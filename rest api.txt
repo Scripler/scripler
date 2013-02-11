@@ -4,32 +4,32 @@ The following presents the REST API for Scripler V1, per specification: https://
 Current status: first draft (ready for input)
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-Resource													Description
+Resource                                                    Description
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Frontpage, Project-space
-GET /														Shows Scripler frontpage
-GET create													Shows Scripler Create
-GET explore													Shows Scripler Explore
-GET login													Shows login page
-GET logout													Shows logout button
-GET register												Shows register page
-POST register												Registers the user with the selected register-method, e.g. email, Facebook or Google id
-GET editprofile												Shows edit profile page
-POST editprofile											Edits the user's profile storing the new values supplied by the user
+GET /                                                       Shows Scripler frontpage
+GET create                                                  Shows Scripler Create
+GET explore                                                 Shows Scripler Explore
+GET login                                                   Shows login page
+GET logout                                                  Shows logout button
+GET register                                                Shows register page
+POST register                                               Registers the user with the selected register-method, e.g. email, Facebook or Google id
+GET editprofile                                             Shows edit profile page
+POST editprofile                                            Edits the user's profile storing the new values supplied by the user
 
 -- Editor, Insert, Output, Project-space, Typography
-GET	project													Shows the Project-space page
-GET	project/new												Shows the page where a new project, incl. project options, can be created
-PUT project/savenewstyle									Save as new style			
-PUT project/savenewstylesheet								Save as new style sheet
+GET    project                                              Shows the Project-space page
+GET    project/new                                          Shows the page where a new project, incl. project options, can be created
+PUT project/savenewstyle                                    Save as new style            
+PUT project/savenewstylesheet                               Save as new style sheet
 
 -- Project-manager
-GET	project/:x												Shows the Project-manager page of the selected project
-POST project/:x/archive										Archives the current document
-POST project/:x/compile										Compiles the project
-POST project/:x/createdoc									Creates a new document in the project
-POST project/:x/createfolder								Creates a new folder in the project
-GET project/:x/editdoc										Shows the document the user selected to be edited
-GET project/:x/archive										?
-GET project/:x/folder										?
+GET    project/:x                                           Shows the Project-manager page of the selected project
+POST project/:x/archive                                     Archives the current document
+POST project/:x/compile                                     Compiles the project
+POST project/:x/createdoc                                   Creates a new document in the project
+POST project/:x/createfolder                                Creates a new folder in the project
+GET project/:x/editdoc                                      Shows the document the user selected to be edited
+GET project/:x/archive                                      ?
+GET project/:x/folder                                       ?
