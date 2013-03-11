@@ -6,7 +6,7 @@ Requirements:
  - [MongoDB][1] (configure host/ip in ScriplerMongoDB.py)
  - [Python][2] 2.7
  - Python modules:
-   - [Bottle][3] (wbe/http micro framework)
+   - [Bottle][3] (web/http micro framework)
    - [pymongo][4] (MongoDB driver)
 
 Generate test data
