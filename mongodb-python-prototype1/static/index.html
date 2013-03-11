@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US" >
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Scripler API/DB test</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/pepper-grinder/jquery-ui.min.css" />
+<link rel="stylesheet" href="static/main.css" type="text/css" />
+<script type="text/javascript" src="static/main.js"></script>
+</head>
+<body>
+
+<div id="dialog-login" title="Login">
+  <form>
+	  <fieldset>
+		<label>Username
+		<input type="text" name="loginUsername" id="loginUsername" class="text ui-widget-content ui-corner-all" /></label>
+		<label>Password
+		<input type="password" name="loginPassword" id="loginPassword" value="" class="text ui-widget-content ui-corner-all" /></label>
+	  </fieldset>
+  </form>
+</div>
+
+<div id="dialog-user" title="Create new user">
+  <form>
+	  <fieldset>
+		<label>Username
+		<input type="text" name="username" id="username" class="text ui-widget-content ui-corner-all" /></label>
+		<label>Name
+		<input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" /></label>
+		<label>Email
+		<input type="text" name="email" id="email" value="" class="text ui-widget-content ui-corner-all" /></label>
+		<label>Password
+		<input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" /></label>
+	  </fieldset>
+  </form>
+</div>
+
+
+<div id="dialog-project" title="Create new project">
+  <form>
+	  <fieldset>
+		<label>Name
+		<input type="text" name="projectName" id="projectName" class="text ui-widget-content ui-corner-all" /></label>
+		<label>Description
+		<input type="text" name="projectDescription" id="projectDescription" value="" class="text ui-widget-content ui-corner-all" /></label>
+	  </fieldset>
+  </form>
+</div>
+
+<div id="dialog-document" title="Create new document">
+  <form>
+	  <fieldset>
+		<label>Title
+		<input type="text" name="documentTitle" id="documentTitle" class="text ui-widget-content ui-corner-all" /></label>
+	  </fieldset>
+  </form>
+</div>
+
+<div id="dialog-access" title="Grant access to project">
+  <form>
+	  <fieldset>
+		<label>UserID
+		<input type="text" name="accessUserID" id="accessUserID" class="text ui-widget-content ui-corner-all" /></label>
+		<label>Access
+		<select name"accessType" id="accessType"><option>admin</option><option>something-else</option></select></label>
+	  </fieldset>
+  </form>
+</div>
+
+<div id="login-container">
+	<button id="login-button">Login</button>
+	<button id="logout-button">Logout</button>
+</div>
+  
+
+<div id="users-container" class="container ui-widget">
+  <p class="info">
+	Login, or select a user below to "cheat":
+  </p>
+  <h1>Users:</h1> (Limited to 5...)
+  <table id="users" class="ui-widget ui-widget-content">
+    <thead>
+      <tr class="ui-widget-header ">
+        <th>ID</th>
+        <th>Username</th>
+        <th>Name</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <button id="create-user">Create new user</button>
+</div>
+
+
+
+<div id="projects-container" class="container ui-widget">
+  <h1>Projects:</h1>
+  <table id="projects" class="ui-widget ui-widget-content">
+    <thead>
+      <tr class="ui-widget-header ">
+        <th>ID</th>
+        <th>Name</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <button id="create-project">Create new project</button>
+</div>
+
+
+
+<div id="project-container" class="container ui-widget">
+  <h1>Project:</h1>
+  Name: <strong><span id="projectNameText"> </span></strong><br />
+  Description: <strong><span id="projectDescriptionText"> </span></strong><br />
+  Members:
+  <table id="project-members" class="ui-widget ui-widget-content">
+    <thead>
+      <tr class="ui-widget-header ">
+        <th>ID</th>
+        <th>Username</th>
+        <th>Access</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <button id="grant-access">Grant access</button><br />
+  Documents:
+  <table id="project-documents" class="ui-widget ui-widget-content">
+    <thead>
+      <tr class="ui-widget-header ">
+        <th>ID</th>
+        <th>Title</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <button id="create-document">Create document</button>
+</div>
+
+
+<div id="document-container" class="container ui-widget">
+	Document text:
+	<textarea cols="100" rows="10" id="documentText" name="documentText"> </textarea>
+  	<button id="save-document">Save document</button>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+Users:
+======
+
+Format:
+{_id, username, email, passwordHash, projects[{projectId, name}]}
+
+Example:
+{
+	_id: "512fc3f8eae856239819e811",
+	username: "allanmc",
+	name: "Allan Mørk Christensen",
+	email: "allan@scripler.com",
+	passwordHash: "ebec50a24662a7c1e780a389cb1279c879742b2be9a196e18f987339f712da7e",
+    projects: [
+        {
+            projectId: "513513f0eae85621fc7ecbdd",
+            name: "The Wonderful Wizard of Oz"
+        }
+    ]
+}
+
+Projects:
+=========
+
+Format:
+{_id, name, description, members[{userId, username, access[]}], documents[{documentId, documentRevs[], title}]}
+
+Example:
+{
+	_id: "513513f0eae85621fc7ecbdd"
+	name: "The Wonderful Wizard of Oz",
+	description: "The Wonderful Wizard of Oz is a children's novel written by L. Frank Baum and illustrated by W. W. Denslow.",
+	members: [
+		{
+			userId: "512fc3f8eae856239819e811",
+            username: "allanmc"
+			access: ["read", "export"]
+		},
+        {
+			userId: "513513a2eae85621fc7ecbda",
+            username: "mortengf"
+			access: ["admin"]
+		}
+	]
+    documents: [
+        {
+            documentId: "512fc40eeae856209cd14997",
+            title: "First Draft"
+            documentRevs: [{rev: 5, documentId: "512fc40eeae856209cd14998"}, {rev: 4, documentId: "512fc40eeae856209cd14999"}, {rev: 3, documentId: "5138ea8deae85625241285cf"}]
+        },
+        {
+            documentId: "312fc40eeae856209cd1499d",
+            title: "Second Draft"
+            documentRevs: [{rev: 4, documentId: "112fc40eeae856209cd1499c"}, {rev: 4, documentId: "812fc40eeae856209cd1499b"}, {rev: 4, documentId: "9138ea8deae85625241285ca"}]
+        }
+    ]
+}
+
+Documents:
+==========
+Maybe "Documents" should be embedded in their "Project"? This could be a problem because of MongoDB's document size limit of 16MB? Anyway, one client is only working on a single document at a time, so combining them might not benefit a whole lot.
+
+Format:
+{_id, projectId, document}
+
+Example:
+{
+	_id: "512fc40eeae856209cd14997",
+	projectId: "513513f0eae85621fc7ecbdd",
+	document: "<html>
+				<head>
+				<title>The Project Gutenberg eBook of The War of the Worlds, by H. G. Wells</title>
+				</head>
+				<body>
+				<p>Hello World</p>
+				</body>
+			    </html>"
+}
