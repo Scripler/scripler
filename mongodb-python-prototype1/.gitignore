@@ -1,6 +1,0 @@
-#Compiled python
-*.pyc
-
-#PyDev project files
-.project
-.pydevproject
