@@ -1,0 +1,63 @@
+The following presents the REST API for Scripler v1, per specification: https://sites.google.com/site/scriplerwiki/
+
+Current status: draft (ready for input)
+
+Based on principles described here:
+http://www.websanova.com/tutorials/web-services/how-to-design-a-rest-api-and-why-you-should
+
+POST   - Creates a resource
+GET    - Reads/gets a resource (never any side effects, idempotent)
+PUT    - Updates an existing resource (idempotent)
+DELETE - Deletes an resource (idempotent)
+
+GET/PUT/DELETE - a specific resource always has the same URI.
+PUT/POST - can include request data.
+GET/DELETE - can have no other data than what is specified in the URI.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+Resource                                                   Description
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Frontpage, Project-space, and other page-data (should these be part of the REST API?)
+GET    /                                            Gets data for Scripler frontpage
+GET    /create                                      Gets data for Scripler Create page
+GET    /explore                                     Gets data for Explore page
+GET    /login                                       Gets data for Login page
+GET    /register                                    Gets data for Register page
+GET    /editprofile                                 Gets data for Edit Profile page
+GET    /projectspace                                Gets data for the Project-space page
+GET    /projectspace/new                            Gets data for the page where a new project, incl. project options, can be created
+
+-- Users
+POST   /user                                        Registers the user with the selected register-method, e.g. email, Facebook or Google id
+GET    /user/:x                                     Gets user data
+PUT    /user/:x                                     Update user data
+DELETE /user/:x                                     Deletes the user
+POST   /login                                       Logs in a user
+POST   /logout                                      Logs out a user
+
+-- Stylesheets (stylesheet: x)
+POST   /stylesheet                                  Save/create a new stylesheet
+GET    /stylesheet/:x                               Get a stylesheet
+PUT    /stylesheet/:x                               Update a stylesheet
+DELETE /stylesheet/:x                               Delete a new stylesheet
+
+-- Projects (project :x)
+POST   /project                                     Creates a project with supplied data.
+GET    /project/:x                                  Gets data for the Project-manager page of the selected project
+PUT    /project/:x                                  Updates data for the Project-manager page of the selected project
+DELETE /project/:x                                  Deletes/archives the project, and all its documents
+POST   /project/:x/compile                          Compiles the project
+
+-- Documents (project :x, document :y)
+POST   /project/:x/document                         Creates a new document for the project
+GET    /project/:x/document/:y                      Gets data for the selected document
+PUT    /project/:x/document/:y                      Updates data for the selected document
+DELETE /project/:x/document/:y                      Deletes the selected document
+
+-- Folders (project :x, folder :y)
+POST   /project/:x/folder                           Creates a new folder in the project 
+GET    /project/:x/folder/:y                        Gets data for the folder
+PUT    /project/:x/folder/:y                        Updates data (foldername?) for the folder 
+DELETE /project/:x/folder/:y                        Deletes the folder 
+                      
