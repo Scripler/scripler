@@ -1,0 +1,22 @@
+Normal user-creation:
+------------------------
+1. User/client sends a request:
+    POST /user (username/email/etc send along as post-data)
+2. We create the user with the attached data in our database, and let the user be logged in with this new user account.
+
+User-creation through OAuth:
+---------------------------
+1. User/client sends a request to one of the following:
+    GET /auth/twitter (user created using Twitter data)
+    GET /auth/google (user created using Google data)
+    GET /auth/facebook (user created using Facebook data)
+    GET /auth/linkedin (user created using LinkedIn data)
+2. User is redirected to the providers page to grant the access
+3. Provider redirects the user back to us (callback), with the allowed data attached (e.g. username and email)
+4. We create the user with the attached data in our own database, and let the user be logged in with this new user account.
+5. (Optoinal) The user is asked to enter any missing data in a form on our site.
+
+Node.js OAuth libraries:
+http://passportjs.org/ (example: https://gist.github.com/joshbirk/1732068)
+https://github.com/bnoguchi/everyauth
+(https://github.com/ciaranj/connect-auth)
