@@ -1,0 +1,24 @@
+<% layout('layout') -%>
+Select login-provider:<br />
+<a href="/auth/twitter">Sign in with Twitter</a><br />
+<a href="/auth/facebook">Sign in with Facebook</a><br />
+<a href="/auth/google">Sign in with Google</a><br />
+<a href="/auth/linkedin">Sign in with LinkedIn</a><br />
+<br /><br />
+Or login with a local account:
+<form action="/login" method="post">
+	<div>
+	<label>Email:</label>
+	<input type="text" name="email"/><br/>
+	</div>
+	<div>
+	<label>Password:</label>
+	<input type="password" name="password"/>
+	</div>
+	<div>
+	<input type="submit" value="Login"/>
+    <% if (message) { %>
+    <span style="color:red;"><%= message %></span>
+    <% } %>
+	</div>
+</form>

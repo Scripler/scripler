@@ -1,0 +1,28 @@
+<% layout('layout') -%>
+Select login-provider:<br />
+<a href="/auth/twitter">Sign in with Twitter</a><br />
+<a href="/auth/facebook">Sign in with Facebook</a><br />
+<a href="/auth/google">Sign in with Google</a><br />
+<a href="/auth/linkedin">Sign in with LinkedIn</a><br />
+<br /><br />
+Or create a new local account:
+<form action="/new-user" method="post">
+	<div>
+	<label>Name:</label>
+	<input type="text" name="name"/><br/>
+	</div>
+	<div>
+	<label>Email:</label>
+	<input type="text" name="email"/><br/>
+	</div>
+	<div>
+	<label>Password:</label>
+	<input type="password" name="password"/>
+	</div>
+	<div>
+	<input type="submit" value="Create account"/>
+    <% if (message) { %>
+    <span style="color:red;"><%= message %></span>
+    <% } %>
+	</div>
+</form>

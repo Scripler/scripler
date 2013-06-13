@@ -1,0 +1,30 @@
+{
+  "name": "scripler-server",
+  "description": "Scripler Server",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "3.2.4",
+    "config": "~0.4.25",
+    "mongoose": "~3.6.11",
+    "ejs": "~0.8.4",
+    "ejs-locals": "~1.0.2",
+    "bcrypt": "~0.7.6",
+    "passport": "~0.1.17",
+    "passport-twitter": "~0.1.5",
+    "passport-facebook": "~0.1.5",
+    "passport-linkedin": "~0.1.3",
+    "passport-google": "~0.3.0",
+    "passport-local": "~0.1.6",
+    "xtend": "~2.0.5"
+  },
+  "readmeFilename": "README.md",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": "",
+  "author": "",
+  "license": "BSD"
+}
