@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="angularjs-publications">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+		<title>Scripler, Create</title>
+		<link rel="icon" type="image/ico" href="favicon.ico">
+		<link rel="stylesheet" type="text/css" href="css/shared/default.css" />
+		<link rel="stylesheet" type="text/css" href="css/pages/projectspace.css" />
+	</head>
+	<body>
+
+		<div class="container">
+			<div class="main">
+
+				<section class="section-unisquare">
+					<p> </p>
+
+<!--					<p class="filter-buttons"><span class="filter-sort-button">Sort by Filter</span> | <span class="search-sort-button">Sort by Search</span></p>
+					<p class="filter-sort" ng-show="showFilterSort">
+						Filter by Sort:
+						<span ng-click="publicationOrder = 'publicationCreated'; reverse=!reverse">time</span> | 
+						<span ng-click="publicationOrder = 'publicationName'; reverse=!reverse">titel</span> | 
+						<span ng-click="publicationOrder = 'publicationChanged'; reverse=!reverse">changed</span>
+					</p>
+					<p class="filter-search" ng-show="showFilterSearch">
+						Filter by Search:
+							<input type="text" ng-model="publicationSearch">
+					</p>-->
+				</section>
+
+				<section class="section-publications" ng-controller="PublicationsCtrl">
+					<div class="publication new" ng-click="addPublication(publication)">
+		 				<p>+</p>
+		 			</div>
+
+					<div class="publication" ng-animate="'animate'" ng-repeat="publication in publications | orderBy:publicationOrder:reverse | filter:publicationSearch">
+						<a class="publication-options-show" data-gui="{{publication.publicationNumber}}" ng-click="showPublicationOptions = true;">
+							<div class="arrow"></div>
+						</a>
+						<!--<p ng-hide="editingPublicationTitle" ng-click="editingPublicationTitle = true;">-->
+						<p ng-hide="editingPublicationTitle">
+							{{publication.publicationName}}
+						</p>
+
+						<form ng-show="editingPublicationTitle" ng-submit="editingPublicationTitle = false; renamePublication(publication);">
+						<p>
+								<input type="text" ng-model="publication.publicationName" placeholder="publication title" focus-on="editingPublicationTitle" />
+								<button class="btn" type="submit">Save</button>
+						</p>
+						</form>
+
+						<div class="publication-options" ng-show="showPublicationOptions">
+							<div class="publication-options-header">Publication Options</div>
+							<div class="publication-options-hide" ng-click="showPublicationOptions = false;" title="Close Options">x</div>
+							<div class="publication-options-menupoint" ng-click="editingPublicationTitle = true; showPublicationOptions = false;">rename</div>
+							<div class="publication-options-menupoint" ng-click="copyPublication(publication); showPublicationOptions = false;">copy</div>
+							<div class="publication-options-menupoint" ng-click="archivePublication(publication)">archive</div>
+							<div class="publication-options-menupoint" ng-click="removePublication(publication)">delete</div>
+							<div class="publication-options-dates">
+								<div>Created Date: </div><div class="dates">{{publication.publicationCreated | date:'yyyy-MM-dd HH:mm'}}</div>
+								<div>Last Changed Date: </div><div class="dates">{{publication.publicationChanged | date:'yyyy-MM-dd HH:mm'}}</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+			</div>
+		</div>
+
+		<!-- CHANGE/FIX: When focus is availeble in jquery lite, skip jquery lib -->
+	    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+	    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+		<script type="text/javascript" src="js/pages/projectspace.controller.js"></script>
+
+	</body>
+</html>
