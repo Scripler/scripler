@@ -8,7 +8,7 @@ var mongoose = require('mongoose')
  */
 var ProjectSchema = new Schema({
     name: { type: String, required: true },
-    order: { type: Number},
+    order: { type: Number, default: 0},
     modified: { type: Date, default: Date.now }
 });
 

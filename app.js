@@ -1,6 +1,7 @@
 var express = require('express')
     , index = require('./routes/index')
     , user = require('./routes/user')
+    , project = require('./routes/project')
     , http = require('http')
     , path = require('path')
     , mongoose = require('mongoose')
@@ -41,11 +42,21 @@ if ('development' == app.get('env')) {
 //app.get('/new-user', index.newUser);
 //app.post('/new-user', index.newUserPost);
 
-/*API*/
+/* API Frontpage */
 app.get('/users', user.list);
 app.post('/user/login', user.login);
 app.post('/user/logout', user.logout);
 app.post('/user/register', user.register);
+
+/* API Projectspace */
+app.get('/project/showprojects', project.list);
+app.post('/project/create', project.create);
+app.get('/project/open', project.open);
+app.get('/project/options', project.options);
+app.post('/project/copy', project.copy);
+app.post('/project/rename', project.rename);
+app.post('/project/archive', project.archive);
+app.post('/project/delete', project.delete);
 
 scriplerPassport.initPaths(app);
 
