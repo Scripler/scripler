@@ -1,20 +1,15 @@
 var express = require('express'),
     passport = require('passport'),
-    TwitterStrategy = require('passport-twitter').Strategy,
     FacebookStrategy = require('passport-facebook').Strategy,
     GoogleStrategy = require('passport-google').Strategy,
     LinkedInStrategy = require('passport-linkedin').Strategy,
     LocalStrategy = require('passport-local').Strategy,
-//ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn,
     mongoose = require('mongoose'),
     ObjectId = mongoose.Types.ObjectId,
     extend = require('xtend'),
     User = require('../models/user.js').User,
-//crypto = require('crypto'),
     util = require('util'),
-    conf = require('config')
-//SALT = "s8(hb?.;*!sW"
-    ;
+    conf = require('config');
 
 passport.serializeUser(function (user, done) {
     done(null, user._id);
@@ -38,16 +33,20 @@ passport.use(new LocalStrategy({usernameField: 'email'}, function (email, passwo
             return done(err);
         } else if (user) {
             // check if password is matchings
-            user.comparePassword(passwordpassword, function (err, isMatch) {
-                if (err) {
-                    return done(err);
-                } else if (isMatch) {
-                    return done(null, user);
-                } else {
-                    // invalid password
-                    return done(null, false, { message: 'Invalid password' });
-                }
-            });
+            if (user.password) {
+                user.comparePassword(password, function (err, isMatch) {
+                    if (err) {
+                        return done(err);
+                    } else if (isMatch) {
+                        return done(null, user);
+                    } else {
+                        // invalid password
+                        return done(null, false, { message: 'Invalid password' });
+                    }
+                });
+            } else {
+                return done(null, false, { message: 'User has no local password!'});
+            }
         } else {
             // could not find user
             return done(null, false, { message: 'Unknown user ' + email });
@@ -58,17 +57,6 @@ passport.use(new LocalStrategy({usernameField: 'email'}, function (email, passwo
 /*
  * PROVIDER ACCOUNTS
  */
-passport.use(new TwitterStrategy({
-        consumerKey:       conf.passport.twitter.consumerKey,
-        consumerSecret:    conf.passport.twitter.consumerSecret,
-        callbackURL:       conf.passport.twitter.callbackURL,
-        passReqToCallback: true
-    },
-    function (req, token, tokenSecret, profile, done) {
-        addProviderToUser(profile.provider, profile.id, profile, req.user, done);
-    }
-));
-
 passport.use(new FacebookStrategy({
         clientID:          conf.passport.facebook.clientID,
         clientSecret:      conf.passport.facebook.clientSecret,
@@ -106,15 +94,33 @@ passport.use(new LinkedInStrategy({
 
 function addProviderToUser(provider, providerId, profile, currentUser, done) {
     var providerObject = {"name": provider, "id": providerId};
-    User.findOne({providers: {"$elemMatch": providerObject}}, function (err, user) {
+    var email;
+    if (profile.emails && profile.emails.length > 0) {
+        email = profile.emails[0].value;
+    } else {
+        //TODO Do something when we don't get an email from the provider
+        console.log("error: " + "We got no email from provider! What to do?");
+    }
+    //TODO Currently merges account if email already exists... Is this acceptable to do?
+    User.findOne({"$or": [
+        {email: email},
+        {providers: {"$elemMatch": providerObject}}
+    ]}, function (err, user) {
         if (user) {
             //User already in database
             if (currentUser && currentUser._id != user._id) {
                 console.log("Current user: " + currentUser);
                 console.log("Database user: " + user);
-                //TODO merge accounts?
+                //TODO Maybe we hsouldn't automatically merge accounts?
                 console.log("debug: " + "User already in database, and already logged in, but not with the same account! Merge!");
-                done(null, currentUser);
+                currentUser.providers.addToSet(providerObject);
+                currentUser.markModified('providers');//"providers" is of type "Mixed", so Mongoose, doesn't detect the change.
+                currentUser.save(function (err) {
+                    if (err) {
+                        throw err;
+                    }
+                    done(null, currentUser);
+                });
             } else {
                 console.log("debug: " + "Nothing to do... User already has this account attached");
                 done(null, user);
@@ -133,49 +139,9 @@ function addProviderToUser(provider, providerId, profile, currentUser, done) {
                 var user = new User();
                 user.providers.addToSet(providerObject);
                 user.name = profile.displayName;
-                user.email = profile.emails[0].value;
-            }
-            user.markModified('providers');//"providers" is of type "Mixed", so Mongoose, doesn't detect the change.
-            user.save(function (err) {
-                if (err) {
-                    throw err;
+                if (profile.emails && profile.emails.length > 0) {
+                    user.email = profile.emails[0].value;
                 }
-                done(null, user);
-            });
-        }
-    })
-}
-
-function addProviderToUser(provider, providerId, profile, currentUser, done) {
-    var providerObject = {"name": provider, "id": providerId};
-    User.findOne({providers: {"$elemMatch": providerObject}}, function (err, user) {
-        if (user) {
-            //User already in database
-            if (currentUser && currentUser._id != user._id) {
-                console.log("Current user: " + currentUser);
-                console.log("Database user: " + user);
-                //TODO merge accounts?
-                console.log("debug: " + "User already in database, and already logged in, but not with the same account! Merge!");
-                done(null, currentUser);
-            } else {
-                console.log("debug: " + "Nothing to do... User already has this account attached");
-                done(null, user);
-            }
-        } else {
-            if (currentUser) {
-                //User already loggedin, so add new provider to user
-                var user = currentUser;
-                console.log("debug: " + "User already loggedin, so add new provider to user");
-                user.providers.addToSet(providerObject);
-                done(null, user);
-            } else {
-                //New user
-                //TODO check if another account with same email address exists!
-                console.log("debug: " + "New user");
-                var user = new User();
-                user.providers.addToSet(providerObject);
-                user.name = profile.displayName;
-                user.email = profile.emails[0].value;
             }
             user.markModified('providers');//"providers" is of type "Mixed", so Mongoose, doesn't detect the change.
             user.save(function (err) {
@@ -202,9 +168,6 @@ function authnOrAuthz(provider, options) {
 }
 
 function initPaths(app) {
-    app.get('/auth/twitter', authnOrAuthz('twitter'));
-    app.get('/auth/twitter/callback', passport.authenticate('twitter', { successReturnToOrRedirect: '/', failureRedirect: '/login' }));
-
     app.get('/auth/facebook', authnOrAuthz('facebook', { scope: ['email'] }));
     app.get('/auth/facebook/callback', passport.authenticate('facebook', { successReturnToOrRedirect: '/', failureRedirect: '/login' }));
 
@@ -215,4 +178,15 @@ function initPaths(app) {
     app.get('/auth/linkedin/callback', passport.authenticate('linkedin', { successReturnToOrRedirect: '/', failureRedirect: '/login' }));
 }
 
+function isLoggedIn() {
+    return function (req, res, next) {
+        if (!req.isAuthenticated || !req.isAuthenticated()) {
+            return res.send({"errorMessage": "User not authenticated"}, 403);
+        } else {
+            next();
+        }
+    }
+}
+
 exports.initPaths = initPaths;
+exports.isLoggedIn = isLoggedIn;

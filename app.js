@@ -7,7 +7,8 @@ var express = require('express')
     , mongoose = require('mongoose')
     , conf = require('config')
     , passport = require('passport')
-    , scriplerPassport = require('./routes/passport');
+    , auth = require('./routes/auth')
+    , MongoStore = require('connect-mongo')(express);
 
 var app = express();
 
@@ -23,7 +24,11 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser(conf.app.cookie_secret));
-app.use(express.session({ secret: conf.app.session_secret }));
+app.use(express.session({
+    secret: conf.app.session_secret,
+    maxAge: new Date(Date.now() + 3600000),
+    store:  new MongoStore({db: mongoose.connection.db})
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(app.router);
@@ -35,30 +40,32 @@ if ('development' == app.get('env')) {
 }
 
 /*Dummy GUI*/
-//app.get('/', index.index);
-//app.get('/account', index.account);
-//app.get('/login', index.login);
-//app.post('/login', user.login);
-//app.get('/new-user', index.newUser);
-//app.post('/new-user', index.newUserPost);
+app.get('/', index.index);
+app.get('/account', index.account);
+app.get('/login', index.login);
+app.post('/login', index.loginPost);
+app.get('/logout', index.logout)
+app.get('/new-user', index.newUser);
+app.post('/new-user', index.newUserPost);
 
 /* API Frontpage */
-app.get('/users', user.list);
+app.get('/user', auth.isLoggedIn(), user.get);
+app.get('/user/list', auth.isLoggedIn(), user.list);
 app.post('/user/login', user.login);
 app.post('/user/logout', user.logout);
 app.post('/user/register', user.register);
 
 /* API Projectspace */
-app.get('/project/showprojects', project.list);
-app.post('/project/create', project.create);
-app.get('/project/open', project.open);
-app.get('/project/options', project.options);
-app.post('/project/copy', project.copy);
-app.post('/project/rename', project.rename);
-app.post('/project/archive', project.archive);
-app.post('/project/delete', project.delete);
+app.get('/project/list', auth.isLoggedIn(), project.list);
+app.post('/project', auth.isLoggedIn(), project.create);
+app.get('/project/:id', auth.isLoggedIn(), project.open);
+app.get('/project/:id/options', auth.isLoggedIn(), project.options);
+app.post('/project/:id/copy', auth.isLoggedIn(), project.copy);
+app.put('/project/:id/rename', auth.isLoggedIn(), project.rename);
+app.put('/project/:id/archive', auth.isLoggedIn(), project.archive);
+app.delete('/project/:id', auth.isLoggedIn(), project.delete);
 
-scriplerPassport.initPaths(app);
+auth.initPaths(app);
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port') + ('development' == app.get('env') ? ' -  in development mode!' : ''));

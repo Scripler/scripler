@@ -2,14 +2,21 @@ var User = require('../models/user.js').User
     , passport = require('passport');
 
 /**
+ * GET current user.
+ */
+exports.get = function (req, res) {
+    res.send({"status": 0, "user": req.user});
+};
+
+/**
  * GET users listing.
  */
 exports.list = function (req, res) {
     User.find({}, function (err, docs) {
         if (err) {
-            res.send({"status": 0, "error": err.code, "error_text": err.err});
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
         } else {
-            res.send({"status": 1, "users": docs});
+            res.send({"users": docs});
         }
     });
 };
@@ -18,52 +25,29 @@ exports.list = function (req, res) {
  * POST user login.
  */
 exports.login = function (req, res, next) {
-    //    passport.authenticate('local', function (err, user, info) {
-    //        if (err) {
-    //            return next(err)
-    //        }
-    //        if (!user) {
-    //            req.session.messages = [info.message];
-    //            //return res.redirect('/login')
-    //        }
-    //        req.logIn(user, function (err) {
-    //            if (err) {
-    //                return next(err);
-    //            }
-    //            //return res.redirect('/');
-    //        });
-    //    })(req, res, next);
-
-    User.findOne({"email": req.body.email}, function (err, user) {
-        if (err) {
-            // return error
-            res.send({"status": -err.code, "errorMessage": "Database problem", "errorDetails": err.err});
-        } else if (user) {
-            // check if password is matchings
-            user.comparePassword(req.body.password, function (err, isMatch) {
+        passport.authenticate('local', function (err, user, info) {
+            if (err) {
+                res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+            }
+            if (!user) {
+                    res.send({"errorMessage": info.message}, 401);
+            }
+            req.logIn(user, function (err) {
                 if (err) {
-                    // return error
-                    res.send({"status": -err.code, "errorMessage": "Database problem", "errorDetails": err.err});
-                } else if (isMatch) {
-                    res.send({"status": 0, "user": user});
+                    res.send({"errorMessage": info.message}, 401);
                 } else {
-                    // invalid password
-                    res.send({"status": -1, "errorMessage": "Invalid user password"});
+                    res.send({"user": user});
                 }
             });
-        } else {
-            // could not find user
-            res.send({"status": -2, "errorMessage": "Unknown user"});
-        }
-    });
-
+        })(req, res, next);
 };
 
 /**
  * POST user logout.
  */
 exports.logout = function (req, res) {
-    res.send({"status": 0});
+    req.logout();
+    res.send({});
 };
 
 /**
@@ -79,12 +63,12 @@ exports.register = function (req, res) {
         if (err) {
             // return error
             if (err.code == 11000) {
-                res.send({"status": -1, "errorMessage": "User already registered"});
+                res.send({"errorMessage": "User already registered"}, 403);
             } else {
-                res.send({"status": -err.code, "errorMessage": "Database problem", "errorDetails": err.err});
+                res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
             }
         } else {
-            res.send({"status": 0});
+            res.send({"user": user});
         }
     });
 };
