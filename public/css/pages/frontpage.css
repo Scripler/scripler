@@ -1,3 +1,6 @@
+body {
+	background-color: rgb(198,198,198);
+}
 #background {
 	/* Set rules to fill background */
 	min-height: 100%;
@@ -11,6 +14,12 @@
 	position: fixed;
 	top: 0;
 	left: 0;
+
+	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%); /* WebKit */
+    background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%); /* Firefox */
+    background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%); /* IE10+ */
+    background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%); /* Opera */
+    background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
 }
 
 #create, #features, #news, #pricing, #learn, #about, #contact {
@@ -19,59 +28,7 @@
 	margin: 0 auto; 
     width: 100%;
     position: relative;
-    box-shadow: 0 0 50px rgba(0,0,0,0.5);
-}
-
-#create {
-	background: #C6C6C6;
-    background-image: -webkit-radial-gradient(center center, circle contain, #E0E0E0 0%, #C6C6C6 100%); /* WebKit */
-    background-image: -moz-radial-gradient(center center, circle contain, #E0E0E0 0%, #C6C6C6 100%); /* Firefox */
-    background-image: -ms-radial-gradient(center center, circle contain, #E0E0E0 0%, #C6C6C6 100%); /* IE10+ */
-    background-image: -o-radial-gradient(center center, circle contain, #E0E0E0 0%, #C6C6C6 100%); /* Opera */
-    background-image: radial-gradient(center center, circle contain, #E0E0E0 0%, #C6C6C6 100%);
-}
-#features {
-	background: #215660;
-    background-image: -webkit-radial-gradient(center center, circle contain, #3B707A 0%, #215660 100%); /* WebKit */
-    background-image: -moz-radial-gradient(center center, circle contain, #3B707A 0%, #215660 100%); /* Firefox */
-    background-image: -ms-radial-gradient(center center, circle contain, #3B707A 0%, #215660 100%); /* IE10+ */
-    background-image: -o-radial-gradient(center center, circle contain, #3B707A 0%, #215660 100%); /* Opera */
-    background-image: radial-gradient(center center, circle contain, #3B707A 0%, #215660 100%);
-}
-#news { 
-	background: #FFF56C;
-    background-image: -webkit-radial-gradient(center center, circle contain, #FFFF86 0%, #FFF56C 100%); /* WebKit */
-    background-image: -moz-radial-gradient(center center, circle contain, #FFFF86 0%, #FFF56C 100%); /* Firefox */
-    background-image: -ms-radial-gradient(center center, circle contain, #FFFF86 0%, #FFF56C 100%); /* IE10+ */
-    background-image: -o-radial-gradient(center center, circle contain, #FFFF86 0%, #FFF56C 100%); /* Opera */
-    background-image: radial-gradient(center center, circle contain, #FFFF86 0%, #FFF56C 100%);
-}
-#pricing { 
-	background: #C6C6C6;
-    background-image: -webkit-radial-gradient(center center, circle contain, #E0E0E0 0%, #C6C6C6 100%); /* WebKit */
-    background-image: -moz-radial-gradient(center center, circle contain, #E0E0E0 0%, #C6C6C6 100%); /* Firefox */
-    background-image: -ms-radial-gradient(center center, circle contain, #E0E0E0 0%, #C6C6C6 100%); /* IE10+ */
-    background-image: -o-radial-gradient(center center, circle contain, #E0E0E0 0%, #C6C6C6 100%); /* Opera */
-    background-image: radial-gradient(center center, circle contain, #E0E0E0 0%, #C6C6C6 100%);
-}
-#learn {
-	background: #666666;
-    background-image: -webkit-radial-gradient(center center, circle contain, #808080 0%, #666666 100%); /* WebKit */
-    background-image: -moz-radial-gradient(center center, circle contain, #808080 0%, #666666 100%); /* Firefox */
-    background-image: -ms-radial-gradient(center center, circle contain, #808080 0%, #666666 100%); /* IE10+ */
-    background-image: -o-radial-gradient(center center, circle contain, #808080 0%, #666666 100%); /* Opera */
-    background-image: radial-gradient(center center, circle contain, #808080 0%, #666666 100%);
-}
-#about { 
-	background: #215660;
-    background-image: -webkit-radial-gradient(center center, circle contain, #3B707A 0%, #215660 100%); /* WebKit */
-    background-image: -moz-radial-gradient(center center, circle contain, #3B707A 0%, #215660 100%); /* Firefox */
-    background-image: -ms-radial-gradient(center center, circle contain, #3B707A 0%, #215660 100%); /* IE10+ */
-    background-image: -o-radial-gradient(center center, circle contain, #3B707A 0%, #215660 100%); /* Opera */
-    background-image: radial-gradient(center center, circle contain, #3B707A 0%, #215660 100%);
-}
-#contact { 
-	background: none #FFFFFF;
+/*    box-shadow: 0 0 50px rgba(0,0,0,0.5);*/
 }
 
 #create article, #features article, #news article, #pricing article, #learn article, #about article, #contact article {
