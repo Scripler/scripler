@@ -16,7 +16,9 @@ Folder Structure
 * models
  * The MongoDB schemas for the collections
 * routes
- * Application logic for the different logical domains
+ * Application logic for the different API routes
+* lib
+ * Other application logic
 
 Requirements
 ------------
@@ -30,7 +32,16 @@ Installation
 How To Run
 ----------
     node app.js
-    
+
+Test
+-----------
+To run the unit- and integratation tests [Mocha][3]  is required. Install in global scope:
+
+    npm install mocha -g
+
+To run all tests enter:
+
+    mocha
 
 Bcrypt Installation Problems
 ----------------------------
@@ -39,3 +50,4 @@ https://github.com/ncb000gt/node.bcrypt.js/#dependencies
 
   [1]: http://www.mongodb.org/
   [2]: http://nodejs.org/
+  [3]: http://visionmedia.github.io/mocha/

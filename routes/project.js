@@ -117,11 +117,23 @@ exports.rename = function (req, res) {
     });
 }
 exports.archive = function (req, res) {
-    Project.update({ _id: req.params.id, "members": {"$elemMatch": {"userId": req.user._id, "access": "admin"}} }, { archived: true }, function (err, numberAffected, raw) {
+    Project.findOne({"_id": req.params.id}, function (err, project) {
         if (err) {
             res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+        } else if (!project) {
+            res.send({"errorMessage": "Project not found"}, 404);
+        } else if (!hasAccessToProject(req.user, project)) {
+            res.send({"errorMessage": "Access denied"}, 403);
         } else {
-            res.send({"affected": numberAffected});
+            project.archived = true;
+            project.save(function (err) {
+                if (err) {
+                    // return error
+                    res.send({"errorMessage": "Database problem"}, 400);
+                } else {
+                    res.send({project: project});
+                }
+            });
         }
     });
 }

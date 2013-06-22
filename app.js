@@ -7,8 +7,9 @@ var express = require('express')
     , mongoose = require('mongoose')
     , conf = require('config')
     , passport = require('passport')
-    , auth = require('./routes/auth')
-    , MongoStore = require('connect-mongo')(express);
+    , auth = require('./lib/auth')
+    , MongoStore = require('connect-mongo')(express)
+    , logger = require('./lib/logger');
 
 var app = express();
 
@@ -20,7 +21,7 @@ app.set('port', conf.app.port);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('ejs', require('ejs-locals'));
-app.use(express.logger('dev'));
+app.use(express.logger({format: 'short', stream: {write: function(msg){logger.info(msg.trim());}}}));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser(conf.app.cookie_secret));
@@ -68,5 +69,6 @@ app.delete('/project/:id', auth.isLoggedIn(), project.delete);
 auth.initPaths(app);
 
 http.createServer(app).listen(app.get('port'), function () {
-    console.log('Express server listening on port ' + app.get('port') + ('development' == app.get('env') ? ' -  in development mode!' : ''));
+    logger.info('Express server listening on port ' + app.get('port') + ('development' == app.get('env') ? ' -  in development mode!' : ''));
 });
+

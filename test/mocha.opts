@@ -1,0 +1,7 @@
+--reporter spec
+--ui bdd
+--slow 10
+--colors
+--invert
+--async-only
+--check-leaks
