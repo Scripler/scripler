@@ -1,0 +1,10 @@
+{
+    "app":      {
+        "port":           9091,
+        "cookie_secret":  "abc:$",
+        "session_secret": "xyz:$"
+    },
+    "db": {
+        "uri": "mongodb://localhost/scripler_test"
+    }
+}

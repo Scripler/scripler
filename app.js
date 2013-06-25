@@ -69,6 +69,6 @@ app.delete('/project/:id', auth.isLoggedIn(), project.delete);
 auth.initPaths(app);
 
 http.createServer(app).listen(app.get('port'), function () {
-    logger.info('Express server listening on port ' + app.get('port') + ('development' == app.get('env') ? ' -  in development mode!' : ''));
+    logger.info('Express server listening on port ' + app.get('port') + ('development' == app.get('env') ? ' - in development mode!' : ''));
 });
 
