@@ -3,54 +3,123 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<title>Scripler, Welcome</title>
 		<link rel="stylesheet" type="text/css" href="css/shared/default.css" />
 		<link rel="stylesheet" type="text/css" href="css/pages/frontpage.css" />
+		<link rel="stylesheet" type="text/css" href="css/modules/navigation.css" />
 	</head>
-	<body>
+	<body class="menu-left-push">
+
+		<nav class="menu-left menu-left-vertical menu-left-left" id="menu-left">
+	    	<ul>
+				<li class="navpoint clearfix">
+	        		<div class="text-field">
+	        			
+	        		</div>
+	        	</li>
+	        	<li class="navpoint menu-create clearfix" data="create">
+	        		<div class="text-field">
+	        			Create
+	        		</div>
+	        		<div class="arrow-field">
+	        			<div class="arrow"></div>
+	        		</div>
+	        	</li>
+	        	<li class="navpoint menu-features clearfix" data="features">
+	        		<div class="text-field">
+	        			Features
+	        		</div>
+	        		<div class="arrow-field">
+	        			<div class="arrow"></div>
+	        		</div>
+	        	</li>
+	        	<li class="navpoint menu-news clearfix" data="news">
+	        		<div class="text-field">
+	        			News
+	        		</div>
+	        		<div class="arrow-field">
+	        			<div class="arrow"></div>
+	        		</div>
+	        	</li>
+	        	<li class="navpoint menu-pricing clearfix" data="pricing">
+	        		<div class="text-field">
+	        			Pricing
+	        		</div>
+	        		<div class="arrow-field">
+	        			<div class="arrow"></div>
+	        		</div>
+	        	</li>
+	        	<li class="navpoint menu-learn clearfix" data="learn">
+	        		<div class="text-field">
+	        			Learn
+	        		</div>
+	        		<div class="arrow-field">
+	        			<div class="arrow"></div>
+	        		</div>
+	        	</li>
+	        	<li class="navpoint menu-about clearfix" data="about">
+	        		<div class="text-field">
+	        			About
+	        		</div>
+	        		<div class="arrow-field">
+	        			<div class="arrow"></div>
+	        		</div>
+	        	</li>
+	        	<li class="navpoint menu-contact clearfix" data="contact">
+	        		<div class="text-field">
+	        			Contact
+	        		</div>
+	        		<div class="arrow-field">
+	        			<div class="arrow"></div>
+	        		</div>
+	        	</li>
+	        </ul>
+		</nav>
 
 		<div id="background"></div>
 
-		<nav class="topmenu">
+		<nav class="menu-top">
 	    	<ul>
 	    		<!-- //ADD/FIX: Make a fallback if you haven't got Javascript -->
-	        	<li class="menu-create active" data="create">Create</li>
-	        	<li class="menu-features" data="features">Features</li>
-	        	<li class="menu-news" data="news">News</li>
-	        	<li class="menu-pricing" data="pricing">Pricing</li>
-	        	<li class="menu-learn" data="learn">Learn</li>
-	        	<li class="menu-about" data="about">About</li>
-	        	<li class="menu-contact" data="contact">Contact</li>
+	        	<li class="navpoint menu-create" data="create">Create</li>
+	        	<li class="navpoint menu-features" data="features">Features</li>
+	        	<li class="navpoint menu-news" data="news">News</li>
+	        	<li class="navpoint menu-pricing" data="pricing">Pricing</li>
+	        	<li class="navpoint menu-learn" data="learn">Learn</li>
+	        	<li class="navpoint menu-about" data="about">About</li>
+	        	<li class="navpoint menu-contact" data="contact">Contact</li>
+
+	        	<li class="navbutton" id="showMenu"></li>
 	        </ul>
 		</nav>
 
 		<section id="create" data-speed="100" data-type="background">
-		  <article></article>
+		  <article><div class="contentback"></div></article>
 		</section>
 
 		<section id="features" data-speed="100" data-type="background">
-		  <article></article>
+		  <article><div class="contentback"></div></article>
 		</section>
 
 		<section id="news" data-speed="100" data-type="background">
-		  <article></article>
+		  <article><div class="contentback"></div></article>
 		</section>
 
 		<section id="pricing" data-speed="100" data-type="background">
-		  <article></article>
+		  <article><div class="contentback"></div></article>
 		</section>
 
 		<section id="learn" data-speed="100" data-type="background">
-		  <article></article>
+		  <article><div class="contentback"></div></article>
 		</section>
 
 		<section id="about" data-speed="100" data-type="background">
-		  <article></article>
+		  <article><div class="contentback"></div></article>
 		</section>
 
 		<section id="contact" data-speed="100" data-type="background">
-		  <article></article>
+		  <article><div class="contentback"></div></article>
 		</section>
 
 		<!-- JS Code -->
@@ -61,7 +130,8 @@
 		    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 		<!--<![endif]-->
 		<script src="http://code.jquery.com/color/jquery.color-2.1.0.js"></script>
-		<script src="js/shared/jquery.scrollpoint.js"></script>
+<!--		<script src="js/shared/jquery.scrollpoint.js"></script>-->
+		<script src="js/shared/classie.js"></script>
 		<script src="js/pages/frontpage.jquery.js"></script>
 
 	</body>

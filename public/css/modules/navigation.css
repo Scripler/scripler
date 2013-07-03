@@ -1,0 +1,176 @@
+.menu-top {
+	background: none #FFFFFF;
+	position: fixed;
+	width: 100%;
+	height: 50px;
+	z-index: 10;
+	text-align: center;
+    box-shadow: 0 8px 50px -6px rgba(0,0,0,0.5);
+}
+
+.menu-top .navbutton {
+	border-bottom: .2em solid #999;
+	border-top: .55em double #999;
+	content: "";
+	height: .8em;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 1em;
+}
+.menu-top .navbutton.active {
+	border-color: #000;
+}
+@media screen and (min-width: 56.25em){
+	.menu-top .navbutton {
+		display: none;
+	}
+}
+
+.menu-top ul {
+	margin: 0 auto;
+	width: 950px;
+	list-style: none;
+	text-align: center;
+}
+.menu-top li {
+	display: inline-block;
+	margin: 15px 20px;
+	cursor: pointer;
+	color: #C6C6C6;
+}
+
+@media screen and (max-width: 56.25em){
+	.menu-top li.navpoint {
+		display: none;
+	}
+}
+
+@media screen and (min-width: 30em){
+	display: none;
+}
+
+.menu-top li.active, .menu-left li.active {
+	color: #333333;
+}
+.menu-top li.navbutton.active {
+	margin-left: 220px;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+
+/* General styles for all menus */
+.menu-left {
+	background: #FFF;
+	position: fixed;
+	border-right: 1px solid #efefef;
+	box-shadow: 0 0 10px #999;
+}
+
+.menu-left li {
+	display: block;
+	color: #C6C6C6;
+/*	font-size: 1.1em;
+	font-weight: 300;*/
+}
+
+.menu-left li:hover {
+	color: #666;
+}
+
+.menu-left li:active {
+	color: #000;
+}
+
+.menu-left li .text-field {
+	float: left;
+	width: 164px;
+	padding: 0.6em;
+}
+
+.menu-left li .arrow-field {
+	display: none;
+}
+.menu-left li:hover .arrow-field {
+	display: inline-block;
+	float: left;
+	background: none #efefef;
+	padding: 0.6em;
+}
+.menu-left li.active .arrow-field {
+	display: inline-block;;
+	float: left;
+	background: none rgb(255,245,108);
+	padding: 0.6em;
+}
+.menu-left li .arrow-field .arrow {
+	width: 0; 
+	height: 0; 
+	border-top: 9px solid transparent;
+	border-bottom: 9px solid transparent;
+	border-left: 15px solid white;
+}
+
+/* Orientation-dependent styles for the content of the menu */
+
+.menu-left-vertical {
+	width: 200px;
+	height: 100%;
+	top: 0;
+	z-index: 100;
+}
+
+.menu-left-vertical ul {
+	margin: 0;
+	padding: 0;
+}
+
+.menu-left-vertical li {
+	border-bottom: 1px solid #efefef;
+}
+.menu-left-vertical li.active  {
+	border-bottom: 1px solid rgb(255,245,108);
+}
+
+/* Vertical menu that slides from the left or right */
+
+.menu-left-left {
+	left: -250px;
+}
+
+.menu-left-left.menu-left-open {
+	left: 0px;
+}
+
+/* Push classes applied to the body */
+.menu-left-push {
+	overflow-x: hidden;
+	position: relative;
+	left: 0;
+}
+
+.menu-left-push-toright {
+	left: 200px;
+}
+
+/* Transitions */
+.menu-left, .menu-left-push {
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+
+@media screen and (max-height: 26.375em){
+
+	.menu-left-vertical {
+		font-size: 90%;
+		width: 190px;
+	}
+
+	.menu-left-left,
+	.menu-left-push-toleft {
+		left: -190px;
+	}
+
+}
