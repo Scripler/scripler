@@ -1,5 +1,7 @@
-node_modules
+node_modules*
 config/*
 !config/default.json
 !config/test.json
 .idea
+.project
+.classpath

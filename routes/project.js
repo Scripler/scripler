@@ -48,7 +48,8 @@ var create = exports.create = function (req, res) {
     project.save(function (err) {
         if (err) {
             // return error
-            res.send({"errorMessage": "Database problem"}, 400);
+            //res.send({"errorMessage": "Database problem"}, 400);
+			res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
         } else {
             res.send({project: project});
         }

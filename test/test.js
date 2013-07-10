@@ -222,5 +222,41 @@ describe('Scripler RESTfull API', function () {
                     done();
                 });
         })
+    }),
+    describe('/document', function () {
+        var documentName = "MyFirstDocument";
+        var projectId = "51dd1e41eb053ef80f000003"; // TODO: previous value of "projectId" is apparently undefined here - why?
+
+        it('creating a document should return the new document', function (done) {
+            request(host)
+                .post('/project/' + projectId + '/document/' + documentName)
+                .set('cookie', cookie)
+                .send({text: "It is my best document ever!"})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.document.name, documentName);
+                    assert.equal(res.body.document.projectId, projectId);
+                    assert.equal(res.body.document.text, "It is my best document ever!");
+                    assert.equal(res.body.document.archived, false);
+                    assert.equal(res.body.document.members[0].userId, userId);
+                    assert.equal(res.body.document.members[0].access[0], "admin");
+                    documentId = res.body.document._id;
+                    documentId && done();
+                });
+        }),
+        it('document list should return one document owned by project ' + projectId, function (done) {
+            request(host)
+                .get('/document/list')
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.documents.length, 1);
+                    assert.equal(res.body.documents[0].name, documentName);
+                    assert.equal(res.body.documents[0].projectId, projectId);
+                    done();
+                });
+        })
     })
 })

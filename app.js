@@ -2,6 +2,7 @@ var express = require('express')
     , index = require('./routes/index')
     , user = require('./routes/user')
     , project = require('./routes/project')
+    , document = require('./routes/document')
     , http = require('http')
     , path = require('path')
     , mongoose = require('mongoose')
@@ -56,7 +57,7 @@ app.post('/user/login', user.login);
 app.post('/user/logout', user.logout);
 app.post('/user/register', user.register);
 
-/* API Projectspace */
+/* API Projectspace (projects) */
 app.get('/project/list', auth.isLoggedIn(), project.list);
 app.post('/project', auth.isLoggedIn(), project.create);
 app.get('/project/:id', auth.isLoggedIn(), project.open);
@@ -65,6 +66,10 @@ app.post('/project/:id/copy', auth.isLoggedIn(), project.copy);
 app.put('/project/:id/rename', auth.isLoggedIn(), project.rename);
 app.put('/project/:id/archive', auth.isLoggedIn(), project.archive);
 app.delete('/project/:id', auth.isLoggedIn(), project.delete);
+
+/* API Projectmanager (documents) */
+app.get('/document/list', auth.isLoggedIn(), document.list);
+app.post('/project/:id/document/:docname', auth.isLoggedIn(), document.create);
 
 auth.initPaths(app);
 
