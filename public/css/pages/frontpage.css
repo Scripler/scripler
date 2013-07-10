@@ -1,6 +1,13 @@
 body {
 	background-color: rgb(198,198,198);
 }
+
+.contentback {
+	background: none red;
+	width: 200px;
+	height: 200px;
+}
+
 #background {
 	/* Set rules to fill background */
 	min-height: 100%;
@@ -25,7 +32,8 @@ body {
 #create, #features, #news, #pricing, #learn, #about, #contact {
 	min-height: 100%;
 /*	height: 1000px;*/
-	margin: 0 auto; 
+	margin: 0 auto;
+	padding: 20px;
     width: 100%;
     position: relative;
 /*    box-shadow: 0 0 50px rgba(0,0,0,0.5);*/
@@ -35,29 +43,4 @@ body {
 	min-height: 900px;
 	width: 960px;
 	margin: 0 auto;
-}
-
-.topmenu {
-	background: none #FFFFFF;
-	position: fixed;
-	width: 100%;
-	height: 50px;
-	z-index: 10;
-	text-align: center;
-    box-shadow: 0 8px 50px -6px rgba(0,0,0,0.5);
-}
-.topmenu ul {
-	margin: 0 auto;
-	width: 950px;
-	list-style: none;
-	text-align: center;
-}
-.topmenu li {
-	display: inline-block;
-	margin: 15px 20px;
-	cursor: pointer;
-	color: #C6C6C6;
-}
-.topmenu li.active {
-	color: #333333;
 }

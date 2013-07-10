@@ -27,12 +27,12 @@ body {
 }
 
 a {
-	color: #f0f0f0;
+	color: #999;
 	text-decoration: none;
 }
 
 a:hover {
-	color: #000;
+	color: #666;
 }
 
 .main, .container > header {
@@ -106,7 +106,7 @@ a:hover {
 
 .main > section h2 {
 	font-weight: 300;
-	color: #ccc;
+	color: #333;
 }
 
 .main > section input {
