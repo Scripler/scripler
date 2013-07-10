@@ -229,9 +229,9 @@ describe('Scripler RESTfull API', function () {
 
         it('creating a document should return the new document', function (done) {
             request(host)
-                .post('/project/' + projectId + '/document/' + documentName)
+                .post('/project/' + projectId + '/document')
                 .set('cookie', cookie)
-                .send({text: "It is my best document ever!"})
+                .send({name: documentName, text: "It is my best document ever!"})
                 .expect(200)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");

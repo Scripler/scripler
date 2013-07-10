@@ -15,7 +15,7 @@ var DocumentMemberSchema = new Schema({
  * Document Schema
  */
 var DocumentSchema = new Schema({
-    name: { type: String, required: true },
+    name: { type: String },
     text: { type: String },
     projectId: { type: String, required: true }, 
 	members: [DocumentMemberSchema],

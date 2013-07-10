@@ -23,9 +23,9 @@ exports.list = function (req, res) {
 exports.create = function (req, res) {
     var document = new Document({
         // TODO: Add creating user
-        name:    req.params.docname,
-        projectId: req.params.id,
-        text:    req.body.text,
+        name:      req.body.name,
+        text:      req.body.text,
+        projectId: req.params.projectId,
         members: [
             {userId: req.user._id, access: ["admin"]}
         ]

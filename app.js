@@ -69,7 +69,7 @@ app.delete('/project/:id', auth.isLoggedIn(), project.delete);
 
 /* API Projectmanager (documents) */
 app.get('/document/list', auth.isLoggedIn(), document.list);
-app.post('/project/:id/document/:docname', auth.isLoggedIn(), document.create);
+app.post('/project/:projectId/document', auth.isLoggedIn(), document.create);
 
 auth.initPaths(app);
 
