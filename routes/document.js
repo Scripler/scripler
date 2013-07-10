@@ -4,27 +4,6 @@ var Document = require('../models/document.js').Document;
  * The functions in this file are based on '/routes/project.js'.
  */
 
-// Document helper functions
-
-/**
- * Does the user have access to the document?
- */
-function hasAccessToDocument(user, document, access) {
-    access = access || "admin";
-    var memberObj = getEmbeddedDocument(document.members, "userId", user._id.toString()) || {};
-    var accessArray = memberObj.access || [];
-    return accessArray.indexOf(access) >= 0;
-}
-
-function getEmbeddedDocument(arr, queryField, search) {
-    var len = arr.length;
-    while (len--) {
-        if (arr[len][queryField] === search) {
-            return arr[len];
-        }
-    }
-}
-
 /**
  * GET documents listing.
  *

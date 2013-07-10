@@ -1,26 +1,5 @@
 var Project = require('../models/project.js').Project;
-
-// Project helper functions
-
-/**
- * Does the user have access to the project?
- */
-function hasAccessToProject(user, project, access) {
-    access = access || "admin";
-    var memberObj = getEmbeddedDocument(project.members, "userId", user._id.toString()) || {};
-    var accessArray = memberObj.access || [];
-    return accessArray.indexOf(access) >= 0;
-}
-
-function getEmbeddedDocument(arr, queryField, search) {
-    var len = arr.length;
-    while (len--) {
-        if (arr[len][queryField] === search) {
-            return arr[len];
-        }
-    }
-}
-
+var utils = require('../lib/utils');
 
 /**
  * GET projects listing.
@@ -61,7 +40,7 @@ exports.open = function (req, res) {
             res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
         } else if (!project) {
             res.send({"errorMessage": "Project not found"}, 404);
-        } else if (!hasAccessToProject(req.user, project)) {
+        } else if (!utils.hasAccessToEntity(req.user, project)) {
             res.send({"errorMessage": "Access denied"}, 403);
         } else {
             res.send({ project: project});
@@ -74,7 +53,7 @@ exports.options = function (req, res) {
             res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
         } else if (!project) {
             res.send({"errorMessage": "Project not found"}, 404);
-        } else if (!hasAccessToProject(req.user, project)) {
+        } else if (!utils.hasAccessToEntity(req.user, project)) {
             res.send({"errorMessage": "Access denied"}, 403);
         } else {
             res.send({project: project});
@@ -87,7 +66,7 @@ exports.copy = function (req, res) {
             res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
         } else if (!project) {
             res.send({"errorMessage": "Project not found"}, 404);
-        } else if (!hasAccessToProject(req.user, project)) {
+        } else if (!utils.hasAccessToEntity(req.user, project)) {
             res.send({"errorMessage": "Access denied"}, 403);
         } else {
             var newReq = req;
@@ -102,7 +81,7 @@ exports.rename = function (req, res) {
             res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
         } else if (!project) {
             res.send({"errorMessage": "Project not found"}, 404);
-        } else if (!hasAccessToProject(req.user, project)) {
+        } else if (!utils.hasAccessToEntity(req.user, project)) {
             res.send({"errorMessage": "Access denied"}, 403);
         } else {
             project.name = req.body.name;
@@ -123,7 +102,7 @@ exports.archive = function (req, res) {
             res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
         } else if (!project) {
             res.send({"errorMessage": "Project not found"}, 404);
-        } else if (!hasAccessToProject(req.user, project)) {
+        } else if (!utils.hasAccessToEntity(req.user, project)) {
             res.send({"errorMessage": "Access denied"}, 403);
         } else {
             project.archived = true;
@@ -144,7 +123,7 @@ exports.delete = function (req, res) {
             res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
         } else if (!project) {
             res.send({"errorMessage": "Project not found"}, 404);
-        } else if (!hasAccessToProject(req.user, project)) {
+        } else if (!utils.hasAccessToEntity(req.user, project)) {
             res.send({"errorMessage": "Access denied"}, 403);
         } else {
             project.remove(function (err, result) {
