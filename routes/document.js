@@ -13,7 +13,7 @@ var Document = require('../models/document.js').Document;
 exports.list = function (req, res) {
     Document.find({}, function (err, docs) {
         if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else {
             res.send({"documents": docs});
         }
@@ -34,7 +34,7 @@ exports.create = function (req, res) {
     document.save(function (err) {
         if (err) {
             // return error
-            res.send({"errorMessage": "Database problem"}, 400);
+            res.send({"errorMessage": "Database problem"}, 503);
         } else {
             res.send({document: document});
         }
