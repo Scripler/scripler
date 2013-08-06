@@ -1,10 +1,6 @@
 var Project = require('../models/project.js').Project;
 var utils = require('../lib/utils');
 
-/**
- * GET projects listing.
- */
-
 exports.list = function (req, res) {
     Project.find({}, function (err, docs) {
         if (err) {
@@ -14,7 +10,6 @@ exports.list = function (req, res) {
         }
     });
 };
-
 
 var create = exports.create = function (req, res) {
     var project = new Project({
@@ -34,6 +29,7 @@ var create = exports.create = function (req, res) {
         }
     });
 }
+
 exports.open = function (req, res) {
     Project.findOne({"_id": req.params.id}, function (err, project) {
         if (err) {
@@ -47,34 +43,7 @@ exports.open = function (req, res) {
         }
     });
 }
-exports.options = function (req, res) {
-    Project.findOne({"_id": req.params.id}, function (err, project) {
-        if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
-        } else if (!project) {
-            res.send({"errorMessage": "Project not found"}, 404);
-        } else if (!utils.hasAccessToEntity(req.user, project)) {
-            res.send({"errorMessage": "Access denied"}, 403);
-        } else {
-            res.send({project: project});
-        }
-    });
-}
-exports.copy = function (req, res) {
-    Project.findOne({"_id": req.params.id}, function (err, project) {
-        if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
-        } else if (!project) {
-            res.send({"errorMessage": "Project not found"}, 404);
-        } else if (!utils.hasAccessToEntity(req.user, project)) {
-            res.send({"errorMessage": "Access denied"}, 403);
-        } else {
-            var newReq = req;
-            req.body.name = project.name + " - Copy";
-            create(newReq, res);
-        }
-    });
-}
+
 exports.rename = function (req, res) {
     Project.findOne({"_id": req.params.id}, function (err, project) {
         if (err) {
@@ -96,6 +65,7 @@ exports.rename = function (req, res) {
         }
     });
 }
+
 exports.archive = function (req, res) {
     Project.findOne({"_id": req.params.id}, function (err, project) {
         if (err) {
@@ -117,6 +87,11 @@ exports.archive = function (req, res) {
         }
     });
 }
+
+exports.unarchive = function (req, res) {
+    // TODO: implement
+}
+
 exports.delete = function (req, res) {
     Project.findOne({"_id": req.params.id}, function (err, project) {
         if (err) {
@@ -131,6 +106,42 @@ exports.delete = function (req, res) {
             });
         }
     });
+}
 
+exports.options = function (req, res) {
+    Project.findOne({"_id": req.params.id}, function (err, project) {
+        if (err) {
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        } else if (!project) {
+            res.send({"errorMessage": "Project not found"}, 404);
+        } else if (!utils.hasAccessToEntity(req.user, project)) {
+            res.send({"errorMessage": "Access denied"}, 403);
+        } else {
+            res.send({project: project});
+        }
+    });
+}
 
+exports.copy = function (req, res) {
+    Project.findOne({"_id": req.params.id}, function (err, project) {
+        if (err) {
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        } else if (!project) {
+            res.send({"errorMessage": "Project not found"}, 404);
+        } else if (!utils.hasAccessToEntity(req.user, project)) {
+            res.send({"errorMessage": "Access denied"}, 403);
+        } else {
+            var newReq = req;
+            req.body.name = project.name + " - Copy";
+            create(newReq, res);
+        }
+    });
+}
+
+exports.compile = function (req, res) {
+    // TODO: implement
+}
+
+exports.rearrange = function (req, res) {
+    // TODO: implement
 }

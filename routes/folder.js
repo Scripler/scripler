@@ -76,12 +76,20 @@ exports.create = function (req, res) {
 	
 }
 
-exports.archive = function (req, res) {
+exports.open = function (req, res) {
     // TODO: implement
 }
 
 exports.rename = function (req, res) {
 	// TODO: implement
+}
+
+exports.archive = function (req, res) {
+    // TODO: implement
+}
+
+exports.unarchive = function (req, res) {
+    // TODO: implement
 }
 
 exports.delete = function (req, res) {

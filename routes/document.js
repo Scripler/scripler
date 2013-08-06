@@ -63,20 +63,16 @@ exports.open = function (req, res) {
     });
 }
 
+exports.rename = function (req, res) {
+	// TODO: implement
+}
+
 exports.archive = function (req, res) {
     // TODO: implement
 }
 
-exports.compile = function (req, res) {
+exports.unarchive = function (req, res) {
     // TODO: implement
-}
-
-exports.rearrange = function (req, res) {
-    // TODO: implement
-}
-
-exports.rename = function (req, res) {
-	// TODO: implement
 }
 
 exports.delete = function (req, res) {
