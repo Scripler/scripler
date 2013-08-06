@@ -14,7 +14,7 @@ exports.get = function (req, res) {
 exports.list = function (req, res) {
     User.find({}, function (err, docs) {
         if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else {
             res.send({"users": docs});
         }
@@ -27,7 +27,7 @@ exports.list = function (req, res) {
 exports.login = function (req, res, next) {
         passport.authenticate('local', function (err, user, info) {
             if (err) {
-                res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+                res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
             }
             if (!user) {
                     res.send({"errorMessage": info.message}, 401);
@@ -65,7 +65,7 @@ exports.register = function (req, res) {
             if (err.code == 11000) {
                 res.send({"errorMessage": "User already registered"}, 403);
             } else {
-                res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+                res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
             }
         } else {
             res.send({"user": user});

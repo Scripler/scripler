@@ -6,7 +6,7 @@ exports.create = function (req, res) {
 	// Does a project exist for the document?
 	Project.findOne({"_id": req.body.projectId}, function (err, project) {
         if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else if (!project) {
             res.send({"errorMessage": "Project not found"}, 404);
         } else if (!utils.hasAccessToEntity(req.user, project)) {
@@ -23,7 +23,6 @@ exports.create = function (req, res) {
                 ]
             });
             
-            project.documents.push(document);
             document.save(function (err) {
                 if (err) {
                     // return error
@@ -31,7 +30,7 @@ exports.create = function (req, res) {
         				"errorCode": err.code,
         				"errorMessage": "Database problem",
         				"errorDetails": err.err
-        			}, 400);
+        			}, 503);
                 } else {
                 	project.documents.push(document);
                 	project.save(function (err, project) {
@@ -40,7 +39,7 @@ exports.create = function (req, res) {
                 				"errorCode": err.code,
                 				"errorMessage": "Database problem",
                 				"errorDetails": err.err
-                			}, 400);
+                			}, 503);
                 		} else {
                 			res.send({document: document});
                 		}
@@ -54,13 +53,12 @@ exports.create = function (req, res) {
 exports.open = function (req, res) {
     Document.findOne({"_id": req.params.documentId}, function (err, document) {
         if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else if (!document) {
             res.send({"errorMessage": "Document not found"}, 404);
         } else if (!utils.hasAccessToEntity(req.user, document)) {
             res.send({"errorMessage": "Access denied"}, 403);
         } else {
-            res.send({ document: document});
         }
     });
 }

@@ -8,7 +8,7 @@ var utils = require('../lib/utils');
 exports.list = function (req, res) {
     Project.find({}, function (err, docs) {
         if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else {
             res.send({"projects": docs});
         }
@@ -28,7 +28,7 @@ var create = exports.create = function (req, res) {
         if (err) {
             // return error
             //res.send({"errorMessage": "Database problem"}, 400);
-			res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+			res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else {
             res.send({project: project});
         }
@@ -37,7 +37,7 @@ var create = exports.create = function (req, res) {
 exports.open = function (req, res) {
     Project.findOne({"_id": req.params.id}, function (err, project) {
         if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else if (!project) {
             res.send({"errorMessage": "Project not found"}, 404);
         } else if (!utils.hasAccessToEntity(req.user, project)) {
@@ -50,7 +50,7 @@ exports.open = function (req, res) {
 exports.options = function (req, res) {
     Project.findOne({"_id": req.params.id}, function (err, project) {
         if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else if (!project) {
             res.send({"errorMessage": "Project not found"}, 404);
         } else if (!utils.hasAccessToEntity(req.user, project)) {
@@ -63,7 +63,7 @@ exports.options = function (req, res) {
 exports.copy = function (req, res) {
     Project.findOne({"_id": req.params.id}, function (err, project) {
         if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else if (!project) {
             res.send({"errorMessage": "Project not found"}, 404);
         } else if (!utils.hasAccessToEntity(req.user, project)) {
@@ -78,7 +78,7 @@ exports.copy = function (req, res) {
 exports.rename = function (req, res) {
     Project.findOne({"_id": req.params.id}, function (err, project) {
         if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else if (!project) {
             res.send({"errorMessage": "Project not found"}, 404);
         } else if (!utils.hasAccessToEntity(req.user, project)) {
@@ -88,7 +88,7 @@ exports.rename = function (req, res) {
             project.save(function (err) {
                 if (err) {
                     // return error
-                    res.send({"errorMessage": "Database problem"}, 400);
+                    res.send({"errorMessage": "Database problem"}, 503);
                 } else {
                     res.send({project: project});
                 }
@@ -99,7 +99,7 @@ exports.rename = function (req, res) {
 exports.archive = function (req, res) {
     Project.findOne({"_id": req.params.id}, function (err, project) {
         if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else if (!project) {
             res.send({"errorMessage": "Project not found"}, 404);
         } else if (!utils.hasAccessToEntity(req.user, project)) {
@@ -109,7 +109,7 @@ exports.archive = function (req, res) {
             project.save(function (err) {
                 if (err) {
                     // return error
-                    res.send({"errorMessage": "Database problem"}, 400);
+                    res.send({"errorMessage": "Database problem"}, 503);
                 } else {
                     res.send({project: project});
                 }
@@ -120,7 +120,7 @@ exports.archive = function (req, res) {
 exports.delete = function (req, res) {
     Project.findOne({"_id": req.params.id}, function (err, project) {
         if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else if (!project) {
             res.send({"errorMessage": "Project not found"}, 404);
         } else if (!utils.hasAccessToEntity(req.user, project)) {
