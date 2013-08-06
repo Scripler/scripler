@@ -2,6 +2,7 @@ var express = require('express')
     , index = require('./routes/index')
     , user = require('./routes/user')
     , project = require('./routes/project')
+    , folder = require('./routes/folder')
     , document = require('./routes/document')
     , http = require('http')
     , path = require('path')
@@ -41,6 +42,8 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
+// NB! The routes below are the URLs used by the API and thus most likely not the URLs seen by the user.
+
 /*Dummy GUI*/
 app.get('/', index.index);
 app.get('/account', index.account);
@@ -67,9 +70,10 @@ app.put('/project/:id/rename', auth.isLoggedIn(), project.rename);
 app.put('/project/:id/archive', auth.isLoggedIn(), project.archive);
 app.delete('/project/:id', auth.isLoggedIn(), project.delete);
 
-/* API Projectmanager (documents) */
-app.get('/document/list', auth.isLoggedIn(), document.list);
-app.post('/project/:projectId/document', auth.isLoggedIn(), document.create);
+/* API Projectmanager (documents and folders) */
+app.post('/document', auth.isLoggedIn(), document.create);
+app.post('/folder', auth.isLoggedIn(), folder.create);
+app.get('/document/:documentId', auth.isLoggedIn(), document.open);
 
 auth.initPaths(app);
 

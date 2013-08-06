@@ -10,6 +10,7 @@ var host = 'localhost:'+conf.app.port;
 var cookie;
 var projectId;
 var userId;
+var folderId;
 
 if (conf.db.uri.match('_test$') === null) {
     console.log("You shouldn't be running this test on any database not being specifically meant for 'test'!");
@@ -17,7 +18,7 @@ if (conf.db.uri.match('_test$') === null) {
     process.exit(1);
 }
 
-describe('Scripler RESTfull API', function () {
+describe('Scripler RESTful API', function () {
     before(function (done) {
         //Don't start the tests before the database connection is ready.
         mongoose.connection.on('open', function() {
@@ -211,50 +212,75 @@ describe('Scripler RESTfull API', function () {
                     assert.equal(res.body.project.archived, true);
                     done();
                 });
+        })
+    }),
+    describe('/document', function () {
+        it('creating a document should return the new document', function (done) {
+            request(host)
+                .post('/document')
+                .set('cookie', cookie)
+                .send({projectId: projectId, name: 'MyFirstDocument', text: 'It is my best document ever!'})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.document.name, 'MyFirstDocument');
+                    assert.equal(res.body.document.projectId, projectId);
+                    assert.equal(res.body.document.text, 'It is my best document ever!');
+                    assert.equal(res.body.document.archived, false);
+                    assert.equal(res.body.document.members[0].userId, userId);
+                    assert.equal(res.body.document.members[0].access[0], "admin");
+                    res.body.document._id && done();
+                });
+        })
+    }),
+    describe('/folder', function () {
+        it('Creating a folder without a parent should return the new folder as an empty root folder', function (done) {
+            request(host)
+                .post('/folder')
+                .set('cookie', cookie)
+                .send({projectId: projectId, name: 'Chapter 1'})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.folder.name, 'Chapter 1');
+                    assert.equal(res.body.folder.folders.length, 0);
+                    folderId = res.body.folder._id; 
+                    folderId && done();
+                });
         }),
-        it('deleting a project should return success', function (done) {
+        it('Creating a folder with a parent folder should return the new folder as an empty child folder of the parent', function (done) {
+            request(host)
+                .post('/folder')
+                .set('cookie', cookie)
+                .send({projectId: projectId, name: 'Chapter 1 - images', parentFolderId: folderId})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.folder.name, 'Chapter 1 - images');
+                    assert.equal(res.body.folder.folders.length, 0);
+                    res.body.folder._id && done();
+                });
+        })
+    }),
+    describe('/project', function () {
+        it('opening the project should now return one root folder (but not the child folder)', function (done) {
+            request(host)
+                .get('/project/'+projectId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.project.folders.length, 1);
+                    done();
+                });
+        }),
+    	it('deleting a project should return success', function (done) {
             request(host)
                 .del('/project/'+projectId)
                 .set('cookie', cookie)
                 .expect(200)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    done();
-                });
-        })
-    }),
-    describe('/document', function () {
-        var documentName = "MyFirstDocument";
-        var projectId = "51dd1e41eb053ef80f000003"; // TODO: previous value of "projectId" is apparently undefined here - why?
-
-        it('creating a document should return the new document', function (done) {
-            request(host)
-                .post('/project/' + projectId + '/document')
-                .set('cookie', cookie)
-                .send({name: documentName, text: "It is my best document ever!"})
-                .expect(200)
-                .end(function (err, res) {
-                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    assert.equal(res.body.document.name, documentName);
-                    assert.equal(res.body.document.projectId, projectId);
-                    assert.equal(res.body.document.text, "It is my best document ever!");
-                    assert.equal(res.body.document.archived, false);
-                    assert.equal(res.body.document.members[0].userId, userId);
-                    assert.equal(res.body.document.members[0].access[0], "admin");
-                    documentId = res.body.document._id;
-                    documentId && done();
-                });
-        }),
-        it('document list should return one document owned by project ' + projectId, function (done) {
-            request(host)
-                .get('/document/list')
-                .set('cookie', cookie)
-                .expect(200)
-                .end(function (err, res) {
-                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    assert.equal(res.body.documents.length, 1);
-                    assert.equal(res.body.documents[0].name, documentName);
-                    assert.equal(res.body.documents[0].projectId, projectId);
                     done();
                 });
         })

@@ -17,7 +17,8 @@ var DocumentMemberSchema = new Schema({
 var DocumentSchema = new Schema({
     name: { type: String },
     text: { type: String },
-    projectId: { type: String, required: true }, 
+    projectId: { type: Schema.Types.ObjectId, required: true },
+    folderId: { type: Schema.Types.ObjectId },
 	members: [DocumentMemberSchema],
     archived: { type: Boolean, default: false},
     modified: { type: Date, default: Date.now }
