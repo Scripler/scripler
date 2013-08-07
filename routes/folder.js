@@ -20,20 +20,6 @@ function findFolder(folders, folderId) {
 	return folder;
 }
 
-function saveAndRespond(res, project, folder) {
-	project.save(function (err, project) {
-		if (err) {
-			res.send({
-				"errorCode": err.code,
-				"errorMessage": "Database problem",
-				"errorDetails": err.err
-			}, 400);
-		} else {
-			res.send({folder: folder});
-		}
-	 });
-}
-
 exports.create = function (req, res) {
 	// Does a project exist for the folder?
 	Project.findOne({"_id": req.body.projectId}, function (err, project) {
@@ -70,7 +56,17 @@ exports.create = function (req, res) {
         		project.folders.push(folder);        		
         	}
         	
-        	saveAndRespond(res, project, folder);
+        	project.save(function (err, project) {
+        		if (err) {
+        			res.send({
+        				"errorCode": err.code,
+        				"errorMessage": "Database problem",
+        				"errorDetails": err.err
+        			}, 400);
+        		} else {
+        			res.send({folder: folder});
+        		}
+        	});
         }
 	});
 	
