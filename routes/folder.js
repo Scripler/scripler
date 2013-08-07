@@ -24,7 +24,7 @@ exports.create = function (req, res) {
 	// Does a project exist for the folder?
 	Project.findOne({"_id": req.body.projectId}, function (err, project) {
         if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 400);
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else if (!project) {
             res.send({"errorMessage": "Project not found"}, 404);
         } else if (!utils.hasAccessToEntity(req.user, project)) {
@@ -62,7 +62,7 @@ exports.create = function (req, res) {
         				"errorCode": err.code,
         				"errorMessage": "Database problem",
         				"errorDetails": err.err
-        			}, 400);
+        			}, 503);
         		} else {
         			res.send({folder: folder});
         		}
@@ -77,7 +77,32 @@ exports.open = function (req, res) {
 }
 
 exports.rename = function (req, res) {
-	// TODO: implement
+	Project.findOne({"_id": req.body.projectId}, function (err, project) {
+        if (err) {
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        } else if (!project) {
+            res.send({"errorMessage": "Project not found"}, 404);
+        } else if (!utils.hasAccessToEntity(req.user, project)) {
+            res.send({"errorMessage": "Access denied"}, 403);
+        } else {
+        	var folder = findFolder(project.folders, req.params.id);
+        	
+    		if (folder) {
+    			folder.name = req.body.name;
+                project.save(function (err) {
+                    if (err) {
+                        // return error
+                        res.send({"errorMessage": "Database problem"}, 503);
+                    } else {
+                        res.send({folder: folder});
+                    }
+                });
+    		} else {
+    			res.send({"errorMessage": "Folder not found"}, 404);
+    			return;
+    		}
+        }
+	});
 }
 
 exports.archive = function (req, res) {

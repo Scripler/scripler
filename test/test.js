@@ -271,7 +271,7 @@ describe('Scripler RESTful API', function () {
         })
     }),
     describe('/folder', function () {
-        it('Creating a folder without a parent should return the new folder as an empty root folder', function (done) {
+        it('creating a folder without a parent should return the new folder as an empty root folder', function (done) {
             request(host)
                 .post('/folder')
                 .set('cookie', cookie)
@@ -285,7 +285,7 @@ describe('Scripler RESTful API', function () {
                     folderId && done();
                 });
         }),
-        it('Creating a folder with a parent folder should return the new folder as an empty child folder of the parent', function (done) {
+        it('creating a folder with a parent folder should return the new folder as an empty child folder of the parent', function (done) {
             request(host)
                 .post('/folder')
                 .set('cookie', cookie)
@@ -296,6 +296,18 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.folder.name, 'Chapter 1 - images');
                     assert.equal(res.body.folder.folders.length, 0);
                     res.body.folder._id && done();
+                });
+        }),
+        it('renaming a folder should return the folder', function (done) {
+            request(host)
+                .put('/folder/'+folderId+'/rename')
+                .set('cookie', cookie)
+                .send({projectId: projectId, name: "A New Fine Name"})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.folder.name, "A New Fine Name");
+                    done();
                 });
         })
     }),

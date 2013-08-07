@@ -80,6 +80,7 @@ app.put('/document/:id/archive', auth.isLoggedIn(), document.archive);
 app.delete('/document/:id', auth.isLoggedIn(), document.delete);
 
 app.post('/folder', auth.isLoggedIn(), folder.create);
+app.put('/folder/:id/rename', auth.isLoggedIn(), folder.rename);
 
 
 //-------------------------- API END --------------------------
