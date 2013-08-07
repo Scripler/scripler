@@ -42,7 +42,9 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
-// NB! The routes below are the URLs used by the API and thus most likely not the URLs seen by the user.
+// -------------------------- API --------------------------
+
+// The routes below are the URLs used by the API (not the URLs seen by the user).
 
 /*Dummy GUI*/
 app.get('/', index.index);
@@ -64,16 +66,24 @@ app.post('/user/register', user.register);
 app.get('/project/list', auth.isLoggedIn(), project.list);
 app.post('/project', auth.isLoggedIn(), project.create);
 app.get('/project/:id', auth.isLoggedIn(), project.open);
-app.get('/project/:id/options', auth.isLoggedIn(), project.options);
-app.post('/project/:id/copy', auth.isLoggedIn(), project.copy);
 app.put('/project/:id/rename', auth.isLoggedIn(), project.rename);
 app.put('/project/:id/archive', auth.isLoggedIn(), project.archive);
 app.delete('/project/:id', auth.isLoggedIn(), project.delete);
+app.get('/project/:id/options', auth.isLoggedIn(), project.options);
+app.post('/project/:id/copy', auth.isLoggedIn(), project.copy);
 
 /* API Projectmanager (documents and folders) */
 app.post('/document', auth.isLoggedIn(), document.create);
-app.post('/folder', auth.isLoggedIn(), folder.create);
 app.get('/document/:documentId', auth.isLoggedIn(), document.open);
+app.put('/document/:id/rename', auth.isLoggedIn(), document.rename);
+app.put('/document/:id/archive', auth.isLoggedIn(), document.archive);
+app.delete('/document/:id', auth.isLoggedIn(), document.delete);
+
+app.post('/folder', auth.isLoggedIn(), folder.create);
+
+
+//-------------------------- API END --------------------------
+
 
 auth.initPaths(app);
 

@@ -11,6 +11,7 @@ var cookie;
 var projectId;
 var userId;
 var folderId;
+var documentId;
 
 if (conf.db.uri.match('_test$') === null) {
     console.log("You shouldn't be running this test on any database not being specifically meant for 'test'!");
@@ -215,7 +216,7 @@ describe('Scripler RESTful API', function () {
         })
     }),
     describe('/document', function () {
-        it('creating a document should return the new document', function (done) {
+    	it('creating a document should return the new document', function (done) {
             request(host)
                 .post('/document')
                 .set('cookie', cookie)
@@ -223,13 +224,49 @@ describe('Scripler RESTful API', function () {
                 .expect(200)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    document = res.body.document;
                     assert.equal(res.body.document.name, 'MyFirstDocument');
                     assert.equal(res.body.document.projectId, projectId);
                     assert.equal(res.body.document.text, 'It is my best document ever!');
                     assert.equal(res.body.document.archived, false);
                     assert.equal(res.body.document.members[0].userId, userId);
                     assert.equal(res.body.document.members[0].access[0], "admin");
-                    res.body.document._id && done();
+                    documentId = res.body.document._id;
+                    documentId && done();
+                });
+        }),
+        it('renaming a document should return the document', function (done) {
+            request(host)
+                .put('/document/'+documentId+'/rename')
+                .set('cookie', cookie)
+                .send({name: "A New Cool Name"})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.document.name, "A New Cool Name");
+                    done();
+                });
+        }),
+        it('archiving a document should return the archived document', function (done) {
+            request(host)
+                .put('/document/'+documentId+'/archive')
+                .set('cookie', cookie)
+                .send({})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.document.archived, true);
+                    done();
+                });
+        }),
+    	it('deleting a document should return success', function (done) {
+            request(host)
+                .del('/document/'+documentId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    done();
                 });
         })
     }),
