@@ -200,74 +200,6 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.project.name, "A New Name");
                     done();
                 });
-        }),
-        it('archiving a project should return the archived project', function (done) {
-            request(host)
-                .put('/project/'+projectId+'/archive')
-                .set('cookie', cookie)
-                .send({})
-                .expect(200)
-                .end(function (err, res) {
-                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    assert.equal(res.body.project.name, "A New Name");
-                    assert.equal(res.body.project.archived, true);
-                    done();
-                });
-        })
-    }),
-    describe('/document', function () {
-    	it('creating a document should return the new document', function (done) {
-            request(host)
-                .post('/document')
-                .set('cookie', cookie)
-                .send({projectId: projectId, name: 'MyFirstDocument', text: 'It is my best document ever!'})
-                .expect(200)
-                .end(function (err, res) {
-                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    document = res.body.document;
-                    assert.equal(res.body.document.name, 'MyFirstDocument');
-                    assert.equal(res.body.document.projectId, projectId);
-                    assert.equal(res.body.document.text, 'It is my best document ever!');
-                    assert.equal(res.body.document.archived, false);
-                    assert.equal(res.body.document.members[0].userId, userId);
-                    assert.equal(res.body.document.members[0].access[0], "admin");
-                    documentId = res.body.document._id;
-                    documentId && done();
-                });
-        }),
-        it('renaming a document should return the document', function (done) {
-            request(host)
-                .put('/document/'+documentId+'/rename')
-                .set('cookie', cookie)
-                .send({name: "A New Cool Name"})
-                .expect(200)
-                .end(function (err, res) {
-                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    assert.equal(res.body.document.name, "A New Cool Name");
-                    done();
-                });
-        }),
-        it('archiving a document should return the archived document', function (done) {
-            request(host)
-                .put('/document/'+documentId+'/archive')
-                .set('cookie', cookie)
-                .send({})
-                .expect(200)
-                .end(function (err, res) {
-                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    assert.equal(res.body.document.archived, true);
-                    done();
-                });
-        }),
-    	it('deleting a document should return success', function (done) {
-            request(host)
-                .del('/document/'+documentId)
-                .set('cookie', cookie)
-                .expect(200)
-                .end(function (err, res) {
-                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    done();
-                });
         })
     }),
     describe('/folder', function () {
@@ -311,6 +243,78 @@ describe('Scripler RESTful API', function () {
                 });
         })
     }),
+    describe('/document', function () {
+    	it('creating a document (in the root folder) should return the new document', function (done) {
+            request(host)
+                .post('/document')
+                .set('cookie', cookie)
+                .send({projectId: projectId, folderId: folderId, name: 'MyFirstDocument', text: 'It is my best document ever!'})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    document = res.body.document;
+                    assert.equal(res.body.document.name, 'MyFirstDocument');
+                    assert.equal(res.body.document.projectId, projectId);
+                    assert.equal(res.body.document.folderId, folderId);
+                    assert.equal(res.body.document.text, 'It is my best document ever!');
+                    assert.equal(res.body.document.archived, false);
+                    assert.equal(res.body.document.members[0].userId, userId);
+                    assert.equal(res.body.document.members[0].access[0], "admin");
+                    documentId = res.body.document._id;
+                    documentId && done();
+                });
+        }),
+        it('renaming a document should return the document', function (done) {
+            request(host)
+                .put('/document/'+documentId+'/rename')
+                .set('cookie', cookie)
+                .send({name: "A New Cool Name"})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.document.name, "A New Cool Name");
+                    done();
+                });
+        })
+    }),
+    describe('/folder', function () {
+        it('opening the root folder should return the folder contents: one child folder and one document', function (done) {
+            request(host)
+                .get('/folder/'+projectId+'/'+folderId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.result.folders.length, 1);
+                    assert.equal(res.body.result.docs.length, 1);
+                    done();
+                });
+        })
+    }),
+    describe('/document', function () {
+        it('archiving a document should return the archived document', function (done) {
+            request(host)
+                .put('/document/'+documentId+'/archive')
+                .set('cookie', cookie)
+                .send({})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.document.archived, true);
+                    done();
+                });
+        }),
+    	it('deleting a document should return success', function (done) {
+            request(host)
+                .del('/document/'+documentId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    done();
+                });
+        })
+    }),
     describe('/project', function () {
         it('opening the project should now return one root folder (but not the child folder)', function (done) {
             request(host)
@@ -320,6 +324,19 @@ describe('Scripler RESTful API', function () {
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
                     assert.equal(res.body.project.folders.length, 1);
+                    done();
+                });
+        }),
+        it('archiving a project should return the archived project', function (done) {
+            request(host)
+                .put('/project/'+projectId+'/archive')
+                .set('cookie', cookie)
+                .send({})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.project.name, "A New Name");
+                    assert.equal(res.body.project.archived, true);
                     done();
                 });
         }),

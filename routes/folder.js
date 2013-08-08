@@ -1,5 +1,6 @@
 var Project = require('../models/project.js').Project;
 var Folder = require('../models/project.js').Folder;
+var Document = require('../models/document.js').Document;
 var utils = require('../lib/utils');
 
 function findFolder(folders, folderId) {
@@ -73,7 +74,44 @@ exports.create = function (req, res) {
 }
 
 exports.open = function (req, res) {
-    // TODO: implement
+	// Does a project exist for the folder?
+	Project.findOne({"_id": req.params.projectId}, function (err, project) {
+        if (err) {
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        } else if (!project) {
+            res.send({"errorMessage": "Project not found"}, 404);
+        } else if (!utils.hasAccessToEntity(req.user, project)) {
+            res.send({"errorMessage": "Access denied"}, 403);
+        } else { // Yes, find the folder and return its contents
+        	if (req.params.folderId) {
+        		var folder = findFolder(project.folders, req.params.folderId);
+        		
+        		var result = {};
+        		// Does the folder exist?
+        		if (folder) {  // Yes, return its contents 
+        			// Add sub folders to the result
+        			result.folders = folder.folders;
+        			
+        			// Add documents to the result
+        			var docs = Document.find({"folderId": req.params.folderId}, function (err, docs) {
+        				if (err) {
+        					res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        				} else if (docs) {
+        					result.docs = docs;
+        				}
+        				
+        				res.send({result: result});
+        			});
+        		} else {
+        			// No, inform the caller
+        			res.send({"errorMessage": "Folder not found"}, 404);
+        			return;
+        		}
+        	} else {
+        		res.send({"errorMessage": "No folder specified"}, 400);
+        	}
+        }
+	});
 }
 
 exports.rename = function (req, res) {

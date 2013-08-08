@@ -80,6 +80,7 @@ app.put('/document/:id/archive', auth.isLoggedIn(), document.archive);
 app.delete('/document/:id', auth.isLoggedIn(), document.delete);
 
 app.post('/folder', auth.isLoggedIn(), folder.create);
+app.get('/folder/:projectId/:folderId', auth.isLoggedIn(), folder.open);
 app.put('/folder/:id/rename', auth.isLoggedIn(), folder.rename);
 
 
