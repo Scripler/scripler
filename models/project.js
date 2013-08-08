@@ -24,6 +24,7 @@ FolderSchema.add({
 var ProjectSchema = new Schema({
     name: { type: String, required: true },
     order: { type: Number, default: 0},
+    //documents: [{document: { type: Schema.Types.ObjectId, ref: 'Document' }, order: {type: Number}}], // Referencing
     documents: [{ type: Schema.Types.ObjectId, ref: 'Document' }], // Referencing
     folders: [FolderSchema], // Embedding, since amount of folder meta data is expected to be small.
     members: [ProjectMemberSchema],

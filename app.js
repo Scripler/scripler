@@ -74,7 +74,7 @@ app.post('/project/:id/copy', auth.isLoggedIn(), project.copy);
 
 /* API Projectmanager (documents and folders) */
 app.post('/document', auth.isLoggedIn(), document.create);
-app.get('/document/:documentId', auth.isLoggedIn(), document.open);
+app.get('/document/:id', auth.isLoggedIn(), document.open);
 app.put('/document/:id/rename', auth.isLoggedIn(), document.rename);
 app.put('/document/:id/archive', auth.isLoggedIn(), document.archive);
 app.delete('/document/:id', auth.isLoggedIn(), document.delete);

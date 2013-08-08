@@ -264,6 +264,17 @@ describe('Scripler RESTful API', function () {
                     documentId && done();
                 });
         }),
+        it('opening a document should return the document', function (done) {
+            request(host)
+                .get('/document/'+documentId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.document.name, 'MyFirstDocument');
+                    done();
+                });
+        }),
         it('renaming a document should return the document', function (done) {
             request(host)
                 .put('/document/'+documentId+'/rename')
@@ -287,6 +298,7 @@ describe('Scripler RESTful API', function () {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
                     assert.equal(res.body.result.folders.length, 1);
                     assert.equal(res.body.result.docs.length, 1);
+                    assert.equal(res.body.result.docs[0].folderId, folderId);
                     done();
                 });
         })
