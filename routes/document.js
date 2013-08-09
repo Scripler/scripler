@@ -109,7 +109,25 @@ exports.archive = function (req, res) {
 }
 
 exports.unarchive = function (req, res) {
-    // TODO: implement
+    Document.findOne({"_id": req.params.id}, function (err, document) {
+        if (err) {
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        } else if (!document) {
+            res.send({"errorMessage": "Project not found"}, 404);
+        } else if (!utils.hasAccessToEntity(req.user, document)) {
+            res.send({"errorMessage": "Access denied"}, 403);
+        } else {
+        	document.archived = false;
+        	document.save(function (err) {
+                if (err) {
+                    // return error
+                    res.send({"errorMessage": "Database problem"}, 503);
+                } else {
+                    res.send({document: document});
+                }
+            });
+        }
+    });
 }
 
 exports.delete = function (req, res) {
