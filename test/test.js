@@ -10,7 +10,8 @@ var host = 'localhost:'+conf.app.port;
 var cookie;
 var projectId;
 var userId;
-var folderId;
+var rootFolderId;
+var childFolderId;
 var documentId;
 
 if (conf.db.uri.match('_test$') === null) {
@@ -213,26 +214,27 @@ describe('Scripler RESTful API', function () {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
                     assert.equal(res.body.folder.name, 'Chapter 1');
                     assert.equal(res.body.folder.folders.length, 0);
-                    folderId = res.body.folder._id; 
-                    folderId && done();
+                    rootFolderId = res.body.folder._id; 
+                    rootFolderId && done();
                 });
         }),
         it('creating a folder with a parent folder should return the new folder as an empty child folder of the parent', function (done) {
             request(host)
                 .post('/folder')
                 .set('cookie', cookie)
-                .send({projectId: projectId, name: 'Chapter 1 - images', parentFolderId: folderId})
+                .send({projectId: projectId, name: 'Chapter 1 - images', parentFolderId: rootFolderId})
                 .expect(200)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
                     assert.equal(res.body.folder.name, 'Chapter 1 - images');
                     assert.equal(res.body.folder.folders.length, 0);
-                    res.body.folder._id && done();
+                    childFolderId = res.body.folder._id;
+                    childFolderId && done();
                 });
         }),
         it('renaming a folder should return the folder', function (done) {
             request(host)
-                .put('/folder/'+folderId+'/rename')
+                .put('/folder/'+rootFolderId+'/rename')
                 .set('cookie', cookie)
                 .send({projectId: projectId, name: "A New Fine Name"})
                 .expect(200)
@@ -244,18 +246,18 @@ describe('Scripler RESTful API', function () {
         })
     }),
     describe('/document', function () {
-    	it('creating a document (in the root folder) should return the new document', function (done) {
+    	it('creating a document in a folder should return the document with that folder id', function (done) {
             request(host)
                 .post('/document')
                 .set('cookie', cookie)
-                .send({projectId: projectId, folderId: folderId, name: 'MyFirstDocument', text: 'It is my best document ever!'})
+                .send({projectId: projectId, folderId: rootFolderId, name: 'MyFirstDocument', text: 'It is my best document ever!'})
                 .expect(200)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
                     document = res.body.document;
                     assert.equal(res.body.document.name, 'MyFirstDocument');
                     assert.equal(res.body.document.projectId, projectId);
-                    assert.equal(res.body.document.folderId, folderId);
+                    assert.equal(res.body.document.folderId, rootFolderId);
                     assert.equal(res.body.document.text, 'It is my best document ever!');
                     assert.equal(res.body.document.archived, false);
                     assert.equal(res.body.document.members[0].userId, userId);
@@ -289,16 +291,19 @@ describe('Scripler RESTful API', function () {
         })
     }),
     describe('/folder', function () {
-        it('opening the root folder should return the folder contents: one child folder and one document', function (done) {
+        it('opening the previously created root folder should return the folder contents: the previously created child folder and document', function (done) {
             request(host)
-                .get('/folder/'+projectId+'/'+folderId)
+                .get('/folder/'+projectId+'/'+rootFolderId)
                 .set('cookie', cookie)
                 .expect(200)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
                     assert.equal(res.body.result.folders.length, 1);
+                    assert.equal(res.body.result.folders[0]._id, childFolderId);
+
                     assert.equal(res.body.result.docs.length, 1);
-                    assert.equal(res.body.result.docs[0].folderId, folderId);
+                    assert.equal(res.body.result.docs[0].folderId, rootFolderId);
+                    assert.equal(res.body.result.docs[0]._id, documentId);
                     done();
                 });
         })
@@ -320,6 +325,19 @@ describe('Scripler RESTful API', function () {
             request(host)
                 .del('/document/'+documentId)
                 .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    done();
+                });
+        })
+    }),
+    describe('/folder', function () {
+        it('archiving a folder should return success', function (done) {
+            request(host)
+                .put('/folder/'+projectId+'/'+rootFolderId+'/archive')
+                .set('cookie', cookie)
+                .send({})
                 .expect(200)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");

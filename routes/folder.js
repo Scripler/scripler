@@ -3,6 +3,14 @@ var Folder = require('../models/project.js').Folder;
 var Document = require('../models/document.js').Document;
 var utils = require('../lib/utils');
 
+/**
+ * 
+ * Find a folder recursively.
+ * 
+ * @param folders
+ * @param folderId
+ * @returns
+ */
 function findFolder(folders, folderId) {
 	if (!folders) return;
 	
@@ -19,6 +27,40 @@ function findFolder(folders, folderId) {
 		}			
 	}
 	return folder;
+}
+
+/**
+ * 
+ * Archive a folder, i.e. its child folders and documents, recursively.
+ * 
+ * @param folders
+ * @param folderId
+ * @returns
+ */
+function archiveFolder(folder) {
+	if (!folder) return;
+	
+	// Archive folder
+	folder.archived = true;
+	
+	// Archive documents (see http://mongoosejs.com/docs/2.7.x/docs/updating-documents.html)
+	var conditions = { folderId: folder.id }
+	  , update = { }
+	  , options = { multi: true };
+	  
+	var cb = function callback (err, numAffected) {
+		if (err) {
+			throw new Error(err);
+		}
+	};
+	Document.update(conditions, update, options, cb);	
+
+	// Process child folders
+	if (folder.folders) {
+		for (var i=0; i<folder.folders.length; i++) {
+			archiveFolder(folder[i]);
+		}		
+	}
 }
 
 exports.create = function (req, res) {
@@ -144,7 +186,24 @@ exports.rename = function (req, res) {
 }
 
 exports.archive = function (req, res) {
-    // TODO: implement
+	// Does a project exist for the folder?
+	Project.findOne({"_id": req.params.projectId}, function (err, project) {
+        if (err) {
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        } else if (!project) {
+            res.send({"errorMessage": "Project not found"}, 404);
+        } else if (!utils.hasAccessToEntity(req.user, project)) {
+            res.send({"errorMessage": "Access denied"}, 403);
+        } else { // Yes, archive all folders and documents in the folder
+        	if (req.params.folderId) {
+        		var folder = findFolder(project.folders, req.params.folderId)
+        		archiveFolder(folder);
+        		res.send({});
+        	} else {
+        		res.send({"errorMessage": "No folder specified"}, 400);
+        	}
+        }
+	});
 }
 
 exports.unarchive = function (req, res) {
