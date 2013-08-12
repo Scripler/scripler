@@ -333,10 +333,38 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.result.docs[0]._id, documentId);
                     done();
                 });
+        }),
+        it('unarchiving a folder should return the unarchived folder', function (done) {
+            request(host)
+                .put('/folder/'+projectId+'/'+childFolderId+'/unarchive')
+                .set('cookie', cookie)
+                .send({})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.folder.archived, false);
+                    done();
+                });
+        }),
+        it('opening the root folder should now again return the child folder and document, since we just unarchived the child folder', function (done) {
+            request(host)
+                .get('/folder/'+projectId+'/'+rootFolderId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.result.folders.length, 1);
+                    assert.equal(res.body.result.folders[0]._id, childFolderId);
+
+                    assert.equal(res.body.result.docs.length, 1);
+                    assert.equal(res.body.result.docs[0].folderId, rootFolderId);
+                    assert.equal(res.body.result.docs[0]._id, documentId);
+                    done();
+                });
         })
     }),
     describe('/document', function () {
-        it('archiving a document should return the archived document', function (done) {
+        it('archiving a document should return success', function (done) {
             request(host)
                 .put('/document/'+documentId+'/archive')
                 .set('cookie', cookie)
@@ -344,7 +372,18 @@ describe('Scripler RESTful API', function () {
                 .expect(200)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    assert.equal(res.body.document.archived, true);
+                    done();
+                });
+        }),
+        it('unarchiving a document should return the archived document', function (done) {
+            request(host)
+                .put('/document/'+documentId+'/unarchive')
+                .set('cookie', cookie)
+                .send({})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.document.archived, false);
                     done();
                 });
         }),

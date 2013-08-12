@@ -101,7 +101,7 @@ exports.archive = function (req, res) {
                     // return error
                     res.send({"errorMessage": "Database problem"}, 503);
                 } else {
-                    res.send({document: document});
+                    res.send({});
                 }
             });
         }

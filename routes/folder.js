@@ -55,11 +55,11 @@ function findFolder(folders, folderId) {
  * @param folderId
  * @returns
  */
-function archiveFolder(folder) {
+function archiveFolder(folder, archived) {
 	if (!folder) return;
 	
 	// Archive folder
-	folder.archived = true;
+	folder.archived = archived;
 		
 	// Archive documents (see http://mongoosejs.com/docs/2.7.x/docs/updating-documents.html)
 	var conditions = { folderId: folder.id }
@@ -214,7 +214,7 @@ exports.archive = function (req, res) {
         } else { // Yes, archive all folders and documents in the folder
         	if (req.params.folderId) {
         		var folder = findFolder(project.folders, req.params.folderId)
-        		archiveFolder(folder); // Change that value! (urgh, see e.g.: http://stackoverflow.com/questions/518000/is-javascript-a-pass-by-reference-or-pass-by-value-language)
+        		archiveFolder(folder, true); // Change that value! (urgh, see e.g.: http://stackoverflow.com/questions/518000/is-javascript-a-pass-by-reference-or-pass-by-value-language)
         		project.save(function (err, project) {
         			if (err) {
         	            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
@@ -229,8 +229,36 @@ exports.archive = function (req, res) {
 	});
 }
 
+/**
+ * Copy-paste of archive(), except for argument in call to archiveFolder().
+ * 
+ * TODO: implement generic function that takes archive/unarchive function as parameter.
+ */
 exports.unarchive = function (req, res) {
-    // TODO: implement
+	// Does a project exist for the folder?
+	Project.findOne({"_id": req.params.projectId}, function (err, project) {
+        if (err) {
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        } else if (!project) {
+            res.send({"errorMessage": "Project not found"}, 404);
+        } else if (!utils.hasAccessToEntity(req.user, project)) {
+            res.send({"errorMessage": "Access denied"}, 403);
+        } else { // Yes, unarchive all folders and documents in the folder
+        	if (req.params.folderId) {
+        		var folder = findFolder(project.folders, req.params.folderId)
+        		archiveFolder(folder, false); // Change that value! (urgh, see e.g.: http://stackoverflow.com/questions/518000/is-javascript-a-pass-by-reference-or-pass-by-value-language)
+        		project.save(function (err, project) {
+        			if (err) {
+        	            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        			} else {
+                		res.send({ folder: folder });
+        			}
+        		});
+        	} else {
+        		res.send({"errorMessage": "No folder specified"}, 400);
+        	}
+        }
+	});
 }
 
 exports.delete = function (req, res) {
