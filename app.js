@@ -78,7 +78,7 @@ app.get('/document/:id', auth.isLoggedIn(), document.open);
 app.put('/document/:id/rename', auth.isLoggedIn(), document.rename);
 app.put('/document/:id/archive', auth.isLoggedIn(), document.archive);
 app.put('/document/:id/unarchive', auth.isLoggedIn(), document.unarchive);
-app.delete('/document/:id', auth.isLoggedIn(), document.delete);
+app.delete('/document/:projectId/:documentId', auth.isLoggedIn(), document.delete);
 
 app.post('/folder', auth.isLoggedIn(), folder.create);
 app.get('/folder/:projectId/:folderId', auth.isLoggedIn(), folder.open);

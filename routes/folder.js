@@ -5,6 +5,8 @@ var utils = require('../lib/utils');
 
 /**
  * 
+ * Filter out archived folders.
+ * 
  * TODO: Move to generic (array) utility library + make generic, i.e. accept filter condition as parameter.
  * 
  * @param folders
@@ -63,7 +65,7 @@ function archiveFolder(folder, archived) {
 		
 	// Archive documents (see http://mongoosejs.com/docs/2.7.x/docs/updating-documents.html)
 	var conditions = { folderId: folder.id }
-	  , update = { }
+	  , update = { archived: archived }
 	  , options = { multi: true };
 	  
 	var cb = function callback (err, numAffected) {

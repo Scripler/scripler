@@ -131,17 +131,31 @@ exports.unarchive = function (req, res) {
 }
 
 exports.delete = function (req, res) {
-    Document.findOne({"_id": req.params.id}, function (err, document) {
+	// Does a project exist for the document?
+	Project.findOne({"_id": req.params.projectId}, function (err, project) {
         if (err) {
             res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
-        } else if (!document) {
+        } else if (!project) {
             res.send({"errorMessage": "Project not found"}, 404);
-        } else if (!utils.hasAccessToEntity(req.user, document)) {
+        } else if (!utils.hasAccessToEntity(req.user, project)) {
             res.send({"errorMessage": "Access denied"}, 403);
-        } else {
-        	document.remove(function (err, result) {
-                res.send({});
-            });
+        } else { // Yes, remove the document
+            Document.findOne({"_id": req.params.documentId}, function (err, document) {
+                if (err) {
+                    res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+                } else if (!document) {
+                    res.send({"errorMessage": "Document not found"}, 404);
+                } else if (!utils.hasAccessToEntity(req.user, document)) {
+                    res.send({"errorMessage": "Access denied"}, 403);
+                } else {
+                	project.documents.remove(req.params.documentId);
+                	project.save(function (err, project) {
+                    	document.remove(function (err, result) {
+                            res.send({});
+                        });                		
+                	});
+                }
+            });        	
         }
-    });
+    });	
 }
