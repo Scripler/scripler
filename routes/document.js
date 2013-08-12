@@ -51,7 +51,7 @@ exports.create = function (req, res) {
 }
 
 exports.open = function (req, res) {
-    Document.findOne({"_id": req.params.id}, function (err, document) {
+    Document.findOne({"_id": req.params.id, "archived": false}, function (err, document) {
         if (err) {
             res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else if (!document) {

@@ -17,7 +17,8 @@ var ProjectMemberSchema = new Schema({
  */
 var FolderSchema = new Schema();
 FolderSchema.add({
-	name: { type: String },	
+	name: { type: String },
+	archived: { type: Boolean, default: false },
 	folders: [FolderSchema], 
 });
 

@@ -5,6 +5,24 @@ var utils = require('../lib/utils');
 
 /**
  * 
+ * TODO: Move to generic (array) utility library and accept filter condition as parameter.
+ * 
+ * @param folders
+ * @returns
+ */
+function filter(folders) {
+	if (folders) {
+		for (var i=0; i<folders.length; i++) {
+			if (folders[i].archived) {
+				folders.splice(i, 1);
+			}
+		}
+	}
+	return folders;
+}
+
+/**
+ * 
  * Find a folder recursively.
  * 
  * @param folders
@@ -37,11 +55,18 @@ function findFolder(folders, folderId) {
  * @param folderId
  * @returns
  */
-function archiveFolder(folder) {
+function archiveFolder(project, folder) {
 	if (!folder) return;
 	
 	// Archive folder
 	folder.archived = true;
+	
+	// FIXME: folder is not saved on the project
+	project.save(function (err, project) {
+		if (err) {
+			throw new Error(err);
+		}
+	});
 	
 	// Archive documents (see http://mongoosejs.com/docs/2.7.x/docs/updating-documents.html)
 	var conditions = { folderId: folder.id }
@@ -131,11 +156,11 @@ exports.open = function (req, res) {
         		var result = {};
         		// Does the folder exist?
         		if (folder) {  // Yes, return its contents 
-        			// Add sub folders to the result
-        			result.folders = folder.folders;
+        			// Add child folders to the result
+        			result.folders = filter(folder.folders);
         			
         			// Add documents to the result
-        			var docs = Document.find({"folderId": req.params.folderId}, function (err, docs) {
+        			var docs = Document.find({"folderId": req.params.folderId, "archived": false}, function (err, docs) {
         				if (err) {
         					res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         				} else if (docs) {
@@ -144,12 +169,11 @@ exports.open = function (req, res) {
         				
         				res.send({result: result});
         			});
-        		} else {
-        			// No, inform the caller
+        		} else { // No, inform the caller        			
         			res.send({"errorMessage": "Folder not found"}, 404);
         			return;
         		}
-        	} else {
+        	} else { // No, inform the caller
         		res.send({"errorMessage": "No folder specified"}, 400);
         	}
         }
@@ -197,7 +221,7 @@ exports.archive = function (req, res) {
         } else { // Yes, archive all folders and documents in the folder
         	if (req.params.folderId) {
         		var folder = findFolder(project.folders, req.params.folderId)
-        		archiveFolder(folder);
+        		archiveFolder(project, folder);
         		res.send({});
         	} else {
         		res.send({"errorMessage": "No folder specified"}, 400);
