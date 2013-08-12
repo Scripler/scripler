@@ -5,7 +5,7 @@ var utils = require('../lib/utils');
 
 /**
  * 
- * TODO: Move to generic (array) utility library and accept filter condition as parameter.
+ * TODO: Move to generic (array) utility library + make generic, i.e. accept filter condition as parameter.
  * 
  * @param folders
  * @returns
@@ -55,19 +55,12 @@ function findFolder(folders, folderId) {
  * @param folderId
  * @returns
  */
-function archiveFolder(project, folder) {
+function archiveFolder(folder) {
 	if (!folder) return;
 	
 	// Archive folder
 	folder.archived = true;
-	
-	// FIXME: folder is not saved on the project
-	project.save(function (err, project) {
-		if (err) {
-			throw new Error(err);
-		}
-	});
-	
+		
 	// Archive documents (see http://mongoosejs.com/docs/2.7.x/docs/updating-documents.html)
 	var conditions = { folderId: folder.id }
 	  , update = { }
@@ -221,8 +214,14 @@ exports.archive = function (req, res) {
         } else { // Yes, archive all folders and documents in the folder
         	if (req.params.folderId) {
         		var folder = findFolder(project.folders, req.params.folderId)
-        		archiveFolder(project, folder);
-        		res.send({});
+        		archiveFolder(folder); // Change that value! (urgh, see e.g.: http://stackoverflow.com/questions/518000/is-javascript-a-pass-by-reference-or-pass-by-value-language)
+        		project.save(function (err, project) {
+        			if (err) {
+        	            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        			} else {
+                		res.send({});
+        			}
+        		});
         	} else {
         		res.send({"errorMessage": "No folder specified"}, 400);
         	}
