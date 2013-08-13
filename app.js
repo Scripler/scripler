@@ -43,7 +43,9 @@ if ('development' == env) {
     app.use(express.errorHandler());
 }
 
-// NB! The routes below are the URLs used by the API and thus most likely not the URLs seen by the user.
+// -------------------------- API --------------------------
+
+// The routes below are the URLs used by the API (not the URLs seen by the user).
 
 /*Dummy GUI*/
 app.get('/', index.index);
@@ -69,16 +71,29 @@ app.get('/project/archived', auth.isLoggedIn(), project.archived);
 app.put('/project/rearrange', auth.isLoggedIn(), project.rearrange);
 app.post('/project', auth.isLoggedIn(), project.create);
 app.get('/project/:id', auth.isLoggedIn(), project.open);
-app.post('/project/:id/copy', auth.isLoggedIn(), project.copy);
 app.put('/project/:id/rename', auth.isLoggedIn(), project.rename);
 app.put('/project/:id/archive', auth.isLoggedIn(), project.archive);
 app.put('/project/:id/unarchive', auth.isLoggedIn(), project.unarchive);
 app.delete('/project/:id', auth.isLoggedIn(), project.delete);
+app.post('/project/:id/copy', auth.isLoggedIn(), project.copy);
 
 /* API Projectmanager (documents and folders) */
 app.post('/document', auth.isLoggedIn(), document.create);
+app.get('/document/:id', auth.isLoggedIn(), document.open);
+app.put('/document/:id/rename', auth.isLoggedIn(), document.rename);
+app.put('/document/:id/archive', auth.isLoggedIn(), document.archive);
+app.put('/document/:id/unarchive', auth.isLoggedIn(), document.unarchive);
+app.delete('/document/:projectId/:documentId', auth.isLoggedIn(), document.delete);
+
 app.post('/folder', auth.isLoggedIn(), folder.create);
-app.get('/document/:documentId', auth.isLoggedIn(), document.open);
+app.get('/folder/:projectId/:folderId', auth.isLoggedIn(), folder.open);
+app.put('/folder/:id/rename', auth.isLoggedIn(), folder.rename);
+app.put('/folder/:projectId/:folderId/archive', auth.isLoggedIn(), folder.archive);
+app.put('/folder/:projectId/:folderId/unarchive', auth.isLoggedIn(), folder.unarchive);
+
+
+//-------------------------- API END --------------------------
+
 
 auth.initPaths(app);
 

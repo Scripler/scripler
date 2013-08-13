@@ -17,13 +17,15 @@ var ProjectMemberSchema = new Schema({
  */
 var FolderSchema = new Schema();
 FolderSchema.add({
-	name: { type: String },	
+	name: { type: String },
+	archived: { type: Boolean, default: false },
 	folders: [FolderSchema], 
 });
 
 var ProjectSchema = new Schema({
     name: { type: String, required: true },
     order: { type: Number, default: 0},
+    //documents: [{document: { type: Schema.Types.ObjectId, ref: 'Document' }, order: {type: Number}}], // Referencing
     documents: [{ type: Schema.Types.ObjectId, ref: 'Document' }], // Referencing
     folders: [FolderSchema], // Embedding, since amount of folder meta data is expected to be small.
     members: [ProjectMemberSchema],

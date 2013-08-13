@@ -51,7 +51,7 @@ exports.create = function (req, res) {
 }
 
 exports.open = function (req, res) {
-    Document.findOne({"_id": req.params.documentId}, function (err, document) {
+    Document.findOne({"_id": req.params.id, "archived": false}, function (err, document) {
         if (err) {
             res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else if (!document) {
@@ -59,22 +59,103 @@ exports.open = function (req, res) {
         } else if (!utils.hasAccessToEntity(req.user, document)) {
             res.send({"errorMessage": "Access denied"}, 403);
         } else {
+        	res.send({ document: document});
         }
     });
 }
 
 exports.rename = function (req, res) {
-	// TODO: implement
+    Document.findOne({"_id": req.params.id}, function (err, document) {
+        if (err) {
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        } else if (!document) {
+            res.send({"errorMessage": "Project not found"}, 404);
+        } else if (!utils.hasAccessToEntity(req.user, document)) {
+            res.send({"errorMessage": "Access denied"}, 403);
+        } else {
+        	document.name = req.body.name;
+        	document.save(function (err) {
+                if (err) {
+                    // return error
+                    res.send({"errorMessage": "Database problem"}, 503);
+                } else {
+                    res.send({document: document});
+                }
+            });
+        }
+    });
 }
 
 exports.archive = function (req, res) {
-    // TODO: implement
+    Document.findOne({"_id": req.params.id}, function (err, document) {
+        if (err) {
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        } else if (!document) {
+            res.send({"errorMessage": "Project not found"}, 404);
+        } else if (!utils.hasAccessToEntity(req.user, document)) {
+            res.send({"errorMessage": "Access denied"}, 403);
+        } else {
+        	document.archived = true;
+        	document.save(function (err) {
+                if (err) {
+                    // return error
+                    res.send({"errorMessage": "Database problem"}, 503);
+                } else {
+                    res.send({});
+                }
+            });
+        }
+    });
 }
 
 exports.unarchive = function (req, res) {
-    // TODO: implement
+    Document.findOne({"_id": req.params.id}, function (err, document) {
+        if (err) {
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        } else if (!document) {
+            res.send({"errorMessage": "Project not found"}, 404);
+        } else if (!utils.hasAccessToEntity(req.user, document)) {
+            res.send({"errorMessage": "Access denied"}, 403);
+        } else {
+        	document.archived = false;
+        	document.save(function (err) {
+                if (err) {
+                    // return error
+                    res.send({"errorMessage": "Database problem"}, 503);
+                } else {
+                    res.send({document: document});
+                }
+            });
+        }
+    });
 }
 
 exports.delete = function (req, res) {
-    // TODO: implement
+	// Does a project exist for the document?
+	Project.findOne({"_id": req.params.projectId}, function (err, project) {
+        if (err) {
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        } else if (!project) {
+            res.send({"errorMessage": "Project not found"}, 404);
+        } else if (!utils.hasAccessToEntity(req.user, project)) {
+            res.send({"errorMessage": "Access denied"}, 403);
+        } else { // Yes, remove the document
+            Document.findOne({"_id": req.params.documentId}, function (err, document) {
+                if (err) {
+                    res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+                } else if (!document) {
+                    res.send({"errorMessage": "Document not found"}, 404);
+                } else if (!utils.hasAccessToEntity(req.user, document)) {
+                    res.send({"errorMessage": "Access denied"}, 403);
+                } else {
+                	project.documents.remove(req.params.documentId);
+                	project.save(function (err, project) {
+                    	document.remove(function (err, result) {
+                            res.send({});
+                        });                		
+                	});
+                }
+            });        	
+        }
+    });	
 }

@@ -12,7 +12,10 @@ var projectId;
 var projectId2;
 var projectId3;
 var userId;
-var folderId;
+var rootFolderId;
+var childFolderId;
+var rootDocumentId;
+var childDocumentId;
 
 if (conf.db.uri.match('_test$') === null) {
     console.log("You shouldn't be running this test on any database not being specifically meant for 'test'!");
@@ -29,10 +32,11 @@ describe('Scripler RESTful API', function () {
     }),
     after(function (done) {
         //Clean database
-        mongoose.connection.db.dropDatabase();
-        done();
+        mongoose.connection.db.dropDatabase(function() {
+            done();
+        });
     }),
-    describe('/user', function () {
+    describe('Frontpage (/user)', function () {
         it('Register a new user should return the user (dummy initialization)', function (done) {
             request(host)
                 .post('/user/register')
@@ -102,7 +106,7 @@ describe('Scripler RESTful API', function () {
                 });
         })
     }),
-    describe('/project', function () {
+    describe('Projectspace (/project)', function () {
         it('Creating a project should return the new project - 1', function (done) {
             request(host)
                 .post('/project')
@@ -281,27 +285,8 @@ describe('Scripler RESTful API', function () {
                 });
         })
     }),
-    describe('/document', function () {
-        it('creating a document should return the new document', function (done) {
-            request(host)
-                .post('/document')
-                .set('cookie', cookie)
-                .send({projectId: projectId, name: 'MyFirstDocument', text: 'It is my best document ever!'})
-                .expect(200)
-                .end(function (err, res) {
-                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    assert.equal(res.body.document.name, 'MyFirstDocument');
-                    assert.equal(res.body.document.projectId, projectId);
-                    assert.equal(res.body.document.text, 'It is my best document ever!');
-                    assert.equal(res.body.document.archived, false);
-                    assert.equal(res.body.document.members[0].userId, userId);
-                    assert.equal(res.body.document.members[0].access[0], "admin");
-                    res.body.document._id && done();
-                });
-        })
-    }),
-    describe('/folder', function () {
-        it('Creating a folder without a parent should return the new folder as an empty root folder', function (done) {
+    describe('Projectmanager (/folder and /document)', function () {
+        it('creating a folder without a parent should return the new folder as an empty root folder', function (done) {
             request(host)
                 .post('/folder')
                 .set('cookie', cookie)
@@ -311,26 +296,215 @@ describe('Scripler RESTful API', function () {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
                     assert.equal(res.body.folder.name, 'Chapter 1');
                     assert.equal(res.body.folder.folders.length, 0);
-                    folderId = res.body.folder._id; 
-                    folderId && done();
+                    rootFolderId = res.body.folder._id; 
+                    rootFolderId && done();
                 });
         }),
-        it('Creating a folder with a parent folder should return the new folder as an empty child folder of the parent', function (done) {
+        it('creating a folder with a parent folder should return the new folder as an empty child folder of the parent', function (done) {
             request(host)
                 .post('/folder')
                 .set('cookie', cookie)
-                .send({projectId: projectId, name: 'Chapter 1 - images', parentFolderId: folderId})
+                .send({projectId: projectId, name: 'Chapter 1 - images', parentFolderId: rootFolderId})
                 .expect(200)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
                     assert.equal(res.body.folder.name, 'Chapter 1 - images');
                     assert.equal(res.body.folder.folders.length, 0);
-                    res.body.folder._id && done();
+                    childFolderId = res.body.folder._id;
+                    childFolderId && done();
                 });
-        })
-    }),
-    describe('/project', function () {
-        it('opening the project should now return one root folder (but not the child folder)', function (done) {
+        }),
+        it('renaming a folder should return the folder', function (done) {
+            request(host)
+                .put('/folder/'+rootFolderId+'/rename')
+                .set('cookie', cookie)
+                .send({projectId: projectId, name: "A New Fine Name"})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.folder.name, "A New Fine Name");
+                    done();
+                });
+        }),
+    	it('creating a document in a folder (the root folder) should return the document with that folder id - 1', function (done) {
+            request(host)
+                .post('/document')
+                .set('cookie', cookie)
+                .send({projectId: projectId, folderId: rootFolderId, name: 'MyFirstDocument', text: 'It is my best document ever!'})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    document = res.body.document;
+                    assert.equal(res.body.document.name, 'MyFirstDocument');
+                    assert.equal(res.body.document.projectId, projectId);
+                    assert.equal(res.body.document.folderId, rootFolderId);
+                    assert.equal(res.body.document.text, 'It is my best document ever!');
+                    assert.equal(res.body.document.archived, false);
+                    assert.equal(res.body.document.members[0].userId, userId);
+                    assert.equal(res.body.document.members[0].access[0], "admin");
+                    rootDocumentId = res.body.document._id;
+                    rootDocumentId && done();
+                });
+        }),
+    	it('creating a document in a folder (the child folder) should return the document with that folder id - 2', function (done) {
+            request(host)
+                .post('/document')
+                .set('cookie', cookie)
+                .send({projectId: projectId, folderId: childFolderId, name: 'MySecondDocument', text: 'It is almost my best document!'})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    document = res.body.document;
+                    assert.equal(res.body.document.name, 'MySecondDocument');
+                    assert.equal(res.body.document.projectId, projectId);
+                    assert.equal(res.body.document.folderId, childFolderId);
+                    assert.equal(res.body.document.text, 'It is almost my best document!');
+                    assert.equal(res.body.document.archived, false);
+                    assert.equal(res.body.document.members[0].userId, userId);
+                    assert.equal(res.body.document.members[0].access[0], "admin");
+                    childDocumentId = res.body.document._id;
+                    childDocumentId && done();
+                });
+        }),
+        it('opening a document (the root document) should return the document', function (done) {
+            request(host)
+                .get('/document/'+rootDocumentId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.document.name, 'MyFirstDocument');
+                    done();
+                });
+        }),
+        it('renaming a document (the root document) should return the document', function (done) {
+            request(host)
+                .put('/document/'+rootDocumentId+'/rename')
+                .set('cookie', cookie)
+                .send({name: "A New Cool Name"})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.document.name, "A New Cool Name");
+                    done();
+                });
+        }),
+        it('opening the previously created root folder should return the folder contents: the previously created child folder and document', function (done) {
+            request(host)
+                .get('/folder/'+projectId+'/'+rootFolderId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.result.folders.length, 1);
+                    assert.equal(res.body.result.folders[0]._id, childFolderId);
+
+                    assert.equal(res.body.result.docs.length, 1);
+                    assert.equal(res.body.result.docs[0].folderId, rootFolderId);
+                    assert.equal(res.body.result.docs[0]._id, rootDocumentId);
+                    done();
+                });
+        }),
+        it('archiving a folder (the child folder) should return success', function (done) {
+            request(host)
+                .put('/folder/'+projectId+'/'+childFolderId+'/archive')
+                .set('cookie', cookie)
+                .send({})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    done();
+                });
+        }),
+        it('opening the root folder should now only return the document, since we just archived the child folder', function (done) {
+            request(host)
+                .get('/folder/'+projectId+'/'+rootFolderId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.result.folders.length, 0);
+                    assert.equal(res.body.result.docs.length, 1);
+                    assert.equal(res.body.result.docs[0].folderId, rootFolderId);
+                    assert.equal(res.body.result.docs[0]._id, rootDocumentId);
+                    done();
+                });
+        }),
+        it('unarchiving a folder (the child folder) should return the unarchived folder', function (done) {
+            request(host)
+                .put('/folder/'+projectId+'/'+childFolderId+'/unarchive')
+                .set('cookie', cookie)
+                .send({})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.folder.archived, false);
+                    done();
+                });
+        }),
+        it('opening the root folder should now again return the child folder and document, since we just unarchived the child folder', function (done) {
+            request(host)
+                .get('/folder/'+projectId+'/'+rootFolderId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.result.folders.length, 1);
+                    assert.equal(res.body.result.folders[0]._id, childFolderId);
+
+                    assert.equal(res.body.result.docs.length, 1);
+                    assert.equal(res.body.result.docs[0].folderId, rootFolderId);
+                    assert.equal(res.body.result.docs[0]._id, rootDocumentId);
+                    done();
+                });
+        }),
+        it('archiving a document (the root document) should return success', function (done) {
+            request(host)
+                .put('/document/'+rootDocumentId+'/archive')
+                .set('cookie', cookie)
+                .send({})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    done();
+                });
+        }),
+        it('opening the root folder should now only return the child folder, since we just archived the document', function (done) {
+            request(host)
+                .get('/folder/'+projectId+'/'+rootFolderId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.result.folders.length, 1);
+                    assert.equal(res.body.result.folders[0]._id, childFolderId);
+                    assert.equal(res.body.result.docs.length, 0);
+                    done();
+                });
+        }),
+        it('unarchiving a document (the root document) should return the archived document', function (done) {
+            request(host)
+                .put('/document/'+rootDocumentId+'/unarchive')
+                .set('cookie', cookie)
+                .send({})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.document.archived, false);
+                    done();
+                });
+        }),
+    	it('deleting a document (the root document) should return success', function (done) {
+            request(host)
+                .del('/document/'+projectId+'/'+rootDocumentId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    done();
+                });
+        }),
+        it('opening the project should now return the root and child folders and one document (not the document we just deleted)', function (done) {
             request(host)
                 .get('/project/'+projectId)
                 .set('cookie', cookie)
@@ -338,16 +512,10 @@ describe('Scripler RESTful API', function () {
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
                     assert.equal(res.body.project.folders.length, 1);
-                    done();
-                });
-        }),
-    	it('deleting a project should return success', function (done) {
-            request(host)
-                .del('/project/'+projectId)
-                .set('cookie', cookie)
-                .expect(200)
-                .end(function (err, res) {
-                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.project.folders[0]._id, rootFolderId);
+                    assert.equal(res.body.project.folders[0].folders.length, 1);
+                    assert.equal(res.body.project.folders[0].folders[0]._id, childFolderId);
+                    assert.equal(res.body.project.documents.length, 1);
                     done();
                 });
         })
