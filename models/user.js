@@ -7,11 +7,13 @@ var mongoose = require('mongoose')
  * User DB
  */
 var UserSchema = new Schema({
-    name:      { type: String, required: true },
-    email:     { type: String, required: true, unique: true },
-    password:  { type: String },
-    providers: [ {} ],
-    modified:  { type: Date, default: Date.now }
+    name:             { type: String, required: true },
+    email:            { type: String, required: true, unique: true },
+    emailValidated:   { type: Boolean, default: false },
+    projects:         [ { type: Schema.Types.ObjectId, ref: 'Project' } ],
+    password:         { type: String },
+    providers:        [ {} ],
+    modified:         { type: Date, default: Date.now }
 });
 
 /** Handle bcrypt password-hashing.

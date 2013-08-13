@@ -14,6 +14,7 @@ var express = require('express')
     , logger = require('./lib/logger');
 
 var app = express();
+var env = app.get('env');
 
 // db connect
 mongoose.connect(conf.db.uri);
@@ -38,7 +39,7 @@ app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
-if ('development' == app.get('env')) {
+if ('development' == env) {
     app.use(express.errorHandler());
 }
 
@@ -55,19 +56,23 @@ app.post('/new-user', index.newUserPost);
 
 /* API Frontpage */
 app.get('/user', auth.isLoggedIn(), user.get);
+app.put('/user', auth.isLoggedIn(), user.edit);
 app.get('/user/list', auth.isLoggedIn(), user.list);
 app.post('/user/login', user.login);
 app.post('/user/logout', user.logout);
 app.post('/user/register', user.register);
+app.get('/user/:id/validate/:hash', user.validate);
 
 /* API Projectspace (projects) */
 app.get('/project/list', auth.isLoggedIn(), project.list);
+app.get('/project/archived', auth.isLoggedIn(), project.archived);
+app.put('/project/rearrange', auth.isLoggedIn(), project.rearrange);
 app.post('/project', auth.isLoggedIn(), project.create);
 app.get('/project/:id', auth.isLoggedIn(), project.open);
-app.get('/project/:id/options', auth.isLoggedIn(), project.options);
 app.post('/project/:id/copy', auth.isLoggedIn(), project.copy);
 app.put('/project/:id/rename', auth.isLoggedIn(), project.rename);
 app.put('/project/:id/archive', auth.isLoggedIn(), project.archive);
+app.put('/project/:id/unarchive', auth.isLoggedIn(), project.unarchive);
 app.delete('/project/:id', auth.isLoggedIn(), project.delete);
 
 /* API Projectmanager (documents and folders) */
@@ -78,6 +83,6 @@ app.get('/document/:documentId', auth.isLoggedIn(), document.open);
 auth.initPaths(app);
 
 http.createServer(app).listen(app.get('port'), function () {
-    logger.info('Express server listening on port ' + app.get('port') + ('development' == app.get('env') ? ' - in development mode!' : ''));
+    logger.info('Express server listening on port ' + app.get('port') + ('development' == env ? ' - in development mode!' : ''));
 });
 
