@@ -423,7 +423,7 @@ describe('Scripler RESTful API', function () {
                     done();
                 });
         }),
-        it('opening the project should now return the root and child folders and one document (not the document we just deleted)', function (done) {
+        it('opening the project should now only return the root and child folders and one document (not the document we just deleted)', function (done) {
             request(host)
                 .get('/project/'+projectId)
                 .set('cookie', cookie)
@@ -435,6 +435,44 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.project.folders[0].folders.length, 1);
                     assert.equal(res.body.project.folders[0].folders[0]._id, childFolderId);
                     assert.equal(res.body.project.documents.length, 1);
+                    assert.equal(res.body.project.documents[0], childDocumentId);
+                    done();
+                });
+        }),
+    	it('deleting a folder (the child folder) should return success', function (done) {
+            request(host)
+                .del('/folder/'+projectId+'/'+rootFolderId+'/'+childFolderId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    done();
+                });
+        }),
+        it('opening the root folder should now return no folders and no documents, since we just deleted the child folder', function (done) {
+            request(host)
+                .get('/folder/'+projectId+'/'+rootFolderId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.result.folders.length, 0);
+                    assert.equal(res.body.result.docs.length, 0);
+                    done();
+                });
+        }),
+        it('opening the project should now only return the root folder and one document', function (done) {
+            request(host)
+                .get('/project/'+projectId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.project.folders.length, 1);
+                    assert.equal(res.body.project.folders[0]._id, rootFolderId);
+                    assert.equal(res.body.project.folders[0].folders.length, 0);
+                    assert.equal(res.body.project.documents.length, 1);
+                    assert.equal(res.body.project.documents[0], childDocumentId);
                     done();
                 });
         }),

@@ -51,10 +51,10 @@ function findFolder(folders, folderId) {
 
 /**
  * 
- * Archive a folder, i.e. its child folders and documents, recursively.
+ * Archive/unarchive a folder, i.e. its child folders and documents, recursively.
  * 
- * @param folders
- * @param folderId
+ * @param folder
+ * @param archived
  * @returns
  */
 function archiveFolder(folder, archived) {
@@ -80,6 +80,34 @@ function archiveFolder(folder, archived) {
 		for (var i=0; i<folder.folders.length; i++) {
 			archiveFolder(folder[i]);
 		}		
+	}
+}
+
+/**
+ * 
+ * Delete a folder's contents, i.e. its child folders and documents, recursively (depth-first and bottom-up).
+ * 
+ * This function does NOT delete the folder itself from its parent (i.e. either the project or a parent folder).
+ * 
+ * @param folders
+ * @returns
+ */
+function deleteFolder(folder) {
+	// Process child folders depth-first
+	if (folder.folders) {
+		for (var i=0; i<folder.folders.length; i++) {
+			deleteFolder(folder.folders[i]);
+		}		
+	}
+	
+	// Delete documents
+	Document.find({ folderId: folder.id }).remove();
+	
+	// Delete folders (the parent folder deletes its child folders)
+	if (folder.folders) {
+		for (var i=0; i<folder.folders.length; i++) {
+			folder.folders.pop();
+		}	
 	}
 }
 
@@ -213,9 +241,9 @@ exports.archive = function (req, res) {
             res.send({"errorMessage": "Project not found"}, 404);
         } else if (!utils.hasAccessToEntity(req.user, project)) {
             res.send({"errorMessage": "Access denied"}, 403);
-        } else { // Yes, archive all folders and documents in the folder
+        } else { // Yes, archive all child folders and documents in the folder
         	if (req.params.folderId) {
-        		var folder = findFolder(project.folders, req.params.folderId)
+        		var folder = findFolder(project.folders, req.params.folderId);
         		archiveFolder(folder, true); // Change that value! (urgh, see e.g.: http://stackoverflow.com/questions/518000/is-javascript-a-pass-by-reference-or-pass-by-value-language)
         		project.save(function (err, project) {
         			if (err) {
@@ -245,9 +273,9 @@ exports.unarchive = function (req, res) {
             res.send({"errorMessage": "Project not found"}, 404);
         } else if (!utils.hasAccessToEntity(req.user, project)) {
             res.send({"errorMessage": "Access denied"}, 403);
-        } else { // Yes, unarchive all folders and documents in the folder
+        } else { // Yes, unarchive all child folders and documents in the folder
         	if (req.params.folderId) {
-        		var folder = findFolder(project.folders, req.params.folderId)
+        		var folder = findFolder(project.folders, req.params.folderId);
         		archiveFolder(folder, false); // Change that value! (urgh, see e.g.: http://stackoverflow.com/questions/518000/is-javascript-a-pass-by-reference-or-pass-by-value-language)
         		project.save(function (err, project) {
         			if (err) {
@@ -263,6 +291,51 @@ exports.unarchive = function (req, res) {
 	});
 }
 
+/**
+ * Copy-paste of archive(), except for call to deleteFolder().
+ * 
+ * TODO: implement generic function that takes a delete function as parameter.
+ */
 exports.delete = function (req, res) {
-    // TODO: implement
+	// Does a project exist for the folder?
+	Project.findOne({"_id": req.params.projectId}, function (err, project) {
+        if (err) {
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        } else if (!project) {
+            res.send({"errorMessage": "Project not found"}, 404);
+        } else if (!utils.hasAccessToEntity(req.user, project)) {
+            res.send({"errorMessage": "Access denied"}, 403);
+        } else { // Yes, delete all child folders and documents in the folder
+        	if (req.params.folderId) {
+
+        		// Remove folder contents, i.e. child folders and documents
+        		var folder = findFolder(project.folders, req.params.folderId);
+        		deleteFolder(folder);
+
+        		// Remove folder from parent, i.e. either the project or a parent folder...
+       		
+        		// Did the caller indicate that the folder has a parent folder?
+        		if (req.params.parentFolderId) { // Yes, remove the folder on the parent folder
+            		var parentFolder = findFolder(project.folders, req.params.parentFolderId);
+            		if (parentFolder) {
+            			parentFolder.folders.id(req.params.folderId).remove();
+            		} else {
+            			res.send({"errorMessage": "Parent folder specified but not found"}, 400);           			
+            		}            		
+        		} else { // No, remove the folder directly from the project
+        			project.folders.id(req.params.folderId).remove();
+        		}
+
+        		project.save(function (err, project) {
+        			if (err) {
+        	            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        			} else {
+                		res.send({});
+        			}
+        		});        			
+        	} else {
+        		res.send({"errorMessage": "No folder specified"}, 400);
+        	}
+        }
+	});
 }
