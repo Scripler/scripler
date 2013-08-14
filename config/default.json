@@ -2,16 +2,17 @@
     "app":      {
         "port":           3000,
         "cookie_secret":  "xxx",
-        "session_secret": "xxx"
+        "session_secret": "xxx",
+        "salt":           "xxx"
     },
-    "db": {
+    "db":       {
         "uri": "mongodb://localhost/scripler"
     },
     "passport": {
         "twitter":  {
             "consumerKey":    "xxx",
             "consumerSecret": "xxx",
-            "callbackURL":      "http://scripler.com:3000/auth/twitter/callback"
+            "callbackURL":    "http://scripler.com:3000/auth/twitter/callback"
         },
         "google":   {
             "returnURL": "http://scripler.com:3000/auth/google/callback",
