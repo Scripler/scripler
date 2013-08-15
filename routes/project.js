@@ -9,7 +9,7 @@ var list = exports.list = function (req, res) {
 };
 
 exports.archived = function (req, res) {
-    Project.find({"archived": true,  "members": {"$elemMatch": {"userId": req.user._id, "access": "admin"}}}, function (err, projects) {
+    Project.find({"archived": true, "members": {"$elemMatch": {"userId": req.user._id, "access": "admin"}}}, function (err, projects) {
         if (err) {
             res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else {
@@ -21,14 +21,14 @@ exports.archived = function (req, res) {
 var create = exports.create = function (req, res) {
     var project = new Project({
         // TODO: Add creating user
-        name:    req.body.name,
+        name: req.body.name,
         members: [
             {userId: req.user._id, access: ["admin"]}
         ]
     });
     project.save(function (err) {
         if (err) {
-			res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else {
             req.user.projects.push(project);
             req.user.save(function (err) {
@@ -122,7 +122,7 @@ exports.unarchive = function (req, res) {
                     res.send({"errorMessage": "Database problem"}, 503);
                 } else {
                     var membersArray = [];
-                    for(var i = 0; i < project.members.length; i++) {
+                    for (var i = 0; i < project.members.length; i++) {
                         membersArray.push(project.members[i].userId);
                     }
                     User.update({"_id": {"$in": membersArray}}, {"$addToSet": {"projects": project._id}}, {multi: true}, function (err, numberAffected, raw) {
@@ -148,13 +148,18 @@ exports.delete = function (req, res) {
             res.send({"errorMessage": "Access denied"}, 403);
         } else {
             project.remove(function (err, result) {
-                User.update({"projects": req.params.id}, {"$pull": {"projects": req.params.id}}, {multi: true}, function (err, numberAffected, raw) {
-                    if (err) {
-                        res.send({"errorMessage": "Database problem", "errorDetails": err}, 503);
-                    } else {
-                        res.send({});
-                    }
-                });
+                if (err) {
+                    // return error
+                    res.send({"errorMessage": "Database problem"}, 503);
+                } else {
+                    User.update({"projects": req.params.id}, {"$pull": {"projects": req.params.id}}, {multi: true}, function (err, numberAffected, raw) {
+                        if (err) {
+                            res.send({"errorMessage": "Database problem", "errorDetails": err}, 503);
+                        } else {
+                            res.send({});
+                        }
+                    });
+                }
             });
         }
     });

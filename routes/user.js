@@ -86,7 +86,7 @@ exports.register = function (req, res) {
                 }
             } else {
                 if ('test' != global.env) {
-                    email.sendEmail({email: user.email, name: user.name, url: conf.app.url_prefix + 'user/' + user._id + '/validate/' + hashEmail(user.email)}, 'Validate your email', 'validate-email');
+                    email.sendEmail({email: user.email, name: user.name, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Validate your email', 'validate-email');
                 }
                 res.send({"user": user});
             }
@@ -97,7 +97,7 @@ exports.register = function (req, res) {
 /**
  * GET user validate.
  */
-exports.validate = function (req, res) {
+exports.verification = function (req, res) {
     User.findOne({"_id": req.params.id}, function (err, user) {
         var redirectUrl = conf.app.url_prefix + '?err=';
         if (err) {

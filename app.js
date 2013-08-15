@@ -63,7 +63,7 @@ app.get('/user/list', auth.isLoggedIn(), user.list);
 app.post('/user/login', user.login);
 app.post('/user/logout', user.logout);
 app.post('/user/register', user.register);
-app.get('/user/:id/validate/:hash', user.validate);
+app.get('/user/:id/verify/:hash', user.verification);
 
 /* API Projectspace (projects) */
 app.get('/project/list', auth.isLoggedIn(), project.list);
