@@ -97,7 +97,7 @@ exports.register = function (req, res) {
 /**
  * GET user validate.
  */
-exports.verification = function (req, res) {
+exports.verify = function (req, res) {
     User.findOne({"_id": req.params.id}, function (err, user) {
         var redirectUrl = conf.app.url_prefix + '?err=';
         if (err) {

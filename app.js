@@ -52,7 +52,7 @@ app.get('/', index.index);
 app.get('/account', index.account);
 app.get('/login', index.login);
 app.post('/login', index.loginPost);
-app.get('/logout', index.logout)
+app.get('/logout', index.logout);
 app.get('/new-user', index.newUser);
 app.post('/new-user', index.newUserPost);
 
@@ -63,7 +63,7 @@ app.get('/user/list', auth.isLoggedIn(), user.list);
 app.post('/user/login', user.login);
 app.post('/user/logout', user.logout);
 app.post('/user/register', user.register);
-app.get('/user/:id/verify/:hash', user.verification);
+app.get('/user/:id/verify/:hash', user.verify);
 
 /* API Projectspace (projects) */
 app.get('/project/list', auth.isLoggedIn(), project.list);
