@@ -52,7 +52,7 @@ app.get('/', index.index);
 app.get('/account', index.account);
 app.get('/login', index.login);
 app.post('/login', index.loginPost);
-app.get('/logout', index.logout)
+app.get('/logout', index.logout);
 app.get('/new-user', index.newUser);
 app.post('/new-user', index.newUserPost);
 
@@ -63,7 +63,7 @@ app.get('/user/list', auth.isLoggedIn(), user.list);
 app.post('/user/login', user.login);
 app.post('/user/logout', user.logout);
 app.post('/user/register', user.register);
-app.get('/user/:id/validate/:hash', user.validate);
+app.get('/user/:id/verify/:hash', user.verify);
 
 /* API Projectspace (projects) */
 app.get('/project/list', auth.isLoggedIn(), project.list);
@@ -90,7 +90,7 @@ app.get('/folder/:projectId/:folderId', auth.isLoggedIn(), folder.open);
 app.put('/folder/:id/rename', auth.isLoggedIn(), folder.rename);
 app.put('/folder/:projectId/:folderId/archive', auth.isLoggedIn(), folder.archive);
 app.put('/folder/:projectId/:folderId/unarchive', auth.isLoggedIn(), folder.unarchive);
-
+app.delete('/folder/:projectId/:parentFolderId/:folderId', auth.isLoggedIn(), folder.delete);
 
 //-------------------------- API END --------------------------
 
