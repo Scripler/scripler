@@ -86,7 +86,7 @@ exports.register = function (req, res) {
                 }
             } else {
                 if ('test' != global.env) {
-                    email.sendEmail({email: user.email, name: user.name, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Validate your email', 'validate-email');
+                    email.sendEmail({email: user.email, name: user.name, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
                 }
                 res.send({"user": user});
             }
@@ -136,7 +136,7 @@ exports.edit = function (req, res) {
         } else {
             req.user.email = email;
             if ('test' != global.env) {
-                email.sendEmail({email: user.email, name: user.name, url: conf.app.url_prefix + 'user/' + user._id + '/validate/' + hashEmail(user.email)}, 'Validate your email', 'validate-email');
+                email.sendEmail({email: user.email, name: user.name, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
             }
             if ('production' != global.env) {
                 user.emailValidated = true;
