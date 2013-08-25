@@ -132,8 +132,15 @@ exports.edit = function (req, res) {
     if (email) {
         if (!isEmail(email)) {
             res.send({"errorMessage": "Invalid email address"}, 400);
+            return;
         } else {
             req.user.email = email;
+            if ('test' != global.env) {
+                email.sendEmail({email: user.email, name: user.name, url: conf.app.url_prefix + 'user/' + user._id + '/validate/' + hashEmail(user.email)}, 'Validate your email', 'validate-email');
+            }
+            if ('production' != global.env) {
+                user.emailValidated = true;
+            }
         }
     }
     if (password) {

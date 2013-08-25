@@ -72,7 +72,7 @@ describe('Scripler RESTful API', function () {
                     done();
                 });
         }),
-        it('Return current user', function (done) {
+        it('Get current user', function (done) {
             request(host)
                 .get('/user')
                 .set('cookie', cookie)
@@ -80,6 +80,30 @@ describe('Scripler RESTful API', function () {
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
                     assert.equal(res.body.user.name, "John Doe");
+                    done();
+                });
+        }),
+        it('Update current users profile name', function (done) {
+            request(host)
+                .put('/user')
+                .set('cookie', cookie)
+                .send({name: "John Doe, Jr."})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.user.name, "John Doe, Jr.");
+                    done();
+                });
+        }),
+        it('Update current users profile with invalid email shold reutrn error', function (done) {
+            request(host)
+                .put('/user')
+                .set('cookie', cookie)
+                .send({email: "allan-scripler.com"})
+                .expect(400)
+                .end(function (err, res) {
+                    if (err) throw new Error(err);
+                    assert.equal(res.body.errorMessage, "Invalid email address");
                     done();
                 });
         }),
