@@ -159,3 +159,27 @@ exports.delete = function (req, res) {
         }
     });	
 }
+
+exports.rearrange = function (req, res) {
+	// Does a project exist for the document?
+	Project.findOne({"_id": req.params.projectId}, function (err, project) {
+        if (err) {
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        } else if (!project) {
+            res.send({"errorMessage": "Project not found"}, 404);
+        } else if (!utils.hasAccessToEntity(req.user, project)) {
+            res.send({"errorMessage": "Access denied"}, 403);
+        } else { // Yes, rearrange the documents on the project
+        	project.documents = req.body.documents;
+        	project.save(function (err, project) {
+                if (err) {
+                    // return error
+                    res.send({"errorMessage": "Database problem"}, 503);
+                } else {
+                    res.send({project: project});
+                }
+        	});
+        }
+    });
+}
+

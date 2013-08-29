@@ -95,7 +95,7 @@ describe('Scripler RESTful API', function () {
                     done();
                 });
         }),
-        it('Update current users profile with invalid email shold reutrn error', function (done) {
+        it('Update current users profile with invalid email shold return error', function (done) {
             request(host)
                 .put('/user')
                 .set('cookie', cookie)
@@ -245,7 +245,7 @@ describe('Scripler RESTful API', function () {
                     done();
                 });
         }),
-        it('Rearraning projects should return project list in the new order ', function (done) {
+        it('Rearranging projects should return project list in the new order ', function (done) {
             request(host)
                 .put('/project/rearrange')
                 .set('cookie', cookie)
@@ -518,6 +518,20 @@ describe('Scripler RESTful API', function () {
                     done();
                 });
         }),
+        it('Rearranging documents should return the project with the documents in the new order ', function (done) {
+            request(host)
+                .put('/document/'+projectId+'/rearrange')
+                .set('cookie', cookie)
+                .send({documents:[childDocumentId, rootDocumentId]})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.project.documents.length, 2);
+                    assert.equal(res.body.project.documents[0], childDocumentId);
+                    assert.equal(res.body.project.documents[1], rootDocumentId);
+                    done();
+                });
+        })
     	it('deleting a document (the root document) should return success', function (done) {
             request(host)
                 .del('/document/'+projectId+'/'+rootDocumentId)
