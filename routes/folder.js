@@ -97,13 +97,18 @@ function deleteFolder(folder) {
 	if (folder.folders) {
 		for (var i=0; i<folder.folders.length; i++) {
 			deleteFolder(folder.folders[i]);
-		}		
+		}
 	}
 	
 	// Delete documents
-	Document.find({ folderId: folder.id }).remove();
-	
-	// Delete folders (the parent folder deletes its child folders)
+    console.log("Deleting folders!?");
+    Document.find({ folderId: folder.id },function(err, documents){
+        documents.forEach(function(document){
+            document.remove();
+        });
+    });
+
+        // Delete folders (the parent folder deletes its child folders)
 	if (folder.folders) {
 		for (var i=0; i<folder.folders.length; i++) {
 			folder.folders.pop();

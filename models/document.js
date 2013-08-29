@@ -1,5 +1,6 @@
 var mongoose = require('mongoose')
     , Schema = mongoose.Schema
+    , Project = require('./project.js').Project
     , bcrypt = require('bcrypt')
     , SALT_WORK_FACTOR = 10;
 
@@ -22,6 +23,13 @@ var DocumentSchema = new Schema({
 	members: [DocumentMemberSchema],
     archived: { type: Boolean, default: false},
     modified: { type: Date, default: Date.now }
+});
+
+
+DocumentSchema.pre('remove', function(next) {
+    var documentId = this._id;
+    Project.update({"documents": documentId}, {"$pull": {"documents": documentId}}, {multi: true});
+    next();
 });
 
 exports.Document = mongoose.model('Document', DocumentSchema);

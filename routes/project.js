@@ -44,7 +44,7 @@ var create = exports.create = function (req, res) {
 }
 
 exports.open = function (req, res) {
-    Project.findOne({"_id": req.params.id, "archived": false}, function (err, project) {
+    Project.findOne({"_id": req.params.id, "archived": false}).populate('documents').exec(function (err, project) {
         if (err) {
             res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else if (!project) {

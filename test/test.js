@@ -6,7 +6,7 @@ var assert = require("assert")
     , mongoose = require('mongoose')
     , request = require('supertest');
 
-var host = 'localhost:'+conf.app.port;
+var host = '127.0.0.1:'+conf.app.port;
 var cookie;
 var projectId;
 var projectId2;
@@ -532,6 +532,22 @@ describe('Scripler RESTful API', function () {
                     done();
                 });
         })
+        it('opening the project should return the two documents', function (done) {
+            request(host)
+                .get('/project/'+projectId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.project.folders.length, 1);
+                    assert.equal(res.body.project.folders[0]._id, rootFolderId);
+                    assert.equal(res.body.project.folders[0].folders.length, 1);
+                    assert.equal(res.body.project.folders[0].folders[0]._id, childFolderId);
+                    assert.equal(res.body.project.documents.length, 2);
+                    assert.equal(res.body.project.documents[0]._id, childDocumentId);
+                    done();
+                });
+        }),
     	it('deleting a document (the root document) should return success', function (done) {
             request(host)
                 .del('/document/'+projectId+'/'+rootDocumentId)
@@ -554,7 +570,7 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.project.folders[0].folders.length, 1);
                     assert.equal(res.body.project.folders[0].folders[0]._id, childFolderId);
                     assert.equal(res.body.project.documents.length, 1);
-                    assert.equal(res.body.project.documents[0], childDocumentId);
+                    assert.equal(res.body.project.documents[0]._id, childDocumentId);
                     done();
                 });
         }),
@@ -580,7 +596,7 @@ describe('Scripler RESTful API', function () {
                     done();
                 });
         }),
-        it('opening the project should now only return the root folder and one document', function (done) {
+        it('opening the project should now only return the root folder and no documents', function (done) {
             request(host)
                 .get('/project/'+projectId)
                 .set('cookie', cookie)
@@ -590,8 +606,7 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.project.folders.length, 1);
                     assert.equal(res.body.project.folders[0]._id, rootFolderId);
                     assert.equal(res.body.project.folders[0].folders.length, 0);
-                    assert.equal(res.body.project.documents.length, 1);
-                    assert.equal(res.body.project.documents[0], childDocumentId);
+                    assert.equal(res.body.project.documents.length, 0);
                     done();
                 });
         })
