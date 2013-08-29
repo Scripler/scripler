@@ -390,6 +390,17 @@ describe('Scripler RESTful API', function () {
                     childDocumentId && done();
                 });
         }),
+        it('updating a document should return success', function (done) {
+            request(host)
+                .put('/document/'+rootDocumentId+'/update')
+                .set('cookie', cookie)
+                .send({text: "This is no longer a matter of 'if' but 'when'...and look here..."})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    done();
+                });
+        }),
         it('opening a document (the root document) should return the document', function (done) {
             request(host)
                 .get('/document/'+rootDocumentId)

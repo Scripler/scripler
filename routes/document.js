@@ -64,6 +64,28 @@ exports.open = function (req, res) {
     });
 }
 
+exports.update = function (req, res) {
+    Document.findOne({"_id": req.params.id}, function (err, document) {
+        if (err) {
+            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+        } else if (!document) {
+            res.send({"errorMessage": "Project not found"}, 404);
+        } else if (!utils.hasAccessToEntity(req.user, document)) {
+            res.send({"errorMessage": "Access denied"}, 403);
+        } else {
+        	document.text = req.body.text;
+        	document.save(function (err) {
+                if (err) {
+                    // return error
+                    res.send({"errorMessage": "Database problem"}, 503);
+                } else {
+                    res.send({});
+                }
+            });
+        }
+    });
+}
+
 exports.rename = function (req, res) {
     Document.findOne({"_id": req.params.id}, function (err, document) {
         if (err) {

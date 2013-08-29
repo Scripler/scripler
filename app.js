@@ -80,6 +80,7 @@ app.post('/project/:id/copy', auth.isLoggedIn(), project.copy);
 /* API Projectmanager (documents and folders) */
 app.post('/document', auth.isLoggedIn(), document.create);
 app.get('/document/:id', auth.isLoggedIn(), document.open);
+app.put('/document/:id/update', auth.isLoggedIn(), document.update);
 app.put('/document/:id/rename', auth.isLoggedIn(), document.rename);
 app.put('/document/:id/archive', auth.isLoggedIn(), document.archive);
 app.put('/document/:id/unarchive', auth.isLoggedIn(), document.unarchive);
