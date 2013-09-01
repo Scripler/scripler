@@ -5,17 +5,18 @@ var utils = require('../lib/utils');
 
 /**
  * 
- * Filter out archived folders.
+ * Filter out archived or unarchived folders (or anything else with "length" and "archived" properties).
  * 
- * TODO: Move to generic (array) utility library + make generic, i.e. accept filter condition as parameter.
+ * FIXME: make recursive (currently only filters one level of folders).
+ * TODO: Move to generic (array) utility library.
  * 
  * @param folders
  * @returns
  */
-function filter(folders) {
+function filter(folders, archived) {
 	if (folders) {
-		for (var i=0; i<folders.length; i++) {
-			if (folders[i].archived) {
+		for (var i=0; i<folders.length; i++) {			
+			if (folders[i].archived == archived) {
 				folders.splice(i, 1);
 			}
 		}
@@ -101,14 +102,13 @@ function deleteFolder(folder) {
 	}
 	
 	// Delete documents
-    console.log("Deleting folders!?");
     Document.find({ folderId: folder.id },function(err, documents){
         documents.forEach(function(document){
             document.remove();
         });
     });
 
-        // Delete folders (the parent folder deletes its child folders)
+    // Delete folders (the parent folder deletes its child folders)
 	if (folder.folders) {
 		for (var i=0; i<folder.folders.length; i++) {
 			folder.folders.pop();
@@ -168,6 +168,12 @@ exports.create = function (req, res) {
 	
 }
 
+/*
+ * Open a folder.
+ * 
+ * This function can be used to open the specifal folder "archive" (trash) by calling it with the id of 
+ * the project's root folder and setting the optional parameter "archived" to true.
+ */
 exports.open = function (req, res) {
 	// Does a project exist for the folder?
 	Project.findOne({"_id": req.params.projectId}, function (err, project) {
@@ -185,18 +191,32 @@ exports.open = function (req, res) {
         		// Does the folder exist?
         		if (folder) {  // Yes, return its contents 
         			// Add child folders to the result
-        			result.folders = filter(folder.folders);
+
+        			// NB! To filter out folders, use the negated value of parameter "archived" (also: good ol' strings)
+        			var archived = (req.params.archived && req.params.archived == "true") ? true : false;
+        			result.folders = filter(folder.folders, !archived);
         			
         			// Add documents to the result
-        			var docs = Document.find({"folderId": req.params.folderId, "archived": false}, function (err, docs) {
-        				if (err) {
-        					res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
-        				} else if (docs) {
-        					result.docs = docs;
-        				}
-        				
-        				res.send({result: result});
-        			});
+        			if (archived) { // Return the project's archived documents
+        				// Populate the project's documents
+        				project.populate({path: "documents", match: {"archived": archived}}, function (err, project) {
+            				if (err) {
+            					res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+            				} else if (project) {
+            					result.docs = project.documents;
+                				res.send({result: result});
+            				}
+        				});
+        			} else { // Return the folder's documents
+            			Document.find({"folderId": req.params.folderId, "archived": archived}, function (err, docs) {
+            				if (err) {
+            					res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+            				} else if (docs) {
+            					result.docs = docs;
+            					res.send({result: result});
+            				}
+            			});        				
+        			}
         		} else { // No, inform the caller        			
         			res.send({"errorMessage": "Folder not found"}, 404);
         			return;

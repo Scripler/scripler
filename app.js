@@ -88,7 +88,7 @@ app.put('/document/:projectId/rearrange', auth.isLoggedIn(), document.rearrange)
 app.delete('/document/:projectId/:documentId', auth.isLoggedIn(), document.delete);
 
 app.post('/folder', auth.isLoggedIn(), folder.create);
-app.get('/folder/:projectId/:folderId', auth.isLoggedIn(), folder.open);
+app.get('/folder/:projectId/:folderId/:archived?', auth.isLoggedIn(), folder.open);
 app.put('/folder/:id/rename', auth.isLoggedIn(), folder.rename);
 app.put('/folder/:projectId/:folderId/archive', auth.isLoggedIn(), folder.archive);
 app.put('/folder/:projectId/:folderId/unarchive', auth.isLoggedIn(), folder.unarchive);
