@@ -608,6 +608,8 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.project.folders[0].folders[0]._id, childFolderId);
                     assert.equal(res.body.project.documents.length, 1);
                     assert.equal(res.body.project.documents[0]._id, childDocumentId);
+                    assert.equal(res.body.project.documents[0].name, "MySecondDocument");
+                    assert.equal(res.body.project.documents[0].text, undefined);
                     done();
                 });
         }),
