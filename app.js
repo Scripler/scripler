@@ -5,6 +5,8 @@ var express = require('express')
     , folder = require('./routes/folder')
     , document = require('./routes/document')
     , http = require('http')
+    , https = require('https')
+    , fs = require('fs')
     , path = require('path')
     , mongoose = require('mongoose')
     , conf = require('config')
@@ -13,6 +15,17 @@ var express = require('express')
     , MongoStore = require('connect-mongo')(express)
     , logger = require('./lib/logger');
 
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
+    // intercept OPTIONS method
+    if ('OPTIONS' == req.method) {
+        res.send(200);
+    } else {
+        next();
+    }
+};
 var app = express();
 var env = app.get('env');
 
@@ -24,6 +37,11 @@ app.set('port', conf.app.port);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('ejs', require('ejs-locals'));
+if ('development' == env) {
+    // development only
+    app.use(express.errorHandler());
+    app.use(allowCrossDomain);
+}
 app.use(express.logger({format: 'short', stream: {write: function(msg){logger.info(msg.trim());}}}));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
@@ -38,10 +56,6 @@ app.use(passport.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
-// development only
-if ('development' == env) {
-    app.use(express.errorHandler());
-}
 
 // -------------------------- API --------------------------
 
@@ -99,7 +113,19 @@ app.delete('/folder/:projectId/:parentFolderId/:folderId', auth.isLoggedIn(), fo
 
 auth.initPaths(app);
 
-http.createServer(app).listen(app.get('port'), function () {
-    logger.info('Express server listening on port ' + app.get('port') + ('development' == env ? ' - in development mode!' : ''));
-});
+if ('production' == env) {
+    var sslOptions = {
+        key: fs.readFileSync('config/ssl/scripler-key.pem'),
+        cert: fs.readFileSync('config/ssl/scripler-cert.pem')
+    };
+    https.createServer(sslOptions,app).listen(app.get('port'), function () {
+        logger.info('Express server listening on port ' + app.get('port') + ' (HTTPS)');
+    });
+} else {
+    http.createServer(app).listen(app.get('port'), function () {
+        logger.info('Express server listening on port ' + app.get('port') + ('development' == env ? ' - in development mode!' : ''));
+    });
+}
+
+
 
