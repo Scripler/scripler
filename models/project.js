@@ -1,5 +1,7 @@
 var mongoose = require('mongoose')
     , Schema = mongoose.Schema
+    , Document
+    , User =  require('./user.js').User
     , bcrypt = require('bcrypt')
     , SALT_WORK_FACTOR = 10;
 
@@ -13,13 +15,13 @@ var ProjectMemberSchema = new Schema({
 
 /**
  * Folder Schema, recursive, see https://groups.google.com/forum/#!topic/mongoose-orm/0yUVXNyprx8
- * 
+ *
  */
 var FolderSchema = new Schema();
 FolderSchema.add({
 	name: { type: String },
 	archived: { type: Boolean, default: false },
-	folders: [FolderSchema], 
+	folders: [FolderSchema]
 });
 
 var ProjectSchema = new Schema({
@@ -31,6 +33,24 @@ var ProjectSchema = new Schema({
     members: [ProjectMemberSchema],
     archived: { type: Boolean, default: false},
     modified: { type: Date, default: Date.now }
+});
+
+ProjectSchema.pre('remove', function(next) {
+    var projectId = this._id;
+    if (Document == undefined) {
+        //Lazy loaded because of document<->project cyclic dependency
+        Document = require('./document.js').Document
+    }
+
+    User.update({"projectId": projectId}, {"$pull": {"projectId": projectId}}, {multi: true});
+
+    Document.find({ "projectId": projectId },function(err, documents){
+        documents.forEach(function(document){
+            document.remove();
+        });
+    });
+
+    next();
 });
 
 exports.Project = mongoose.model('Project', ProjectSchema);

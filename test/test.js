@@ -648,6 +648,47 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.project.documents.length, 0);
                     done();
                 });
+        }),
+        it('Creating a document in the root folder, should return the document with that folder id', function (done) {
+            request(host)
+                .post('/document')
+                .set('cookie', cookie)
+                .send({projectId: projectId, folderId: childFolderId, name: 'MyThirdDocument', text: 'It is my worst document!'})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    document = res.body.document;
+                    assert.equal(res.body.document.name, 'MyThirdDocument');
+                    assert.equal(res.body.document.projectId, projectId);
+                    assert.equal(res.body.document.folderId, childFolderId);
+                    assert.equal(res.body.document.text, 'It is my worst document!');
+                    assert.equal(res.body.document.archived, false);
+                    assert.equal(res.body.document.members[0].userId, userId);
+                    assert.equal(res.body.document.members[0].access[0], "admin");
+                    childDocumentId = res.body.document._id;
+                    childDocumentId && done();
+                });
+        }),
+        it('Deleting a project, should return success', function (done) {
+            request(host)
+                .del('/project/'+projectId)
+                .set('cookie', cookie)
+                .send({})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    done();
+                });
+        }),
+        it('Openeing a document of a deleted project should return not-found', function (done) {
+            request(host)
+                .get('/document/'+childDocumentId)
+                .set('cookie', cookie)
+                .expect(404)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    done();
+                });
         })
     })
 })

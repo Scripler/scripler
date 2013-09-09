@@ -1,6 +1,6 @@
 var mongoose = require('mongoose')
     , Schema = mongoose.Schema
-    , Project = require('./project.js').Project
+    , Project
     , bcrypt = require('bcrypt')
     , SALT_WORK_FACTOR = 10;
 
@@ -25,9 +25,12 @@ var DocumentSchema = new Schema({
     modified: { type: Date, default: Date.now }
 });
 
-
 DocumentSchema.pre('remove', function(next) {
     var documentId = this._id;
+    if (Project == undefined) {
+        //Lazy loaded because of document<->project cyclic dependency
+        Project = require('./project.js').Project;
+    }
     Project.update({"documents": documentId}, {"$pull": {"documents": documentId}}, {multi: true});
     next();
 });
