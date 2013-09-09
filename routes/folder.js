@@ -11,7 +11,8 @@ var utils = require('../lib/utils');
  * TODO: Move to generic (array) utility library.
  * 
  * @param folders
- * @returns
+ * @param archived
+ * @returns folders
  */
 function filter(folders, archived) {
 	if (folders) {
@@ -30,7 +31,7 @@ function filter(folders, archived) {
  * 
  * @param folders
  * @param folderId
- * @returns
+ * @returns folder
  */
 function findFolder(folders, folderId) {
 	if (!folders) return;
@@ -56,7 +57,6 @@ function findFolder(folders, folderId) {
  * 
  * @param folder
  * @param archived
- * @returns
  */
 function archiveFolder(folder, archived) {
 	if (!folder) return;
@@ -90,8 +90,7 @@ function archiveFolder(folder, archived) {
  * 
  * This function does NOT delete the folder itself from its parent (i.e. either the project or a parent folder).
  * 
- * @param folders
- * @returns
+ * @param folder
  */
 function deleteFolder(folder) {
 	// Process child folders depth-first
