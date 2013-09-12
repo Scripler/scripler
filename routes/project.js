@@ -1,5 +1,6 @@
 var Project = require('../models/project.js').Project;
 var User = require('../models/user.js').User;
+var Document = require('../models/document.js').Document;
 var utils = require('../lib/utils');
 
 var list = exports.list = function (req, res) {
@@ -20,7 +21,6 @@ exports.archived = function (req, res) {
 
 var create = exports.create = function (req, res) {
     var project = new Project({
-        // TODO: Add creating user
         name: req.body.name,
         members: [
             {userId: req.user._id, access: ["admin"]}
@@ -166,7 +166,7 @@ exports.delete = function (req, res) {
 }
 
 exports.copy = function (req, res) {
-    Project.findOne({"_id": req.params.id}, function (err, project) {
+    Project.findOne({"_id": req.params.id}).populate('documents').exec(function (err, project) {
         if (err) {
             res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
         } else if (!project) {
@@ -174,9 +174,50 @@ exports.copy = function (req, res) {
         } else if (!utils.hasAccessToEntity(req.user, project)) {
             res.send({"errorMessage": "Access denied"}, 403);
         } else {
-            var newReq = req;
-            req.body.name = project.name + " - Copy";
-            create(newReq, res);
+            var newProject = new Project({
+                name: project.name + " - Copy",
+                folders: project.folders,
+                members: project.members
+            });
+
+            //Add to user (last project in order)
+            req.user.projects.push(newProject);
+            req.user.save();
+
+            //Copy documents
+            var newDocuments = [];
+            for (var i = 0; i < project.documents.length; i++) {
+                var document = project.documents[i];
+                var newDocument = new Document({
+                    name:      document.name,
+                    text:      document.text,
+                    projectId: newProject,
+                    folderId: document.folderId,
+                    archived: document.archived,
+                    members: document.members
+                });
+                newProject.documents.push(newDocument);
+                newDocuments.push(newDocument);
+            }
+            newProject.save(function (err) {
+                if (err) {
+                    res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+                } else {
+                    Document.create(newDocuments, function (err) {
+                        if (err) {
+                            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+                        } else {
+                            newProject.save(function (err) {
+                                if (err) {
+                                    res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+                                } else {
+                                    res.send({project: newProject});
+                                }
+                            });
+                        }
+                    });
+                }
+            });
         }
     });
 }

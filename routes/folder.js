@@ -89,19 +89,20 @@ function archiveFolder(folder, archived) {
  * Delete a folder's contents, i.e. its child folders and documents, recursively (depth-first and bottom-up).
  * 
  * This function does NOT delete the folder itself from its parent (i.e. either the project or a parent folder).
- * 
+ *
+ * @param projectId
  * @param folder
  */
-function deleteFolder(folder) {
+function deleteFolder(projectId, folder) {
 	// Process child folders depth-first
 	if (folder.folders) {
 		for (var i=0; i<folder.folders.length; i++) {
-			deleteFolder(folder.folders[i]);
+			deleteFolder(projectId, folder.folders[i]);
 		}
 	}
 	
 	// Delete documents
-    Document.find({ folderId: folder.id },function(err, documents){
+    Document.find({ projectId: projectId, folderId: folder.id },function(err, documents){
         documents.forEach(function(document){
             document.remove();
         });
@@ -207,7 +208,7 @@ exports.open = function (req, res) {
             				}
         				});
         			} else { // Return the folder's documents
-            			Document.find({"folderId": req.params.folderId, "archived": archived}, function (err, docs) {
+            			Document.find({"projectId": req.params.projectId, "folderId": req.params.folderId, "archived": archived}, function (err, docs) {
             				if (err) {
             					res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
             				} else if (docs) {
@@ -334,7 +335,7 @@ exports.delete = function (req, res) {
 
         		// Remove folder contents, i.e. child folders and documents
         		var folder = findFolder(project.folders, req.params.folderId);
-        		deleteFolder(folder);
+        		deleteFolder(req.params.projectId, folder);
 
         		// Remove folder from parent, i.e. either the project or a parent folder...
        		

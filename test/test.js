@@ -27,13 +27,9 @@ describe('Scripler RESTful API', function () {
     before(function (done) {
         //Don't start the tests before the database connection is ready.
         mongoose.connection.on('open', function() {
-            done();
-        });
-    }),
-    after(function (done) {
-        //Clean database
-        mongoose.connection.db.dropDatabase(function() {
-            done();
+            mongoose.connection.db.dropDatabase(function() {
+                done();
+            });
         });
     }),
     describe('Frontpage (/user)', function () {
@@ -191,6 +187,7 @@ describe('Scripler RESTful API', function () {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
                     assert.equal(res.body.project.name, "The Wizard of Oz - Copy");
                     assert.equal(res.body.project.archived, false);
+                    assert.notEqual(res.body.project._id, projectId);
                     projectId3 = res.body.project._id;
                     done();
                 });
@@ -229,7 +226,9 @@ describe('Scripler RESTful API', function () {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
                     assert.equal(res.body.projects.length, 2);
                     assert.equal(res.body.projects[0].name, "The Wizard of Oz");
+                    assert.equal(res.body.projects[0]._id, projectId);
                     assert.equal(res.body.projects[1].name, "A Nice Story");
+                    assert.equal(res.body.projects[1]._id, projectId2);
                     done();
                 });
         }),
@@ -433,7 +432,6 @@ describe('Scripler RESTful API', function () {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
                     assert.equal(res.body.result.folders.length, 1);
                     assert.equal(res.body.result.folders[0]._id, childFolderId);
-
                     assert.equal(res.body.result.docs.length, 1);
                     assert.equal(res.body.result.docs[0].folderId, rootFolderId);
                     assert.equal(res.body.result.docs[0]._id, rootDocumentId);
@@ -568,7 +566,7 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.project.documents[1], rootDocumentId);
                     done();
                 });
-        })
+        }),
         it('Opening the project should return the two documents', function (done) {
             request(host)
                 .get('/project/'+projectId)
@@ -582,6 +580,41 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.project.folders[0].folders[0]._id, childFolderId);
                     assert.equal(res.body.project.documents.length, 2);
                     assert.equal(res.body.project.documents[0]._id, childDocumentId);
+                    done();
+                });
+        }),
+        it('Copying the project should return the copied project with the two copied documents', function (done) {
+            request(host)
+                .post('/project/'+projectId+'/copy')
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    projectId3 = res.body.project._id;
+                    assert.notEqual(projectId3, projectId);
+                    assert.equal(res.body.project.folders.length, 1);
+                    assert.equal(res.body.project.folders[0]._id, rootFolderId);
+                    assert.equal(res.body.project.folders[0].folders.length, 1);
+                    assert.equal(res.body.project.folders[0].folders[0]._id, childFolderId);
+                    assert.equal(res.body.project.documents.length, 2);
+                    assert.notEqual(res.body.project.documents[0], childDocumentId);
+                    assert.notEqual(res.body.project.documents[1], rootDocumentId);
+                    done();
+                });
+        }),
+        it('Project list should return the three unarchived projects in order - the last must be the new copy', function (done) {
+            request(host)
+                .get('/project/list')
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.projects.length, 3);
+                    assert.equal(res.body.projects[0].name, "A Nice Story");
+                    assert.equal(res.body.projects[1].name, "The Wizard of Oz");
+                    assert.equal(res.body.projects[2].name, "The Wizard of Oz - Copy");
+                    assert.notEqual(res.body.projects[1].documents[0], res.body.projects[2].documents[0]);
+                    assert.notEqual(res.body.projects[1].documents[1], res.body.projects[2].documents[1]);
                     done();
                 });
         }),
@@ -687,6 +720,21 @@ describe('Scripler RESTful API', function () {
                 .expect(404)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    done();
+                });
+        }),
+        it('Opening the copied project should still return its two copied documents', function (done) {
+            request(host)
+                .get('/project/'+projectId3)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.project.documents.length, 2);
+                    assert.equal(res.body.project.documents[0].name, "MySecondDocument");
+                    assert.equal(res.body.project.documents[0].text, undefined);
+                    assert.equal(res.body.project.documents[1].name, "A New Cool Name");
+                    assert.equal(res.body.project.documents[1].text, undefined);
                     done();
                 });
         })
