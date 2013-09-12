@@ -207,13 +207,7 @@ exports.copy = function (req, res) {
                         if (err) {
                             res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
                         } else {
-                            newProject.save(function (err) {
-                                if (err) {
-                                    res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
-                                } else {
-                                    res.send({project: newProject});
-                                }
-                            });
+                            res.send({project: newProject});
                         }
                     });
                 }
