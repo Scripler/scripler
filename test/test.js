@@ -306,6 +306,19 @@ describe('Scripler RESTful API', function () {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
                     done();
                 });
+        }),
+        it('Get current user should return the user with only the two projectIds', function (done) {
+            request(host)
+                .get('/user')
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.user.projects.length, 2);
+                    assert.equal(res.body.user.projects[0], projectId2);
+                    assert.equal(res.body.user.projects[1], projectId);
+                    done();
+                });
         })
     }),
     describe('Projectmanager (/folder and /document)', function () {
@@ -713,7 +726,7 @@ describe('Scripler RESTful API', function () {
                     done();
                 });
         }),
-        it('Openeing a document of a deleted project should return not-found', function (done) {
+        it('Opening a document of a deleted project should return not-found', function (done) {
             request(host)
                 .get('/document/'+childDocumentId)
                 .set('cookie', cookie)

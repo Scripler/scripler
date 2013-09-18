@@ -42,7 +42,7 @@ ProjectSchema.pre('remove', function(next) {
         Document = require('./document.js').Document
     }
 
-    User.update({"projectId": projectId}, {"$pull": {"projectId": projectId}}, {multi: true});
+    User.update({"projects": projectId}, {"$pull": {"projects": projectId}}, {multi: true}).exec();
 
     Document.find({ "projectId": projectId },function(err, documents){
         documents.forEach(function(document){
