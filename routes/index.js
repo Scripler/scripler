@@ -1,49 +1,72 @@
-var user = require('./user')
-    , passport = require('passport');
+var frontpage = require('./frontpage')
+    , user = require('./user')
+    , project = require('./project')
+    , folder = require('./folder')
+    , document = require('./document')
+    , Project = require('../models/project.js').Project
+    , Document = require('../models/document.js').Document
+    , utils = require('../lib/utils');
 
-exports.index = function (req, res) {
-    res.render('index', {user: req.user});
-};
-exports.account = function (req, res) {
-    res.render('account', { user: req.user });
-};
-exports.login = function (req, res) {
-    res.render('login', { user: req.user, message: req.session.messages });
-};
+module.exports = function (app, auth) {
+    // Dummy GUI URLs
+    app.get('/', frontpage.index);
+    app.get('/account', frontpage.account);
+    app.get('/login', frontpage.login);
+    app.post('/login', frontpage.loginPost);
+    app.get('/logout', frontpage.logout);
+    app.get('/new-user', frontpage.newUser);
+    app.post('/new-user', frontpage.newUserPost);
 
-exports.loginPost = function (req, res, next) {
-    passport.authenticate('local', function (err, user, info) {
-        if (err) {
-            return next(err)
-        }
-        if (!user) {
-            req.session.messages = [info.message];
-            return res.redirect('/login')
-        }
-        req.logIn(user, function (err) {
-            if (err) {
-                return next(err);
-            }
-            return res.redirect('/');
-        });
-    })(req, res, next);
-}
+    // API URIs
+    // The routes below are the URLs used by the API (not the URLs seen by the user).
 
-exports.logout = function (req, res, next) {
-    req.logout();
-    res.redirect('/');
-}
+    /* API Frontpage */
+    app.get('/user', auth.isLoggedIn(), user.get);
+    app.put('/user', auth.isLoggedIn(), user.edit);
+    app.get('/user/list', auth.isLoggedIn(), user.list);
+    app.post('/user/login', user.login);
+    app.post('/user/logout', user.logout);
+    app.post('/user/register', user.register);
+    app.get('/user/:id/verify/:hash', user.verify);
 
-exports.newUser = function (req, res) {
-    res.render('new-user', { user: req.user, message: req.session.messages });
-};
+    /* API Projectspace (projects) */
+    app.get('/project/list', auth.isLoggedIn(), project.list);
+    app.get('/project/archived', auth.isLoggedIn(), project.archived);
+    app.put('/project/rearrange', auth.isLoggedIn(), project.rearrange);
+    app.post('/project', auth.isLoggedIn(), project.create);
+    app.get('/project/:projectIdPopulated', auth.isLoggedIn(), project.open);
+    app.put('/project/:projectId/rename', auth.isLoggedIn(), project.rename);
+    app.put('/project/:projectId/archive', auth.isLoggedIn(), project.archive);
+    app.put('/project/:projectId/unarchive', auth.isLoggedIn(), project.unarchive);
+    app.delete('/project/:projectId', auth.isLoggedIn(), project.delete);
+    app.post('/project/:projectIdPopulated/copy', auth.isLoggedIn(), project.copy);
 
-exports.newUserPost = function (req, res, next) {
-    //res.send(util.inspect(req.body, false, null));
-    var email = req.body.email
-    if (!email) {
-        req.session.messages = ["You need to enter an email address!"];
-        return res.redirect('/new-user');
-    }
-    user.register(req, res);
+    /* API Projectmanager (documents and folders) */
+    app.post('/document', auth.isLoggedIn(), project.load(), document.create);
+    app.get('/document/:documentId', auth.isLoggedIn(), document.open);
+    app.put('/document/:documentId/update', auth.isLoggedIn(), document.update);
+    app.put('/document/:documentId/rename', auth.isLoggedIn(), document.rename);
+    app.put('/document/:documentId/archive', auth.isLoggedIn(), document.archive);
+    app.put('/document/:documentId/unarchive', auth.isLoggedIn(), document.unarchive);
+    app.put('/document/:projectId/rearrange', auth.isLoggedIn(), document.rearrange);
+    app.delete('/document/:projectId/:documentId', auth.isLoggedIn(), document.delete);
+
+    app.post('/folder', auth.isLoggedIn(), project.load(), folder.create);
+    app.get('/folder/:projectId/:folderId/:archived?', auth.isLoggedIn(), folder.open);
+    app.put('/folder/:id/rename', auth.isLoggedIn(), project.load(), folder.rename);
+    app.put('/folder/:projectId/:folderId/archive', auth.isLoggedIn(), folder.archive);
+    app.put('/folder/:projectId/:folderId/unarchive', auth.isLoggedIn(), folder.unarchive);
+    app.delete('/folder/:projectId/:parentFolderId/:folderId', auth.isLoggedIn(), folder.delete);
+
+
+    // API Parameters
+    app.param('projectId', function(req, res, next, id){
+        return project.load(id)(req, res, next);
+    });
+    app.param('projectIdPopulated', function(req, res, next, id){
+        return project.loadPopulated(id)(req, res, next);
+    });
+    app.param('documentId', function(req, res, next, id){
+        return document.load(id)(req, res, next);
+    });
 }

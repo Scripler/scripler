@@ -22,13 +22,12 @@ exports.get = function (req, res) {
 /**
  * GET users listing.
  */
-exports.list = function (req, res) {
+exports.list = function (req, res, next) {
     User.find({}, function (err, docs) {
         if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
-        } else {
-            res.send({"users": docs});
+            return next(err);
         }
+        res.send({"users": docs});
     });
 };
 
@@ -38,17 +37,16 @@ exports.list = function (req, res) {
 exports.login = function (req, res, next) {
     passport.authenticate('local', function (err, user, info) {
         if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+            return next(err);
         }
         if (!user) {
-            res.send({"errorMessage": info.message}, 401);
+            return next({message: info.message, status: 401});
         }
         req.logIn(user, function (err) {
             if (err) {
-                res.send({"errorMessage": info.message}, 401);
-            } else {
-                res.send({"user": user});
+                return next(err);
             }
+            res.send({"user": user});
         });
     })(req, res, next);
 };
@@ -64,9 +62,9 @@ exports.logout = function (req, res) {
 /**
  * POST user registration.
  */
-exports.register = function (req, res) {
+exports.register = function (req, res, next) {
     if (!isEmail(req.body.email)) {
-        res.send({"errorMessage": "Invalid email address"}, 400);
+        return next({message: "Invalid email address", status: 400});
     } else {
         var user = new User({
             name:     req.body.name,
@@ -80,10 +78,9 @@ exports.register = function (req, res) {
             if (err) {
                 // return error
                 if (err.code == 11000) {
-                    res.send({"errorMessage": "User already registered"}, 403);
-                } else {
-                    res.send({"errorCode": err.code, "errorMessage": "Database problem", "errorDetails": err.err}, 503);
+                    return next({message: "User already registered", status: 400});
                 }
+                return next(err);
             } else {
                 if ('test' != global.env) {
                     email.sendEmail({email: user.email, name: user.name, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
@@ -122,7 +119,7 @@ exports.verify = function (req, res) {
 /**
  * PUT user profile edit.
  */
-exports.edit = function (req, res) {
+exports.edit = function (req, res, next) {
     var name = req.body.name;
     var email = req.body.email;
     var password = req.body.password;
@@ -131,8 +128,7 @@ exports.edit = function (req, res) {
     }
     if (email) {
         if (!isEmail(email)) {
-            res.send({"errorMessage": "Invalid email address"}, 400);
-            return;
+            return next({message: "Invalid email address", status: 400});
         } else {
             req.user.email = email;
             if ('test' != global.env) {
@@ -148,9 +144,8 @@ exports.edit = function (req, res) {
     }
     req.user.save(function (err) {
         if (err) {
-            res.send({"errorCode": err.code, "errorMessage": "Database problem"}, 503);
-        } else {
-            res.send({"user": req.user});
+            return next(err);
         }
+        res.send({"user": req.user});
     });
 };
