@@ -2,6 +2,7 @@ node_modules*
 config/*
 !config/default.json
 !config/test.json
+!config/express.js
 .idea
 .project
 .classpath
