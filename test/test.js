@@ -336,6 +336,18 @@ describe('Scripler RESTful API', function () {
                     rootFolderId && done();
                 });
         }),
+        it('Opening the root folder should return an empty folder', function (done) {
+            request(host)
+                .get('/folder/'+projectId+'/'+rootFolderId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.result.folders.length, 0);
+                    assert.equal(res.body.result.docs.length, 0);
+                    done();
+                });
+        }),
         it('Creating a folder with a parent folder should return the new folder as an empty child folder of the parent', function (done) {
             request(host)
                 .post('/folder')
@@ -348,6 +360,18 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.folder.folders.length, 0);
                     childFolderId = res.body.folder._id;
                     childFolderId && done();
+                });
+        }),
+        it('Opening the child folder should return an empty folder', function (done) {
+            request(host)
+                .get('/folder/'+projectId+'/'+childFolderId)
+                .set('cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.result.folders.length, 0);
+                    assert.equal(res.body.result.docs.length, 0);
+                    done();
                 });
         }),
         it('Renaming a folder should return the folder', function (done) {
