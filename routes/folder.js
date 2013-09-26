@@ -119,7 +119,6 @@ function deleteFolder(projectId, folder) {
 exports.create = function (req, res, next) {
 	var project = req.project;
     var folder = new Folder({
-        // TODO: Add creating user
         name:      req.body.name,
         members: [
             {userId: req.user._id, access: ["admin"]}

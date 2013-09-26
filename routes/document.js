@@ -25,7 +25,7 @@ exports.create = function (req, res, next) {
     var document = new Document({
         name:      req.body.name,
         text:      req.body.text,
-        projectId: req.body.projectId,
+        projectId: project._id,
         folderId:  req.body.folderId,
         members:   [
             {userId: req.user._id, access: ["admin"]}
@@ -94,12 +94,15 @@ exports.unarchive = function (req, res, next) {
     });
 }
 
-exports.delete = function (req, res) {
+exports.delete = function (req, res, next) {
     var document = req.document;
     var project = req.project;
     project.documents.remove(document._id);
     project.save(function (err, project) {
         document.remove(function (err, result) {
+            if (err) {
+                return next(err);
+            }
             res.send({});
         });
     });

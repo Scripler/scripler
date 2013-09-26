@@ -36,7 +36,7 @@ exports.loadPopulated = function (id) {
     }
 }
 
-var list = exports.list = function (req, res) {
+var list = exports.list = function (req, res, next) {
     User.findOne({"_id": req.user._id}).populate('projects').exec(function (err, user) {
         if (err) {
             return next(err);
