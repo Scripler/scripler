@@ -53,6 +53,8 @@ module.exports = function (app, conf, mongoose) {
         }
         if (err.stack) {
             logger.error(err.stack);
+        } else {
+            logger.error(err);
         }
         res.send({ "errorCode": err.code, "errorMessage": err.message, "errorDetails": err.err}, err.status || 500);
     });

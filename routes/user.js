@@ -1,6 +1,6 @@
 var User = require('../models/user.js').User
     , passport = require('passport')
-    , email = require('../lib/email/email.js')
+    , emailer = require('../lib/email/email.js')
     , crypto = require('crypto')
     , conf = require('config');
 
@@ -83,7 +83,7 @@ exports.register = function (req, res, next) {
                 return next(err);
             } else {
                 if ('test' != global.env) {
-                    email.sendEmail({email: user.email, name: user.name, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
+                    emailer.sendEmail({email: user.email, name: user.name, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
                 }
                 res.send({"user": user});
             }
@@ -120,6 +120,7 @@ exports.verify = function (req, res) {
  * PUT user profile edit.
  */
 exports.edit = function (req, res, next) {
+    var user = req.user;
     var name = req.body.name;
     var email = req.body.email;
     var password = req.body.password;
@@ -132,7 +133,7 @@ exports.edit = function (req, res, next) {
         } else {
             req.user.email = email;
             if ('test' != global.env) {
-                email.sendEmail({email: user.email, name: user.name, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
+                emailer.sendEmail({email: user.email, name: user.name, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
             }
             if ('production' != global.env) {
                 user.emailValidated = true;
