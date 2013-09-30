@@ -56,7 +56,7 @@ module.exports = function (app, auth) {
     app.put('/folder/:id/rename', auth.isLoggedIn(), project.load(), folder.rename);
     app.put('/folder/:projectId/:folderId/archive', auth.isLoggedIn(), folder.archive);
     app.put('/folder/:projectId/:folderId/unarchive', auth.isLoggedIn(), folder.unarchive);
-    app.delete('/folder/:projectId/:parentFolderId/:folderId', auth.isLoggedIn(), folder.delete);
+    app.delete('/folder/:projectId/:parentFolderId?/:folderId', auth.isLoggedIn(), folder.delete);
 
 
     // API Parameters
