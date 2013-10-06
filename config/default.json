@@ -1,12 +1,20 @@
 {
     "app":      {
         "port":           3000,
+        "url_prefix":     "http://localhost:3000/",
         "cookie_secret":  "xxx",
         "session_secret": "xxx",
         "salt":           "xxx"
     },
     "db":       {
         "uri": "mongodb://localhost/scripler"
+    },
+    "smtp": {
+        "service": "Gmail",
+        "auth": {
+            "user": "xxxx@gmail.com",
+            "pass": "xxxx"
+        }
     },
     "passport": {
         "twitter":  {

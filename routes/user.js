@@ -2,7 +2,8 @@ var User = require('../models/user.js').User
     , passport = require('passport')
     , emailer = require('../lib/email/email.js')
     , crypto = require('crypto')
-    , conf = require('config');
+    , conf = require('config')
+    , env = process.env.NODE_ENV;
 
 function isEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -71,7 +72,7 @@ exports.register = function (req, res, next) {
             email:    req.body.email,
             password: req.body.password
         });
-        if ('production' != global.env) {
+        if ('production' != env) {
             user.emailValidated = true;
         }
         user.save(function (err) {
@@ -82,7 +83,7 @@ exports.register = function (req, res, next) {
                 }
                 return next(err);
             } else {
-                if ('test' != global.env) {
+                if ('test' != env) {
                     emailer.sendEmail({email: user.email, name: user.name, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
                 }
                 res.send({"user": user});
@@ -132,10 +133,10 @@ exports.edit = function (req, res, next) {
             return next({message: "Invalid email address", status: 400});
         } else {
             req.user.email = email;
-            if ('test' != global.env) {
+            if ('test' != env) {
                 emailer.sendEmail({email: user.email, name: user.name, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
             }
-            if ('production' != global.env) {
+            if ('production' != env) {
                 user.emailValidated = true;
             }
         }
