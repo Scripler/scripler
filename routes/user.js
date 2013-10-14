@@ -129,9 +129,9 @@ exports.verify = function (req, res) {
                                     name: user.name
                                 }
             }, function (data) {
-                logger.info("MailChimp Subscribe Successfull: " + user.email);
+                logger.info("MailChimp subscribe successful: " + user.email);
             }, function (error) {
-                logger.error("MailChimp SubScribe Error: " + user.email + " - " + error.code + " - " + error.error);
+                logger.error("MailChimp subscribe error: " + user.email + " - " + error.code + " - " + error.error);
             });
         }
     });
