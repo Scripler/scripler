@@ -16,6 +16,13 @@
             "pass": "xxxx"
         }
     },
+    "mailchimp": {
+        "apiKey":               "xxxx",
+        "memberListId":         "xxxx",
+        "memberGroupId":        1234,
+        "memberGroupIdFree":    "Members - Free",
+        "memberGroupIdPaying":  "Members - Paying"
+    },
     "passport": {
         "twitter":  {
             "consumerKey":    "xxx",

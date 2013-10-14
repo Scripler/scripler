@@ -3,7 +3,12 @@ var User = require('../models/user.js').User
     , emailer = require('../lib/email/email.js')
     , crypto = require('crypto')
     , conf = require('config')
+    , mcapi = new require('mailchimp-api')
+    , logger = require('../lib/logger')
+    , conf = require('config')
     , env = process.env.NODE_ENV;
+
+var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
 
 function isEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -112,6 +117,21 @@ exports.verify = function (req, res) {
                 } else {
                     res.redirect(redirectUrl);
                 }
+            });
+
+            mc.lists.subscribe({
+                                id: conf.mailchimp.memberListId,
+                                double_optin: false,
+                                update_existing: true,
+                                email: {email: user.email},
+                                merge_vars: {
+                                    groupings: [{id: conf.mailchimp.memberGroupId, groups: [conf.mailchimp.memberGroupIdFree]}],
+                                    name: user.name
+                                }
+            }, function (data) {
+                logger.info("MailChimp Subscribe Successfull: " + user.email);
+            }, function (error) {
+                logger.error("MailChimp SubScribe Error: " + user.email + " - " + error.code + " - " + error.error);
             });
         }
     });
