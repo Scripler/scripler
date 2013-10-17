@@ -73,7 +73,8 @@ exports.register = function (req, res, next) {
         return next({message: "Invalid email address", status: 400});
     } else {
         var user = new User({
-            name:     req.body.name,
+            firstname:     req.body.firstname,
+            lastname:     req.body.lastname,
             email:    req.body.email,
             password: req.body.password
         });
@@ -89,7 +90,7 @@ exports.register = function (req, res, next) {
                 return next(err);
             } else {
                 if ('test' != env) {
-                    emailer.sendEmail({email: user.email, name: user.name, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
+                    emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
                 }
                 res.send({"user": user});
             }
@@ -126,7 +127,8 @@ exports.verify = function (req, res) {
                                 email: {email: user.email},
                                 merge_vars: {
                                     groupings: [{id: conf.mailchimp.memberGroupId, groups: [conf.mailchimp.memberGroupIdFree]}],
-                                    name: user.name
+                                    FNAME: user.firstname,
+                                    LNAME: user.lastname
                                 }
             }, function (data) {
                 logger.info("MailChimp subscribe successful: " + user.email);
@@ -142,11 +144,15 @@ exports.verify = function (req, res) {
  */
 exports.edit = function (req, res, next) {
     var user = req.user;
-    var name = req.body.name;
+    var firstname = req.body.firstname;
+    var lastname = req.body.lastname;
     var email = req.body.email;
     var password = req.body.password;
-    if (name) {
-        req.user.name = name;
+    if (firstname) {
+        req.user.firstname = firstname;
+    }
+    if (lastname) {
+        req.user.lastname = lastname;
     }
     if (email) {
         if (!isEmail(email)) {
@@ -154,7 +160,7 @@ exports.edit = function (req, res, next) {
         } else {
             req.user.email = email;
             if ('test' != env) {
-                emailer.sendEmail({email: user.email, name: user.name, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
+                emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
             }
             if ('production' != env) {
                 user.emailValidated = true;

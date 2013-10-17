@@ -36,22 +36,24 @@ describe('Scripler RESTful API', function () {
         it('Register a new user should return the user (dummy initialization)', function (done) {
             request(host)
                 .post('/user/register')
-                .send({name: "Dummy Doe", email: "dummy@doe.com", password: "abc"})
+                .send({firstname: "Dummy", lastname: "Doe", email: "dummy@doe.com", password: "abc"})
                 .expect(200)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    assert.equal(res.body.user.name, "Dummy Doe");
+                    assert.equal(res.body.user.firstname, "Dummy");
+                    assert.equal(res.body.user.lastname, "Doe");
                     done();
                 });
         }),
         it('Registering a new user should return the user', function (done) {
             request(host)
                 .post('/user/register')
-                .send({name: "John Doe", email: "john@doe.com", password: "abc"})
+                .send({firstname: "John", lastname: "Doe", email: "john@doe.com", password: "abc"})
                 .expect(200)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    assert.equal(res.body.user.name, "John Doe");
+                    assert.equal(res.body.user.firstname, "John");
+                    assert.equal(res.body.user.lastname, "Doe");
                     done();
                 });
         }),
@@ -63,7 +65,8 @@ describe('Scripler RESTful API', function () {
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
                     cookie = res.headers['set-cookie'];
-                    assert.equal(res.body.user.name, "John Doe");
+                    assert.equal(res.body.user.firstname, "John");
+                    assert.equal(res.body.user.lastname, "Doe");
                     userId = res.body.user._id;
                     done();
                 });
@@ -75,7 +78,8 @@ describe('Scripler RESTful API', function () {
                 .expect(200)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    assert.equal(res.body.user.name, "John Doe");
+                    assert.equal(res.body.user.firstname, "John");
+                    assert.equal(res.body.user.lastname, "Doe");
                     done();
                 });
         }),
@@ -83,11 +87,12 @@ describe('Scripler RESTful API', function () {
             request(host)
                 .put('/user')
                 .set('cookie', cookie)
-                .send({name: "John Doe, Jr."})
+                .send({firstname: "John", lastname: "Doe, Jr."})
                 .expect(200)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    assert.equal(res.body.user.name, "John Doe, Jr.");
+                    assert.equal(res.body.user.firstname, "John");
+                    assert.equal(res.body.user.lastname, "Doe, Jr.");
                     done();
                 });
         }),
