@@ -1,5 +1,5 @@
 Scripler
-========
+=========
 The Scripler web application source code repository.
 
 Folder Structure
