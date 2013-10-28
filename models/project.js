@@ -14,6 +14,18 @@ var ProjectMemberSchema = new Schema({
 });
 
 /**
+ * Metadata Sub-Schema
+ */
+var metadata = {
+    title:       { type: String },
+    description: { type: String },
+    language:    { type: String },
+    authors:     [ { type: String} ],
+    isbn:        { type: String }
+};
+var ProjectMetadataSchema = new Schema(metadata);
+
+/**
  * Folder Schema, recursive, see https://groups.google.com/forum/#!topic/mongoose-orm/0yUVXNyprx8
  *
  */
@@ -27,10 +39,10 @@ FolderSchema.add({
 var ProjectSchema = new Schema({
     name: { type: String, required: true },
     order: { type: Number, default: 0},
-    //documents: [{document: { type: Schema.Types.ObjectId, ref: 'Document' }, order: {type: Number}}], // Referencing
     documents: [{ type: Schema.Types.ObjectId, ref: 'Document' }], // Referencing
     folders: [FolderSchema], // Embedding, since amount of folder meta data is expected to be small.
     members: [ProjectMemberSchema],
+    metadata: metadata,
     archived: { type: Boolean, default: false},
     modified: { type: Date, default: Date.now }
 });

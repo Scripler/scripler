@@ -140,9 +140,16 @@ exports.copy = function (req, res, next) {
     var project = req.project;
 
     var newProject = new Project({
-        name: project.name + " - Copy",
-        folders: project.folders,
-        members: project.members
+        name:     project.name + " - Copy",
+        folders:  project.folders,
+        members:  project.members,
+        metadata: {
+            title: project.metadata.title,
+            description: project.metadata.description,
+            authors: project.metadata.authors,
+            language: project.metadata.language,
+            isbn:  project.metadata.isbn
+        }
     });
 
     //Add to user (last project in order)
@@ -184,6 +191,22 @@ exports.rearrange = function (req, res) {
             return next(err);
         }
         list(req, res);
+    });
+}
+
+exports.metadata = function (req, res, next) {
+    var project = req.project;
+    project.metadata.title = req.body.title;
+    project.metadata.description = req.body.description;
+    project.metadata.authors = req.body.authors;
+    project.metadata.language = req.body.language;
+    project.metadata.isbn = req.body.isbn;
+
+    project.save(function (err) {
+        if (err) {
+            return next(err);
+        }
+        res.send({project: project});
     });
 }
 
