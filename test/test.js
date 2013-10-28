@@ -625,6 +625,31 @@ describe('Scripler RESTful API', function () {
                     done();
                 });
         }),
+        it('Set all metadata - should return updated project', function (done) {
+            request(host)
+                .put('/project/'+projectId+'/metadata')
+                .set('cookie', cookie)
+                .send({
+                    title: "Space: From Earth to the Edge of the Universe",
+                    authors: ["Carole Stott", "Robert Dinwiddie", "Giles Sparrow"],
+                    description: "Take an incredible journey through Space...",
+                    language: "English",
+                    isbn: "1405353767"
+                })
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.project.metadata.title, "Space: From Earth to the Edge of the Universe");
+                    assert.equal(res.body.project.metadata.authors.length, 3);
+                    assert.equal(res.body.project.metadata.authors[0], "Carole Stott");
+                    assert.equal(res.body.project.metadata.authors[1], "Robert Dinwiddie");
+                    assert.equal(res.body.project.metadata.authors[2], "Giles Sparrow");
+                    assert.equal(res.body.project.metadata.description, "Take an incredible journey through Space...");
+                    assert.equal(res.body.project.metadata.language, "English");
+                    assert.equal(res.body.project.metadata.isbn, "1405353767");
+                    done();
+                });
+        }),
         it('Copying the project should return the copied project with the two copied documents', function (done) {
             request(host)
                 .post('/project/'+projectId+'/copy')
@@ -743,7 +768,9 @@ describe('Scripler RESTful API', function () {
                     childDocumentId = res.body.document._id;
                     childDocumentId && done();
                 });
-        }),
+        })
+    })
+    describe('Cleanup', function () {
         it('Deleting a project, should return success', function (done) {
             request(host)
                 .del('/project/'+projectId)
@@ -765,7 +792,7 @@ describe('Scripler RESTful API', function () {
                     done();
                 });
         }),
-        it('Opening the copied project should still return its two copied documents', function (done) {
+        it('Opening the copied project should still return its two copied documents, and metadata', function (done) {
             request(host)
                 .get('/project/'+projectId3)
                 .set('cookie', cookie)
@@ -777,6 +804,8 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.project.documents[0].text, undefined);
                     assert.equal(res.body.project.documents[1].name, "A New Cool Name");
                     assert.equal(res.body.project.documents[1].text, undefined);
+                    assert.equal(res.body.project.metadata.isbn, "1405353767");
+                    assert.equal(res.body.project.metadata.authors.length, 3);
                     done();
                 });
         })
