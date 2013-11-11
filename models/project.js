@@ -11,19 +11,16 @@ var mongoose = require('mongoose')
 var ProjectMemberSchema = new Schema({
     userId: { type: String, required: true },
     access: [{ type: String }]
-});
+}, { _id: false });
 
 /**
- * Metadata Sub-Schema
+ * Meta TOC Entry Schema
  */
-var metadata = {
-    title:       { type: String },
-    description: { type: String },
-    language:    { type: String },
-    authors:     [ { type: String} ],
-    isbn:        { type: String }
-};
-var ProjectMetadataSchema = new Schema(metadata);
+var TOCEntrySchema = new Schema({
+    title: { type: String },
+    target: { type: String },
+    level: {type: Number}
+}, { _id: false });
 
 /**
  * Folder Schema, recursive, see https://groups.google.com/forum/#!topic/mongoose-orm/0yUVXNyprx8
@@ -42,7 +39,16 @@ var ProjectSchema = new Schema({
     documents: [{ type: Schema.Types.ObjectId, ref: 'Document' }], // Referencing
     folders: [FolderSchema], // Embedding, since amount of folder meta data is expected to be small.
     members: [ProjectMemberSchema],
-    metadata: metadata,
+    metadata: {
+        title:       { type: String },
+        description: { type: String },
+        keywords:    [ {type: String} ],
+        language:    { type: String },
+        authors:     [ {type: String} ],
+        cover:       { type: String },
+        isbn:        { type: String },
+        toc:         { entries: [TOCEntrySchema] }
+    },
     archived: { type: Boolean, default: false},
     modified: { type: Date, default: Date.now }
 });

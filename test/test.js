@@ -395,7 +395,13 @@ describe('Scripler RESTful API', function () {
             request(host)
                 .post('/document')
                 .set('cookie', cookie)
-                .send({projectId: projectId, folderId: rootFolderId, name: 'MyFirstDocument', text: 'It is my best document ever!'})
+                .send({
+                        projectId: projectId,
+                        folderId: rootFolderId,
+                        name: 'MyFirstDocument',
+                        text: 'It is my best document ever!',
+                        type: 'cover'
+                })
                 .expect(200)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
@@ -415,7 +421,7 @@ describe('Scripler RESTful API', function () {
             request(host)
                 .post('/document')
                 .set('cookie', cookie)
-                .send({projectId: projectId, folderId: childFolderId, name: 'MySecondDocument', text: 'It is almost my best document!'})
+                .send({projectId: projectId, folderId: childFolderId, name: 'MySecondDocument', text: 'It is almost my best document!', type: "cover"})
                 .expect(200)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
@@ -632,8 +638,10 @@ describe('Scripler RESTful API', function () {
                 .send({
                     title: "Space: From Earth to the Edge of the Universe",
                     authors: ["Carole Stott", "Robert Dinwiddie", "Giles Sparrow"],
+                    keywords: ["great", "universe", "earth", "solar system"],
                     description: "Take an incredible journey through Space...",
                     language: "English",
+                    cover: "images/frontpage.jpg",
                     isbn: "1405353767"
                 })
                 .expect(200)
@@ -647,6 +655,24 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.project.metadata.description, "Take an incredible journey through Space...");
                     assert.equal(res.body.project.metadata.language, "English");
                     assert.equal(res.body.project.metadata.isbn, "1405353767");
+                    done();
+                });
+        }),
+        it('Set metadata TOC - should return updated project', function (done) {
+            request(host)
+                .put('/project/'+projectId+'/toc')
+                .set('cookie', cookie)
+                .send({entries: [
+                    {title: "Frontpage", target: "image/cover.jpg", "level": "0"},
+                    {title: "Titlepage", target: "text/titlepage.html", "level": "0"}
+                ]})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.project.metadata.title, "Space: From Earth to the Edge of the Universe");
+                    assert.equal(res.body.project.metadata.authors.length, 3);
+                    assert.equal(res.body.project.metadata.toc.entries.length, 2);
+                    assert.equal(res.body.project.metadata.toc.entries[0].title, "Frontpage");
                     done();
                 });
         }),
@@ -710,6 +736,7 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.project.documents[0]._id, childDocumentId);
                     assert.equal(res.body.project.documents[0].name, "MySecondDocument");
                     assert.equal(res.body.project.documents[0].text, undefined);
+                    assert.equal(res.body.project.documents[0].type, "cover");
                     done();
                 });
         }),
@@ -805,7 +832,9 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.project.documents[1].name, "A New Cool Name");
                     assert.equal(res.body.project.documents[1].text, undefined);
                     assert.equal(res.body.project.metadata.isbn, "1405353767");
+                    assert.equal(res.body.project.metadata.keywords.length, 4);
                     assert.equal(res.body.project.metadata.authors.length, 3);
+                    assert.equal(res.body.project.metadata.toc.entries.length, 2);
                     done();
                 });
         })

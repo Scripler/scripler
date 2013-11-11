@@ -2,6 +2,7 @@ var Project = require('../models/project.js').Project;
 var User = require('../models/user.js').User;
 var Document = require('../models/document.js').Document;
 var utils = require('../lib/utils');
+var extend = require('xtend');
 
 //Load project by id
 exports.load = function (id) {
@@ -23,7 +24,7 @@ exports.load = function (id) {
 exports.loadPopulated = function (id) {
     return function (req, res, next) {
         id = id || req.body.projectId;
-        Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members').exec(function (err, project) {
+        Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type').exec(function (err, project) {
             if (err) return next(err);
             if (!project) {
                 return next({message: "Project not found", status: 404});
@@ -143,14 +144,9 @@ exports.copy = function (req, res, next) {
         name:     project.name + " - Copy",
         folders:  project.folders,
         members:  project.members,
-        metadata: {
-            title: project.metadata.title,
-            description: project.metadata.description,
-            authors: project.metadata.authors,
-            language: project.metadata.language,
-            isbn:  project.metadata.isbn
-        }
+        metadata: extend({}, project.metadata)
     });
+    newProject.metadata.toc = project.metadata.toc;
 
     //Add to user (last project in order)
     req.user.projects.push(newProject);
@@ -161,9 +157,10 @@ exports.copy = function (req, res, next) {
     for (var i = 0; i < project.documents.length; i++) {
         var document = project.documents[i];
         var newDocument = new Document({
-            name:      document.name,
-            text:      document.text,
+            name: document.name,
+            text: document.text,
             projectId: newProject,
+            type: document.type,
             folderId: document.folderId,
             archived: document.archived,
             members: document.members
@@ -184,7 +181,7 @@ exports.copy = function (req, res, next) {
     });
 }
 
-exports.rearrange = function (req, res) {
+exports.rearrange = function (req, res, next) {
     req.user.projects = req.body.projects;
     req.user.save(function (err) {
         if (err) {
@@ -199,9 +196,22 @@ exports.metadata = function (req, res, next) {
     project.metadata.title = req.body.title;
     project.metadata.description = req.body.description;
     project.metadata.authors = req.body.authors;
+    project.metadata.keywords = req.body.keywords;
     project.metadata.language = req.body.language;
+    project.metadata.cover = req.body.cover;
     project.metadata.isbn = req.body.isbn;
 
+    project.save(function (err) {
+        if (err) {
+            return next(err);
+        }
+        res.send({project: project});
+    });
+}
+
+exports.toc = function (req, res, next) {
+    var project = req.project;
+    project.metadata.toc = req.body;
     project.save(function (err) {
         if (err) {
             return next(err);
