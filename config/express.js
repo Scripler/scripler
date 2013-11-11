@@ -51,6 +51,9 @@ module.exports = function (app, conf, mongoose) {
             httpCodes[404] = "Not Found";
             err = {status: err, message: httpCodes[err] || httpCodes[0]};
         }
+        if (err.errors) {
+            err.err = err.errors;
+        }
         if (err.stack) {
             logger.error(err.stack);
         } else {
