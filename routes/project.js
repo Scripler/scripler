@@ -4,6 +4,7 @@ var Document = require('../models/document.js').Document;
 var utils = require('../lib/utils');
 var extend = require('xtend');
 var epub2 = require('../lib/epub2');
+var sanitize = require('sanitize-filename');
 
 //Load project by id
 exports.load = function (id) {
@@ -240,5 +241,8 @@ exports.toc = function (req, res, next) {
 
 exports.compile = function (req, res) {
     var epub = epub2.create(req.project);
-	return epub.pipe(res);
+	var saneTitle = sanitize(req.project.metadata.title);
+	res.setHeader('Content-disposition', 'attachment; filename=' + saneTitle);
+	res.setHeader('Content-type', 'application/epub+zip');
+	epub.pipe(res);
 }

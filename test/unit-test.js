@@ -1,16 +1,3 @@
-/*
- Besides these unit tests, create ITs for the "create" function process/flow in "epub2"? This would, however, be dependent on a test that calls the API:
- 1. Create project
- 2. Create document
- 3. Create metadata
- 4. Creates ToC
-
- How to create object-oriented (re-usable) tests in Node.js?
-
- Mock? http://howtonode.org/make-your-tests-deterministic
- Quint? node-unit?
- */
-
 var epub2 = require('../lib/epub2')
   , assert = require("assert")
   , TOCEntry = require('../models/project.js').TOCEntry

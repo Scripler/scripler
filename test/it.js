@@ -681,8 +681,23 @@ describe('Scripler RESTful API', function () {
 				.get('/project/'+projectId+'/compile')
 				.set('cookie', cookie)
 				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+				.expect('Content-Type', 'application/epub+zip')
+				.parse(function (res, callback) {
+					res.setEncoding('binary');
+					res.data = '';
+					res.on('data', function (chunk) {
+						res.data += chunk;
+					});
+					res.on('end', function () {
+						callback(null, new Buffer(res.data, 'binary'));
+					});
+				}).end(function (err, res) {
+					if (err) return done(err);
+
+					// binary response data is in res.body as a buffer
+					assert.ok(Buffer.isBuffer(res.body));
+					//console.log("res: ", res.body);
+
 					done();
 				});
 		}),
