@@ -60,6 +60,8 @@ module.exports = function (app, auth) {
     app.put('/folder/:projectId/:folderId/unarchive', auth.isLoggedIn(), folder.unarchive);
     app.delete('/folder/:projectId/:parentFolderId?/:folderId', auth.isLoggedIn(), folder.delete);
 
+    /* API Output */
+    app.get('/project/:projectIdPopulatedText/compile', auth.isLoggedIn(), project.compile);
 
     // API Parameters
     app.param('projectId', function(req, res, next, id){
@@ -68,6 +70,9 @@ module.exports = function (app, auth) {
     app.param('projectIdPopulated', function(req, res, next, id){
         return project.loadPopulated(id)(req, res, next);
     });
+	app.param('projectIdPopulatedText', function(req, res, next, id){
+		return project.loadPopulatedText(id)(req, res, next);
+	});
     app.param('documentId', function(req, res, next, id){
         return document.load(id)(req, res, next);
     });

@@ -24,7 +24,13 @@
     "winston": "~0.7.2",
     "email-templates": "~0.1.0",
     "nodemailer": "~0.5.2",
-    "mailchimp-api": "~2.0.3"
+    "mailchimp-api": "~2.0.3",
+    "ncp": "~0.4.2",
+    "adm-zip": "~0.4.3",
+    "filewalker": "~0.1.2",
+    "path": "~0.4.9",
+    "archiver": "~0.4.10",
+    "sanitize-filename": "~1.0.1"
   },
   "readmeFilename": "README.md",
   "main": "app.js",

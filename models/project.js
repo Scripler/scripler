@@ -73,3 +73,4 @@ ProjectSchema.pre('remove', function(next) {
 
 exports.Project = mongoose.model('Project', ProjectSchema);
 exports.Folder = mongoose.model('Folder', FolderSchema);
+exports.TOCEntry = mongoose.model('TOCEntry', TOCEntrySchema);

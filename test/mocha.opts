@@ -3,5 +3,5 @@
 --slow 10
 --colors
 --invert
---async-only
 --check-leaks
+--timeout 5000

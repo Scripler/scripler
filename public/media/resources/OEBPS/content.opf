@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" unique-identifier="bookid" version="2.0">
+  <metadata>
+    <dc:identifier id="BookId" opf:scheme="UUID">%metadata_uuid%</dc:identifier>
+    <dc:title>%metadata_title%</dc:title>
+    <dc:creator opf:role="aut">%metadata_author%</dc:creator>
+    <dc:language>%metadata_language%</dc:language>
+    <dc:date opf:event="modification">%metadata_modification_date%</dc:date>
+    <dc:description>%metadata_description%</dc:description>
+    <dc:identifier opf:scheme="ISBN">%metadata_identifier%</dc:identifier>
+    <dc:type>%metadata_type%</dc:type>
+    <dc:rights>%metadata_rights%</dc:rights>
+    <dc:contributor opf:role="bkp">%metadata_contributor%</dc:contributor>
+    <dc:date opf:event="publication">%metadata_publication_date%</dc:date>
+    <dc:publisher>%metadata_publisher%</dc:publisher>
+    <dc:format>%metadata_format%</dc:format>
+    <meta name="cover" content="%metadata_cover%" />
+  </metadata>
+  <manifest>
+    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+    <item id="css" href="stylesheet.css" media-type="text/css"/>
+	%manifest_html_files%
+	%manifest_image_files%
+	%manifest_font_files%
+	<item href="%manifest_font_license_name%.txt" id="%manifest_font_license_name%" media-type="text/plain" />
+  </manifest>
+  <spine toc="ncx">
+	%spine_documents%
+  </spine>
+  <guide>
+    %guide_cover%
+	%guide_title-page%
+	%guide_colophon%
+	%guide_toc%
+  </guide> 
+</package>

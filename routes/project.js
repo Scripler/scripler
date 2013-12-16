@@ -3,6 +3,7 @@ var User = require('../models/user.js').User;
 var Document = require('../models/document.js').Document;
 var utils = require('../lib/utils');
 var extend = require('xtend');
+var epub2 = require('../lib/epub2');
 
 //Load project by id
 exports.load = function (id) {
@@ -35,6 +36,23 @@ exports.loadPopulated = function (id) {
             return next();
         });
     }
+}
+
+// Purely for performance reasons
+exports.loadPopulatedText = function (id) {
+	return function (req, res, next) {
+		id = id || req.body.projectId;
+		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type text').exec(function (err, project) {
+			if (err) return next(err);
+			if (!project) {
+				return next({message: "Project not found", status: 404});
+			}
+			if (!req.user) return next();//Let missing authentication be handled in auth middleware
+			if (!utils.hasAccessToEntity(req.user, project)) next(403);
+			req.project = project;
+			return next();
+		});
+	}
 }
 
 var list = exports.list = function (req, res, next) {
@@ -221,5 +239,6 @@ exports.toc = function (req, res, next) {
 }
 
 exports.compile = function (req, res) {
-    // TODO: implement
+    var epub = epub2.create(req.project);
+	return epub.pipe(res);
 }

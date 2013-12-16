@@ -676,6 +676,16 @@ describe('Scripler RESTful API', function () {
                     done();
                 });
         }),
+		it('Compiling a project should return the compiled project (as an EPUB archive)', function (done) {
+			request(host)
+				.get('/project/'+projectId+'/compile')
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
+		}),
         it('Copying the project should return the copied project with the two copied documents', function (done) {
             request(host)
                 .post('/project/'+projectId+'/copy')

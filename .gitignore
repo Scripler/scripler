@@ -6,3 +6,6 @@ config/*
 .idea
 .project
 .classpath
+.settings
+debug.log
+exceptions.log
