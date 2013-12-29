@@ -4,7 +4,8 @@ var assert = require("assert")
     , conf = require('config')
     , app = require('../app')
     , mongoose = require('mongoose')
-    , request = require('supertest');
+    , request = require('supertest')
+	, fs = require('fs');
 
 var host = '127.0.0.1:'+conf.app.port;
 var cookie;
@@ -697,6 +698,7 @@ describe('Scripler RESTful API', function () {
 					// binary response data is in res.body as a buffer
 					assert.ok(Buffer.isBuffer(res.body));
 					//console.log("res: ", res.body);
+					fs.writeFile(projectId + '.epub', res.body);
 
 					done();
 				});

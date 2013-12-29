@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<package xmlns="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" unique-identifier="bookid" version="2.0">
-  <metadata>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId" version="2.0">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
     <dc:identifier id="BookId" opf:scheme="UUID">%metadata_uuid%</dc:identifier>
     <dc:title>%metadata_title%</dc:title>
     <dc:creator opf:role="aut">%metadata_author%</dc:creator>
@@ -17,8 +17,8 @@
     <meta name="cover" content="%metadata_cover%" />
   </metadata>
   <manifest>
-    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
-    <item id="css" href="stylesheet.css" media-type="text/css"/>
+	<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+	<item id="css" href="stylesheet.css" media-type="text/css"/>
 	%manifest_html_files%
 	%manifest_image_files%
 	%manifest_font_files%
