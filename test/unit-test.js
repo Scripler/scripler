@@ -96,9 +96,10 @@ describe('epub2', function () {
     }),
     it('getManifestHtmlFilesString', function () {
 		var folderName = 'HTML';
+		var prefix = 'doc_';
 
 		var htmlFiles = [];
-		var result = epub2.getManifestFilesString(folderName, htmlFiles, 'html', 'application/xhtml+xml');
+		var result = epub2.getManifestFilesString(prefix, folderName, htmlFiles, 'html', 'application/xhtml+xml');
 		assert.equal(result, '');
 
 		var document1 = new Document;
@@ -106,23 +107,24 @@ describe('epub2', function () {
 		//htmlFile1.mediaType = 'application/xhtml+xml';
 
 	    htmlFiles = [document1];
-	    result = epub2.getManifestFilesString(folderName, htmlFiles, 'html', 'application/xhtml+xml');
-	    assert.equal(result, '<item id="' + document1.id + '" href="HTML/' + document1.id + '.html" media-type="application/xhtml+xml" />\n');
+	    result = epub2.getManifestFilesString(prefix, folderName, htmlFiles, 'html', 'application/xhtml+xml');
+	    assert.equal(result, '<item id="' + prefix + document1.id + '.html" href="HTML/' + prefix + document1.id + '.html" media-type="application/xhtml+xml" />\n');
 
 		var document2 = new Document;
 		//htmlFile2.id = 'Doc2.html';
 		//htmlFile2.mediaType = 'application/xhtml+xml';
 
 	    htmlFiles = [document1, document2];
-	    result = epub2.getManifestFilesString(folderName, htmlFiles, 'html', 'application/xhtml+xml');
-	    assert.equal(result, '<item id="' + document1.id + '" href="HTML/' + document1.id + '.html" media-type="application/xhtml+xml" />\n' +
-							 '<item id="' + document2.id + '" href="HTML/' + document2.id + '.html" media-type="application/xhtml+xml" />\n');
+	    result = epub2.getManifestFilesString(prefix, folderName, htmlFiles, 'html', 'application/xhtml+xml');
+	    assert.equal(result, '<item id="' + prefix + document1.id + '.html" href="HTML/' + prefix + document1.id + '.html" media-type="application/xhtml+xml" />\n' +
+							 '<item id="' + prefix + document2.id + '.html" href="HTML/' + prefix + document2.id + '.html" media-type="application/xhtml+xml" />\n');
     }),
     it('getManifestImageFilesString', function () {
 		var folderName = 'Images';
+		var prefix = 'img_';
 
 		var images = [];
-		var result = epub2.getManifestFilesString(folderName, images, 'jpg', 'image/jpeg');
+		var result = epub2.getManifestFilesString(prefix, folderName, images, 'jpg', 'image/jpeg');
 		assert.equal(result, '');
 
 		var image1 = new ManifestFile;
@@ -130,23 +132,24 @@ describe('epub2', function () {
 		//image1.mediaType = 'image/jpeg';
 
 		images = [image1];
-		var result = epub2.getManifestFilesString(folderName, images, 'jpg', 'image/jpeg');
-		assert.equal(result, '<item id="frontpage" href="Images/frontpage.jpg" media-type="image/jpeg" />\n');
+		var result = epub2.getManifestFilesString(prefix, folderName, images, 'jpg', 'image/jpeg');
+		assert.equal(result, '<item id="img_frontpage.jpg" href="Images/img_frontpage.jpg" media-type="image/jpeg" />\n');
 
 		var image2 = new ManifestFile;
 		image2.id = 'fun_image';
 		//image2.mediaType = 'image/png';
 
 		images = [image1, image2];
-		var result = epub2.getManifestFilesString(folderName, images, 'jpg', 'image/jpeg');
-		assert.equal(result, 	'<item id="frontpage" href="Images/frontpage.jpg" media-type="image/jpeg" />\n' +
-								'<item id="fun_image" href="Images/fun_image.jpg" media-type="image/jpeg" />\n');
+		var result = epub2.getManifestFilesString(prefix, folderName, images, 'jpg', 'image/jpeg');
+		assert.equal(result, 	'<item id="img_frontpage.jpg" href="Images/img_frontpage.jpg" media-type="image/jpeg" />\n' +
+								'<item id="img_fun_image.jpg" href="Images/img_fun_image.jpg" media-type="image/jpeg" />\n');
 	}),
     it('getManifestFontFilesString', function () {
 		var folderName = 'Fonts';
+		var prefix = 'font_';
 
 		var fonts = [];
-		var result = epub2.getManifestFilesString(folderName, fonts, 'tff', 'application/x-font-ttf');
+		var result = epub2.getManifestFilesString(prefix, folderName, fonts, 'tff', 'application/x-font-ttf');
 		assert.equal(result, '');
 
 		var font1 = new ManifestFile;
@@ -154,36 +157,39 @@ describe('epub2', function () {
 		//font1.mediaType = 'application/x-font-ttf';
 
 		fonts = [font1];
-		var result = epub2.getManifestFilesString(folderName, fonts, 'tff', 'application/x-font-ttf');
-		assert.equal(result, '<item id="Scripler1" href="Fonts/Scripler1.tff" media-type="application/x-font-ttf" />\n');
+		var result = epub2.getManifestFilesString(prefix, folderName, fonts, 'tff', 'application/x-font-ttf');
+		assert.equal(result, '<item id="font_Scripler1.tff" href="Fonts/font_Scripler1.tff" media-type="application/x-font-ttf" />\n');
 
 		var font2 = new ManifestFile;
 		font2.id = 'Scrupler33';
 		//font2.mediaType = 'application/x-font-ttf';
 
 		fonts = [font1, font2];
-		var result = epub2.getManifestFilesString(folderName, fonts, 'tff', 'application/x-font-ttf');
-		assert.equal(result, 	'<item id="Scripler1" href="Fonts/Scripler1.tff" media-type="application/x-font-ttf" />\n' +
-								'<item id="Scrupler33" href="Fonts/Scrupler33.tff" media-type="application/x-font-ttf" />\n');
+		var result = epub2.getManifestFilesString(prefix, folderName, fonts, 'tff', 'application/x-font-ttf');
+		assert.equal(result, 	'<item id="font_Scripler1.tff" href="Fonts/font_Scripler1.tff" media-type="application/x-font-ttf" />\n' +
+								'<item id="font_Scrupler33.tff" href="Fonts/font_Scrupler33.tff" media-type="application/x-font-ttf" />\n');
     }),
     it('getSpineDocumentsString', function () {
 		var htmlFiles = [];
-		var result = epub2.getSpineDocumentsString(htmlFiles);
+		var prefix = 'doc_';
+
+		var result = epub2.getSpineDocumentsString(prefix, htmlFiles, 'html');
 		assert.equal(result, '');
 
 		var htmlFile1 = new ManifestFile;
-		htmlFile1.id = 'Doc1.html';
+		htmlFile1.id = 'Doc1';
 
 		htmlFiles = [htmlFile1];
-		var result = epub2.getSpineDocumentsString(htmlFiles);
-		assert.equal(result, '<itemref idref="Doc1.html" />\n');
+		var result = epub2.getSpineDocumentsString(prefix, htmlFiles, 'html');
+		assert.equal(result, '<itemref idref="doc_Doc1.html" />\n');
 
 		var htmlFile2 = new ManifestFile;
-		htmlFile2.id = 'Doc2.html';
+		htmlFile2.id = 'Doc2';
+		htmlFile2.type = 'TitlePage';
 
 		htmlFiles = [htmlFile1, htmlFile2];
-		var result = epub2.getSpineDocumentsString(htmlFiles);
-		assert.equal(result, 	'<itemref idref="Doc1.html" />\n' +
-								'<itemref idref="Doc2.html" />\n');
+		var result = epub2.getSpineDocumentsString(prefix, htmlFiles, 'html');
+		assert.equal(result, 	'<itemref idref="doc_Doc1.html" />\n' +
+								'<itemref idref="TitlePage.html" />\n');
     });
 });

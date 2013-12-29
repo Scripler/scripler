@@ -184,6 +184,7 @@ exports.open = function (req, res, next) {
                     }
                 });
             } else { // Return the folder's documents
+				// TODO: enable sorting for folders! How exactly?
                 Document.find({"projectId": req.params.projectId, "folderId": req.params.folderId, "archived": archived}, function (err, docs) {
                     if (err) {
                         return next(err);

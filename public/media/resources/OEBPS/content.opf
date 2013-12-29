@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <package xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId" version="2.0">
   <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
     <dc:identifier id="BookId" opf:scheme="UUID">%metadata_uuid%</dc:identifier>
@@ -22,7 +22,7 @@
 	%manifest_html_files%
 	%manifest_image_files%
 	%manifest_font_files%
-	<item href="%manifest_font_license_name%.txt" id="%manifest_font_license_name%" media-type="text/plain" />
+	<item href="%manifest_font_license_name%" id="%manifest_font_license_name%" media-type="text/plain" />
   </manifest>
   <spine toc="ncx">
 	%spine_documents%
