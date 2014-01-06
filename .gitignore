@@ -9,3 +9,5 @@ config/*
 .settings
 debug.log
 exceptions.log
+public/resources/projects/project*
+public/resources/users/user*

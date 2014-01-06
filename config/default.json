@@ -43,5 +43,13 @@
             "consumerSecret": "xxx",
             "callbackURL":    "http://scripler.com:3000/auth/linkedin/callback"
         }
-    }
+    },
+	"resources": {
+		"projectsDir": "C:\\Users\\mgf\\Dropbox\\Dokumenter\\Udvikling\\Kode\\Scripler\\Github\\Scripler\\scripler\\public\\resources\\projects",
+		"usersDir": "C:\\Users\\mgf\\Dropbox\\Dokumenter\\Udvikling\\Kode\\Scripler\\Github\\Scripler\\scripler\\public\\resources\\users"
+	},
+	"epub": {
+		"projectDirPrefix": "project",
+		"userDirPrefix": "user"
+	}
 }

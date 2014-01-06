@@ -6,7 +6,10 @@ var User = require('../models/user.js').User
     , mcapi = new require('mailchimp-api')
     , logger = require('../lib/logger')
     , conf = require('config')
-    , env = process.env.NODE_ENV;
+    , env = process.env.NODE_ENV
+	, path = require('path')
+	, fs = require('fs');
+;
 
 var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
 
@@ -92,7 +95,15 @@ exports.register = function (req, res, next) {
                 if ('test' != env) {
                     emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
                 }
-                res.send({"user": user});
+
+				var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + user._id);
+				fs.mkdir(userDir, function(err) {
+					if (err) {
+						return next(err);
+					} else {
+						res.send({"user": user});
+					}
+				});
             }
         });
     }

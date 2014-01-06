@@ -3,10 +3,13 @@ var User = require('../models/user.js').User;
 var Document = require('../models/document.js').Document;
 var utils = require('../lib/utils');
 var extend = require('xtend');
-var epub2 = require('../lib/epub2');
+var epub2 = require('../lib/epub/epub2/epub2');
 var sanitize = require('sanitize-filename');
+var conf = require('config');
+var path = require('path');
+var fs = require('fs');
 
-//Load project by id
+//Load project by i
 exports.load = function (id) {
     return function (req, res, next) {
         id = id || req.body.projectId;
@@ -88,8 +91,16 @@ exports.create = function (req, res, next) {
         req.user.projects.push(project);
         req.user.save(function (err) {
             if (err) {
-                return next(err);
+				return next(err);
             }
+
+			var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
+			fs.mkdir(projectDir, function(err) {
+				if (err) {
+					return next(err);
+				}
+			});
+
             res.send({project: project});
         });
     });
@@ -240,7 +251,7 @@ exports.toc = function (req, res, next) {
 }
 
 exports.compile = function (req, res) {
-    var epub = epub2.create(req.project);
+    var epub = epub2.create(req.project, req.user._id);
 	var saneTitle = sanitize(req.project.metadata.title);
 	res.setHeader('Content-disposition', 'attachment; filename=' + saneTitle);
 	res.setHeader('Content-type', 'application/epub+zip');
