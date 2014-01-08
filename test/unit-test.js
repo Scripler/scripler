@@ -149,7 +149,7 @@ describe('epub2', function () {
 		var prefix = 'font_';
 
 		var fonts = [];
-		var result = epub2.getManifestFilesString(prefix, folderName, fonts, 'tff', 'application/x-font-ttf');
+		var result = epub2.getManifestFilesString(prefix, folderName, fonts, 'ttf', 'application/x-font-ttf');
 		assert.equal(result, '');
 
 		var font1 = new ManifestFile;
@@ -157,17 +157,17 @@ describe('epub2', function () {
 		//font1.mediaType = 'application/x-font-ttf';
 
 		fonts = [font1];
-		var result = epub2.getManifestFilesString(prefix, folderName, fonts, 'tff', 'application/x-font-ttf');
-		assert.equal(result, '<item id="font_Scripler1.tff" href="Fonts/font_Scripler1.tff" media-type="application/x-font-ttf" />\n');
+		var result = epub2.getManifestFilesString(prefix, folderName, fonts, 'ttf', 'application/x-font-ttf');
+		assert.equal(result, '<item id="font_Scripler1.ttf" href="Fonts/font_Scripler1.ttf" media-type="application/x-font-ttf" />\n');
 
 		var font2 = new ManifestFile;
 		font2.id = 'Scrupler33';
 		//font2.mediaType = 'application/x-font-ttf';
 
 		fonts = [font1, font2];
-		var result = epub2.getManifestFilesString(prefix, folderName, fonts, 'tff', 'application/x-font-ttf');
-		assert.equal(result, 	'<item id="font_Scripler1.tff" href="Fonts/font_Scripler1.tff" media-type="application/x-font-ttf" />\n' +
-								'<item id="font_Scrupler33.tff" href="Fonts/font_Scrupler33.tff" media-type="application/x-font-ttf" />\n');
+		var result = epub2.getManifestFilesString(prefix, folderName, fonts, 'ttf', 'application/x-font-ttf');
+		assert.equal(result, 	'<item id="font_Scripler1.ttf" href="Fonts/font_Scripler1.ttf" media-type="application/x-font-ttf" />\n' +
+								'<item id="font_Scrupler33.ttf" href="Fonts/font_Scrupler33.ttf" media-type="application/x-font-ttf" />\n');
     }),
     it('getSpineDocumentsString', function () {
 		var htmlFiles = [];

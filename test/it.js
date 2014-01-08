@@ -931,7 +931,7 @@ describe('Scripler RESTful API', function () {
 							if (error !== null) {
 								console.log('exec error: ' + error);
 							}
-							fs.unlinkSync(epub)
+							fs.unlinkSync(epub);
 							done();
 						});
 				});

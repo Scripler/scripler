@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <package xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId" version="2.0">
   <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
-    <dc:identifier id="BookId" opf:scheme="UUID">%metadata_uuid%</dc:identifier>
+    <dc:identifier opf:scheme="UUID" id="BookId">urn:uuid:%metadata_uuid%</dc:identifier>
+    <dc:identifier opf:scheme="ISBN">urn:isbn:%metadata_isbn%</dc:identifier>
     <dc:title>%metadata_title%</dc:title>
     <dc:creator opf:role="aut">%metadata_author%</dc:creator>
     <dc:language>%metadata_language%</dc:language>
     <dc:date opf:event="modification">%metadata_modification_date%</dc:date>
     <dc:description>%metadata_description%</dc:description>
-    <dc:identifier opf:scheme="ISBN">%metadata_identifier%</dc:identifier>
     <dc:type>%metadata_type%</dc:type>
     <dc:rights>%metadata_rights%</dc:rights>
     <dc:contributor opf:role="bkp">%metadata_contributor%</dc:contributor>
