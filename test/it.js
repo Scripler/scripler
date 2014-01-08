@@ -905,7 +905,7 @@ describe('Scripler RESTful API', function () {
                 });
         }),
 		it('Uploading a font to a user should return success', function (done) {
-			// TODO: once an API call for this exists, change this code to use it. For now, fake it...
+			// TODO: when an API call for this exists, change this code to use it. For now, fake it...
 
 			// Copy font from source, test dir, to destination, public dir
 			var fontName = 'casper.ttf';
@@ -925,7 +925,7 @@ describe('Scripler RESTful API', function () {
 			});
 		}),
 		it('Uploading an image to a project should return success', function (done) {
-			// TODO: once an API call for this exists, change this code to use it. For now, fake it...
+			// TODO: when an API call for this exists, change this code to use it. For now, fake it...
 
 			// Copy image from source, test dir, to destination, public dir
 			var imageName = 'Scripler_logo.jpg';
