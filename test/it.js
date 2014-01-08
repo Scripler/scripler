@@ -913,8 +913,7 @@ describe('Scripler RESTful API', function () {
 			var srcFont = path.join(srcUserFontsDir, fontName);
 
 			var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + userId);
-			var fontsDir = 'Fonts'; // TODO: put in conf (also used by epub2.js)
-			var dstUserFontsDir = path.join(userDir, fontsDir);
+			var dstUserFontsDir = path.join(userDir, conf.epub.fontsDir);
 
 			fs.mkdir(dstUserFontsDir, function (err) {
 				if (err) {
@@ -934,8 +933,7 @@ describe('Scripler RESTful API', function () {
 			var srcImage = path.join(srcImagesDir, imageName);
 
 			var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + projectId);
-			var imagesDir = 'Images'; // TODO: put in conf (also used by epub2.js)
-			var dstImagesDir = path.join(projectDir, imagesDir);
+			var dstImagesDir = path.join(projectDir, conf.epub.imagesDir);
 
 			fs.mkdir(dstImagesDir, function (err) {
 				if (err) {

@@ -49,7 +49,9 @@
 		"usersDir": "C:\\Users\\mgf\\Dropbox\\Dokumenter\\Udvikling\\Kode\\Scripler\\Github\\Scripler\\scripler\\public\\resources\\users"
 	},
 	"epub": {
+		"userDirPrefix": "user",
 		"projectDirPrefix": "project",
-		"userDirPrefix": "user"
+		"fontsDir": "Fonts",
+		"imagesDir": "Images"
 	}
 }
