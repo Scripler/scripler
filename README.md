@@ -19,6 +19,8 @@ Folder Structure
  * Application logic for the different API routes
 * lib
  * Other application logic
+* test
+ * unit and integration test
 
 Requirements
 ------------
