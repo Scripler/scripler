@@ -32,7 +32,8 @@
     "archiver": "~0.4.10",
     "sanitize-filename": "~1.0.1",
     "moment": "~2.5.0",
-    "node-uuid": "~1.4.1"
+    "node-uuid": "~1.4.1",
+    "async": "~0.2.9"
   },
   "readmeFilename": "README.md",
   "main": "app.js",

@@ -5,7 +5,8 @@ var assert = require("assert")
     , app = require('../app')
     , mongoose = require('mongoose')
     , request = require('supertest')
-	, fs = require('fs');
+	, fs = require('fs')
+	, path = require('path');
 
 var exec = require('child_process').exec,
 	child;
@@ -24,6 +25,8 @@ var coverDocumentId;
 var titlePageDocumentId;
 var tocDocumentId;
 var colophonDocumentId;
+
+var cleanupEPUB = false;
 
 function containsId(items, id) {
 	var result = false;
@@ -889,7 +892,6 @@ describe('Scripler RESTful API', function () {
                 .put('/project/'+projectId+'/toc')
                 .set('cookie', cookie)
                 .send({entries: [
-                    //{title: "Frontpage", target: "image/cover.jpg", "level": "0"}, // TODO: uncomment when Image TODO in epub2.js is solved
                     {title: "Titlepage", target: "HTML/TitlePage.html", "level": "0"}
                 ]})
                 .expect(200)
@@ -897,11 +899,53 @@ describe('Scripler RESTful API', function () {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
                     assert.equal(res.body.project.metadata.title, "Space: From Earth to the Edge of the Universe");
                     assert.equal(res.body.project.metadata.authors.length, 3);
-                    assert.equal(res.body.project.metadata.toc.entries.length, 1); // TODO: change value to 2 when Image TODO in epub2.js is solved
+                    assert.equal(res.body.project.metadata.toc.entries.length, 1);
                     assert.equal(res.body.project.metadata.toc.entries[0].title, "Titlepage");
                     done();
                 });
         }),
+		it('Uploading a font to a user should return success', function (done) {
+			// TODO: once an API call for this exists, change this code to use it. For now, fake it...
+
+			// Copy font from source, test dir, to destination, public dir
+			var fontName = 'casper.ttf';
+			var srcUserFontsDir = path.join('test', 'resources', 'user-fonts');
+			var srcFont = path.join(srcUserFontsDir, fontName);
+
+			var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + userId);
+			var fontsDir = 'Fonts'; // TODO: put in conf (also used by epub2.js)
+			var dstUserFontsDir = path.join(userDir, fontsDir);
+
+			fs.mkdir(dstUserFontsDir, function (err) {
+				if (err) {
+					throw err;
+				}
+				var dstFont = path.join(dstUserFontsDir, fontName);
+				fs.createReadStream(srcFont).pipe(fs.createWriteStream(dstFont));
+				done();
+			});
+		}),
+		it('Uploading an image to a project should return success', function (done) {
+			// TODO: once an API call for this exists, change this code to use it. For now, fake it...
+
+			// Copy image from source, test dir, to destination, public dir
+			var imageName = 'Scripler_logo.jpg';
+			var srcImagesDir = path.join('test', 'resources', 'images');
+			var srcImage = path.join(srcImagesDir, imageName);
+
+			var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + projectId);
+			var imagesDir = 'Images'; // TODO: put in conf (also used by epub2.js)
+			var dstImagesDir = path.join(projectDir, imagesDir);
+
+			fs.mkdir(dstImagesDir, function (err) {
+				if (err) {
+					throw err;
+				}
+				var dstImage = path.join(dstImagesDir, imageName);
+				fs.createReadStream(srcImage).pipe(fs.createWriteStream(dstImage));
+				done();
+			});
+		}),
 		it('Compiling a project should return the compiled project (as an EPUB archive)', function (done) {
 			request(host)
 				.get('/project/'+projectId+'/compile')
@@ -930,8 +974,11 @@ describe('Scripler RESTful API', function () {
 						function (error, stdout, stderr) {
 							if (error !== null) {
 								console.log('exec error: ' + error);
+								throw error;
 							}
-							fs.unlinkSync(epub);
+							if (cleanupEPUB) {
+								fs.unlinkSync(epub);
+							}
 							done();
 						});
 				});
@@ -1142,9 +1189,9 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.project.metadata.isbn, "1405353767");
                     assert.equal(res.body.project.metadata.keywords.length, 4);
                     assert.equal(res.body.project.metadata.authors.length, 3);
-                    assert.equal(res.body.project.metadata.toc.entries.length, 1); // TODO: change value to 2 when Image TODO in epub2.js is solved
+                    assert.equal(res.body.project.metadata.toc.entries.length, 1);
                     done();
                 });
         })
-    })
+	})
 })

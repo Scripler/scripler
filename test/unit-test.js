@@ -127,17 +127,13 @@ describe('epub2', function () {
 		var result = epub2.getManifestFilesString(prefix, folderName, images, 'jpg', 'image/jpeg');
 		assert.equal(result, '');
 
-		var image1 = new ManifestFile;
-		image1.id = 'frontpage';
-		//image1.mediaType = 'image/jpeg';
+		var image1 = 'img_frontpage.jpg';
 
 		images = [image1];
 		var result = epub2.getManifestFilesString(prefix, folderName, images, 'jpg', 'image/jpeg');
 		assert.equal(result, '<item id="img_frontpage.jpg" href="Images/img_frontpage.jpg" media-type="image/jpeg" />');
 
-		var image2 = new ManifestFile;
-		image2.id = 'fun_image';
-		//image2.mediaType = 'image/png';
+		var image2 = 'img_fun_image.jpg';
 
 		images = [image1, image2];
 		var result = epub2.getManifestFilesString(prefix, folderName, images, 'jpg', 'image/jpeg');
@@ -152,17 +148,13 @@ describe('epub2', function () {
 		var result = epub2.getManifestFilesString(prefix, folderName, fonts, 'ttf', 'application/x-font-ttf');
 		assert.equal(result, '');
 
-		var font1 = new ManifestFile;
-		font1.id = 'Scripler1';
-		//font1.mediaType = 'application/x-font-ttf';
+		var font1 = 'font_Scripler1.ttf';
 
 		fonts = [font1];
 		var result = epub2.getManifestFilesString(prefix, folderName, fonts, 'ttf', 'application/x-font-ttf');
 		assert.equal(result, '<item id="font_Scripler1.ttf" href="Fonts/font_Scripler1.ttf" media-type="application/x-font-ttf" />');
 
-		var font2 = new ManifestFile;
-		font2.id = 'Scrupler33';
-		//font2.mediaType = 'application/x-font-ttf';
+		var font2 = 'font_Scrupler33.ttf';
 
 		fonts = [font1, font2];
 		var result = epub2.getManifestFilesString(prefix, folderName, fonts, 'ttf', 'application/x-font-ttf');

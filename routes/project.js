@@ -251,7 +251,7 @@ exports.toc = function (req, res, next) {
 }
 
 exports.compile = function (req, res) {
-    var epub = epub2.create(req.project, req.user._id);
+    var epub = epub2.create(req.user._id, req.project);
 	var saneTitle = sanitize(req.project.metadata.title);
 	res.setHeader('Content-disposition', 'attachment; filename=' + saneTitle);
 	res.setHeader('Content-type', 'application/epub+zip');
