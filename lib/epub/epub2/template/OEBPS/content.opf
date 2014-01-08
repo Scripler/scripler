@@ -28,7 +28,7 @@
 	%spine_documents%
   </spine>
   <guide>
-    %guide_cover%
+	%guide_cover%
 	%guide_title-page%
 	%guide_colophon%
 	%guide_toc%
