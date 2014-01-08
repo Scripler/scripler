@@ -8,6 +8,7 @@ var sanitize = require('sanitize-filename');
 var conf = require('config');
 var path = require('path');
 var fs = require('fs');
+var rimraf = require('rimraf');
 
 //Load project by i
 exports.load = function (id) {
@@ -99,9 +100,9 @@ exports.create = function (req, res, next) {
 				if (err) {
 					return next(err);
 				}
+				res.send({project: project});
 			});
 
-            res.send({project: project});
         });
     });
 }
@@ -159,12 +160,19 @@ exports.unarchive = function (req, res, next) {
 
 exports.delete = function (req, res, next) {
     var project = req.project;
-    project.remove(function (err, result) {
-        if (err) {
-            return next(err);
-        }
-        res.send({});
-    });
+
+	var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
+	rimraf(projectDir, function(err) {
+		if (err) {
+			return next(err);
+		}
+		project.remove(function (err, result) {
+			if (err) {
+				return next(err);
+			}
+			res.send({});
+		});
+	});
 }
 
 exports.copy = function (req, res, next) {
