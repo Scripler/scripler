@@ -3,12 +3,6 @@ var epub2 = require('../lib/epub/epub2/epub2')
   , TOCEntry = require('../models/project.js').TOCEntry
   , Document = require('../models/document.js').Document;
 
-// TODO: will manifest file (HTML, images, fonts) properties be located on Document?
-ManifestFile = function (id, mediaType) {
-	this.id = id;
-	this.mediaType = mediaType;
-};
-
 describe('epub2', function () {
     it('getCloseNavPointsString', function () {
         var result = epub2.getCloseNavPointsString(0, 0);
@@ -99,20 +93,20 @@ describe('epub2', function () {
 		var prefix = 'doc_';
 
 		var htmlFiles = [];
-		var result = epub2.getManifestFilesString(prefix, folderName, htmlFiles, 'html', 'application/xhtml+xml');
+		var result = epub2.getManifestFilesString(prefix, folderName, htmlFiles);
 		assert.equal(result, '');
 
 		var document1 = new Document;
-		//document1.id = 'Doc1.html';
-		//htmlFile1.mediaType = 'application/xhtml+xml';
+		document1.fileExtension = 'html';
+		document1.mediaType = 'application/xhtml+xml';
 
 	    htmlFiles = [document1];
-	    result = epub2.getManifestFilesString(prefix, folderName, htmlFiles, 'html', 'application/xhtml+xml');
+	    result = epub2.getManifestFilesString(prefix, folderName, htmlFiles);
 	    assert.equal(result, '<item id="' + prefix + document1.id + '.html" href="HTML/' + prefix + document1.id + '.html" media-type="application/xhtml+xml" />');
 
 		var document2 = new Document;
-		//htmlFile2.id = 'Doc2.html';
-		//htmlFile2.mediaType = 'application/xhtml+xml';
+		document2.fileExtension = 'html';
+		document2.mediaType = 'application/xhtml+xml';
 
 	    htmlFiles = [document1, document2];
 	    result = epub2.getManifestFilesString(prefix, folderName, htmlFiles, 'html', 'application/xhtml+xml');
@@ -124,21 +118,30 @@ describe('epub2', function () {
 		var prefix = 'img_';
 
 		var images = [];
-		var result = epub2.getManifestFilesString(prefix, folderName, images, 'jpg', 'image/jpeg');
+		var result = epub2.getManifestFilesString(prefix, folderName, images);
 		assert.equal(result, '');
 
-		var image1 = 'img_frontpage.jpg';
+		var image1 = {
+			"name"			: "img_frontpage.jpg",
+			"fileExtension"	: "jpg",
+			"mediaType"		: "image/jpeg"
+		};
 
 		images = [image1];
-		var result = epub2.getManifestFilesString(prefix, folderName, images, 'jpg', 'image/jpeg');
+
+		var result = epub2.getManifestFilesString(prefix, folderName, images);
 		assert.equal(result, '<item id="img_frontpage.jpg" href="Images/img_frontpage.jpg" media-type="image/jpeg" />');
 
-		var image2 = 'img_fun_image.jpg';
+		var image2 = {
+			"name"			: "img_fun_image.png",
+			"fileExtension"	: "png",
+			"mediaType"		: "image/png"
+		};
 
 		images = [image1, image2];
-		var result = epub2.getManifestFilesString(prefix, folderName, images, 'jpg', 'image/jpeg');
+		var result = epub2.getManifestFilesString(prefix, folderName, images);
 		assert.equal(result, 	'<item id="img_frontpage.jpg" href="Images/img_frontpage.jpg" media-type="image/jpeg" />' +
-								'<item id="img_fun_image.jpg" href="Images/img_fun_image.jpg" media-type="image/jpeg" />');
+								'<item id="img_fun_image.png" href="Images/img_fun_image.png" media-type="image/png" />');
 	}),
     it('getManifestFontFilesString', function () {
 		var folderName = 'Fonts';
@@ -148,13 +151,21 @@ describe('epub2', function () {
 		var result = epub2.getManifestFilesString(prefix, folderName, fonts, 'ttf', 'application/x-font-ttf');
 		assert.equal(result, '');
 
-		var font1 = 'font_Scripler1.ttf';
+		var font1 = {
+			"name"			: "font_Scripler1.ttf",
+			"fileExtension"	: "ttf",
+			"mediaType"		: "application/x-font-ttf"
+		};
 
 		fonts = [font1];
 		var result = epub2.getManifestFilesString(prefix, folderName, fonts, 'ttf', 'application/x-font-ttf');
 		assert.equal(result, '<item id="font_Scripler1.ttf" href="Fonts/font_Scripler1.ttf" media-type="application/x-font-ttf" />');
 
-		var font2 = 'font_Scrupler33.ttf';
+		var font2 = {
+			"name"			: "font_Scrupler33.ttf",
+			"fileExtension"	: "ttf",
+			"mediaType"		: "application/x-font-ttf"
+		};
 
 		fonts = [font1, font2];
 		var result = epub2.getManifestFilesString(prefix, folderName, fonts, 'ttf', 'application/x-font-ttf');
@@ -168,20 +179,18 @@ describe('epub2', function () {
 		var result = epub2.getSpineDocumentsString(prefix, htmlFiles, 'html');
 		assert.equal(result, '');
 
-		var htmlFile1 = new ManifestFile;
-		htmlFile1.id = 'Doc1';
+		var htmlFile1 = new Document;
 
 		htmlFiles = [htmlFile1];
 		var result = epub2.getSpineDocumentsString(prefix, htmlFiles, 'html');
-		assert.equal(result, '<itemref idref="doc_Doc1.html" />');
+		assert.equal(result, '<itemref idref="' + prefix + htmlFile1.id + '.html" />');
 
-		var htmlFile2 = new ManifestFile;
-		htmlFile2.id = 'Doc2';
+		var htmlFile2 = new Document;
 		htmlFile2.type = 'TitlePage';
 
 		htmlFiles = [htmlFile1, htmlFile2];
 		var result = epub2.getSpineDocumentsString(prefix, htmlFiles, 'html');
-		assert.equal(result, 	'<itemref idref="doc_Doc1.html" />' +
+		assert.equal(result, 	'<itemref idref="' + prefix + htmlFile1.id + '.html" />' +
 								'<itemref idref="TitlePage.html" />');
     });
 });
