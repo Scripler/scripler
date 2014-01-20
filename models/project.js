@@ -47,6 +47,17 @@ var ProjectSchema = new Schema({
         authors:     [ {type: String} ],
         cover:       { type: String },
         isbn:        { type: String },
+		rights:      { type: String },
+		contributors: [{
+						role: { type: String },
+						name: { type: String }
+					  }],
+		publisher:   { type: String },
+		coverage:    { type: String },
+		publicationDate: { type: Date },
+		type:	     { type: String },
+		relation:    { type: String },
+		source:      { type: String },
         toc:         { entries: [TOCEntrySchema] }
     },
     archived: { type: Boolean, default: false},

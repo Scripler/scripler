@@ -6,7 +6,8 @@ var assert = require("assert")
     , mongoose = require('mongoose')
     , request = require('supertest')
 	, fs = require('fs')
-	, path = require('path');
+	, path = require('path')
+	, moment = require('moment');
 
 var exec = require('child_process').exec,
 	child;
@@ -861,29 +862,63 @@ describe('Scripler RESTful API', function () {
                 });
         }),
         it('Set all metadata - should return updated project', function (done) {
+			var now = new Date;
+
             request(host)
                 .put('/project/'+projectId+'/metadata')
                 .set('cookie', cookie)
                 .send({
+					isbn: "1405353767",
                     title: "Space: From Earth to the Edge of the Universe",
+					description: "Take an incredible journey through Space...",
                     authors: ["Carole Stott", "Robert Dinwiddie", "Giles Sparrow"],
-                    keywords: ["great", "universe", "earth", "solar system"],
-                    description: "Take an incredible journey through Space...",
+                    keywords: ["ABQ", "ACBN", "FRH", "WSBB"],
                     language: "English",
-                    cover: "images/frontpage.jpg",
-                    isbn: "1405353767"
+					publicationDate: now,
+					type: "MUS018000",
+					rights: "© Det Gamle Forlag",
+					contributors: [{
+									  role: "edt",
+									  name: "Ole Olsen"
+								   },
+									{
+									  role: "pte",
+									  name: "Jytte Ustantinious"
+								   }],
+					publisher: "Det Gamle Forlag",
+					cover: "images/frontpage.jpg",
+					coverage: "Asia",
+					relation: "Part 2",
+					source: "Det Gode Bibliotek"
                 })
                 .expect(200)
                 .end(function (err, res) {
                     if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.project.metadata.isbn, "1405353767");
                     assert.equal(res.body.project.metadata.title, "Space: From Earth to the Edge of the Universe");
+					assert.equal(res.body.project.metadata.description, "Take an incredible journey through Space...");
                     assert.equal(res.body.project.metadata.authors.length, 3);
                     assert.equal(res.body.project.metadata.authors[0], "Carole Stott");
                     assert.equal(res.body.project.metadata.authors[1], "Robert Dinwiddie");
                     assert.equal(res.body.project.metadata.authors[2], "Giles Sparrow");
-                    assert.equal(res.body.project.metadata.description, "Take an incredible journey through Space...");
+					assert.equal(res.body.project.metadata.keywords[0], "ABQ");
+					assert.equal(res.body.project.metadata.keywords[1], "ACBN");
+					assert.equal(res.body.project.metadata.keywords[2], "FRH");
+					assert.equal(res.body.project.metadata.keywords[3], "WSBB");
                     assert.equal(res.body.project.metadata.language, "English");
-                    assert.equal(res.body.project.metadata.isbn, "1405353767");
+					// TODO: assert publicationDate has value from input: db is currently 1 hour behind + format date appropriately
+					//assert.equal(res.body.project.metadata.publicationDate, now.format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
+					assert.equal(res.body.project.metadata.type, "MUS018000");
+					assert.equal(res.body.project.metadata.rights, "© Det Gamle Forlag");
+					assert.equal(res.body.project.metadata.contributors[0].role, "edt");
+					assert.equal(res.body.project.metadata.contributors[0].name, "Ole Olsen");
+					assert.equal(res.body.project.metadata.contributors[1].role, "pte");
+					assert.equal(res.body.project.metadata.contributors[1].name, "Jytte Ustantinious");
+					assert.equal(res.body.project.metadata.publisher, "Det Gamle Forlag");
+					assert.equal(res.body.project.metadata.cover, "images/frontpage.jpg");
+					assert.equal(res.body.project.metadata.coverage, "Asia");
+					assert.equal(res.body.project.metadata.relation, "Part 2");
+					assert.equal(res.body.project.metadata.source, "Det Gode Bibliotek");
                     done();
                 });
         }),

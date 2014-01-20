@@ -231,13 +231,21 @@ exports.rearrange = function (req, res, next) {
 
 exports.metadata = function (req, res, next) {
     var project = req.project;
+	project.metadata.isbn = req.body.isbn;
     project.metadata.title = req.body.title;
     project.metadata.description = req.body.description;
     project.metadata.authors = req.body.authors;
     project.metadata.keywords = req.body.keywords;
     project.metadata.language = req.body.language;
+	project.metadata.publicationDate = req.body.publicationDate;
+	project.metadata.type = req.body.type;
+	project.metadata.rights = req.body.rights;
+	project.metadata.contributors = req.body.contributors;
+	project.metadata.publisher = req.body.publisher;
     project.metadata.cover = req.body.cover;
-    project.metadata.isbn = req.body.isbn;
+	project.metadata.coverage = req.body.coverage;
+	project.metadata.relation = req.body.relation;
+	project.metadata.source = req.body.source;
 
     project.save(function (err) {
         if (err) {
