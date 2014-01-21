@@ -1183,15 +1183,15 @@ describe('Scripler RESTful API', function () {
                 });
         }),
 		it('Deleting a project should return success - clean up project #2', function (done) {
-				request(host)
-					.del('/project/'+projectId2)
-					.set('cookie', cookie)
-					.send({})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						done();
-					});
+			request(host)
+				.del('/project/'+projectId2)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
 		}),
         it('Opening a document of a deleted project should return not-found', function (done) {
             request(host)
@@ -1236,6 +1236,17 @@ describe('Scripler RESTful API', function () {
                     assert.equal(res.body.project.metadata.toc.entries.length, 1);
                     done();
                 });
-        })
+        }),
+		it('Deleting a project should return success - clean up project copy (#3)', function (done) {
+			request(host)
+				.del('/project/'+projectId3)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
+		})
 	})
 })

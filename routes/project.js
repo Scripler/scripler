@@ -9,6 +9,7 @@ var conf = require('config');
 var path = require('path');
 var fs = require('fs');
 var rimraf = require('rimraf');
+var ncp = require('ncp').ncp;
 
 //Load project by i
 exports.load = function (id) {
@@ -214,8 +215,20 @@ exports.copy = function (req, res, next) {
             if (err) {
                 return next(err);
             }
-            res.send({project: newProject});
-        });
+
+			var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
+			var imagesDir = path.join(projectDir, conf.epub.imagesDir);
+
+			var newProjectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + newProject._id);
+			var newImagesDir = path.join(newProjectDir, conf.epub.imagesDir);
+
+			ncp(projectDir, newProjectDir, function (err) {
+				if (err) {
+					return next(err);
+				}
+				res.send({project: newProject});
+			});
+		});
     });
 }
 
