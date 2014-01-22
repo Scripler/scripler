@@ -53,7 +53,8 @@
 		"fontsDir": "Fonts",
 		"projectDirPrefix": "project",
 		"htmlDir": "HTML",
-		"imagesDir": "Images"
+		"imagesDir": "Images",
+		"stylesDir": "Styles"
 	},
 	"epub2": {
 		"oepbsDir": "OEBPS"

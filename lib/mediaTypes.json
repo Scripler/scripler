@@ -1,0 +1,7 @@
+{
+	"css"	: "text/css",
+	"html"	: "application/xhtml+xml",
+	"jpg"	: "image/jpeg",
+	"png"	: "image/png",
+	"ttf"	: "application/x-font-ttf"
+}

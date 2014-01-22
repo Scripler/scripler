@@ -979,6 +979,26 @@ describe('Scripler RESTful API', function () {
 				done();
 			});
 		}),
+		it('Uploading a style to a project should return success', function (done) {
+			// TODO: when an API call for this exists, change this code to use it. For now, fake it...
+
+			// Copy style from source, test dir, to destination, public dir
+			var styleName = 'my_cool_stylesheet.css';
+			var srcStylesDir = path.join('test', 'resources', 'styles');
+			var srcStyle = path.join(srcStylesDir, styleName);
+
+			var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + projectId);
+			var dstStylesDir = path.join(projectDir, conf.epub.stylesDir);
+
+			fs.mkdir(dstStylesDir, function (err) {
+				if (err) {
+					throw err;
+				}
+				var dstStyle = path.join(dstStylesDir, styleName);
+				fs.createReadStream(srcStyle).pipe(fs.createWriteStream(dstStyle));
+				done();
+			});
+		}),
 		it('Compiling a project should return the compiled project (as an EPUB2 archive)', function (done) {
 			request(host)
 				.get('/project/'+projectId+'/compile')
