@@ -50,8 +50,12 @@
 	},
 	"epub": {
 		"userDirPrefix": "user",
-		"projectDirPrefix": "project",
 		"fontsDir": "Fonts",
+		"projectDirPrefix": "project",
+		"htmlDir": "HTML",
 		"imagesDir": "Images"
+	},
+	"epub2": {
+		"oepbsDir": "OEBPS"
 	}
 }

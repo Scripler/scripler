@@ -979,7 +979,7 @@ describe('Scripler RESTful API', function () {
 				done();
 			});
 		}),
-		it('Compiling a project should return the compiled project (as an EPUB archive)', function (done) {
+		it('Compiling a project should return the compiled project (as an EPUB2 archive)', function (done) {
 			request(host)
 				.get('/project/'+projectId+'/compile')
 				.set('cookie', cookie)
