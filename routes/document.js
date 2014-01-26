@@ -1,6 +1,9 @@
 var Document = require('../models/document.js').Document;
 var Project = require('../models/project.js').Project;
 var utils = require('../lib/utils');
+var docConverter = require('../lib/doc-converter');
+var path = require('path');
+var conf = require('config');
 
 //Load a document by id
 exports.load = function (id) {
@@ -114,5 +117,36 @@ exports.rearrange = function (req, res, next) {
         }
         res.send({project: project});
     });
+}
+
+exports.upload = function (req, res, next) {
+    var files = req.files.file;
+    // If only a single file was uploaded, *files* is not an array.
+    // In that case, we make it an array, to handle single- ang multi-fileuploads the same way.
+    if (!(files instanceof Array)) {
+        files = [files];
+    }
+    var completedFiles = 0;
+    var importedHtml = '';
+    // TODO: use actual user when editor is available in real test-setup
+    var user = 'test';
+    var userDir = path.join(conf.resources.usersDir, user);
+    var userUrl = conf.resources.usersUrl + '/' + user;
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        console.log('Uploaded file ' + file.name + ' to ' + file.path + ' (' + file.size + ')');
+        docConverter.execute(userDir, file.path, function(err, html) {
+            if (err) {
+                return next(err);
+            }
+            completedFiles++;
+            importedHtml = importedHtml + html;
+            if (completedFiles == files.length) {
+                // All file imported
+                // Update all img links to match the upload location
+                res.send(importedHtml.replace(/(<img[^>]*src=")([^"]+")/g, '$1'+userUrl+'/$2'));
+            }
+        });
+    }
 }
 

@@ -1,0 +1,3 @@
+[submodule "lib/doc-converter/docvert"]
+	path = lib/doc-converter/docvert
+	url = https://github.com/Scripler/docvert.git

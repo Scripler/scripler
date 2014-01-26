@@ -52,6 +52,7 @@ module.exports = function (app, auth) {
     app.put('/document/:documentId/unarchive', auth.isLoggedIn(), document.unarchive);
     app.put('/document/:projectId/rearrange', auth.isLoggedIn(), document.rearrange);
     app.delete('/document/:projectId/:documentId', auth.isLoggedIn(), document.delete);
+    app.post('/document/upload', document.upload);
 
     app.post('/folder', auth.isLoggedIn(), project.load(), folder.create);
     app.get('/folder/:projectId/:folderId/:archived?', auth.isLoggedIn(), folder.open);
