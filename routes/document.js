@@ -137,7 +137,7 @@ exports.upload = function (req, res, next) {
         console.log('Uploaded file ' + file.name + ' to ' + file.path + ' (' + file.size + ')');
         docConverter.execute(userDir, file.path, function(err, html) {
             if (err) {
-                return next(err);
+                return next(new Error(err));
             }
             completedFiles++;
             importedHtml = importedHtml + html;
