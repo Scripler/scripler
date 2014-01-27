@@ -1,0 +1,136 @@
+		a:link { color: #ABABAB; text-decoration:line-through; } 
+		a:visited { color: #ABABAB; text-decoration:line-through; } 
+		a:hover { color: #FFF56C; text-decoration:line-through; } 
+		a:active { color: #000000; text-decoration:line-through; } 
+
+		@font-face {
+		font-family: robotoblack;
+		src: local(robotoblack), url('fonte/robotoblack.ttf') format('truetype');
+		}
+
+		@font-face {
+		font-family: robotoblackitalic;
+		src: local(robotoblackitalic), url('fonte/robotoblackitalic.ttf') format('truetype');
+		}
+
+		@font-face {
+		font-family: robotobold;
+		src: local(robotobold), url('fonte/robotobold.ttf') format('truetype');
+		}
+
+		@font-face {
+		font-family: robotoregular;
+		src: local(robotoregular), url('fonte/robotoregular.ttf') format('truetype');
+		}
+
+		@font-face {
+		font-family: robotolightitalic;
+		src: local(robotolightitalic), url('fonte/robotolightitalic.ttf') format('truetype');
+		}
+
+		@font-face {
+		font-family: robotomediumitalic;
+		src: local(robotomediumitalic), url('fonte/robotomediumitalic.ttf') format('truetype');
+		}
+
+		@font-face {
+		font-family: sourcecodeproregular;
+		src: local(sourcecodeproregular), url('fonte/sourcecodeproregular.otf') format('opentype');
+		}
+
+		h1 {
+		font-family: robotoblackitalic;
+		font-size:4em;
+		color:#000000;
+		margin:1.2em 0em 0.8em 0em;
+		padding:0em;
+		}
+
+		h2 {
+		font-family: robotobold;
+		font-size:2.5em;
+		margin:1.2em 0em 0.8em 0em;
+		padding:0em;
+		}
+		
+		h3 {
+		font-family: robotobold;
+		font-size:2em;
+		margin:1.2em 0em 0.8em 0em;
+		padding:0em;
+		}
+		
+		h4 {
+		font-family: robotobold;
+		font-size:1.6em;
+		margin:1.2em 0em 0.8em 0em;
+		padding:0em;
+		}
+		
+		h5 {
+		font-family: robotobold;
+		font-size:1.3em;
+		margin:1.2em 0em 0.8em 0em;
+		padding:0em;
+		}
+		
+		p {
+		font-family: robotoregular;
+		font-size:1em;
+		hyphens: auto;
+		-moz-hyphens: auto;
+		-webkit-hyphens: auto;
+		margin:0em;
+		padding:0em 0em 0em 2em;
+		}
+		
+		p+p {
+		text-indent: 3em;
+		}
+
+		.speech {
+		font-family: robotolightitalic;
+		font-size:1em;
+		}
+
+		blockquote {
+		font-family: robotomediumitalic;
+		font-size:1.4em;
+		background-color:#FFF56C;
+		display:block;
+		padding:2em;
+		margin-top:1.2em;
+		margin-bottom:0.8em;
+		margin-left:0em;
+		margin-right:2em;
+		}		
+
+		.caption {
+		font-family: robotoregular;
+		font-size:0.7em;
+		margin:0em 0em 1.2em 0em;
+		display:block;
+		}
+
+		code {
+		font-family: sourcecodeproregular;
+		font-size:1em;
+		background-color:#ABABAB;
+		color:#000000;
+		display:block;
+		margin:1.2em 2em 0.8em 0em;
+		padding:1em;
+		}
+		
+		img {
+		display:block;
+		margin-top:1.2em;
+		margin-bottom:0.3em;
+		margin-left:0em;
+		margin-right:auto;
+		}
+
+		body {
+		width:600px;
+		padding:20px;
+		}
