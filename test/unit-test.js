@@ -1,4 +1,4 @@
-var epub2 = require('../lib/epub/epub2/epub2')
+var epub2 = require('../lib/epub/epub2')
   , assert = require("assert")
   , TOCEntry = require('../models/project.js').TOCEntry
   , Document = require('../models/document.js').Document;
