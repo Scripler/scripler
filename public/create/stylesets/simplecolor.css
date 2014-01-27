@@ -1,0 +1,146 @@
+		a:link { color: #0000ff; text-decoration:underline; } 
+		a:visited { color: #0000ff; text-decoration:underline; } 
+		a:hover { color: #ffffff; text-decoration:underline; } 
+		a:active { color: #000000; text-decoration:underline; } 
+
+		@font-face {
+		font-family: sourcesansproregular;
+		src: local(sourcesansproregular), url('fonte/sourcesansproregular.otf') format('opentype');
+		}
+
+		@font-face {
+		font-family: sourcesansproitalic;
+		src: local(sourcesansproitalic), url('fonte/sourcesansproitalic.otf') format('opentype');
+		}
+
+		@font-face {
+		font-family: sourcesansproblack;
+		src: local(sourcesansproblack), url('fonte/sourcesansproblack.otf') format('opentype');
+		}
+
+		@font-face {
+		font-family: sourcesansproblackitalic;
+		src: local(sourcesansproblackitalic), url('fonte/sourcesansproblackitalic.otf') format('opentype');
+		}
+
+		@font-face {
+		font-family: sourcesansprobold;
+		src: local(sourcesansprobold), url('fonte/sourcesansprobold.otf') format('opentype');
+		}
+
+		@font-face {
+		font-family: sourcesansprobolditalic;
+		src: local(sourcesansprobolditalic), url('fonte/sourcesansprobolditalic.otf') format('opentype');
+		}
+
+		@font-face {
+		font-family: sourcesansprosemibold;
+		src: local(sourcesansprosemibold), url('fonte/sourcesansprosemibold.otf') format('opentype');
+		}
+
+		@font-face {
+		font-family: sourcesansprosemibolditalic;
+		src: local(sourcesansprosemibolditalic), url('fonte/sourcesansprosemibolditalic.otf') format('opentype');
+		}
+
+		@font-face {
+		font-family: sourcecodeprobold;
+		src: local(sourcecodeprobold), url('fonte/sourcecodeprobold.otf') format('opentype');
+		}
+
+		h1 {
+		font-family: sourcesansproblack;
+		font-size:4em;
+		color:#0000ff;
+		margin:1em 0em 0.5em 0em;
+		}
+
+		h2 {
+		font-family: sourcesansproblack;
+		font-size:2em;
+		margin:1em 0em 0.5em 0em;
+		padding:0em;
+		}
+		
+		h3 {
+		font-family: sourcesansproblack;
+		font-size:1.6em;
+		margin:1em 0em 0.5em 0em;
+		padding:0em;
+		}
+		
+		h4 {
+		font-family: sourcesansprosemibold;
+		font-size:1.4em;
+		margin:1em 0em 0.5em 0em;
+		padding:0em;
+		}
+		
+		h5 {
+		font-family: sourcesansprosemibold;
+		font-size:1.2em;
+		margin:1em 0em 0.5em 0em;
+		padding:0em;
+		}
+		
+		p {
+		font-family: sourcesansproregular;
+		font-size:1em;
+		hyphens: auto;
+		-moz-hyphens: auto;
+		-webkit-hyphens: auto;
+		margin:0em;
+		padding:0em;
+		}
+		
+		p+p {
+		text-indent: 2.5em
+		}
+
+		.speech {
+		font-family: sourcesansproregular;
+		font-size:1em;
+		}
+
+		blockquote {
+		font-family: sourcesansprosemibolditalic;
+		font-size:1.2em;
+		display:block;
+		border-style:solid;
+		border-color:#0000ff;
+		padding:0.5em;
+		margin-top:1em;
+		margin-bottom:1em;
+		margin-left:4em;
+		margin-right:4em;
+		}		
+
+		.caption {
+		font-family: sourcesansproitalic;
+		font-size:0.7em;
+		margin:0em 0em 1em 0em;
+		display:block;
+		}
+
+		code {
+		font-family: sourcecodeprobold;
+		font-size:1em;
+		background-color:#000000;
+		color:#ffffff;
+		display:block;
+		margin:1em 0em 0.5em 0em;
+		padding:1em;
+		}
+		
+		img {
+		display:block;
+		margin-top:1em;
+		margin-bottom:0.3em;
+		margin-left:0em;
+		margin-right:auto;
+		}
+
+		body {
+		width:600px;
+		padding:20px;
+		}

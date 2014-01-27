@@ -9,25 +9,34 @@ body, html { font-size: 100%; 	padding: 0; margin: 0;}
 	box-sizing: border-box;
 }
 
-/* Clearfix hack by Nicolas Gallagher: http://nicolasgallagher.com/micro-clearfix-hack/ */
+/* Clearfix */
 .clearfix:before,
 .clearfix:after {
 	content: " ";
 	display: table;
 }
-
 .clearfix:after {
 	clear: both;
 }
 
+/* General Styling */
 body {
 	background: none #ececec;
     font-family: 'Lato', Calibri, Arial, sans-serif;
     color: #666;
 }
 
+h1 {
+	font-size: 2.25em;
+	margin: 0.8em 0 0.4em 0;	
+}
+h2 {
+	font-size: 1.25em;
+	margin: 0.8em 0 0.4em 0;
+}
+
 a {
-	color: #999;
+	color: #000;
 	text-decoration: none;
 }
 

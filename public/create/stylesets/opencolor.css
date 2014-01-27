@@ -1,0 +1,144 @@
+		a:link { color: #FF0600; text-decoration:underline; } 
+		a:visited { color: #FF0600; text-decoration:underline; } 
+		a:hover { color: #FF0600; text-decoration:underline; } 
+		a:active { color: #FF0600; text-decoration:none; } 
+
+		@font-face {
+		font-family: opensansregular;
+		src: local(opensansregular), url('fonte/opensansregular.ttf') format('truetype');
+		}
+
+		@font-face {
+		font-family: opensansitalic;
+		src: local(opensansitalic), url('fonte/opensansitalic.ttf') format('truetype');
+		}
+
+		@font-face {
+		font-family: opensanssemibold;
+		src: local(opensanssemibold), url('fonte/opensanssemibold.ttf') format('truetype');
+		}
+
+		@font-face {
+		font-family: opensansbold;
+		src: local(opensansbold), url('fonte/opensansbold.ttf') format('truetype');
+		}
+
+		@font-face {
+		font-family: opensanssemibolditalic;
+		src: local(opensanssemibolditalic), url('fonte/opensanssemibolditalic.ttf') format('truetype');
+		}		
+
+		@font-face {
+		font-family: dejavusansmono;
+		src: local(dejavusansmono), url('fonte/dejavusansmono.ttf') format('truetype');
+		}		
+
+		h1 {
+		font-family: opensansbold;
+		font-size:3.5em;
+		text-transform: uppercase;
+		text-align: left;
+		color:#000000;
+		margin:2em 0em 1em 0em;
+		padding:0em;
+		}
+
+		h2 {
+		font-family: opensansbold;
+		font-size:2.5em;
+		text-transform: uppercase;
+		text-align: left;
+		color:#FF0600;
+		margin:2em 0em 1em 0em;
+		padding:0em;
+		}
+		
+		h3 {
+		font-family: opensansbold;
+		font-size:2em;
+		text-transform: uppercase;
+		text-align: left;
+		color:#FF0600;
+		margin:2em 0em 1em 0em;
+		padding:0em;
+		}
+		
+		h4 {
+		font-family: opensansbold;
+		font-size:1.6em;
+		text-transform: uppercase;
+		text-align: left;
+		color:#FF0600;
+		margin:2em 0em 1em 0em;
+		padding:0em;
+		}
+		
+		h5 {
+		font-family: opensansbold;
+		font-size:1.4em;
+		text-transform: uppercase;
+		text-align: left;
+		color:#FF0600;
+		margin:2em 0em 1em 0em;
+		padding:0em;
+		}
+		
+		p {
+		font-family: opensansregular;
+		font-size:1em;
+		hyphens: auto;
+		-moz-hyphens: auto;
+		-webkit-hyphens: auto;
+		margin:0em 0em 0em 3em;
+		padding:0em;
+		}
+		
+		p+p {
+		text-indent: 2em
+		}
+
+		.speech {
+		font-family: opensansitalic;
+		font-size:1em;
+		}
+
+		blockquote {
+		font-family: opensanssemibolditalic;
+		font-size:1.2em;
+		text-align: left;
+		color:#FF0600;
+		display:block;
+		padding:0.5em;
+		margin:2em 5.5em 1.5em 5.5em;
+		}		
+
+		.caption {
+		font-family: opensansitalic;
+		font-size:0.8em;
+		text-align: left;
+		margin:0em 0em 1.5em 6em;
+		display:block;
+		}
+
+		code {
+		font-family: dejavusansmono;
+		font-size:1em;
+		background-color:#000000;
+		color:#ffffff;
+		display:block;
+		margin:2em 4em 1.5em 5em;
+		padding:1em;
+		}
+		
+		img {
+		display:block;
+		margin-top:2em;
+		margin-bottom:0.3em;
+		margin-left:5em;
+		margin-right:auto;
+		}
+
+		body {
+		width:600px;
+		padding:20px;
+		}

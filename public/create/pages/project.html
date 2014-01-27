@@ -1,0 +1,60 @@
+<link rel="stylesheet" type="text/css" href="pages/css/shared/default.css" />
+<link rel="stylesheet" type="text/css" href="pages/css/pages/project.css" />
+<link rel="stylesheet" type="text/css" href="pages/css/shared/fonts.css">
+
+<div class="container">
+
+  <div id="menu-left" class="menu-left">
+    <div class="content">
+      <ul>
+        <li class="menu-item-left open">
+          <div class="menu-text"><span class="icon icon-file-alt"></span>Project</div>
+          <div  class="menu-content">
+            <a ng-repeat="chapter in chapters" ng-click="chapterChoosen(chapter)">{{chapter.chapterTitle}}<br></a>
+          </div>
+        </li>
+        <li class="menu-item-left closed">
+          <div class="menu-text"><span class="icon icon-font"></span>Typography</div>
+          <div  class="menu-content">
+            Content<br><br>
+            <a ng-click="changeStyle('bookbw')">bookbw</a><br>
+            <a ng-click="changeStyle('futurebw')">futurebw</a><br>
+            <a ng-click="changeStyle('pleasantbw')">pleasantbw</a>
+          </div>
+        </li>
+        <li class="menu-item-left closed">
+          <div class="menu-text"><span class="icon icon-pencil"></span>Insert</div>
+          <div  class="menu-content">
+            Content
+          </div>          
+        </li>
+      </ul>
+    </div>
+    <div id="menu-left-showhide" class="content-icon">
+      <span class="icon icon-reorder"></span>
+    </div>
+  </div>
+
+  <div class="editor">
+    <textarea ck-editor="" ng-model="entrybody" class="form-control" id="bodyeditor" value="{{entrybody}}">
+      {{entrybody}}
+    </textarea>
+  </div>
+
+  <div id="menu-right" class="menu-right">
+    <div id="menu-right-showhide" class="content-icon">
+      <span class="icon icon-reorder"></span>
+    </div>
+    <div class="content">
+      <ul>
+        <li class="menu-item open">
+          <div class="menu-text"><span class="icon icon-signout"></span>Output</div>
+          <div  class="menu-content">
+            Content
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</div>

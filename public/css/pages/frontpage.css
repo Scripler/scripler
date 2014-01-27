@@ -1,46 +1,194 @@
-body {
-	background-color: rgb(198,198,198);
+div.half {
+	width: 50%;
+	float: left;
 }
 
-.contentback {
-	background: none red;
-	width: 200px;
-	height: 200px;
-}
-
-#background {
-	/* Set rules to fill background */
-	min-height: 100%;
-/*	min-width: 1024px;*/
-
-	/* Set up proportionate scaling */
-	width: 100%;
-	height: auto;
-
-	/* Set up positioning */
-	position: fixed;
-	top: 0;
-	left: 0;
-
-	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%); /* WebKit */
-    background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%); /* Firefox */
-    background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%); /* IE10+ */
-    background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%); /* Opera */
-    background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
-}
-
-#create, #features, #news, #pricing, #learn, #about, #contact {
-	min-height: 100%;
-/*	height: 1000px;*/
-	margin: 0 auto;
-	padding: 20px;
-    width: 100%;
+#scripler, #explore, #features, #news, #pricing, #learn, #about, #contact {
     position: relative;
-/*    box-shadow: 0 0 50px rgba(0,0,0,0.5);*/
+	margin: 0 auto;
+	padding: 30px 20px 20px 20px;
+    width: 100%;
+    overflow: hidden;
+
+  	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* WebKit */
+    background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Firefox */
+    background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* IE10+ */
+    background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Opera */
+    background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+}
+#scripler {
+	background-color: #fff;
+}
+#features {
+	background-color: #c6c6c6;
+}
+#news {
+	background-color: #fff56c;
+	white-space: nowrap;
+}
+#about {
+	background-color: #215660;
+    white-space: nowrap;
+    color: #fff;
+}
+#contact {
+	padding: 0;
+}
+#map-canvas {
+	margin: 0;
+	padding: 0;
 }
 
-#create article, #features article, #news article, #pricing article, #learn article, #about article, #contact article {
-	min-height: 900px;
+#scripler article, #explore article, #features article, #news article, #pricing article, #learn article {
+	position: relative;
 	width: 960px;
 	margin: 0 auto;
+	padding: 50px 0 0 0;
+	overflow: hidden;
+}
+#news article, #about article {
+	position: relative;
+    width: 99%;
+    margin: 0 auto;
+	padding: 50px 0 0 0;
+    display: inline-block;
+    vertical-align: top;
+    white-space: normal;
+}
+#news article .inner, #about article .inner {
+	position: relative;
+    width: 960px;
+    margin: 0 auto;
+}
+#news article .inner span, #about article .inner span {
+	font-size: 80%;
+	font-style: italic;;
+}
+#news article .inner .column, #about article .inner .column {
+	float: left;
+    width: 33%;
+    padding: 0 20px;
+}
+#contact article {
+	background-color: #fff;
+	border: 1px solid rgba(102,102,102,0.5);
+	position: absolute;
+	top: 78px;
+	left: 120px;
+	padding: 0 20px 20px;
+	width: 500px;
+	border-radius: 5px;
+}
+
+.create_logo, .create_subtitle, .create_subtext {
+	text-align: center;
+}
+.create_logo {
+	padding: 50px 0 30px;
+}
+
+.socialicons {
+    text-align: center;
+    margin: 30px 0 0 0;
+}
+.socialicon {
+	background-color: #efefef;
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	padding: 10px;
+	font-size: 22px;
+    margin: 0 auto;
+    display: inline-block;
+}
+.socialicon:hover {
+	background-color: #fff265;
+}
+.socialicon a {
+	color: white;
+}
+
+.hexagon {
+	position: relative;
+	width: 130px;
+	float: left;
+	margin: 0 30px;
+}
+.hexagon-content {
+	background-color: #fff265;
+	margin: 15px 0;
+	padding: 10px 0;
+	text-align: center;
+}
+.hexagon-title {
+	text-align: center;
+}
+
+.create_form {
+	margin: 0 0 20px 0;
+}
+.mc-field-group {
+	margin: 20px 0 0;
+	text-align: center;
+}
+
+.email {
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	border-radius: 1px;
+	-moz-box-shadow: 0 0 5px 5px #818285;
+	-webkit-box-shadow: 0 0 5px 5px #818285;
+	box-shadow: 0 0 2px 2px #818285;
+	-webkit-appearance: none;
+	border: none;
+	background: #f6f6f6;
+	font-size: 20px;
+	font-weight: bold;
+	width: 300px;
+	height: 32px;
+	padding: 0 0 0 15px;
+	margin: 0 5px 0 0;
+	color: #818285;
+	font-family: 'Roboto', sans-serif;
+}
+.button {
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	border-radius: 1px;
+	-moz-box-shadow: 0 0 5px 5px #818285;
+	-webkit-box-shadow: 0 0 5px 5px #818285;
+	box-shadow: 0 0 2px 2px #818285;
+	-webkit-appearance: none;
+	border: none;
+	background: #fff265;
+	color: #231f20;
+	font-size: 20px;
+	font-weight: bold;
+	width: 135px;
+	height: 33px;
+	cursor: pointer;
+	margin: 0 0 0 5px;
+	text-align: center;
+	font-family: 'Roboto', sans-serif;
+}
+.response {
+	width: 450px;
+	margin: 20px auto 0;
+}
+
+.prev, .next {
+	position: fixed;
+	top: 200px;
+	z-index: 10;
+	cursor: pointer;
+}
+.prev {
+	width: 600px;
+	right: 50%;
+	text-align: left;
+}
+.next{
+	width: 600px;
+	left: 50%;
+	text-align: right;
 }
