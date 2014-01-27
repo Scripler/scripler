@@ -29,7 +29,10 @@ module.exports = function (app, conf, mongoose) {
         app.use(allowCrossDomain);
     }
     app.use(express.logger({format: 'short', stream: {write: function(msg){logger.info(msg.trim());}}}));
-    app.use(express.bodyParser());
+    app.use(express.bodyParser({
+        uploadDir: '/tmp/uploads',
+        keepExtensions: true
+    }));
     app.use(express.methodOverride());
     app.use(express.cookieParser(conf.app.cookie_secret));
     app.use(express.session({

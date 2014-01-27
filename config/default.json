@@ -46,7 +46,9 @@
     },
 	"resources": {
 		"projectsDir": "C:\\Users\\mgf\\Dropbox\\Dokumenter\\Udvikling\\Kode\\Scripler\\Github\\Scripler\\scripler\\public\\resources\\projects",
-		"usersDir": "C:\\Users\\mgf\\Dropbox\\Dokumenter\\Udvikling\\Kode\\Scripler\\Github\\Scripler\\scripler\\public\\resources\\users"
+		"usersDir": "C:\\Users\\mgf\\Dropbox\\Dokumenter\\Udvikling\\Kode\\Scripler\\Github\\Scripler\\scripler\\public\\resources\\users",
+        "projectsUrl": "http://scripler.com:3000/public/resources/projects",
+        "usersUrl": "http://scripler.com:3000/public/resources/users"
 	},
 	"epub": {
 		"userDirPrefix": "user",
