@@ -1,0 +1,125 @@
+		a:link { color: #25768F; text-decoration:underline; } 
+		a:visited { color: #25768F; text-decoration:underline; } 
+		a:hover { color: #002952; text-decoration:none; } 
+		a:active { color: #000000; text-decoration:none; } 
+
+		@font-face {
+		font-family: sourcecodeproregular;
+		src: local(sourcecodeproregular), url('fonte/sourcecodeproregular.otf') format('opentype');
+		}
+
+		@font-face {
+		font-family: ralewaythin;
+		src: local(ralewaythin), url('fonte/ralewaythin.otf') format('opentype');
+		}
+
+		@font-face {
+		font-family: merriweathersansregular;
+		src: local(merriweathersansregular), url('fonte/merriweathersansregular.otf') format('opentype');
+		}		
+
+		@font-face {
+		font-family: merriweathersanslight;
+		src: local(merriweathersanslight), url('fonte/merriweathersanslight.otf') format('opentype');
+		}		
+
+		@font-face {
+		font-family: merriweathersansbold;
+		src: local(merriweathersansbold), url('fonte/merriweathersansbold.otf') format('opentype');
+		}		
+
+		h1 {
+		font-family: ralewaythin;
+		font-size:3.5em;
+		color:#000000;
+		margin:1.5em 0em 1em 0em;
+		padding:0em;
+		}
+
+		h2 {
+		font-family: ralewaythin;
+		font-size:2.8em;
+		margin:1.5em 0em 1em 0em;
+		padding:0em;
+		}
+		
+		h3 {
+		font-family: ralewaythin;
+		font-size:2.2em;
+		margin:1.5em 0em 1em 0em;
+		padding:0em;
+		}
+		
+		h4 {
+		font-family: ralewaythin;
+		font-size:1.8em;
+		margin:1.5em 0em 1em 0em;
+		padding:0em;
+		}
+		
+		h5 {
+		font-family: ralewaythin;
+		font-size:1.5em;
+		margin:1.5em 0em 1em 0em;
+		padding:0em;
+		}
+		
+		p {
+		font-family: merriweathersanslight;
+		font-size:1em;
+		line-height: 1.5;
+		hyphens: auto;
+		-moz-hyphens: auto;
+		-webkit-hyphens: auto;
+		margin:0em;
+		padding:0em;
+		}
+		
+		p+p {
+		text-indent:4em;
+		}
+
+		.speech {
+		font-family: merriweathersanslight;
+		}
+
+		blockquote {
+		font-family: merriweathersanslight;
+		font-size:1.3em;
+		text-align: left;
+		color: #25768F;
+		display:block;
+		padding:0.5em;
+		margin:1.5em 6em 1em 2em;
+		}		
+
+		.caption {
+		font-family: merriweathersanslight;
+		font-size:0.8em;
+		text-align: center;
+		margin:0em 0em 1em 0em;
+		display:block;
+		}
+
+		code {
+		font-family: sourcecodeproregular;
+		font-size:1em;
+		background-color:#25768F;
+		color:#ffffff;
+		display:block;
+		margin:1.5em 3em 1em 2em;
+		padding:1em;
+		}
+		
+		img {
+		display:block;
+		margin-top:1.5em;
+		margin-bottom:0.3em;
+		margin-left:auto;
+		margin-right:auto;
+		}
+
+		body {
+		width:600px;
+		padding:20px;
+		}

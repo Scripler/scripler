@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>New Image plugin &mdash; CKEditor Sample</title>
+	<meta charset="utf-8">
+	<script src="ckeditor/ckeditor.js"></script>
+	<script>
+		if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 )
+			CKEDITOR.tools.enableHtml5Elements( document );
+	</script>
+	<script language="javascript">
+		function changeStyle(name){
+			var editor = CKEDITOR.instances.editor1.window;
+			if (editor) {
+				editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+name+'.css';
+			}
+		}
+	</script>
+    <style type="text/css">
+        div.mask {
+            display:            none;
+            position:           absolute;
+            z-index:            1;
+            top:                0;
+            left:               0;
+            width:              100%;
+            height:             100%;
+            background-color:   rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+
+	<textarea id="editor1" cols="12" rows="10">
+       <h1>Pleasant</h1>
+
+        <h2>Human happiness</h2>
+
+        <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. <span class="speech">&emsp;&emsp;&laquo;Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure.&raquo;&emsp;&emsp;</span> To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?"</p>
+        <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are <a href="http://www.scripler.com">extremely painful</a>. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?"</p>
+
+        <h3>Annoying consequences</h3>
+
+        <p>But I must explain to you how all this mistaken idea of <a href="http://www.scripler.com">denouncing pleasure</a> and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?"</p>
+
+        <h4>A man who chooses</h4>
+
+        <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the <a href="http://www.scripler.com">master-builder</a> of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to <a href="http://www.scripler.com">enjoy</a> a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?"</p>
+
+        <h5>Occasionally </h5>
+
+        <p><span class="speech">&laquo;But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.&raquo;&emsp;&emsp;</span> Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious <a href="http://www.scripler.com">physical exercise</a>, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?"</p>
+
+        <img src="stylesets/ebook.jpeg">
+
+        <div class="caption">Those who do not know how to pursue pleasure rationally encounter consequences.</div>
+
+        <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. <span class="speech">&emsp;&emsp;&laquo;To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?&raquo;&emsp;</span></p>
+
+        <p>
+<code>&amp;lt;?php /* All form fields are automatically passed to the PHP script through the array $HTTP_POST_VARS. */
+$to = $HTTP_POST_VARS['kkaassppaarr@gmail.com'];
+$email = $HTTP_POST_VARS['email'];
+$subject = $HTTP_POST_VARS['subject'];
+$message = $HTTP_POST_VARS['message'];
+/* PHP form validation: the script checks that the Email field contains a valid email address and the Subject field isn't empty. preg_match performs a regular expression match. It's a very powerful PHP function to validate form fields and other strings - see PHP manual for details. */
+if (!preg_match(&amp;quot;/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/&amp;quot;, $email)) {
+&amp;#160; echo &amp;quot;&amp;lt;h4&amp;gt;Invalid email address&amp;lt;/h4&amp;gt;&amp;quot;;
+&amp;#160; echo &amp;quot;&amp;lt;a href='javascript:history.back(1);'&amp;gt;Back&amp;lt;/a&amp;gt;&amp;quot;;
+} elseif ($subject == &amp;quot;&amp;quot;) {
+&amp;#160; echo &amp;quot;No subject&amp;quot;;
+&amp;#160; echo &amp;quot;&amp;lt;a href='javascript:history.back(1);'&amp;gt;Back&amp;lt;/a&amp;gt;&amp;quot;;}
+/* Sends the mail and outputs the &amp;quot;Thank you&amp;quot; string if the mail is successfully sent, or the error string otherwise. */
+elseif (mail($email,$subject,$message)) {
+&amp;#160; echo &amp;quot;Thank you for sending email&amp;quot;;
+} else {
+&amp;#160; echo &amp;quot;Can't send email to $email&amp;quot;;}?&amp;gt;</code>
+        </p>
+
+        <h3>Jones</h3>
+
+        <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the <a href="http://www.scripler.com">master-builder</a> of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to <a href="http://www.scripler.com">enjoy</a> a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?"</p>
+
+        <blockquote>"To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?"</blockquote>
+
+        <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter <a href="http://www.scripler.com">consequences</a> that are extremely painful. Nor again is there <a href="http://www.scripler.com">anyone</a> who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?"</p>
+    </textarea>
+
+<p>Vælg stilsæt: <a href="javascript:changeStyle('bookbw')">bookbw</a>, <a href="javascript:changeStyle('futurebw')">futurebw</a>, <a href="javascript:changeStyle('pleasantbw')">pleasantbw</a></p>
+
+    <div id="mask" class="mask"></div>
+	<script>
+		CKEDITOR.replace( 'editor1', {
+            //extraAllowedContent: "h1 a span(speech)",
+			allowedContent: true,
+			extraPlugins: 'image2,identify-empty-paragraphs',
+			skin: 'scripler',
+			height: 600,
+			width: 850,
+			removePlugins: 'image',
+			font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
+			contentsCss: ['stylesets/pleasantbw.css', 'contents.css', 'http://fonts.googleapis.com/css?family=Ribeye'],
+			/*coreStyles_bold : {
+				element: 'span',
+				attributes: { 'class': 'scripler-bold' }
+			},
+			coreStyles_italic : {
+				element: 'span',
+				attributes: { 'class': 'scripler-italic' }
+			},*/
+			toolbar: [
+				['Source'], ['Undo'], ['Redo'], ['Paste'], ['PasteFromWord'], ['Styles'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['Image'], ['Link'], ['TextColor'], ['BGColor']
+			],
+			removeButtons: 'language,CreateDiv,Flash,Iframe',
+			removePlugins : 'elementspath'
+		});
+
+	</script>
+</body>
+</html>
