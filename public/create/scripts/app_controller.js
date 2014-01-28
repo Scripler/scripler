@@ -6,14 +6,38 @@ appSite.controller('appController', ['$http', '$scope', function($http, $scope) 
 
 }]);
 
-appSite.config(function ($routeProvider) {
-    $routeProvider
-        .when('/', {templateUrl:'pages/create.html', controller:createController})
-        .when('/create', {templateUrl:'pages/create.html', controller:createController})
-        .when('/project', {templateUrl:'pages/project.html', controller:projectController})
-        .when('/login', {templateUrl:'pages/login.html', controller:createController})
-        .when('/error', {templateUrl:'pages/error.html', controller:createController})
-        .otherwise({redirectTo:'/'});
+appSite.config(function ($routeProvider, $locationProvider, $httpProvider) {
+
+	var isLoggedIn = ['$q', '$timeout', '$http', '$location', function($q, $timeout, $http, $location) {
+		var deferred = $q.defer();
+
+		$http.get('/user')
+		.success(function(userInfo){
+			if (userInfo.user) {
+				$timeout(deferred.resolve, 0);
+			} else {
+				$timeout(function(){deferred.reject();}, 0);
+				$location.url('/login');
+			}
+		})
+		.error(function() {
+				console.log("errr");
+				$timeout(function(){deferred.reject();}, 0);
+				$location.url('/login');
+		});
+
+		return deferred.promise;
+	}]
+
+	$routeProvider
+		.when('/', {templateUrl:'pages/login.html', controller:createController,
+					resolve: { access: isLoggedIn }
+					})
+		.when('/create', {templateUrl:'pages/create.html', controller:createController})
+		.when('/project', {templateUrl:'pages/project.html', controller:projectController})
+		.when('/login', {templateUrl:'pages/login.html'})
+		.when('/error', {templateUrl:'pages/error.html', controller:createController})
+		.otherwise({redirectTo:'/'});
 });
 
 appSite.directive('ckEditor', function() {
