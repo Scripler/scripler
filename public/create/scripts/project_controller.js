@@ -15,34 +15,12 @@ function projectController($scope) {
         {chapterNumber:'00008',chapterTitle:'Titel 8',chapterContent:'<h1>this is a test 8</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'bookbw'}
     ];
 
-    function editorInitiate() {
-    	console.log("loading");
-    }
-
-	angular.element(document).ready(function () {
-
-	    // CK Editor Initiate
-	  	/*angular.element(document).ready(function () {
-	  		editorInitiate();
-		}	
-		
-		function editorInitiate() {
-		    var startChapter = $scope.chapters[0];
-		    $scope.entrybody = startChapter.chapterContent;
-		    // Mangler at tilføje stylen startChapter.chapterStyleSheet
-			//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.chapterStyleSheet+'.css';
-		}*/
-
-	    var startChapter = $scope.chapters[0];
-	    $scope.entrybody = startChapter.chapterContent;
-	    // Mangler at tilføje stylen startChapter.chapterStyleSheet
-		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.chapterStyleSheet+'.css';
-
-		// Global Variables
+    function initiateMenus() {
+    	// Variables
 		var menuLeft = document.getElementById("menu-left");
 		var menuRight = document.getElementById("menu-right");
 
-		// Global Functions
+		// Functions
 		function screenHeight() {
 			var w = window,
 		    d = document,
@@ -53,30 +31,6 @@ function projectController($scope) {
 
 		    return y;
 		};
-
-		// CK Editor Controls
-	    $scope.chapterChoosen = function(chapter) {
-	    	var editor = CKEDITOR.instances.bodyeditor.window;
-			if (editor) {
-				$scope.entrybody = chapter.chapterContent;
-				$scope.entrybodyStyleset = chapter.chapterStyleSheet;
-				//Change to use the script settings and load content there
-				editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+chapter.chapterStyleSheet+'.css';
-			}
-			else {
-				console.log('error: no editor found')
-			}
-	    };
-
-	    $scope.changeStyle = function (name) {
-	      var editor = CKEDITOR.instances.bodyeditor.window;
-			if (editor) {
-				editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+name+'.css';
-			}
-			else {
-				console.log('error: no editor found')
-			}
-	    };
 
 		// Menu Controls
 		var elements = document.getElementsByClassName('menu-item-left');
@@ -126,5 +80,51 @@ function projectController($scope) {
 		    menuRight.className += " open";
 		  }
 		};
+    }
+
+    function initiateEditor(scope) {
+    	$scope.ckContent = 'test';
+
+//		var startChapter = $scope.chapters[0];
+//		$scope.entrybody = startChapter.chapterContent;
+		// Mangler at tilføje stylen startChapter.chapterStyleSheet		
+    }
+
+    initiateEditor();
+    initiateMenus();
+
+	angular.element(document).ready(function () {
+
+
+
+		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.chapterStyleSheet+'.css';
+		
+//	    var startChapter = $scope.chapters[0];
+//	    $scope.entrybody = startChapter.chapterContent;
+	    // Mangler at tilføje stylen startChapter.chapterStyleSheet
+		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.chapterStyleSheet+'.css';
+
+		// CK Editor Controls
+	    $scope.chapterChoosen = function(chapter) {
+			if (editor) {
+				$scope.entrybody = chapter.chapterContent;
+				$scope.entrybodyStyleset = chapter.chapterStyleSheet;
+				//Change to use the script settings and load content there
+				editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+chapter.chapterStyleSheet+'.css';
+			}
+			else {
+				console.log('error: no editor found')
+			}
+	    };
+
+	    $scope.changeStyle = function (name) {
+			if (editor) {
+				editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+name+'.css';
+			}
+			else {
+				console.log('error: no editor found')
+			}
+	    };
+
 	});
 }
