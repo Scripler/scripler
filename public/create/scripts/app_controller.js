@@ -11,26 +11,38 @@ appSite.config(function ($routeProvider, $locationProvider, $httpProvider) {
 	var isLoggedIn = ['$q', '$timeout', '$http', '$location', function($q, $timeout, $http, $location) {
 		var deferred = $q.defer();
 
-		$http.get('/user')
+		$http.get('http://localhost:3000/user')
 		.success(function(userInfo){
 			if (userInfo.user) {
 				$timeout(deferred.resolve, 0);
 			} else {
 				$timeout(function(){deferred.reject();}, 0);
-				$location.url('/login');
+				location.href = 'http://localhost:8888/public/#login';
 			}
-		})
-		.error(function() {
-				console.log("errr");
-				$timeout(function(){deferred.reject();}, 0);
-				$location.url('/login');
 		});
 
 		return deferred.promise;
 	}]
 
+	$httpProvider.responseInterceptors.push(function($q, $location) {
+		return function(promise) {
+			return promise
+			.then(
+				function(response){
+					return response;
+				},
+				function(response) {
+					if (response.status === 401) {
+						location.href = 'http://localhost:8888/public/#login';
+					}
+					return $q.reject(response);
+				}
+			);
+		}
+	});
+
 	$routeProvider
-		.when('/', {templateUrl:'pages/login.html', controller:createController,
+		.when('/', {templateUrl:'pages/create.html', controller:createController,
 					resolve: { access: isLoggedIn }
 					})
 		.when('/create', {templateUrl:'pages/create.html', controller:createController})
