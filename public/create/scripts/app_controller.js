@@ -1,55 +1,58 @@
 'use strict';
 
-var appSite = angular.module('scriplerApp', []);
+var appSite = angular.module( 'scriplerApp', [] );
 
-appSite.controller('appController', ['$http', '$scope', function($http, $scope) {
+appSite.controller( 'appController', [ '$http', '$scope', function( $http, $scope ) {
 
 }]);
 
-appSite.config(function ($routeProvider, $locationProvider, $httpProvider) {
+appSite.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
 
-	var isLoggedIn = ['$q', '$timeout', '$http', '$location', function($q, $timeout, $http, $location) {
+	var isLoggedIn = [ '$q', '$timeout', '$http', '$location', function ( $q, $timeout, $http, $location ) {
 		var deferred = $q.defer();
 
-		$http.get('http://localhost:3000/user')
-		.success(function(userInfo){
-			if (userInfo.user) {
-				$timeout(deferred.resolve, 0);
-			} else {
-				$timeout(function(){deferred.reject();}, 0);
-				location.href = 'http://localhost:8888/public/#login';
-			}
-		});
+		$http.get( 'http://localhost:3000/user' )
+			.success( function( userInfo ){
+				if ( userInfo.user ) {
+					$timeout( deferred.resolve, 0 );
+				} else {
+					$timeout( function() {
+						deferred.reject();
+					}, 0);
+					location.href = 'http://localhost:8888/public/#login';
+				}
+			});
 
 		return deferred.promise;
 	}]
 
-	$httpProvider.responseInterceptors.push(function($q, $location) {
-		return function(promise) {
-			return promise
-			.then(
-				function(response){
-					return response;
-				},
-				function(response) {
-					if (response.status === 401) {
-						location.href = 'http://localhost:8888/public/#login';
+	$httpProvider.responseInterceptors
+		.push( function ( $q, $location ) {
+			return function(promise) {
+				return promise
+				.then(
+					function(response){
+						return response;
+					},
+					function(response) {
+						if (response.status === 401) {
+							location.href = 'http://localhost:8888/public/#login';
+						}
+						return $q.reject(response);
 					}
-					return $q.reject(response);
-				}
-			);
-		}
-	});
+				);
+			}
+		});
 
 	$routeProvider
-		.when('/', {templateUrl:'pages/create.html', controller:createController,
+		.when('/', { templateUrl:'pages/create.html', controller:createController,
 					resolve: { access: isLoggedIn }
 					})
-		.when('/create', {templateUrl:'pages/create.html', controller:createController})
-		.when('/project', {templateUrl:'pages/project.html', controller:projectController})
-		.when('/login', {templateUrl:'pages/login.html'})
-		.when('/error', {templateUrl:'pages/error.html', controller:createController})
-		.otherwise({redirectTo:'/'});
+		.when('/create', { templateUrl:'pages/create.html', controller:createController })
+		.when('/project', { templateUrl:'pages/project.html', controller:projectController })
+		.when('/login', { templateUrl:'pages/login.html' })
+		.when('/error', { templateUrl:'pages/error.html', controller:createController })
+		.otherwise({ redirectTo:'/' });
 });
 
 appSite.directive('ckEditor', function() {
