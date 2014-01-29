@@ -22,7 +22,7 @@ appSite.directive('ckEditor', function() {
 		link: function(scope, elm, attr, ngModel) {
 			var ck = CKEDITOR.replace('bodyeditor', {
 				allowedContent: true,
-				skin: 'scripler',
+//				skin: 'scripler',
 				height: 600,
 				width: 800,
 				font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
@@ -37,7 +37,7 @@ appSite.directive('ckEditor', function() {
 				removeButtons: 'language,CreateDiv,Flash,Iframe'
 			});
 
-/*			if (!ngModel) return;
+			if (!ngModel) return;
 
 			ck.on('instanceReady', function() {
 				ck.setData(ngModel.$viewValue);
@@ -57,8 +57,8 @@ appSite.directive('ckEditor', function() {
 				ck.setData(ngModel.$viewValue);
 			};
 
-/*					if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 )
-			CKEDITOR.tools.enableHtml5Elements( document );*/
+			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 )
+			CKEDITOR.tools.enableHtml5Elements( document );
 
 		}
 	};
