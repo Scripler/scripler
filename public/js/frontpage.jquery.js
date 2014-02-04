@@ -39,6 +39,25 @@ $(document).ready(function(){
 		});*/
 	});
 
+	$( "#login-form" ).submit(function( event ) {
+  		event.preventDefault();
+		$.ajax({
+			url: '/api/user/login',
+            type: 'POST',
+            data: "email=" + $("#login-email").val() + "&password=" + $("#login-password").val(),
+            dataType: 'json',
+			success: function( data ) {
+				document.location.href = "/public/create";
+			}
+		});
+	});
+
+	$( ".menu-login" ).one("click", function( event ) {
+		$( ".menu-top" ).animate({ "marginTop": "0" }, 1000);
+		$( "#login" ).animate({ "marginTop": "0" }, 1000);
+		$( "#scripler article" ).animate({ "padding-top": "0" }, 1000 );
+	})
+
     $(".to-top").on("click", function(event){
     	event.preventDefault();
     	var gotoPoint = "#scripler";
@@ -48,7 +67,7 @@ $(document).ready(function(){
 
     $("#about").on('click', '.seeteam, .prev', function(e) {
     	e.preventDefault();
-    	
+
 		var target = $(this).attr("class");
         if (target == 'seeteam') {
         	$("#about article").animate({
@@ -110,7 +129,7 @@ $(document).ready(function(){
             }
         }
     }
-    
+
     var newsItem = GetURLParameter('news');
     if (newsItem >= 1) {
         var gotoPoint = "#news";
@@ -121,8 +140,8 @@ $(document).ready(function(){
             }, 'slow');
             $('#news .prev').data('prev', newsItem);
             $('#news .prev').fadeIn('slow');
-        });        
-        
+        });
+
     }
 
     var CenterLatlng = new google.maps.LatLng(55.6654175,12.5815801);
