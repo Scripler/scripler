@@ -11,7 +11,7 @@ appSite.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
 	var isLoggedIn = [ '$q', '$timeout', '$http', '$location', function ( $q, $timeout, $http, $location ) {
 		var deferred = $q.defer();
 
-		$http.get( 'http://localhost:3000/user' )
+		$http.get( '/api/user' )
 			.success( function( userInfo ){
 				if ( userInfo.user ) {
 					$timeout( deferred.resolve, 0 );
