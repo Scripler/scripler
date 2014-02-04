@@ -95,6 +95,15 @@ div.half {
 .create_logo, .create_subtitle, .create_subtext {
 	text-align: center;
 }
+.create_subtitle {
+	padding-bottom: 20px;
+	font-size: 150%;
+}
+.create_subtext {
+	padding-bottom: 20px;
+	font-size: 120%;
+	line-height: 1.4;
+}
 .create_logo {
 	padding: 50px 0 30px;
 }
@@ -183,6 +192,14 @@ div.half {
 	margin: 0 0 0 5px;
 	text-align: center;
 	font-family: 'Roboto', sans-serif;
+}
+.try-button {
+	width: 300px;
+	height: 50px;
+}
+.try-wrapper {
+	text-align: center;
+	padding-top: 20px;
 }
 .response {
 	width: 450px;

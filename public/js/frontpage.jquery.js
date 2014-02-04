@@ -53,9 +53,8 @@ $(document).ready(function(){
 	});
 
 	$( ".menu-login" ).one("click", function( event ) {
-		$( ".menu-top" ).animate({ "marginTop": "0" }, 1000);
-		$( "#login" ).animate({ "marginTop": "0" }, 1000);
-		$( "#scripler article" ).animate({ "padding-top": "0" }, 1000 );
+		$( ".menu-top" ).animate({ "marginTop": "0" }, 800);
+		$( "#login" ).animate({ "marginTop": "0" }, 800);
 	})
 
     $(".to-top").on("click", function(event){
