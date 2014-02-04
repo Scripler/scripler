@@ -3,7 +3,7 @@ div.half {
 	float: left;
 }
 
-#scripler, #explore, #features, #news, #pricing, #learn, #about, #contact {
+#scripler, #explore, #features, #news, #pricing, #learn, #about, #contact, #login {
     position: relative;
 	margin: 0 auto;
 	padding: 30px 20px 20px 20px;
@@ -17,7 +17,7 @@ div.half {
     background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
 }
 #scripler {
-	background-color: #fff;
+
 }
 #features {
 	background-color: #c6c6c6;
@@ -38,8 +38,12 @@ div.half {
 	margin: 0;
 	padding: 0;
 }
+#login {
+	background-color: #c6c6c6;
+	margin-top: -193px;
+}
 
-#scripler article, #explore article, #features article, #news article, #pricing article, #learn article {
+#scripler article, #explore article, #features article, #news article, #pricing article, #learn article, #login article {
 	position: relative;
 	width: 960px;
 	margin: 0 auto;
@@ -80,6 +84,14 @@ div.half {
 	border-radius: 5px;
 }
 
+.menu-top {
+	margin-top: 193px;
+}
+.menu-login {
+
+}
+
+
 .create_logo, .create_subtitle, .create_subtext {
 	text-align: center;
 }
@@ -89,10 +101,10 @@ div.half {
 
 .socialicons {
     text-align: center;
-    margin: 30px 0 0 0;
+    padding-top: 20px;
 }
 .socialicon {
-	background-color: #efefef;
+	background-color: #fff;
 	border-radius: 50%;
 	width: 40px;
 	height: 40px;
@@ -105,7 +117,7 @@ div.half {
 	background-color: #fff265;
 }
 .socialicon a {
-	color: white;
+	color: #ABACAF;
 }
 
 .hexagon {
@@ -127,18 +139,22 @@ div.half {
 .create_form {
 	margin: 0 0 20px 0;
 }
+.login-wrap {
+	text-align: center;
+}
 .mc-field-group {
 	margin: 20px 0 0;
 	text-align: center;
 }
 
-.email {
+.login-group input {
+	width: 250px;
+}
+
+.email, .password {
 	-moz-border-radius: 1px;
 	-webkit-border-radius: 1px;
 	border-radius: 1px;
-	-moz-box-shadow: 0 0 5px 5px #818285;
-	-webkit-box-shadow: 0 0 5px 5px #818285;
-	box-shadow: 0 0 2px 2px #818285;
 	-webkit-appearance: none;
 	border: none;
 	background: #f6f6f6;
@@ -155,9 +171,6 @@ div.half {
 	-moz-border-radius: 1px;
 	-webkit-border-radius: 1px;
 	border-radius: 1px;
-	-moz-box-shadow: 0 0 5px 5px #818285;
-	-webkit-box-shadow: 0 0 5px 5px #818285;
-	box-shadow: 0 0 2px 2px #818285;
 	-webkit-appearance: none;
 	border: none;
 	background: #fff265;
