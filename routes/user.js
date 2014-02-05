@@ -1,12 +1,12 @@
 var User = require('../models/user.js').User
-    , passport = require('passport')
-    , emailer = require('../lib/email/email.js')
-    , crypto = require('crypto')
-    , conf = require('config')
-    , mcapi = new require('mailchimp-api')
-    , logger = require('../lib/logger')
-    , conf = require('config')
-    , env = process.env.NODE_ENV
+	, passport = require('passport')
+	, emailer = require('../lib/email/email.js')
+	, crypto = require('crypto')
+	, conf = require('config')
+	, mcapi = new require('mailchimp-api')
+	, logger = require('../lib/logger')
+	, conf = require('config')
+	, env = process.env.NODE_ENV
 	, path = require('path')
 	, fs = require('fs');
 ;
@@ -14,177 +14,179 @@ var User = require('../models/user.js').User
 var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
 
 function isEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 function hashEmail(email) {
-    return crypto.createHash('md5').update(conf.app.salt + email).digest("hex");
+	return crypto.createHash('md5').update(conf.app.salt + email).digest("hex");
 }
 
 /**
  * GET current user.
  */
 exports.get = function (req, res) {
-    res.send({"status": 0, "user": req.user});
+	res.send({"status": 0, "user": req.user});
 };
 
 /**
  * GET users listing.
  */
 exports.list = function (req, res, next) {
-    User.find({}, function (err, docs) {
-        if (err) {
-            return next(err);
-        }
-        res.send({"users": docs});
-    });
+	User.find({}, function (err, docs) {
+		if (err) {
+			return next(err);
+		}
+		res.send({"users": docs});
+	});
 };
 
 /**
  * POST user login.
  */
 exports.login = function (req, res, next) {
-    passport.authenticate('local', function (err, user, info) {
-        if (err) {
-            return next(err);
-        }
-        if (!user) {
-            return next({message: info.message, status: 401});
-        }
-        req.logIn(user, function (err) {
-            if (err) {
-                return next(err);
-            }
-            res.send({"user": user});
-        });
-    })(req, res, next);
+	passport.authenticate('local', function (err, user, info) {
+		if (err) {
+			return next(err);
+		}
+		if (!user) {
+			return next({message: info.message, status: 401});
+		}
+		req.logIn(user, function (err) {
+			if (err) {
+				return next(err);
+			}
+			res.send({"user": user});
+		});
+	})(req, res, next);
 };
 
 /**
  * POST user logout.
  */
 exports.logout = function (req, res) {
-    req.logout();
-    res.send({});
+	req.logout();
+	res.send({});
 };
 
 /**
  * POST user registration.
  */
 exports.register = function (req, res, next) {
-    if (!isEmail(req.body.email)) {
-        return next({message: "Invalid email address", status: 400});
-    } else {
-        var user = new User({
-            firstname:     req.body.firstname,
-            lastname:     req.body.lastname,
-            email:    req.body.email,
-            password: req.body.password
-        });
-        if ('production' != env) {
-            user.emailValidated = true;
-        }
-        user.save(function (err) {
-            if (err) {
-                // return error
-                if (err.code == 11000) {
-                    return next({message: "User already registered", status: 400});
-                }
-                return next(err);
-            } else {
-                if ('test' != env) {
-                    emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
-                }
+	if (!isEmail(req.body.email)) {
+		return next({message: "Invalid email address", status: 400});
+	} else {
+		var user = new User({
+			firstname: req.body.firstname,
+			lastname: req.body.lastname,
+			email: req.body.email,
+			password: req.body.password
+		});
+		if ('production' != env) {
+			user.emailValidated = true;
+		}
+		user.save(function (err) {
+			if (err) {
+				// return error
+				if (err.code == 11000) {
+					return next({message: "User already registered", status: 400});
+				}
+				return next(err);
+			} else {
+				if ('test' != env) {
+					emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
+				}
 
 				var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + user._id);
-				fs.mkdir(userDir, function(err) {
+				fs.mkdir(userDir, function (err) {
 					if (err) {
 						return next(err);
 					} else {
 						res.send({"user": user});
 					}
 				});
-            }
-        });
-    }
+			}
+		});
+	}
 };
 
 /**
  * GET user validate.
  */
 exports.verify = function (req, res) {
-    User.findOne({"_id": req.params.id}, function (err, user) {
-        var redirectUrl = conf.app.url_prefix + '?err=';
-        if (err) {
-            res.redirect(redirectUrl + "Database problem");
-        } else if (!user) {
-            res.redirect(redirectUrl + "User not found");
-        } else if (req.params.hash != hashEmail(user.email)) {
-            res.redirect(redirectUrl + "User not validated");
-        } else {
-            user.emailValidated = true;
-            user.save(function (err) {
-                if (err) {
-                    res.redirect(redirectUrl + "Database problem");
-                } else {
-                    res.redirect(redirectUrl);
-                }
-            });
+	User.findOne({"_id": req.params.id}, function (err, user) {
+		var redirectUrl = conf.app.url_prefix + '?err=';
+		if (err) {
+			res.redirect(redirectUrl + "Database problem");
+		} else if (!user) {
+			res.redirect(redirectUrl + "User not found");
+		} else if (req.params.hash != hashEmail(user.email)) {
+			res.redirect(redirectUrl + "User not validated");
+		} else {
+			user.emailValidated = true;
+			user.save(function (err) {
+				if (err) {
+					res.redirect(redirectUrl + "Database problem");
+				} else {
+					res.redirect(redirectUrl);
+				}
+			});
 
-            mc.lists.subscribe({
-                                id: conf.mailchimp.memberListId,
-                                double_optin: false,
-                                update_existing: true,
-                                email: {email: user.email},
-                                merge_vars: {
-                                    groupings: [{id: conf.mailchimp.memberGroupId, groups: [conf.mailchimp.memberGroupIdFree]}],
-                                    FNAME: user.firstname,
-                                    LNAME: user.lastname
-                                }
-            }, function (data) {
-                logger.info("MailChimp subscribe successful: " + user.email);
-            }, function (error) {
-                logger.error("MailChimp subscribe error: " + user.email + " - " + error.code + " - " + error.error);
-            });
-        }
-    });
+			mc.lists.subscribe({
+				id: conf.mailchimp.memberListId,
+				double_optin: false,
+				update_existing: true,
+				email: {email: user.email},
+				merge_vars: {
+					groupings: [
+						{id: conf.mailchimp.memberGroupId, groups: [conf.mailchimp.memberGroupIdFree]}
+					],
+					FNAME: user.firstname,
+					LNAME: user.lastname
+				}
+			}, function (data) {
+				logger.info("MailChimp subscribe successful: " + user.email);
+			}, function (error) {
+				logger.error("MailChimp subscribe error: " + user.email + " - " + error.code + " - " + error.error);
+			});
+		}
+	});
 };
 
 /**
  * PUT user profile edit.
  */
 exports.edit = function (req, res, next) {
-    var user = req.user;
-    var firstname = req.body.firstname;
-    var lastname = req.body.lastname;
-    var email = req.body.email;
-    var password = req.body.password;
-    if (firstname) {
-        req.user.firstname = firstname;
-    }
-    if (lastname) {
-        req.user.lastname = lastname;
-    }
-    if (email) {
-        if (!isEmail(email)) {
-            return next({message: "Invalid email address", status: 400});
-        } else {
-            req.user.email = email;
-            if ('test' != env) {
-                emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
-            }
-            if ('production' != env) {
-                user.emailValidated = true;
-            }
-        }
-    }
-    if (password) {
-        req.user.password = password;
-    }
-    req.user.save(function (err) {
-        if (err) {
-            return next(err);
-        }
-        res.send({"user": req.user});
-    });
+	var user = req.user;
+	var firstname = req.body.firstname;
+	var lastname = req.body.lastname;
+	var email = req.body.email;
+	var password = req.body.password;
+	if (firstname) {
+		req.user.firstname = firstname;
+	}
+	if (lastname) {
+		req.user.lastname = lastname;
+	}
+	if (email) {
+		if (!isEmail(email)) {
+			return next({message: "Invalid email address", status: 400});
+		} else {
+			req.user.email = email;
+			if ('test' != env) {
+				emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
+			}
+			if ('production' != env) {
+				user.emailValidated = true;
+			}
+		}
+	}
+	if (password) {
+		req.user.password = password;
+	}
+	req.user.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+		res.send({"user": req.user});
+	});
 };

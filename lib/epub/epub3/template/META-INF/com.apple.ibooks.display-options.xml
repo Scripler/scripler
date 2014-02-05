@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <display_options>
-<platform name="*">
-/*Specifying that ibooks should display the book with the font-settings defined in the css*/
-<option name="specified-fonts">true</option>
-</platform>
+    <platform name="*">
+        /*Specifying that ibooks should display the book with the font-settings defined in the css*/
+        <option name="specified-fonts">true</option>
+    </platform>
 </display_options>
