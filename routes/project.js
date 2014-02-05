@@ -3,13 +3,13 @@ var User = require('../models/user.js').User;
 var Document = require('../models/document.js').Document;
 var utils = require('../lib/utils');
 var extend = require('xtend');
-var epub2 = require('../lib/epub/epub2');
 var sanitize = require('sanitize-filename');
 var conf = require('config');
 var path = require('path');
 var fs = require('fs');
 var rimraf = require('rimraf');
 var ncp = require('ncp').ncp;
+var epub3 = require('../lib/epub/epub3');
 
 //Load project by i
 exports.load = function (id) {
@@ -280,7 +280,7 @@ exports.toc = function (req, res, next) {
 }
 
 exports.compile = function (req, res) {
-    var epub = epub2.create(req.user._id, req.project);
+    var epub = epub3.create(req.user._id, req.project);
 	var saneTitle = sanitize(req.project.metadata.title);
 	res.setHeader('Content-disposition', 'attachment; filename=' + saneTitle);
 	res.setHeader('Content-type', 'application/epub+zip');

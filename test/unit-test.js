@@ -1,4 +1,5 @@
 var epub2 = require('../lib/epub/epub2')
+  ,	epub3 = require('../lib/epub/epub3')
   , assert = require("assert")
   , TOCEntry = require('../models/project.js').TOCEntry
   , Document = require('../models/document.js').Document;
@@ -186,11 +187,107 @@ describe('epub2', function () {
 		assert.equal(result, '<itemref idref="' + prefix + htmlFile1.id + '.html" />');
 
 		var htmlFile2 = new Document;
-		htmlFile2.type = 'TitlePage';
+		htmlFile2.type = 'titlepage';
 
 		htmlFiles = [htmlFile1, htmlFile2];
 		var result = epub2.getSpineDocumentsString(prefix, htmlFiles, 'html');
 		assert.equal(result, 	'<itemref idref="' + prefix + htmlFile1.id + '.html" />' +
 								'<itemref idref="TitlePage.html" />');
-    });
-});
+    }),
+	it('getGuideString', function () {
+		var documents = [];
+
+		var document1 = new Document;
+		document1.type = 'cover';
+
+		var document2 = new Document;
+		document2.type = 'disco';
+
+		var document3 = new Document;
+		document3.type = 'titlepage';
+
+		var document4 = new Document;
+		document4.type = 'stew';
+
+		var document5 = new Document;
+		document5.type = 'toc';
+
+		var document6 = new Document;
+		document6.type = 'colophon';
+
+		documents = [document1, document2, document3, document4, document5, document6];
+
+		var result = epub2.getGuideString('cover', documents);
+		assert.equal(result, '<reference href="HTML/Cover.html" title="Cover" type="cover" />');
+
+		var result = epub2.getGuideString('titlepage', documents);
+		assert.equal(result, '<reference href="HTML/TitlePage.html" title="Title Page" type="titlepage" />');
+
+		var result = epub2.getGuideString('toc', documents);
+		assert.equal(result, '<reference href="HTML/ToC.html" title="Table of Contents" type="toc" />');
+
+		var result = epub2.getGuideString('colophon', documents);
+		assert.equal(result, '<reference href="HTML/Colophon.html" title="Colophon" type="colophon" />');
+	});
+},
+describe('epub3', function () {
+	it('getTocString', function () {
+		var tocEntries = [];
+		var result = epub3.getTocString(tocEntries);
+		assert.equal(result, '');
+
+		var tocEntry1 = new TOCEntry;
+		tocEntry1.title = 'Kapitel Einz';
+		tocEntry1.target = 'Kapitel Einz.html';
+		tocEntry1.level = 0;
+
+		tocEntries = [tocEntry1];
+		result = epub3.getTocString(tocEntries);
+		assert.equal(result, '<li><a href="Kapitel Einz.html">Kapitel Einz</a></li>');
+
+		var tocEntry2 = new TOCEntry;
+		tocEntry2.title = 'Kapitel Zwei';
+		tocEntry2.target = 'Kapitel Zwei.html';
+		tocEntry2.level = 1;
+
+		tocEntries = [tocEntry1, tocEntry2];
+		result = epub3.getTocString(tocEntries);
+		assert.equal(result, '<li><a href="Kapitel Einz.html">Kapitel Einz</a></li><li><a href="Kapitel Zwei.html">Kapitel Zwei</a></li>');
+
+	}),
+	it('getLandmarkString', function () {
+		var documents = [];
+
+		var document1 = new Document;
+		document1.type = 'cover';
+
+		var document2 = new Document;
+		document2.type = 'disco';
+
+		var document3 = new Document;
+		document3.type = 'titlepage';
+
+		var document4 = new Document;
+		document4.type = 'stew';
+
+		var document5 = new Document;
+		document5.type = 'toc';
+
+		var document6 = new Document;
+		document6.type = 'colophon';
+
+		documents = [document1, document2, document3, document4, document5, document6];
+
+		var result = epub3.getLandmarkString('cover', documents);
+		assert.equal(result, '<li><a epub:type="cover" href="HTML/Cover.html">Cover</a></li>');
+
+		var result = epub3.getLandmarkString('titlepage', documents);
+		assert.equal(result, '<li><a epub:type="titlepage" href="HTML/TitlePage.html">Title Page</a></li>');
+
+		var result = epub3.getLandmarkString('toc', documents);
+		assert.equal(result, '<li><a epub:type="toc" href="HTML/ToC.html">Table of Contents</a></li>');
+
+		var result = epub3.getLandmarkString('colophon', documents);
+		assert.equal(result, '<li><a epub:type="colophon" href="HTML/Colophon.html">Colophon</a></li>');
+	})
+}));

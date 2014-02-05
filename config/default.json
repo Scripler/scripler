@@ -60,5 +60,8 @@
 	},
 	"epub2": {
 		"oepbsDir": "OEBPS"
+	},
+	"epub3": {
+		"epubDir": "EPUB"
 	}
 }

@@ -22,7 +22,7 @@ var DocumentSchema = new Schema({
     folderId: { type: Schema.Types.ObjectId },
     members: [DocumentMemberSchema],
     archived: { type: Boolean, default: false},
-    type: { type: String, enum: ["Cover", "TitlePage", "ToC", "Colophon"] },
+    type: { type: String, enum: ["cover", "titlepage", "toc", "colophon"] },
     modified: { type: Date, default: Date.now }
 });
 
