@@ -437,7 +437,7 @@ describe('Scripler RESTful API', function () {
 				}),
 				it('Creating a document in a folder (the root folder) should return the document with that folder id - 1', function (done) {
 					var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
-						'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">' +
+						'<!DOCTYPE html>' +
 						'<html xmlns="http://www.w3.org/1999/xhtml">' +
 						'<head><title>MyFirstDocument</title></head>' +
 						'<body><p>It is my best document ever!</p></body>' +
@@ -469,7 +469,7 @@ describe('Scripler RESTful API', function () {
 				}),
 				it('Creating a document in a folder (the child folder) should return the document with that folder id - 2', function (done) {
 					var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
-						'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">' +
+						'<!DOCTYPE html>' +
 						'<html xmlns="http://www.w3.org/1999/xhtml">' +
 						'<head><title>MySecondDocument</title></head>' +
 						'<body><p>It is almost my best document!</p></body>' +
@@ -494,9 +494,9 @@ describe('Scripler RESTful API', function () {
 							childDocumentId && done();
 						});
 				}),
-				it('Creating a Cover document should return the document with type = "Cover"', function (done) {
+				it('Creating a cover document should return the document with type = "cover"', function (done) {
 					var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
-						'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">' +
+						'<!DOCTYPE html>' +
 						'<html xmlns="http://www.w3.org/1999/xhtml">' +
 						'<head><title>Cover</title></head>' +
 						'<body><p>Cool Cover</p></body>' +
@@ -510,7 +510,7 @@ describe('Scripler RESTful API', function () {
 							folderId: rootFolderId,
 							name: 'Cover',
 							text: text,
-							type: 'Cover'
+							type: 'cover'
 						})
 						.expect(200)
 						.end(function (err, res) {
@@ -523,14 +523,14 @@ describe('Scripler RESTful API', function () {
 							assert.equal(res.body.document.archived, false);
 							assert.equal(res.body.document.members[0].userId, userId);
 							assert.equal(res.body.document.members[0].access[0], "admin");
-							assert.equal(res.body.document.type, 'Cover');
+							assert.equal(res.body.document.type, 'cover');
 							coverDocumentId = res.body.document._id;
 							coverDocumentId && done();
 						});
 				}),
-				it('Creating a TitlePage document should return the document with type = "TitlePage"', function (done) {
+				it('Creating a title page document should return the document with type = "titlepage"', function (done) {
 					var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
-						'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">' +
+						'<!DOCTYPE html>' +
 						'<html xmlns="http://www.w3.org/1999/xhtml">' +
 						'<head><title>TitlePage</title></head>' +
 						'<body><p>Cool TitlePage</p></body>' +
@@ -544,7 +544,7 @@ describe('Scripler RESTful API', function () {
 							folderId: rootFolderId,
 							name: 'TitlePage',
 							text: text,
-							type: 'TitlePage'
+							type: 'titlepage'
 						})
 						.expect(200)
 						.end(function (err, res) {
@@ -557,14 +557,14 @@ describe('Scripler RESTful API', function () {
 							assert.equal(res.body.document.archived, false);
 							assert.equal(res.body.document.members[0].userId, userId);
 							assert.equal(res.body.document.members[0].access[0], "admin");
-							assert.equal(res.body.document.type, 'TitlePage');
+							assert.equal(res.body.document.type, 'titlepage');
 							titlePageDocumentId = res.body.document._id;
 							titlePageDocumentId && done();
 						});
 				}),
-				it('Creating a ToC document should return the document with type = "ToC"', function (done) {
+				it('Creating a table of contents document should return the document with type = "toc"', function (done) {
 					var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
-						'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">' +
+						'<!DOCTYPE html>' +
 						'<html xmlns="http://www.w3.org/1999/xhtml">' +
 						'<head><title>ToC</title></head>' +
 						'<body><p>Cool ToC</p></body>' +
@@ -578,7 +578,7 @@ describe('Scripler RESTful API', function () {
 							folderId: rootFolderId,
 							name: 'ToC',
 							text: text,
-							type: 'ToC'
+							type: 'toc'
 						})
 						.expect(200)
 						.end(function (err, res) {
@@ -591,14 +591,14 @@ describe('Scripler RESTful API', function () {
 							assert.equal(res.body.document.archived, false);
 							assert.equal(res.body.document.members[0].userId, userId);
 							assert.equal(res.body.document.members[0].access[0], "admin");
-							assert.equal(res.body.document.type, 'ToC');
+							assert.equal(res.body.document.type, 'toc');
 							tocDocumentId = res.body.document._id;
 							tocDocumentId && done();
 						});
 				}),
-				it('Creating a Colophon document should return the document with type = "Colophon"', function (done) {
+				it('Creating a colophon document should return the document with type = "colophon"', function (done) {
 					var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
-						'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">' +
+						'<!DOCTYPE html>' +
 						'<html xmlns="http://www.w3.org/1999/xhtml">' +
 						'<head><title>Colophon</title></head>' +
 						'<body><p>Cool Colophon</p></body>' +
@@ -612,7 +612,7 @@ describe('Scripler RESTful API', function () {
 							folderId: rootFolderId,
 							name: 'Colophon',
 							text: text,
-							type: 'Colophon'
+							type: 'colophon'
 						})
 						.expect(200)
 						.end(function (err, res) {
@@ -625,7 +625,7 @@ describe('Scripler RESTful API', function () {
 							assert.equal(res.body.document.archived, false);
 							assert.equal(res.body.document.members[0].userId, userId);
 							assert.equal(res.body.document.members[0].access[0], "admin");
-							assert.equal(res.body.document.type, 'Colophon');
+							assert.equal(res.body.document.type, 'colophon');
 							colophonDocumentId = res.body.document._id;
 							colophonDocumentId && done();
 						});
@@ -649,7 +649,7 @@ describe('Scripler RESTful API', function () {
 				}),
 				it('Updating a document should return success', function (done) {
 					var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
-						'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">' +
+						'<!DOCTYPE html>' +
 						'<html xmlns="http://www.w3.org/1999/xhtml">' +
 						'<head><title>MyFirstDocument</title></head>' +
 						'<body><p>This is no longer a matter of if but when...and look here...</p></body>' +
@@ -908,8 +908,8 @@ describe('Scripler RESTful API', function () {
 							assert.equal(res.body.project.metadata.keywords[2], "FRH");
 							assert.equal(res.body.project.metadata.keywords[3], "WSBB");
 							assert.equal(res.body.project.metadata.language, "English");
-							// TODO: assert publicationDate has value from input: db is currently 1 hour behind + format date appropriately
-							//assert.equal(res.body.project.metadata.publicationDate, now.format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
+// TODO: assert publicationDate has value from input: db is currently 1 hour behind + format date appropriately
+//assert.equal(res.body.project.metadata.publicationDate, now.format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
 							assert.equal(res.body.project.metadata.type, "MUS018000");
 							assert.equal(res.body.project.metadata.rights, "© Det Gamle Forlag");
 							assert.equal(res.body.project.metadata.contributors[0].role, "edt");
@@ -929,22 +929,24 @@ describe('Scripler RESTful API', function () {
 						.put('/project/' + projectId + '/toc')
 						.set('cookie', cookie)
 						.send({entries: [
-							{title: "Titlepage", target: "HTML/TitlePage.html", "level": "0"}
+							{title: "Cover", target: "HTML/Cover.html", "level": "0"},
+							{title: "Title Page", target: "HTML/TitlePage.html", "level": "0"},
 						]})
 						.expect(200)
 						.end(function (err, res) {
 							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 							assert.equal(res.body.project.metadata.title, "Space: From Earth to the Edge of the Universe");
 							assert.equal(res.body.project.metadata.authors.length, 3);
-							assert.equal(res.body.project.metadata.toc.entries.length, 1);
-							assert.equal(res.body.project.metadata.toc.entries[0].title, "Titlepage");
+							assert.equal(res.body.project.metadata.toc.entries.length, 2);
+							assert.equal(res.body.project.metadata.toc.entries[0].title, "Cover");
+							assert.equal(res.body.project.metadata.toc.entries[1].title, "Title Page");
 							done();
 						});
 				}),
 				it('Uploading a font to a user should return success', function (done) {
-					// TODO: when an API call for this exists, change this code to use it. For now, fake it...
+// TODO: when an API call for this exists, change this code to use it. For now, fake it...
 
-					// Copy font from source, test dir, to destination, public dir
+// Copy font from source, test dir, to destination, public dir
 					var fontName = 'casper.ttf';
 					var srcUserFontsDir = path.join('test', 'resources', 'user-fonts');
 					var srcFont = path.join(srcUserFontsDir, fontName);
@@ -962,9 +964,9 @@ describe('Scripler RESTful API', function () {
 					});
 				}),
 				it('Uploading an image to a project should return success', function (done) {
-					// TODO: when an API call for this exists, change this code to use it. For now, fake it...
+// TODO: when an API call for this exists, change this code to use it. For now, fake it...
 
-					// Copy image from source, test dir, to destination, public dir
+// Copy image from source, test dir, to destination, public dir
 					var imageName = 'Scripler_logo.jpg';
 					var srcImagesDir = path.join('test', 'resources', 'images');
 					var srcImage = path.join(srcImagesDir, imageName);
@@ -982,9 +984,9 @@ describe('Scripler RESTful API', function () {
 					});
 				}),
 				it('Uploading a style to a project should return success', function (done) {
-					// TODO: when an API call for this exists, change this code to use it. For now, fake it...
+// TODO: when an API call for this exists, change this code to use it. For now, fake it...
 
-					// Copy style from source, test dir, to destination, public dir
+// Copy style from source, test dir, to destination, public dir
 					var styleName = 'my_cool_stylesheet.css';
 					var srcStylesDir = path.join('test', 'resources', 'styles');
 					var srcStyle = path.join(srcStylesDir, styleName);
@@ -1001,7 +1003,7 @@ describe('Scripler RESTful API', function () {
 						done();
 					});
 				}),
-				it('Compiling a project should return the compiled project (as an EPUB2 archive)', function (done) {
+				it('Compiling a project should return the compiled project (as an EPUB archive)', function (done) {
 					request(host)
 						.get('/project/' + projectId + '/compile')
 						.set('cookie', cookie)
@@ -1019,9 +1021,9 @@ describe('Scripler RESTful API', function () {
 						}).end(function (err, res) {
 							if (err) return done(err);
 
-							// binary response data is in res.body as a buffer
+// binary response data is in res.body as a buffer
 							assert.ok(Buffer.isBuffer(res.body));
-							//console.log("res: ", res.body);
+//console.log("res: ", res.body);
 							var epub = projectId + '.epub';
 							fs.writeFile(epub, res.body);
 
@@ -1107,22 +1109,22 @@ describe('Scripler RESTful API', function () {
 							assert.equal(res.body.project.documents[1]._id, coverDocumentId);
 							assert.equal(res.body.project.documents[1].name, "Cover");
 							assert.equal(res.body.project.documents[1].text, undefined);
-							assert.equal(res.body.project.documents[1].type, "Cover");
+							assert.equal(res.body.project.documents[1].type, "cover");
 
 							assert.equal(res.body.project.documents[2]._id, titlePageDocumentId);
 							assert.equal(res.body.project.documents[2].name, "TitlePage");
 							assert.equal(res.body.project.documents[2].text, undefined);
-							assert.equal(res.body.project.documents[2].type, "TitlePage");
+							assert.equal(res.body.project.documents[2].type, "titlepage");
 
 							assert.equal(res.body.project.documents[3]._id, tocDocumentId);
 							assert.equal(res.body.project.documents[3].name, "ToC");
 							assert.equal(res.body.project.documents[3].text, undefined);
-							assert.equal(res.body.project.documents[3].type, "ToC");
+							assert.equal(res.body.project.documents[3].type, "toc");
 
 							assert.equal(res.body.project.documents[4]._id, colophonDocumentId);
 							assert.equal(res.body.project.documents[4].name, "Colophon");
 							assert.equal(res.body.project.documents[4].text, undefined);
-							assert.equal(res.body.project.documents[4].type, "Colophon");
+							assert.equal(res.body.project.documents[4].type, "colophon");
 
 							done();
 						});
@@ -1255,7 +1257,7 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.project.metadata.isbn, "1405353767");
 						assert.equal(res.body.project.metadata.keywords.length, 4);
 						assert.equal(res.body.project.metadata.authors.length, 3);
-						assert.equal(res.body.project.metadata.toc.entries.length, 1);
+						assert.equal(res.body.project.metadata.toc.entries.length, 2);
 						done();
 					});
 			}),
