@@ -130,7 +130,7 @@ exports.archive = function (req, res, next) {
 		if (err) {
 			return next(err);
 		}
-		User.update({"projects": project._id}, {"$pull": {"projects": project._id}}, {multi: true}, function (err, numberAffected, raw) {
+		User.update({"projects": project._id}, function (err, numberAffected, raw) {
 			if (err) {
 				return next(err);
 			}
@@ -150,7 +150,7 @@ exports.unarchive = function (req, res, next) {
 		for (var i = 0; i < project.members.length; i++) {
 			membersArray.push(project.members[i].userId);
 		}
-		User.update({"_id": {"$in": membersArray}}, {"$addToSet": {"projects": project._id}}, {multi: true}, function (err, numberAffected, raw) {
+		User.update({"_id": {"$in": membersArray}}, function (err, numberAffected, raw) {
 			if (err) {
 				return next(err);
 			}
