@@ -1,12 +1,12 @@
 {
-    "app":      {
-        "port":           9091,
-        "url_prefix":     "http://localhost:9091/",
-        "cookie_secret":  "abc:$",
-        "session_secret": "xyz:$",
-        "salt":           "tyu:$"
-    },
-    "db": {
-        "uri": "mongodb://localhost/scripler_test"
-    }
+	"app": {
+		"port": 9091,
+		"url_prefix": "http://localhost:9091/",
+		"cookie_secret": "abc:$",
+		"session_secret": "xyz:$",
+		"salt": "tyu:$"
+	},
+	"db": {
+		"uri": "mongodb://localhost/scripler_test"
+	}
 }

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId" version="2.0">
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId" version="3.0">
   <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
-    <dc:identifier opf:scheme="UUID" id="BookId">urn:uuid:%metadata_uuid%</dc:identifier>
-    <dc:identifier opf:scheme="ISBN">urn:isbn:%metadata_isbn%</dc:identifier>
+    <dc:identifier id="BookId">urn:uuid:%metadata_uuid%</dc:identifier>
+    <dc:identifier>urn:isbn:%metadata_isbn%</dc:identifier>
     <dc:title>%metadata_title%</dc:title>
     <dc:description>%metadata_description%</dc:description>
     %metadata_creators%
     %metadata_subjects%
     <dc:language>%metadata_language%</dc:language>
-    <dc:date opf:event="modification">%metadata_modification_date%</dc:date>
-    <dc:date opf:event="publication">%metadata_publication_date%</dc:date>
+    <meta property="dcterms:modified">%metadata_modification_date%</meta>
+    <dc:date>%metadata_publication_date%</dc:date>
     <dc:type>%metadata_type%</dc:type>
     <dc:rights>%metadata_rights%</dc:rights>
     %metadata_contributors%
@@ -22,6 +22,7 @@
   </metadata>
   <manifest>
 	<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+	<item id="toc" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav" />
 	%manifest_font_files%
 	%manifest_html_files%
 	%manifest_image_files%
@@ -34,7 +35,7 @@
   <guide>
 	%guide_cover%
 	%guide_titlepage%
-	%guide_toc%
 	%guide_colophon%
-  </guide>
+	%guide_toc%
+  </guide> 
 </package>
