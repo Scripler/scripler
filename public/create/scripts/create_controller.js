@@ -24,16 +24,16 @@ function createController($scope) {
 
 function PublicationsCtrl($scope) {
     $scope.publications = [
-        //ADD/FIX: Get Publications API Call, on success do change
-        {publicationNumber:'00001',publicationName:'Titel 1',publicationCreated:'1363359600',publicationChanged:'1365606000'},
-        {publicationNumber:'00002',publicationName:'Titel 2',publicationCreated:'1368637200',publicationChanged:'1365606000'},
-        {publicationNumber:'00003',publicationName:'Titel 3',publicationCreated:'1363359600',publicationChanged:'1382281200'},
-        {publicationNumber:'00004',publicationName:'Titel 4',publicationCreated:'1368637200',publicationChanged:'1382281200'},
-        {publicationNumber:'00005',publicationName:'Titel 5',publicationCreated:'1363359600',publicationChanged:'1365606000'},
-        {publicationNumber:'00006',publicationName:'Titel 6',publicationCreated:'1368637200',publicationChanged:'1365606000'},
-        {publicationNumber:'00007',publicationName:'Titel 7',publicationCreated:'1363359600',publicationChanged:'1382281200'},
-        {publicationNumber:'00008',publicationName:'Titel 8',publicationCreated:'1368637200',publicationChanged:'1382281200'}
-    ];
+		//TODO remove when not in use anymore for testing
+		{id:'00001',name:'Titel 1',created:'1363359600',changed:'1365606000'},
+		{id:'00002',name:'Titel 2',created:'1368637200',changed:'1365606000'},
+		{id:'00003',name:'Titel 3',created:'1363359600',changed:'1382281200'},
+		{id:'00004',name:'Titel 4',created:'1368637200',changed:'1382281200'},
+		{id:'00005',name:'Titel 5',created:'1363359600',changed:'1365606000'},
+		{id:'00006',name:'Titel 6',created:'1368637200',changed:'1365606000'},
+		{id:'00007',name:'Titel 7',created:'1363359600',changed:'1382281200'},
+		{id:'00008',name:'Titel 8',created:'1368637200',changed:'1382281200'}
+	];
 
 
     $scope.toggleElement = function(element) {
