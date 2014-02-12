@@ -47,7 +47,7 @@ $(document).ready(function(){
             data: "email=" + $("#login-email").val() + "&password=" + $("#login-password").val(),
             dataType: 'json',
 			success: function( data ) {
-				document.location.href = "/public/create";
+				document.location.href = "/create";
 			}
 		});
 	});

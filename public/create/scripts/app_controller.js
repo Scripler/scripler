@@ -19,7 +19,7 @@ appSite.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
 					$timeout( function() {
 						deferred.reject();
 					}, 0);
-					location.href = 'http://localhost:8888/public/#login';
+					redirectLogin( $location );
 				}
 			});
 
@@ -36,14 +36,19 @@ appSite.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
 					},
 					function(response) {
 						if (response.status === 401) {
-							$location.path('/');
-							//location.href = 'http://localhost:8888/public/#login';
+							redirectLogin( $location );	
 						}
 						return $q.reject(response);
 					}
 				);
 			}
 		});
+
+	var redirectLogin = function ( $location ) {
+		var url = $location.absUrl();
+		url = url.replace('/create/#', '/#login');
+		location.href = url;	
+	}
 
 	$routeProvider
 		.when('/', { templateUrl:'pages/create.html', controller:createController,
