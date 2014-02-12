@@ -1,6 +1,6 @@
 'use strict';
 
-var appSite = angular.module( 'scriplerApp', [] );
+var app = angular.module( 'scriplerApp', [] );
 
 appSite.controller( 'appController', [ '$http', '$scope', function( $http, $scope ) {
 
