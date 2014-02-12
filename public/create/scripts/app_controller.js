@@ -60,6 +60,34 @@ appSite.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
 		.otherwise({ redirectTo:'/' });
 });
 
+app.directive('focusOn', function($timeout, $parse) {
+	return {
+		link: function(scope, element, attrs) {
+			var model = $parse(attrs.focusOn);
+			scope.$watch(model, function(value) {
+				if(value === true) { 
+					$timeout(function() {
+						element[0].select(); 
+					});
+				}
+			});
+		}
+	};
+});
+
+app.directive('onEnter', function() {
+	return function(scope, element, attrs) {
+		element.bind("keydown keypress", function(event) {
+			if(event.which === 13) {
+				scope.$apply(function(){
+				scope.$eval(attrs.onEnter, {'event': event});
+			});
+				event.preventDefault();
+			}
+		});
+	};
+});
+
 appSite.directive('ckEditor', function() {
 	return {
 		require: '?ngModel',
