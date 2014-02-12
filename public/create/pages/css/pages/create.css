@@ -120,6 +120,9 @@
 	width: 60%;
 	text-align: right;
 }
+.publication-archived {
+	opacity: 0.5;
+}
 
 .filter-sort, .filter-search {
 	position: relative;
@@ -129,6 +132,16 @@
 }
 .filter-search {
 
+}
+
+textarea#rename {
+	width: 90%;
+	margin-top: 37px;
+	height: 100%;
+	border: 1px solid #ffff99;
+	resize: none;
+	outline: none;
+	overflow: hidden;
 }
 
 .animate-enter, .animate-leave { 
