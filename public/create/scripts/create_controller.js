@@ -36,7 +36,7 @@ function PublicationsCtrl ( $scope, $http ) {
 		{id:'00008',name:'Titel 8',created:'1368637200',changed:'1382281200'}
 	];
 
-	$http.get('/api/project/list').success( function ( data ) {
+	$http.get('/project/list').success( function ( data ) {
 		$scope.publications = [];
 		angular.forEach(data.projects, function ( project ) {
 			$scope.publications.push( {id: project._id, name: project.name, changed: project.modified} );
@@ -58,7 +58,7 @@ function PublicationsCtrl ( $scope, $http ) {
 		var name = "Title " + index;
 		var data = '{"name": "' + name + '"}';
 		
-		$http.post('/api/project', data).success( function( data ) {
+		$http.post('/project', data).success( function( data ) {
 			var project = data.project;
 			$scope.publications.push( {id: project._id, name: project.name, changed: project.modified} );
 		});
@@ -69,7 +69,7 @@ function PublicationsCtrl ( $scope, $http ) {
 
 		if (removePublication === true) {
 
-			$http.delete('/api/project/' + publication.id)
+			$http.delete('/project/' + publication.id)
 				.success( function () {
 					$scope.publications.splice($scope.publications.indexOf(publication), 1);				
 				});			
@@ -77,7 +77,7 @@ function PublicationsCtrl ( $scope, $http ) {
 	};
 
 	$scope.archivePublication = function ( publication ) {
-		$http.put('/api/project/' + publication.id + '/archive')
+		$http.put('/project/' + publication.id + '/archive')
 			.success( function () {
 				$scope.publications.splice($scope.publications.indexOf(publication), 1);
 			});
@@ -85,12 +85,12 @@ function PublicationsCtrl ( $scope, $http ) {
 
 	$scope.renamePublication = function ( publication ) {
 		var data = '{"name": "' + publication.name + '"}';
-		$http.put('/api/project/' + publication.id + '/rename', data)
+		$http.put('/project/' + publication.id + '/rename', data)
 			.success( function () {});
 	};
 
 	$scope.copyPublication = function (publication) {
-		$http.post('/api/project/' + publication.id + '/copy')
+		$http.post('/project/' + publication.id + '/copy')
 	  		.success( function ( data ) {
 	  			var project = data.project;
 				$scope.publications.push( {id: project._id, name: project.name, changed: project.modified} );	
