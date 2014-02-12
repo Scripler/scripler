@@ -42,7 +42,7 @@ $(document).ready(function(){
 	$( "#login-form" ).submit(function( event ) {
   		event.preventDefault();
 		$.ajax({
-			url: '/api/user/login',
+			url: '/user/login',
             type: 'POST',
             data: "email=" + $("#login-email").val() + "&password=" + $("#login-password").val(),
             dataType: 'json',
