@@ -2,11 +2,11 @@
 
 var app = angular.module( 'scriplerApp', [] );
 
-appSite.controller( 'appController', [ '$http', '$scope', function( $http, $scope ) {
+app.controller( 'appController', [ '$http', '$scope', function( $http, $scope ) {
 
 }]);
 
-appSite.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
+app.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
 
 	var isLoggedIn = [ '$q', '$timeout', '$http', '$location', function ( $q, $timeout, $http, $location ) {
 		var deferred = $q.defer();
@@ -88,7 +88,7 @@ app.directive('onEnter', function() {
 	};
 });
 
-appSite.directive('ckEditor', function() {
+app.directive('ckEditor', function() {
 	return {
 		require: '?ngModel',
 		link: function(scope, elm, attr, ngModel) {
