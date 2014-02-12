@@ -50,7 +50,6 @@ appSite.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
 					})
 		.when('/create', { templateUrl:'pages/create.html', controller:createController })
 		.when('/project', { templateUrl:'pages/project.html', controller:projectController })
-		.when('/login', { templateUrl:'pages/login.html' })
 		.when('/error', { templateUrl:'pages/error.html', controller:createController })
 		.otherwise({ redirectTo:'/' });
 });
