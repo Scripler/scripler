@@ -64,18 +64,6 @@ function PublicationsCtrl ( $scope, $http ) {
 		});
 	};
 
-	$scope.removePublication = function ( publication ) {
-		var removePublication = confirm('Positive you want to delete Publication');
-
-		if (removePublication === true) {
-
-			$http.delete('/project/' + publication.id)
-				.success( function () {
-					$scope.publications.splice($scope.publications.indexOf(publication), 1);				
-				});			
-		}
-	};
-
 	$scope.archivePublication = function ( publication ) {
 		$http.put('/project/' + publication.id + '/archive')
 			.success( function () {
