@@ -908,8 +908,8 @@ describe('Scripler RESTful API', function () {
 							assert.equal(res.body.project.metadata.keywords[2], "FRH");
 							assert.equal(res.body.project.metadata.keywords[3], "WSBB");
 							assert.equal(res.body.project.metadata.language, "English");
-// TODO: assert publicationDate has value from input: db is currently 1 hour behind + format date appropriately
-//assert.equal(res.body.project.metadata.publicationDate, now.format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
+							// TODO: assert publicationDate has value from input: db is currently 1 hour behind + format date appropriately
+							//assert.equal(res.body.project.metadata.publicationDate, now.format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
 							assert.equal(res.body.project.metadata.type, "MUS018000");
 							assert.equal(res.body.project.metadata.rights, "© Det Gamle Forlag");
 							assert.equal(res.body.project.metadata.contributors[0].role, "edt");
@@ -944,9 +944,9 @@ describe('Scripler RESTful API', function () {
 						});
 				}),
 				it('Uploading a font to a user should return success', function (done) {
-// TODO: when an API call for this exists, change this code to use it. For now, fake it...
+					// TODO: when an API call for this exists, change this code to use it. For now, fake it...
 
-// Copy font from source, test dir, to destination, public dir
+					// Copy font from source, test dir, to destination, public dir
 					var fontName = 'casper.ttf';
 					var srcUserFontsDir = path.join('test', 'resources', 'user-fonts');
 					var srcFont = path.join(srcUserFontsDir, fontName);
@@ -964,9 +964,9 @@ describe('Scripler RESTful API', function () {
 					});
 				}),
 				it('Uploading an image to a project should return success', function (done) {
-// TODO: when an API call for this exists, change this code to use it. For now, fake it...
+					// TODO: when an API call for this exists, change this code to use it. For now, fake it...
 
-// Copy image from source, test dir, to destination, public dir
+					// Copy image from source, test dir, to destination, public dir
 					var imageName = 'Scripler_logo.jpg';
 					var srcImagesDir = path.join('test', 'resources', 'images');
 					var srcImage = path.join(srcImagesDir, imageName);
@@ -984,9 +984,9 @@ describe('Scripler RESTful API', function () {
 					});
 				}),
 				it('Uploading a style to a project should return success', function (done) {
-// TODO: when an API call for this exists, change this code to use it. For now, fake it...
+					// TODO: when an API call for this exists, change this code to use it. For now, fake it...
 
-// Copy style from source, test dir, to destination, public dir
+					// Copy style from source, test dir, to destination, public dir
 					var styleName = 'my_cool_stylesheet.css';
 					var srcStylesDir = path.join('test', 'resources', 'styles');
 					var srcStyle = path.join(srcStylesDir, styleName);
@@ -1021,9 +1021,9 @@ describe('Scripler RESTful API', function () {
 						}).end(function (err, res) {
 							if (err) return done(err);
 
-// binary response data is in res.body as a buffer
+							// binary response data is in res.body as a buffer
 							assert.ok(Buffer.isBuffer(res.body));
-//console.log("res: ", res.body);
+							//console.log("res: ", res.body);
 							var epub = projectId + '.epub';
 							fs.writeFile(epub, res.body);
 
