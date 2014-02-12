@@ -2,410 +2,227 @@
 
 <html>
 <head>
-    <title>Scripler</title>
+	<title>Scripler</title>
 
 	<meta charset="UTF-8">
 
-    <link rel="stylesheet" type="text/css" href="css/shared/default.css" />
+	<link rel="stylesheet" type="text/css" href="css/shared/default.css" />
 	<link rel="stylesheet" type="text/css" href="css/shared/fonts.css" />
 	<link rel="stylesheet" type="text/css" href="css/pages/frontpage.css" />
 	<link rel="stylesheet" type="text/css" href="css/modules/navigation.css" />
 
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBk6FHf_Xec1ykYuZoWjcicCwP-heTCL-w&sensor=true"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBk6FHf_Xec1ykYuZoWjcicCwP-heTCL-w&sensor=true"></script>
 </head>
 <body>
 
 	<nav class="menu-top">
-	    <ul>
-	        <!-- //ADD/FIX: Make a fallback if you haven't got Javascript -->
-	        <li class="navpoint menu-create" data="scripler"><a href="#scripler">Scripler</a></li>
+		<ul>
+			<!-- //ADD/FIX: Make a fallback if you haven't got Javascript -->
+			<li class="navpoint menu-create" data="scripler"><a href="#scripler">Scripler</a></li>
 			<!-- //FIX: If logged in go-to create page, else show create menupoint -->
-	        <!--<li class="navpoint menu-create" data="create"><a href="#create">Create</a></li>-->
-	        <!-- //FIX: If logged in go-to explore page, else show explore menupoint -->
-	        <!--<li class="navpoint menu-create" data="explore">Explore</li>-->
-	        <li class="navpoint menu-features" data="features"><a href="#features">Features</li>
-	        <li class="navpoint menu-news" data="news"><a href="#news">News</li>
-	        <!--<li class="navpoint menu-pricing" data="pricing">Pricing</li>-->
-	        <!--<li class="navpoint menu-learn" data="learn">Learn</li>-->
-	        <li class="navpoint menu-about" data="about"><a href="#about">About</li>
-	        <li class="navpoint menu-contact" data="contact"><a href="#contact">Contact</a></li>
+			<!--<li class="navpoint menu-create" data="create"><a href="#create">Create</a></li>-->
+			<!-- //FIX: If logged in go-to explore page, else show explore menupoint -->
+			<!--<li class="navpoint menu-create" data="explore">Explore</li>-->
+			<li class="navpoint menu-features" data="features"><a href="#features">Features</li>
+			<li class="navpoint menu-news" data="news"><a href="#news">News</li>
+			<!--<li class="navpoint menu-pricing" data="pricing">Pricing</li>-->
+			<!--<li class="navpoint menu-learn" data="learn">Learn</li>-->
+			<li class="navpoint menu-about" data="about"><a href="#about">About</li>
+			<li class="navpoint menu-contact" data="contact"><a href="#contact">Contact</a></li>
+			<li class="navpoint menu-login" data="login"><a href="#login">Login</a></li>
 
-	        <!--<li class="navbutton" id="showMenu"></li>-->
-	    </ul>
+			<!--<li class="navbutton" id="showMenu"></li>-->
+		</ul>
 	</nav>
+
+	<section id="login" class="clearfix">
+		<article>
+			<div class="login-wrap">
+				<form id="login-form">
+					<div class="login-group">
+						<input type="email" value="" name="login-email" class="required email" id="login-email" placeholder="Email Address">
+						<input type="password" value="" name="login-password" class="required password" id="login-password" placeholder="Password">
+						<input name="Login" type="submit" value="Login" class="button">
+					</div>
+				</form>
+				<div class="socialicons clearfix">
+					<div class="socialicon"><a href="http://localhost:8888/api/auth/facebook" target="_blank"><span class="icon-facebook"></span></a></div>
+					<div class="socialicon"><a href="http://localhost:8888/api/auth/google" target="_blank"><span class="icon-linkedin"></span></a></div>
+					<div class="socialicon"><a href="http://localhost:8888/api/auth/google" target="_blank"><span class="icon-google-plus"></span></a></div>
+				</div>
+			 </div>
+		</article>
+	</section>
 
 	<section id="scripler" class="clearfix">
 	  <article>
-	        <div class="create_logo"><img src="images/logo.png" /></div>
+			<div class="create_logo"><img src="images/logo.png" /></div>
 
-	        <h2 class="create_subtitle">
-	            Make great ebooks
-	        </h2>
-	        <div class="create_subtext">
-	            With Scripler, making ebooks is going to be easy.<br />Set up an account and turn your text into a good looking<br />and fully functional ebook, ready for distribution.<br />Oh, and it will be free.<br /><br />Sign up for our newsletter now and be the first to know when Scripler is ready.
-	        </div>
+			<h2 class="create_subtitle">
+				Make great ebooks
+			</h2>
+			<div class="create_subtext">
+				Scripler is an intuitive way to write and produce ebooks.<br />
+				Your books will be beautiful, fully functional and ready for distribution.<br />
+				Oh, and it’s free.
+			</div>
 
-	        <!-- MailChimp -->
-	        <div class="create_form" id="mc_embed_signup">
-	        <form action="http://scripler.us6.list-manage.com/subscribe/post?u=1b5826d9bbcb3775e3f837180&amp;id=74f540769b" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-	            
-	        <div class="mc-field-group">
-	            <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="Email Address">
-	            <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
-	        </div>
-	        <div id="mce-responses" class="clear">
-	            <div class="response error" id="mce-error-response" style="display:none;"></div>
-	            <div class="response success" id="mce-success-response" style="display:none;"></div>
-	        </div>
-	        </form>
-	        </div>
-	        <script type="text/javascript">
-	            var fnames = new Array();var ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';
-	            try {
-	                var jqueryLoaded=jQuery;
-	                jqueryLoaded=true;
-	            } catch(err) {
-	                var jqueryLoaded=false;
-	            }
-	            var head= document.getElementsByTagName('head')[0];
-	            if (!jqueryLoaded) {
-	                var script = document.createElement('script');
-	                script.type = 'text/javascript';
-	                script.src = '//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js';
-	                head.appendChild(script);
-	                if (script.readyState && script.onload!==null){
-	                    script.onreadystatechange= function () {
-	                          if (this.readyState == 'complete') mce_preload_check();
-	                    }    
-	                }
-	            }
+			<div class="try-wrapper">
+				<button type="button" class="button try-button">Try creating your first book!</button>
+			</div>
 
-	            var err_style = '';
-	            try{
-	                err_style = mc_custom_error_style;
-	            } catch(e){
-	                err_style = '#mc_embed_signup input.mce_inline_error{border-color:#6B0505;} #mc_embed_signup div.mce_inline_error{margin: 0 0 1em 0; padding: 5px 10px; background-color:#6B0505; font-weight: bold; z-index: 1; color:#fff;}';
-	            }
-	            var head= document.getElementsByTagName('head')[0];
-	            var style= document.createElement('style');
-	            style.type= 'text/css';
-	            if (style.styleSheet) {
-	              style.styleSheet.cssText = err_style;
-	            } else {
-	              style.appendChild(document.createTextNode(err_style));
-	            }
-	            head.appendChild(style);
-	            setTimeout('mce_preload_check();', 250);
-
-	            var mce_preload_checks = 0;
-	            function mce_preload_check(){
-	                if (mce_preload_checks>40) return;
-	                mce_preload_checks++;
-	                try {
-	                    var jqueryLoaded=jQuery;
-	                } catch(err) {
-	                    setTimeout('mce_preload_check();', 250);
-	                    return;
-	                }
-	                var script = document.createElement('script');
-	                script.type = 'text/javascript';
-	                script.src = 'http://downloads.mailchimp.com/js/jquery.form-n-validate.js';
-	                head.appendChild(script);
-	                try {
-	                    var validatorLoaded=jQuery("#fake-form").validate({});
-	                } catch(err) {
-	                    setTimeout('mce_preload_check();', 250);
-	                    return;
-	                }
-	                mce_init_form();
-	            }
-	            function mce_init_form(){
-	                jQuery(document).ready( function($) {
-	                  var options = { errorClass: 'mce_inline_error', errorElement: 'div', onkeyup: function(){}, onfocusout:function(){}, onblur:function(){}  };
-	                  var mce_validator = $("#mc-embedded-subscribe-form").validate(options);
-	                  $("#mc-embedded-subscribe-form").unbind('submit');//remove the validator so we can get into beforeSubmit on the ajaxform, which then calls the validator
-	                  options = { url: 'http://scripler.us6.list-manage.com/subscribe/post-json?u=1b5826d9bbcb3775e3f837180&id=74f540769b&c=?', type: 'GET', dataType: 'json', contentType: "application/json; charset=utf-8",
-	                                beforeSubmit: function(){
-	                                    $('#mce_tmp_error_msg').remove();
-	                                    $('.datefield','#mc_embed_signup').each(
-	                                        function(){
-	                                            var txt = 'filled';
-	                                            var fields = new Array();
-	                                            var i = 0;
-	                                            $(':text', this).each(
-	                                                function(){
-	                                                    fields[i] = this;
-	                                                    i++;
-	                                                });
-	                                            $(':hidden', this).each(
-	                                                function(){
-	                                                    var bday = false;
-	                                                    if (fields.length == 2){
-	                                                        bday = true;
-	                                                        fields[2] = {'value':1970};//trick birthdays into having years
-	                                                    }
-	                                                    if ( fields[0].value=='MM' && fields[1].value=='DD' && (fields[2].value=='YYYY' || (bday && fields[2].value==1970) ) ){
-	                                                        this.value = '';
-	                                                    } else if ( fields[0].value=='' && fields[1].value=='' && (fields[2].value=='' || (bday && fields[2].value==1970) ) ){
-	                                                        this.value = '';
-	                                                    } else {
-	                                                        if (/\[day\]/.test(fields[0].name)){
-	                                                            this.value = fields[1].value+'/'+fields[0].value+'/'+fields[2].value;                                           
-	                                                        } else {
-	                                                            this.value = fields[0].value+'/'+fields[1].value+'/'+fields[2].value;
-	                                                        }
-	                                                    }
-	                                                });
-	                                        });
-	                                    $('.phonefield-us','#mc_embed_signup').each(
-	                                        function(){
-	                                            var fields = new Array();
-	                                            var i = 0;
-	                                            $(':text', this).each(
-	                                                function(){
-	                                                    fields[i] = this;
-	                                                    i++;
-	                                                });
-	                                            $(':hidden', this).each(
-	                                                function(){
-	                                                    if ( fields[0].value.length != 3 || fields[1].value.length!=3 || fields[2].value.length!=4 ){
-	                                                        this.value = '';
-	                                                    } else {
-	                                                        this.value = 'filled';
-	                                                    }
-	                                                });
-	                                        });
-	                                    return mce_validator.form();
-	                                }, 
-	                                success: mce_success_cb
-	                            };
-	                  $('#mc-embedded-subscribe-form').ajaxForm(options);
-	                });
-	            }
-	            function mce_success_cb(resp){
-	                $('#mce-success-response').hide();
-	                $('#mce-error-response').hide();
-	                if (resp.result=="success"){
-	                    //$('#mce-'+resp.result+'-response').show();
-	                    $('#mce-'+resp.result+'-response').html(resp.msg).show();
-	                    $('#mc-embedded-subscribe-form').each(function(){
-	                        this.reset();
-	                    });
-	                } else {
-	                    var index = -1;
-	                    var msg;
-	                    try {
-	                        var parts = resp.msg.split(' - ',2);
-	                        if (parts[1]==undefined){
-	                            msg = resp.msg;
-	                        } else {
-	                            i = parseInt(parts[0]);
-	                            if (i.toString() == parts[0]){
-	                                index = parts[0];
-	                                msg = parts[1];
-	                            } else {
-	                                index = -1;
-	                                msg = resp.msg;
-	                            }
-	                        }
-	                    } catch(e){
-	                        index = -1;
-	                        msg = resp.msg;
-	                    }
-	                    try{
-	                        if (index== -1){
-	                            //$('#mce-'+resp.result+'-response').show();
-	                            $('#mce-'+resp.result+'-response').html(msg).show();
-	                        } else {
-	                            err_id = 'mce_tmp_error_msg';
-	                            html = '<div id="'+err_id+'" style="'+err_style+'"> '+msg+'</div>';
-	                            
-	                            var input_id = '#mc_embed_signup';
-	                            var f = $(input_id);
-	                            if (ftypes[index]=='address'){
-	                                input_id = '#mce-'+fnames[index]+'-addr1';
-	                                f = $(input_id).parent().parent().get(0);
-	                            } else if (ftypes[index]=='date'){
-	                                input_id = '#mce-'+fnames[index]+'-month';
-	                                f = $(input_id).parent().parent().get(0);
-	                            } else {
-	                                input_id = '#mce-'+fnames[index];
-	                                f = $().parent(input_id).get(0);
-	                            }
-	                            if (f){
-	                                $(f).append(html);
-	                                $(input_id).focus();
-	                            } else {
-	                                $('#mce-'+resp.result+'-response').show();
-	                                $('#mce-'+resp.result+'-response').html(msg);
-	                            }
-	                        }
-	                    } catch(e){
-	                        //$('#mce-'+resp.result+'-response').show();
-	                        $('#mce-'+resp.result+'-response').html(msg).show();
-	                    }
-	                }
-	            }
-	        </script>
-	        <!-- MailChimp -->
-
-	        <div class="socialicons clearfix">
-	            <div class="socialicon"><a href="https://www.facebook.com/Scripler" target="_blank"><span class="icon-facebook"></span></a></div>
-	            <div class="socialicon"><a href="https://twitter.com/Scriplerdk" target="_blank"><span class="icon-twitter"></span></a></div>
-	            <div class="socialicon"><a href="https://plus.google.com/110745200191180687790/" target="_blank"><span class="icon-google-plus"></span></a></div>
-	        </div>
 	  </article>
 	</section>
 
 	<section id="features" class="clearfix">
 	  <article>
-	    <h1>Features</h1>
+		<h1>Features</h1>
 
-	    <div class="hexagon">
-		    <div class="hexagon-content">
+		<div class="hexagon">
+			<div class="hexagon-content">
 				<img src="images/features/free.png" width="100" height="100" />
-		    </div>
-	    	<div class="hexagon-title">It’s free</div>
+			</div>
+			<div class="hexagon-title">It’s free</div>
 	<!--   		<div class="hexagon-text">With Scripler it‘s free to make ebooks. As in - it does not cost a thing. There are premium plans if you need more cloud storage, premium designs or if you want to make custom book-templates.</div>-->
-	   	</div>
-	    <div class="hexagon">
-		    <div class="hexagon-content">
+		</div>
+		<div class="hexagon">
+			<div class="hexagon-content">
 				<img src="images/features/many.png" width="100" height="100" />
-		    </div>
-		    <div class="hexagon-title">Make as many books you like</div>
+			</div>
+			<div class="hexagon-title">Make as many books you like</div>
 	<!--	    <div class="hexagon-text">- No limit on the number of books you can make. Make 1000 books consisting only of a poem each. Make serial fiction and publish each chapter as an ebook or collect your creations in vast works of literature. Just experiment, go wild.</div>-->
-	    </div>
-	    <div class="hexagon">
-		    <div class="hexagon-content">
+		</div>
+		<div class="hexagon">
+			<div class="hexagon-content">
 				<img src="images/features/interface.png" width="100" height="100" />
-		    </div>
-		    <div class="hexagon-title">Groundbreaking user interface</div>
+			</div>
+			<div class="hexagon-title">Groundbreaking user interface</div>
 	<!--	    <div class="hexagon-text">Write in Scriplers distraction-free interface. Everything you need is visible with a single click. Easily manage complex projects with many documents and switch instantly between them, never losing focus on the text editor.</div>-->
-	    </div>
-	    <div class="hexagon">
-		    <div class="hexagon-content">
+		</div>
+		<div class="hexagon">
+			<div class="hexagon-content">
 				<img src="images/features/togd.png" width="100" height="100" />
-		    </div>
-		    <div class="hexagon-title">Great typography and design</div>
+			</div>
+			<div class="hexagon-title">Great typography and design</div>
 	<!--	    <div class="hexagon-text">- Make professionally designed typography with Scripler’s book-templates. You’ll have a wide selection of great fonts and full control of the typography. You can make any type of book with high quality and stringent design. Easily insert images and figures.</div>-->
-	    </div>
-	    <div class="hexagon">
-		    <div class="hexagon-content">
+		</div>
+		<div class="hexagon">
+			<div class="hexagon-content">
 				<img src="images/features/ebook.png" width="100" height="100" />
-		    </div>
-		    <div class="hexagon-title">Fully functional ebooks</div>
+			</div>
+			<div class="hexagon-title">Fully functional ebooks</div>
 	<!--	    <div class="hexagon-text">- Easily insert a cover, table of content, title-page, text-boxes, lists and colophon. All elements are designed for the book-template you currently use. Easily add all relevant metadata to your book, including description and keywords.</div>-->
-	    </div>
-	    <div class="hexagon">
-		    <div class="hexagon-content">
+		</div>
+		<div class="hexagon">
+			<div class="hexagon-content">
 				<img src="images/features/import.png" width="100" height="100" />
-		    </div>
-		    <div class="hexagon-title">Import</div>
+			</div>
+			<div class="hexagon-title">Import</div>
 	<!--	    <div class="hexagon-text">Easily import your content from Word. Just copy and paste directly in the editor, and you’re ready to get to work.</div>-->
-	    </div>
-	    <div class="hexagon">
-		    <div class="hexagon-content">
+		</div>
+		<div class="hexagon">
+			<div class="hexagon-content">
 				<img src="images/features/web.png" width="100" height="100" />
-		    </div>
-		    <div class="hexagon-title">Open standards and web technology</div>
+			</div>
+			<div class="hexagon-title">Open standards and web technology</div>
 	<!--	    <div class="hexagon-text">- Scripler makes ebooks in EPUB format. EPUB is the definitive international and open standard for ebooks. While you will never see any code in Scripler, it is based on web standards such as HTML and CSS.</div>-->
-	    </div>
-	    <div class="hexagon">
-		    <div class="hexagon-content">
+		</div>
+		<div class="hexagon">
+			<div class="hexagon-content">
 				<img src="images/features/innovate.png" width="100" height="100" />
-		    </div>
-		    <div class="hexagon-title">Digital avant-garde</div>
+			</div>
+			<div class="hexagon-title">Digital avant-garde</div>
 	<!--	    <div class="hexagon-text">- Experiment with new genres and literary forms. Make ultra-hyperlinked asynchronous neo-literature, make old genres new again or something entirely different. It´s easy to innovate with Scripler.</div>-->
-	    </div>
-	    <div class="hexagon">
-		    <div class="hexagon-content">
+		</div>
+		<div class="hexagon">
+			<div class="hexagon-content">
 				<img src="images/features/world.png" width="100" height="100" />
-		    </div>
-		    <div class="hexagon-title">Work from anywhere</div>
+			</div>
+			<div class="hexagon-title">Work from anywhere</div>
 	<!--	    <div class="hexagon-text">- Scripler saves your work in the cloud. Each account has free storage enough for several books. You can work from everywhere, and never worry about losing your work.</div>-->
-	    </div>
-	    <div class="hexagon">
-		    <div class="hexagon-content">
+		</div>
+		<div class="hexagon">
+			<div class="hexagon-content">
 				<img src="images/features/premium.png" width="100" height="100" />
-		    </div>
-		    <div class="hexagon-title">Premium subscription for heavy users and professionals</div>
+			</div>
+			<div class="hexagon-title">Premium subscription for heavy users and professionals</div>
 	<!--	    <div class="hexagon-text">- As a premium subscriber you’ll have a wider range of professionaly designed book-templates to choose from, more space for more books, as well as the ability to create and control your own custom book-templates.</div>-->
-	    </div>
+		</div>
 	  </article>
 	</section>
 
 	<section id="news" class="clearfix">
-	    <div class="prev hidden" data-prev="1"><img src="images/arrow_left.png" /></div>
-	    <article>
-	        <div class="inner">
-	            <h1>News</h1>
+		<div class="prev hidden" data-prev="1"><img src="images/arrow_left.png" /></div>
+		<article>
+			<div class="inner">
+				<h1>News</h1>
 
-	            <div class="column">
-		            <h2>Scripler.com is launched</h2>
-		            On October 1 we were thrilled to launch the Scripler website. Right now we are busy developing the first version of Scripler which is a free of charge, lightweight and web-based production tool for creating ebooks.<br>
+				<div class="column">
+					<h2>Scripler.com is launched</h2>
+					On October 1 we were thrilled to launch the Scripler website. Right now we are busy developing the first version of Scripler which is a free of charge, lightweight and web-based production tool for creating ebooks.<br>
 					Meanwhile you can explore scripler.com and learn more about what features you can expect.<br>
 					We will be regularly updating the news section with scoops from inside the Scripler office and what’s new in world of digital publishing.
-	            </div>
+				</div>
 
-	            <div class="column">
-	                <h2>The insanity of traditional publishing workflows</h2>
-	                In the traditional workflow of publishing there are jobs that wouldn't be at all necessary if technology and workflows were better designed to support each other.<br>
+				<div class="column">
+					<h2>The insanity of traditional publishing workflows</h2>
+					In the traditional workflow of publishing there are jobs that wouldn't be at all necessary if technology and workflows were better designed to support each other.<br>
 					What we do now is a weird haphazard mix of everything: We essentially have a workflow that runs like it has for hundreds of years old. All while the individual elements of publishing have been more or less digitalized and evolved hugely with more advanced technology in the last couple of decades.<br /><br />
-	                <a href="#" class="readmore" data-move="1">Read more...</a>
-	            </div>
+					<a href="#" class="readmore" data-move="1">Read more...</a>
+				</div>
 
-	            <div class="column">
-	                <h2>The #%¤&%! of the book</h2>
-	                "With the prophesied coming of the ebook, pundits have been talking about the death of the book for the last 30 years. That’s depressing - let us talk about the evolution of the book instead. This seems to be more appropriate given past experience."<br>
+				<div class="column">
+					<h2>The #%¤&%! of the book</h2>
+					"With the prophesied coming of the ebook, pundits have been talking about the death of the book for the last 30 years. That’s depressing - let us talk about the evolution of the book instead. This seems to be more appropriate given past experience."<br>
 					If the book isn’t dying then what is it doing? Scripler-founder David takes a crack at answering that question in his latest column. Read more about Scripler’s part in the evolution of the book and see what #sabretooth has to do with it all.<br /><br />
-	                <a href="https://medium.com/p/5c8e8b68c469" target="_blank">Read more...</a>
-	            </div>
-	            
-	        </div>
-	    </article>
-	    <article>
-	        <div class="inner">
-	            <h1>News</h1>
-	            <div><h2>The insanity of traditional publishing work-flows: The dead of the ubiquitous book-designer</h2></div>
-	            <br>
-	            <div class="column">
-	            The world needs designers, and they are needed everywhere. But in the traditional workflow from manuscript to whatever - there are job-functions that wouldn't be at all necessary if technology and workflows were better designed and fitted together. What we do now is a weird haphazard mix of everything: A workflow essentially hundreds of years old, where the individual elements has been more or less digitalized and evolved hugely with more advanced technology the last couple of decades+.<br><br>
-	            But the whole process hasn't been redone and rethought completely yet (at least for a great deal of publishers)
-	            </div>
-	            <div class="column">
-	            - something which is sorely needed and will mean great savings and freeing of resources to make better content - if done right.<br /><br />For example, in many places the text is prepared fully in two places. First made ready as a washed and edited word-manuscript and then again by the designer in InDesign or similar (and even a third time if published digitally). This is insane. There should not be reason to actually produce the text two (or three) times - this is a left-over  from long dead technological paradigmes, representing handwriting (/typewriting) and typesetting.
-	            </div>
-	            <div class="column">
-	            Even so it is done extensively and it runs up the cost of book-production immensely - using our most costly resource - skilled human workforce.<br /><br />Of course everything isn't just cake - it is difficult, costly and easy to make mistakes and fail horribly - and even though iBooks Author has some interesting ideas - it seems to fail to serve anyone but Apple itself - I don't think it will stand in the long run. But things need to change if the publishing business is to survive.
-	            </div>
-	        </div>
-	    </article>
-	    <article>
-	        <div class="inner">
-	            <h1>News</h1>
+					<a href="https://medium.com/p/5c8e8b68c469" target="_blank">Read more...</a>
+				</div>
+				
+			</div>
+		</article>
+		<article>
+			<div class="inner">
+				<h1>News</h1>
+				<div><h2>The insanity of traditional publishing work-flows: The dead of the ubiquitous book-designer</h2></div>
+				<br>
+				<div class="column">
+				The world needs designers, and they are needed everywhere. But in the traditional workflow from manuscript to whatever - there are job-functions that wouldn't be at all necessary if technology and workflows were better designed and fitted together. What we do now is a weird haphazard mix of everything: A workflow essentially hundreds of years old, where the individual elements has been more or less digitalized and evolved hugely with more advanced technology the last couple of decades+.<br><br>
+				But the whole process hasn't been redone and rethought completely yet (at least for a great deal of publishers)
+				</div>
+				<div class="column">
+				- something which is sorely needed and will mean great savings and freeing of resources to make better content - if done right.<br /><br />For example, in many places the text is prepared fully in two places. First made ready as a washed and edited word-manuscript and then again by the designer in InDesign or similar (and even a third time if published digitally). This is insane. There should not be reason to actually produce the text two (or three) times - this is a left-over  from long dead technological paradigmes, representing handwriting (/typewriting) and typesetting.
+				</div>
+				<div class="column">
+				Even so it is done extensively and it runs up the cost of book-production immensely - using our most costly resource - skilled human workforce.<br /><br />Of course everything isn't just cake - it is difficult, costly and easy to make mistakes and fail horribly - and even though iBooks Author has some interesting ideas - it seems to fail to serve anyone but Apple itself - I don't think it will stand in the long run. But things need to change if the publishing business is to survive.
+				</div>
+			</div>
+		</article>
+		<article>
+			<div class="inner">
+				<h1>News</h1>
 
-	            <h2>The evolution of the book</h2>
-	            <span>By David Walther Birk</span><br /><br />
-	            <div class="column">
-	            With the prophesied coming of the ebook, pundits have been talking about the death of the book for the last 30 years. That’s depressing - let us talk about the evolution of the book instead. This seems to be more appropriate given past experience - the death of the book was probably prophesied back when papyri was invented.<br /><br />
-	            Talk about the future of the book is often about digitization, either in the form of the changing structures outside and around the book - the distribution, the price and the availability. Or in relation to the packaging - the ebook versus the printed book. What I want to talk about is how the essential bookness of the book might evolve in the years to come.<br /><br />
-	            I think the real evolutionary pressure on books is created by something that is changing human culture even as these words are written. Some people call this the Internet, some years ago it was called Web 2.0. Here I will coin it the Hyper Networked Usage Phenomenon, or HyNUP for short. Sometimes it takes a freaky name to clearly bring forth the freakish effects of something we interact with everyday.<br /><br />
-	            The HyNUP has changed human phenomena in explosive and unforeseen ways. But often it is not the phenomena themselves that are special, but just that they are getting Hyper Networked on a global scale. In fact, the most revolutionary internet-phenomena are often super fundamental.
-	            </div>
-	            <div class="column">
-	            Take Facebook - what is more fundamental to human nature than having social ties, family and friends, and sharing things with these people? Or Twitter - real-time tweeting things that are happening. There is a reason it is called Twitter, birds are doing it all time (Watch out #sabretooth). It is basic animal behaviour. Hyper networked - these basic phenomena becomes something new, something wild.<br /><br />
-	            So what about more complex human phenomena, how does this evolve in a hyper networked context? Take blogs. These are more complex things, closer to our book. Blogs have democratized publishing unlike anything before, giving everyone who wants it a voice and means of using it. Generally blogs concern themselves with shorter concoctions of information.<br /><br />
-	            What if we increase the complexity even more. Moving beyond blog-length, into the lands of complex literature, structured written knowledge, iterative expositions of science, stories, drama, fiction, poetry - have these phenomena evolved into unknown forms never imagined before? On an explosive culture-changing scale, only Wikipedia comes to mind.<br /><br />
-	            Ebooks as we know them are variations of known forms, expositions existing in little digital cages. They are as their print counterparts, their packaging different, but dead instances of written text. How are they created? Like afterthoughts to the printed book, involving complex exports and advanced coding.
-	            </div>
-	            <div class="column">
-	            Not to talk about written forms of scientific knowledge, victims of early digitization, lying in their pdf-tombs, locked behind paywalls and institutional bureaucracy.<br />
-	            My point is that we are not even beginning to see what is possible with this complex human behaviour in a hyper networked context. The ebook scene, or e-publishing, are just mirrors and rehashes of known forms, now in digital.<br /><br />
-	            But we can try to imagine: What will happen if everyone can write books and publish them worldwide with the blink of an eye? What will happen if a thousand people are reading the end of an amazing story at the same time, commenting and chatting real time in the margins of the book? What will happen if fifty scientists can interact with each other as they are reading a new report on cancer-treatment as it is published? What if ten great screenwriters are going episodical like Dickens, reacting to readers like insane improvisational theater - live literature? I want to know!<br /><br />
-	            So the idea of Scripler is to see what happens, if we take this human phenomenon, lets call it literature, and grants it power to evolve in a hyper networked context. What will it then become? It’s an evolutionary experiment, with the internet as the laboratory, and the collective literate output of the world as the subject. That is the ambition at least.
-	            </div>
-	        </div>
-	    </article>
+				<h2>The evolution of the book</h2>
+				<span>By David Walther Birk</span><br /><br />
+				<div class="column">
+				With the prophesied coming of the ebook, pundits have been talking about the death of the book for the last 30 years. That’s depressing - let us talk about the evolution of the book instead. This seems to be more appropriate given past experience - the death of the book was probably prophesied back when papyri was invented.<br /><br />
+				Talk about the future of the book is often about digitization, either in the form of the changing structures outside and around the book - the distribution, the price and the availability. Or in relation to the packaging - the ebook versus the printed book. What I want to talk about is how the essential bookness of the book might evolve in the years to come.<br /><br />
+				I think the real evolutionary pressure on books is created by something that is changing human culture even as these words are written. Some people call this the Internet, some years ago it was called Web 2.0. Here I will coin it the Hyper Networked Usage Phenomenon, or HyNUP for short. Sometimes it takes a freaky name to clearly bring forth the freakish effects of something we interact with everyday.<br /><br />
+				The HyNUP has changed human phenomena in explosive and unforeseen ways. But often it is not the phenomena themselves that are special, but just that they are getting Hyper Networked on a global scale. In fact, the most revolutionary internet-phenomena are often super fundamental.
+				</div>
+				<div class="column">
+				Take Facebook - what is more fundamental to human nature than having social ties, family and friends, and sharing things with these people? Or Twitter - real-time tweeting things that are happening. There is a reason it is called Twitter, birds are doing it all time (Watch out #sabretooth). It is basic animal behaviour. Hyper networked - these basic phenomena becomes something new, something wild.<br /><br />
+				So what about more complex human phenomena, how does this evolve in a hyper networked context? Take blogs. These are more complex things, closer to our book. Blogs have democratized publishing unlike anything before, giving everyone who wants it a voice and means of using it. Generally blogs concern themselves with shorter concoctions of information.<br /><br />
+				What if we increase the complexity even more. Moving beyond blog-length, into the lands of complex literature, structured written knowledge, iterative expositions of science, stories, drama, fiction, poetry - have these phenomena evolved into unknown forms never imagined before? On an explosive culture-changing scale, only Wikipedia comes to mind.<br /><br />
+				Ebooks as we know them are variations of known forms, expositions existing in little digital cages. They are as their print counterparts, their packaging different, but dead instances of written text. How are they created? Like afterthoughts to the printed book, involving complex exports and advanced coding.
+				</div>
+				<div class="column">
+				Not to talk about written forms of scientific knowledge, victims of early digitization, lying in their pdf-tombs, locked behind paywalls and institutional bureaucracy.<br />
+				My point is that we are not even beginning to see what is possible with this complex human behaviour in a hyper networked context. The ebook scene, or e-publishing, are just mirrors and rehashes of known forms, now in digital.<br /><br />
+				But we can try to imagine: What will happen if everyone can write books and publish them worldwide with the blink of an eye? What will happen if a thousand people are reading the end of an amazing story at the same time, commenting and chatting real time in the margins of the book? What will happen if fifty scientists can interact with each other as they are reading a new report on cancer-treatment as it is published? What if ten great screenwriters are going episodical like Dickens, reacting to readers like insane improvisational theater - live literature? I want to know!<br /><br />
+				So the idea of Scripler is to see what happens, if we take this human phenomenon, lets call it literature, and grants it power to evolve in a hyper networked context. What will it then become? It’s an evolutionary experiment, with the internet as the laboratory, and the collective literate output of the world as the subject. That is the ambition at least.
+				</div>
+			</div>
+		</article>
 	</section>
 
 	<!--<section id="pricing" data-speed="100" data-type="background">
@@ -419,110 +236,110 @@
 	</section>-->
 
 	<section id="about" class="clearfix">
-	    <div class="prev hidden"><img src="images/arrow_left.png" /></div>
-	    <article>
-	        <div class="inner">
-	            <h1>About</h1>
-	            
-	            <div class="column">
-	                <h2>Do it yourself</h2>
-	                It’s not easy to change the fundamental structures of a system, that has run the same way for centuries. But that’s the mission Scripler set out to accomplish two years ago. To make publishing possible for everyone. If you want to make an ebook you can. But if you want to have it look and act like it was designed by professionals and you want to make it fast, things start to get complicated. The technologies necessary to DIY exist - but in the current wilderness of self-publishing it’s not accessible to everyone. Existing ebook tools are often extremely pricey and you still need to be familiar with html and css if you want your ebook to be great. That’s where Scripler is different: you’ll be able to create, professionally edit, design, share, and sell your own work - without having to code or shell out thousands of dollars in the process. In fact, it won’t cost you a thing.
-	            </div>
+		<div class="prev hidden"><img src="images/arrow_left.png" /></div>
+		<article>
+			<div class="inner">
+				<h1>About</h1>
+				
+				<div class="column">
+					<h2>Do it yourself</h2>
+					It’s not easy to change the fundamental structures of a system, that has run the same way for centuries. But that’s the mission Scripler set out to accomplish two years ago. To make publishing possible for everyone. If you want to make an ebook you can. But if you want to have it look and act like it was designed by professionals and you want to make it fast, things start to get complicated. The technologies necessary to DIY exist - but in the current wilderness of self-publishing it’s not accessible to everyone. Existing ebook tools are often extremely pricey and you still need to be familiar with html and css if you want your ebook to be great. That’s where Scripler is different: you’ll be able to create, professionally edit, design, share, and sell your own work - without having to code or shell out thousands of dollars in the process. In fact, it won’t cost you a thing.
+				</div>
 
-	            <div class="column">
-	                <h2>From idea to reality</h2>
-	                All work on Scripler is done with zero pay and after we punch out at our regular jobs. We run solely on sugary bytes and fumes of the digital revolution. Scripler was conceived in the mind of project manager and founder David, who was tired of the exhaustingly rigid ways of old fashioned publishing houses. He asked himself the simple question: Why does it have to be so hard, when it should be so easy? That was two year ago, and since Scripler has grown from a one-man show to a full fledged team of 7 Scriplers. Working with a clear mission for the future: We want you to make great ebooks.<br /><br />
-	                <a href="#" class="seeteam">See the team</a>
-	            </div>
+				<div class="column">
+					<h2>From idea to reality</h2>
+					All work on Scripler is done with zero pay and after we punch out at our regular jobs. We run solely on sugary bytes and fumes of the digital revolution. Scripler was conceived in the mind of project manager and founder David, who was tired of the exhaustingly rigid ways of old fashioned publishing houses. He asked himself the simple question: Why does it have to be so hard, when it should be so easy? That was two year ago, and since Scripler has grown from a one-man show to a full fledged team of 7 Scriplers. Working with a clear mission for the future: We want you to make great ebooks.<br /><br />
+					<a href="#" class="seeteam">See the team</a>
+				</div>
 
-	            <div class="column">
-	                <h2>What’s next?</h2>
-	                In just a few short years the world of ebooks and digital publishing has expanded exponentially and both writers and readers have accepted the paperless book. The digitalization of the written word is teeming with potential - most of which we believe has yet to be realized. With a free and functional publishing tool like Scripler we aim to make the whole process of writing, creating and collaborating more fluid. So instead of having to become a publishing professional, focus on what’s important: creating and sharing.<br /><br />
-	                Scriplers vision is to make the ebook revolution accessible to anyone who has something to say. If you are one of them, subscribe to our newsletter and get early access when we launch.<br /><br />
-	                <a href="#" class="to-top">Go to Signup</a><br />
-	            </div>
-	        </div>
-	    </article>
-	    <article>
-	        <div class="inner">
-	            <h1>About</h1>
-	            <h2>Employees</h2>
-	            <div class="half">
-	                <strong>David Walther Birk</strong>, Project Lead<br />
-	                Is actually an archaeologist!<br />
-	                <a href="mailto:david@scripler.com">david@scripler.com</a><br /><br />
+				<div class="column">
+					<h2>What’s next?</h2>
+					In just a few short years the world of ebooks and digital publishing has expanded exponentially and both writers and readers have accepted the paperless book. The digitalization of the written word is teeming with potential - most of which we believe has yet to be realized. With a free and functional publishing tool like Scripler we aim to make the whole process of writing, creating and collaborating more fluid. So instead of having to become a publishing professional, focus on what’s important: creating and sharing.<br /><br />
+					Scriplers vision is to make the ebook revolution accessible to anyone who has something to say. If you are one of them, subscribe to our newsletter and get early access when we launch.<br /><br />
+					<a href="#" class="to-top">Go to Signup</a><br />
+				</div>
+			</div>
+		</article>
+		<article>
+			<div class="inner">
+				<h1>About</h1>
+				<h2>Employees</h2>
+				<div class="half">
+					<strong>David Walther Birk</strong>, Project Lead<br />
+					Is actually an archaeologist!<br />
+					<a href="mailto:david@scripler.com">david@scripler.com</a><br /><br />
 
-	                <strong>Morten Garbøl Franck</strong>, Backend developer<br />
-	                Things I’m addicted to:<br />
-	                <ul><li>Lists</li></ul>
-	                <a href="mailto:morten@scripler.com">morten@scripler.com</a><br /><br />
+					<strong>Morten Garbøl Franck</strong>, Backend developer<br />
+					Things I’m addicted to:<br />
+					<ul><li>Lists</li></ul>
+					<a href="mailto:morten@scripler.com">morten@scripler.com</a><br /><br />
 
-	                <strong>Sofie Marie Ottsen</strong>, Communications<br />
-	                Plays the saxophone (really poorly)<br />
-	                <a href="mailto:sofie@scripler.com">sofie@scripler.com</a><br /><br />
+					<strong>Sofie Marie Ottsen</strong>, Communications<br />
+					Plays the saxophone (really poorly)<br />
+					<a href="mailto:sofie@scripler.com">sofie@scripler.com</a><br /><br />
 
-	                <strong>Ole Sandbæk Jørgensen</strong>, Frontend developer<br />
-	                Fanatic movie watcher. As long as I got my specs on, aye.<br />
-	                <a href="mailto:ole@scripler.com">ole@scripler.com</a>
-	            </div>
-	            <div class="half">
-	                <strong>Kaspar Sivertsen</strong>, Graphic designer<br />
-	                Has no special characteristics what so ever<br />
-	                <a href="mailto:kaspar@scripler.com">kaspar@scripler.com</a><br /><br />
+					<strong>Ole Sandbæk Jørgensen</strong>, Frontend developer<br />
+					Fanatic movie watcher. As long as I got my specs on, aye.<br />
+					<a href="mailto:ole@scripler.com">ole@scripler.com</a>
+				</div>
+				<div class="half">
+					<strong>Kaspar Sivertsen</strong>, Graphic designer<br />
+					Has no special characteristics what so ever<br />
+					<a href="mailto:kaspar@scripler.com">kaspar@scripler.com</a><br /><br />
 
-	                <strong>Allan Mørk Christensen</strong>, Backend developer<br />
-	                Solves the Rubik’s Cube (very slowly)<br />
-	                <a href="mailto:allan@scripler.com">allan@scripler.com</a><br /><br />
+					<strong>Allan Mørk Christensen</strong>, Backend developer<br />
+					Solves the Rubik’s Cube (very slowly)<br />
+					<a href="mailto:allan@scripler.com">allan@scripler.com</a><br /><br />
 
-	                <strong>Kasper Møller</strong>, Communications<br />
-	                Co-writes a blog about otters.<br />
-	                <a href="mailto:kasper@scripler.com">kasper@scripler.com</a>
-	            </div>
-	        </div>
-	    </article>
+					<strong>Kasper Møller</strong>, Communications<br />
+					Co-writes a blog about otters.<br />
+					<a href="mailto:kasper@scripler.com">kasper@scripler.com</a>
+				</div>
+			</div>
+		</article>
 	</section>
 
 	<section id="contact" class="clearfix">
 	  <div id="map-canvas"></div>
 	  <article>
-	    <h1>Contact</h1>
-	    <h2>Ask us anything (about Scripler)</h2>
-	    <div>David Walther Birk<br />Project leader<br /><a href="mailto:david@scripler.com">david@scripler.com</a></div>
+		<h1>Contact</h1>
+		<h2>Ask us anything (about Scripler)</h2>
+		<div>David Walther Birk<br />Project leader<br /><a href="mailto:david@scripler.com">david@scripler.com</a></div>
 
-	    <h2>Find us</h2>
-	    <div>Scripler<br />Laplandsgade 4, 1st floor<br />2300 København S<br />Denmark</div>
+		<h2>Find us</h2>
+		<div>Scripler<br />Laplandsgade 4, 1st floor<br />2300 København S<br />Denmark</div>
 
-	    <h2>Press and media</h2>
-	    <div class="clearfix">
-	        <div class="half">Kasper Møller<br /><a href="mailto:kasper@scripler.com">kasper@scripler.com</a></div>
-	        <div class="half">Sofie Marie Ottsen<br /><a href="mailto:sofie@scripler.com">sofie@scripler.com</a></div>
-	    </div>
+		<h2>Press and media</h2>
+		<div class="clearfix">
+			<div class="half">Kasper Møller<br /><a href="mailto:kasper@scripler.com">kasper@scripler.com</a></div>
+			<div class="half">Sofie Marie Ottsen<br /><a href="mailto:sofie@scripler.com">sofie@scripler.com</a></div>
+		</div>
 
-	    <h2>Stay informed</h2>
-	    <div>Sign up for the newsletter and be the first to know when Scripler is launched. The newsletter will give you a gourmet selection of interesting news from the frontiers of digital publishing and updates on what we’re currently working on at Scripler.<br /><br />
-	    <a href="#" class="to-top">Go to Signup</a>
-	    </div>
+		<h2>Stay informed</h2>
+		<div>Sign up for the newsletter and be the first to know when Scripler is launched. The newsletter will give you a gourmet selection of interesting news from the frontiers of digital publishing and updates on what we’re currently working on at Scripler.<br /><br />
+		<a href="#" class="to-top">Go to Signup</a>
+		</div>
 	  </article>
 	</section>
 
-    <!-- JS Code -->
-    <!--[if lt IE 9]>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <![endif]-->
-    <!--[if gte IE 9]><!---->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-    <!--<![endif]-->
+	<!-- JS Code -->
+	<!--[if lt IE 9]>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<![endif]-->
+	<!--[if gte IE 9]><!---->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+	<!--<![endif]-->
 
-    <script src="js/frontpage.jquery.js"></script>
+	<script src="js/frontpage.jquery.js"></script>
 
-    <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-        ga('create', 'UA-41784294-1', 'scripler.com');
-        ga('send', 'pageview');
-    </script>
+		ga('create', 'UA-41784294-1', 'scripler.com');
+		ga('send', 'pageview');
+	</script>
 </body>
 </html>

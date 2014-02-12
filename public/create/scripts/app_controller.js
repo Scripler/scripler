@@ -1,19 +1,63 @@
 'use strict';
 
-var appSite = angular.module('scriplerApp', []);
+var appSite = angular.module( 'scriplerApp', [] );
 
-appSite.controller('appController', ['$http', '$scope', function($http, $scope) {
+appSite.controller( 'appController', [ '$http', '$scope', function( $http, $scope ) {
 
 }]);
 
-appSite.config(function ($routeProvider) {
-    $routeProvider
-        .when('/', {templateUrl:'pages/create.html', controller:createController})
-        .when('/create', {templateUrl:'pages/create.html', controller:createController})
-        .when('/project', {templateUrl:'pages/project.html', controller:projectController})
-        .when('/login', {templateUrl:'pages/login.html', controller:createController})
-        .when('/error', {templateUrl:'pages/error.html', controller:createController})
-        .otherwise({redirectTo:'/'});
+appSite.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
+
+	var isLoggedIn = [ '$q', '$timeout', '$http', '$location', function ( $q, $timeout, $http, $location ) {
+		var deferred = $q.defer();
+
+		$http.get( '/user' )
+			.success( function( userInfo ){
+				if ( userInfo.user ) {
+					$timeout( deferred.resolve, 0 );
+				} else {
+					$timeout( function() {
+						deferred.reject();
+					}, 0);
+					redirectLogin( $location );
+				}
+			});
+
+		return deferred.promise;
+	}]
+
+	$httpProvider.responseInterceptors
+		.push( function ( $q, $location ) {
+			return function(promise) {
+				return promise
+				.then(
+					function(response){
+						return response;
+					},
+					function(response) {
+						if (response.status === 401) {
+							redirectLogin( $location );	
+						}
+						return $q.reject(response);
+					}
+				);
+			}
+		});
+
+	var redirectLogin = function ( $location ) {
+		var url = $location.absUrl();
+		url = url.replace('/create/#', '/#login');
+		location.href = url;	
+	}
+
+	$routeProvider
+		.when('/', { templateUrl:'pages/create.html', controller:createController,
+					resolve: { access: isLoggedIn }
+					})
+		.when('/create', { templateUrl:'pages/create.html', controller:createController })
+		.when('/project', { templateUrl:'pages/project.html', controller:projectController })
+		.when('/error', { templateUrl:'pages/error.html', controller:createController })
+		.otherwise({ redirectTo:'/' });
 });
 
 appSite.directive('ckEditor', function() {
