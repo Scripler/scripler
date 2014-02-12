@@ -1,12 +1,12 @@
 'use strict';
 
-var appSite = angular.module( 'scriplerApp', [] );
+var app = angular.module( 'scriplerApp', [] );
 
-appSite.controller( 'appController', [ '$http', '$scope', function( $http, $scope ) {
+app.controller( 'appController', [ '$http', '$scope', function( $http, $scope ) {
 
 }]);
 
-appSite.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
+app.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
 
 	var isLoggedIn = [ '$q', '$timeout', '$http', '$location', function ( $q, $timeout, $http, $location ) {
 		var deferred = $q.defer();
@@ -60,7 +60,35 @@ appSite.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
 		.otherwise({ redirectTo:'/' });
 });
 
-appSite.directive('ckEditor', function() {
+app.directive('focusOn', function($timeout, $parse) {
+	return {
+		link: function(scope, element, attrs) {
+			var model = $parse(attrs.focusOn);
+			scope.$watch(model, function(value) {
+				if(value === true) { 
+					$timeout(function() {
+						element[0].select(); 
+					});
+				}
+			});
+		}
+	};
+});
+
+app.directive('onEnter', function() {
+	return function(scope, element, attrs) {
+		element.bind("keydown keypress", function(event) {
+			if(event.which === 13) {
+				scope.$apply(function(){
+				scope.$eval(attrs.onEnter, {'event': event});
+			});
+				event.preventDefault();
+			}
+		});
+	};
+});
+
+app.directive('ckEditor', function() {
 	return {
 		require: '?ngModel',
 		link: function(scope, elm, attr, ngModel) {

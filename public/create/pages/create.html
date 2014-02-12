@@ -27,18 +27,18 @@
  			</div>
 
 			<div class="publication" ng-animate="'animate'" ng-repeat="publication in publications | orderBy:publicationOrder:reverse | filter:publicationSearch">
-				<a class="publication-options-show" data-gui="{{publication.publicationNumber}}" ng-click="showPublicationOptions = true;">
+				<a class="publication-options-show" data-gui="{{publication.id}}" ng-click="showPublicationOptions = true;">
 					<div class="arrow"></div>
 				</a>
 				<!--<p ng-hide="editingPublicationTitle" ng-click="editingPublicationTitle = true;">-->
 				<p ng-hide="editingPublicationTitle">
-					<a href="#/project?pid={{publication.publicationNumber}}">{{publication.publicationName}}</a>
+					<a href="#/project?pid={{publication.id}}">{{publication.name}}</a>
 				</p>
 
-				<form ng-show="editingPublicationTitle" ng-submit="editingPublicationTitle = false; renamePublication(publication);">
+				<form ng-show="editingPublicationTitle">
 				<p>
-						<input type="text" ng-model="publication.publicationName" placeholder="publication title" focus-on="editingPublicationTitle" />
-						<button class="btn" type="submit">Save</button>
+					<!--<input type="text" ng-model="publication.name" placeholder="publication title" focus-on="!!editingPublicationTitle" />-->
+					<textarea id="rename" ng-model="publication.name" placeholder="publication title" focus-on="!!editingPublicationTitle" on-enter="editingPublicationTitle = false; renamePublication(publication);"></textarea>
 				</p>
 				</form>
 
@@ -48,10 +48,9 @@
 					<div class="publication-options-menupoint" ng-click="editingPublicationTitle = true; showPublicationOptions = false;">rename</div>
 					<div class="publication-options-menupoint" ng-click="copyPublication(publication); showPublicationOptions = false;">copy</div>
 					<div class="publication-options-menupoint" ng-click="archivePublication(publication)">archive</div>
-					<div class="publication-options-menupoint" ng-click="removePublication(publication)">delete</div>
 					<div class="publication-options-dates">
-						<div>Created Date: </div><div class="dates">{{publication.publicationCreated | date:'yyyy-MM-dd HH:mm'}}</div>
-						<div>Last Changed Date: </div><div class="dates">{{publication.publicationChanged | date:'yyyy-MM-dd HH:mm'}}</div>
+						<div>Created Date: </div><div class="dates">{{publication.created | date:'yyyy-MM-dd HH:mm'}}</div>
+						<div>Last Changed Date: </div><div class="dates">{{publication.changed | date:'yyyy-MM-dd HH:mm'}}</div>
 					</div>
 				</div>
 			</div>
