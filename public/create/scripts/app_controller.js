@@ -11,7 +11,7 @@ appSite.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
 	var isLoggedIn = [ '$q', '$timeout', '$http', '$location', function ( $q, $timeout, $http, $location ) {
 		var deferred = $q.defer();
 
-		$http.get( '/api/user' )
+		$http.get( '/user' )
 			.success( function( userInfo ){
 				if ( userInfo.user ) {
 					$timeout( deferred.resolve, 0 );
@@ -36,7 +36,8 @@ appSite.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
 					},
 					function(response) {
 						if (response.status === 401) {
-							location.href = 'http://localhost:8888/public/#login';
+							$location.path('/');
+							//location.href = 'http://localhost:8888/public/#login';
 						}
 						return $q.reject(response);
 					}
