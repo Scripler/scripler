@@ -114,7 +114,8 @@ div.half {
 
 .socialicons {
     text-align: center;
-    padding-top: 20px;
+    margin-top: -38px;
+    float: right;
 }
 .socialicon {
 	background-color: #fff;
