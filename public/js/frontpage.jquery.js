@@ -82,7 +82,6 @@ $(document).ready(function(){
         }
     });
 
-    console.log($("#news"));
     $("#news").on('click', '.readmore, .prev', function(e) {
     	e.preventDefault();
 
