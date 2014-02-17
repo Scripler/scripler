@@ -9,3 +9,4 @@ config/*
 .settings
 debug.log
 exceptions.log
+tmp/*
