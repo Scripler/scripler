@@ -28,7 +28,7 @@ $(document).ready(function(){
 
     	var gotoPoint = "#" + $(this).attr("data");
 
-		$('html, body').animate({scrollTop: $(gotoPoint).offset().top}, 1000);
+		$('html, body').animate({scrollTop: $(gotoPoint).offset().top}, 800);
 		/*bodyElement.animate({
 			scrollTop: $(gotoPoint).offset().top
 		}, {
@@ -61,7 +61,7 @@ $(document).ready(function(){
     	event.preventDefault();
     	var gotoPoint = "#scripler";
 
-    	$('html, body').animate({scrollTop: $(gotoPoint).offset().top}, 1000);
+    	$('html, body').animate({scrollTop: $(gotoPoint).offset().top}, 800);
 	});
 
     $("#about").on('click', '.seeteam, .prev', function(e) {
@@ -133,7 +133,7 @@ $(document).ready(function(){
     if (newsItem >= 1) {
         var gotoPoint = "#news";
         var gotoLeftPoint = 100*newsItem;
-        $('html, body').animate({scrollTop: $(gotoPoint).offset().top}, 1000, function() {
+        $('html, body').animate({scrollTop: $(gotoPoint).offset().top}, 800, function() {
             $("#news article").animate({
                 left: '-' + gotoLeftPoint + '%'
             }, 'slow');
