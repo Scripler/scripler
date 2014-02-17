@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test';
+
 var epub = require('../lib/epub')
   , epub3 = require('../lib/epub/epub3')
   , assert = require("assert")
