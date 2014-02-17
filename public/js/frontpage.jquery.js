@@ -53,9 +53,15 @@ $(document).ready(function(){
 	});
 
 	$( ".menu-login" ).one("click", function( event ) {
-		$( ".menu-top" ).animate({ "marginTop": "0" }, 800);
-		$( "#login" ).animate({ "marginTop": "0" }, 800);
+        $( ".menu-top" ).animate({ "marginTop": "0" }, 800);
+        $( "#login" ).animate({ "marginTop": "0" }, 800);	
 	})
+
+    $( ".menu-login" ).on("click", function( event ) {
+        $(":animated").promise().done( function() {
+            $( "#login-email" ).focus();
+        });
+    })
 
     $(".to-top").on("click", function(event){
     	event.preventDefault();
