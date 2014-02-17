@@ -20,7 +20,11 @@ div.half {
 
 }
 #features {
-	background-color: #c6c6c6;
+	background-color: #215660;
+	color: #fff56c;
+}
+#features article.overflow {
+	overflow: visible;
 }
 #news {
 	background-color: #fff56c;
@@ -129,20 +133,32 @@ div.half {
 	color: #ABACAF;
 }
 
-.hexagon {
-	position: relative;
-	width: 130px;
-	float: left;
-	margin: 0 30px;
+.row {
+	height: 160px;
+	margin-left: -40px;
 }
-.hexagon-content {
-	background-color: #fff265;
-	margin: 15px 0;
-	padding: 10px 0;
-	text-align: center;
+.hexagon-icon {
+	width: 140px;
+	float: left;
+}
+.hexagon-icon.right {
+	float: right;
+}
+.hexagon-info {
+	padding-top: 20px;
+	width: 340px;
+	float: left;
+}
+.hexagon-info.right {
+	float: right;
 }
 .hexagon-title {
-	text-align: center;
+	font-weight: 900;
+	padding-bottom: 5px;
+	font-size: 120%;
+}
+.hexagon-text {
+	color: #fff;
 }
 
 .create_form {
