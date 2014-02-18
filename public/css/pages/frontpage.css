@@ -44,7 +44,11 @@ div.half {
 }
 #login {
 	background-color: #c6c6c6;
-	margin-top: -193px;
+	margin-top: -55px;
+	position: absolute;
+}
+#login article.login-article {
+	padding-top: 20px;
 }
 
 #scripler article, #explore article, #features article, #news article, #pricing article, #learn article, #login article {
@@ -89,7 +93,6 @@ div.half {
 }
 
 .menu-top {
-	margin-top: 193px;
 	font-size: 110%;
 }
 .menu-login {

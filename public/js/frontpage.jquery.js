@@ -14,6 +14,16 @@ $(document).ready(function(){
 		windowSize();
 	}
 
+    function isScrolledIntoView(elem) {
+        var docViewTop = $(window).scrollTop();
+        var docViewBottom = docViewTop + $(window).height();
+
+        var elemTop = $(elem).offset().top;
+        var elemBottom = elemTop + $(elem).height();
+
+        return ((elemBottom >= docViewTop) && (elemTop <= docViewBottom));
+    }
+
     $(".menu-top li.navpoint").on("click", function(event){
     	event.preventDefault();
 
@@ -28,7 +38,20 @@ $(document).ready(function(){
 
     	var gotoPoint = "#" + $(this).attr("data");
 
-		$('html, body').animate({scrollTop: $(gotoPoint).offset().top}, 800);
+        var offset = $(gotoPoint).offset().top;
+
+        if ( $(this).attr("data") == "login") {
+            offset = 0;
+        }
+
+        if ( $(this).attr("data") == "scripler") {
+            offset = 80;
+        }
+
+        if ( !isScrolledIntoView($(gotoPoint)) ) {
+            $('html, body').animate({scrollTop: offset}, 800);
+        }
+		
 		/*bodyElement.animate({
 			scrollTop: $(gotoPoint).offset().top
 		}, {
@@ -38,6 +61,8 @@ $(document).ready(function(){
 			}
 		});*/
 	});
+
+
 
 	$( "#login-form" ).submit(function( event ) {
   		event.preventDefault();
@@ -53,8 +78,8 @@ $(document).ready(function(){
 	});
 
 	$( ".menu-login" ).one("click", function( event ) {
-        $( ".menu-top" ).animate({ "marginTop": "0" }, 800);
-        $( "#login" ).animate({ "marginTop": "0" }, 800);	
+        $( "#login" ).animate({ "marginTop": "20" }, 800);	
+        $( "#scripler" ).animate({ "paddingTop": 100 }, 800);
 	})
 
     $( ".menu-login" ).on("click", function( event ) {
