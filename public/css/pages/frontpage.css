@@ -90,6 +90,7 @@ div.half {
 
 .menu-top {
 	margin-top: 193px;
+	font-size: 110%;
 }
 .menu-login {
 
@@ -114,7 +115,8 @@ div.half {
 
 .socialicons {
     text-align: center;
-    padding-top: 20px;
+    margin-top: -38px;
+    float: right;
 }
 .socialicon {
 	background-color: #fff;
@@ -183,8 +185,7 @@ div.half {
 	-webkit-appearance: none;
 	border: none;
 	background: #f6f6f6;
-	font-size: 20px;
-	font-weight: bold;
+	font-size: 15px;
 	width: 300px;
 	height: 32px;
 	padding: 0 0 0 15px;
@@ -208,6 +209,11 @@ div.half {
 	margin: 0 0 0 5px;
 	text-align: center;
 	font-family: 'Roboto', sans-serif;
+}
+.button.login {
+	width: 120px;
+	font-weight: 0;
+	font-size: 15px;
 }
 .try-button {
 	width: 300px;
