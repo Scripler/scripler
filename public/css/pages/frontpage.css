@@ -44,10 +44,11 @@ div.half {
 }
 #login {
 	background-color: #c6c6c6;
-	margin-top: -193px;
+	padding-top: 0;
+	padding-bottom: 0;
 }
 
-#scripler article, #explore article, #features article, #news article, #pricing article, #learn article, #login article {
+#scripler article, #explore article, #features article, #news article, #pricing article, #learn article {
 	position: relative;
 	width: 960px;
 	margin: 0 auto;
@@ -87,9 +88,17 @@ div.half {
 	width: 500px;
 	border-radius: 5px;
 }
+#login article {
+	position: relative;
+	width: 960px;
+	margin: 0 auto;
+	padding: 0;
+	padding-top: 5px;
+	overflow: hidden;	
+}
 
 .menu-top {
-	margin-top: 193px;
+	margin-top: 0px;
 	font-size: 110%;
 }
 .menu-login {

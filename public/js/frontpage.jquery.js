@@ -14,6 +14,17 @@ $(document).ready(function(){
 		windowSize();
 	}
 
+    function isScrolledIntoView(elem) {
+        var docViewTop = $(window).scrollTop();
+        var docViewBottom = docViewTop + $(window).height();
+
+        var elemTop = $(elem).offset().top;
+        var elemBottom = elemTop + $(elem).height();
+
+        return ( (elemBottom >= docViewTop) && (elemTop <= docViewBottom)
+            && (elemBottom <= docViewBottom) &&  (elemTop >= docViewTop) );
+    }
+
     $(".menu-top li.navpoint").on("click", function(event){
     	event.preventDefault();
 
@@ -28,7 +39,10 @@ $(document).ready(function(){
 
     	var gotoPoint = "#" + $(this).attr("data");
 
-		$('html, body').animate({scrollTop: $(gotoPoint).offset().top}, 800);
+        if ( !isScrolledIntoView($(gotoPoint)) ) {
+            $('html, body').animate({scrollTop: $(gotoPoint).offset().top}, 800);
+        }
+
 		/*bodyElement.animate({
 			scrollTop: $(gotoPoint).offset().top
 		}, {
@@ -53,8 +67,7 @@ $(document).ready(function(){
 	});
 
 	$( ".menu-login" ).one("click", function( event ) {
-        $( ".menu-top" ).animate({ "marginTop": "0" }, 800);
-        $( "#login" ).animate({ "marginTop": "0" }, 800);	
+        $( "#login" ).animate({ "paddingBottom": "20", "paddingTop": "70" }, 800);          
 	})
 
     $( ".menu-login" ).on("click", function( event ) {
