@@ -6,7 +6,7 @@ $(document).ready(function(){
 	}
 
 	function windowSize() {
-		$('#scripler, #features, #about, #contact, #contact, #map-canvas').height(documentHeight).css( "overflow", "hidden" );
+		$('#scripler, #features, #news, #about, #contact, #contact, #map-canvas').height(documentHeight).css( "overflow", "hidden" );
 	}
 
 	windowSize();
@@ -40,7 +40,8 @@ $(document).ready(function(){
     	var gotoPoint = "#" + $(this).attr("data");
 
         if ( !isScrolledIntoView($(gotoPoint)) ) {
-            $('html, body').animate({scrollTop: $(gotoPoint).offset().top}, 800);
+            console.log("fire");
+            $('html, body').stop(true,true).animate({scrollTop: $(gotoPoint).offset().top}, 800);
         }
 
 		/*bodyElement.animate({
