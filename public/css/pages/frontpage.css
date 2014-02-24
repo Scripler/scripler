@@ -94,21 +94,26 @@ div.half {
 	padding-top: 5px;
 	overflow: hidden;
 }
-
 .menu-top {
 	margin-top: 0px;
 	font-size: 110%;
 }
-.menu-login {
-
+.menu-top li.menu-blog {
+	margin: 0;
+	background-color: #000;
+	float: right;
+	padding: 15px 25px 15px 25px;
 }
-
+.blog-link {
+	color: #fff56c;
+}
+.blog-link:hover {
+	color: #fff;
+}
 .email-text {
 	text-decoration: underline;
 	font-weight: 900;
 }
-
-
 .create_logo, .create_subtitle, .create_subtext {
 	text-align: center;
 }

@@ -26,31 +26,34 @@ $(document).ready(function(){
 	}
 
 	$(".menu-top li.navpoint").on("click", function(event){
-		event.preventDefault();
-
-		if ($(this).attr("data") == "create") {
-			document.location.href = "/create";
-			return;
-		}
-		if ($(this).attr("data") == "explore") {
-			document.location.href = "/explore";
-			return;
-		}
-
-		var gotoPoint = "#" + $(this).attr("data");
-
-		if ( !isScrolledIntoView($(gotoPoint)) ) {
-			$('html, body').stop(true,true).animate({scrollTop: $(gotoPoint).offset().top}, 800);
-		}
-
-		/*bodyElement.animate({
-			scrollTop: $(gotoPoint).offset().top
-		}, {
-			duration: 2000,
-			step: function( now, fx ){
-				documentScrollColor();
+		if ($(this).attr("data") == "blog") {
+			//do nothing
+		} else {
+			event.preventDefault();
+			if ($(this).attr("data") == "create") {
+				document.location.href = "/create";
+				return;
 			}
-		});*/
+			if ($(this).attr("data") == "explore") {
+				document.location.href = "/explore";
+				return;
+			}
+
+			var gotoPoint = "#" + $(this).attr("data");
+
+			if ( !isScrolledIntoView($(gotoPoint)) ) {
+				$('html, body').stop(true,true).animate({scrollTop: $(gotoPoint).offset().top}, 800);
+			}
+
+			/*bodyElement.animate({
+				scrollTop: $(gotoPoint).offset().top
+			}, {
+				duration: 2000,
+				step: function( now, fx ){
+					documentScrollColor();
+				}
+			});*/
+		}
 	});
 
 	$( "#login-form" ).submit(function( event ) {
