@@ -208,7 +208,7 @@ describe('Scripler RESTful API', function () {
 				it('Project list without session should return unauthorized', function (done) {
 					request(host)
 						.get('/project/list')
-						.expect(403)
+						.expect(401)
 						.end(function (err, res) {
 							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 							assert.equal(res.body.errorMessage, "User not authenticated");
@@ -1027,7 +1027,7 @@ describe('Scripler RESTful API', function () {
 							var epub = projectId + '.epub';
 							fs.writeFile(epub, res.body);
 
-							child = exec('java -jar test\\epubcheck-3.0b5.jar ' + epub,
+							child = exec('java -jar test/epubcheck-3.0b5.jar ' + epub,
 								function (error, stdout, stderr) {
 									if (error !== null) {
 										console.log('exec error: ' + error);
