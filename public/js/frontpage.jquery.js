@@ -6,7 +6,7 @@ $(document).ready(function(){
 	}
 
 	function windowSize() {
-		$('#scripler, #features, #about, #contact, #contact, #map-canvas').height(documentHeight).css( "overflow", "hidden" );
+		$('#scripler, #features, #about, #contact, #map-canvas').height(documentHeight).css( "overflow", "hidden" );
 	}
 
 	windowSize();
