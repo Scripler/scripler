@@ -6,7 +6,7 @@ $(document).ready(function(){
 	}
 
 	function windowSize() {
-		$('#scripler, #features, #about, #contact, #contact, #map-canvas').height(documentHeight).css( "overflow", "hidden" );
+		$('#scripler, #features, #news, #about, #contact, #contact, #map-canvas').height(documentHeight).css( "overflow", "hidden" );
 	}
 
 	windowSize();
@@ -21,7 +21,8 @@ $(document).ready(function(){
         var elemTop = $(elem).offset().top;
         var elemBottom = elemTop + $(elem).height();
 
-        return ((elemBottom >= docViewTop) && (elemTop <= docViewBottom));
+        return ( (elemBottom >= docViewTop) && (elemTop <= docViewBottom)
+            && (elemBottom <= docViewBottom) &&  (elemTop >= docViewTop) );
     }
 
     $(".menu-top li.navpoint").on("click", function(event){
@@ -38,20 +39,10 @@ $(document).ready(function(){
 
     	var gotoPoint = "#" + $(this).attr("data");
 
-        var offset = $(gotoPoint).offset().top;
-
-        if ( $(this).attr("data") == "login") {
-            offset = 0;
-        }
-
-        if ( $(this).attr("data") == "scripler") {
-            offset = 80;
-        }
-
         if ( !isScrolledIntoView($(gotoPoint)) ) {
-            $('html, body').animate({scrollTop: offset}, 800);
+            $('html, body').stop(true,true).animate({scrollTop: $(gotoPoint).offset().top}, 800);
         }
-		
+
 		/*bodyElement.animate({
 			scrollTop: $(gotoPoint).offset().top
 		}, {
@@ -61,8 +52,6 @@ $(document).ready(function(){
 			}
 		});*/
 	});
-
-
 
 	$( "#login-form" ).submit(function( event ) {
   		event.preventDefault();
@@ -78,8 +67,7 @@ $(document).ready(function(){
 	});
 
 	$( ".menu-login" ).one("click", function( event ) {
-        $( "#login" ).animate({ "marginTop": "20" }, 800);	
-        $( "#scripler" ).animate({ "paddingTop": 100 }, 800);
+        $( "#login" ).animate({ "paddingBottom": "20", "paddingTop": "70" }, 800);
 	})
 
     $( ".menu-login" ).on("click", function( event ) {
