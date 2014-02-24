@@ -4,17 +4,17 @@ div.half {
 }
 
 #scripler, #explore, #features, #pricing, #learn, #about, #contact, #login {
-    position: relative;
+	position: relative;
 	margin: 0 auto;
 	padding: 30px 20px 20px 20px;
-    width: 100%;
-    overflow: hidden;
+	width: 100%;
+	overflow: hidden;
 
-  	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* WebKit */
-    background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Firefox */
-    background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* IE10+ */
-    background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Opera */
-    background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* WebKit */
+	background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Firefox */
+	background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* IE10+ */
+	background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Opera */
+	background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
 }
 #scripler {
 
@@ -28,7 +28,7 @@ div.half {
 }
 #about {
 	background-color: #fff56c;
-    white-space: nowrap;
+	white-space: nowrap;
 }
 #contact {
 	padding: 0;
@@ -43,35 +43,38 @@ div.half {
 	padding-bottom: 0;
 }
 
-#scripler article, #explore article, #features article, #news article, #pricing article, #learn article {
+#scripler article, #explore article, #features article, #pricing article, #learn article {
 	position: relative;
 	width: 960px;
 	margin: 0 auto;
 	padding: 50px 0 0 0;
 	overflow: hidden;
 }
-#news article, #about article {
+#about article {
 	position: relative;
-    width: 99%;
-    margin: 0 auto;
+	width: 99%;
+	margin: 0 auto;
 	padding: 50px 0 0 0;
-    display: inline-block;
-    vertical-align: top;
-    white-space: normal;
+	display: inline-block;
+	vertical-align: top;
+	white-space: normal;
 }
-#news article .inner, #about article .inner {
+#about article .inner {
 	position: relative;
-    width: 960px;
-    margin: 0 auto;
+	width: 960px;
+	margin: 0 auto;
 }
-#news article .inner span, #about article .inner span {
-	font-size: 80%;
-	font-style: italic;;
+#about article .inner span {
+	display: block;
+	padding-bottom: 40px;
 }
-#news article .inner .column, #about article .inner .column {
+#about article .inner .column {
 	float: left;
-    width: 33%;
-    padding: 0 20px;
+	width: 33%;
+	padding: 0 20px;
+}
+#about article h2 {
+	padding-bottom: 30px;
 }
 #contact article {
 	background-color: #fff;
@@ -100,6 +103,11 @@ div.half {
 
 }
 
+.email-text {
+	text-decoration: underline;
+	font-weight: 900;
+}
+
 
 .create_logo, .create_subtitle, .create_subtext {
 	text-align: center;
@@ -118,9 +126,9 @@ div.half {
 }
 
 .socialicons {
-    text-align: center;
-    margin-top: -38px;
-    float: right;
+	text-align: center;
+	margin-top: -38px;
+	float: right;
 }
 .socialicon {
 	background-color: #fff;
@@ -129,8 +137,8 @@ div.half {
 	height: 40px;
 	padding: 10px;
 	font-size: 22px;
-    margin: 0 auto;
-    display: inline-block;
+	margin: 0 auto;
+	display: inline-block;
 }
 .socialicon:hover {
 	background-color: #fff265;
