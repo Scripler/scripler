@@ -100,11 +100,11 @@ $(document).ready(function(){
 		}
 	}
 
-	var CenterLatlng = new google.maps.LatLng(55.6654175,12.5815801);
+	var CenterLatlng = new google.maps.LatLng(55.66545,12.599407);
 	var ScriplerLatlng = new google.maps.LatLng(55.669104,12.611121);
 	var mapOptions = {
 		center: CenterLatlng,
-		zoom: 14,
+		zoom: 15,
 		minZoom: 10,
 		maxZoom: 16,
 		disableDefaultUI: true,
@@ -113,7 +113,7 @@ $(document).ready(function(){
 		mapTypeControl: false,
 		scaleControl: false,
 		draggable: false,
-		mapTypeId: google.maps.MapTypeId.ROADMAP
+		mapTypeId: google.maps.MapTypeId.HYBRID
 	};
 	var map = new google.maps.Map(document.getElementById("map-canvas"),
 		mapOptions);

@@ -5,7 +5,7 @@
 	height: 50px;
 	z-index: 10;
 	text-align: center;
-    box-shadow: 0 8px 50px -6px rgba(0,0,0,0.5);
+    box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
 }
 
 .menu-top .navbutton {
