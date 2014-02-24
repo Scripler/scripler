@@ -40,7 +40,6 @@ $(document).ready(function(){
     	var gotoPoint = "#" + $(this).attr("data");
 
         if ( !isScrolledIntoView($(gotoPoint)) ) {
-            console.log("fire");
             $('html, body').stop(true,true).animate({scrollTop: $(gotoPoint).offset().top}, 800);
         }
 
@@ -68,7 +67,7 @@ $(document).ready(function(){
 	});
 
 	$( ".menu-login" ).one("click", function( event ) {
-        $( "#login" ).animate({ "paddingBottom": "20", "paddingTop": "70" }, 800);          
+        $( "#login" ).animate({ "paddingBottom": "20", "paddingTop": "70" }, 800);
 	})
 
     $( ".menu-login" ).on("click", function( event ) {
