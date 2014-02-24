@@ -75,6 +75,7 @@ div.half {
 	padding: 0 20px;
 }
 #about article h2 {
+	font-size: 150%;
 	padding-bottom: 10px;
 }
 #about article .inner span.reduced-padding {
@@ -119,8 +120,9 @@ div.half {
 	font-weight: 900;
 }
 .about-text {
+	font-size: 130%;
 	width: 50%;
-	padding-bottom: 15px;
+	padding-bottom: 40px;
 }
 .create_logo, .create_subtitle, .create_subtext {
 	text-align: center;
