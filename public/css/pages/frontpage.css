@@ -58,6 +58,7 @@ div.half {
 	display: inline-block;
 	vertical-align: top;
 	white-space: normal;
+	padding-left: 150px;
 }
 #about article .inner {
 	position: relative;
@@ -74,7 +75,10 @@ div.half {
 	padding: 0 20px;
 }
 #about article h2 {
-	padding-bottom: 30px;
+	padding-bottom: 10px;
+}
+#about article .inner span.reduced-padding {
+	padding-bottom: 20px;
 }
 #contact article {
 	background-color: #fff;
@@ -113,6 +117,10 @@ div.half {
 .email-text {
 	text-decoration: underline;
 	font-weight: 900;
+}
+.about-text {
+	width: 50%;
+	padding-bottom: 15px;
 }
 .create_logo, .create_subtitle, .create_subtext {
 	text-align: center;
