@@ -6,7 +6,7 @@ $(document).ready(function(){
 	}
 
 	function windowSize() {
-		$('#scripler, #features, #news, #about, #contact, #contact, #map-canvas').height(documentHeight).css( "overflow", "hidden" );
+		$('#scripler, #features, #about, #contact, #contact, #map-canvas').height(documentHeight).css( "overflow", "hidden" );
 	}
 
 	windowSize();
@@ -101,38 +101,6 @@ $(document).ready(function(){
         }
     });
 
-    $("#news").on('click', '.readmore, .prev', function(e) {
-    	e.preventDefault();
-
-        var gotoPoint = "#news";
-		var target = $(this).attr("class");
-
-        if (target == 'readmore') {
-
-            var moveBackNumber = $(this).data('move');
-            var gotoLeftPoint = 100*moveBackNumber;
-
-            $('body').animate({scrollTop: $(gotoPoint).offset().top}, 'fast', function() {
-                $("#news article").animate({
-                    left: '-=' + gotoLeftPoint + '%'
-                }, 'slow');
-                $('#news .prev').data('prev', moveBackNumber);
-                $('#news .prev').fadeIn('slow');
-            });
-        }
-        else {
-
-            var gotoRightPoint = 100*$('#news .prev').data('prev');
-
-            $("#news article").animate({
-                left: '+=' + gotoRightPoint + '%'
-            }, 'slow', function() {
-                $('body').animate({scrollTop: $(gotoPoint).offset().top}, 'fast');
-            });
-            $('#news .prev').fadeOut('slow');
-        }
-    });
-
     function GetURLParameter(sParam) {
         //var sPageURL = window.location.search.substring(1);
         var sPageURL = window.location.hash;
@@ -145,20 +113,6 @@ $(document).ready(function(){
                 return sParameterName[1];
             }
         }
-    }
-
-    var newsItem = GetURLParameter('news');
-    if (newsItem >= 1) {
-        var gotoPoint = "#news";
-        var gotoLeftPoint = 100*newsItem;
-        $('html, body').animate({scrollTop: $(gotoPoint).offset().top}, 800, function() {
-            $("#news article").animate({
-                left: '-' + gotoLeftPoint + '%'
-            }, 'slow');
-            $('#news .prev').data('prev', newsItem);
-            $('#news .prev').fadeIn('slow');
-        });
-
     }
 
     var CenterLatlng = new google.maps.LatLng(55.6654175,12.5815801);

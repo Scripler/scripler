@@ -3,7 +3,7 @@ div.half {
 	float: left;
 }
 
-#scripler, #explore, #features, #news, #pricing, #learn, #about, #contact, #login {
+#scripler, #explore, #features, #pricing, #learn, #about, #contact, #login {
     position: relative;
 	margin: 0 auto;
 	padding: 30px 20px 20px 20px;
@@ -26,14 +26,9 @@ div.half {
 #features article.overflow {
 	overflow: visible;
 }
-#news {
-	background-color: #fff56c;
-	white-space: nowrap;
-}
 #about {
-	background-color: #215660;
+	background-color: #fff56c;
     white-space: nowrap;
-    color: #fff;
 }
 #contact {
 	padding: 0;
@@ -94,7 +89,7 @@ div.half {
 	margin: 0 auto;
 	padding: 0;
 	padding-top: 5px;
-	overflow: hidden;	
+	overflow: hidden;
 }
 
 .menu-top {
