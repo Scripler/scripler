@@ -58,6 +58,7 @@ div.half {
 	display: inline-block;
 	vertical-align: top;
 	white-space: normal;
+	padding-left: 150px;
 }
 #about article .inner {
 	position: relative;
@@ -74,7 +75,11 @@ div.half {
 	padding: 0 20px;
 }
 #about article h2 {
-	padding-bottom: 30px;
+	font-size: 150%;
+	padding-bottom: 10px;
+}
+#about article .inner span.reduced-padding {
+	padding-bottom: 20px;
 }
 #contact article {
 	background-color: #fff;
@@ -84,7 +89,6 @@ div.half {
 	left: 120px;
 	padding: 0 20px 20px;
 	width: 500px;
-	border-radius: 5px;
 }
 #login article {
 	position: relative;
@@ -102,7 +106,7 @@ div.half {
 	margin: 0;
 	background-color: #000;
 	float: right;
-	padding: 15px 25px 15px 25px;
+	padding: 15px 25px 14px 25px;
 }
 .blog-link {
 	color: #fff56c;
@@ -113,6 +117,11 @@ div.half {
 .email-text {
 	text-decoration: underline;
 	font-weight: 900;
+}
+.about-text {
+	font-size: 130%;
+	width: 50%;
+	padding-bottom: 40px;
 }
 .create_logo, .create_subtitle, .create_subtext {
 	text-align: center;
