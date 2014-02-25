@@ -13,6 +13,10 @@ var User = require('../models/user.js').User
 
 var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
 
+function isEmpty(str) {
+    return (!str || 0 === str.length);
+}
+
 function isEmail(email) {
 	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -74,13 +78,13 @@ exports.logout = function (req, res) {
 exports.register = function (req, res, next) {
 	var errors = [];
 
-	if (req.body.name === "") {
+	if (isEmpty(req.body.name)) {
 		errors.push( {message: "Name is empty"} );
 	}
 	if (!isEmail(req.body.email)) {
 		errors.push( {message: "Invalid email"} );
 	}
-	if (req.body.password === "") {
+	if (isEmpty(req.body.password)) {
 		errors.push( {message: "Password is empty"} )
 	}
 	if (req.body.password.length < 8) {
