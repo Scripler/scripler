@@ -1,7 +1,8 @@
 var mongoose = require('mongoose')
 	, Schema = mongoose.Schema
-	, Document
+	, Document // Lazy-loaded, c.f. ProjectSchema.pre()
 	, User = require('./user.js').User
+	, Styleset = require('./styleset.js').Styleset
 	, bcrypt = require('bcrypt')
 	, SALT_WORK_FACTOR = 10;
 
@@ -71,7 +72,10 @@ var ProjectSchema = new Schema({
 		toc: { entries: [TOCEntrySchema] }
 	},
 	archived: { type: Boolean, default: false},
-	modified: { type: Date, default: Date.now }
+	modified: { type: Date, default: Date.now },
+	stylesets: [
+		{ type: Schema.Types.ObjectId, ref: 'Styleset' }
+	]
 });
 
 ProjectSchema.pre('remove', function (next) {

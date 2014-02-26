@@ -26,8 +26,10 @@ var coverDocumentId;
 var titlePageDocumentId;
 var tocDocumentId;
 var colophonDocumentId;
+var stylesetId;
+var styleId;
 
-var cleanupEPUB = false;
+var cleanupEPUB = true;
 
 function containsId(items, id) {
 	var result = false;
@@ -192,183 +194,183 @@ describe('Scripler RESTful API', function () {
 						done();
 					});
 			}),
-				it('Creating a project should return the new project - 2', function (done) {
-					request(host)
-						.post('/project')
-						.set('cookie', cookie)
-						.send({name: "A Nice Story"})
-						.expect(200)
-						.end(function (err, res) {
-							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							assert.equal(res.body.project.name, "A Nice Story");
-							projectId2 = res.body.project._id;
-							done();
-						});
-				}),
-				it('Project list without session should return unauthorized', function (done) {
-					request(host)
-						.get('/project/list')
-						.expect(401)
-						.end(function (err, res) {
-							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							assert.equal(res.body.errorMessage, "User not authenticated");
-							done();
-						});
-				}),
-				it('Opening a project should return the project', function (done) {
-					request(host)
-						.get('/project/' + projectId)
-						.set('cookie', cookie)
-						.expect(200)
-						.end(function (err, res) {
-							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							assert.equal(res.body.project.name, "The Wizard of Oz");
-							done();
-						});
-				}),
-				it('Creating a copy of a project should return the new project', function (done) {
-					request(host)
-						.post('/project/' + projectId + '/copy')
-						.set('cookie', cookie)
-						.send({})
-						.expect(200)
-						.end(function (err, res) {
-							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							assert.equal(res.body.project.name, "The Wizard of Oz - Copy");
-							assert.equal(res.body.project.archived, false);
-							assert.notEqual(res.body.project._id, projectId);
-							projectId3 = res.body.project._id;
-							done();
-						});
-				}),
-				it('Renaming a project should return the project', function (done) {
-					request(host)
-						.put('/project/' + projectId3 + '/rename')
-						.set('cookie', cookie)
-						.send({name: "A New Name"})
-						.expect(200)
-						.end(function (err, res) {
-							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							assert.equal(res.body.project.name, "A New Name");
-							done();
-						});
-				}),
-				it('Archiving a project should return the archived project', function (done) {
-					request(host)
-						.put('/project/' + projectId3 + '/archive')
-						.set('cookie', cookie)
-						.send({})
-						.expect(200)
-						.end(function (err, res) {
-							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							assert.equal(res.body.project.name, "A New Name");
-							assert.equal(res.body.project.archived, true);
-							done();
-						});
-				}),
-				it('Project list should return the two unarchived projects in creation order', function (done) {
-					request(host)
-						.get('/project/list')
-						.set('cookie', cookie)
-						.expect(200)
-						.end(function (err, res) {
-							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							assert.equal(res.body.projects.length, 2);
-							assert.equal(res.body.projects[0].name, "The Wizard of Oz");
-							assert.equal(res.body.projects[0]._id, projectId);
-							assert.equal(res.body.projects[1].name, "A Nice Story");
-							assert.equal(res.body.projects[1]._id, projectId2);
-							done();
-						});
-				}),
-				it('List of archived projects should return the single archived project', function (done) {
-					request(host)
-						.get('/project/archived')
-						.set('cookie', cookie)
-						.expect(200)
-						.end(function (err, res) {
-							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							assert.equal(res.body.projects.length, 1);
-							assert.equal(res.body.projects[0].name, "A New Name");
-							done();
-						});
-				}),
-				it('Rearranging projects should return project list in the new order ', function (done) {
-					request(host)
-						.put('/project/rearrange')
-						.set('cookie', cookie)
-						.send({projects: [projectId2, projectId]})
-						.expect(200)
-						.end(function (err, res) {
-							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							assert.equal(res.body.projects.length, 2);
-							assert.equal(res.body.projects[0].name, "A Nice Story");
-							assert.equal(res.body.projects[1].name, "The Wizard of Oz");
-							done();
-						});
-				}),
-				it('Unarchiving a project should return the unarchived project', function (done) {
-					request(host)
-						.put('/project/' + projectId3 + '/unarchive')
-						.set('cookie', cookie)
-						.send({})
-						.expect(200)
-						.end(function (err, res) {
-							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							assert.equal(res.body.project.name, "A New Name");
-							assert.equal(res.body.project.archived, false);
-							done();
-						});
-				}),
-				it('List of archived projects should return no projects', function (done) {
-					request(host)
-						.get('/project/archived')
-						.set('cookie', cookie)
-						.expect(200)
-						.end(function (err, res) {
-							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							assert.equal(res.body.projects.length, 0);
-							done();
-						});
-				}),
-				it('Project list should return the three unarchived projects in order', function (done) {
-					request(host)
-						.get('/project/list')
-						.set('cookie', cookie)
-						.expect(200)
-						.end(function (err, res) {
-							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							assert.equal(res.body.projects.length, 3);
-							assert.equal(res.body.projects[0].name, "A Nice Story");
-							assert.equal(res.body.projects[1].name, "The Wizard of Oz");
-							assert.equal(res.body.projects[2].name, "A New Name");
-							done();
-						});
-				}),
-				it('Deleting a project should return success', function (done) {
-					request(host)
-						.del('/project/' + projectId3)
-						.set('cookie', cookie)
-						.send({})
-						.expect(200)
-						.end(function (err, res) {
-							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							done();
-						});
-				}),
-				it('Get current user should return the user with only the two projectIds', function (done) {
-					request(host)
-						.get('/user')
-						.set('cookie', cookie)
-						.expect(200)
-						.end(function (err, res) {
-							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							assert.equal(res.body.user.projects.length, 2);
-							assert.equal(res.body.user.projects[0], projectId2);
-							assert.equal(res.body.user.projects[1], projectId);
-							done();
-						});
-				})
+			it('Creating a project should return the new project - 2', function (done) {
+				request(host)
+					.post('/project')
+					.set('cookie', cookie)
+					.send({name: "A Nice Story"})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.project.name, "A Nice Story");
+						projectId2 = res.body.project._id;
+						done();
+					});
+			}),
+			it('Project list without session should return unauthorized', function (done) {
+				request(host)
+					.get('/project/list')
+					.expect(401)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.errorMessage, "User not authenticated");
+						done();
+					});
+			}),
+			it('Opening a project should return the project', function (done) {
+				request(host)
+					.get('/project/' + projectId)
+					.set('cookie', cookie)
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.project.name, "The Wizard of Oz");
+						done();
+					});
+			}),
+			it('Creating a copy of a project should return the new project', function (done) {
+				request(host)
+					.post('/project/' + projectId + '/copy')
+					.set('cookie', cookie)
+					.send({})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.project.name, "The Wizard of Oz - Copy");
+						assert.equal(res.body.project.archived, false);
+						assert.notEqual(res.body.project._id, projectId);
+						projectId3 = res.body.project._id;
+						done();
+					});
+			}),
+			it('Renaming a project should return the project', function (done) {
+				request(host)
+					.put('/project/' + projectId3 + '/rename')
+					.set('cookie', cookie)
+					.send({name: "A New Name"})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.project.name, "A New Name");
+						done();
+					});
+			}),
+			it('Archiving a project should return the archived project', function (done) {
+				request(host)
+					.put('/project/' + projectId3 + '/archive')
+					.set('cookie', cookie)
+					.send({})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.project.name, "A New Name");
+						assert.equal(res.body.project.archived, true);
+						done();
+					});
+			}),
+			it('Project list should return the two unarchived projects in creation order', function (done) {
+				request(host)
+					.get('/project/list')
+					.set('cookie', cookie)
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.projects.length, 2);
+						assert.equal(res.body.projects[0].name, "The Wizard of Oz");
+						assert.equal(res.body.projects[0]._id, projectId);
+						assert.equal(res.body.projects[1].name, "A Nice Story");
+						assert.equal(res.body.projects[1]._id, projectId2);
+						done();
+					});
+			}),
+			it('List of archived projects should return the single archived project', function (done) {
+				request(host)
+					.get('/project/archived')
+					.set('cookie', cookie)
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.projects.length, 1);
+						assert.equal(res.body.projects[0].name, "A New Name");
+						done();
+					});
+			}),
+			it('Rearranging projects should return project list in the new order ', function (done) {
+				request(host)
+					.put('/project/rearrange')
+					.set('cookie', cookie)
+					.send({projects: [projectId2, projectId]})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.projects.length, 2);
+						assert.equal(res.body.projects[0].name, "A Nice Story");
+						assert.equal(res.body.projects[1].name, "The Wizard of Oz");
+						done();
+					});
+			}),
+			it('Unarchiving a project should return the unarchived project', function (done) {
+				request(host)
+					.put('/project/' + projectId3 + '/unarchive')
+					.set('cookie', cookie)
+					.send({})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.project.name, "A New Name");
+						assert.equal(res.body.project.archived, false);
+						done();
+					});
+			}),
+			it('List of archived projects should return no projects', function (done) {
+				request(host)
+					.get('/project/archived')
+					.set('cookie', cookie)
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.projects.length, 0);
+						done();
+					});
+			}),
+			it('Project list should return the three unarchived projects in order', function (done) {
+				request(host)
+					.get('/project/list')
+					.set('cookie', cookie)
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.projects.length, 3);
+						assert.equal(res.body.projects[0].name, "A Nice Story");
+						assert.equal(res.body.projects[1].name, "The Wizard of Oz");
+						assert.equal(res.body.projects[2].name, "A New Name");
+						done();
+					});
+			}),
+			it('Deleting a project should return success', function (done) {
+				request(host)
+					.del('/project/' + projectId3)
+					.set('cookie', cookie)
+					.send({})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						done();
+					});
+			}),
+			it('Get current user should return the user with only the two projectIds', function (done) {
+				request(host)
+					.get('/user')
+					.set('cookie', cookie)
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.user.projects.length, 2);
+						assert.equal(res.body.user.projects[0], projectId2);
+						assert.equal(res.body.user.projects[1], projectId);
+						done();
+					});
+			})
 		}),
 		describe('Projectmanager (/folder and /document)', function () {
 			it('Creating a folder without a parent should return the new folder as an empty root folder', function (done) {
@@ -1194,6 +1196,57 @@ describe('Scripler RESTful API', function () {
 						});
 				})
 		})
+	describe('Styleset', function () {
+		it('Creating a styleset should return the new styleset', function (done) {
+			request(host)
+				.post('/styleset')
+				.set('cookie', cookie)
+				.send({name: "My Best Styleset"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset.name, "My Best Styleset");
+					stylesetId = res.body.styleset._id;
+					stylesetId && done();
+				});
+		}),
+		it('Creating a style should return the new style', function (done) {
+			var css = '.container > header nav a:after {' +
+						'content: attr(data-info);' +
+						'color: #47a3da;' +
+						'position: absolute;' +
+						'width: 600%;' +
+						'top: 120%;' +
+						'text-align: right;' +
+						'right: 0;' +
+						'opacity: 0;' +
+						'pointer-events: none;' +
+					'}' +
+
+					'.container > header nav a:hover:after {' +
+					'	opacity: 1;' +
+					'}' +
+
+					'.container > header nav a:hover {' +
+					'	background: #47a3da;' +
+					'}';
+
+			request(host)
+				.post('/style')
+				.set('cookie', cookie)
+				.send({stylesetId: stylesetId, name: "Coolio", class: "CoolioClass", css: css})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style.name, "Coolio");
+					assert.equal(res.body.style.class, "CoolioClass");
+					assert.equal(res.body.style.css, css);
+					assert.equal(res.body.style.stylesetId, stylesetId);
+					styleId = res.body.style._id;
+					styleId && done();
+				});
+		})
+	}),
 	describe('Cleanup', function () {
 		it('Deleting a project should return success', function (done) {
 			request(host)
