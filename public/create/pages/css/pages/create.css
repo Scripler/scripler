@@ -35,8 +35,8 @@
 }
 
 .publication p {
-	display: table-cell; 
-	vertical-align: middle; 
+	display: table-cell;
+	vertical-align: middle;
 	text-align: center;
 	cursor: pointer;
 }
@@ -144,7 +144,7 @@ textarea#rename {
 	overflow: hidden;
 }
 
-.animate-enter, .animate-leave { 
+.animate-enter, .animate-leave {
 	-webkit-transition: all 0.5s ease-in-out;
 	-moz-transition: all 0.5s ease-in-out;
 	-o-transition: all 0.5s ease-in-out;
@@ -155,4 +155,103 @@ textarea#rename {
 }
 .animate-enter.animate-enter-active, .animate-leave {
 	opacity: 1;
+}
+
+.registration {
+	background-color: #c6c6c6;
+	position: fixed;
+	width: 100%;
+	height: 80px;
+	padding-top: 20px;
+	z-index: 10;
+	text-align: center;
+	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
+	bottom: 0;
+}
+.registration-form {
+	float: left;
+}
+.registration-form input {
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	border-radius: 1px;
+	-webkit-appearance: none;
+	border: none;
+	background: #f6f6f6;
+	font-size: 15px;
+	width: 250px;
+	height: 32px;
+	padding: 0 0 0 15px;
+	margin: 0 5px 0 0;
+	color: #818285;
+	font-family: 'Roboto', sans-serif;
+}
+.registration-form input.has-error {
+	border: 1px solid #b94a48;
+}
+.registration-text {
+	float: left;
+	padding-left: 50px;
+	padding-right: 100px;
+	padding-top: 10px;
+}
+.button {
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	border-radius: 1px;
+	-webkit-appearance: none;
+	border: none;
+	background: #fff265;
+	color: #231f20;
+	font-size: 20px;
+	font-weight: bold;
+	width: 120px;
+	height: 33px;
+	cursor: pointer;
+	margin: 0 0 0 5px;
+	text-align: center;
+	font-family: 'Roboto', sans-serif;
+}
+.error-boxes {
+	position: fixed;
+	margin-left: 367px;
+	margin-bottom: -90px;
+	margin-top: -40px;
+}
+.arrow-box {
+	position: fixed;
+	background: #b94a48;
+	border: 2px solid #fff;
+	padding-top: 5px;
+	height: 32px;
+	width: 250px;
+	color: #fff;
+}
+.arrow-box.second {
+	margin-left: 259px;
+}
+.arrow-box.third {
+	margin-left: 518px;
+}
+.arrow-box:after, .arrow-box:before {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+.arrow-box:after {
+	border-color: rgba(213, 0, 0, 0);
+	border-top-color: #b94a48;
+	border-width: 10px;
+	margin-left: -10px;
+}
+.arrow-box:before {
+	border-color: rgba(194, 225, 245, 0);
+	border-top-color: #fff;
+	border-width: 13px;
+	margin-left: -13px;
 }

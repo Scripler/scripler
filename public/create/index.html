@@ -1,26 +1,42 @@
 <!DOCTYPE html>
 <html ng-app="scriplerApp">
 <head>
-    <title>Scripler</title>
+	<title>Scripler</title>
 
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
-    <script type="text/javascript" src="scripts/app_controller.js"></script>
-    <script type="text/javascript" src="scripts/create_controller.js"></script>
-    <script type="text/javascript" src="scripts/project_controller.js"></script>
-    <script type="text/javascript" src="ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-sanitize.min.js"></script>
+	<script type="text/javascript" src="scripts/app_controller.js"></script>
+	<script type="text/javascript" src="scripts/create_controller.js"></script>
+	<script type="text/javascript" src="scripts/project_controller.js"></script>
+	<script type="text/javascript" src="ckeditor/ckeditor.js"></script>
 </head>
 <body ng-controller="appController">
 
-    <div ng-view></div>
+	<div ng-view></div>
 
-    <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	<div class="registration" ng-show="showRegistration">
+		<div class="error-boxes" ng-show="registerForm.$invalid && !registerForm.$pristine && registrationSubmitted">
+			<div class="arrow-box" ng-show="registerForm.name.$invalid && !registerForm.name.$pristine">Name is empty or invalid</div>
+			<div class="arrow-box second" ng-show="registerForm.email.$invalid && !registerForm.email.$pristine">Email is invalid</div>
+			<div class="arrow-box third" ng-show="registerForm.password.$invalid && !registerForm.password.$pristine">6 Characters minimum</div>
+		</div>
+		<div class="registration-text">Test registration, please ignore.</div>
+		<form name="registerForm" class="registration-form" ng-submit="submitRegistration()" novalidate>
+			<input type="text" name="name" ng-model="user.name" ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First name and Last name" required />
+			<input type="email" name="email" ng-model="user.email" ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email Address" required />
+			<input type="password" name="password" ng-model="user.password" ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" ng-minlength="6" required />
+			<button type="submit" class="button registration-button" >Register</button>
+		</form>
+	</div>
 
-        ga('create', 'UA-41784294-1', 'scripler.com');
-        ga('send', 'pageview');
-    </script>
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-41784294-1', 'scripler.com');
+		ga('send', 'pageview');
+	</script>
 </body>
 </html>

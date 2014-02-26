@@ -1,8 +1,21 @@
 'use strict';
 
-var app = angular.module( 'scriplerApp', [] );
+var app = angular.module( 'scriplerApp', [ 'ngSanitize' ] );
 
-app.controller( 'appController', [ '$http', '$scope', function( $http, $scope ) {
+app.controller( 'appController', [ '$http', '$scope', '$sanitize', function( $http, $scope, $sanitize ) {
+	$scope.user = {};
+
+
+	$scope.submitRegistration = function() {
+		$scope.registrationSubmitted = true;
+
+		if ($scope.registerForm.$valid) {
+				$scope.user.name = $sanitize( $scope.user.name );
+				$scope.user.email = $sanitize( $scope.user.email );
+				$scope.user.password = $scope.user.password;
+				console.log($scope.user);
+		}
+	}
 
 }]);
 
@@ -16,10 +29,11 @@ app.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
 				if ( userInfo.user ) {
 					$timeout( deferred.resolve, 0 );
 				} else {
-					$timeout( function() {
+					/*$timeout( function() {
 						deferred.reject();
 					}, 0);
-					redirectLogin( $location );
+					redirectLogin( $location );*/
+					$timeout( deferred.resolve, 0 );
 				}
 			});
 
@@ -27,7 +41,7 @@ app.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
 	}]
 
 	$httpProvider.responseInterceptors
-		.push( function ( $q, $location ) {
+		.push( function ( $q, $location, $rootScope ) {
 			return function(promise) {
 				return promise
 				.then(
@@ -36,9 +50,10 @@ app.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
 					},
 					function(response) {
 						if (response.status === 401) {
-							redirectLogin( $location );	
+							$rootScope.showRegistration = true;
+							//redirectLogin( $location );
 						}
-						return $q.reject(response);
+						return response;//$q.reject(response);
 					}
 				);
 			}
@@ -47,7 +62,7 @@ app.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
 	var redirectLogin = function ( $location ) {
 		var url = $location.absUrl();
 		url = url.replace('/create/#', '/#login');
-		location.href = url;	
+		location.href = url;
 	}
 
 	$routeProvider
@@ -65,9 +80,9 @@ app.directive('focusOn', function($timeout, $parse) {
 		link: function(scope, element, attrs) {
 			var model = $parse(attrs.focusOn);
 			scope.$watch(model, function(value) {
-				if(value === true) { 
+				if(value === true) {
 					$timeout(function() {
-						element[0].select(); 
+						element[0].select();
 					});
 				}
 			});
