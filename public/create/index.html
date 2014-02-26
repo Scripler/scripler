@@ -16,7 +16,7 @@
 
 	<div class="registration" ng-show="showRegistration">
 		<div class="error-boxes" ng-show="registerForm.$invalid && !registerForm.$pristine && registrationSubmitted">
-			<div class="arrow-box" ng-show="registerForm.name.$invalid && !registerForm.name.$pristine">Name is empty or invalid</div>
+			<div class="arrow-box" ng-show="registerForm.name.$invalid && !registerForm.name.$pristine">Name is empty</div>
 			<div class="arrow-box second" ng-show="registerForm.email.$invalid && !registerForm.email.$pristine">Email is invalid</div>
 			<div class="arrow-box third" ng-show="registerForm.password.$invalid && !registerForm.password.$pristine">6 Characters minimum</div>
 		</div>
