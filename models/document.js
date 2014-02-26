@@ -1,6 +1,7 @@
 var mongoose = require('mongoose')
 	, Schema = mongoose.Schema
-	, Project
+	, Project // Lazy-loaded, c.f. DocumentSchema.pre()
+	, Styleset = require('./styleset.js').Styleset
 	, bcrypt = require('bcrypt')
 	, SALT_WORK_FACTOR = 10;
 
@@ -25,7 +26,10 @@ var DocumentSchema = new Schema({
 	members: [DocumentMemberSchema],
 	archived: { type: Boolean, default: false},
 	type: { type: String, enum: ["cover", "titlepage", "toc", "colophon"] },
-	modified: { type: Date, default: Date.now }
+	modified: { type: Date, default: Date.now },
+	stylesets: [
+		{ type: Schema.Types.ObjectId, ref: 'Styleset' }
+	]
 });
 
 DocumentSchema.pre('remove', function (next) {
