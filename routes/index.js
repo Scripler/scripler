@@ -63,7 +63,8 @@ module.exports = function (app, auth) {
 
 	/* API Styleset */
 	app.post('/styleset', auth.isLoggedIn(), styleset.create);
-	app.post('/style', auth.isLoggedIn(), styleset.load, style.create);
+	app.post('/style', auth.isLoggedIn(), styleset.load(), style.create);
+	app.put('/styleset/:stylesetId/project/:projectId', auth.isLoggedIn(), project.applyStyleset);
 
 	/* API Output */
 	app.get('/project/:projectIdPopulatedText/compile', auth.isLoggedIn(), project.compile);
@@ -80,6 +81,9 @@ module.exports = function (app, auth) {
 	});
 	app.param('documentId', function (req, res, next, id) {
 		return document.load(id)(req, res, next);
+	});
+	app.param('stylesetId', function (req, res, next, id) {
+		return styleset.load(id)(req, res, next);
 	});
 
 }

@@ -1196,7 +1196,7 @@ describe('Scripler RESTful API', function () {
 						});
 				})
 		})
-	describe('Styleset', function () {
+	describe('Typography (Styleset & Style)', function () {
 		it('Creating a styleset should return the new styleset', function (done) {
 			request(host)
 				.post('/styleset')
@@ -1244,6 +1244,19 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.style.stylesetId, stylesetId);
 					styleId = res.body.style._id;
 					styleId && done();
+				});
+		}),
+		it('Applying a styleset to a project should return the project with the styleset applied', function (done) {
+			request(host)
+				.put('/styleset/' + stylesetId + "/project/" + projectId3)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.project._id, projectId3);
+					assert.equal(res.body.project.stylesets[0], stylesetId);
+					done();
 				});
 		})
 	}),

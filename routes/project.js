@@ -286,3 +286,15 @@ exports.compile = function (req, res) {
 	res.setHeader('Content-type', 'application/epub+zip');
 	epub.pipe(res);
 }
+
+exports.applyStyleset = function (req, res, next) {
+	var project = req.project;
+	project.stylesets.push(req.styleset);
+	project.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+
+		res.send({project: project});
+	})
+}
