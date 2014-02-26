@@ -8,7 +8,7 @@ var User = require('../models/user.js').User
 	, conf = require('config')
 	, env = process.env.NODE_ENV
 	, path = require('path')
-	, fs = require('fs');
+	, fs = require('fs')
 ;
 
 var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
@@ -87,7 +87,7 @@ exports.register = function (req, res, next) {
 	if (isEmpty(req.body.password)) {
 		errors.push( {message: "Password is empty"} )
 	}
-	if (req.body.password.length < 8) {
+	if (req.body.password.length < 6) {
 		errors.push( {message: "Password too short"} );
 	}
 
