@@ -6,7 +6,7 @@ function createController($scope) {
 		url: 'http://scripler.com:3000/user/login',
 		type: 'POST',
 		contentType: 'application/json',
-		data: JSON.stringify({ 
+		data: JSON.stringify({
 			"email":"allan@scripler.com",
 			"password":"askldjalskdjsa"
 		}),
@@ -23,7 +23,7 @@ function createController($scope) {
 //}]);
 
 function PublicationsCtrl ( $scope, $http ) {
-	
+
 	$scope.publications = [
 		//TODO remove when not in use anymore for testing
 		{id:'00001',name:'Titel 1',created:'1363359600',changed:'1365606000'},
@@ -45,11 +45,11 @@ function PublicationsCtrl ( $scope, $http ) {
 
 
 	$scope.toggleElement = function (element) {
-	  if ($scope.element != true && $scope.element != false) {
-		  $scope.element = true;
-	  }
+		if ($scope.element != true && $scope.element != false) {
+			$scope.element = true;
+		}
 
-	  $scope.element = $scope.element === false ? true: false;
+		$scope.element = $scope.element === false ? true: false;
 
 	};
 
@@ -57,7 +57,7 @@ function PublicationsCtrl ( $scope, $http ) {
 		var index = $scope.publications.length + 1;
 		var name = "Title " + index;
 		var data = '{"name": "' + name + '"}';
-		
+
 		$http.post('/project', data).success( function( data ) {
 			var project = data.project;
 			$scope.publications.push( {id: project._id, name: project.name, changed: project.modified} );
@@ -79,10 +79,10 @@ function PublicationsCtrl ( $scope, $http ) {
 
 	$scope.copyPublication = function (publication) {
 		$http.post('/project/' + publication.id + '/copy')
-	  		.success( function ( data ) {
-	  			var project = data.project;
-				$scope.publications.push( {id: project._id, name: project.name, changed: project.modified} );	
-	  		});
+			.success( function ( data ) {
+				var project = data.project;
+				$scope.publications.push( {id: project._id, name: project.name, changed: project.modified} );
+			});
 	};
 
 };
