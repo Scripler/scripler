@@ -201,6 +201,13 @@ textarea#rename {
 	width: 400px;
 	text-align: left
 }
+.registration-text.validate {
+	color: #fff;
+	text-align: center;
+	float: none;
+	width: auto;
+	opacity: 1;
+}
 .button.registration-button {
 	font-size: 15px;
 }

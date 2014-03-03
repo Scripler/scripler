@@ -21,7 +21,7 @@
 			<div class="arrow-box second" ng-show="registerForm.email.$invalid && !registerForm.email.$pristine" ng-bind="errors.email"></div>
 			<div class="arrow-box third" ng-show="registerForm.password.$invalid && !registerForm.password.$pristine" ng-bind="errors.password"></div>
 		</div>
-		<div class="registration-text" ng-bind="registrationText"></div>
+		<div class="registration-text" ng-bind="registrationText" ng-class="{ 'validate' : user._id }"></div>
 		<form name="registerForm" class="registration-form" ng-submit="submitRegistration()" ng-hide="user._id" novalidate>
 			<input on-click-change-text type="text" id="reg-name" name="name" ng-model="user.name" ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First name and Last name" required />
 			<input on-click-change-text type="email" id="reg-email" name="email" ng-model="user.email" ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email Address" required />
