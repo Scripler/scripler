@@ -24,7 +24,7 @@
 		<div class="registration-text" ng-bind="registrationText" ng-class="{ 'validate' : user._id }"></div>
 		<form name="registerForm" class="registration-form" ng-submit="submitRegistration()" ng-hide="user._id" novalidate>
 			<input on-click-change-text type="text" id="reg-name" name="name" ng-model="user.name" ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First name and Last name" required />
-			<input on-click-change-text type="email" id="reg-email" name="email" ng-model="user.email" ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email Address" required />
+			<input on-click-change-text type="email" id="reg-email" name="email" ng-model="user.email" ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email Address" ng-pattern="EMAIL_REGEXP" required />
 			<input on-click-change-text type="password" id="reg-password" name="password" ng-model="user.password" ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" ng-minlength="6" required />
 			<button type="submit" class="button registration-button">Register</button>
 		</form>

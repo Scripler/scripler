@@ -8,13 +8,14 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', function( $
 	$scope.errors.email = 'Email is invalid';
 	$scope.errors.password = '6 Characters minimum';
 	$scope.registrationText = 'Hey Stranger - register to save your work!';
+	$scope.EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 	$scope.user = {};
 
 	$scope.$on('user:updated', function( event, user ) {
 		$scope.user = user;
 		if (!$scope.user.emailValidated) {
-			$scope.registrationText = 'Validate your email';
+			$scope.registrationText = 'Hey there, remember to validate your email-address. Learn more.';
 			$scope.$digest();
 		}
 	});
@@ -34,17 +35,19 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', function( $
 							.success( function( data ) {
 								if ( data.user ) {
 									userService.setUser( data.user );
-									$scope.registrationText = 'Registration success';
+									$scope.registrationText = 'Great! We\'ve emailed you a confirmation link (learn more). You can keep writing though...';
 									$scope.$digest();
 								}
 							});
 					}
 				})
 				.error( function( data ) {
-					if ( data.errorMessage ) {
-						$scope.errors.email = data.errorMessage;
-						$scope.registerForm.$invalid = true;
-						$scope.registerForm.email.$invalid = true;
+					if ( data.errorDetails ) {
+						if ( data.errorDetails === 'Email already registered' ) {
+							$scope.errors.email = data.errorDetails;
+							$scope.registerForm.email.$invalid = true;
+							$scope.registerForm.$invalid = true;
+						}
 					}
 				});
 		}

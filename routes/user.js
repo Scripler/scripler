@@ -111,7 +111,7 @@ exports.register = function (req, res, next) {
 			if (err) {
 				// return error
 				if (err.code == 11000) {
-					return next({message: "Email already registered", status: 400});
+					return next({errors: "Email already registered", status: 400});
 				}
 				return next(err);
 			} else {
