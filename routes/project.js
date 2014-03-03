@@ -11,7 +11,7 @@ var rimraf = require('rimraf');
 var ncp = require('ncp').ncp;
 var epub3 = require('../lib/epub/epub3');
 
-//Load project by i
+//Load project by id
 exports.load = function (id) {
 	return function (req, res, next) {
 		id = id || req.body.projectId;
@@ -19,10 +19,10 @@ exports.load = function (id) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
-			}
-			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToEntity(req.user, project)) next(403);
+			}			if (!req.user) return next();//Let missing authentication be handled in auth middleware
+			if (!utils.hasAccessToEntity(req.user, project)) return next(403);
 			req.project = project;
+
 			return next();
 		});
 	}
@@ -37,7 +37,7 @@ exports.loadPopulated = function (id) {
 				return next({message: "Project not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToEntity(req.user, project)) next(403);
+			if (!utils.hasAccessToEntity(req.user, project)) return next(403);
 			req.project = project;
 			return next();
 		});
@@ -54,7 +54,7 @@ exports.loadPopulatedText = function (id) {
 				return next({message: "Project not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToEntity(req.user, project)) next(403);
+			if (!utils.hasAccessToEntity(req.user, project)) return next(403);
 			req.project = project;
 			return next();
 		});
@@ -285,4 +285,16 @@ exports.compile = function (req, res) {
 	res.setHeader('Content-disposition', 'attachment; filename=' + saneTitle);
 	res.setHeader('Content-type', 'application/epub+zip');
 	epub.pipe(res);
+}
+
+exports.applyStyleset = function (req, res, next) {
+	var project = req.project;
+	project.stylesets.push(req.styleset);
+	project.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+
+		res.send({project: project});
+	})
 }

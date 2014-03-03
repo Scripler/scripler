@@ -15,7 +15,7 @@ exports.load = function (id) {
 				return next({message: "Document not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToEntity(req.user, document)) next(403);
+			if (!utils.hasAccessToEntity(req.user, document)) return next(403);
 			req.document = document;
 			return next();
 		});
@@ -148,5 +148,17 @@ exports.upload = function (req, res, next) {
 			}
 		});
 	}
+}
+
+exports.applyStyleset = function (req, res, next) {
+	var document = req.document;
+	document.stylesets.push(req.styleset);
+	document.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+
+		res.send({document: document});
+	})
 }
 

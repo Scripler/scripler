@@ -3,8 +3,8 @@ var frontpage = require('./frontpage')
 	, project = require('./project')
 	, folder = require('./folder')
 	, document = require('./document')
-	, Project = require('../models/project.js').Project
-	, Document = require('../models/document.js').Document
+	, styleset = require('./styleset')
+	, style = require('./style')
 	, utils = require('../lib/utils');
 
 module.exports = function (app, auth) {
@@ -61,6 +61,13 @@ module.exports = function (app, auth) {
 	app.put('/folder/:projectId/:folderId/unarchive', auth.isLoggedIn(), folder.unarchive);
 	app.delete('/folder/:projectId/:parentFolderId?/:folderId', auth.isLoggedIn(), folder.delete);
 
+	/* API Styleset */
+	app.post('/styleset', auth.isLoggedIn(), styleset.create);
+	app.get('/styleset/:stylesetId', auth.isLoggedIn(), styleset.open);
+	app.post('/style', auth.isLoggedIn(), styleset.load(), style.create);
+	app.put('/styleset/:stylesetId/project/:projectId', auth.isLoggedIn(), project.applyStyleset);
+	app.put('/styleset/:stylesetId/document/:documentId', auth.isLoggedIn(), document.applyStyleset);
+
 	/* API Output */
 	app.get('/project/:projectIdPopulatedText/compile', auth.isLoggedIn(), project.compile);
 
@@ -77,4 +84,8 @@ module.exports = function (app, auth) {
 	app.param('documentId', function (req, res, next, id) {
 		return document.load(id)(req, res, next);
 	});
+	app.param('stylesetId', function (req, res, next, id) {
+		return styleset.load(id)(req, res, next);
+	});
+
 }
