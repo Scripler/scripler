@@ -109,9 +109,7 @@ exports.register = function (req, res, next) {
 			email: req.body.email,
 			password: req.body.password
 		});
-		if ('production' != env) {
-			user.emailValidated = true;
-		}
+
 		user.save(function (err) {
 			if (err) {
 				// return error
