@@ -93,7 +93,7 @@ app.service('userService', function( $rootScope ) {
 app.directive('onClickChangeText', function( $timeout, $parse ) {
 	return {
 		link: function( scope, element, attrs ) {
-			element.bind('click', function() {
+			element.bind('focus', function() {
 				if ( attrs.id === 'reg-name' ) {
 					scope.registrationText = 'Just put in your name ...';
 				}

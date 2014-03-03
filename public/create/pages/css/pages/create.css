@@ -193,10 +193,12 @@ textarea#rename {
 	border: 1px solid #b94a48;
 }
 .registration-text {
+	color: #000;
+	opacity: 0.6;
 	float: left;
 	padding-left: 30px;
 	padding-top: 10px;
-	width: 442px;
+	width: 400px;
 	text-align: left
 }
 .button.registration-button {
@@ -221,17 +223,17 @@ textarea#rename {
 }
 .error-boxes {
 	position: fixed;
-	margin-left: 373px;
+	margin-left: 425px;
 	margin-bottom: -90px;
 	margin-top: -40px;
 }
 .arrow-box {
 	position: fixed;
-	background: #b94a48;
+	background: #FF0500;
 	border: 2px solid #fff;
 	padding-top: 5px;
 	height: 32px;
-	width: 250px;
+	width: 200px;
 	color: #fff;
 }
 .arrow-box.second {
@@ -252,7 +254,7 @@ textarea#rename {
 }
 .arrow-box:after {
 	border-color: rgba(213, 0, 0, 0);
-	border-top-color: #b94a48;
+	border-top-color: #FF0500;
 	border-width: 10px;
 	margin-left: -10px;
 }
