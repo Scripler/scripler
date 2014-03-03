@@ -28,7 +28,7 @@ body {
 
 h1 {
 	font-size: 2.25em;
-	margin: 0.8em 0 0.4em 0;	
+	margin: 0.8em 0 0.4em 0;
 }
 h2 {
 	font-size: 1.25em;
@@ -160,7 +160,7 @@ a:hover {
 	pointer-events: none;
 }
 
-.icon-drop:before, 
+.icon-drop:before,
 .icon-arrow-left:before {
 	font-family: 'fontawesome';
 	position: absolute;
@@ -184,4 +184,132 @@ a:hover {
 
 .hidden {
 	display: none;
+}
+
+
+.registration {
+	background-color: #c6c6c6;
+	position: fixed;
+	width: 100%;
+	padding-top: 20px;
+	z-index: 10;
+	text-align: center;
+	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
+	bottom: 0;
+	padding-bottom: 20px;
+}
+.green {
+	background-color: #5cb85c;
+}
+.registration-form {
+	float: left;
+}
+.registration-form input {
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	border-radius: 1px;
+	-webkit-appearance: none;
+	border: none;
+	background: #f6f6f6;
+	font-size: 15px;
+	width: 250px;
+	height: 32px;
+	padding: 0 0 0 15px;
+	margin: 0 5px 0 0;
+	color: #818285;
+	font-family: 'Roboto', sans-serif;
+}
+.registration-form input.has-error {
+	border: 1px solid #b94a48;
+}
+.registration-text {
+	color: #000;
+	opacity: 0.6;
+	float: left;
+	padding-left: 20px;
+	padding-top: 8px;
+	width: 400px;
+	text-align: left;
+	font-weight: 900;
+}
+.registration-text.validate {
+	color: #fff;
+	text-align: center;
+	float: none;
+	width: auto;
+	opacity: 1;
+}
+.button.registration-button {
+	font-size: 15px;
+}
+.registration-button {
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	border-radius: 1px;
+	-webkit-appearance: none;
+	border: none;
+	background: #fff265;
+	color: #231f20;
+	font-size: 20px;
+	font-weight: bold;
+	width: 120px;
+	height: 33px;
+	cursor: pointer;
+	margin: 0 0 0 5px;
+	text-align: center;
+	font-family: 'Roboto', sans-serif;
+}
+.registration-close-button {
+	position: fixed;
+	right: 8px;
+	bottom: 48px;
+	color: #fff;
+	font-size: 120%;
+	cursor: pointer;
+}
+.registration-close-button:hover {
+	color: #000;
+}
+.error-boxes {
+	position: fixed;
+	margin-left: 425px;
+	margin-bottom: -90px;
+	margin-top: -40px;
+}
+.arrow-box {
+	position: fixed;
+	background: #FF0500;
+	border: 2px solid #fff;
+	padding-top: 5px;
+	height: 32px;
+	width: 200px;
+	color: #fff;
+}
+.arrow-box.second {
+	margin-left: 259px;
+}
+.arrow-box.third {
+	margin-left: 518px;
+}
+.arrow-box:after, .arrow-box:before {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+.arrow-box:after {
+	border-color: rgba(213, 0, 0, 0);
+	border-top-color: #FF0500;
+	border-width: 10px;
+	margin-left: -10px;
+}
+.arrow-box:before {
+	border-color: rgba(194, 225, 245, 0);
+	border-top-color: #fff;
+	border-width: 13px;
+	margin-left: -13px;
 }
