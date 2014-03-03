@@ -63,6 +63,7 @@ module.exports = function (app, auth) {
 
 	/* API Styleset */
 	app.post('/styleset', auth.isLoggedIn(), styleset.create);
+	app.get('/styleset/:stylesetId', auth.isLoggedIn(), styleset.open);
 	app.post('/style', auth.isLoggedIn(), styleset.load(), style.create);
 	app.put('/styleset/:stylesetId/project/:projectId', auth.isLoggedIn(), project.applyStyleset);
 	app.put('/styleset/:stylesetId/document/:documentId', auth.isLoggedIn(), document.applyStyleset);

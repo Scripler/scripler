@@ -35,3 +35,7 @@ exports.create = function (req, res, next) {
 	});
 
 }
+
+exports.open = function (req, res) {
+	res.send({styleset: req.styleset});
+}

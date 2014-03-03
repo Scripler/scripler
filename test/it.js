@@ -1271,6 +1271,19 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.document.stylesets[0], stylesetId);
 					done();
 				});
+		}),
+		it('Opening a styleset should return the styleset', function (done) {
+			request(host)
+				.get('/styleset/' + stylesetId)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset._id, stylesetId);
+					assert.equal(res.body.styleset.name, "My Best Styleset");
+					done();
+				});
 		})
 	}),
 	describe('Cleanup', function () {
