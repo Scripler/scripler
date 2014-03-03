@@ -9,13 +9,10 @@ var User = require('../models/user.js').User
 	, env = process.env.NODE_ENV
 	, path = require('path')
 	, fs = require('fs')
+	, utils = require('../lib/utils')
 ;
 
 var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
-
-function isEmpty(str) {
-    return (!str || 0 === str.length);
-}
 
 function isEmail(email) {
 	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -78,20 +75,20 @@ exports.logout = function (req, res) {
 exports.register = function (req, res, next) {
 	var errors = [];
 
-	if (isEmpty(req.body.name)) {
+	if (utils.isEmpty(req.body.name)) {
 		errors.push( {message: "Name is empty"} );
 	}
 	if (!isEmail(req.body.email)) {
 		errors.push( {message: "Invalid email"} );
 	}
-	if (isEmpty(req.body.password)) {
+	if (utils.isEmpty(req.body.password)) {
 		errors.push( {message: "Password is empty"} )
 	}
 	if (req.body.password.length < 6) {
 		errors.push( {message: "Password too short"} );
 	}
 
-	if (errors.length !== 0){
+	if (errors.length !== 0) {
 		return next( {errors: errors, status: 400} );
 	} else {
 		var names = req.body.name.split(" ");
