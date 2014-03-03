@@ -15,7 +15,8 @@
 
 	<div ng-view></div>
 
-	<div class="registration" ng-hide="user.emailValidated" ng-class="{ 'green' : user._id }">
+	<div class="registration" ng-hide="user.emailValidated || closeStatus" ng-class="{ 'green' : user._id }">
+		<div class="registration-close-button" ng-click="closeStatus = !closeStatus">x</div>
 		<div class="error-boxes" ng-show="registerForm.$invalid && !registerForm.$pristine && registrationSubmitted && !user._id">
 			<div class="arrow-box" ng-show="registerForm.name.$invalid && !registerForm.name.$pristine" ng-bind="errors.name"></div>
 			<div class="arrow-box second" ng-show="registerForm.email.$invalid && !registerForm.email.$pristine" ng-bind="errors.email"></div>

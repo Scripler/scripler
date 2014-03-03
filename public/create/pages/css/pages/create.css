@@ -229,6 +229,17 @@ textarea#rename {
 	text-align: center;
 	font-family: 'Roboto', sans-serif;
 }
+.registration-close-button {
+	position: fixed;
+	right: 8px;
+	bottom: 48px;
+	color: #fff;
+	font-size: 120%;
+	cursor: pointer;
+}
+.registration-close-button:hover {
+	color: #000;
+}
 .error-boxes {
 	position: fixed;
 	margin-left: 425px;
