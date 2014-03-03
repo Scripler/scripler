@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module( 'scriplerApp', [ 'ngSanitize' ] );
+var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize' ] );
 
 app.controller( 'appController', [ '$http', '$scope', '$sanitize', function( $http, $scope, $sanitize ) {
 	$scope.user = {};
