@@ -161,12 +161,12 @@ textarea#rename {
 	background-color: #c6c6c6;
 	position: fixed;
 	width: 100%;
-	height: 80px;
 	padding-top: 20px;
 	z-index: 10;
 	text-align: center;
 	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
 	bottom: 0;
+	padding-bottom: 20px;
 }
 .green {
 	background-color: #5cb85c;
@@ -196,10 +196,11 @@ textarea#rename {
 	color: #000;
 	opacity: 0.6;
 	float: left;
-	padding-left: 30px;
+	padding-left: 20px;
 	padding-top: 10px;
 	width: 400px;
-	text-align: left
+	text-align: left;
+	font-weight: 900;
 }
 .registration-text.validate {
 	color: #fff;
