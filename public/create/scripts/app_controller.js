@@ -1,54 +1,74 @@
 'use strict';
 
-var app = angular.module( 'scriplerApp', [] );
+var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize' ] );
 
-app.controller( 'appController', [ '$http', '$scope', function( $http, $scope ) {
+app.controller( 'appController', [ '$http', '$scope', 'userService', function( $http, $scope, userService ) {
+	$scope.errors = {};
+	$scope.errors.name = 'Name is empty';
+	$scope.errors.email = 'Email is invalid';
+	$scope.errors.password = '6 Characters minimum';
+	$scope.registrationText = 'Hey Stranger - register to save your work!';
+	$scope.EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+	$scope.user = {};
+
+	$scope.$on('user:updated', function( event, user ) {
+		$scope.user = user;
+		if (!$scope.user.emailValidated) {
+			$scope.registrationText = 'Hey there, remember to validate your email-address. Learn more.';
+			$scope.$digest();
+		}
+	});
+
+	$scope.submitRegistration = function() {
+		$scope.registrationSubmitted = true;
+		$scope.registerForm.$pristine = false;
+		$scope.registerForm.name.$pristine = false;
+		$scope.registerForm.email.$pristine = false;
+		$scope.registerForm.password.$pristine = false;
+
+		if ($scope.registerForm.$valid) {
+			$http.post( '/user/register', angular.toJson( $scope.user ) )
+				.success( function( data ) {
+					if ( data.user ) {
+						$http.post('/user/login/', angular.toJson( $scope.user ) )
+							.success( function( data ) {
+								if ( data.user ) {
+									userService.setUser( data.user );
+									$scope.registrationText = 'Great! We\'ve emailed you a confirmation link (learn more). You can keep writing though...';
+									$scope.$digest();
+								}
+							});
+					}
+				})
+				.error( function( data ) {
+					if ( data.errorDetails ) {
+						if ( data.errorDetails === 'Email already registered' ) {
+							$scope.errors.email = data.errorDetails;
+							$scope.registerForm.email.$invalid = true;
+							$scope.registerForm.$invalid = true;
+						}
+					}
+				});
+		}
+	}
 
 }]);
 
-app.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
+app.config( function( $routeProvider, $httpProvider ) {
 
-	var isLoggedIn = [ '$q', '$timeout', '$http', '$location', function ( $q, $timeout, $http, $location ) {
+	var isLoggedIn = [ '$q', '$http', 'userService', function( $q, $http, userService ) {
 		var deferred = $q.defer();
 
 		$http.get( '/user' )
-			.success( function( userInfo ){
-				if ( userInfo.user ) {
-					$timeout( deferred.resolve, 0 );
-				} else {
-					$timeout( function() {
-						deferred.reject();
-					}, 0);
-					redirectLogin( $location );
+			.success( function( data ) {
+				if ( data.user ) {
+					userService.setUser( data.user );
 				}
 			});
 
-		return deferred.promise;
+		return deferred.resolve;
 	}]
-
-	$httpProvider.responseInterceptors
-		.push( function ( $q, $location ) {
-			return function(promise) {
-				return promise
-				.then(
-					function(response){
-						return response;
-					},
-					function(response) {
-						if (response.status === 401) {
-							redirectLogin( $location );	
-						}
-						return $q.reject(response);
-					}
-				);
-			}
-		});
-
-	var redirectLogin = function ( $location ) {
-		var url = $location.absUrl();
-		url = url.replace('/create/#', '/#login');
-		location.href = url;	
-	}
 
 	$routeProvider
 		.when('/', { templateUrl:'pages/create.html', controller:createController,
@@ -60,14 +80,47 @@ app.config( function ( $routeProvider, $locationProvider, $httpProvider ) {
 		.otherwise({ redirectTo:'/' });
 });
 
-app.directive('focusOn', function($timeout, $parse) {
+app.service('userService', function( $rootScope ) {
+	var user = {};
 	return {
-		link: function(scope, element, attrs) {
-			var model = $parse(attrs.focusOn);
-			scope.$watch(model, function(value) {
-				if(value === true) { 
-					$timeout(function() {
-						element[0].select(); 
+		setUser : function( user ) {
+			this.user = user;
+			$rootScope.$broadcast('user:updated', this.user);
+		},
+		getUser : function() {
+			return user;
+		}
+	};
+});
+
+app.directive('onClickChangeText', function( $timeout, $parse ) {
+	return {
+		link: function( scope, element, attrs ) {
+			element.bind('focus', function() {
+				if ( attrs.id === 'reg-name' ) {
+					scope.registrationText = 'Just put in your name ...';
+				}
+				if ( attrs.id === 'reg-email' ) {
+					scope.registrationText = 'Good job, now your email. We\'ll verify it shortly ...';
+				}
+				if ( attrs.id === 'reg-password' ) {
+					scope.registrationText = 'Nice. Now choose a password, a good one.';
+				}
+
+				scope.$digest();
+			});
+		}
+	};
+});
+
+app.directive('focusOn', function( $timeout, $parse ) {
+	return {
+		link: function( scope, element, attrs ) {
+			var model = $parse( attrs.focusOn );
+			scope.$watch(model, function( value ) {
+				if( value === true ) {
+					$timeout( function() {
+						element[0].select();
 					});
 				}
 			});
@@ -76,8 +129,8 @@ app.directive('focusOn', function($timeout, $parse) {
 });
 
 app.directive('onEnter', function() {
-	return function(scope, element, attrs) {
-		element.bind("keydown keypress", function(event) {
+	return function( scope, element, attrs ) {
+		element.bind("keydown keypress", function( event ) {
 			if(event.which === 13) {
 				scope.$apply(function(){
 				scope.$eval(attrs.onEnter, {'event': event});

@@ -72,6 +72,7 @@ var ProjectSchema = new Schema({
 		toc: { entries: [TOCEntrySchema] }
 	},
 	archived: { type: Boolean, default: false},
+	created: { type: Date, default: Date.now },
 	modified: { type: Date, default: Date.now },
 	stylesets: [
 		{ type: Schema.Types.ObjectId, ref: 'Styleset' }

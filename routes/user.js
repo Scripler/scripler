@@ -8,7 +8,8 @@ var User = require('../models/user.js').User
 	, conf = require('config')
 	, env = process.env.NODE_ENV
 	, path = require('path')
-	, fs = require('fs');
+	, fs = require('fs')
+	, utils = require('../lib/utils')
 ;
 
 var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
@@ -72,23 +73,44 @@ exports.logout = function (req, res) {
  * POST user registration.
  */
 exports.register = function (req, res, next) {
+	var errors = [];
+
+	if (utils.isEmpty(req.body.name)) {
+		errors.push( {message: "Name is empty"} );
+	}
 	if (!isEmail(req.body.email)) {
-		return next({message: "Invalid email address", status: 400});
+		errors.push( {message: "Invalid email"} );
+	}
+	if (utils.isEmpty(req.body.password)) {
+		errors.push( {message: "Password is empty"} )
+	} else if (req.body.password.length < 6) {
+		errors.push( {message: "Password too short"} );
+	}
+
+	if (errors.length !== 0) {
+		return next( {errors: errors, status: 400} );
 	} else {
+		var names = req.body.name.split(" ");
+		var firstname = names[0];
+		var lastname = "";
+
+		for (var i=1; i < names.length; i++) {
+			lastname += names[i] + " ";
+		}
+		lastname = lastname.trim();
+
 		var user = new User({
-			firstname: req.body.firstname,
-			lastname: req.body.lastname,
+			firstname: firstname,
+			lastname: lastname,
 			email: req.body.email,
 			password: req.body.password
 		});
-		if ('production' != env) {
-			user.emailValidated = true;
-		}
+
 		user.save(function (err) {
 			if (err) {
 				// return error
 				if (err.code == 11000) {
-					return next({message: "User already registered", status: 400});
+					return next({errors: "Email already registered", status: 400});
 				}
 				return next(err);
 			} else {

@@ -82,7 +82,7 @@ describe('Scripler RESTful API', function () {
 			it('Register a new user should return the user (dummy initialization)', function (done) {
 				request(host)
 					.post('/user/register')
-					.send({firstname: "Dummy", lastname: "Doe", email: "dummy@doe.com", password: "abc"})
+					.send({name: "Dummy Doe", email: "dummy@doe.com", password: "12345678"})
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
@@ -94,7 +94,7 @@ describe('Scripler RESTful API', function () {
 				it('Registering a new user should return the user', function (done) {
 					request(host)
 						.post('/user/register')
-						.send({firstname: "John", lastname: "Doe", email: "john@doe.com", password: "abc"})
+						.send({name: "John Doe", email: "john@doe.com", password: "12345678"})
 						.expect(200)
 						.end(function (err, res) {
 							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
@@ -106,7 +106,7 @@ describe('Scripler RESTful API', function () {
 				it('Login should return current user', function (done) {
 					request(host)
 						.post('/user/login')
-						.send({email: "john@doe.com", password: "abc"})
+						.send({email: "john@doe.com", password: "12345678"})
 						.expect(200)
 						.end(function (err, res) {
 							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");

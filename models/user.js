@@ -7,14 +7,14 @@ var mongoose = require('mongoose')
  * User DB
  */
 var UserSchema = new Schema({
-	firstname: { type: String},
+	firstname: { type: String, required: true},
 	lastname: { type: String},
 	email: { type: String, required: true, unique: true },
 	emailValidated: { type: Boolean, default: false },
 	projects: [
 		{ type: Schema.Types.ObjectId, ref: 'Project' }
 	],
-	password: { type: String },
+	password: { type: String, required: true },
 	providers: [
 		{}
 	],

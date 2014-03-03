@@ -6,7 +6,7 @@ function createController($scope) {
 		url: 'http://scripler.com:3000/user/login',
 		type: 'POST',
 		contentType: 'application/json',
-		data: JSON.stringify({ 
+		data: JSON.stringify({
 			"email":"allan@scripler.com",
 			"password":"askldjalskdjsa"
 		}),
@@ -22,67 +22,70 @@ function createController($scope) {
 }
 //}]);
 
-function PublicationsCtrl ( $scope, $http ) {
-	
-	$scope.publications = [
-		//TODO remove when not in use anymore for testing
-		{id:'00001',name:'Titel 1',created:'1363359600',changed:'1365606000'},
-		{id:'00002',name:'Titel 2',created:'1368637200',changed:'1365606000'},
-		{id:'00003',name:'Titel 3',created:'1363359600',changed:'1382281200'},
-		{id:'00004',name:'Titel 4',created:'1368637200',changed:'1382281200'},
-		{id:'00005',name:'Titel 5',created:'1363359600',changed:'1365606000'},
-		{id:'00006',name:'Titel 6',created:'1368637200',changed:'1365606000'},
-		{id:'00007',name:'Titel 7',created:'1363359600',changed:'1382281200'},
-		{id:'00008',name:'Titel 8',created:'1368637200',changed:'1382281200'}
-	];
+function PublicationsCtrl ( $scope, $http, userService ) {
+	$scope.user = {};
 
-	$http.get('/project/list').success( function ( data ) {
-		$scope.publications = [];
-		angular.forEach(data.projects, function ( project ) {
-			$scope.publications.push( {id: project._id, name: project.name, changed: project.modified} );
-		})
+	$scope.$on('user:updated', function( event, user ) {
+		$scope.user = user;
+		//iterate through publications and call add
 	});
 
+	$scope.publications = [
+		{ id:'00001', name:'Demo Title 1', created:'1363359600', changed:'1365606000' }
+	];
 
-	$scope.toggleElement = function (element) {
-	  if ($scope.element != true && $scope.element != false) {
-		  $scope.element = true;
-	  }
+	if ( $scope.user._id ) {
+		$http.get('/project/list')
+			.success( function( data ) {
+				$scope.publications = [];
+				angular.forEach(data.projects, function( project ) {
+					$scope.publications.push( {id: project._id, name: project.name, created: project.created, changed: project.modified} );
+				})
+		});
+	}
 
-	  $scope.element = $scope.element === false ? true: false;
+	$scope.toggleElement = function( element ) {
+		if ($scope.element != true && $scope.element != false) {
+			$scope.element = true;
+		}
+
+		$scope.element = $scope.element === false ? true: false;
 
 	};
 
-	$scope.addPublication = function () {
+	$scope.addPublication = function() {
 		var index = $scope.publications.length + 1;
 		var name = "Title " + index;
-		var data = '{"name": "' + name + '"}';
-		
-		$http.post('/project', data).success( function( data ) {
-			var project = data.project;
-			$scope.publications.push( {id: project._id, name: project.name, changed: project.modified} );
-		});
+		var data = {};
+		data.name = name;
+
+		$http.post('/project', angular.toJson( data ) )
+			.success( function( data ) {
+				var project = data.project;
+				$scope.publications.push( {id: project._id, name: project.name, created: project.created, changed: project.modified} );
+			});
 	};
 
-	$scope.archivePublication = function ( publication ) {
+	$scope.archivePublication = function( publication ) {
 		$http.put('/project/' + publication.id + '/archive')
-			.success( function () {
+			.success( function() {
 				$scope.publications.splice($scope.publications.indexOf(publication), 1);
 			});
 	};
 
-	$scope.renamePublication = function ( publication ) {
-		var data = '{"name": "' + publication.name + '"}';
-		$http.put('/project/' + publication.id + '/rename', data)
-			.success( function () {});
+	$scope.renamePublication = function( publication ) {
+		var data = {};
+		data.name = publication.name;
+		$http.put('/project/' + publication.id + '/rename', angular.toJson( data ) )
+			.success( function() {});
 	};
 
-	$scope.copyPublication = function (publication) {
+	$scope.copyPublication = function( publication ) {
 		$http.post('/project/' + publication.id + '/copy')
-	  		.success( function ( data ) {
-	  			var project = data.project;
-				$scope.publications.push( {id: project._id, name: project.name, changed: project.modified} );	
-	  		});
+			.success( function( data ) {
+				var project = data.project;
+				$scope.publications.push( {id: project._id, name: project.name, created: project.created, changed: project.modified} );
+			});
 	};
 
 };

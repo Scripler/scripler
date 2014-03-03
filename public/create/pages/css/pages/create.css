@@ -35,8 +35,8 @@
 }
 
 .publication p {
-	display: table-cell; 
-	vertical-align: middle; 
+	display: table-cell;
+	vertical-align: middle;
 	text-align: center;
 	cursor: pointer;
 }
@@ -144,7 +144,7 @@ textarea#rename {
 	overflow: hidden;
 }
 
-.animate-enter, .animate-leave { 
+.animate-enter, .animate-leave {
 	-webkit-transition: all 0.5s ease-in-out;
 	-moz-transition: all 0.5s ease-in-out;
 	-o-transition: all 0.5s ease-in-out;
