@@ -150,3 +150,15 @@ exports.upload = function (req, res, next) {
 	}
 }
 
+exports.applyStyleset = function (req, res, next) {
+	var document = req.document;
+	document.stylesets.push(req.styleset);
+	document.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+
+		res.send({document: document});
+	})
+}
+

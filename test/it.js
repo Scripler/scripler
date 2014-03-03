@@ -1258,6 +1258,19 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.project.stylesets[0], stylesetId);
 					done();
 				});
+		}),
+		it('Applying a styleset to a document should return the document with the styleset applied', function (done) {
+			request(host)
+				.put('/styleset/' + stylesetId + "/document/" + childDocumentId)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.document._id, childDocumentId);
+					assert.equal(res.body.document.stylesets[0], stylesetId);
+					done();
+				});
 		})
 	}),
 	describe('Cleanup', function () {
