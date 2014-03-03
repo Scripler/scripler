@@ -83,8 +83,7 @@ exports.register = function (req, res, next) {
 	}
 	if (utils.isEmpty(req.body.password)) {
 		errors.push( {message: "Password is empty"} )
-	}
-	if (req.body.password.length < 6) {
+	} else if (req.body.password.length < 6) {
 		errors.push( {message: "Password too short"} );
 	}
 
