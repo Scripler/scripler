@@ -15,18 +15,18 @@
 
 	<div ng-view></div>
 
-	<div class="registration" ng-show="showRegistration">
-		<div class="error-boxes" ng-show="registerForm.$invalid && !registerForm.$pristine && registrationSubmitted">
-			<div class="arrow-box" ng-show="registerForm.name.$invalid && !registerForm.name.$pristine">Name is empty</div>
-			<div class="arrow-box second" ng-show="registerForm.email.$invalid && !registerForm.email.$pristine">Email is invalid</div>
-			<div class="arrow-box third" ng-show="registerForm.password.$invalid && !registerForm.password.$pristine">6 Characters minimum</div>
+	<div class="registration" ng-hide="user.emailValidated" ng-class="{ 'green' : user._id }">
+		<div class="error-boxes" ng-show="registerForm.$invalid && !registerForm.$pristine && registrationSubmitted && !user._id">
+			<div class="arrow-box" ng-show="registerForm.name.$invalid && !registerForm.name.$pristine" ng-bind="errors.name"></div>
+			<div class="arrow-box second" ng-show="registerForm.email.$invalid && !registerForm.email.$pristine" ng-bind="errors.email"></div>
+			<div class="arrow-box third" ng-show="registerForm.password.$invalid && !registerForm.password.$pristine" ng-bind="errors.password"></div>
 		</div>
-		<div class="registration-text">Test registration, please ignore.</div>
-		<form name="registerForm" class="registration-form" ng-submit="submitRegistration()" novalidate>
-			<input type="text" name="name" ng-model="user.name" ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First name and Last name" required />
-			<input type="email" name="email" ng-model="user.email" ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email Address" required />
-			<input type="password" name="password" ng-model="user.password" ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" ng-minlength="6" required />
-			<button type="submit" class="button registration-button" >Register</button>
+		<div class="registration-text" ng-bind="registrationText"></div>
+		<form name="registerForm" class="registration-form" ng-submit="submitRegistration()" ng-hide="user._id" novalidate>
+			<input on-click-change-text type="text" id="reg-name" name="name" ng-model="user.name" ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First name and Last name" required />
+			<input on-click-change-text type="email" id="reg-email" name="email" ng-model="user.email" ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email Address" required />
+			<input on-click-change-text type="password" id="reg-password" name="password" ng-model="user.password" ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" ng-minlength="6" required />
+			<button type="submit" class="button registration-button">Register</button>
 		</form>
 	</div>
 
