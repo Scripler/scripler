@@ -55,17 +55,20 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', function( $
 
 app.config( function( $routeProvider, $httpProvider ) {
 
-	var isLoggedIn = [ '$q', '$http', 'userService', function( $q, $http, userService ) {
+	var isLoggedIn = [ '$q', '$http', '$timeout', '$rootScope', 'userService', function( $q, $http, $timeout, $rootScope, userService ) {
 		var deferred = $q.defer();
 
 		$http.get( '/user' )
 			.success( function( data ) {
 				if ( data.user ) {
 					userService.setUser( data.user );
+					$timeout(deferred.resolve, 0);
 				}
+			})
+			.error( function( data ) {
+				$rootScope.$broadcast('demo:mode');
+				$timeout(deferred.resolve, 0);
 			});
-
-		return deferred.resolve;
 	}]
 
 	$routeProvider
