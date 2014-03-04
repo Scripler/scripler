@@ -35,7 +35,6 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', function( $
 								if ( data.user ) {
 									userService.setUser( data.user );
 									$scope.registrationText = 'Great! We\'ve emailed you a confirmation link (learn more). You can keep writing though...';
-									$scope.$digest();
 								}
 							});
 					}
