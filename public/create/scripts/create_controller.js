@@ -23,7 +23,11 @@ function createController($scope) {
 //}]);
 
 function PublicationsCtrl ( $scope, $http, userService ) {
-	$scope.user = {};
+	$scope.publications = [];
+
+	$scope.$on('demo:mode', function( event ) {
+		$scope.publications = [ { _id: Date.now(), name:'Demo Title', order: 0 } ];
+	});
 
 	$scope.$on('user:updated', function( event, user ) {
 		$scope.user = user;
