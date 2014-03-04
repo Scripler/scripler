@@ -16,7 +16,6 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', function( $
 		$scope.user = user;
 		if (!$scope.user.emailValidated) {
 			$scope.registrationText = 'Hey there, remember to validate your email-address. Learn more.';
-			$scope.$digest();
 		}
 	});
 
