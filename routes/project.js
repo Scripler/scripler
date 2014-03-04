@@ -82,6 +82,7 @@ exports.archived = function (req, res, next) {
 exports.create = function (req, res, next) {
 	var project = new Project({
 		name: req.body.name,
+		order: req.body.order,
 		members: [
 			{userId: req.user._id, access: ["admin"]}
 		]
