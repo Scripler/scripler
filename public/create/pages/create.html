@@ -8,11 +8,11 @@
 			<p> </p>
 
 
-					<p class="filter-buttons"><span class="filter-sort-button" ng-click="toggleElement('filterFilter')">Sort by Filter</span> | <span class="search-sort-button" ng-click="toggleElement('filterSearch')">Sort by Search</span></p>
+			<p class="filter-buttons"><span class="filter-sort-button" ng-click="toggleElement('filterFilter')">Sort by Filter</span> | <span class="search-sort-button" ng-click="toggleElement('filterSearch')">Sort by Search</span></p>
 			<p class="filter-sort" ng-show="filterFilter">
 				Filter by Sort:
-				<span ng-click="publicationOrder = 'publicationCreated'; reverse=!reverse">time</span> | 
-				<span ng-click="publicationOrder = 'publicationName'; reverse=!reverse">titel</span> | 
+				<span ng-click="publicationOrder = 'publicationCreated'; reverse=!reverse">time</span> |
+				<span ng-click="publicationOrder = 'publicationName'; reverse=!reverse">titel</span> |
 				<span ng-click="publicationOrder = 'publicationChanged'; reverse=!reverse">changed</span>
 			</p>
 			<p class="filter-search" ng-show="filterSearch">
@@ -48,9 +48,9 @@
 					<div class="publication-options-menupoint" ng-click="editingPublicationTitle = true; showPublicationOptions = false;">rename</div>
 					<div class="publication-options-menupoint" ng-click="copyPublication(publication); showPublicationOptions = false;">copy</div>
 					<div class="publication-options-menupoint" ng-click="archivePublication(publication)">archive</div>
-					<div class="publication-options-dates">
+					<div class="publication-options-dates" ng-show="publication.created && publication.changed">
 						<div>Created Date: </div><div class="dates">{{publication.created | date:'yyyy-MM-dd HH:mm'}}</div>
-						<div>Last Changed Date: </div><div class="dates">{{publication.changed | date:'yyyy-MM-dd HH:mm'}}</div>
+						<div>Last Changed: </div><div class="dates">{{publication.changed | date:'yyyy-MM-dd HH:mm'}}</div>
 					</div>
 				</div>
 			</div>
