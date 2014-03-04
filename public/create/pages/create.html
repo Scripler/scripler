@@ -26,7 +26,7 @@
  				<p>+</p>
  			</div>
 
-			<div class="publication" ng-animate="'animate'" ng-repeat="publication in publications | orderBy:publicationOrder:reverse | filter:publicationSearch">
+			<div class="publication" ng-animate="'animate'" ng-repeat="publication in publications | orderBy:'order':reverse | filter:publicationSearch">
 				<a class="publication-options-show" data-gui="{{publication.id}}" ng-click="showPublicationOptions = true;">
 					<div class="arrow"></div>
 				</a>
