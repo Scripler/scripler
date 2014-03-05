@@ -37,7 +37,11 @@
 		"230409d4-a71c-8683-1342-fb38ebbe31d2",
 		"12ab8c78-77ea-3cd6-d613-a152f92bc972",
 		"b4d2dca4-488e-1d53-35ae-a11b973254dd",
-		"d89dbd37-2f3c-be7e-2ce9-d866552b6ea1"
+		"d89dbd37-2f3c-be7e-2ce9-d866552b6ea1",
+		"1c70efe9-8e36-1f5a-fec1-16de832641c6",
+		"5d8290c5-97b7-65b4-9f81-533c5a35f84a",
+		"3efb7ff0-1b7f-c7cb-0895-cb2aa34ebb33",
+		"c7645fdc-8df4-902e-8b02-61f537970c87"
 	],
 	"folders": [],
 	"timestamp": 1371745901435,
@@ -77,11 +81,11 @@
 			"url": "http://{{hostname}}:3000/style",
 			"pathVariables": {},
 			"method": "POST",
-			"data": "{\"stylesetId\": \"530dee8066553bb00c000004\", \"name\": \"Juff\", \"class\": \"JuffClass\", \"css\": \"sdfisdfiusdifusidfuisdfuisdff\"}",
+			"data": "{\"stylesetId\": \"530dee8066553bb00c000004\", \"name\": \"UFF\", \"class\": \"KOOOL\", \"css\": \"...\"}",
 			"dataMode": "raw",
 			"version": 2,
 			"tests": "",
-			"time": 1393422508194,
+			"time": 1394014070966,
 			"name": "Style Create",
 			"description": "",
 			"collectionId": "d67fc4f6-4b5a-a3e2-026c-7dde5158f9c1",
@@ -114,6 +118,23 @@
 			"name": "Document Rearrange",
 			"description": "",
 			"collectionId": "d67fc4f6-4b5a-a3e2-026c-7dde5158f9c1",
+			"synced": false
+		},
+		{
+			"id": "1c70efe9-8e36-1f5a-fec1-16de832641c6",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://{{hostname}}:3000/styleset/530dee8066553bb00c000004",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "",
+			"time": 1393873000666,
+			"name": "Styleset - Open",
+			"description": "",
+			"collectionId": "d67fc4f6-4b5a-a3e2-026c-7dde5158f9c1",
+			"responses": [],
 			"synced": false
 		},
 		{
@@ -177,6 +198,23 @@
 			"synced": false
 		},
 		{
+			"id": "3efb7ff0-1b7f-c7cb-0895-cb2aa34ebb33",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://{{hostname}}:3000/styleset/530dee8066553bb00c000004/update",
+			"pathVariables": {},
+			"method": "PUT",
+			"data": "{\"name\": \"Wonkers\", \"styles\": [\"5316f7783527c1f021000004\"]}",
+			"dataMode": "raw",
+			"version": 2,
+			"tests": "",
+			"time": 1394016218921,
+			"name": "Styleset - Update",
+			"description": "",
+			"collectionId": "d67fc4f6-4b5a-a3e2-026c-7dde5158f9c1",
+			"responses": [],
+			"synced": false
+		},
+		{
 			"id": "4184b3f0-1aae-9649-e1f8-fabe392ca6ad",
 			"url": "http://{{hostname}}:3000/folder",
 			"data": "{\"projectId\": \"5249b768606c41b815000008\", \"name\": \"Chapter 1\"}",
@@ -188,6 +226,23 @@
 			"name": "Folder Create",
 			"description": "",
 			"collectionId": "d67fc4f6-4b5a-a3e2-026c-7dde5158f9c1",
+			"synced": false
+		},
+		{
+			"id": "5d8290c5-97b7-65b4-9f81-533c5a35f84a",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://{{hostname}}:3000/style/5316f7783527c1f021000004",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "",
+			"time": 1394014086651,
+			"name": "Style - Open",
+			"description": "",
+			"collectionId": "d67fc4f6-4b5a-a3e2-026c-7dde5158f9c1",
+			"responses": [],
 			"synced": false
 		},
 		{
@@ -420,6 +475,23 @@
 			"dataMode": "raw",
 			"timestamp": 0,
 			"version": 2,
+			"synced": false
+		},
+		{
+			"id": "c7645fdc-8df4-902e-8b02-61f537970c87",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://{{hostname}}:3000/style/5316f7783527c1f021000004/update",
+			"pathVariables": {},
+			"method": "PUT",
+			"data": "{\"name\": \"Bloody hell\", \"class\": \"imm\", \"css\": \"dyyyyyyt\"}",
+			"dataMode": "raw",
+			"version": 2,
+			"tests": "",
+			"time": 1394017228822,
+			"name": "Style - Update",
+			"description": "",
+			"collectionId": "d67fc4f6-4b5a-a3e2-026c-7dde5158f9c1",
+			"responses": [],
 			"synced": false
 		},
 		{

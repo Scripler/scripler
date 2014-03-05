@@ -1310,6 +1310,17 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					done();
 				});
+		}),
+		it('Updating a style should return success', function (done) {
+			request(host)
+				.put('/style/' + styleId + '/update')
+				.set('cookie', cookie)
+				.send({name: "Donkey", class: "jack", css: css + "...some new CSS"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
 		})
 	}),
 	describe('Cleanup', function () {

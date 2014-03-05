@@ -47,3 +47,16 @@ exports.create = function (req, res, next) {
 exports.open = function (req, res) {
 	res.send({style: req.style});
 }
+
+exports.update = function (req, res, next) {
+	var style = req.style;
+	style.name = style.name;
+	style.class = style.class;
+	style.css = style.css;
+	style.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+		res.send({});
+	});
+}

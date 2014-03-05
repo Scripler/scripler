@@ -43,8 +43,8 @@ exports.open = function (req, res) {
 
 exports.update = function (req, res, next) {
 	var styleset = req.styleset;
-	styleset.name = req.body.name;
-	styleset.styles = req.body.styles;
+	styleset.name = styleset.name;
+	styleset.styles = styleset.styles;
 	styleset.save(function (err) {
 		if (err) {
 			return next(err);
