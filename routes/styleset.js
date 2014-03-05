@@ -64,3 +64,48 @@ exports.rearrange = function (req, res, next) {
 		res.send({project: project});
 	});
 }
+
+exports.archive = function (req, res, next) {
+	var styleset = req.styleset;
+	styleset.archived = true;
+	styleset.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+		Project.update({"stylesets": styleset._id}, {"$pull": {"stylesets": styleset._id}}, {multi: true}, function (err, numberAffected, raw) {
+			if (err) {
+				return next(err);
+			}
+			res.send({styleset: styleset});
+		});
+	});
+}
+
+exports.unarchive = function (req, res, next) {
+	var styleset = req.styleset;
+	styleset.archived = false;
+	styleset.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+		var membersArray = [];
+		for (var i = 0; i < styleset.members.length; i++) {
+			membersArray.push(styleset.members[i].userId);
+		}
+		Project.update({"members": {"$in": membersArray}}, {"$addToSet": {"stylesets": styleset._id}}, {multi: true}, function (err, numberAffected, raw) {
+			if (err) {
+				return next(err);
+			}
+			res.send({styleset: styleset});
+		});
+	});
+}
+
+exports.archived = function (req, res, next) {
+	Styleset.find({"archived": true, "members": {"$elemMatch": {"userId": req.user._id, "access": "admin"}}}, function (err, stylesets) {
+		if (err) {
+			return next(err);
+		}
+		res.send({"stylesets": stylesets});
+	});
+};

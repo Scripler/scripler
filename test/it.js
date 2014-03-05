@@ -1363,6 +1363,44 @@ describe('Scripler RESTful API', function () {
 				assert.equal(res.body.project.stylesets[1], stylesetId);
 				done();
 			});
+		}),
+		it('Archiving a styleset should return the archived styleset', function (done) {
+			request(host)
+				.put('/styleset/' + stylesetId + '/archive')
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset.name, "My Best Styleset");
+					assert.equal(res.body.styleset.archived, true);
+					done();
+				});
+		}),
+		it('List of archived stylesets should return the single archived styleset', function (done) {
+			request(host)
+				.get('/styleset/archived')
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.stylesets.length, 1);
+					assert.equal(res.body.stylesets[0].name, "My Best Styleset");
+					done();
+				});
+		}),
+		it('Unarchiving a styleset should return the unarchived styleset', function (done) {
+			request(host)
+				.put('/styleset/' + stylesetId + '/unarchive')
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset.name, "My Best Styleset");
+					assert.equal(res.body.styleset.archived, false);
+					done();
+				});
 		})
 	}),
 	describe('Cleanup', function () {

@@ -42,7 +42,10 @@
 		"5d8290c5-97b7-65b4-9f81-533c5a35f84a",
 		"3efb7ff0-1b7f-c7cb-0895-cb2aa34ebb33",
 		"c7645fdc-8df4-902e-8b02-61f537970c87",
-		"b28b5e70-0a38-818d-3446-5ca5ec1836ec"
+		"b28b5e70-0a38-818d-3446-5ca5ec1836ec",
+		"feceed10-8a1b-1354-c556-a4f9c85e2b9d",
+		"3a2e02b6-912f-0c90-db0b-0fab99dee37c",
+		"ae989197-3be5-5d5d-3bf0-5ff835aeb3b0"
 	],
 	"folders": [],
 	"timestamp": 1371745901435,
@@ -182,6 +185,23 @@
 			"timestamp": 0,
 			"responses": [],
 			"version": 2,
+			"synced": false
+		},
+		{
+			"id": "3a2e02b6-912f-0c90-db0b-0fab99dee37c",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://{{hostname}}:3000/styleset/530dee8066553bb00c000004/unarchive",
+			"pathVariables": {},
+			"method": "PUT",
+			"data": "{}",
+			"dataMode": "raw",
+			"version": 2,
+			"tests": "",
+			"time": 1394024546958,
+			"name": "Styleset - Unarchive",
+			"description": "",
+			"collectionId": "d67fc4f6-4b5a-a3e2-026c-7dde5158f9c1",
+			"responses": [],
 			"synced": false
 		},
 		{
@@ -434,6 +454,23 @@
 			"synced": false
 		},
 		{
+			"id": "ae989197-3be5-5d5d-3bf0-5ff835aeb3b0",
+			"headers": "",
+			"url": "http://{{hostname}}:3000/styleset/archived",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "",
+			"time": 1394026933992,
+			"name": "Styleset - List of archived",
+			"description": "",
+			"collectionId": "d67fc4f6-4b5a-a3e2-026c-7dde5158f9c1",
+			"responses": [],
+			"synced": false
+		},
+		{
 			"id": "b28b5e70-0a38-818d-3446-5ca5ec1836ec",
 			"headers": "Content-Type: application/json\n",
 			"url": "http://{{hostname}}:3000/styleset/530de9169531e61822000004/rearrange",
@@ -460,7 +497,7 @@
 			"dataMode": "raw",
 			"version": 2,
 			"tests": "",
-			"time": 1393421969683,
+			"time": 1394024562307,
 			"name": "Styleset - Apply to project",
 			"description": "",
 			"collectionId": "d67fc4f6-4b5a-a3e2-026c-7dde5158f9c1",
@@ -641,6 +678,23 @@
 			"name": "Project Delete",
 			"description": "",
 			"collectionId": "d67fc4f6-4b5a-a3e2-026c-7dde5158f9c1",
+			"synced": false
+		},
+		{
+			"id": "feceed10-8a1b-1354-c556-a4f9c85e2b9d",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://{{hostname}}:3000/styleset/530dee8066553bb00c000004/archive",
+			"pathVariables": {},
+			"method": "PUT",
+			"data": "{}",
+			"dataMode": "raw",
+			"version": 2,
+			"tests": "",
+			"time": 1394026918484,
+			"name": "Styleset - Archive",
+			"description": "",
+			"collectionId": "d67fc4f6-4b5a-a3e2-026c-7dde5158f9c1",
+			"responses": [],
 			"synced": false
 		}
 	]

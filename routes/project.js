@@ -31,7 +31,7 @@ exports.load = function (id) {
 exports.loadPopulated = function (id) {
 	return function (req, res, next) {
 		id = id || req.body.projectId;
-		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type').exec(function (err, project) {
+		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type stylesets').exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
@@ -48,7 +48,7 @@ exports.loadPopulated = function (id) {
 exports.loadPopulatedText = function (id) {
 	return function (req, res, next) {
 		id = id || req.body.projectId;
-		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type text').exec(function (err, project) {
+		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type stylesets text').exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
