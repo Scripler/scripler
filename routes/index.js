@@ -65,6 +65,7 @@ module.exports = function (app, auth) {
 	app.post('/styleset', auth.isLoggedIn(), styleset.create);
 	app.get('/styleset/:stylesetId', auth.isLoggedIn(), styleset.open);
 	app.post('/style', auth.isLoggedIn(), styleset.load(), style.create);
+	app.get('/style/:styleId', auth.isLoggedIn(), style.open);
 	app.put('/styleset/:stylesetId/project/:projectId', auth.isLoggedIn(), project.applyStyleset);
 	app.put('/styleset/:stylesetId/document/:documentId', auth.isLoggedIn(), document.applyStyleset);
 
@@ -87,5 +88,7 @@ module.exports = function (app, auth) {
 	app.param('stylesetId', function (req, res, next, id) {
 		return styleset.load(id)(req, res, next);
 	});
-
+	app.param('styleId', function (req, res, next, id) {
+		return style.load(id)(req, res, next);
+	});
 }

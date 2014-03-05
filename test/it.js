@@ -1197,6 +1197,26 @@ describe('Scripler RESTful API', function () {
 				})
 		})
 	describe('Typography (Styleset & Style)', function () {
+		var css = '.container > header nav a:after {' +
+			'content: attr(data-info);' +
+			'color: #47a3da;' +
+			'position: absolute;' +
+			'width: 600%;' +
+			'top: 120%;' +
+			'text-align: right;' +
+			'right: 0;' +
+			'opacity: 0;' +
+			'pointer-events: none;' +
+			'}' +
+
+			'.container > header nav a:hover:after {' +
+			'	opacity: 1;' +
+			'}' +
+
+			'.container > header nav a:hover {' +
+			'	background: #47a3da;' +
+			'}';
+
 		it('Creating a styleset should return the new styleset', function (done) {
 			request(host)
 				.post('/styleset')
@@ -1211,26 +1231,6 @@ describe('Scripler RESTful API', function () {
 				});
 		}),
 		it('Creating a style should return the new style', function (done) {
-			var css = '.container > header nav a:after {' +
-						'content: attr(data-info);' +
-						'color: #47a3da;' +
-						'position: absolute;' +
-						'width: 600%;' +
-						'top: 120%;' +
-						'text-align: right;' +
-						'right: 0;' +
-						'opacity: 0;' +
-						'pointer-events: none;' +
-					'}' +
-
-					'.container > header nav a:hover:after {' +
-					'	opacity: 1;' +
-					'}' +
-
-					'.container > header nav a:hover {' +
-					'	background: #47a3da;' +
-					'}';
-
 			request(host)
 				.post('/style')
 				.set('cookie', cookie)
@@ -1282,6 +1282,21 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset._id, stylesetId);
 					assert.equal(res.body.styleset.name, "My Best Styleset");
+					done();
+				});
+		}),
+		it('Opening a style should return the style', function (done) {
+			request(host)
+				.get('/style/' + styleId)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style._id, styleId);
+					assert.equal(res.body.style.name, "Coolio");
+					assert.equal(res.body.style.class, "CoolioClass");
+					assert.equal(res.body.style.css, css);
 					done();
 				});
 		})

@@ -18,6 +18,7 @@ exports.load = function (id) {
 		});
 	}
 }
+
 exports.create = function (req, res, next) {
 	var styleset = new Styleset({
 		name: req.body.name,
