@@ -1,5 +1,10 @@
 body, html { position: relative; font-size: 100%; padding: 0; margin: 0; }
 
+/*angular cloak*/
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
 /* Reset */
 *,
 *:after,
@@ -186,7 +191,7 @@ a:hover {
 	display: none;
 }
 
-
+/*registration styling*/
 .registration {
 	background-color: #c6c6c6;
 	position: fixed;
