@@ -32,7 +32,10 @@ function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
 
 	$scope.$on('user:updated', function( event, user ) {
 		$scope.user = user;
+		$scope.getList();
+	});
 
+	$scope.$on('user:registered', function( event, user ) {
 		if ( user._id ) {
 			angular.forEach($scope.publications, function( publication, index ) {
 				$http.post('/project', angular.toJson( publication ) )
@@ -40,8 +43,8 @@ function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
 						$scope.publications[index] = data.project;
 				});
 			})
-			$scope.getList();
 			localStorageService.remove( lsName );
+			$scope.getList();
 		}
 	});
 
@@ -84,16 +87,16 @@ function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
 	};
 
 	$scope.archivePublication = function( publication ) {
-		var index = publications.indexOf( publication );
+		var index = $scope.publications.indexOf( publication );
 		if ( $scope.user._id ) {
 			$http.put('/project/' + publication._id + '/archive')
 				.success( function() {
 					publication.archived = true;
-					publications[index] = publication;
+					$scope.publications[index] = publication;
 				});
 		} else {
 			publication.archived = true;
-			publications[index] = publication;
+			$scope.publications[index] = publication;
 			localStorageService.add( lsName, $scope.publications );
 		}
 	};
@@ -116,6 +119,7 @@ function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
 				});
 		} else {
 			var publication = publication;
+			publication.order = publication.order + 1;
 			this.publication.name = publication.name + ' - Copy';
 			$scope.publications.push( this.publication );
 			localStorageService.add( lsName, $scope.publications );

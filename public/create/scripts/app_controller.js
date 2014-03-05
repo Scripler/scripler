@@ -51,6 +51,7 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 								.success( function( data ) {
 									if ( data.user ) {
 										userService.setUser( data.user );
+										$rootScope.$broadcast('user:registered', data.user);
 										$scope.registrationText = 'Great! We\'ve emailed you a confirmation link (learn more). You can keep writing though...';
 									}
 								});
