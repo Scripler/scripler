@@ -22,11 +22,12 @@ function createController($scope) {
 }
 //}]);
 
-function PublicationsCtrl ( $scope, $http, userService ) {
+function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
 	$scope.publications = [];
+	var lsName = 'demo-scripler-publications';
 
-	$scope.$on('demo:mode', function( event ) {
-		$scope.publications = [ { _id: Date.now(), name:'Demo Title', order: 0 } ];
+	$scope.$on('demo:mode', function( event, publications ) {
+		$scope.publications = publications;
 	});
 
 	$scope.$on('user:updated', function( event, user ) {
@@ -40,6 +41,7 @@ function PublicationsCtrl ( $scope, $http, userService ) {
 				});
 			})
 			$scope.getList();
+			localStorageService.remove( lsName );
 		}
 	});
 
@@ -77,22 +79,31 @@ function PublicationsCtrl ( $scope, $http, userService ) {
 		} else {
 			publication._id = Date.now();
 			$scope.publications.push( publication );
-			//save to localStorage
+			localStorageService.add( lsName, $scope.publications );
 		}
 	};
 
 	$scope.archivePublication = function( publication ) {
+		var index = publications.indexOf( publication );
 		if ( $scope.user._id ) {
 			$http.put('/project/' + publication._id + '/archive')
-				.success( function() {});
+				.success( function() {
+					publication.archived = true;
+					publications[index] = publication;
+				});
+		} else {
+			publication.archived = true;
+			publications[index] = publication;
+			localStorageService.add( lsName, $scope.publications );
 		}
-		$scope.publications.splice($scope.publications.indexOf( publication ), 1);
 	};
 
 	$scope.renamePublication = function( publication ) {
 		if ( $scope.user._id ) {
 			$http.put('/project/' + publication._id + '/rename', angular.toJson( publication ) )
 				.success( function() {});
+		} else {
+			localStorageService.add( lsName, $scope.publications );
 		}
 	};
 
@@ -107,6 +118,7 @@ function PublicationsCtrl ( $scope, $http, userService ) {
 			var publication = publication;
 			this.publication.name = publication.name + ' - Copy';
 			$scope.publications.push( this.publication );
+			localStorageService.add( lsName, $scope.publications );
 		}
 	};
 
