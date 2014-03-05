@@ -1,81 +1,97 @@
 'use strict';
 
-var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize' ] );
+var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'LocalStorageModule' ] );
 
-app.controller( 'appController', [ '$http', '$scope', 'userService', function( $http, $scope, userService ) {
-	$scope.errors = {};
-	$scope.errors.name = 'Name is empty';
-	$scope.errors.email = 'Email is invalid';
-	$scope.errors.password = '6 Characters minimum';
-	$scope.registrationText = 'Hey Stranger - register to save your work!';
-	$scope.EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStorageService', '$rootScope', '$timeout',
+	function( $http, $scope, userService, localStorageService, $rootScope, $timeout ) {
+		$scope.errors = {};
+		$scope.errors.name = 'Name is empty';
+		$scope.errors.email = 'Email is invalid';
+		$scope.errors.password = '6 Characters minimum';
+		$scope.registrationText = 'Hey Stranger - register to save your work!';
+		$scope.EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-	$scope.user = {};
+		$scope.user = {};
 
-	$scope.$on('user:updated', function( event, user ) {
-		$scope.user = user;
-		if (!$scope.user.emailValidated) {
-			$scope.registrationText = 'Hey there, remember to validate your email-address. Learn more.';
-		}
-	});
+		$scope.$on('user:updated', function( event, user ) {
+			$scope.user = user;
+			if (!$scope.user.emailValidated) {
+				$scope.registrationText = 'Hey there, remember to validate your email-address. Learn more.';
+			}
+		});
 
-	$scope.submitRegistration = function() {
-		$scope.registrationSubmitted = true;
-		$scope.registerForm.$pristine = false;
-		$scope.registerForm.name.$pristine = false;
-		$scope.registerForm.email.$pristine = false;
-		$scope.registerForm.password.$pristine = false;
-
-		if ($scope.registerForm.$valid) {
-			$http.post( '/user/register', angular.toJson( $scope.user ) )
-				.success( function( data ) {
-					if ( data.user ) {
-						$http.post('/user/login/', angular.toJson( $scope.user ) )
-							.success( function( data ) {
-								if ( data.user ) {
-									userService.setUser( data.user );
-									$scope.registrationText = 'Great! We\'ve emailed you a confirmation link (learn more). You can keep writing though...';
-								}
-							});
+		$scope.$on('login:failed', function( event ) {
+			var publications = [];
+			var lsPublications = localStorageService.get('demo-scripler-publications');
+				if ( lsPublications ) {
+					if ( lsPublications.length !== 0 ) {
+						publications = lsPublications;
 					}
-				})
-				.error( function( data ) {
-					if ( data.errorDetails ) {
-						if ( data.errorDetails === 'Email already registered' ) {
-							$scope.errors.email = data.errorDetails;
-							$scope.registerForm.email.$invalid = true;
-							$scope.registerForm.$invalid = true;
+				} else {
+					publications = [ { _id: Date.now(), name:'Demo Title', order: 0 } ];
+				}
+			var demoOn = function() {
+				$rootScope.$broadcast('demo:mode', publications);
+			}
+			$timeout(demoOn, 1); //!important: timeout for createController to load
+		});
+
+		$scope.submitRegistration = function() {
+			$scope.registrationSubmitted = true;
+			$scope.registerForm.$pristine = false;
+			$scope.registerForm.name.$pristine = false;
+			$scope.registerForm.email.$pristine = false;
+			$scope.registerForm.password.$pristine = false;
+
+			if ($scope.registerForm.$valid) {
+				$http.post( '/user/register', angular.toJson( $scope.user ) )
+					.success( function( data ) {
+						if ( data.user ) {
+							$http.post('/user/login/', angular.toJson( $scope.user ) )
+								.success( function( data ) {
+									if ( data.user ) {
+										userService.setUser( data.user );
+										$scope.registrationText = 'Great! We\'ve emailed you a confirmation link (learn more). You can keep writing though...';
+									}
+								});
 						}
-					}
-				});
+					})
+					.error( function( data ) {
+						if ( data.errorDetails ) {
+							if ( data.errorDetails === 'Email already registered' ) {
+								$scope.errors.email = data.errorDetails;
+								$scope.registerForm.email.$invalid = true;
+								$scope.registerForm.$invalid = true;
+							}
+						}
+					});
+			}
 		}
-	}
-
 }]);
 
 app.config( function( $routeProvider, $httpProvider ) {
 
-	var isLoggedIn = [ '$q', '$http', '$timeout', '$rootScope', 'userService', function( $q, $http, $timeout, $rootScope, userService ) {
-		var deferred = $q.defer();
+	var isLoggedIn = [ '$q', '$http', '$timeout', '$rootScope', 'userService',
+		function( $q, $http, $timeout, $rootScope, userService ) {
+			var deferred = $q.defer();
 
-		$http.get( '/user' )
-			.success( function( data ) {
-				if ( data.user ) {
-					userService.setUser( data.user );
+			$http.get( '/user' )
+				.success( function( data ) {
+					if ( data.user ) {
+						userService.setUser( data.user );
+						$timeout(deferred.resolve, 0);
+					}
+				})
+				.error( function( data ) {
+					$rootScope.$broadcast('login:failed');
 					$timeout(deferred.resolve, 0);
-				}
-			})
-			.error( function( data ) {
-				$rootScope.$broadcast('demo:mode');
-				$timeout(deferred.resolve, 0);
-			});
+				});
 	}]
 
 	$routeProvider
 		.when('/', { templateUrl:'pages/create.html', controller:createController,
 					resolve: { access: isLoggedIn }
 					})
-		.when('/create', { templateUrl:'pages/create.html', controller:createController })
 		.when('/project', { templateUrl:'pages/project.html', controller:projectController })
 		.when('/error', { templateUrl:'pages/error.html', controller:createController })
 		.otherwise({ redirectTo:'/' });
