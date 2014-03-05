@@ -17,6 +17,9 @@
 	background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* Opera */
 	background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%);
 }
+.section-unisquare.white-bg {
+	background-color: #fff;
+}
 .section-publications {
 	margin: 0 0 0 10px !important;
 	min-height: 340px;
@@ -201,14 +204,14 @@ textarea#rename {
 }
 .user-box {
 	padding-top: 6px;
-	padding-left: 30px;
+	padding-left: 20px;
 }
 .user-image {
 	float: left;
 }
 .user-text {
 	float: left;
-	width: 215px;
+	width: 225px;
 	color: #000;
 	padding-top: 5px;
 	padding-left: 10px;
@@ -218,7 +221,11 @@ textarea#rename {
 	height: 16px;
 	overflow: hidden;
 }
+.user-name.settings {
+	height: 100%;
+}
 .user-links a {
+	cursor: pointer;
 	text-decoration: underline;
 }
 .user-links a, span {
@@ -227,4 +234,22 @@ textarea#rename {
 }
 .user-links a:hover {
 	color: #000;
+}
+.user-settings .user-box {
+	height: 130px;
+	padding-left: 10px;
+}
+.settings-text {
+	float: left;
+	font-size: 120%;
+	font-weight: 900;
+	color: #000;
+	opacity: 0.6;
+	width: 160px;
+	padding-top: 20px;
+	padding-left: 15px;
+}
+hr {
+	width: 92%;
+	border: 0; border-top: 1px solid #fff265;
 }

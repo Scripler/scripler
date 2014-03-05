@@ -3,27 +3,39 @@
 <div class="container">
 	<div class="main">
 
-		<section class="section-unisquare">
-			<div class="links">
-				<a onclick="history.back(-1)" class="frontpage-link">
-					<span class="arrow-left"></span><p>Frontpage</p>
-				</a>
-			</div>
-			<div class="logo-box">
-				<img class="logo" src="../images/logo.png">
-			</div>
-			<div class="uni-bottom-box">
-				<div class="user-box">
-					<img class="user-image" src="http://placekitten.com/50/50">
-					<div class="user-text">
-						<div class="user-name" ng-bind-html="user.name"></div>
-						<div class="user-links">
-							<a href="#" ng-click="showSettings = !showSettings">Settings</a>
-							<span>|</span>
-							<a href="/logout">Log out</a>
+		<section class="section-unisquare" ng-class="{ 'white-bg' : showSettings}">
+			<div ng-hide="showSettings">
+				<div class="links">
+					<a onclick="history.back(-1)" class="frontpage-link">
+						<span class="arrow-left"></span><p>Frontpage</p>
+					</a>
+				</div>
+				<div class="logo-box">
+					<img class="logo" src="../images/logo.png">
+				</div>
+				<div class="uni-bottom-box">
+					<div class="user-box">
+						<img class="user-image" src="http://placekitten.com/50/50">
+						<div class="user-text">
+							<div class="user-name" ng-bind-html="user.firstname + ' ' + user.lastname"></div>
+							<div class="user-links">
+								<a ng-click="showSettings = !showSettings">Settings</a>
+								<span>|</span>
+								<a href="/logout">Log out</a>
+							</div>
 						</div>
 					</div>
 				</div>
+			</div>
+			<div class="user-settings" ng-show="showSettings">
+				<div class="user-box">
+						<img class="user-image" src="http://placekitten.com/100/100">
+						<div class="settings-text">
+							<div class="user-name settings" ng-bind-html="user.firstname"></div>
+							<div class="user-name settings" ng-bind-html="user.lastname"></div>
+						</div>
+				</div>
+				<hr>
 			</div>
 		</section>
 
