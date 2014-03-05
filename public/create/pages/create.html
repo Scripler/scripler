@@ -1,4 +1,3 @@
-<link rel="stylesheet" type="text/css" href="pages/css/shared/default.css" />
 <link rel="stylesheet" type="text/css" href="pages/css/pages/create.css" />
 
 <div class="container">
@@ -26,7 +25,7 @@
  				<p>+</p>
  			</div>
 
-			<div class="publication" ng-animate="'animate'" ng-repeat="publication in publications track by $index | orderBy:'order':reverse | filter:publicationSearch">
+			<div class="publication" ng-animate="'animate'" ng-hide="publication.archived" ng-repeat="publication in publications track by $index | orderBy:'order':reverse | filter:publicationSearch">
 				<a class="publication-options-show" data-gui="{{publication._id}}" ng-click="showPublicationOptions = true;">
 					<div class="arrow"></div>
 				</a>

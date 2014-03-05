@@ -3,6 +3,8 @@
 <head>
 	<title>Scripler</title>
 
+	<link rel="stylesheet" type="text/css" href="pages/css/shared/default.css" />
+
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-sanitize.js"></script>
@@ -12,11 +14,11 @@
 	<script type="text/javascript" src="scripts/project_controller.js"></script>
 	<script type="text/javascript" src="ckeditor/ckeditor.js"></script>
 </head>
-<body ng-controller="appController">
+<body ng-controller="appController" ng-cloak>
 
 	<div ng-view></div>
 
-	<div class="registration" ng-hide="user.emailValidated || closeStatus" ng-class="{ 'green' : user._id }">
+	<div class="registration" ng-hide="user.emailValidated || closeStatus" ng-class="{ 'green' : user._id }" ng-cloak>
 		<div class="registration-close-button" ng-click="closeStatus = !closeStatus" ng-show="user._id">x</div>
 		<div class="error-boxes" ng-show="registerForm.$invalid && !registerForm.$pristine && registrationSubmitted && !user._id">
 			<div class="arrow-box" ng-show="registerForm.name.$invalid && !registerForm.name.$pristine" ng-bind="errors.name"></div>
