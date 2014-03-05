@@ -27,8 +27,8 @@ body, html { position: relative; font-size: 100%; padding: 0; margin: 0; }
 /* General Styling */
 body {
 	background: none #ececec;
-    font-family: 'Lato', Calibri, Arial, sans-serif;
-    color: #666;
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+	color: #666;
 }
 
 h1 {
