@@ -2,13 +2,20 @@
 	float: left;
 }
 .section-unisquare {
+	position: relative;
 	margin: 0 10px 0 0 !important;
 	padding: 10px !important;
 	width: 300px !important;
 	height: 300px !important;
-	border: 1px solid #fff;
-	background: none #fefefe;
-	box-shadow: 0px 5px 5px -5px #ccc
+	border: 2px solid #fff;
+	background: none #c6c6c6;
+	box-shadow: 0px 5px 5px -5px #ccc;
+
+	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* WebKit */
+	background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* Firefox */
+	background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* IE10+ */
+	background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* Opera */
+	background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%);
 }
 .section-publications {
 	margin: 0 0 0 10px !important;
@@ -155,4 +162,69 @@ textarea#rename {
 }
 .animate-enter.animate-enter-active, .animate-leave {
 	opacity: 1;
+}
+
+.frontpage-link {
+	color: #fff;
+}
+.frontpage-link p {
+	float: left;
+	padding-left: 5px;
+	margin-top: 0;
+}
+.frontpage-link:hover .arrow-left {
+	border-right: 6px solid #666;
+}
+.arrow-left {
+	float: left;
+	width: 0;
+	height: 0;
+	margin-top: 2px;
+	border-top: 6px solid transparent;
+	border-bottom: 6px solid transparent;
+	border-right: 6px solid #fff;
+}
+.logo-box {
+	text-align: center;
+	padding-top: 70px;
+}
+.logo {
+	width: 30%;
+}
+.uni-bottom-box {
+	height: 60px;
+	background-color: #fff;
+	position: absolute;
+	left: 0;
+	width: 100%;
+	bottom: 0;
+}
+.user-box {
+	padding-top: 6px;
+	padding-left: 30px;
+}
+.user-image {
+	float: left;
+}
+.user-text {
+	float: left;
+	width: 215px;
+	color: #000;
+	padding-top: 5px;
+	padding-left: 10px;
+	font-size: 90%;
+}
+.user-name {
+	height: 16px;
+	overflow: hidden;
+}
+.user-links a {
+	text-decoration: underline;
+}
+.user-links a, span {
+	font-size: 80%;
+	color: #666;
+}
+.user-links a:hover {
+	color: #000;
 }

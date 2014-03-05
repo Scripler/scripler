@@ -4,26 +4,33 @@
 	<div class="main">
 
 		<section class="section-unisquare">
-			<p> </p>
-
-
-			<p class="filter-buttons"><span class="filter-sort-button" ng-click="toggleElement('filterFilter')">Sort by Filter</span> | <span class="search-sort-button" ng-click="toggleElement('filterSearch')">Sort by Search</span></p>
-			<p class="filter-sort" ng-show="filterFilter">
-				Filter by Sort:
-				<span ng-click="publicationOrder = 'publicationCreated'; reverse=!reverse">time</span> |
-				<span ng-click="publicationOrder = 'publicationName'; reverse=!reverse">titel</span> |
-				<span ng-click="publicationOrder = 'publicationChanged'; reverse=!reverse">changed</span>
-			</p>
-			<p class="filter-search" ng-show="filterSearch">
-				Filter by Search:
-					<input type="text" ng-model="publicationSearch">
-			</p>
+			<div class="links">
+				<a onclick="history.back(-1)" class="frontpage-link">
+					<span class="arrow-left"></span><p>Frontpage</p>
+				</a>
+			</div>
+			<div class="logo-box">
+				<img class="logo" src="../images/logo.png">
+			</div>
+			<div class="uni-bottom-box">
+				<div class="user-box">
+					<img class="user-image" src="http://placekitten.com/50/50">
+					<div class="user-text">
+						<div class="user-name" ng-bind-html="user.name"></div>
+						<div class="user-links">
+							<a href="#" ng-click="showSettings = !showSettings">Settings</a>
+							<span>|</span>
+							<a href="/logout">Log out</a>
+						</div>
+					</div>
+				</div>
+			</div>
 		</section>
 
 		<section class="section-publications" ng-controller="PublicationsCtrl">
 			<div class="publication new" ng-click="addPublication(publication)">
- 				<p>+</p>
- 			</div>
+				<p>+</p>
+			</div>
 
 			<div class="publication" ng-animate="'animate'" ng-hide="publication.archived" ng-repeat="publication in publications track by $index | orderBy:'order':reverse | filter:publicationSearch">
 				<a class="publication-options-show" data-gui="{{publication._id}}" ng-click="showPublicationOptions = true;">
