@@ -41,7 +41,8 @@
 		"1c70efe9-8e36-1f5a-fec1-16de832641c6",
 		"5d8290c5-97b7-65b4-9f81-533c5a35f84a",
 		"3efb7ff0-1b7f-c7cb-0895-cb2aa34ebb33",
-		"c7645fdc-8df4-902e-8b02-61f537970c87"
+		"c7645fdc-8df4-902e-8b02-61f537970c87",
+		"b28b5e70-0a38-818d-3446-5ca5ec1836ec"
 	],
 	"folders": [],
 	"timestamp": 1371745901435,
@@ -143,11 +144,11 @@
 			"url": "http://{{hostname}}:3000/styleset",
 			"pathVariables": {},
 			"method": "POST",
-			"data": "{\"name\": \"My Best Stylesetty222454fgftfgfg54\"}",
+			"data": "{\"name\": \"jskdfjksdjk\"}",
 			"dataMode": "raw",
 			"version": 2,
 			"tests": "",
-			"time": 1393421958276,
+			"time": 1394019805334,
 			"name": "Styleset Create",
 			"description": "",
 			"collectionId": "d67fc4f6-4b5a-a3e2-026c-7dde5158f9c1",
@@ -430,6 +431,23 @@
 			"version": 2,
 			"responses": [],
 			"collectionId": "d67fc4f6-4b5a-a3e2-026c-7dde5158f9c1",
+			"synced": false
+		},
+		{
+			"id": "b28b5e70-0a38-818d-3446-5ca5ec1836ec",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://{{hostname}}:3000/styleset/530de9169531e61822000004/rearrange",
+			"pathVariables": {},
+			"method": "PUT",
+			"data": "{\"stylesets\": [\"5316f7783527c1f021000004\", \"53170dd2ce71cdec2b000004\"]}",
+			"dataMode": "raw",
+			"version": 2,
+			"tests": "",
+			"time": 1394020491055,
+			"name": "Styleset - Rearrange",
+			"description": "",
+			"collectionId": "d67fc4f6-4b5a-a3e2-026c-7dde5158f9c1",
+			"responses": [],
 			"synced": false
 		},
 		{

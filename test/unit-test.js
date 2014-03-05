@@ -174,64 +174,64 @@ describe('epub', function () {
 			var result = epub.getManifestFilesString(prefix, folderName, fonts, 'ttf', 'application/x-font-ttf');
 			assert.equal(result, '<item id="font_Scripler1.ttf" href="Fonts/font_Scripler1.ttf" media-type="application/x-font-ttf" />' +
 				'<item id="font_Scrupler33.ttf" href="Fonts/font_Scrupler33.ttf" media-type="application/x-font-ttf" />');
+		}),
+		it('getSpineDocumentsString', function () {
+			var htmlFiles = [];
+			var prefix = 'doc_';
+
+			var result = epub.getSpineDocumentsString(prefix, htmlFiles, 'html');
+			assert.equal(result, '');
+
+			var htmlFile1 = new Document;
+
+			htmlFiles = [htmlFile1];
+			var result = epub.getSpineDocumentsString(prefix, htmlFiles, 'html');
+			assert.equal(result, '<itemref idref="' + prefix + htmlFile1.id + '.html" />');
+
+			var htmlFile2 = new Document;
+			htmlFile2.type = 'titlepage';
+
+			htmlFiles = [htmlFile1, htmlFile2];
+			var result = epub.getSpineDocumentsString(prefix, htmlFiles, 'html');
+			assert.equal(result, '<itemref idref="' + prefix + htmlFile1.id + '.html" />' +
+				'<itemref idref="TitlePage.html" />');
+		}),
+		it('getGuideString', function () {
+			var documents = [];
+
+			var document1 = new Document;
+			document1.type = 'cover';
+
+			var document2 = new Document;
+			document2.type = 'disco';
+
+			var document3 = new Document;
+			document3.type = 'titlepage';
+
+			var document4 = new Document;
+			document4.type = 'stew';
+
+			var document5 = new Document;
+			document5.type = 'toc';
+
+			var document6 = new Document;
+			document6.type = 'colophon';
+
+			documents = [document1, document2, document3, document4, document5, document6];
+
+			var result = epub.getGuideString('cover', documents);
+			assert.equal(result, '<reference href="HTML/Cover.html" title="Cover" type="cover" />');
+
+			var result = epub.getGuideString('titlepage', documents);
+			assert.equal(result, '<reference href="HTML/TitlePage.html" title="Title Page" type="titlepage" />');
+
+			var result = epub.getGuideString('toc', documents);
+			assert.equal(result, '<reference href="HTML/ToC.html" title="Table of Contents" type="toc" />');
+
+			var result = epub.getGuideString('colophon', documents);
+			assert.equal(result, '<reference href="HTML/Colophon.html" title="Colophon" type="colophon" />');
 		})
 }	),
-	it('getSpineDocumentsString', function () {
-		var htmlFiles = [];
-		var prefix = 'doc_';
-
-		var result = epub.getSpineDocumentsString(prefix, htmlFiles, 'html');
-		assert.equal(result, '');
-
-		var htmlFile1 = new Document;
-
-		htmlFiles = [htmlFile1];
-		var result = epub.getSpineDocumentsString(prefix, htmlFiles, 'html');
-		assert.equal(result, '<itemref idref="' + prefix + htmlFile1.id + '.html" />');
-
-		var htmlFile2 = new Document;
-		htmlFile2.type = 'titlepage';
-
-		htmlFiles = [htmlFile1, htmlFile2];
-		var result = epub.getSpineDocumentsString(prefix, htmlFiles, 'html');
-		assert.equal(result, '<itemref idref="' + prefix + htmlFile1.id + '.html" />' +
-			'<itemref idref="TitlePage.html" />');
-	}),
-	it('getGuideString', function () {
-		var documents = [];
-
-		var document1 = new Document;
-		document1.type = 'cover';
-
-		var document2 = new Document;
-		document2.type = 'disco';
-
-		var document3 = new Document;
-		document3.type = 'titlepage';
-
-		var document4 = new Document;
-		document4.type = 'stew';
-
-		var document5 = new Document;
-		document5.type = 'toc';
-
-		var document6 = new Document;
-		document6.type = 'colophon';
-
-		documents = [document1, document2, document3, document4, document5, document6];
-
-		var result = epub.getGuideString('cover', documents);
-		assert.equal(result, '<reference href="HTML/Cover.html" title="Cover" type="cover" />');
-
-		var result = epub.getGuideString('titlepage', documents);
-		assert.equal(result, '<reference href="HTML/TitlePage.html" title="Title Page" type="titlepage" />');
-
-		var result = epub.getGuideString('toc', documents);
-		assert.equal(result, '<reference href="HTML/ToC.html" title="Table of Contents" type="toc" />');
-
-		var result = epub.getGuideString('colophon', documents);
-		assert.equal(result, '<reference href="HTML/Colophon.html" title="Colophon" type="colophon" />');
-	},
 	describe('epub3', function () {
 		it('getTocString', function () {
 			var tocEntries = [];
@@ -292,4 +292,4 @@ describe('epub', function () {
 			var result = epub3.getLandmarkString('colophon', documents);
 			assert.equal(result, '<li><a epub:type="colophon" href="HTML/Colophon.html">Colophon</a></li>');
 		})
-}));
+});

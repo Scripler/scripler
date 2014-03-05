@@ -27,6 +27,7 @@ var titlePageDocumentId;
 var tocDocumentId;
 var colophonDocumentId;
 var stylesetId;
+var newStylesetId;
 var styleId;
 
 var cleanupEPUB = true;
@@ -1321,6 +1322,47 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					done();
 				});
+		}),
+		it('Creating a new styleset to test rearrange of stylesets below', function (done) {
+			request(host)
+				.post('/styleset')
+				.set('cookie', cookie)
+				.send({name: "My New Cool Styleset"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset.name, "My New Cool Styleset");
+					newStylesetId = res.body.styleset._id;
+					newStylesetId && done();
+				});
+		}),
+		it('Applying the new styleset to a project - also to be able to test rearrange of stylesets below', function (done) {
+			request(host)
+				.put('/styleset/' + newStylesetId + "/project/" + projectId3)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.project._id, projectId3);
+					assert.equal(res.body.project.stylesets[0], stylesetId);
+					assert.equal(res.body.project.stylesets[1], newStylesetId);
+					done();
+				});
+		}),
+		it('Rearranging stylesets should return the project with the stylesets in the new order ', function (done) {
+		request(host)
+			.put('/styleset/' + projectId3 + '/rearrange')
+			.set('cookie', cookie)
+			.send({stylesets: [newStylesetId, stylesetId]})
+			.expect(200)
+			.end(function (err, res) {
+				if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+				assert.equal(res.body.project.stylesets.length, 2);
+				assert.equal(res.body.project.stylesets[0], newStylesetId);
+				assert.equal(res.body.project.stylesets[1], stylesetId);
+				done();
+			});
 		})
 	}),
 	describe('Cleanup', function () {

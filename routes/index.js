@@ -68,6 +68,7 @@ module.exports = function (app, auth) {
 	app.get('/style/:styleId', auth.isLoggedIn(), style.open);
 	app.put('/styleset/:stylesetId/update', auth.isLoggedIn(), styleset.update);
 	app.put('/style/:styleId/update', auth.isLoggedIn(), style.update);
+	app.put('/styleset/:projectId/rearrange', auth.isLoggedIn(), styleset.rearrange);
 	app.put('/styleset/:stylesetId/project/:projectId', auth.isLoggedIn(), project.applyStyleset);
 	app.put('/styleset/:stylesetId/document/:documentId', auth.isLoggedIn(), document.applyStyleset);
 

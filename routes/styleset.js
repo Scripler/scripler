@@ -1,5 +1,6 @@
 var utils = require('../lib/utils');
 var Styleset = require('../models/styleset.js').Styleset;
+var Project = require('../models/project.js').Project;
 
 //Load styleset by id
 exports.load = function (id) {
@@ -50,5 +51,16 @@ exports.update = function (req, res, next) {
 			return next(err);
 		}
 		res.send({});
+	});
+}
+
+exports.rearrange = function (req, res, next) {
+	var project = req.project;
+	project.stylesets = req.body.stylesets;
+	project.save(function (err, project) {
+		if (err) {
+			return next(err);
+		}
+		res.send({project: project});
 	});
 }
