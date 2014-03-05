@@ -1299,6 +1299,17 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.style.css, css);
 					done();
 				});
+		}),
+		it('Updating a styleset should return success', function (done) {
+			request(host)
+				.put('/styleset/' + stylesetId + '/update')
+				.set('cookie', cookie)
+				.send({name: "OK, Maybe not the BEST, but...", styles: [styleId]})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
 		})
 	}),
 	describe('Cleanup', function () {

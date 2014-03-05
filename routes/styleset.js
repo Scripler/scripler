@@ -40,3 +40,15 @@ exports.create = function (req, res, next) {
 exports.open = function (req, res) {
 	res.send({styleset: req.styleset});
 }
+
+exports.update = function (req, res, next) {
+	var styleset = req.styleset;
+	styleset.name = req.body.name;
+	styleset.styles = req.body.styles;
+	styleset.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+		res.send({});
+	});
+}
