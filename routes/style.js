@@ -1,5 +1,5 @@
 var utils = require('../lib/utils');
-var Style = require('../models/styleset.js').Style;
+var Style = require('../models/style.js').Style;
 
 //Load style by id
 exports.load = function (id) {
@@ -12,6 +12,7 @@ exports.load = function (id) {
 				return next({message: "Style not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
+			if (!utils.hasAccessToEntity(req.user, style)) return next(403);
 			req.style = style;
 			return next();
 		});
@@ -25,7 +26,10 @@ exports.create = function (req, res, next) {
 		name: req.body.name,
 		class: req.body.class,
 		css: req.body.css,
-		stylesetId: styleset._id
+		stylesetId: styleset._id,
+		members: [
+			{userId: req.user._id, access: ["admin"]}
+		]
 	});
 
 	style.save(function(err) {
@@ -60,3 +64,34 @@ exports.update = function (req, res, next) {
 		res.send({});
 	});
 }
+
+exports.archive = function (req, res, next) {
+	var style = req.style;
+	style.archived = true;
+	style.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+		res.send({style: style});
+	});
+}
+
+exports.unarchive = function (req, res, next) {
+	var style = req.style;
+	style.archived = false;
+	style.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+		res.send({style: style});
+	});
+}
+
+exports.archived = function (req, res, next) {
+	Style.find({"archived": true, "members": {"$elemMatch": {"userId": req.user._id, "access": "admin"}}}, function (err, styles) {
+		if (err) {
+			return next(err);
+		}
+		res.send({"styles": styles});
+	});
+};

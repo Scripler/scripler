@@ -1401,6 +1401,44 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.styleset.archived, false);
 					done();
 				});
+		}),
+		it('Archiving a style should return the archived style', function (done) {
+			request(host)
+				.put('/style/' + styleId + '/archive')
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style._id, styleId);
+					assert.equal(res.body.style.archived, true);
+					done();
+				});
+		}),
+		it('List of archived styles should return the single archived style', function (done) {
+			request(host)
+				.get('/style/archived')
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styles.length, 1);
+					assert.equal(res.body.styles[0]._id, styleId);
+					done();
+				});
+		}),
+		it('Unarchiving a style should return the unarchived style', function (done) {
+			request(host)
+				.put('/style/' + styleId + '/unarchive')
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style._id, styleId);
+					assert.equal(res.body.style.archived, false);
+					done();
+				});
 		})
 	}),
 	describe('Cleanup', function () {
