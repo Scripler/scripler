@@ -123,7 +123,32 @@ a:hover {
 	color: #333;
 }
 
-.main > section input {
+input {
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	border-radius: 1px;
+	-webkit-appearance: none;
+	border: none;
+	background: #f6f6f6;
+	font-size: 15px;
+	width: 250px;
+	height: 32px;
+	padding: 0 0 0 15px;
+	margin: 0 5px 0 0;
+	color: #818285;
+	font-family: 'Roboto', sans-serif;
+}
+input.has-error {
+	border: 1px solid #b94a48;
+}
+input:focus {
+	outline: -webkit-focus-ring-color auto 5px;
+	outline-color: -webkit-focus-ring-color;
+	outline-style: auto;
+	outline-width: 5px;
+}
+
+/*.main > section input {
 	border: none;
 	background: #fff;
 	color: #000;
@@ -138,7 +163,7 @@ a:hover {
 	border: 1px solid #ffff99;
 	border-radius: 5px;
 	outline: none;
-}
+}*/
 
 .main > section button {
 	border: none;
@@ -208,24 +233,6 @@ a:hover {
 }
 .registration-form {
 	float: left;
-}
-.registration-form input {
-	-moz-border-radius: 1px;
-	-webkit-border-radius: 1px;
-	border-radius: 1px;
-	-webkit-appearance: none;
-	border: none;
-	background: #f6f6f6;
-	font-size: 15px;
-	width: 250px;
-	height: 32px;
-	padding: 0 0 0 15px;
-	margin: 0 5px 0 0;
-	color: #818285;
-	font-family: 'Roboto', sans-serif;
-}
-.registration-form input.has-error {
-	border: 1px solid #b94a48;
 }
 .registration-text {
 	color: #000;
