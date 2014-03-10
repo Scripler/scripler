@@ -123,7 +123,7 @@ a:hover {
 	color: #333;
 }
 
-input:not(["checkbox"]) {
+input[type="password"], input[type="text"], input[type="email"] {
 	-moz-border-radius: 1px;
 	-webkit-border-radius: 1px;
 	border-radius: 1px;
