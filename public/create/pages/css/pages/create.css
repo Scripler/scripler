@@ -236,7 +236,7 @@ textarea#rename {
 	color: #000;
 }
 .user-settings .user-box {
-	height: 130px;
+	height: 115px;
 	padding-left: 10px;
 }
 .settings-text {
@@ -253,3 +253,43 @@ hr {
 	width: 92%;
 	border: 0; border-top: 1px solid #fff265;
 }
+.user-settings-options {
+	padding-left: 10px;
+}
+.user-settings-options .user-email input {
+	width: auto;
+	border: -moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	border-radius: 1px;
+	-webkit-appearance: none;
+	border: none;
+	color: #818285;
+	font-family: 'Roboto', sans-serif;
+}
+.user-settings-options .user-email input:disabled {
+	background: #f6f6f6;
+}
+.user-settings-options a {
+	font-size: 80%;
+	text-decoration: underline;
+	color: #666;
+	cursor: pointer;
+}
+.user-settings-options a:hover {
+	color: #000;
+}
+.user-email {
+	width: 266px;
+	overflow: hidden;
+}
+.edit-password {
+	padding-top: 5px;
+	padding-left: 5px;
+}
+.edit-password form .button {
+	margin-left: 7px;
+}
+.edit-password input {
+	margin-bottom: 5px;
+}
+
