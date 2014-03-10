@@ -50,10 +50,10 @@
 							<button type="submit" class="button">Save Changes</button>
 						</form>
 					</div>
-					<div class="edit-newsletter">
+					<div class="edit-newsletter" ng-show="!editPassword">
 						<input type="checkbox" ng-model="user.newsletter">Receive newsletter
 					</div>
-					<div class="edit-archived">
+					<div class="edit-archived" ng-show="!editPassword">
 						<input type="checkbox" ng-model="user.showArchived">Show Archived
 					</div>
 				</div>
