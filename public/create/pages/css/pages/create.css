@@ -254,6 +254,7 @@ hr {
 	border: 0; border-top: 1px solid #fff265;
 }
 .user-settings-options {
+	font-size: 90%;
 	padding-left: 10px;
 }
 .user-settings-options .user-email input {
