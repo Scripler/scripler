@@ -1,6 +1,6 @@
 'use strict'
 
-function createController( $scope, $http ) {
+function createController( $scope, $http, userService ) {
 
 		$scope.changePassword = function() {
 			$scope.passwordSubmitted = true;
@@ -30,6 +30,18 @@ function createController( $scope, $http ) {
 			}
 		}
 
+		$scope.updateUser = function() {
+			$scope.saveSubmitted = true;
+
+			if ( $scope.emailEditForm.$valid ) {
+				$http.put( '/user', angular.toJson( $scope.user ) )
+					.success( function( data ) {
+						userService.setUser( data.user );
+						$scope.showSettings = false;
+					})
+			}
+		}
+
 	/*$.ajax({
 		url: 'http://scripler.com:3000/user/login',
 		type: 'POST',
@@ -52,6 +64,7 @@ function createController( $scope, $http ) {
 
 function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
 	$scope.publications = [];
+	$scope.showPublicationOptions = false;
 	var lsName = 'demo-scripler-publications';
 
 	$scope.$on('demo:mode', function( event, publications ) {
@@ -77,13 +90,22 @@ function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
 	});
 
 	$scope.getList = function() {
+		$scope.publications = [];
 		$http.get('/project/list')
 			.success( function( data ) {
-				$scope.publications = [];
 				angular.forEach(data.projects, function( project ) {
 					$scope.publications.push( project );
 				})
 		});
+
+		if ( $scope.user.showArchived ) {
+			$http.get('/project/archived')
+				.success( function( data ) {
+					angular.forEach(data.projects, function( project ) {
+						$scope.publications.push( project );
+					})
+				});
+		}
 	};
 
 	$scope.toggleElement = function( element ) {
