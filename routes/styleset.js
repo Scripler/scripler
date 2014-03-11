@@ -1,5 +1,6 @@
 var utils = require('../lib/utils');
 var Styleset = require('../models/styleset.js').Styleset;
+var Project = require('../models/project.js').Project;
 
 //Load styleset by id
 exports.load = function (id) {
@@ -18,6 +19,7 @@ exports.load = function (id) {
 		});
 	}
 }
+
 exports.create = function (req, res, next) {
 	var styleset = new Styleset({
 		name: req.body.name,
@@ -39,3 +41,71 @@ exports.create = function (req, res, next) {
 exports.open = function (req, res) {
 	res.send({styleset: req.styleset});
 }
+
+exports.update = function (req, res, next) {
+	var styleset = req.styleset;
+	styleset.name = styleset.name;
+	styleset.styles = styleset.styles;
+	styleset.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+		res.send({});
+	});
+}
+
+exports.rearrange = function (req, res, next) {
+	var project = req.project;
+	project.stylesets = req.body.stylesets;
+	project.save(function (err, project) {
+		if (err) {
+			return next(err);
+		}
+		res.send({project: project});
+	});
+}
+
+exports.archive = function (req, res, next) {
+	var styleset = req.styleset;
+	styleset.archived = true;
+	styleset.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+		Project.update({"stylesets": styleset._id}, {"$pull": {"stylesets": styleset._id}}, {multi: true}, function (err, numberAffected, raw) {
+			if (err) {
+				return next(err);
+			}
+			res.send({styleset: styleset});
+		});
+	});
+}
+
+exports.unarchive = function (req, res, next) {
+	var styleset = req.styleset;
+	styleset.archived = false;
+	styleset.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+		var membersArray = [];
+		for (var i = 0; i < styleset.members.length; i++) {
+			membersArray.push(styleset.members[i].userId);
+		}
+		Project.update({"members": {"$in": membersArray}}, {"$addToSet": {"stylesets": styleset._id}}, {multi: true}, function (err, numberAffected, raw) {
+			if (err) {
+				return next(err);
+			}
+			res.send({styleset: styleset});
+		});
+	});
+}
+
+exports.archived = function (req, res, next) {
+	Styleset.find({"archived": true, "members": {"$elemMatch": {"userId": req.user._id, "access": "admin"}}}, function (err, stylesets) {
+		if (err) {
+			return next(err);
+		}
+		res.send({"stylesets": stylesets});
+	});
+};

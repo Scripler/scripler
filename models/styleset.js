@@ -1,5 +1,6 @@
 var mongoose = require('mongoose')
-	, Schema = mongoose.Schema;
+	, Schema = mongoose.Schema
+	, Style = require('./style.js').Style;
 
 /**
  * Styleset-Member schema
@@ -12,23 +13,13 @@ var StylesetMemberSchema = new Schema({
 }, { _id: false });
 
 /**
- * Style Schema
- */
-var StyleSchema = new Schema({
-	name: { type: String, required: true },
-	class: { type: String },
-	css: { type: String },
-	stylesetId: { type: Schema.Types.ObjectId, required: true }
-});
-
-/**
  * Styleset Schema
  */
 var StylesetSchema = new Schema({
 	name: { type: String, required: true },
-	styles: [ { type: Schema.Types.ObjectId, ref: 'StyleSchema' }],
-	members: [StylesetMemberSchema]
+	styles: [ { type: Schema.Types.ObjectId, ref: 'Style' }],
+	members: [StylesetMemberSchema],
+	archived: { type: Boolean, default: false}
 });
 
 exports.Styleset = mongoose.model('Styleset', StylesetSchema);
-exports.Style = mongoose.model('Style', StyleSchema);

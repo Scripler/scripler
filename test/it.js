@@ -27,6 +27,7 @@ var titlePageDocumentId;
 var tocDocumentId;
 var colophonDocumentId;
 var stylesetId;
+var newStylesetId;
 var styleId;
 
 var cleanupEPUB = true;
@@ -1197,6 +1198,26 @@ describe('Scripler RESTful API', function () {
 				})
 		})
 	describe('Typography (Styleset & Style)', function () {
+		var css = '.container > header nav a:after {' +
+			'content: attr(data-info);' +
+			'color: #47a3da;' +
+			'position: absolute;' +
+			'width: 600%;' +
+			'top: 120%;' +
+			'text-align: right;' +
+			'right: 0;' +
+			'opacity: 0;' +
+			'pointer-events: none;' +
+			'}' +
+
+			'.container > header nav a:hover:after {' +
+			'	opacity: 1;' +
+			'}' +
+
+			'.container > header nav a:hover {' +
+			'	background: #47a3da;' +
+			'}';
+
 		it('Creating a styleset should return the new styleset', function (done) {
 			request(host)
 				.post('/styleset')
@@ -1211,26 +1232,6 @@ describe('Scripler RESTful API', function () {
 				});
 		}),
 		it('Creating a style should return the new style', function (done) {
-			var css = '.container > header nav a:after {' +
-						'content: attr(data-info);' +
-						'color: #47a3da;' +
-						'position: absolute;' +
-						'width: 600%;' +
-						'top: 120%;' +
-						'text-align: right;' +
-						'right: 0;' +
-						'opacity: 0;' +
-						'pointer-events: none;' +
-					'}' +
-
-					'.container > header nav a:hover:after {' +
-					'	opacity: 1;' +
-					'}' +
-
-					'.container > header nav a:hover {' +
-					'	background: #47a3da;' +
-					'}';
-
 			request(host)
 				.post('/style')
 				.set('cookie', cookie)
@@ -1282,6 +1283,160 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset._id, stylesetId);
 					assert.equal(res.body.styleset.name, "My Best Styleset");
+					done();
+				});
+		}),
+		it('Opening a style should return the style', function (done) {
+			request(host)
+				.get('/style/' + styleId)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style._id, styleId);
+					assert.equal(res.body.style.name, "Coolio");
+					assert.equal(res.body.style.class, "CoolioClass");
+					assert.equal(res.body.style.css, css);
+					done();
+				});
+		}),
+		it('Updating a styleset should return success', function (done) {
+			request(host)
+				.put('/styleset/' + stylesetId + '/update')
+				.set('cookie', cookie)
+				.send({name: "OK, Maybe not the BEST, but...", styles: [styleId]})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
+		}),
+		it('Updating a style should return success', function (done) {
+			request(host)
+				.put('/style/' + styleId + '/update')
+				.set('cookie', cookie)
+				.send({name: "Donkey", class: "jack", css: css + "...some new CSS"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
+		}),
+		it('Creating a new styleset to test rearrange of stylesets below', function (done) {
+			request(host)
+				.post('/styleset')
+				.set('cookie', cookie)
+				.send({name: "My New Cool Styleset"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset.name, "My New Cool Styleset");
+					newStylesetId = res.body.styleset._id;
+					newStylesetId && done();
+				});
+		}),
+		it('Applying the new styleset to a project - also to be able to test rearrange of stylesets below', function (done) {
+			request(host)
+				.put('/styleset/' + newStylesetId + "/project/" + projectId3)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.project._id, projectId3);
+					assert.equal(res.body.project.stylesets[0], stylesetId);
+					assert.equal(res.body.project.stylesets[1], newStylesetId);
+					done();
+				});
+		}),
+		it('Rearranging stylesets should return the project with the stylesets in the new order ', function (done) {
+		request(host)
+			.put('/styleset/' + projectId3 + '/rearrange')
+			.set('cookie', cookie)
+			.send({stylesets: [newStylesetId, stylesetId]})
+			.expect(200)
+			.end(function (err, res) {
+				if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+				assert.equal(res.body.project.stylesets.length, 2);
+				assert.equal(res.body.project.stylesets[0], newStylesetId);
+				assert.equal(res.body.project.stylesets[1], stylesetId);
+				done();
+			});
+		}),
+		it('Archiving a styleset should return the archived styleset', function (done) {
+			request(host)
+				.put('/styleset/' + stylesetId + '/archive')
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset.name, "My Best Styleset");
+					assert.equal(res.body.styleset.archived, true);
+					done();
+				});
+		}),
+		it('List of archived stylesets should return the single archived styleset', function (done) {
+			request(host)
+				.get('/styleset/archived')
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.stylesets.length, 1);
+					assert.equal(res.body.stylesets[0].name, "My Best Styleset");
+					done();
+				});
+		}),
+		it('Unarchiving a styleset should return the unarchived styleset', function (done) {
+			request(host)
+				.put('/styleset/' + stylesetId + '/unarchive')
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset.name, "My Best Styleset");
+					assert.equal(res.body.styleset.archived, false);
+					done();
+				});
+		}),
+		it('Archiving a style should return the archived style', function (done) {
+			request(host)
+				.put('/style/' + styleId + '/archive')
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style._id, styleId);
+					assert.equal(res.body.style.archived, true);
+					done();
+				});
+		}),
+		it('List of archived styles should return the single archived style', function (done) {
+			request(host)
+				.get('/style/archived')
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styles.length, 1);
+					assert.equal(res.body.styles[0]._id, styleId);
+					done();
+				});
+		}),
+		it('Unarchiving a style should return the unarchived style', function (done) {
+			request(host)
+				.put('/style/' + styleId + '/unarchive')
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style._id, styleId);
+					assert.equal(res.body.style.archived, false);
 					done();
 				});
 		})
