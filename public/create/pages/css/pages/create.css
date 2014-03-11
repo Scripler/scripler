@@ -263,7 +263,6 @@ hr {
 	-webkit-border-radius: 1px;
 	border-radius: 1px;
 	-webkit-appearance: none;
-	border: none;
 	color: #818285;
 	font-family: 'Roboto', sans-serif;
 }
@@ -296,4 +295,9 @@ hr {
 .edit-newsletter {
 	padding-top: 5px;
 }
-
+.archived {
+	background-color: #CFCFCF;
+}
+.archived a {
+	color: #6B6B6B;
+}
