@@ -38,8 +38,10 @@
 				<hr>
 				<div class="user-settings-options">
 					<div class="user-email" ng-show="!editPassword">
-						<input size="{{user.email.length}}" type="email" ng-model="user.email" ng-disabled="!editEmail" focus-on="editEmail">
-						<a ng-click="editEmail = !editEmail">Edit</a>
+						<form name="emailEditForm">
+							<input name="editEmailInput" ng-class="{ 'has-error' : emailEditForm.editEmailInput.$invalid && saveSubmitted}" type="email" ng-model="user.email" ng-pattern="EMAIL_REGEXP" ng-disabled="!editEmail" focus-on="editEmail">
+							<a ng-click="editEmail = !editEmail">Edit</a>
+						</form>
 					</div>
 					<div class="edit-password">
 						<a ng-click="editPassword = !editPassword" ng-show="!editPassword">Edit password</a>
@@ -56,6 +58,7 @@
 					<div class="edit-archived" ng-show="!editPassword">
 						<input type="checkbox" ng-model="user.showArchived">Show Archived
 					</div>
+					<button ng-click="updateUser()" class="button" ng-show="!editPassword">Save Changes</button>
 				</div>
 			</div>
 		</section>
@@ -65,8 +68,8 @@
 				<p>+</p>
 			</div>
 
-			<div class="publication" ng-animate="'animate'" ng-hide="publication.archived" ng-repeat="publication in publications track by $index | orderBy:'order':reverse | filter:publicationSearch">
-				<a class="publication-options-show" data-gui="{{publication._id}}" ng-click="showPublicationOptions = true;">
+			<div class="publication" ng-animate="'animate'" ng-class="{ 'archived' : publication.archived }" ng-hide="publication.archived && !user.showArchived" ng-repeat="publication in publications track by $index | orderBy:'order':reverse | filter:publicationSearch">
+				<a class="publication-options-show" data-gui="{{publication._id}}" ng-click="showPublicationOptions = true">
 					<div class="arrow"></div>
 				</a>
 				<!--<p ng-hide="editingPublicationTitle" ng-click="editingPublicationTitle = true;">-->
@@ -86,7 +89,7 @@
 					<div class="publication-options-hide" ng-click="showPublicationOptions = false;" title="Close Options">x</div>
 					<div class="publication-options-menupoint" ng-click="editingPublicationTitle = true; showPublicationOptions = false;">rename</div>
 					<div class="publication-options-menupoint" ng-click="copyPublication(publication); showPublicationOptions = false;">copy</div>
-					<div class="publication-options-menupoint" ng-click="archivePublication(publication)">archive</div>
+					<div class="publication-options-menupoint" ng-click="archivePublication(publication); showPublicationOptions = false;">archive</div>
 					<div class="publication-options-dates" ng-show="publication.created && publication.changed">
 						<div>Created Date: </div><div class="dates">{{publication.created | date:'yyyy-MM-dd HH:mm'}}</div>
 						<div>Last Changed: </div><div class="dates">{{publication.modified | date:'yyyy-MM-dd HH:mm'}}</div>
