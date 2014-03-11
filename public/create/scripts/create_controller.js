@@ -90,22 +90,24 @@ function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
 	});
 
 	$scope.getList = function() {
-		$scope.publications = [];
+		var publications = [];
 		$http.get('/project/list')
 			.success( function( data ) {
 				angular.forEach(data.projects, function( project ) {
-					$scope.publications.push( project );
+					publications.push( project );
 				})
+
+				if ( $scope.user.showArchived ) {
+					$http.get('/project/archived')
+						.success( function( data ) {
+							angular.forEach(data.projects, function( project ) {
+								publications.push( project );
+							})
+						});
+				}
 		});
 
-		if ( $scope.user.showArchived ) {
-			$http.get('/project/archived')
-				.success( function( data ) {
-					angular.forEach(data.projects, function( project ) {
-						$scope.publications.push( project );
-					})
-				});
-		}
+		$scope.publications = publications;
 	};
 
 	$scope.toggleElement = function( element ) {
