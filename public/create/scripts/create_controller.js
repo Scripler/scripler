@@ -62,7 +62,7 @@ function createController( $scope, $http, userService ) {
 }
 //}]);
 
-function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
+function PublicationsCtrl ( $scope, $http, localStorageService, projectsService ) {
 	$scope.publications = [];
 	$scope.showPublicationOptions = false;
 	var lsName = 'demo-scripler-publications';
@@ -73,7 +73,7 @@ function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
 
 	$scope.$on('user:updated', function( event, user ) {
 		$scope.user = user;
-		$scope.getList();
+		$scope.publications = projectsService.getList( user );
 	});
 
 	$scope.$on('user:registered', function( event, user ) {
@@ -85,30 +85,9 @@ function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
 				});
 			})
 			localStorageService.remove( lsName );
-			$scope.getList();
+			$scope.publications = projectsService.getList();
 		}
 	});
-
-	$scope.getList = function() {
-		var publications = [];
-		$http.get('/project/list')
-			.success( function( data ) {
-				angular.forEach(data.projects, function( project ) {
-					publications.push( project );
-				})
-
-				if ( $scope.user.showArchived ) {
-					$http.get('/project/archived')
-						.success( function( data ) {
-							angular.forEach(data.projects, function( project ) {
-								publications.push( project );
-							})
-						});
-				}
-		});
-
-		$scope.publications = publications;
-	};
 
 	$scope.toggleElement = function( element ) {
 		if ($scope.element != true && $scope.element != false) {
