@@ -17,6 +17,7 @@ var cookie;
 var projectId;
 var projectId2;
 var projectId3;
+var projectId4;
 var userId;
 var rootFolderId;
 var childFolderId;
@@ -30,7 +31,7 @@ var stylesetId;
 var newStylesetId;
 var styleId;
 
-var cleanupEPUB = true;
+var cleanupEPUB = false;
 
 function containsId(items, id) {
 	var result = false;
@@ -229,7 +230,7 @@ describe('Scripler RESTful API', function () {
 						done();
 					});
 			}),
-			it('Creating a copy of a project should return the new project', function (done) {
+			it('Copying a project should return the new project', function (done) {
 				request(host)
 					.post('/project/' + projectId + '/copy')
 					.set('cookie', cookie)
@@ -292,6 +293,7 @@ describe('Scripler RESTful API', function () {
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 						assert.equal(res.body.projects.length, 1);
+						assert.equal(res.body.projects[0]._id, projectId3);
 						assert.equal(res.body.projects[0].name, "A New Name");
 						done();
 					});
@@ -373,7 +375,7 @@ describe('Scripler RESTful API', function () {
 					});
 			})
 		}),
-		describe('Projectmanager (/folder and /document)', function () {
+		describe('Document Manager (Document & Folder)', function () {
 			it('Creating a folder without a parent should return the new folder as an empty root folder', function (done) {
 				request(host)
 					.post('/folder')
@@ -864,185 +866,6 @@ describe('Scripler RESTful API', function () {
 							done();
 						});
 				}),
-				it('Set all metadata - should return updated project', function (done) {
-					var now = new Date;
-
-					request(host)
-						.put('/project/' + projectId + '/metadata')
-						.set('cookie', cookie)
-						.send({
-							isbn: "1405353767",
-							title: "Space: From Earth to the Edge of the Universe",
-							description: "Take an incredible journey through Space...",
-							authors: ["Carole Stott", "Robert Dinwiddie", "Giles Sparrow"],
-							keywords: ["ABQ", "ACBN", "FRH", "WSBB"],
-							language: "English",
-							publicationDate: now,
-							type: "MUS018000",
-							rights: "© Det Gamle Forlag",
-							contributors: [
-								{
-									role: "edt",
-									name: "Ole Olsen"
-								},
-								{
-									role: "pte",
-									name: "Jytte Ustantinious"
-								}
-							],
-							publisher: "Det Gamle Forlag",
-							cover: "images/frontpage.jpg",
-							coverage: "Asia",
-							relation: "Part 2",
-							source: "Det Gode Bibliotek"
-						})
-						.expect(200)
-						.end(function (err, res) {
-							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							assert.equal(res.body.project.metadata.isbn, "1405353767");
-							assert.equal(res.body.project.metadata.title, "Space: From Earth to the Edge of the Universe");
-							assert.equal(res.body.project.metadata.description, "Take an incredible journey through Space...");
-							assert.equal(res.body.project.metadata.authors.length, 3);
-							assert.equal(res.body.project.metadata.authors[0], "Carole Stott");
-							assert.equal(res.body.project.metadata.authors[1], "Robert Dinwiddie");
-							assert.equal(res.body.project.metadata.authors[2], "Giles Sparrow");
-							assert.equal(res.body.project.metadata.keywords[0], "ABQ");
-							assert.equal(res.body.project.metadata.keywords[1], "ACBN");
-							assert.equal(res.body.project.metadata.keywords[2], "FRH");
-							assert.equal(res.body.project.metadata.keywords[3], "WSBB");
-							assert.equal(res.body.project.metadata.language, "English");
-							// TODO: assert publicationDate has value from input: db is currently 1 hour behind + format date appropriately
-							//assert.equal(res.body.project.metadata.publicationDate, now.format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
-							assert.equal(res.body.project.metadata.type, "MUS018000");
-							assert.equal(res.body.project.metadata.rights, "© Det Gamle Forlag");
-							assert.equal(res.body.project.metadata.contributors[0].role, "edt");
-							assert.equal(res.body.project.metadata.contributors[0].name, "Ole Olsen");
-							assert.equal(res.body.project.metadata.contributors[1].role, "pte");
-							assert.equal(res.body.project.metadata.contributors[1].name, "Jytte Ustantinious");
-							assert.equal(res.body.project.metadata.publisher, "Det Gamle Forlag");
-							assert.equal(res.body.project.metadata.cover, "images/frontpage.jpg");
-							assert.equal(res.body.project.metadata.coverage, "Asia");
-							assert.equal(res.body.project.metadata.relation, "Part 2");
-							assert.equal(res.body.project.metadata.source, "Det Gode Bibliotek");
-							done();
-						});
-				}),
-				it('Set metadata TOC - should return updated project', function (done) {
-					request(host)
-						.put('/project/' + projectId + '/toc')
-						.set('cookie', cookie)
-						.send({entries: [
-							{title: "Cover", target: "HTML/Cover.html", "level": "0"},
-							{title: "Title Page", target: "HTML/TitlePage.html", "level": "0"},
-						]})
-						.expect(200)
-						.end(function (err, res) {
-							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							assert.equal(res.body.project.metadata.title, "Space: From Earth to the Edge of the Universe");
-							assert.equal(res.body.project.metadata.authors.length, 3);
-							assert.equal(res.body.project.metadata.toc.entries.length, 2);
-							assert.equal(res.body.project.metadata.toc.entries[0].title, "Cover");
-							assert.equal(res.body.project.metadata.toc.entries[1].title, "Title Page");
-							done();
-						});
-				}),
-				it('Uploading a font to a user should return success', function (done) {
-					// TODO: when an API call for this exists, change this code to use it. For now, fake it...
-
-					// Copy font from source, test dir, to destination, public dir
-					var fontName = 'casper.ttf';
-					var srcUserFontsDir = path.join('test', 'resources', 'user-fonts');
-					var srcFont = path.join(srcUserFontsDir, fontName);
-
-					var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + userId);
-					var dstUserFontsDir = path.join(userDir, conf.epub.fontsDir);
-
-					fs.mkdir(dstUserFontsDir, function (err) {
-						if (err) {
-							throw err;
-						}
-						var dstFont = path.join(dstUserFontsDir, fontName);
-						fs.createReadStream(srcFont).pipe(fs.createWriteStream(dstFont));
-						done();
-					});
-				}),
-				it('Uploading an image to a project should return success', function (done) {
-					// TODO: when an API call for this exists, change this code to use it. For now, fake it...
-
-					// Copy image from source, test dir, to destination, public dir
-					var imageName = 'Scripler_logo.jpg';
-					var srcImagesDir = path.join('test', 'resources', 'images');
-					var srcImage = path.join(srcImagesDir, imageName);
-
-					var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + projectId);
-					var dstImagesDir = path.join(projectDir, conf.epub.imagesDir);
-
-					fs.mkdir(dstImagesDir, function (err) {
-						if (err) {
-							throw err;
-						}
-						var dstImage = path.join(dstImagesDir, imageName);
-						fs.createReadStream(srcImage).pipe(fs.createWriteStream(dstImage));
-						done();
-					});
-				}),
-				it('Uploading a style to a project should return success', function (done) {
-					// TODO: when an API call for this exists, change this code to use it. For now, fake it...
-
-					// Copy style from source, test dir, to destination, public dir
-					var styleName = 'my_cool_stylesheet.css';
-					var srcStylesDir = path.join('test', 'resources', 'styles');
-					var srcStyle = path.join(srcStylesDir, styleName);
-
-					var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + projectId);
-					var dstStylesDir = path.join(projectDir, conf.epub.stylesDir);
-
-					fs.mkdir(dstStylesDir, function (err) {
-						if (err) {
-							throw err;
-						}
-						var dstStyle = path.join(dstStylesDir, styleName);
-						fs.createReadStream(srcStyle).pipe(fs.createWriteStream(dstStyle));
-						done();
-					});
-				}),
-				it('Compiling a project should return the compiled project (as an EPUB archive)', function (done) {
-					request(host)
-						.get('/project/' + projectId + '/compile')
-						.set('cookie', cookie)
-						.expect(200)
-						.expect('Content-Type', 'application/epub+zip')
-						.parse(function (res, callback) {
-							res.setEncoding('binary');
-							res.data = '';
-							res.on('data', function (chunk) {
-								res.data += chunk;
-							});
-							res.on('end', function () {
-								callback(null, new Buffer(res.data, 'binary'));
-							});
-						}).end(function (err, res) {
-							if (err) return done(err);
-
-							// binary response data is in res.body as a buffer
-							assert.ok(Buffer.isBuffer(res.body));
-							//console.log("res: ", res.body);
-							var epub = projectId + '.epub';
-							fs.writeFile(epub, res.body);
-
-							child = exec('java -jar test/epubcheck-3.0b5.jar ' + epub,
-								function (error, stdout, stderr) {
-									if (error !== null) {
-										console.log('exec error: ' + error);
-										throw error;
-									}
-									if (cleanupEPUB) {
-										fs.unlinkSync(epub);
-									}
-									done();
-								});
-						});
-				}),
 				it('Copying the project should return the copied project with the three COPIED documents', function (done) {
 					request(host)
 						.post('/project/' + projectId + '/copy')
@@ -1050,8 +873,8 @@ describe('Scripler RESTful API', function () {
 						.expect(200)
 						.end(function (err, res) {
 							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-							projectId3 = res.body.project._id;
-							assert.notEqual(projectId3, projectId);
+							projectId4 = res.body.project._id;
+							assert.notEqual(projectId4, projectId);
 							assert.equal(res.body.project.folders.length, 1);
 							assert.equal(res.body.project.folders[0]._id, rootFolderId);
 							assert.equal(res.body.project.folders[0].folders.length, 1);
@@ -1177,18 +1000,25 @@ describe('Scripler RESTful API', function () {
 						});
 				}),
 				it('Creating a document in a child folder, should return the document with that folder id', function (done) {
+					var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
+						'<!DOCTYPE html>' +
+						'<html xmlns="http://www.w3.org/1999/xhtml">' +
+						'<head><title>Sikke et dokument</title></head>' +
+						'<body><p>It is another one of my worst documents ever!</p></body>' +
+						'</html>';
+
 					request(host)
 						.post('/document')
 						.set('cookie', cookie)
-						.send({projectId: projectId, folderId: childFolderId, name: 'MyThirdDocument', text: 'It is my worst document!'})
+						.send({projectId: projectId, folderId: childFolderId, name: 'Sikke et dokument', text: text})
 						.expect(200)
 						.end(function (err, res) {
 							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 							document = res.body.document;
-							assert.equal(res.body.document.name, 'MyThirdDocument');
+							assert.equal(res.body.document.name, 'Sikke et dokument');
 							assert.equal(res.body.document.projectId, projectId);
 							assert.equal(res.body.document.folderId, childFolderId);
-							assert.equal(res.body.document.text, 'It is my worst document!');
+							assert.equal(res.body.document.text, text);
 							assert.equal(res.body.document.archived, false);
 							assert.equal(res.body.document.members[0].userId, userId);
 							assert.equal(res.body.document.members[0].access[0], "admin");
@@ -1196,251 +1026,412 @@ describe('Scripler RESTful API', function () {
 							childDocumentId && done();
 						});
 				})
+		}),
+		describe('Typography (Styleset & Style)', function () {
+			var css = '.container > header nav a:after {' +
+				'content: attr(data-info);' +
+				'color: #47a3da;' +
+				'position: absolute;' +
+				'width: 600%;' +
+				'top: 120%;' +
+				'text-align: right;' +
+				'right: 0;' +
+				'opacity: 0;' +
+				'pointer-events: none;' +
+				'}' +
+
+				'.container > header nav a:hover:after {' +
+				'	opacity: 1;' +
+				'}' +
+
+				'.container > header nav a:hover {' +
+				'	background: #47a3da;' +
+				'}';
+
+			it('Creating a styleset should return the new styleset', function (done) {
+				request(host)
+					.post('/styleset')
+					.set('cookie', cookie)
+					.send({name: "My Best Styleset"})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.styleset.name, "My Best Styleset");
+						stylesetId = res.body.styleset._id;
+						stylesetId && done();
+					});
+			}),
+			it('Creating a style should return the new style', function (done) {
+				request(host)
+					.post('/style')
+					.set('cookie', cookie)
+					.send({stylesetId: stylesetId, name: "Coolio", class: "CoolioClass", css: css})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.style.name, "Coolio");
+						assert.equal(res.body.style.class, "CoolioClass");
+						assert.equal(res.body.style.css, css);
+						assert.equal(res.body.style.stylesetId, stylesetId);
+						styleId = res.body.style._id;
+						styleId && done();
+					});
+			}),
+			it('Applying a styleset to a project should return the project with the styleset applied', function (done) {
+				request(host)
+					.put('/styleset/' + stylesetId + "/project/" + projectId)
+					.set('cookie', cookie)
+					.send({})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.project._id, projectId);
+						assert.equal(res.body.project.stylesets[0], stylesetId);
+						done();
+					});
+			}),
+			it('Applying a styleset to a document should return the document with the styleset applied', function (done) {
+				request(host)
+					.put('/styleset/' + stylesetId + "/document/" + childDocumentId)
+					.set('cookie', cookie)
+					.send({})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.document._id, childDocumentId);
+						assert.equal(res.body.document.stylesets[0], stylesetId);
+						done();
+					});
+			}),
+			it('Opening a styleset should return the styleset', function (done) {
+				request(host)
+					.get('/styleset/' + stylesetId)
+					.set('cookie', cookie)
+					.send({})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.styleset._id, stylesetId);
+						assert.equal(res.body.styleset.name, "My Best Styleset");
+						done();
+					});
+			}),
+			it('Opening a style should return the style', function (done) {
+				request(host)
+					.get('/style/' + styleId)
+					.set('cookie', cookie)
+					.send({})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.style._id, styleId);
+						assert.equal(res.body.style.name, "Coolio");
+						assert.equal(res.body.style.class, "CoolioClass");
+						assert.equal(res.body.style.css, css);
+						done();
+					});
+			}),
+			it('Updating a styleset should return success', function (done) {
+				request(host)
+					.put('/styleset/' + stylesetId + '/update')
+					.set('cookie', cookie)
+					.send({name: "OK, Maybe not the BEST, but...", styles: [styleId]})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						done();
+					});
+			}),
+			it('Updating a style should return success', function (done) {
+				request(host)
+					.put('/style/' + styleId + '/update')
+					.set('cookie', cookie)
+					.send({name: "Donkey", class: "jack", css: css + "...some new CSS"})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						done();
+					});
+			}),
+			it('Creating a new styleset to test rearrange of stylesets below', function (done) {
+				request(host)
+					.post('/styleset')
+					.set('cookie', cookie)
+					.send({name: "My New Cool Styleset"})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.styleset.name, "My New Cool Styleset");
+						newStylesetId = res.body.styleset._id;
+						newStylesetId && done();
+					});
+			}),
+			it('Applying the new styleset to a project - also to be able to test rearrange of stylesets below', function (done) {
+				request(host)
+					.put('/styleset/' + newStylesetId + "/project/" + projectId)
+					.set('cookie', cookie)
+					.send({})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.project._id, projectId);
+						assert.equal(res.body.project.stylesets[0], stylesetId);
+						assert.equal(res.body.project.stylesets[1], newStylesetId);
+						done();
+					});
+			}),
+			it('Rearranging stylesets should return the project with the stylesets in the new order ', function (done) {
+				request(host)
+					.put('/styleset/' + projectId + '/rearrange')
+					.set('cookie', cookie)
+					.send({stylesets: [newStylesetId, stylesetId]})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.project.stylesets.length, 2);
+						assert.equal(res.body.project.stylesets[0], newStylesetId);
+						assert.equal(res.body.project.stylesets[1], stylesetId);
+						done();
+					});
+			}),
+			it('Archiving a styleset should return the archived styleset', function (done) {
+				request(host)
+					.put('/styleset/' + stylesetId + '/archive')
+					.set('cookie', cookie)
+					.send({})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.styleset.name, "My Best Styleset");
+						assert.equal(res.body.styleset.archived, true);
+						done();
+					});
+			}),
+			it('List of archived stylesets should return the single archived styleset', function (done) {
+				request(host)
+					.get('/styleset/archived')
+					.set('cookie', cookie)
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.stylesets.length, 1);
+						assert.equal(res.body.stylesets[0].name, "My Best Styleset");
+						done();
+					});
+			}),
+			it('Unarchiving a styleset should return the unarchived styleset', function (done) {
+				request(host)
+					.put('/styleset/' + stylesetId + '/unarchive')
+					.set('cookie', cookie)
+					.send({})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.styleset.name, "My Best Styleset");
+						assert.equal(res.body.styleset.archived, false);
+						done();
+					});
+			}),
+			it('Archiving a style should return the archived style', function (done) {
+				request(host)
+					.put('/style/' + styleId + '/archive')
+					.set('cookie', cookie)
+					.send({})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.style._id, styleId);
+						assert.equal(res.body.style.archived, true);
+						done();
+					});
+			}),
+			it('List of archived styles should return the single archived style', function (done) {
+				request(host)
+					.get('/style/archived')
+					.set('cookie', cookie)
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.styles.length, 1);
+						assert.equal(res.body.styles[0]._id, styleId);
+						done();
+					});
+			}),
+			it('Unarchiving a style should return the unarchived style', function (done) {
+				request(host)
+					.put('/style/' + styleId + '/unarchive')
+					.set('cookie', cookie)
+					.send({})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.style._id, styleId);
+						assert.equal(res.body.style.archived, false);
+						done();
+					});
+			})
+		}),
+		describe('Output', function () {
+			it('Set all metadata - should return updated project', function (done) {
+				var now = new Date;
+
+				request(host)
+					.put('/project/' + projectId + '/metadata')
+					.set('cookie', cookie)
+					.send({
+						isbn: "1405353767",
+						title: "Space: From Earth to the Edge of the Universe",
+						description: "Take an incredible journey through Space...",
+						authors: ["Carole Stott", "Robert Dinwiddie", "Giles Sparrow"],
+						keywords: ["ABQ", "ACBN", "FRH", "WSBB"],
+						language: "English",
+						publicationDate: now,
+						type: "MUS018000",
+						rights: "© Det Gamle Forlag",
+						contributors: [
+							{
+								role: "edt",
+								name: "Ole Olsen"
+							},
+							{
+								role: "pte",
+								name: "Jytte Ustantinious"
+							}
+						],
+						publisher: "Det Gamle Forlag",
+						cover: "images/frontpage.jpg",
+						coverage: "Asia",
+						relation: "Part 2",
+						source: "Det Gode Bibliotek"
+					})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.project.metadata.isbn, "1405353767");
+						assert.equal(res.body.project.metadata.title, "Space: From Earth to the Edge of the Universe");
+						assert.equal(res.body.project.metadata.description, "Take an incredible journey through Space...");
+						assert.equal(res.body.project.metadata.authors.length, 3);
+						assert.equal(res.body.project.metadata.authors[0], "Carole Stott");
+						assert.equal(res.body.project.metadata.authors[1], "Robert Dinwiddie");
+						assert.equal(res.body.project.metadata.authors[2], "Giles Sparrow");
+						assert.equal(res.body.project.metadata.keywords[0], "ABQ");
+						assert.equal(res.body.project.metadata.keywords[1], "ACBN");
+						assert.equal(res.body.project.metadata.keywords[2], "FRH");
+						assert.equal(res.body.project.metadata.keywords[3], "WSBB");
+						assert.equal(res.body.project.metadata.language, "English");
+						// TODO: assert publicationDate has value from input: db is currently 1 hour behind + format date appropriately
+						//assert.equal(res.body.project.metadata.publicationDate, now.format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
+						assert.equal(res.body.project.metadata.type, "MUS018000");
+						assert.equal(res.body.project.metadata.rights, "© Det Gamle Forlag");
+						assert.equal(res.body.project.metadata.contributors[0].role, "edt");
+						assert.equal(res.body.project.metadata.contributors[0].name, "Ole Olsen");
+						assert.equal(res.body.project.metadata.contributors[1].role, "pte");
+						assert.equal(res.body.project.metadata.contributors[1].name, "Jytte Ustantinious");
+						assert.equal(res.body.project.metadata.publisher, "Det Gamle Forlag");
+						assert.equal(res.body.project.metadata.cover, "images/frontpage.jpg");
+						assert.equal(res.body.project.metadata.coverage, "Asia");
+						assert.equal(res.body.project.metadata.relation, "Part 2");
+						assert.equal(res.body.project.metadata.source, "Det Gode Bibliotek");
+						done();
+					});
+			}),
+			it('Set metadata TOC - should return updated project', function (done) {
+				request(host)
+					.put('/project/' + projectId + '/toc')
+					.set('cookie', cookie)
+					.send({entries: [
+						{title: "Cover", target: "HTML/Cover.html", "level": "0"},
+						{title: "Title Page", target: "HTML/TitlePage.html", "level": "0"},
+					]})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.project.metadata.title, "Space: From Earth to the Edge of the Universe");
+						assert.equal(res.body.project.metadata.authors.length, 3);
+						assert.equal(res.body.project.metadata.toc.entries.length, 2);
+						assert.equal(res.body.project.metadata.toc.entries[0].title, "Cover");
+						assert.equal(res.body.project.metadata.toc.entries[1].title, "Title Page");
+						done();
+					});
+			}),
+			it('Uploading a font to a user should return success', function (done) {
+				// TODO: when an API call for this exists, change this code to use it. For now, fake it...
+
+				// Copy font from source, test dir, to destination, public dir
+				var fontName = 'casper.ttf';
+				var srcUserFontsDir = path.join('test', 'resources', 'user-fonts');
+				var srcFont = path.join(srcUserFontsDir, fontName);
+
+				var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + userId);
+				var dstUserFontsDir = path.join(userDir, conf.epub.fontsDir);
+
+				fs.mkdir(dstUserFontsDir, function (err) {
+					if (err) {
+						throw err;
+					}
+					var dstFont = path.join(dstUserFontsDir, fontName);
+					fs.createReadStream(srcFont).pipe(fs.createWriteStream(dstFont));
+					done();
+				});
+			}),
+			it('Uploading an image to a project should return success', function (done) {
+				// TODO: when an API call for this exists, change this code to use it. For now, fake it...
+
+				// Copy image from source, test dir, to destination, public dir
+				var imageName = 'Scripler_logo.jpg';
+				var srcImagesDir = path.join('test', 'resources', 'images');
+				var srcImage = path.join(srcImagesDir, imageName);
+
+				var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + projectId);
+				var dstImagesDir = path.join(projectDir, conf.epub.imagesDir);
+
+				fs.mkdir(dstImagesDir, function (err) {
+					if (err) {
+						throw err;
+					}
+					var dstImage = path.join(dstImagesDir, imageName);
+					fs.createReadStream(srcImage).pipe(fs.createWriteStream(dstImage));
+					done();
+				});
+			}),
+			it('Compiling a project should return the compiled project (as an EPUB archive)', function (done) {
+				request(host)
+					.get('/project/' + projectId + '/compile')
+					.set('cookie', cookie)
+					.expect(200)
+					.expect('Content-Type', 'application/epub+zip')
+					.parse(function (res, callback) {
+						res.setEncoding('binary');
+						res.data = '';
+						res.on('data', function (chunk) {
+							res.data += chunk;
+						});
+						res.on('end', function () {
+							callback(null, new Buffer(res.data, 'binary'));
+						});
+					}).end(function (err, res) {
+						if (err) return done(err);
+
+						// binary response data is in res.body as a buffer
+						assert.ok(Buffer.isBuffer(res.body));
+						//console.log("res: ", res.body);
+						var epub = projectId + '.epub';
+						fs.writeFile(epub, res.body);
+
+						child = exec('java -jar test/epubcheck-3.0b5.jar ' + epub,
+							function (error, stdout, stderr) {
+								if (error !== null) {
+									console.log('exec error: ' + error);
+									throw error;
+								}
+								if (cleanupEPUB) {
+									fs.unlinkSync(epub);
+								}
+								done();
+							});
+					});
+			})
 		})
-	describe('Typography (Styleset & Style)', function () {
-		var css = '.container > header nav a:after {' +
-			'content: attr(data-info);' +
-			'color: #47a3da;' +
-			'position: absolute;' +
-			'width: 600%;' +
-			'top: 120%;' +
-			'text-align: right;' +
-			'right: 0;' +
-			'opacity: 0;' +
-			'pointer-events: none;' +
-			'}' +
-
-			'.container > header nav a:hover:after {' +
-			'	opacity: 1;' +
-			'}' +
-
-			'.container > header nav a:hover {' +
-			'	background: #47a3da;' +
-			'}';
-
-		it('Creating a styleset should return the new styleset', function (done) {
-			request(host)
-				.post('/styleset')
-				.set('cookie', cookie)
-				.send({name: "My Best Styleset"})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset.name, "My Best Styleset");
-					stylesetId = res.body.styleset._id;
-					stylesetId && done();
-				});
-		}),
-		it('Creating a style should return the new style', function (done) {
-			request(host)
-				.post('/style')
-				.set('cookie', cookie)
-				.send({stylesetId: stylesetId, name: "Coolio", class: "CoolioClass", css: css})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.style.name, "Coolio");
-					assert.equal(res.body.style.class, "CoolioClass");
-					assert.equal(res.body.style.css, css);
-					assert.equal(res.body.style.stylesetId, stylesetId);
-					styleId = res.body.style._id;
-					styleId && done();
-				});
-		}),
-		it('Applying a styleset to a project should return the project with the styleset applied', function (done) {
-			request(host)
-				.put('/styleset/' + stylesetId + "/project/" + projectId3)
-				.set('cookie', cookie)
-				.send({})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.project._id, projectId3);
-					assert.equal(res.body.project.stylesets[0], stylesetId);
-					done();
-				});
-		}),
-		it('Applying a styleset to a document should return the document with the styleset applied', function (done) {
-			request(host)
-				.put('/styleset/' + stylesetId + "/document/" + childDocumentId)
-				.set('cookie', cookie)
-				.send({})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.document._id, childDocumentId);
-					assert.equal(res.body.document.stylesets[0], stylesetId);
-					done();
-				});
-		}),
-		it('Opening a styleset should return the styleset', function (done) {
-			request(host)
-				.get('/styleset/' + stylesetId)
-				.set('cookie', cookie)
-				.send({})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset._id, stylesetId);
-					assert.equal(res.body.styleset.name, "My Best Styleset");
-					done();
-				});
-		}),
-		it('Opening a style should return the style', function (done) {
-			request(host)
-				.get('/style/' + styleId)
-				.set('cookie', cookie)
-				.send({})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.style._id, styleId);
-					assert.equal(res.body.style.name, "Coolio");
-					assert.equal(res.body.style.class, "CoolioClass");
-					assert.equal(res.body.style.css, css);
-					done();
-				});
-		}),
-		it('Updating a styleset should return success', function (done) {
-			request(host)
-				.put('/styleset/' + stylesetId + '/update')
-				.set('cookie', cookie)
-				.send({name: "OK, Maybe not the BEST, but...", styles: [styleId]})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					done();
-				});
-		}),
-		it('Updating a style should return success', function (done) {
-			request(host)
-				.put('/style/' + styleId + '/update')
-				.set('cookie', cookie)
-				.send({name: "Donkey", class: "jack", css: css + "...some new CSS"})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					done();
-				});
-		}),
-		it('Creating a new styleset to test rearrange of stylesets below', function (done) {
-			request(host)
-				.post('/styleset')
-				.set('cookie', cookie)
-				.send({name: "My New Cool Styleset"})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset.name, "My New Cool Styleset");
-					newStylesetId = res.body.styleset._id;
-					newStylesetId && done();
-				});
-		}),
-		it('Applying the new styleset to a project - also to be able to test rearrange of stylesets below', function (done) {
-			request(host)
-				.put('/styleset/' + newStylesetId + "/project/" + projectId3)
-				.set('cookie', cookie)
-				.send({})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.project._id, projectId3);
-					assert.equal(res.body.project.stylesets[0], stylesetId);
-					assert.equal(res.body.project.stylesets[1], newStylesetId);
-					done();
-				});
-		}),
-		it('Rearranging stylesets should return the project with the stylesets in the new order ', function (done) {
-		request(host)
-			.put('/styleset/' + projectId3 + '/rearrange')
-			.set('cookie', cookie)
-			.send({stylesets: [newStylesetId, stylesetId]})
-			.expect(200)
-			.end(function (err, res) {
-				if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-				assert.equal(res.body.project.stylesets.length, 2);
-				assert.equal(res.body.project.stylesets[0], newStylesetId);
-				assert.equal(res.body.project.stylesets[1], stylesetId);
-				done();
-			});
-		}),
-		it('Archiving a styleset should return the archived styleset', function (done) {
-			request(host)
-				.put('/styleset/' + stylesetId + '/archive')
-				.set('cookie', cookie)
-				.send({})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset.name, "My Best Styleset");
-					assert.equal(res.body.styleset.archived, true);
-					done();
-				});
-		}),
-		it('List of archived stylesets should return the single archived styleset', function (done) {
-			request(host)
-				.get('/styleset/archived')
-				.set('cookie', cookie)
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.stylesets.length, 1);
-					assert.equal(res.body.stylesets[0].name, "My Best Styleset");
-					done();
-				});
-		}),
-		it('Unarchiving a styleset should return the unarchived styleset', function (done) {
-			request(host)
-				.put('/styleset/' + stylesetId + '/unarchive')
-				.set('cookie', cookie)
-				.send({})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset.name, "My Best Styleset");
-					assert.equal(res.body.styleset.archived, false);
-					done();
-				});
-		}),
-		it('Archiving a style should return the archived style', function (done) {
-			request(host)
-				.put('/style/' + styleId + '/archive')
-				.set('cookie', cookie)
-				.send({})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.style._id, styleId);
-					assert.equal(res.body.style.archived, true);
-					done();
-				});
-		}),
-		it('List of archived styles should return the single archived style', function (done) {
-			request(host)
-				.get('/style/archived')
-				.set('cookie', cookie)
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styles.length, 1);
-					assert.equal(res.body.styles[0]._id, styleId);
-					done();
-				});
-		}),
-		it('Unarchiving a style should return the unarchived style', function (done) {
-			request(host)
-				.put('/style/' + styleId + '/unarchive')
-				.set('cookie', cookie)
-				.send({})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.style._id, styleId);
-					assert.equal(res.body.style.archived, false);
-					done();
-				});
-		})
-	}),
 	describe('Cleanup', function () {
 		it('Deleting a project should return success', function (done) {
 			request(host)
@@ -1453,71 +1444,66 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-			it('Deleting a project should return success - clean up project #2', function (done) {
-				request(host)
-					.del('/project/' + projectId2)
-					.set('cookie', cookie)
-					.send({})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						done();
-					});
-			}),
-			it('Opening a document of a deleted project should return not-found', function (done) {
-				request(host)
-					.get('/document/' + childDocumentId)
-					.set('cookie', cookie)
-					.expect(404)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						done();
-					});
-			}),
-			it('Opening the copied project should still return its six copied documents and metadata', function (done) {
-				request(host)
-					.get('/project/' + projectId3)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.project.documents.length, 6);
+		it('Deleting a project should return success - clean up project #2', function (done) {
+			request(host)
+				.del('/project/' + projectId2)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
+		}),
+		it('Opening a document of a deleted project should return not-found', function (done) {
+			request(host)
+				.get('/document/' + childDocumentId)
+				.set('cookie', cookie)
+				.expect(404)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
+		}),
+		it('Opening the copied project should still return its six copied documents (but no metadata since this was added AFTER the copy was made).', function (done) {
+			request(host)
+				.get('/project/' + projectId4)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.project.documents.length, 6);
 
-						assert.equal(res.body.project.documents[0].name, "MySecondDocument");
-						assert.equal(res.body.project.documents[0].text, undefined);
+					assert.equal(res.body.project.documents[0].name, "MySecondDocument");
+					assert.equal(res.body.project.documents[0].text, undefined);
 
-						assert.equal(res.body.project.documents[1].name, "A New Cool Name");
-						assert.equal(res.body.project.documents[1].text, undefined);
+					assert.equal(res.body.project.documents[1].name, "A New Cool Name");
+					assert.equal(res.body.project.documents[1].text, undefined);
 
-						assert.equal(res.body.project.documents[2].name, "Cover");
-						assert.equal(res.body.project.documents[2].text, undefined);
+					assert.equal(res.body.project.documents[2].name, "Cover");
+					assert.equal(res.body.project.documents[2].text, undefined);
 
-						assert.equal(res.body.project.documents[3].name, "TitlePage");
-						assert.equal(res.body.project.documents[3].text, undefined);
+					assert.equal(res.body.project.documents[3].name, "TitlePage");
+					assert.equal(res.body.project.documents[3].text, undefined);
 
-						assert.equal(res.body.project.documents[4].name, "ToC");
-						assert.equal(res.body.project.documents[4].text, undefined);
+					assert.equal(res.body.project.documents[4].name, "ToC");
+					assert.equal(res.body.project.documents[4].text, undefined);
 
-						assert.equal(res.body.project.documents[5].name, "Colophon");
-						assert.equal(res.body.project.documents[5].text, undefined);
-
-						assert.equal(res.body.project.metadata.isbn, "1405353767");
-						assert.equal(res.body.project.metadata.keywords.length, 4);
-						assert.equal(res.body.project.metadata.authors.length, 3);
-						assert.equal(res.body.project.metadata.toc.entries.length, 2);
-						done();
-					});
-			}),
-			it('Deleting a project should return success - clean up project copy (#3)', function (done) {
-				request(host)
-					.del('/project/' + projectId3)
-					.set('cookie', cookie)
-					.send({})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						done();
-					});
-			})
+					assert.equal(res.body.project.documents[5].name, "Colophon");
+					assert.equal(res.body.project.documents[5].text, undefined);
+					done();
+				});
+		}),
+		it('Deleting a project should return success - clean up project copy (#4)', function (done) {
+			request(host)
+				.del('/project/' + projectId4)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
+		})
 	})
 })

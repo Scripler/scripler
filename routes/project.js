@@ -1,6 +1,7 @@
 var Project = require('../models/project.js').Project;
 var User = require('../models/user.js').User;
 var Document = require('../models/document.js').Document;
+var Styleset = require('../models/styleset.js').Styleset;
 var utils = require('../lib/utils');
 var extend = require('xtend');
 var sanitize = require('sanitize-filename');
@@ -10,6 +11,7 @@ var fs = require('fs');
 var rimraf = require('rimraf');
 var ncp = require('ncp').ncp;
 var epub3 = require('../lib/epub/epub3');
+var async = require('async');
 
 //Load project by id
 exports.load = function (id) {
@@ -31,7 +33,7 @@ exports.load = function (id) {
 exports.loadPopulated = function (id) {
 	return function (req, res, next) {
 		id = id || req.body.projectId;
-		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type stylesets').exec(function (err, project) {
+		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type').exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
@@ -45,17 +47,32 @@ exports.loadPopulated = function (id) {
 }
 
 // Purely for performance reasons
-exports.loadPopulatedText = function (id) {
+exports.loadPopulatedFull = function (id) {
 	return function (req, res, next) {
 		id = id || req.body.projectId;
-		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type stylesets text').exec(function (err, project) {
+		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type text').exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
 			if (!utils.hasAccessToEntity(req.user, project)) return next(403);
+
 			req.project = project;
+
+			/*
+			var populateStyleset = function (styleset, callback) {
+				Styleset.findOne({"_id": styleset.id}).populate('styles', 'name class css').exec(function (err, styleset) {
+					if (err) callback(err);
+					callback(null);
+				});
+			};
+
+			async.each(req.project.stylesets, populateStyleset, function(err) {
+				if (err) return next(err);
+				return next();
+			});
+			*/
 			return next();
 		});
 	}

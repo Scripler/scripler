@@ -79,7 +79,7 @@ module.exports = function (app, auth) {
 	app.put('/styleset/:stylesetId/document/:documentId', auth.isLoggedIn(), document.applyStyleset);
 
 	/* API Output */
-	app.get('/project/:projectIdPopulatedText/compile', auth.isLoggedIn(), project.compile);
+	app.get('/project/:projectIdPopulatedFull/compile', auth.isLoggedIn(), project.compile);
 
 	// API Parameters
 	app.param('projectId', function (req, res, next, id) {
@@ -88,8 +88,8 @@ module.exports = function (app, auth) {
 	app.param('projectIdPopulated', function (req, res, next, id) {
 		return project.loadPopulated(id)(req, res, next);
 	});
-	app.param('projectIdPopulatedText', function (req, res, next, id) {
-		return project.loadPopulatedText(id)(req, res, next);
+	app.param('projectIdPopulatedFull', function (req, res, next, id) {
+		return project.loadPopulatedFull(id)(req, res, next);
 	});
 	app.param('documentId', function (req, res, next, id) {
 		return document.load(id)(req, res, next);
