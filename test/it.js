@@ -31,7 +31,7 @@ var stylesetId;
 var newStylesetId;
 var styleId;
 
-var cleanupEPUB = false;
+var cleanupEPUB = true;
 
 function containsId(items, id) {
 	var result = false;

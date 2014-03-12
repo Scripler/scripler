@@ -89,7 +89,7 @@ module.exports = function (app, auth) {
 		return project.loadPopulated(id)(req, res, next);
 	});
 	app.param('projectIdPopulatedFull', function (req, res, next, id) {
-		return project.loadPopulatedFull(id)(req, res, next);
+		return project.loadPopulatedText(id)(req, res, next);
 	});
 	app.param('documentId', function (req, res, next, id) {
 		return document.load(id)(req, res, next);
