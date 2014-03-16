@@ -90,7 +90,7 @@ exports.create = function (req, res, next) {
 		if (err) {
 			return next(err);
 		}
-		req.user.projects.push(project);
+		req.user.projects.addToSet(project);
 		req.user.save(function (err) {
 			if (err) {
 				return next(err);
@@ -188,7 +188,7 @@ exports.copy = function (req, res, next) {
 	newProject.metadata.toc = project.metadata.toc;
 
 	//Add to user (last project in order)
-	req.user.projects.push(newProject);
+	req.user.projects.addToSet(newProject);
 	req.user.save();
 
 	//Copy documents
@@ -289,7 +289,7 @@ exports.compile = function (req, res) {
 
 exports.applyStyleset = function (req, res, next) {
 	var project = req.project;
-	project.stylesets.push(req.styleset);
+	project.stylesets.addToSet(req.styleset);
 	project.save(function (err) {
 		if (err) {
 			return next(err);
