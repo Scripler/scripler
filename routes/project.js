@@ -1,6 +1,7 @@
 var Project = require('../models/project.js').Project;
 var User = require('../models/user.js').User;
 var Document = require('../models/document.js').Document;
+var Styleset = require('../models/styleset.js').Styleset;
 var utils = require('../lib/utils');
 var extend = require('xtend');
 var sanitize = require('sanitize-filename');
@@ -45,18 +46,54 @@ exports.loadPopulated = function (id) {
 }
 
 // Purely for performance reasons
-exports.loadPopulatedText = function (id) {
+exports.loadPopulatedFull = function (id) {
 	return function (req, res, next) {
 		id = id || req.body.projectId;
-		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type text').exec(function (err, project) {
+		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type text').populate('stylesets').exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
 			if (!utils.hasAccessToEntity(req.user, project)) return next(403);
-			req.project = project;
-			return next();
+
+			/*
+			 Filter out archived documents, stylesets and styles manually.
+			 NB! If someone saves the project later in this request, we are screwed => ...TODO: use aggregation?
+			 */
+
+			// Filter out archived documents.
+			for (var i=0; i<project.documents.length; i++) {
+				var document = project.documents[i];
+				if (document.archived) {
+					project.documents.splice(i, 1);
+				}
+			}
+
+			// Filter out archived stylesets.
+			for (var i=0; i<project.stylesets.length; i++) {
+				var styleset = project.stylesets[i];
+				if (styleset.archived) {
+					project.stylesets.splice(i, 1);
+				}
+
+				// Filter out archived styles.
+				Styleset.findOne(styleset).populate({path: 'styles'}).exec(function (err, styleset) {
+					if (err) next(err);
+
+					if (styleset.styles != null && styleset.styles.length > 0) {
+						for (var j=0; j<styleset.styles.length; j++) {
+							var style = styleset.styles[j];
+							if (style.archived) {
+								styleset.styles.splice(j, 1);
+							}
+						}
+					}
+
+					req.project = project;
+					return next();
+				});
+			}
 		});
 	}
 }
@@ -281,7 +318,8 @@ exports.toc = function (req, res, next) {
 
 exports.compile = function (req, res) {
 	var epub = epub3.create(req.user._id, req.project);
-	var saneTitle = sanitize(req.project.metadata.title);
+	var filename = req.project.metadata.title || req.project.name;
+	var saneTitle = sanitize(filename);
 	res.setHeader('Content-disposition', 'attachment; filename=' + saneTitle);
 	res.setHeader('Content-type', 'application/epub+zip');
 	epub.pipe(res);
