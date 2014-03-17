@@ -103,7 +103,6 @@ function PublicationsCtrl ( $scope, $http, localStorageService, projectsService 
 		var name = "Title " + order;
 		var publication = {};
 		publication.name = name;
-		publication.order = order;
 
 		if ( $scope.user._id ) {
 			$http.post('/project', angular.toJson( publication ) )
@@ -142,7 +141,6 @@ function PublicationsCtrl ( $scope, $http, localStorageService, projectsService 
 	};
 
 	$scope.copyPublication = function( publication ) {
-		//backend needs to support order for copying, because otherwise order is 0
 		if ( $scope.user._id ) {
 			$http.post('/project/' + publication._id + '/copy')
 				.success( function( data ) {
@@ -150,7 +148,6 @@ function PublicationsCtrl ( $scope, $http, localStorageService, projectsService 
 				});
 		} else {
 			var publication = publication;
-			publication.order = publication.order + 1;
 			this.publication.name = publication.name + ' - Copy';
 			$scope.publications.push( this.publication );
 			localStorageService.add( lsName, $scope.publications );
