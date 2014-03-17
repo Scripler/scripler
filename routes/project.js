@@ -119,6 +119,7 @@ exports.archived = function (req, res, next) {
 exports.create = function (req, res, next) {
 	var project = new Project({
 		name: req.body.name,
+		order: req.body.order,
 		members: [
 			{userId: req.user._id, access: ["admin"]}
 		]
@@ -146,7 +147,7 @@ exports.create = function (req, res, next) {
 }
 
 exports.open = function (req, res) {
-	res.send({ project: req.project});
+	res.send({ project: req.project });
 }
 
 exports.rename = function (req, res, next) {
@@ -218,6 +219,7 @@ exports.copy = function (req, res, next) {
 
 	var newProject = new Project({
 		name: project.name + " - Copy",
+		order: project.order + 1,
 		folders: project.folders,
 		members: project.members,
 		metadata: extend({}, project.metadata)

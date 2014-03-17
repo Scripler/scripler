@@ -18,7 +18,9 @@ var UserSchema = new Schema({
 	providers: [
 		{}
 	],
-	modified: { type: Date, default: Date.now }
+	modified: { type: Date, default: Date.now },
+	showArchived: { type: Boolean, default: false },
+	newsletter: { type: Boolean, default: true }
 });
 
 /** Handle bcrypt password-hashing.
