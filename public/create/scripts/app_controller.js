@@ -100,7 +100,7 @@ app.config( function( $routeProvider, $httpProvider ) {
 		.otherwise({ redirectTo:'/' });
 });
 
-app.service('projectsService', function( $http ) {
+app.service('projectsService', function( $http, $q ) {
 	var projects = [];
 	return {
 		getList: function( user ) {
@@ -123,14 +123,16 @@ app.service('projectsService', function( $http ) {
 
 			return projects;
 		},
-		getDocuments: function( pid ) {
-			angular.forEach(projects, function( project ) {
-				if ( project._id === pid ) {
-					return project.documents;
-				}
-			})
-		}
+		getProject: function( projectId ) {
+			var deferred = $q.defer();
 
+			$http.get( '/project/' + projectId )
+				.success( function( data ) {
+					deferred.resolve( data.project );
+				})
+
+			return deferred.promise;
+		}
 	}
 })
 

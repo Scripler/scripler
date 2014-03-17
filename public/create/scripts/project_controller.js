@@ -1,6 +1,6 @@
 'use strict'
 
-function projectController( $scope, $location, userService, projectsService ) {
+function projectController( $scope, $location, userService, projectsService, $http ) {
 
 	// Scope, Project
 	$scope.chapters = [
@@ -18,7 +18,12 @@ function projectController( $scope, $location, userService, projectsService ) {
 	$scope.$on('user:updated', function( event, user ) {
 		$scope.user = user;
 		$scope.pid = ($location.search()).pid;
-		$scope.chapters = projectsService.getDocuments();
+
+		var projectPromise = projectsService.getProject( $scope.pid );
+		projectPromise.then( function( project ) {
+			$scope.project = project;
+			$scope.chapters = $scope.project.documents;
+		});
 	});
 
 	$scope.addDocument = function() {
@@ -26,11 +31,16 @@ function projectController( $scope, $location, userService, projectsService ) {
 		var name = "Document " + order;
 		var document = {};
 		document.name = name;
-		document.order = order;
 
-		$scope.chapters.push( document );
-
-		//$http.post('/document')
+		if ( $scope.user._id ) {
+			document.projectId = $scope.pid;
+			$http.post('/document', angular.toJson( document ) )
+				.success( function( data ) {
+					$scope.chapters.push( data.document );
+				})
+		} else {
+			$scope.chapters.push( document );
+		}
 	}
 
     function initiateMenus() {
