@@ -104,6 +104,7 @@ app.service('projectsService', function( $http, $q ) {
 	var projects = [];
 	return {
 		getList: function( user ) {
+			projects = [];
 
 			$http.get('/project/list')
 				.success( function( data ) {
