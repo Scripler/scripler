@@ -132,14 +132,14 @@ exports.create = function (req, res, next) {
 		// Yes, does the parent folder exist?
 		if (parentFolder) {
 			// Yes, save the new folder as a child
-			parentFolder.folders.push(folder);
+			parentFolder.folders.addToSet(folder);
 		} else {
 			// No, inform the caller
 			return next({message: "Parent folder not found", status: 404});
 		}
 	} else {
 		// No, save the folder directly on the project (as a root folder)
-		project.folders.push(folder);
+		project.folders.addToSet(folder);
 	}
 
 	project.save(function (err, project) {

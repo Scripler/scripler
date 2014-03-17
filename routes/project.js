@@ -31,7 +31,7 @@ exports.load = function (id) {
 exports.loadPopulated = function (id) {
 	return function (req, res, next) {
 		id = id || req.body.projectId;
-		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type stylesets').exec(function (err, project) {
+		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type').exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
@@ -48,7 +48,7 @@ exports.loadPopulated = function (id) {
 exports.loadPopulatedText = function (id) {
 	return function (req, res, next) {
 		id = id || req.body.projectId;
-		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type stylesets text').exec(function (err, project) {
+		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type text').exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
@@ -91,7 +91,7 @@ exports.create = function (req, res, next) {
 		if (err) {
 			return next(err);
 		}
-		req.user.projects.push(project);
+		req.user.projects.addToSet(project);
 		req.user.save(function (err) {
 			if (err) {
 				return next(err);
@@ -190,7 +190,7 @@ exports.copy = function (req, res, next) {
 	newProject.metadata.toc = project.metadata.toc;
 
 	//Add to user (last project in order)
-	req.user.projects.push(newProject);
+	req.user.projects.addToSet(newProject);
 	req.user.save();
 
 	//Copy documents
@@ -291,7 +291,7 @@ exports.compile = function (req, res) {
 
 exports.applyStyleset = function (req, res, next) {
 	var project = req.project;
-	project.stylesets.push(req.styleset);
+	project.stylesets.addToSet(req.styleset);
 	project.save(function (err) {
 		if (err) {
 			return next(err);

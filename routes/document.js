@@ -40,7 +40,7 @@ exports.create = function (req, res, next) {
 		if (err) {
 			return next(err);
 		}
-		project.documents.push(document);
+		project.documents.addToSet(document);
 		project.save(function (err, project) {
 			if (err) {
 				return next(err);
@@ -152,7 +152,7 @@ exports.upload = function (req, res, next) {
 
 exports.applyStyleset = function (req, res, next) {
 	var document = req.document;
-	document.stylesets.push(req.styleset);
+	document.stylesets.addToSet(req.styleset);
 	document.save(function (err) {
 		if (err) {
 			return next(err);
