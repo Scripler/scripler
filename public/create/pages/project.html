@@ -10,7 +10,10 @@
 				<li class="menu-item-left open">
 					<div class="menu-text"><span class="icon icon-file-alt"></span>Project</div>
 					<div  class="menu-content">
-						<a ng-repeat="chapter in chapters" ng-click="chapterChoosen(chapter)">{{chapter.chapterTitle}}<br></a>
+						<div class="document new" ng-click="addDocument()">
+							<p>+</p>
+						</div>
+						<div class="document" ng-repeat="chapter in chapters" ng-click="chapterChoosen(chapter)"><p>{{chapter.title}}</p></div>
 					</div>
 				</li>
 				<li class="menu-item-left closed">
