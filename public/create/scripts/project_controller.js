@@ -22,7 +22,7 @@ function projectController( $scope, $location, userService, projectsService ) {
 	});
 
 	$scope.addDocument = function() {
-		var order = $scope.chapters.length;
+		var order = $scope.chapters.length + 1;
 		var title = "Document " + order;
 		var document = {};
 		document.title = title;
