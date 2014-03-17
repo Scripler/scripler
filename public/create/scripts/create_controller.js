@@ -1,6 +1,46 @@
 'use strict'
 
-function createController($scope) {
+function createController( $scope, $http, userService ) {
+
+		$scope.changePassword = function() {
+			$scope.passwordSubmitted = true;
+
+			if ( $scope.newPassword !== $scope.newPasswordRetype ) {
+				$scope.editPasswordForm.$valid = false;
+				$scope.editPasswordForm.newPassword.$invalid = true;
+				$scope.editPasswordForm.newPasswordRetype.$invalid = true;
+			}
+
+			if ( $scope.editPasswordForm.$valid ) {
+				var user = {};
+				user.email = $scope.user.email;
+				user.password = $scope.password;
+
+				$http.post( '/user/login', angular.toJson( user ) )
+					.success( function( data ) {
+						user.password = $scope.newPassword;
+						$http.put( '/user', angular.toJson( user ) )
+							.success( function( data ) {
+								$scope.editPassword = !$scope.editPassword;
+							});
+					})
+					.error( function( data ) {
+						$scope.editPasswordForm.currentPassword.$invalid = true;
+					});
+			}
+		}
+
+		$scope.updateUser = function() {
+			$scope.saveSubmitted = true;
+
+			if ( $scope.emailEditForm.$valid ) {
+				$http.put( '/user', angular.toJson( $scope.user ) )
+					.success( function( data ) {
+						userService.setUser( data.user );
+						$scope.showSettings = false;
+					})
+			}
+		}
 
 	/*$.ajax({
 		url: 'http://scripler.com:3000/user/login',
@@ -22,27 +62,32 @@ function createController($scope) {
 }
 //}]);
 
-function PublicationsCtrl ( $scope, $http, userService ) {
-	$scope.user = {};
+function PublicationsCtrl ( $scope, $http, localStorageService, projectsService ) {
+	$scope.publications = [];
+	$scope.showPublicationOptions = false;
+	var lsName = 'demo-scripler-publications';
+
+	$scope.$on('demo:mode', function( event, publications ) {
+		$scope.publications = publications;
+	});
 
 	$scope.$on('user:updated', function( event, user ) {
 		$scope.user = user;
-		//iterate through publications and call add
+		$scope.publications = projectsService.getList( user );
 	});
 
-	$scope.publications = [
-		{ id:'00001', name:'Demo Title 1', created:'1363359600', changed:'1365606000' }
-	];
-
-	if ( $scope.user._id ) {
-		$http.get('/project/list')
-			.success( function( data ) {
-				$scope.publications = [];
-				angular.forEach(data.projects, function( project ) {
-					$scope.publications.push( {id: project._id, name: project.name, created: project.created, changed: project.modified} );
-				})
-		});
-	}
+	$scope.$on('user:registered', function( event, user ) {
+		if ( user._id ) {
+			angular.forEach($scope.publications, function( publication, index ) {
+				$http.post('/project', angular.toJson( publication ) )
+					.success( function( data ) {
+						$scope.publications[index] = data.project;
+				});
+			})
+			localStorageService.remove( lsName );
+			$scope.publications = projectsService.getList();
+		}
+	});
 
 	$scope.toggleElement = function( element ) {
 		if ($scope.element != true && $scope.element != false) {
@@ -54,38 +99,59 @@ function PublicationsCtrl ( $scope, $http, userService ) {
 	};
 
 	$scope.addPublication = function() {
-		var index = $scope.publications.length + 1;
-		var name = "Title " + index;
-		var data = {};
-		data.name = name;
+		var order = $scope.publications.length;
+		var name = "Title " + order;
+		var publication = {};
+		publication.name = name;
 
-		$http.post('/project', angular.toJson( data ) )
-			.success( function( data ) {
-				var project = data.project;
-				$scope.publications.push( {id: project._id, name: project.name, created: project.created, changed: project.modified} );
-			});
+		if ( $scope.user._id ) {
+			$http.post('/project', angular.toJson( publication ) )
+				.success( function( data ) {
+					$scope.publications.push( data.project );
+				});
+		} else {
+			publication._id = Date.now();
+			$scope.publications.push( publication );
+			localStorageService.add( lsName, $scope.publications );
+		}
 	};
 
 	$scope.archivePublication = function( publication ) {
-		$http.put('/project/' + publication.id + '/archive')
-			.success( function() {
-				$scope.publications.splice($scope.publications.indexOf(publication), 1);
-			});
+		var index = $scope.publications.indexOf( publication );
+		if ( $scope.user._id ) {
+			$http.put('/project/' + publication._id + '/archive')
+				.success( function() {
+					publication.archived = true;
+					$scope.publications[index] = publication;
+				});
+		} else {
+			publication.archived = true;
+			$scope.publications[index] = publication;
+			localStorageService.add( lsName, $scope.publications );
+		}
 	};
 
 	$scope.renamePublication = function( publication ) {
-		var data = {};
-		data.name = publication.name;
-		$http.put('/project/' + publication.id + '/rename', angular.toJson( data ) )
-			.success( function() {});
+		if ( $scope.user._id ) {
+			$http.put('/project/' + publication._id + '/rename', angular.toJson( publication ) )
+				.success( function() {});
+		} else {
+			localStorageService.add( lsName, $scope.publications );
+		}
 	};
 
 	$scope.copyPublication = function( publication ) {
-		$http.post('/project/' + publication.id + '/copy')
-			.success( function( data ) {
-				var project = data.project;
-				$scope.publications.push( {id: project._id, name: project.name, created: project.created, changed: project.modified} );
-			});
+		if ( $scope.user._id ) {
+			$http.post('/project/' + publication._id + '/copy')
+				.success( function( data ) {
+					$scope.publications.push( data.project );
+				});
+		} else {
+			var publication = publication;
+			this.publication.name = publication.name + ' - Copy';
+			$scope.publications.push( this.publication );
+			localStorageService.add( lsName, $scope.publications );
+		}
 	};
 
 };

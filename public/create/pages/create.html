@@ -1,38 +1,80 @@
-<link rel="stylesheet" type="text/css" href="pages/css/shared/default.css" />
 <link rel="stylesheet" type="text/css" href="pages/css/pages/create.css" />
 
 <div class="container">
 	<div class="main">
 
-		<section class="section-unisquare">
-			<p> </p>
-
-
-					<p class="filter-buttons"><span class="filter-sort-button" ng-click="toggleElement('filterFilter')">Sort by Filter</span> | <span class="search-sort-button" ng-click="toggleElement('filterSearch')">Sort by Search</span></p>
-			<p class="filter-sort" ng-show="filterFilter">
-				Filter by Sort:
-				<span ng-click="publicationOrder = 'publicationCreated'; reverse=!reverse">time</span> | 
-				<span ng-click="publicationOrder = 'publicationName'; reverse=!reverse">titel</span> | 
-				<span ng-click="publicationOrder = 'publicationChanged'; reverse=!reverse">changed</span>
-			</p>
-			<p class="filter-search" ng-show="filterSearch">
-				Filter by Search:
-					<input type="text" ng-model="publicationSearch">
-			</p>
+		<section class="section-unisquare" ng-class="{ 'white-bg' : showSettings}">
+			<div ng-hide="showSettings">
+				<div class="links">
+					<a onclick="history.back(-1)" class="frontpage-link">
+						<span class="arrow-left"></span><p>Frontpage</p>
+					</a>
+				</div>
+				<div class="logo-box">
+					<img class="logo" src="../images/logo.png">
+				</div>
+				<div class="uni-bottom-box" ng-show="user._id">
+					<div class="user-box">
+						<img class="user-image" src="http://placekitten.com/50/50">
+						<div class="user-text">
+							<div class="user-name" ng-bind-html="user.firstname + ' ' + user.lastname"></div>
+							<div class="user-links">
+								<a ng-click="showSettings = !showSettings">Settings</a>
+								<span>|</span>
+								<a href="/logout">Log out</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="user-settings" ng-show="showSettings">
+				<div class="user-box">
+						<img class="user-image" src="http://placekitten.com/100/100">
+						<div class="settings-text">
+							<div class="user-name settings" ng-bind-html="user.firstname"></div>
+							<div class="user-name settings" ng-bind-html="user.lastname"></div>
+						</div>
+				</div>
+				<hr>
+				<div class="user-settings-options">
+					<div class="user-email" ng-show="!editPassword">
+						<form name="emailEditForm">
+							<input name="editEmailInput" ng-class="{ 'has-error' : emailEditForm.editEmailInput.$invalid && saveSubmitted}" type="email" ng-model="user.email" ng-pattern="EMAIL_REGEXP" ng-disabled="!editEmail" focus-on="editEmail">
+							<a ng-click="editEmail = !editEmail">Edit</a>
+						</form>
+					</div>
+					<div class="edit-password">
+						<a ng-click="editPassword = !editPassword" ng-show="!editPassword">Edit password</a>
+						<form name="editPasswordForm" ng-submit="changePassword()" ng-show="editPassword" novalidate>
+							<input type="password" id="current-password" name="currentPassword" ng-model="password" ng-class="{ 'has-error' : editPasswordForm.currentPassword.$invalid && passwordSubmitted }" placeholder="Current" ng-minlength="6" required>
+							<input type="password" id="new-password" name="newPassword" ng-model="newPassword" ng-class="{ 'has-error' : editPasswordForm.newPassword.$invalid && passwordSubmitted }" placeholder="New" ng-minlength="6" required>
+							<input type="password" id="new-retype-password" name="newPasswordRetype" ng-model="newPasswordRetype" ng-class="{ 'has-error' : editPasswordForm.newPasswordRetype.$invalid && passwordSubmitted }" placeholder="Retype New" ng-minlength="6" required>
+							<button type="submit" class="button">Save Changes</button>
+						</form>
+					</div>
+					<div class="edit-newsletter" ng-show="!editPassword">
+						<input type="checkbox" ng-model="user.newsletter">Receive newsletter
+					</div>
+					<div class="edit-archived" ng-show="!editPassword">
+						<input type="checkbox" ng-model="user.showArchived">Show Archived
+					</div>
+					<button ng-click="updateUser()" class="button" ng-show="!editPassword">Save Changes</button>
+				</div>
+			</div>
 		</section>
 
 		<section class="section-publications" ng-controller="PublicationsCtrl">
 			<div class="publication new" ng-click="addPublication(publication)">
- 				<p>+</p>
- 			</div>
+				<p>+</p>
+			</div>
 
-			<div class="publication" ng-animate="'animate'" ng-repeat="publication in publications | orderBy:publicationOrder:reverse | filter:publicationSearch">
-				<a class="publication-options-show" data-gui="{{publication.id}}" ng-click="showPublicationOptions = true;">
+			<div class="publication" ng-animate="'animate'" ng-class="{ 'archived' : publication.archived }" ng-hide="publication.archived && !user.showArchived" ng-repeat="publication in publications track by $index | orderBy:'order':reverse | filter:publicationSearch">
+				<a class="publication-options-show" data-gui="{{publication._id}}" ng-click="showPublicationOptions = true">
 					<div class="arrow"></div>
 				</a>
 				<!--<p ng-hide="editingPublicationTitle" ng-click="editingPublicationTitle = true;">-->
 				<p ng-hide="editingPublicationTitle">
-					<a href="#/project?pid={{publication.id}}">{{publication.name}}</a>
+					<a href="#/project?pid={{publication._id}}">{{publication.name}}</a>
 				</p>
 
 				<form ng-show="editingPublicationTitle">
@@ -47,10 +89,10 @@
 					<div class="publication-options-hide" ng-click="showPublicationOptions = false;" title="Close Options">x</div>
 					<div class="publication-options-menupoint" ng-click="editingPublicationTitle = true; showPublicationOptions = false;">rename</div>
 					<div class="publication-options-menupoint" ng-click="copyPublication(publication); showPublicationOptions = false;">copy</div>
-					<div class="publication-options-menupoint" ng-click="archivePublication(publication)">archive</div>
-					<div class="publication-options-dates">
+					<div class="publication-options-menupoint" ng-click="archivePublication(publication); showPublicationOptions = false;">archive</div>
+					<div class="publication-options-dates" ng-show="publication.created && publication.changed">
 						<div>Created Date: </div><div class="dates">{{publication.created | date:'yyyy-MM-dd HH:mm'}}</div>
-						<div>Last Changed Date: </div><div class="dates">{{publication.changed | date:'yyyy-MM-dd HH:mm'}}</div>
+						<div>Last Changed: </div><div class="dates">{{publication.modified | date:'yyyy-MM-dd HH:mm'}}</div>
 					</div>
 				</div>
 			</div>

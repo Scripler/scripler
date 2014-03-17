@@ -183,6 +183,8 @@ exports.edit = function (req, res, next) {
 	var lastname = req.body.lastname;
 	var email = req.body.email;
 	var password = req.body.password;
+	var newsletter = req.body.newsletter;
+	var showArchived = req.body.showArchived;
 	if (firstname) {
 		req.user.firstname = firstname;
 	}
@@ -204,6 +206,12 @@ exports.edit = function (req, res, next) {
 	}
 	if (password) {
 		req.user.password = password;
+	}
+	if (typeof newsletter === "boolean") {
+		req.user.newsletter = newsletter;
+	}
+	if (typeof showArchived === "boolean") {
+		req.user.showArchived = showArchived;
 	}
 	req.user.save(function (err) {
 		if (err) {

@@ -3,19 +3,22 @@
 <head>
 	<title>Scripler</title>
 
+	<link rel="stylesheet" type="text/css" href="pages/css/shared/default.css" />
+
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-sanitize.js"></script>
+	<script type="text/javascript" src="scripts/angular-local-storage.min.js"></script>
 	<script type="text/javascript" src="scripts/app_controller.js"></script>
 	<script type="text/javascript" src="scripts/create_controller.js"></script>
 	<script type="text/javascript" src="scripts/project_controller.js"></script>
 	<script type="text/javascript" src="ckeditor/ckeditor.js"></script>
 </head>
-<body ng-controller="appController">
+<body ng-controller="appController" ng-cloak>
 
 	<div ng-view></div>
 
-	<div class="registration" ng-hide="user.emailValidated || closeStatus" ng-class="{ 'green' : user._id }">
+	<div class="registration" ng-hide="user.emailValidated || closeStatus" ng-class="{ 'green' : user._id }" ng-cloak>
 		<div class="registration-close-button" ng-click="closeStatus = !closeStatus" ng-show="user._id">x</div>
 		<div class="error-boxes" ng-show="registerForm.$invalid && !registerForm.$pristine && registrationSubmitted && !user._id">
 			<div class="arrow-box" ng-show="registerForm.name.$invalid && !registerForm.name.$pristine" ng-bind="errors.name"></div>
@@ -24,9 +27,9 @@
 		</div>
 		<div class="registration-text" ng-bind="registrationText" ng-class="{ 'validate' : user._id }"></div>
 		<form name="registerForm" class="registration-form" ng-submit="submitRegistration()" ng-hide="user._id" novalidate>
-			<input on-click-change-text type="text" id="reg-name" name="name" ng-model="user.name" ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First name and Last name" required />
-			<input on-click-change-text type="email" id="reg-email" name="email" ng-model="user.email" ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email Address" ng-pattern="EMAIL_REGEXP" required />
-			<input on-click-change-text type="password" id="reg-password" name="password" ng-model="user.password" ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" ng-minlength="6" required />
+			<input on-click-change-text type="text" id="reg-name" name="name" ng-model="user.name" ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First name and Last name" required>
+			<input on-click-change-text type="email" id="reg-email" name="email" ng-model="user.email" ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email Address" ng-pattern="EMAIL_REGEXP" required>
+			<input on-click-change-text type="password" id="reg-password" name="password" ng-model="user.password" ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" ng-minlength="6" required>
 			<button type="submit" class="button registration-button">Register</button>
 		</form>
 	</div>
