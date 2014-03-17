@@ -90,23 +90,62 @@ app.config( function( $routeProvider, $httpProvider ) {
 	}]
 
 	$routeProvider
-		.when('/', { templateUrl:'pages/create.html', controller:createController,
+		.when('/', { templateUrl:'pages/create.html', controller: createController,
 					resolve: { access: isLoggedIn }
 					})
-		.when('/project', { templateUrl:'pages/project.html', controller:projectController })
-		.when('/error', { templateUrl:'pages/error.html', controller:createController })
+		.when('/project', { templateUrl:'pages/project.html', controller: projectController,
+							resolve: { access: isLoggedIn }
+							})
+		.when('/error', { templateUrl:'pages/error.html', controller: createController })
 		.otherwise({ redirectTo:'/' });
 });
 
+app.service('projectsService', function( $http, $q ) {
+	var projects = [];
+	return {
+		getList: function( user ) {
+
+			$http.get('/project/list')
+				.success( function( data ) {
+					angular.forEach(data.projects, function( project ) {
+						projects.push( project );
+					})
+
+					if ( user.showArchived ) {
+						$http.get('/project/archived')
+							.success( function( data ) {
+								angular.forEach(data.projects, function( project ) {
+									projects.push( project );
+								})
+							});
+					}
+				});
+
+			return projects;
+		},
+		getProject: function( projectId ) {
+			var deferred = $q.defer();
+
+			$http.get( '/project/' + projectId )
+				.success( function( data ) {
+					deferred.resolve( data.project );
+				})
+
+			return deferred.promise;
+		}
+	}
+})
+
 app.service('userService', function( $rootScope ) {
 	var user = {};
+
 	return {
 		setUser : function( user ) {
 			this.user = user;
 			$rootScope.$broadcast('user:updated', this.user);
 		},
 		getUser : function() {
-			return user;
+			return this.user;
 		}
 	};
 });

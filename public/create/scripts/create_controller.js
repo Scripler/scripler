@@ -62,7 +62,7 @@ function createController( $scope, $http, userService ) {
 }
 //}]);
 
-function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
+function PublicationsCtrl ( $scope, $http, localStorageService, projectsService ) {
 	$scope.publications = [];
 	$scope.showPublicationOptions = false;
 	var lsName = 'demo-scripler-publications';
@@ -73,7 +73,7 @@ function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
 
 	$scope.$on('user:updated', function( event, user ) {
 		$scope.user = user;
-		$scope.getList();
+		$scope.publications = projectsService.getList( user );
 	});
 
 	$scope.$on('user:registered', function( event, user ) {
@@ -85,30 +85,9 @@ function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
 				});
 			})
 			localStorageService.remove( lsName );
-			$scope.getList();
+			$scope.publications = projectsService.getList();
 		}
 	});
-
-	$scope.getList = function() {
-		var publications = [];
-		$http.get('/project/list')
-			.success( function( data ) {
-				angular.forEach(data.projects, function( project ) {
-					publications.push( project );
-				})
-
-				if ( $scope.user.showArchived ) {
-					$http.get('/project/archived')
-						.success( function( data ) {
-							angular.forEach(data.projects, function( project ) {
-								publications.push( project );
-							})
-						});
-				}
-		});
-
-		$scope.publications = publications;
-	};
 
 	$scope.toggleElement = function( element ) {
 		if ($scope.element != true && $scope.element != false) {
@@ -124,7 +103,6 @@ function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
 		var name = "Title " + order;
 		var publication = {};
 		publication.name = name;
-		publication.order = order;
 
 		if ( $scope.user._id ) {
 			$http.post('/project', angular.toJson( publication ) )
@@ -163,7 +141,6 @@ function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
 	};
 
 	$scope.copyPublication = function( publication ) {
-		//backend needs to support order for copying, because otherwise order is 0
 		if ( $scope.user._id ) {
 			$http.post('/project/' + publication._id + '/copy')
 				.success( function( data ) {
@@ -171,7 +148,6 @@ function PublicationsCtrl ( $scope, $http, userService, localStorageService ) {
 				});
 		} else {
 			var publication = publication;
-			publication.order = publication.order + 1;
 			this.publication.name = publication.name + ' - Copy';
 			$scope.publications.push( this.publication );
 			localStorageService.add( lsName, $scope.publications );

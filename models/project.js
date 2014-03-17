@@ -38,7 +38,6 @@ FolderSchema.add({
 
 var ProjectSchema = new Schema({
 	name: { type: String, required: true },
-	order: { type: Number, default: 0},
 	documents: [
 		{ type: Schema.Types.ObjectId, ref: 'Document' }
 	], // Referencing

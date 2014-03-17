@@ -1,16 +1,16 @@
 .menu-left, .menu-right {
-  position: absolute;
-  top: 0;
-  width: 242px;
-  transition: all 2s;
-  -moz-transition: all 2s;
-  -ms-transition: all 2s;
-  -webkit-transition: all 2s;
-  -o-transition: all 2s;
+	z-index: 1;
+	position: absolute;
+	top: 0;
+	transition: all 2s;
+	-moz-transition: all 2s;
+	-ms-transition: all 2s;
+	-webkit-transition: all 2s;
+	-o-transition: all 2s;
 }
 .menu-left {
   left: 0;
-  margin: 0 0 0 -200px;
+  margin: 0 0 0 -260px;
 }
 .menu-right {
   right: 0;
@@ -69,11 +69,18 @@
   display: none;
 }
 
+.menu-content {
+	overflow: hidden;
+}
 .menu-left .content, .menu-right .content {
   background: #fff;
-  width: 200px;
-  height: 100%;
   float: left;
+}
+.menu-left .content {
+	width: 260px;
+}
+.menu-right .content {
+	width: 200px;
 }
 .menu-left .content-icon, .menu-right .content-icon {
   background: #fff;
@@ -94,4 +101,33 @@
   position: relative;
   margin: 0 auto;
   width: 800px;
+}
+.menu-left ul li div .document {
+	padding: 0;
+}
+.document {
+	margin: 0 15px 15px 0;
+	width: 88px;
+	height: 142px;
+	background: none #fefefe;
+	float: left;
+	border: 1px solid #ffff99;
+	display: table;
+	box-shadow: 0px 5px 5px -5px #ccc;
+}
+.document.new {
+	border: 1px dashed #eee;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.document p {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	cursor: pointer;
 }
