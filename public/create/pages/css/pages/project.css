@@ -16,8 +16,11 @@
   right: 0;
   margin: 0 -200px 0 0;
 }
-.menu-left.open, .menu-right.open {
-  margin: 0 !important;
+.menu-left.open {
+	margin-left: 59px !important;
+}
+.menu-right.open {
+	margin: 0 !important;
 }
 
 .menu-left ul, .menu-right ul {
@@ -32,17 +35,15 @@
   background-color: #fafafa;
 }
 .menu-left ul li {
-  border-left: 5px solid #fff;
 }
 .menu-right ul li {
-  border-right: 5px solid #fff;
+  border-left: 5px solid #fff;
 }
 .menu-left ul li div, .menu-right ul li div {
   padding: 12px 20px;
 }
 .menu-left ul li .menu-content, .menu-right ul li .menu-content {
   background: #fafafa;
-  border-top: 2px solid #efefef;
   border-bottom: 2px solid #efefef;
 }
 .menu-left .icon, .menu-right .icon {
@@ -53,7 +54,7 @@
   color: #efefef;
 }
 .menu-left ul li.open {
-  border-left: 5px solid #fff265;
+  border-right: 5px solid #fff265;
 }
 .menu-right ul li.open {
   border-right: 5px solid #fff265;
