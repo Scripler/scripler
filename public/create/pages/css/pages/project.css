@@ -70,7 +70,9 @@
 }
 .menu-left-tabs {
 	position: fixed;
-	left: -45px;
+	left: 0;
+	top: 0;
+	z-index: 2;
 }
 .menu-left-tab {
 	background: #fff265;
@@ -145,18 +147,18 @@
 }
 
 .rotate {
-	-webkit-transform: rotate(-90deg);
+	-webkit-transform: rotate(-90deg) translate(0, -25px);
 	-moz-transform: rotate(-90deg);
 	-ms-transform: rotate(-90deg);
 	-o-transform: rotate(-90deg);
-	transform: rotate(-90deg);
+	transform: rotate(-90deg) translate(0, -25px);
 
 	/* also accepts left, right, top, bottom coordinates; not required, but a good idea for styling */
-	-webkit-transform-origin: 50% 50%;
-	-moz-transform-origin: 50% 50%;
-	-ms-transform-origin: 50% 50%;
-	-o-transform-origin: 50% 50%;
-	transform-origin: 50% 50%;
+	-webkit-transform-origin: 0 0;
+	-moz-transform-origin: 40% 100%;
+	-ms-transform-origin: 40% 100%;
+	-o-transform-origin: 40% 100%;
+	transform-origin: 40% 100%;
 
 	/* Should be unset in IE9+ I think. */
 	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);

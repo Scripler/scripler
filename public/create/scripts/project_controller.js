@@ -94,6 +94,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var menuLeftShowhide = document.getElementById('menu-left-showhide');
 		menuLeftShowhide.style.width = screenHeight() / 3 + "px";
 
+		var menuLeftTabs = document.getElementById( 'menu-left-tabs' );
+		angular.element( menuLeftTabs ).css( 'top', screenHeight() / 3 + 'px' );
+
 		menuLeftShowhide.onclick = function() {
 		  if (menuLeft.className.match(/(?:^|\s)open(?!\S)/) ) {
 		    menuLeft.className = "menu-left";
