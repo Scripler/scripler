@@ -8,16 +8,16 @@
 		<div class="content">
 			<ul>
 				<li class="menu-item-left open">
-					<div class="menu-text"><span class="icon icon-file-alt"></span>Project</div>
 					<div  class="menu-content">
 						<div class="document new" ng-click="addDocument()">
 							<p>+</p>
 						</div>
-						<div class="document" ng-repeat="chapter in chapters" ng-click="chapterChoosen(chapter)"><p>{{chapter.name}}</p></div>
+						<div class="document" ng-repeat="chapter in chapters" ng-click="chapterChoosen(chapter)">
+							<p>{{chapter.name}}</p>
+						</div>
 					</div>
 				</li>
 				<li class="menu-item-left closed">
-					<div class="menu-text"><span class="icon icon-font"></span>Typography</div>
 					<div class="menu-content">
 						Content<br><br>
 						<a ng-click="changeStyle('bookbw')">bookbw</a><br>
@@ -26,15 +26,16 @@
 					</div>
 				</li>
 				<li class="menu-item-left closed">
-					<div class="menu-text"><span class="icon icon-pencil"></span>Insert</div>
 					<div class="menu-content">
 					Content
 					</div>
 				</li>
 			</ul>
 		</div>
-		<div id="menu-left-showhide" class="content-icon">
-			<span class="icon icon-reorder"></span>
+		<div class="menu-left-tabs">
+			<div id="menu-left-showhide" class="menu-left-tab rotate">
+				<p ng-bind="project.name">Documents</p>
+			</div>
 		</div>
 	</div>
 

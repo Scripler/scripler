@@ -1,12 +1,12 @@
 .menu-left, .menu-right {
 	z-index: 1;
-	position: absolute;
+	position: fixed;
 	top: 0;
-	transition: all 2s;
-	-moz-transition: all 2s;
-	-ms-transition: all 2s;
-	-webkit-transition: all 2s;
-	-o-transition: all 2s;
+	transition: all 1s;
+	-moz-transition: all 1s;
+	-ms-transition: all 1s;
+	-webkit-transition: all 1s;
+	-o-transition: all 1s;
 }
 .menu-left {
   left: 0;
@@ -67,6 +67,18 @@
 }
 .menu-left ul li.closed .menu-content, .menu-right ul li.closed .menu-content {
   display: none;
+}
+.menu-left-tabs {
+	position: fixed;
+	left: -45px;
+}
+.menu-left-tab {
+	background: #fff265;
+	height: 60px;
+	font-size: 150%;
+	cursor: pointer;
+	line-height: 50px;
+	padding-left: 30px;
 }
 
 .menu-content {
@@ -130,4 +142,22 @@
 	vertical-align: middle;
 	text-align: center;
 	cursor: pointer;
+}
+
+.rotate {
+	-webkit-transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg);
+	-o-transform: rotate(-90deg);
+	transform: rotate(-90deg);
+
+	/* also accepts left, right, top, bottom coordinates; not required, but a good idea for styling */
+	-webkit-transform-origin: 50% 50%;
+	-moz-transform-origin: 50% 50%;
+	-ms-transform-origin: 50% 50%;
+	-o-transform-origin: 50% 50%;
+	transform-origin: 50% 50%;
+
+	/* Should be unset in IE9+ I think. */
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }

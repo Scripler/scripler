@@ -91,7 +91,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		menuLeft.style.height = screenHeight() + "px";
 		menuRight.style.height = screenHeight() + "px";
 
-		document.getElementById('menu-left-showhide').onclick = function() {
+		var menuLeftShowhide = document.getElementById('menu-left-showhide');
+		menuLeftShowhide.style.width = screenHeight() / 3 + "px";
+
+		menuLeftShowhide.onclick = function() {
 		  if (menuLeft.className.match(/(?:^|\s)open(?!\S)/) ) {
 		    menuLeft.className = "menu-left";
 		  }
