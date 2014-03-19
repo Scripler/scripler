@@ -64,7 +64,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		menuRight.style.height = screenHeight() + "px";
 
 		var menuLeftContent = document.getElementById('menu-left-content');
-		menuLeftContent.style.height = screenHeight()-80 + "px";
+		menuLeftContent.style.height = screenHeight()-73 + "px";
 
 		var menuLeftTabs = document.getElementById('menu-left-tabs');
 		menuLeftTabs.style.height = 66 + 'px';

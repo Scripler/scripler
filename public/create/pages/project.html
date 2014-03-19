@@ -6,43 +6,41 @@
 
 
 	<div id="menu-left-tabs" class="menu-left-tabs rotate">
-		<div class="menu-left-tab" ng-click="showDocuments = !showDocuments">
+		<div class="menu-left-tab" ng-click="showDocuments = !showDocuments; showTypo = false; showInsert = false;">
 			<p ng-bind-html="project.name || 'Documents'">Documents</p>
 		</div>
-		<div class="menu-left-tab">
+		<div class="menu-left-tab" ng-click="showTypo = !showTypo; showDocuments = false; showInsert = false;">
 			<p>Typography</p>
 		</div>
-		<div class="menu-left-tab">
+		<div class="menu-left-tab" ng-click="showInsert = !showInsert; showDocuments = false; showTypo = false;">
 			<p>Insert</p>
 		</div>
 	</div>
-	<div id="menu-left" class="menu-left" ng-class="{ 'open' : showDocuments }">
+	<div id="menu-left" class="menu-left" ng-class="{ 'open' : showDocuments || showTypo || showInsert }">
 		<div id="menu-left-content" class="content">
-			<ul>
-				<li class="menu-item-left">
-					<div  class="menu-content">
-						<div class="document new" ng-click="addDocument()">
-							<p>+</p>
-						</div>
-						<div class="document" ng-repeat="chapter in chapters" ng-click="chapterChoosen(chapter)">
-							<p>{{chapter.name}}</p>
-						</div>
+			<div class="menu-item-left" ng-show="showDocuments">
+				<div  class="menu-content">
+					<div class="document new" ng-click="addDocument()">
+						<p>+</p>
 					</div>
-				</li>
-				<li class="menu-item-left">
-					<div class="menu-content">
-						Content<br><br>
-						<a ng-click="changeStyle('bookbw')">bookbw</a><br>
-						<a ng-click="changeStyle('futurebw')">futurebw</a><br>
-						<a ng-click="changeStyle('pleasantbw')">pleasantbw</a>
+					<div class="document" ng-repeat="chapter in chapters" ng-click="chapterChoosen(chapter)">
+						<p>{{chapter.name}}</p>
 					</div>
-				</li>
-				<li class="menu-item-left">
-					<div class="menu-content">
-					Content
-					</div>
-				</li>
-			</ul>
+				</div>
+			</div>
+			<div class="menu-item-left" ng-show="showTypo">
+				<div class="menu-content">
+					Typography<br><br>
+					<a ng-click="changeStyle('bookbw')">bookbw</a><br>
+					<a ng-click="changeStyle('futurebw')">futurebw</a><br>
+					<a ng-click="changeStyle('pleasantbw')">pleasantbw</a>
+				</div>
+			</div>
+			<div class="menu-item-left" ng-show="showInsert">
+				<div class="menu-content">
+					Insert
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -54,7 +52,7 @@
 	</div>
 
 	<div id="menu-right" class="menu-right">
-		<div id="menu-right-showhide" class="content-icon">
+		<div id="menu-right-showshow" class="content-icon">
 			<span class="icon icon-reorder"></span>
 		</div>
 		<div class="content">
