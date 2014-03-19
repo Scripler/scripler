@@ -43,8 +43,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
-    function initiateMenus() {
-    	// Variables
+	function initiateMenus() {
+		// Variables
 		var menuLeft = document.getElementById("menu-left");
 		var menuRight = document.getElementById("menu-right");
 
@@ -66,10 +66,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var menuLeftContent = document.getElementById('menu-left-content');
 		menuLeftContent.style.height = screenHeight()-80 + "px";
 
-		var menuLeftTabs = document.getElementsByClassName( 'menu-left-tab' );
-		angular.element( menuLeftTabs[0] ).css( 'width', screenHeight() / 3  + 'px' );
-		angular.element( menuLeftTabs[1] ).css( 'width', screenHeight() / 3 + 'px' );
-		angular.element( menuLeftTabs[2] ).css( 'width', screenHeight() / 3 + 'px' );
+		var menuLeftTabs = document.getElementById('menu-left-tabs');
+		menuLeftTabs.style.height = 66 + 'px';
+
+		var menuLeftTab = document.getElementsByClassName( 'menu-left-tab' );
+		menuLeftTab[0].style.width = screenHeight() / 3  + 'px';
+		menuLeftTab[1].style.width = screenHeight() / 3  + 'px';
+		menuLeftTab[2].style.width = screenHeight() / 3  + 'px';
 
 	}
 
