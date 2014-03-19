@@ -1,4 +1,5 @@
 var User = require('../models/user.js').User
+	, Project = require('../models/project.js').Project
 	, passport = require('passport')
 	, emailer = require('../lib/email/email.js')
 	, crypto = require('crypto')
@@ -26,7 +27,26 @@ function hashEmail(email) {
  * GET current user.
  */
 exports.get = function (req, res) {
-	res.send({"status": 0, "user": req.user});
+	var user = req.user;
+
+	User.findOne(user).populate('projects', 'deleted').exec(function (err, user) {
+		if (err) return next(err);
+
+		var projects = user.projects;
+
+		// Filter out deleted documents.
+		for (var i=0; i<projects.length; i++) {
+			var project = projects[i];
+			if (project.deleted) {
+				projects.splice(i, 1);
+			} else {
+				// Only return the id (not "deleted")
+				user.projects[i] = project._id;
+			}
+		}
+
+		res.send({"status": 0, "user": user});
+	});
 };
 
 /**

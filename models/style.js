@@ -20,7 +20,8 @@ var StyleSchema = new Schema({
 	css: { type: String },
 	stylesetId: { type: Schema.Types.ObjectId, required: true },
 	members: [StyleMemberSchema],
-	archived: { type: Boolean, default: false}
+	archived: { type: Boolean, default: false},
+	deleted: { type: Boolean, default: false}
 });
 
 exports.Style = mongoose.model('Style', StyleSchema);

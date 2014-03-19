@@ -25,6 +25,7 @@ var DocumentSchema = new Schema({
 	folderId: { type: Schema.Types.ObjectId },
 	members: [DocumentMemberSchema],
 	archived: { type: Boolean, default: false},
+	deleted: { type: Boolean, default: false},
 	type: { type: String, enum: ["cover", "titlepage", "toc", "colophon"] },
 	modified: { type: Date, default: Date.now },
 	stylesets: [
@@ -33,6 +34,8 @@ var DocumentSchema = new Schema({
 });
 
 DocumentSchema.pre('remove', function (next) {
+	// TODO: add log message "WARN: Documents should not be deleted - why is this happening?"
+
 	var documentId = this._id;
 	if (Project == undefined) {
 		//Lazy loaded because of document<->project cyclic dependency

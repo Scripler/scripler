@@ -71,6 +71,7 @@ var ProjectSchema = new Schema({
 		toc: { entries: [TOCEntrySchema] }
 	},
 	archived: { type: Boolean, default: false},
+	deleted: { type: Boolean, default: false},
 	created: { type: Date, default: Date.now },
 	modified: { type: Date, default: Date.now },
 	stylesets: [
@@ -79,6 +80,8 @@ var ProjectSchema = new Schema({
 });
 
 ProjectSchema.pre('remove', function (next) {
+	// TODO: add log message "WARN: Projects should not be deleted - why is this happening?"
+
 	var projectId = this._id;
 	if (Document == undefined) {
 		//Lazy loaded because of document<->project cyclic dependency

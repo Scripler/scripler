@@ -818,6 +818,18 @@ describe('Scripler RESTful API', function () {
 							done();
 						});
 				}),
+				it('Attempting to rearrange e.g. more documents than the project has should return an error', function (done) {
+					request(host)
+						.put('/document/' + projectId + '/rearrange')
+						.set('cookie', cookie)
+						.send({documents: [rootDocumentId, childDocumentId, rootDocumentId, coverDocumentId, titlePageDocumentId, tocDocumentId, colophonDocumentId]})
+						.expect(400)
+						.end(function (err, res) {
+							if (err) throw new Error(err);
+							assert.equal(res.body.errorMessage, "/document/rearrange can only rearrange existing documents (not e.g. add or delete documents)");
+							done();
+						});
+				}),
 				it('Rearranging documents should return the project with the documents in the new order ', function (done) {
 					request(host)
 						.put('/document/' + projectId + '/rearrange')

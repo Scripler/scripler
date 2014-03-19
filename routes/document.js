@@ -9,7 +9,7 @@ var conf = require('config');
 exports.load = function (id) {
 	return function (req, res, next) {
 		id = id || req.body.documentId;
-		Document.findOne({"_id": id}, function (err, document) {
+		Document.findOne({"_id": id, "deleted": false}, function (err, document) {
 			if (err) return next(err);
 			if (!document) {
 				return next({message: "Document not found", status: 404});
@@ -100,23 +100,39 @@ exports.unarchive = function (req, res, next) {
 
 exports.delete = function (req, res, next) {
 	var document = req.document;
-	document.remove(function (err, result) {
+	document.deleted = true;
+	document.save(function (err) {
 		if (err) {
 			return next(err);
 		}
+
 		res.send({});
 	});
 }
 
 exports.rearrange = function (req, res, next) {
+	var errorMessage = "/document/rearrange can only rearrange existing documents (not e.g. add or delete documents)";
 	var project = req.project;
-	project.documents = req.body.documents;
-	project.save(function (err, project) {
-		if (err) {
-			return next(err);
+
+	if (req.body.documents && req.body.documents.length == project.documents.length) {
+		for (var i=0; i<req.body.documents.length; i++) {
+			var rearrangedDocument = req.body.documents[i];
+			var containsRearrangedDocument = utils.containsModel(req.body.documents, rearrangedDocument);
+			if (!containsRearrangedDocument) {
+				return next({message: errorMessage, status: 400});
+			}
 		}
-		res.send({project: project});
-	});
+
+		project.documents = req.body.documents;
+		project.save(function (err, project) {
+			if (err) {
+				return next(err);
+			}
+			res.send({project: project});
+		});
+	} else {
+		return next({message: errorMessage, status: 400});
+	}
 }
 
 exports.upload = function (req, res, next) {
