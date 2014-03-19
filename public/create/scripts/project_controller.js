@@ -60,34 +60,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		    return y;
 		};
 
-		// Menu Controls
-		var elements = document.getElementsByClassName('menu-item-left');
-
-		/*for (var i = 0; i < elements.length; i++) {
-		    elements[i].addEventListener('click', function(e) {
-		    	//e.stopPropagation();
-
-		    	if (this.className == 'menu-item-left closed') {
-		    		elements[0].className = 'menu-item-left closed';
-		    		elements[1].className = 'menu-item-left closed';
-		    		elements[2].className = 'menu-item-left closed';
-		    		this.className = 'menu-item-left open';
-		    	}
-		    	else {
-		    		this.className = 'menu-item-left closed';
-		    		//elements[0].className = 'menu-item-left open';
-		    	}
-		    }, false);
-		};*/
-
-		/*var elementsChildren = document.getElementsByClassName('menu-content');
-
-		for (var i = 0; i < elements.length; i++) {
-		    elementsChildren[i].addEventListener('click', function(e) {
-		    	e.stopPropagation();
-		    }, false);
-		};*/
-
 		//menuLeft.style.height = screenHeight()-80 + "px";
 		menuRight.style.height = screenHeight() + "px";
 
@@ -98,26 +70,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		angular.element( menuLeftTabs[0] ).css( 'width', screenHeight() / 3  + 'px' );
 		angular.element( menuLeftTabs[1] ).css( 'width', screenHeight() / 3 + 'px' );
 		angular.element( menuLeftTabs[2] ).css( 'width', screenHeight() / 3 + 'px' );
-		//angular.element( menuLeftTabs ).css( 'top', screenHeight() + 'px' );
 
-		/*menuLeftShowhide.onclick = function() {
-		  if (menuLeft.className.match(/(?:^|\s)open(?!\S)/) ) {
-		    menuLeft.className = "menu-left";
-		  }
-		  else {
-		    menuLeft.className += " open";
-		  }
-		};
-
-		document.getElementById('menu-right-showhide').onclick = function() {
-		  if (menuRight.className.match(/(?:^|\s)open(?!\S)/) ) {
-		    menuRight.className = "menu-right";
-		  }
-		  else {
-		    menuRight.className += " open";
-		  }
-		};*/
-    }
+	}
 
     function initiateEditor(scope) {
     	$scope.ckContent = 'test';
