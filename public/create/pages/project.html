@@ -6,14 +6,20 @@
 
 
 	<div id="menu-left-tabs" class="menu-left-tabs rotate">
-		<div id="menu-left-showhide" class="menu-left-tab">
-			<p ng-bind-html="project.name">Documents</p>
+		<div class="menu-left-tab" ng-click="showDocuments = !showDocuments">
+			<p ng-bind-html="project.name || 'Documents'">Documents</p>
+		</div>
+		<div class="menu-left-tab">
+			<p>Typography</p>
+		</div>
+		<div class="menu-left-tab">
+			<p>Insert</p>
 		</div>
 	</div>
-	<div id="menu-left" class="menu-left">
-		<div class="content">
+	<div id="menu-left" class="menu-left" ng-class="{ 'open' : showDocuments }">
+		<div id="menu-left-content" class="content">
 			<ul>
-				<li class="menu-item-left open">
+				<li class="menu-item-left">
 					<div  class="menu-content">
 						<div class="document new" ng-click="addDocument()">
 							<p>+</p>
@@ -23,7 +29,7 @@
 						</div>
 					</div>
 				</li>
-				<li class="menu-item-left closed">
+				<li class="menu-item-left">
 					<div class="menu-content">
 						Content<br><br>
 						<a ng-click="changeStyle('bookbw')">bookbw</a><br>
@@ -31,7 +37,7 @@
 						<a ng-click="changeStyle('pleasantbw')">pleasantbw</a>
 					</div>
 				</li>
-				<li class="menu-item-left closed">
+				<li class="menu-item-left">
 					<div class="menu-content">
 					Content
 					</div>

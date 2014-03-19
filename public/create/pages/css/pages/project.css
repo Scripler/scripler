@@ -70,26 +70,28 @@
   display: none;
 }
 .menu-left-tabs {
-	position: fixed;
-	left: 0;
-	top: 0;
 	z-index: 2;
+	position: fixed;
+	top: 21.4em;
+	bottom: 0;
+	margin: auto;
 }
 .menu-left-tab {
 	background: #fff265;
-	height: 60px;
-	font-size: 150%;
+	font-size: 130%;
 	cursor: pointer;
-	line-height: 50px;
-	padding-left: 30px;
+	padding-right: 50px;
+	float: right;
+	text-align: right;
 }
 
 .menu-content {
 	overflow: hidden;
 }
 .menu-left .content, .menu-right .content {
-  background: #fff;
-  float: left;
+	overflow-y: scroll;
+	background: #fff;
+	float: left;
 }
 .menu-left .content {
 	width: 260px;
@@ -148,19 +150,15 @@
 }
 
 .rotate {
-	-webkit-transform: rotate(-90deg) translate(0, -25px);
-	-moz-transform: rotate(-90deg);
-	-ms-transform: rotate(-90deg);
-	-o-transform: rotate(-90deg);
-	transform: rotate(-90deg) translate(0, -25px);
-
-	/* also accepts left, right, top, bottom coordinates; not required, but a good idea for styling */
-	-webkit-transform-origin: 0 0;
-	-moz-transform-origin: 40% 100%;
-	-ms-transform-origin: 40% 100%;
-	-o-transform-origin: 40% 100%;
-	transform-origin: 40% 100%;
-
-	/* Should be unset in IE9+ I think. */
-	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+	-webkit-transform-origin: 0 50%;
+	-webkit-transform: rotate(-90deg) translate(-29%, 50%);
+	-moz-transform-origin: 0 50%;
+	-moz-transform: rotate(-90deg) translate(-29%, 50%);
+	-ms-transform-origin: 0 50%;
+	-ms-transform: rotate(-90deg) translate(-29%, 50%);
+	-o-transform-origin: 0 50%;
+	-o-transform: rotate(-90deg) translate(-29%, 50%);
+	transform-origin: 0 50%;
+	transform: rotate(-90deg) translate(-29%, 50%);
+	left: 0;
 }

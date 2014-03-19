@@ -63,7 +63,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		// Menu Controls
 		var elements = document.getElementsByClassName('menu-item-left');
 
-		for (var i = 0; i < elements.length; i++) {
+		/*for (var i = 0; i < elements.length; i++) {
 		    elements[i].addEventListener('click', function(e) {
 		    	//e.stopPropagation();
 
@@ -78,26 +78,29 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		    		//elements[0].className = 'menu-item-left open';
 		    	}
 		    }, false);
-		};
+		};*/
 
-		var elementsChildren = document.getElementsByClassName('menu-content');
+		/*var elementsChildren = document.getElementsByClassName('menu-content');
 
 		for (var i = 0; i < elements.length; i++) {
 		    elementsChildren[i].addEventListener('click', function(e) {
 		    	e.stopPropagation();
 		    }, false);
-		};
+		};*/
 
-		menuLeft.style.height = screenHeight() + "px";
+		//menuLeft.style.height = screenHeight()-80 + "px";
 		menuRight.style.height = screenHeight() + "px";
 
-		var menuLeftShowhide = document.getElementById('menu-left-showhide');
-		menuLeftShowhide.style.width = screenHeight() / 3 + "px";
+		var menuLeftContent = document.getElementById('menu-left-content');
+		menuLeftContent.style.height = screenHeight()-80 + "px";
 
-		var menuLeftTabs = document.getElementById( 'menu-left-tabs' );
-		angular.element( menuLeftTabs ).css( 'top', screenHeight() / 3 + 'px' );
+		var menuLeftTabs = document.getElementsByClassName( 'menu-left-tab' );
+		angular.element( menuLeftTabs[0] ).css( 'width', screenHeight() / 3  + 'px' );
+		angular.element( menuLeftTabs[1] ).css( 'width', screenHeight() / 3 + 'px' );
+		angular.element( menuLeftTabs[2] ).css( 'width', screenHeight() / 3 + 'px' );
+		//angular.element( menuLeftTabs ).css( 'top', screenHeight() + 'px' );
 
-		menuLeftShowhide.onclick = function() {
+		/*menuLeftShowhide.onclick = function() {
 		  if (menuLeft.className.match(/(?:^|\s)open(?!\S)/) ) {
 		    menuLeft.className = "menu-left";
 		  }
@@ -113,7 +116,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		  else {
 		    menuRight.className += " open";
 		  }
-		};
+		};*/
     }
 
     function initiateEditor(scope) {
