@@ -23,52 +23,6 @@
 	margin: 0 !important;
 }
 
-.menu-left ul, .menu-right ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.menu-left ul li, .menu-right ul li {
-  border-bottom: 1px solid #fafafa;
-}
-.menu-left ul li:hover, .menu-right ul li:hover {
-  background-color: #fafafa;
-}
-.menu-left ul li {
-}
-.menu-right ul li {
-  border-left: 5px solid #fff;
-}
-.menu-left ul li div, .menu-right ul li div {
-  padding: 12px 20px;
-}
-.menu-left ul li .menu-content, .menu-right ul li .menu-content {
-  background: #fafafa;
-  border-bottom: 2px solid #efefef;
-}
-.menu-left .icon, .menu-right .icon {
-  color: #333;
-}
-.menu-left ul li .icon, .menu-right ul li .icon {
-  margin-right: 10px;
-  color: #efefef;
-}
-.menu-left ul li.open {
-  border-right: 5px solid #fff265;
-}
-.menu-right ul li.open {
-  border-right: 5px solid #fff265;
-}
-.menu-left ul li.open .icon, .menu-right ul li.open .icon {
-  color: #999;
-}
-.menu-left ul li.open .menu-content, .menu-right ul li.open .menu-content {
-  color: #666;
-  display: block;
-}
-.menu-left ul li.closed .menu-content, .menu-right ul li.closed .menu-content {
-  display: none;
-}
 .menu-left-tabs {
 	z-index: 2;
 	position: fixed;
@@ -84,17 +38,29 @@
 	float: right;
 	text-align: right;
 }
+.menu-item-left {
+	opacity:1;
+}
+.menu-item-left.ng-hide {
+	opacity: 0;
+}
+.content.ng-hide-add,
+.content.ng-hide-remove {
+	display:block!important;
+}
 
 .menu-content {
 	overflow: hidden;
 }
 .menu-left .content, .menu-right .content {
-	overflow-y: scroll;
+	overflow-y: auto;
 	background: #fff;
 	float: left;
 }
 .menu-left .content {
 	width: 260px;
+	padding-left: 20px;
+	padding-top: 20px;
 }
 .menu-right .content {
 	width: 200px;
