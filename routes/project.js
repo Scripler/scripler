@@ -21,7 +21,7 @@ exports.load = function (id) {
 			if (!project) {
 				return next({message: "Project not found", status: 404});
 			}			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToEntity(req.user, project)) return next(403);
+			if (!utils.hasAccessToModel(req.user, project)) return next(403);
 			req.project = project;
 
 			return next();
@@ -38,7 +38,7 @@ exports.loadPopulated = function (id) {
 				return next({message: "Project not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToEntity(req.user, project)) return next(403);
+			if (!utils.hasAccessToModel(req.user, project)) return next(403);
 			req.project = project;
 			return next();
 		});
@@ -55,7 +55,7 @@ exports.loadPopulatedFull = function (id) {
 				return next({message: "Project not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToEntity(req.user, project)) return next(403);
+			if (!utils.hasAccessToModel(req.user, project)) return next(403);
 
 			/*
 			 Filter out archived documents, stylesets and styles manually.
@@ -104,15 +104,6 @@ var list = exports.list = function (req, res, next) {
 			return next(err);
 		}
 		res.send({"projects": user.projects});
-	});
-};
-
-exports.archived = function (req, res, next) {
-	Project.find({"archived": true, "members": {"$elemMatch": {"userId": req.user._id, "access": "admin"}}}, function (err, projects) {
-		if (err) {
-			return next(err);
-		}
-		res.send({"projects": projects});
 	});
 };
 
@@ -168,12 +159,7 @@ exports.archive = function (req, res, next) {
 		if (err) {
 			return next(err);
 		}
-		User.update({"projects": project._id}, {"$pull": {"projects": project._id}}, {multi: true}, function (err, numberAffected, raw) {
-			if (err) {
-				return next(err);
-			}
-			res.send({project: project});
-		});
+		res.send({project: project});
 	});
 }
 
@@ -188,12 +174,7 @@ exports.unarchive = function (req, res, next) {
 		for (var i = 0; i < project.members.length; i++) {
 			membersArray.push(project.members[i].userId);
 		}
-		User.update({"_id": {"$in": membersArray}}, {"$addToSet": {"projects": project._id}}, {multi: true}, function (err, numberAffected, raw) {
-			if (err) {
-				return next(err);
-			}
-			res.send({project: project});
-		});
+		res.send({project: project});
 	});
 }
 
@@ -272,13 +253,26 @@ exports.copy = function (req, res, next) {
 }
 
 exports.rearrange = function (req, res, next) {
-	req.user.projects = req.body.projects;
-	req.user.save(function (err) {
-		if (err) {
-			return next(err);
+	var errorMessage = "/project/rearrange can only rearrange existing projects (not e.g. add or delete projects)";
+
+	if (req.body.projects && req.body.projects.length == req.user.projects.length) {
+		for (var i=0; i<req.body.projects.length; i++) {
+			var rearrangedProject = req.body.projects[i];
+			var containsRearrangedProject = utils.containsModel(req.body.projects, rearrangedProject);
+			if (!containsRearrangedProject) {
+				return next({message: errorMessage, status: 400});
+			}
 		}
-		list(req, res);
-	});
+		req.user.projects = req.body.projects;
+		req.user.save(function (err) {
+			if (err) {
+				return next(err);
+			}
+			list(req, res);
+		});
+	} else {
+		return next({message: errorMessage, status: 400});
+	}
 }
 
 exports.metadata = function (req, res, next) {

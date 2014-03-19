@@ -12,7 +12,7 @@ exports.load = function (id) {
 				return next({message: "Style not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToEntity(req.user, style)) return next(403);
+			if (!utils.hasAccessToModel(req.user, style)) return next(403);
 			req.style = style;
 			return next();
 		});

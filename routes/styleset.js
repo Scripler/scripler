@@ -13,7 +13,7 @@ exports.load = function (id) {
 				return next({message: "Styleset not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToEntity(req.user, styleset)) return next(403);
+			if (!utils.hasAccessToModel(req.user, styleset)) return next(403);
 			req.styleset = styleset;
 			return next();
 		});

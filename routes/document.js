@@ -15,7 +15,7 @@ exports.load = function (id) {
 				return next({message: "Document not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToEntity(req.user, document)) return next(403);
+			if (!utils.hasAccessToModel(req.user, document)) return next(403);
 			req.document = document;
 			return next();
 		});
