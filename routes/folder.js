@@ -104,7 +104,8 @@ function deleteFolder(projectId, folder) {
 	// Delete documents
 	Document.find({ projectId: projectId, folderId: folder.id }, function (err, documents) {
 		documents.forEach(function (document) {
-			document.remove();
+			document.deleted = true;
+			document.save();
 		});
 	});
 
@@ -185,7 +186,7 @@ exports.open = function (req, res, next) {
 				});
 			} else { // Return the folder's documents
 				// TODO: enable sorting for folders! How exactly?
-				Document.find({"projectId": req.params.projectId, "folderId": req.params.folderId, "archived": archived}, function (err, docs) {
+				Document.find({"projectId": req.params.projectId, "folderId": req.params.folderId, "archived": archived, "deleted": false}, function (err, docs) {
 					if (err) {
 						return next(err);
 					} else if (docs) {

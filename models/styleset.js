@@ -19,7 +19,8 @@ var StylesetSchema = new Schema({
 	name: { type: String, required: true },
 	styles: [ { type: Schema.Types.ObjectId, ref: 'Style' }],
 	members: [StylesetMemberSchema],
-	archived: { type: Boolean, default: false}
+	archived: { type: Boolean, default: false},
+	deleted: { type: Boolean, default: false}
 });
 
 exports.Styleset = mongoose.model('Styleset', StylesetSchema);

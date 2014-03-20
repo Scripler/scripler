@@ -270,31 +270,32 @@ describe('Scripler RESTful API', function () {
 						done();
 					});
 			}),
-			it('Project list should return the two unarchived projects in creation order', function (done) {
+			it('Project list should return all projects in creation order: BOTH unarchived AND archived', function (done) {
 				request(host)
 					.get('/project/list')
 					.set('cookie', cookie)
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.projects.length, 2);
+						assert.equal(res.body.projects.length, 3);
 						assert.equal(res.body.projects[0].name, "The Wizard of Oz");
 						assert.equal(res.body.projects[0]._id, projectId);
 						assert.equal(res.body.projects[1].name, "A Nice Story");
 						assert.equal(res.body.projects[1]._id, projectId2);
+						assert.equal(res.body.projects[2].name, "A New Name");
+						assert.equal(res.body.projects[2]._id, projectId3);
 						done();
 					});
 			}),
-			it('List of archived projects should return the single archived project', function (done) {
+			it('Attempting to rearrange e.g. fewer projects than the user has should return an error', function (done) {
 				request(host)
-					.get('/project/archived')
+					.put('/project/rearrange')
 					.set('cookie', cookie)
-					.expect(200)
+					.send({projects: [projectId2, projectId]})
+					.expect(400)
 					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.projects.length, 1);
-						assert.equal(res.body.projects[0]._id, projectId3);
-						assert.equal(res.body.projects[0].name, "A New Name");
+						if (err) throw new Error(err);
+						assert.equal(res.body.errorMessage, "/project/rearrange can only rearrange existing projects (not e.g. add or delete projects)");
 						done();
 					});
 			}),
@@ -302,13 +303,14 @@ describe('Scripler RESTful API', function () {
 				request(host)
 					.put('/project/rearrange')
 					.set('cookie', cookie)
-					.send({projects: [projectId2, projectId]})
+					.send({projects: [projectId2, projectId, projectId3]})
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.projects.length, 2);
+						assert.equal(res.body.projects.length, 3);
 						assert.equal(res.body.projects[0].name, "A Nice Story");
 						assert.equal(res.body.projects[1].name, "The Wizard of Oz");
+						assert.equal(res.body.projects[2].name, "A New Name");
 						done();
 					});
 			}),
@@ -325,18 +327,7 @@ describe('Scripler RESTful API', function () {
 						done();
 					});
 			}),
-			it('List of archived projects should return no projects', function (done) {
-				request(host)
-					.get('/project/archived')
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.projects.length, 0);
-						done();
-					});
-			}),
-			it('Project list should return the three unarchived projects in order', function (done) {
+			it('Project list should (still) return all projects in order: the three unarchived projects', function (done) {
 				request(host)
 					.get('/project/list')
 					.set('cookie', cookie)
@@ -824,6 +815,18 @@ describe('Scripler RESTful API', function () {
 						.end(function (err, res) {
 							if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 							assert.equal(res.body.document.archived, false);
+							done();
+						});
+				}),
+				it('Attempting to rearrange e.g. more documents than the project has should return an error', function (done) {
+					request(host)
+						.put('/document/' + projectId + '/rearrange')
+						.set('cookie', cookie)
+						.send({documents: [rootDocumentId, childDocumentId, rootDocumentId, coverDocumentId, titlePageDocumentId, tocDocumentId, colophonDocumentId]})
+						.expect(400)
+						.end(function (err, res) {
+							if (err) throw new Error(err);
+							assert.equal(res.body.errorMessage, "/document/rearrange can only rearrange existing documents (not e.g. add or delete documents)");
 							done();
 						});
 				}),

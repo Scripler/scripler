@@ -16,14 +16,26 @@ var epub3 = require('../lib/epub/epub3');
 exports.load = function (id) {
 	return function (req, res, next) {
 		id = id || req.body.projectId;
-		Project.findOne({"_id": id}, function (err, project) {
+		Project.findOne({"_id": id, "deleted": false}).populate('documents').exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
-			}			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToEntity(req.user, project)) return next(403);
-			req.project = project;
+			}
+			if (!req.user) return next();//Let missing authentication be handled in auth middleware
+			if (!utils.hasAccessToModel(req.user, project)) return next(403);
 
+			/*
+			 Filter out deleted documents manually.
+			 NB! If someone saves the project later in this request, we are screwed => ...TODO: use aggregation?
+			 */
+			for (var i=0; i<project.documents.length; i++) {
+				var document = project.documents[i];
+				if (document.deleted) {
+					project.documents.splice(i, 1);
+				}
+			}
+
+			req.project = project;
 			return next();
 		});
 	}
@@ -32,59 +44,70 @@ exports.load = function (id) {
 exports.loadPopulated = function (id) {
 	return function (req, res, next) {
 		id = id || req.body.projectId;
-		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type').exec(function (err, project) {
+		Project.findOne({"_id": id, "deleted": false}).populate('documents', 'name folderId modified archived deleted members type').exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToEntity(req.user, project)) return next(403);
+			if (!utils.hasAccessToModel(req.user, project)) return next(403);
+
+			/*
+			 Filter out deleted documents manually.
+			 NB! If someone saves the project later in this request, we are screwed => ...TODO: use aggregation?
+			 */
+			for (var i=0; i<project.documents.length; i++) {
+				var document = project.documents[i];
+				if (document.deleted) {
+					project.documents.splice(i, 1);
+				}
+			}
+
 			req.project = project;
 			return next();
 		});
 	}
 }
 
-// Purely for performance reasons
 exports.loadPopulatedFull = function (id) {
 	return function (req, res, next) {
 		id = id || req.body.projectId;
-		Project.findOne({"_id": id, "archived": false}).populate('documents', 'name folderId modified archived members type text').populate('stylesets').exec(function (err, project) {
+		Project.findOne({"_id": id, "deleted": false}).populate('documents', 'name folderId modified archived deleted members type text').populate('stylesets').exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToEntity(req.user, project)) return next(403);
+			if (!utils.hasAccessToModel(req.user, project)) return next(403);
 
 			/*
-			 Filter out archived documents, stylesets and styles manually.
+			 Filter out deleted documents, stylesets and styles manually.
 			 NB! If someone saves the project later in this request, we are screwed => ...TODO: use aggregation?
 			 */
 
-			// Filter out archived documents.
+			// Filter out deleted documents.
 			for (var i=0; i<project.documents.length; i++) {
 				var document = project.documents[i];
-				if (document.archived) {
+				if (document.deleted) {
 					project.documents.splice(i, 1);
 				}
 			}
 
-			// Filter out archived stylesets.
+			// Filter out deleted stylesets.
 			for (var i=0; i<project.stylesets.length; i++) {
 				var styleset = project.stylesets[i];
-				if (styleset.archived) {
+				if (styleset.deleted) {
 					project.stylesets.splice(i, 1);
 				}
 
-				// Filter out archived styles.
+				// Filter out deleted styles.
 				Styleset.findOne(styleset).populate({path: 'styles'}).exec(function (err, styleset) {
 					if (err) next(err);
 
 					if (styleset.styles != null && styleset.styles.length > 0) {
 						for (var j=0; j<styleset.styles.length; j++) {
 							var style = styleset.styles[j];
-							if (style.archived) {
+							if (style.deleted) {
 								styleset.styles.splice(j, 1);
 							}
 						}
@@ -103,16 +126,16 @@ var list = exports.list = function (req, res, next) {
 		if (err) {
 			return next(err);
 		}
-		res.send({"projects": user.projects});
-	});
-};
 
-exports.archived = function (req, res, next) {
-	Project.find({"archived": true, "members": {"$elemMatch": {"userId": req.user._id, "access": "admin"}}}, function (err, projects) {
-		if (err) {
-			return next(err);
+		// Filter out deleted projects. TODO: as above, use aggregation?
+		for (var i=0; i<user.projects.length; i++) {
+			var project = user.projects[i];
+			if (project.deleted) {
+				user.projects.splice(i, 1);
+			}
 		}
-		res.send({"projects": projects});
+
+		res.send({"projects": user.projects});
 	});
 };
 
@@ -168,12 +191,7 @@ exports.archive = function (req, res, next) {
 		if (err) {
 			return next(err);
 		}
-		User.update({"projects": project._id}, {"$pull": {"projects": project._id}}, {multi: true}, function (err, numberAffected, raw) {
-			if (err) {
-				return next(err);
-			}
-			res.send({project: project});
-		});
+		res.send({project: project});
 	});
 }
 
@@ -188,29 +206,22 @@ exports.unarchive = function (req, res, next) {
 		for (var i = 0; i < project.members.length; i++) {
 			membersArray.push(project.members[i].userId);
 		}
-		User.update({"_id": {"$in": membersArray}}, {"$addToSet": {"projects": project._id}}, {multi: true}, function (err, numberAffected, raw) {
-			if (err) {
-				return next(err);
-			}
-			res.send({project: project});
-		});
+		res.send({project: project});
 	});
 }
 
 exports.delete = function (req, res, next) {
 	var project = req.project;
-
-	var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
-	rimraf(projectDir, function (err) {
+	project.deleted = true;
+	project.save(function (err) {
 		if (err) {
 			return next(err);
 		}
-		project.remove(function (err, result) {
-			if (err) {
-				return next(err);
-			}
-			res.send({});
-		});
+
+		// Stylesets and styles should not be "deleted" since they could be in use by other projects
+		Document.update({"projectId": project._id}, {"deleted": true}, {multi: true}).exec();
+
+		res.send({});
 	});
 }
 
@@ -240,6 +251,7 @@ exports.copy = function (req, res, next) {
 			type: document.type,
 			folderId: document.folderId,
 			archived: document.archived,
+			deleted: document.deleted,
 			members: document.members
 		});
 		newProject.documents.push(newDocument);
@@ -271,13 +283,26 @@ exports.copy = function (req, res, next) {
 }
 
 exports.rearrange = function (req, res, next) {
-	req.user.projects = req.body.projects;
-	req.user.save(function (err) {
-		if (err) {
-			return next(err);
+	var errorMessage = "/project/rearrange can only rearrange existing projects (not e.g. add or delete projects)";
+
+	if (req.body.projects && req.body.projects.length == req.user.projects.length) {
+		for (var i=0; i<req.body.projects.length; i++) {
+			var rearrangedProject = req.body.projects[i];
+			var containsRearrangedProject = utils.containsModel(req.body.projects, rearrangedProject);
+			if (!containsRearrangedProject) {
+				return next({message: errorMessage, status: 400});
+			}
 		}
-		list(req, res);
-	});
+		req.user.projects = req.body.projects;
+		req.user.save(function (err) {
+			if (err) {
+				return next(err);
+			}
+			list(req, res);
+		});
+	} else {
+		return next({message: errorMessage, status: 400});
+	}
 }
 
 exports.metadata = function (req, res, next) {

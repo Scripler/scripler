@@ -6,13 +6,13 @@ exports.load = function (id) {
 	return function (req, res, next) {
 		// TODO: specifying "id" as a var will cause its value to be undefined - WHY? (why is the "id" param not in scope anymore?)
 		id = id || req.body.styleId;
-		Style.findOne({"_id": id}, function (err, style) {
+		Style.findOne({"_id": id, "deleted": false}, function (err, style) {
 			if (err) return next(err);
 			if (!style) {
 				return next({message: "Style not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToEntity(req.user, style)) return next(403);
+			if (!utils.hasAccessToModel(req.user, style)) return next(403);
 			req.style = style;
 			return next();
 		});
