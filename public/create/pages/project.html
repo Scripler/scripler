@@ -20,10 +20,10 @@
 		<div id="menu-left-content" class="content">
 			<div class="menu-item-left" ng-show="showDocuments">
 				<div  class="menu-content">
-					<div class="projectDocument new" ng-click="addDocument()">
+					<div class="projectDocument new" ng-click="addProjectDocument()">
 						<p>+</p>
 					</div>
-					<div class="projectDocument" ng-repeat="projectDocument in projectDocuments">
+					<div class="projectDocument" ng-repeat="projectDocument in projectDocuments" ng-hide="projectDocument.archived">
 						<a class="projectDocument-options-show" ng-click="showProjectDocumentOptions = true">
 							<div class="arrow"></div>
 						</a>
@@ -41,7 +41,6 @@
 						<div class="projectDocument-options" ng-show="showProjectDocumentOptions">
 							<div class="projectDocument-options-hide" ng-click="showProjectDocumentOptions = false;" title="Close Options">x</div>
 							<div class="projectDocument-options-menupoint first" ng-click="editingProjectDocumentTitle = true; showProjectDocumentOptions = false;">rename</div>
-							<div class="projectDocument-options-menupoint" ng-click="copyProjectDocument(projectDocument); showProjectDocumentOptions = false;">copy</div>
 							<div class="projectDocument-options-menupoint" ng-click="archiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">archive</div>
 						</div>
 					</div>

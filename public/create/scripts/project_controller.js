@@ -26,7 +26,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	});
 
-	$scope.addDocument = function() {
+	$scope.addProjectDocument = function() {
 		var order = $scope.projectDocuments.length + 1;
 		var name = "Document " + order;
 		var document = {};
@@ -42,6 +42,26 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.projectDocuments.push( document );
 		}
 	}
+
+	$scope.archiveProjectDocument = function( projectDocument ) {
+		if ( $scope.user._id ) {
+			$http.put('/document/' + projectDocument._id + '/archive')
+				.success( function() {
+					projectDocument.archived = true;
+				});
+		} else {
+			projectDocument.archived = true;
+		}
+	};
+
+	$scope.renameProjectDocument = function( projectDocument ) {
+		if ( $scope.user._id ) {
+			$http.put('/document/' + projectDocument._id + '/rename', angular.toJson( projectDocument ) )
+				.success( function() {});
+		} else {
+			//TODO save to localstorage
+		}
+	};
 
 	function initiateMenus() {
 		// Variables
