@@ -219,7 +219,6 @@ exports.copy = function (req, res, next) {
 
 	var newProject = new Project({
 		name: project.name + " - Copy",
-		order: project.order + 1,
 		folders: project.folders,
 		members: project.members,
 		metadata: extend({}, project.metadata)
