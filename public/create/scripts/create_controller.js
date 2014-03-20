@@ -117,7 +117,6 @@ function PublicationsCtrl ( $scope, $http, localStorageService, projectsService 
 	};
 
 	$scope.archivePublication = function( publication ) {
-		var index = $scope.publications.indexOf( publication );
 		if ( $scope.user._id ) {
 			$http.put('/project/' + publication._id + '/archive')
 				.success( function() {
