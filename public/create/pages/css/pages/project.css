@@ -185,7 +185,7 @@
 }
 textarea#renameProjectDocument {
 	width: 90%;
-	height: 100%;
+	height: auto;
 	border: 1px solid #ffff99;
 	resize: none;
 	outline: none;
