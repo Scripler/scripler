@@ -55,6 +55,12 @@
 	vertical-align: middle;
 	text-align: center;
 	cursor: pointer;
+
+	overflow:hidden;
+    white-space:nowrap;
+    -ms-text-overflow:ellipsis;
+    text-overflow:ellipsis;
+    width:142px;
 }
 
 .publication .publication-options-show {

@@ -20,11 +20,30 @@
 		<div id="menu-left-content" class="content">
 			<div class="menu-item-left" ng-show="showDocuments">
 				<div  class="menu-content">
-					<div class="document new" ng-click="addDocument()">
+					<div class="projectDocument new" ng-click="addDocument()">
 						<p>+</p>
 					</div>
-					<div class="document" ng-repeat="chapter in chapters" ng-click="chapterChoosen(chapter)">
-						<p>{{chapter.name}}</p>
+					<div class="projectDocument" ng-repeat="projectDocument in projectDocuments">
+						<a class="projectDocument-options-show" ng-click="showProjectDocumentOptions = true">
+							<div class="arrow"></div>
+						</a>
+
+						<p ng-hide="editingProjectDocumentTitle">
+							<a ng-click="projectDocumentChoosen(projectDocument)">{{projectDocument.name}}</a>
+						</p>
+
+						<form ng-show="editingProjectDocumentTitle">
+							<p>
+								<textarea id="renameProjectDocument" ng-model="projectDocument.name" focus-on="!!editingProjectDocumentTitle" on-enter="editingProjectDocumentTitle = false; renameProjectDocument(projectDocument);"></textarea>
+							</p>
+						</form>
+
+						<div class="projectDocument-options" ng-show="showProjectDocumentOptions">
+							<div class="projectDocument-options-hide" ng-click="showProjectDocumentOptions = false;" title="Close Options">x</div>
+							<div class="projectDocument-options-menupoint first" ng-click="editingProjectDocumentTitle = true; showProjectDocumentOptions = false;">rename</div>
+							<div class="projectDocument-options-menupoint" ng-click="copyProjectDocument(projectDocument); showProjectDocumentOptions = false;">copy</div>
+							<div class="projectDocument-options-menupoint" ng-click="archiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">archive</div>
+						</div>
 					</div>
 				</div>
 			</div>

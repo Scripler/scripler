@@ -88,17 +88,17 @@
 .menu-left ul li div .document {
 	padding: 0;
 }
-.document {
+.projectDocument {
+	position: relative;
 	margin: 0 15px 15px 0;
-	width: 88px;
-	height: 142px;
+	width: 59px;
+	height: 95px;
 	background: none #fefefe;
 	float: left;
 	border: 1px solid #ffff99;
-	display: table;
 	box-shadow: 0px 5px 5px -5px #ccc;
 }
-.document.new {
+.projectDocument.new {
 	border: 1px dashed #eee;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -108,11 +108,102 @@
 	user-select: none;
 }
 
-.document p {
-	display: table-cell;
+.projectDocument p {
 	vertical-align: middle;
 	text-align: center;
 	cursor: pointer;
+	overflow: hidden;
+}
+.projectDocument .projectDocument-options-show {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	background-color: #fff;
+	border-radius: 2px;
+	padding: 4px 2px;
+	cursor: pointer;
+	-webkit-transition: all 0.5s ease-in-out;
+	-moz-transition: all 0.5s ease-in-out;
+	-o-transition: all 0.5s ease-in-out;
+	transition: all 0.5s ease-in-out;
+}
+.projectDocument:hover .projectDocument-options-show, .projectDocument .projectDocument-options-show.active {
+	background-color: #eee;
+	-webkit-transition: all 0.5s ease-in-out;
+	-moz-transition: all 0.5s ease-in-out;
+	-o-transition: all 0.5s ease-in-out;
+	transition: all 0.5s ease-in-out;
+}
+
+.projectDocument .projectDocument-options-show .arrow {
+	width: 0;
+	height: 0;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-top: 5px solid #fff;
+}
+.projectDocument-options {
+	position: absolute;
+	top: 20px;
+	right: 0;
+	background: none #fff;
+	width: 90px;
+	padding: 10px;
+	z-index: 10;
+	border-radius: 5px;
+	border: 1px solid #eee;
+}
+.projectDocument-options-header {
+	border-bottom: 1px solid #eee;
+	text-align: center;
+	padding: 5px 0 10px;
+}
+.projectDocument-options-hide {
+	position: absolute;
+	top: 5px;
+	right: 10px;
+	cursor: pointer;
+}
+.projectDocument-options-menupoint {
+	cursor: pointer;
+	margin: 2px -10px;
+	padding: 5px 15px;
+	text-transform: capitalize;
+}
+.projectDocument-options-menupoint.first {
+	margin-top: 10px;
+}
+.projectDocument-options-menupoint:hover {
+	background: none #ffffcc;
+}
+.projectDocument-options-dates {
+	border-top: 1px solid #eee;
+	padding: 10px 0 5px;
+}
+.projectDocument-archived {
+	opacity: 0.5;
+}
+textarea#renameProjectDocument {
+	width: 90%;
+	margin-top: 37px;
+	height: 100%;
+	border: 1px solid #ffff99;
+	resize: none;
+	outline: none;
+	overflow: hidden;
+}
+
+.animate-enter, .animate-leave {
+	-webkit-transition: all 0.5s ease-in-out;
+	-moz-transition: all 0.5s ease-in-out;
+	-o-transition: all 0.5s ease-in-out;
+	transition: all 0.5s ease-in-out;
+}
+.animate-leave.animate-leave-active, .animate-enter {
+	opacity: 0;
+}
+.animate-enter.animate-enter-active, .animate-leave {
+	opacity: 1;
 }
 
 .rotate {
