@@ -3,16 +3,16 @@
 function projectController( $scope, $location, userService, projectsService, $http ) {
 
 	// Scope, Project
-	$scope.chapters = [
+	$scope.projectDocuments = [
         //ADD/FIX: Get Publications API Call, on success do change
-        {chapterNumber:'00001',name:'Document 1',chapterContent:'<h1>this is a test</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'bookbw'},
-        {chapterNumber:'00002',name:'Document 2',chapterContent:'<h1>this is a test 2</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'bookbw'},
-        {chapterNumber:'00003',name:'Document 3',chapterContent:'<h1>this is a test 3</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'futurebw'},
-        {chapterNumber:'00004',name:'Document 4',chapterContent:'<h1>this is a test 4</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'futurebw'},
-        {chapterNumber:'00005',name:'Document 5',chapterContent:'<h1>this is a test 5</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'pleasantbw'},
-        {chapterNumber:'00006',name:'Document 6',chapterContent:'<h1>this is a test 6</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'pleasantbw'},
-        {chapterNumber:'00007',name:'Document 7',chapterContent:'<h1>this is a test 7</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'bookbw'},
-        {chapterNumber:'00008',name:'Document 8',chapterContent:'<h1>this is a test 8</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'bookbw'}
+        {number:'00001',name:'Document 1',content:'<h1>this is a test</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'},
+        {number:'00002',name:'Document 2',content:'<h1>this is a test 2</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'},
+        {number:'00003',name:'Document 3',content:'<h1>this is a test 3</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'futurebw'},
+        {number:'00004',name:'Document 4',content:'<h1>this is a test 4</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'futurebw'},
+        {number:'00005',name:'Document 5',content:'<h1>this is a test 5</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'pleasantbw'},
+        {number:'00006',name:'Document 6',content:'<h1>this is a test 6</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'pleasantbw'},
+        {number:'00007',name:'Document 7',content:'<h1>this is a test 7</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'},
+        {number:'00008',name:'Document 8',content:'<h1>this is a test 8</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'}
     ];
 
 	$scope.$on('user:updated', function( event, user ) {
@@ -22,12 +22,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var projectPromise = projectsService.getProject( $scope.pid );
 		projectPromise.then( function( project ) {
 			$scope.project = project;
-			$scope.chapters = $scope.project.documents;
+			$scope.projectDocuments = $scope.project.documents;
 		});
 	});
 
 	$scope.addDocument = function() {
-		var order = $scope.chapters.length + 1;
+		var order = $scope.projectDocuments.length + 1;
 		var name = "Document " + order;
 		var document = {};
 		document.name = name;
@@ -36,10 +36,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			document.projectId = $scope.pid;
 			$http.post('/document', angular.toJson( document ) )
 				.success( function( data ) {
-					$scope.chapters.push( data.document );
+					$scope.projectDocuments.push( data.document );
 				})
 		} else {
-			$scope.chapters.push( document );
+			$scope.projectDocuments.push( document );
 		}
 	}
 
@@ -79,9 +79,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
     function initiateEditor(scope) {
     	$scope.ckContent = 'test';
 
-//		var startChapter = $scope.chapters[0];
-//		$scope.entrybody = startChapter.chapterContent;
-		// Mangler at tilføje stylen startChapter.chapterStyleSheet
+//		var startChapter = $scope.documents[0];
+//		$scope.entrybody = startChapter.content;
+		// Mangler at tilføje stylen startChapter.documentstyleSheet
     }
 
     initiateEditor();
@@ -91,20 +91,20 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 
 
-		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.chapterStyleSheet+'.css';
+		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
 
-//	    var startChapter = $scope.chapters[0];
-//	    $scope.entrybody = startChapter.chapterContent;
-	    // Mangler at tilføje stylen startChapter.chapterStyleSheet
-		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.chapterStyleSheet+'.css';
+//	    var startChapter = $scope.documents[0];
+//	    $scope.entrybody = startChapter.content;
+	    // Mangler at tilføje stylen startChapter.documentstyleSheet
+		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
 
 		// CK Editor Controls
-	    $scope.chapterChoosen = function(chapter) {
+	    $scope.projectDocumentChoosen = function( projectDocument ) {
 			if (editor) {
-				$scope.entrybody = chapter.chapterContent;
-				$scope.entrybodyStyleset = chapter.chapterStyleSheet;
+				$scope.entrybody = projectDocument.content;
+				$scope.entrybodyStyleset = projectDocument.styleSheet;
 				//Change to use the script settings and load content there
-				editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+chapter.chapterStyleSheet+'.css';
+				editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+projectDocument.styleSheet+'.css';
 			}
 			else {
 				console.log('error: no editor found')
