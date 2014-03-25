@@ -1,3 +1,6 @@
+body {
+	background-color: #D1D2D4 !important;
+}
 .menu-left, .menu-right {
 	z-index: 1;
 	position: fixed;
@@ -9,6 +12,9 @@
 	-o-transition: all 1s;
 }
 .menu-left {
+	background-color: #F2F3F4;
+	height: 100%;
+	min-height: 100%;
 	left: 0;
 	margin: 0 0 0 -260px;
 }
@@ -33,6 +39,10 @@
 	min-height: 100%; /* Minimum height for modern browsers */
 	height:100%; /* Minimum height for IE */
 	background: #fff265;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
 }
 .menu-left-tab {
 	font-size: 130%;
@@ -56,10 +66,11 @@
 }
 .menu-left .content, .menu-right .content {
 	overflow-y: auto;
-	background: #fff;
 	float: left;
 }
 .menu-left .content {
+	height: 100%;
+	min-height: 100%;
 	width: 260px;
 	padding-left: 20px;
 	padding-top: 20px;
@@ -90,6 +101,10 @@
 .menu-left ul li div .document {
 	padding: 0;
 }
+.projectDocuments {
+	padding-left: 0px;
+	margin-top: 0;
+}
 .projectDocument {
 	position: relative;
 	margin: 0 15px 15px 0;
@@ -99,8 +114,10 @@
 	float: left;
 	border: 1px solid #ffff99;
 	box-shadow: 0px 5px 5px -5px #ccc;
+	cursor: pointer;
 }
 .projectDocument.new {
+	padding-top: 20px;
 	border: 1px dashed #eee;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -215,4 +232,26 @@ textarea#renameProjectDocument {
 .center {
 	height: 30%;
 	min-height: 30%;
+}
+.projectDocument.over {
+	opacity: .25;
+	-webkit-transition: -webkit-transform 0.2s ease-out;
+	-moz-transition: -moz-transform 0.2s ease-out;
+	-webkit-transform: scale(0.8);
+	-moz-transform: scale(0.8);
+}
+.projectDocument.moving {
+	opacity: .25;
+}
+[draggable] {
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+[draggable] * {
+	-moz-user-drag: none;
+	-khtml-user-drag: none;
+	-webkit-user-drag: none;
+	user-drag: none;
 }

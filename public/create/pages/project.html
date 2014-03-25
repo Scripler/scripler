@@ -5,7 +5,7 @@
 <div class="container">
 
 
-	<div id="menu-left-tabs" class="menu-left-tabs">
+	<div id="menu-left-tabs" class="menu-left-tabs" ondragstart="return false;" ondrop="return false;">
 		<div class="menu-left-tab shadow" ng-click="showDocuments = !showDocuments; showTypo = false; showInsert = false;">
 			<div class="center"></div>
 			<img src="pages/images/documents.svg" width="20">
@@ -26,25 +26,27 @@
 					<div class="projectDocument new" ng-click="addProjectDocument()">
 						<p>+</p>
 					</div>
-					<div class="projectDocument" ng-repeat="projectDocument in projectDocuments" ng-hide="projectDocument.archived">
-						<a class="projectDocument-options-show" ng-click="showProjectDocumentOptions = true">
-							<div class="arrow"></div>
-						</a>
+					<div html-sortable="sortable_option" ng-model="projectDocuments">
+						<div class="projectDocument" ng-repeat="projectDocument in projectDocuments" ng-hide="projectDocument.archived">
+							<a class="projectDocument-options-show" ng-click="showProjectDocumentOptions = true">
+								<div class="arrow"></div>
+							</a>
 
-						<p ng-hide="editingProjectDocumentTitle">
-							<a ng-click="projectDocumentChoosen(projectDocument)">{{projectDocument.name}}</a>
-						</p>
-
-						<form ng-show="editingProjectDocumentTitle">
-							<p>
-								<textarea id="renameProjectDocument" rows="4" ng-model="projectDocument.name" focus-on="!!editingProjectDocumentTitle" on-enter="editingProjectDocumentTitle = false; renameProjectDocument(projectDocument);"></textarea>
+							<p ng-hide="editingProjectDocumentTitle">
+								<a ng-click="projectDocumentChoosen(projectDocument)">{{projectDocument.name}}</a>
 							</p>
-						</form>
 
-						<div class="projectDocument-options" ng-show="showProjectDocumentOptions">
-							<div class="projectDocument-options-hide" ng-click="showProjectDocumentOptions = false;" title="Close Options">x</div>
-							<div class="projectDocument-options-menupoint first" ng-click="editingProjectDocumentTitle = true; showProjectDocumentOptions = false;">rename</div>
-							<div class="projectDocument-options-menupoint" ng-click="archiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">archive</div>
+							<form ng-show="editingProjectDocumentTitle">
+								<p>
+									<textarea id="renameProjectDocument" rows="4" ng-model="projectDocument.name" focus-on="!!editingProjectDocumentTitle" on-enter="editingProjectDocumentTitle = false; renameProjectDocument(projectDocument);"></textarea>
+								</p>
+							</form>
+
+							<div class="projectDocument-options" ng-show="showProjectDocumentOptions">
+								<div class="projectDocument-options-hide" ng-click="showProjectDocumentOptions = false;" title="Close Options">x</div>
+								<div class="projectDocument-options-menupoint first" ng-click="editingProjectDocumentTitle = true; showProjectDocumentOptions = false;">rename</div>
+								<div class="projectDocument-options-menupoint" ng-click="archiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">archive</div>
+							</div>
 						</div>
 					</div>
 				</div>
