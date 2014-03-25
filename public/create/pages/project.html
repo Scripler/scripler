@@ -5,15 +5,18 @@
 <div class="container">
 
 
-	<div id="menu-left-tabs" class="menu-left-tabs rotate">
-		<div class="menu-left-tab" ng-click="showDocuments = !showDocuments; showTypo = false; showInsert = false;">
-			<p ng-bind-html="project.name || 'Documents'">Documents</p>
+	<div id="menu-left-tabs" class="menu-left-tabs">
+		<div class="menu-left-tab shadow" ng-click="showDocuments = !showDocuments; showTypo = false; showInsert = false;">
+			<div class="center"></div>
+			<img src="pages/images/documents.svg" width="20">
 		</div>
-		<div class="menu-left-tab" ng-click="showTypo = !showTypo; showDocuments = false; showInsert = false;">
-			<p>Typography</p>
+		<div class="menu-left-tab shadow" ng-click="showTypo = !showTypo; showDocuments = false; showInsert = false;">
+			<div class="center"></div>
+			<img src="pages/images/typography.svg" width="20">
 		</div>
-		<div class="menu-left-tab" ng-click="showInsert = !showInsert; showDocuments = false; showTypo = false;">
-			<p>Insert</p>
+		<div class="menu-left-tab shadow" ng-click="showInsert = !showInsert; showDocuments = false; showTypo = false;">
+			<div class="center"></div>
+			<img src="pages/images/insert.svg" width="20">
 		</div>
 	</div>
 	<div id="menu-left" class="menu-left" ng-class="{ 'open' : showDocuments || showTypo || showInsert }">

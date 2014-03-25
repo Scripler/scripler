@@ -2,6 +2,8 @@
 
 function projectController( $scope, $location, userService, projectsService, $http ) {
 
+	$scope.testName = 'Documents Test';
+
 	// Scope, Project
 	$scope.projectDocuments = [
         //ADD/FIX: Get Publications API Call, on success do change
@@ -81,7 +83,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		};
 
 		//menuLeft.style.height = screenHeight()-80 + "px";
-		menuRight.style.height = screenHeight() + "px";
+		/*menuRight.style.height = screenHeight() + "px";
 
 		var menuLeftContent = document.getElementById('menu-left-content');
 		menuLeftContent.style.height = screenHeight()-73 + "px";
@@ -92,7 +94,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var menuLeftTab = document.getElementsByClassName( 'menu-left-tab' );
 		menuLeftTab[0].style.width = screenHeight() / 3  + 'px';
 		menuLeftTab[1].style.width = screenHeight() / 3  + 'px';
-		menuLeftTab[2].style.width = screenHeight() / 3  + 'px';
+		menuLeftTab[2].style.width = screenHeight() / 3  + 'px';*/
 
 	}
 

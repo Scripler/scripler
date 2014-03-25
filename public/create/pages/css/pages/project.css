@@ -9,15 +9,15 @@
 	-o-transition: all 1s;
 }
 .menu-left {
-  left: 0;
-  margin: 0 0 0 -260px;
+	left: 0;
+	margin: 0 0 0 -260px;
 }
 .menu-right {
-  right: 0;
-  margin: 0 -200px 0 0;
+	right: 0;
+	margin: 0 -200px 0 0;
 }
 .menu-left.open {
-	margin-left: 59px !important;
+	margin-left: 50px !important;
 }
 .menu-right.open {
 	margin: 0 !important;
@@ -26,17 +26,19 @@
 .menu-left-tabs {
 	z-index: 2;
 	position: fixed;
-	top: 21.3em;
-	bottom: 0;
+	top: 0;
+	left: 0;
 	margin: auto;
+	width: 50px;
+	min-height: 100%; /* Minimum height for modern browsers */
+	height:100%; /* Minimum height for IE */
+	background: #fff265;
 }
 .menu-left-tab {
-	background: #fff265;
 	font-size: 130%;
 	cursor: pointer;
-	padding-right: 50px;
-	float: right;
-	text-align: right;
+	padding: 10px;
+	height: calc(100% / 3);
 }
 .menu-item-left {
 	opacity:1;
@@ -66,24 +68,24 @@
 	width: 200px;
 }
 .menu-left .content-icon, .menu-right .content-icon {
-  background: #fff;
-  width: 42px;
-  height: 42px;
-  padding: 10px 0 0 12px;
-  font-size: 20px;
-  float: left;
-  cursor: pointer;
+	background: #fff;
+	width: 42px;
+	height: 42px;
+	padding: 10px 0 0 12px;
+	font-size: 20px;
+	float: left;
+	cursor: pointer;
 }
 
 .container {
- padding: 40px;
+	padding: 40px;
 }
 
 .editor {
-  background: #fff;
-  position: relative;
-  margin: 0 auto;
-  width: 800px;
+	background: #fff;
+	position: relative;
+	margin: 0 auto;
+	width: 800px;
 }
 .menu-left ul li div .document {
 	padding: 0;
@@ -205,16 +207,12 @@ textarea#renameProjectDocument {
 	opacity: 1;
 }
 
-.rotate {
-	-webkit-transform-origin: 0 50%;
-	-webkit-transform: rotate(-90deg) translate(-29%, 50%);
-	-moz-transform-origin: 0 50%;
-	-moz-transform: rotate(-90deg) translate(-29%, 50%);
-	-ms-transform-origin: 0 50%;
-	-ms-transform: rotate(-90deg) translate(-29%, 50%);
-	-o-transform-origin: 0 50%;
-	-o-transform: rotate(-90deg) translate(-29%, 50%);
-	transform-origin: 0 50%;
-	transform: rotate(-90deg) translate(-29%, 50%);
-	left: 0;
+.shadow {
+	-webkit-box-shadow: 0 8px 6px -6px black;
+	-moz-box-shadow: 0 8px 6px -6px black;
+	box-shadow: 0 3px 20px -6px black;
+}
+.center {
+	height: 30%;
+	min-height: 30%;
 }
