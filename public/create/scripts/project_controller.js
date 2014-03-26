@@ -4,10 +4,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.testName = 'Documents Test';
 	$scope.sortable_option = {
-
-	stop : function( list, drop_item ) {
-		console.log(list);
-		//call reorder
+		stop : function( list, drop_item ) {
+			console.log(list);
+			//call reorder
 		}
 	};
 
@@ -72,39 +71,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
-	function initiateMenus() {
-		// Variables
-		var menuLeft = document.getElementById("menu-left");
-		var menuRight = document.getElementById("menu-right");
-
-		// Functions
-		function screenHeight() {
-			var w = window,
-		    d = document,
-		    e = d.documentElement || d.body,
-		    //g = d.getElementsByTagName('body')[0],
-		    //x = w.innerWidth || e.clientWidth || g.clientWidth,
-		    y = w.innerHeight|| e.clientHeight;// || g.clientHeight;
-
-		    return y;
-		};
-
-		//menuLeft.style.height = screenHeight()-80 + "px";
-		/*menuRight.style.height = screenHeight() + "px";
-
-		var menuLeftContent = document.getElementById('menu-left-content');
-		menuLeftContent.style.height = screenHeight()-73 + "px";
-
-		var menuLeftTabs = document.getElementById('menu-left-tabs');
-		menuLeftTabs.style.height = 66 + 'px';
-
-		var menuLeftTab = document.getElementsByClassName( 'menu-left-tab' );
-		menuLeftTab[0].style.width = screenHeight() / 3  + 'px';
-		menuLeftTab[1].style.width = screenHeight() / 3  + 'px';
-		menuLeftTab[2].style.width = screenHeight() / 3  + 'px';*/
-
-	}
-
     function initiateEditor(scope) {
     	$scope.ckContent = 'test';
 
@@ -114,7 +80,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
     }
 
     initiateEditor();
-    initiateMenus();
 
 	angular.element(document).ready(function () {
 
