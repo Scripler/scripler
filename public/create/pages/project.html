@@ -27,7 +27,7 @@
 						<p>+</p>
 					</div>
 					<div html-sortable="sortable_option" ng-model="projectDocuments">
-						<div class="projectDocument" ng-repeat="projectDocument in projectDocuments" ng-hide="projectDocument.archived">
+						<div class="projectDocument" ng-repeat="projectDocument in projectDocuments track by projectDocument._id" ng-hide="projectDocument.archived">
 							<a class="projectDocument-options-show" ng-click="showProjectDocumentOptions = true">
 								<div class="arrow"></div>
 							</a>
