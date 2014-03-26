@@ -13,14 +13,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	// Scope, Project
 	$scope.projectDocuments = [
 		//ADD/FIX: Get Publications API Call, on success do change
-		{number:'00001',name:'Document 1',content:'<h1>this is a test</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'},
-		{number:'00002',name:'Document 2',content:'<h1>this is a test 2</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'},
-		{number:'00003',name:'Document 3',content:'<h1>this is a test 3</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'futurebw'},
-		{number:'00004',name:'Document 4',content:'<h1>this is a test 4</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'futurebw'},
-		{number:'00005',name:'Document 5',content:'<h1>this is a test 5</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'pleasantbw'},
-		{number:'00006',name:'Document 6',content:'<h1>this is a test 6</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'pleasantbw'},
-		{number:'00007',name:'Document 7',content:'<h1>this is a test 7</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'},
-		{number:'00008',name:'Document 8',content:'<h1>this is a test 8</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'}
+		{_id:'00001',name:'Document 1',content:'<h1>this is a test</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'},
+		{_id:'00002',name:'Document 2',content:'<h1>this is a test 2</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'},
+		{_id:'00003',name:'Document 3',content:'<h1>this is a test 3</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'futurebw'},
+		{_id:'00004',name:'Document 4',content:'<h1>this is a test 4</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'futurebw'},
+		{_id:'00005',name:'Document 5',content:'<h1>this is a test 5</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'pleasantbw'},
+		{_id:'00006',name:'Document 6',content:'<h1>this is a test 6</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'pleasantbw'},
+		{_id:'00007',name:'Document 7',content:'<h1>this is a test 7</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'},
+		{_id:'00008',name:'Document 8',content:'<h1>this is a test 8</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'}
 	];
 
 	$scope.$on('user:updated', function( event, user ) {
