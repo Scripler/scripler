@@ -5,8 +5,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.testName = 'Documents Test';
 	$scope.sortable_option = {
 		stop : function( list, drop_item ) {
-			console.log(list);
-			//call reorder
+			var documentList = {};
+			documentList.documents = list;
+
+			if ( $scope.user._id ) {
+				$http.put('/document/' + $scope.pid + '/rearrange' angular.toJson( documentList ) )
+					.success( function() {});
+			} else {
+				//save to localstorage
+			}
 		}
 	};
 
