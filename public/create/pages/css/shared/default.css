@@ -1,5 +1,10 @@
 body, html { position: relative; font-size: 100%; padding: 0; margin: 0; }
 
+/*angular cloak*/
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
 /* Reset */
 *,
 *:after,
@@ -22,8 +27,9 @@ body, html { position: relative; font-size: 100%; padding: 0; margin: 0; }
 /* General Styling */
 body {
 	background: none #ececec;
-    font-family: 'Lato', Calibri, Arial, sans-serif;
-    color: #666;
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+	color: #666;
+	overflow-x: hidden
 }
 
 h1 {
@@ -118,7 +124,32 @@ a:hover {
 	color: #333;
 }
 
-.main > section input {
+input[type="password"], input[type="text"], input[type="email"] {
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	border-radius: 1px;
+	-webkit-appearance: none;
+	border: none;
+	background: #f6f6f6;
+	font-size: 15px;
+	width: 250px;
+	height: 32px;
+	padding: 0 0 0 15px;
+	margin: 0 5px 0 0;
+	color: #818285;
+	font-family: 'Roboto', sans-serif;
+}
+input.has-error {
+	border: 1px solid #b94a48;
+}
+input:focus {
+	outline: -webkit-focus-ring-color auto 5px;
+	outline-color: -webkit-focus-ring-color;
+	outline-style: auto;
+	outline-width: 5px;
+}
+
+/*.main > section input {
 	border: none;
 	background: #fff;
 	color: #000;
@@ -133,7 +164,7 @@ a:hover {
 	border: 1px solid #ffff99;
 	border-radius: 5px;
 	outline: none;
-}
+}*/
 
 .main > section button {
 	border: none;
@@ -186,7 +217,7 @@ a:hover {
 	display: none;
 }
 
-
+/*registration styling*/
 .registration {
 	background-color: #c6c6c6;
 	position: fixed;
@@ -203,24 +234,6 @@ a:hover {
 }
 .registration-form {
 	float: left;
-}
-.registration-form input {
-	-moz-border-radius: 1px;
-	-webkit-border-radius: 1px;
-	border-radius: 1px;
-	-webkit-appearance: none;
-	border: none;
-	background: #f6f6f6;
-	font-size: 15px;
-	width: 250px;
-	height: 32px;
-	padding: 0 0 0 15px;
-	margin: 0 5px 0 0;
-	color: #818285;
-	font-family: 'Roboto', sans-serif;
-}
-.registration-form input.has-error {
-	border: 1px solid #b94a48;
 }
 .registration-text {
 	color: #000;

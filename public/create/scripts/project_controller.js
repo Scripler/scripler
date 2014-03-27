@@ -1,19 +1,47 @@
 'use strict'
 
-function projectController($scope) {
+function projectController( $scope, $location, userService, projectsService, $http ) {
 
 	// Scope, Project
 	$scope.chapters = [
         //ADD/FIX: Get Publications API Call, on success do change
-        {chapterNumber:'00001',chapterTitle:'Titel 1',chapterContent:'<h1>this is a test</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'bookbw'},
-        {chapterNumber:'00002',chapterTitle:'Titel 2',chapterContent:'<h1>this is a test 2</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'bookbw'},
-        {chapterNumber:'00003',chapterTitle:'Titel 3',chapterContent:'<h1>this is a test 3</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'futurebw'},
-        {chapterNumber:'00004',chapterTitle:'Titel 4',chapterContent:'<h1>this is a test 4</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'futurebw'},
-        {chapterNumber:'00005',chapterTitle:'Titel 5',chapterContent:'<h1>this is a test 5</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'pleasantbw'},
-        {chapterNumber:'00006',chapterTitle:'Titel 6',chapterContent:'<h1>this is a test 6</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'pleasantbw'},
-        {chapterNumber:'00007',chapterTitle:'Titel 7',chapterContent:'<h1>this is a test 7</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'bookbw'},
-        {chapterNumber:'00008',chapterTitle:'Titel 8',chapterContent:'<h1>this is a test 8</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'bookbw'}
+        {chapterNumber:'00001',name:'Document 1',chapterContent:'<h1>this is a test</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'bookbw'},
+        {chapterNumber:'00002',name:'Document 2',chapterContent:'<h1>this is a test 2</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'bookbw'},
+        {chapterNumber:'00003',name:'Document 3',chapterContent:'<h1>this is a test 3</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'futurebw'},
+        {chapterNumber:'00004',name:'Document 4',chapterContent:'<h1>this is a test 4</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'futurebw'},
+        {chapterNumber:'00005',name:'Document 5',chapterContent:'<h1>this is a test 5</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'pleasantbw'},
+        {chapterNumber:'00006',name:'Document 6',chapterContent:'<h1>this is a test 6</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'pleasantbw'},
+        {chapterNumber:'00007',name:'Document 7',chapterContent:'<h1>this is a test 7</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'bookbw'},
+        {chapterNumber:'00008',name:'Document 8',chapterContent:'<h1>this is a test 8</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',chapterStyleSheet:'bookbw'}
     ];
+
+	$scope.$on('user:updated', function( event, user ) {
+		$scope.user = user;
+		$scope.pid = ($location.search()).pid;
+
+		var projectPromise = projectsService.getProject( $scope.pid );
+		projectPromise.then( function( project ) {
+			$scope.project = project;
+			$scope.chapters = $scope.project.documents;
+		});
+	});
+
+	$scope.addDocument = function() {
+		var order = $scope.chapters.length + 1;
+		var name = "Document " + order;
+		var document = {};
+		document.name = name;
+
+		if ( $scope.user._id ) {
+			document.projectId = $scope.pid;
+			$http.post('/document', angular.toJson( document ) )
+				.success( function( data ) {
+					$scope.chapters.push( data.document );
+				})
+		} else {
+			$scope.chapters.push( document );
+		}
+	}
 
     function initiateMenus() {
     	// Variables
@@ -87,7 +115,7 @@ function projectController($scope) {
 
 //		var startChapter = $scope.chapters[0];
 //		$scope.entrybody = startChapter.chapterContent;
-		// Mangler at tilføje stylen startChapter.chapterStyleSheet		
+		// Mangler at tilføje stylen startChapter.chapterStyleSheet
     }
 
     initiateEditor();
@@ -98,7 +126,7 @@ function projectController($scope) {
 
 
 		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.chapterStyleSheet+'.css';
-		
+
 //	    var startChapter = $scope.chapters[0];
 //	    $scope.entrybody = startChapter.chapterContent;
 	    // Mangler at tilføje stylen startChapter.chapterStyleSheet
