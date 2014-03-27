@@ -9,7 +9,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			documentList.documents = list;
 
 			if ( $scope.user._id ) {
-				$http.put('/document/' + $scope.pid + '/rearrange' angular.toJson( documentList ) )
+				$http.put('/document/' + $scope.pid + '/rearrange', angular.toJson( documentList ) )
 					.success( function() {});
 			} else {
 				//save to localstorage
