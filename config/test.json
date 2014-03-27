@@ -8,5 +8,11 @@
 	},
 	"db": {
 		"uri": "mongodb://localhost/scripler_test"
-	}
+	},
+        "resources": {
+                "projectsDir": "/tmp",
+                "usersDir": "/tmp",
+                "projectsUrl": "http://localhost:3000/public/resources/projects",
+                "usersUrl": "http://localhost:3000/public/resources/users"
+        }
 }

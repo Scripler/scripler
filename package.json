@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node app.js"
   },
+  "scripts": {
+    "test": "mocha"
+  },
   "dependencies": {
     "config": "~0.4.25",
     "mongoose": "~3.6.11",
