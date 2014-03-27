@@ -54,6 +54,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					$scope.projectDocuments.push( data.document );
 				})
 		} else {
+			document._id = Date.now();
 			$scope.projectDocuments.push( document );
 		}
 	}
