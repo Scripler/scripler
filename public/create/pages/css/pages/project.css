@@ -95,18 +95,29 @@ body {
 	position: absolute;
 	border: 1px solid;
 	bottom: 0;
+	z-index: 1;
+	margin-bottom: -100px;
 }
-.options-bottom-buttons {
+.menu-left-options.open {
+	margin-bottom: 0 !important;
+}
+.documents-options-bottom-buttons {
 	background-color: #231F20;
 	height: 25px;
 	width: inherit;
+	position: absolute;
+	z-index: 2;
+	bottom: 0;
 }
-.options-bottom-buttons a {
+.documents-options-bottom-buttons a {
 	color: #fff;
-	padding-left: 20px;
-	padding-right: 20px;
+	margin-left: 20px;
+	margin-right: 20px;
 	line-height: 25px;
 	text-decoration: underline;
+}
+.documents-options-bottom-buttons a:hover {
+	color: #999;
 }
 
 .container {
