@@ -27,7 +27,7 @@
 						<p>+</p>
 					</div>
 					<div html-sortable="sortable_option" ng-model="projectDocuments">
-						<div class="projectDocument" ng-repeat="projectDocument in projectDocuments track by projectDocument._id" ng-hide="projectDocument.archived">
+						<div class="projectDocument" ng-repeat="projectDocument in projectDocuments track by projectDocument._id" ng-hide="projectDocument.archived && !user.showArchivedDocuments">
 							<a class="projectDocument-options-show" ng-click="showProjectDocumentOptions = true">
 								<div class="arrow"></div>
 							</a>
@@ -73,8 +73,12 @@
 		<div id="menu-left-content-options" class="menu-left-options" ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
 			<div class="options-bottom-box">
 				<div ng-show="showNewOptions">new</div>
-				<div ng-show="showImportOptions">import</div>
-				<div ng-show="showBottomOptions">options</div>
+				<div ng-show="showImportOptions">
+					import
+				</div>
+				<div ng-show="showBottomOptions">
+					<input type="checkbox" ng-model="user.showArchivedDocuments">Show Archived Documents
+				</div>
 			</div>
 		</div>
 	</div>
