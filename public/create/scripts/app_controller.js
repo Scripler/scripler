@@ -141,12 +141,18 @@ app.service('userService', function( $rootScope ) {
 	var user = {};
 
 	return {
-		setUser : function( user ) {
+		setUser: function( user ) {
 			this.user = user;
 			$rootScope.$broadcast('user:updated', this.user);
 		},
-		getUser : function() {
+		getUser: function() {
 			return this.user;
+		},
+		updateUser: function( user ) {
+			$http.put( '/user', angular.toJson( user ) )
+				.success( function( data ) {
+					setUser( data.user );
+				});
 		}
 	};
 });

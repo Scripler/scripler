@@ -34,11 +34,8 @@ function createController( $scope, $http, userService ) {
 			$scope.saveSubmitted = true;
 
 			if ( $scope.emailEditForm.$valid ) {
-				$http.put( '/user', angular.toJson( $scope.user ) )
-					.success( function( data ) {
-						userService.setUser( data.user );
-						$scope.showSettings = false;
-					})
+				userService.updateUser( $scope.user );
+				$scope.showSettings = false;
 			}
 		}
 
