@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'LocalStorageModule' ] );
+var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'LocalStorageModule', 'html5.sortable' ] );
 
 app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStorageService', '$rootScope', '$timeout',
 	function( $http, $scope, userService, localStorageService, $rootScope, $timeout ) {
@@ -137,16 +137,23 @@ app.service('projectsService', function( $http, $q ) {
 	}
 })
 
-app.service('userService', function( $rootScope ) {
+app.service('userService', function( $rootScope, $http ) {
 	var user = {};
 
 	return {
-		setUser : function( user ) {
+		setUser: function( user ) {
 			this.user = user;
 			$rootScope.$broadcast('user:updated', this.user);
 		},
-		getUser : function() {
+		getUser: function() {
 			return this.user;
+		},
+		updateUser: function( user ) {
+			var self = this;
+			$http.put( '/user', angular.toJson( user ) )
+				.success( function( data ) {
+					self.setUser( data.user );
+				});
 		}
 	};
 });

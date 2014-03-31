@@ -205,6 +205,7 @@ exports.edit = function (req, res, next) {
 	var password = req.body.password;
 	var newsletter = req.body.newsletter;
 	var showArchived = req.body.showArchived;
+	var showArchivedDocuments = req.body.showArchivedDocuments;
 	if (firstname) {
 		req.user.firstname = firstname;
 	}
@@ -232,6 +233,9 @@ exports.edit = function (req, res, next) {
 	}
 	if (typeof showArchived === "boolean") {
 		req.user.showArchived = showArchived;
+	}
+	if (typeof showArchivedDocuments === "boolean") {
+		req.user.showArchivedDocuments = showArchivedDocuments;
 	}
 	req.user.save(function (err) {
 		if (err) {
