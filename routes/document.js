@@ -160,7 +160,9 @@ exports.upload = function (req, res, next) {
 			if (completedFiles == files.length) {
 				// All file imported
 				// Update all img links to match the upload location
-				res.send(importedHtml.replace(/(<img[^>]*src=")([^"]+")/g, '$1' + userUrl + '/$2'));
+				importedHtml = importedHtml.replace(/(<img[^>]*src=")([^"]+")/g, '$1' + userUrl + '/$2');
+				importedHtml = importedHtml.replace(/(<img[^>]*src=")[^"]+ObjectReplacements[^"]+/g, '$1http://scripler.com/images/broken_file.png');
+				res.send(importedHtml);
 			}
 		});
 	}
