@@ -212,7 +212,7 @@ app.directive('ckEditor', function() {
 		link: function(scope, elm, attr, ngModel) {
 			var ck = CKEDITOR.replace('bodyeditor', {
 				allowedContent: true,
-//				skin: 'scripler',
+				skin: 'scripler',
 				height: 600,
 				width: 800,
 				font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
