@@ -93,7 +93,7 @@ body {
 	height: 100px;
 	width: inherit;
 	position: absolute;
-	border: 1px solid;
+	border: 2px solid #666;
 	bottom: 0;
 	z-index: 1;
 	margin-bottom: -100px;
@@ -104,7 +104,7 @@ body {
 	-o-transition: all 0.5s;
 }
 .menu-left-options.open {
-	margin-bottom: 0 !important;
+	margin-bottom: 23px !important;
 }
 .documents-options-bottom-buttons {
 	background-color: #231F20;

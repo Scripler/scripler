@@ -66,15 +66,15 @@
 			</div>
 		</div>
 		<div class="documents-options-bottom-buttons" ng-show="showDocuments">
-			<a ng-click="showBottomOptions = !showBottomOptions">new</a>
-			<a ng-click="showBottomOptions = !showBottomOptions">import</a>
-			<a ng-click="showBottomOptions = !showBottomOptions">options</a>
+			<a ng-click="showNewOptions = !showNewOptions; showImportOptions = false; showBottomOptions = false;">new</a>
+			<a ng-click="showImportOptions = !showImportOptions; showNewOptions = false; showBottomOptions = false;">import</a>
+			<a ng-click="showBottomOptions = !showBottomOptions; showNewOptions = false; showImportOptions = false;">options</a>
 		</div>
-		<div id="menu-left-content-options" class="menu-left-options" ng-class="{ 'open' : showBottomOptions }">
+		<div id="menu-left-content-options" class="menu-left-options" ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
 			<div class="options-bottom-box">
-				<div>new</div>
-				<div>import</div>
-				<div>options</div>
+				<div ng-show="showNewOptions">new</div>
+				<div ng-show="showImportOptions">import</div>
+				<div ng-show="showBottomOptions">options</div>
 			</div>
 		</div>
 	</div>
