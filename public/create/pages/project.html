@@ -77,7 +77,7 @@
 					import
 				</div>
 				<div ng-show="showBottomOptions">
-					<input type="checkbox" ng-model="user.showArchivedDocuments">Show Archived Documents
+					<input type="checkbox" ng-model="user.showArchivedDocuments" ng-change="updateUser();">Show Archived Documents
 				</div>
 			</div>
 		</div>

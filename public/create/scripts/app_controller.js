@@ -137,7 +137,7 @@ app.service('projectsService', function( $http, $q ) {
 	}
 })
 
-app.service('userService', function( $rootScope ) {
+app.service('userService', function( $rootScope, $http ) {
 	var user = {};
 
 	return {
@@ -149,9 +149,10 @@ app.service('userService', function( $rootScope ) {
 			return this.user;
 		},
 		updateUser: function( user ) {
+			var self = this;
 			$http.put( '/user', angular.toJson( user ) )
 				.success( function( data ) {
-					setUser( data.user );
+					self.setUser( data.user );
 				});
 		}
 	};

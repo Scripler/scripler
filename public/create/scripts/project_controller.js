@@ -3,6 +3,11 @@
 function projectController( $scope, $location, userService, projectsService, $http ) {
 
 	$scope.testName = 'Documents Test';
+
+	$scope.updateUser = function() {
+		userService.updateUser( $scope.user );
+	}
+
 	$scope.sortable_option = {
 		stop : function( list, drop_item ) {
 			var documentList = {};
