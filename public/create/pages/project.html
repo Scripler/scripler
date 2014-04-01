@@ -70,7 +70,7 @@
 			<a ng-click="showImportOptions = !showImportOptions; showNewOptions = false; showBottomOptions = false;">import</a>
 			<a ng-click="showBottomOptions = !showBottomOptions; showNewOptions = false; showImportOptions = false;">options</a>
 		</div>
-		<div id="menu-left-content-options" class="menu-left-options" ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
+		<div id="menu-left-content-options" class="menu-left-options" ng-show="showDocuments" ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
 			<div class="options-bottom-box">
 				<div ng-show="showNewOptions">
 					<a ng-click="addProjectDocument()">New Document</a><br>
