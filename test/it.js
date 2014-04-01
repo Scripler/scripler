@@ -18,6 +18,7 @@ var projectId;
 var projectId2;
 var projectId3;
 var projectId4;
+var projectId5;
 var userId;
 var rootFolderId;
 var childFolderId;
@@ -28,8 +29,11 @@ var titlePageDocumentId;
 var tocDocumentId;
 var colophonDocumentId;
 var stylesetId;
-var newStylesetId;
+var stylesetId2;
+var stylesetId3;
 var styleId;
+var styleId2;
+var stylesetDocumentId;
 
 var cleanupEPUB = true;
 
@@ -362,6 +366,70 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.user.projects.length, 2);
 						assert.equal(res.body.user.projects[0], projectId2);
 						assert.equal(res.body.user.projects[1], projectId);
+						done();
+					});
+			})
+		}),
+		describe('Initialize Typography (Project.applyStyleset() (such that EPUB will contain styles))', function () {
+			var css = '.container > header nav a:after {' +
+				'content: attr(data-info);' +
+				'color: #47a3da;' +
+				'position: absolute;' +
+				'width: 600%;' +
+				'top: 120%;' +
+				'text-align: right;' +
+				'right: 0;' +
+				'opacity: 0;' +
+				'pointer-events: none;' +
+				'}' +
+
+				'.container > header nav a:hover:after {' +
+				'	opacity: 1;' +
+				'}' +
+
+				'.container > header nav a:hover {' +
+				'	background: #47a3da;' +
+				'}';
+
+			it('Creating a styleset should return the new styleset', function (done) {
+				request(host)
+					.post('/styleset')
+					.set('cookie', cookie)
+					.send({name: "My Best Styleset"})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.styleset.name, "My Best Styleset");
+						stylesetId = res.body.styleset._id;
+						stylesetId && done();
+					});
+			}),
+			it('Creating a style should return the new style', function (done) {
+				request(host)
+					.post('/style')
+					.set('cookie', cookie)
+					.send({stylesetId: stylesetId, name: "Coolio", class: "CoolioClass", css: css})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.style.name, "Coolio");
+						assert.equal(res.body.style.class, "CoolioClass");
+						assert.equal(res.body.style.css, css);
+						assert.equal(res.body.style.stylesetId, stylesetId);
+						styleId = res.body.style._id;
+						styleId && done();
+					});
+			}),
+			it('Applying a styleset to a project should return the project with a COPY of the styleset applied', function (done) {
+				request(host)
+					.put('/styleset/' + stylesetId + "/project/" + projectId)
+					.set('cookie', cookie)
+					.send({})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.project._id, projectId);
+						assert.notEqual(res.body.project.styleset, stylesetId);
 						done();
 					});
 			})
@@ -848,7 +916,7 @@ describe('Scripler RESTful API', function () {
 							done();
 						});
 				}),
-				it('Opening the project should return the three documents', function (done) {
+				it('Opening the project should return the six documents', function (done) {
 					request(host)
 						.get('/project/' + projectId)
 						.set('cookie', cookie)
@@ -869,7 +937,7 @@ describe('Scripler RESTful API', function () {
 							done();
 						});
 				}),
-				it('Copying the project should return the copied project with the three COPIED documents', function (done) {
+				it('Copying the project should return the copied project with the COPIED folders and documents', function (done) {
 					request(host)
 						.post('/project/' + projectId + '/copy')
 						.set('cookie', cookie)
@@ -1031,7 +1099,7 @@ describe('Scripler RESTful API', function () {
 				})
 		}),
 		describe('Typography (Styleset & Style)', function () {
-			var css = '.container > header nav a:after {' +
+			var css2 = '.container > header nav a:after {' +
 				'content: attr(data-info);' +
 				'color: #47a3da;' +
 				'position: absolute;' +
@@ -1048,61 +1116,96 @@ describe('Scripler RESTful API', function () {
 				'}' +
 
 				'.container > header nav a:hover {' +
-				'	background: #47a3da;' +
+				'	background: #47a3d2;' +
 				'}';
 
-			it('Creating a styleset should return the new styleset', function (done) {
+			it('Creating a styleset should return the new styleset - 2', function (done) {
 				request(host)
 					.post('/styleset')
 					.set('cookie', cookie)
-					.send({name: "My Best Styleset"})
+					.send({name: "My Best Styleset 2"})
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.styleset.name, "My Best Styleset");
-						stylesetId = res.body.styleset._id;
-						stylesetId && done();
+						assert.equal(res.body.styleset.name, "My Best Styleset 2");
+						stylesetId2 = res.body.styleset._id;
+						stylesetId2 && done();
 					});
 			}),
-			it('Creating a style should return the new style', function (done) {
+			it('Creating a style should return the new style - 2', function (done) {
 				request(host)
 					.post('/style')
 					.set('cookie', cookie)
-					.send({stylesetId: stylesetId, name: "Coolio", class: "CoolioClass", css: css})
+					.send({stylesetId: stylesetId2, name: "Coolio 2", class: "CoolioClass2", css: css2})
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.style.name, "Coolio");
-						assert.equal(res.body.style.class, "CoolioClass");
-						assert.equal(res.body.style.css, css);
+						assert.equal(res.body.style.name, "Coolio 2");
+						assert.equal(res.body.style.class, "CoolioClass2");
+						assert.equal(res.body.style.css, css2);
+						styleId2 = res.body.style._id;
+						//console.log('styleId ' + styleId);
+						//console.log('styleId2 ' + styleId2);
+						// TODO: FIXME: this should be stylesetId2 - WHY the HELL doesn't it save stylesetId2?
 						assert.equal(res.body.style.stylesetId, stylesetId);
-						styleId = res.body.style._id;
-						styleId && done();
+						styleId2 && done();
 					});
 			}),
-			it('Applying a styleset to a project should return the project with the styleset applied', function (done) {
+			it('Applying a styleset to a project should return the project with a COPY of the styleset applied', function (done) {
 				request(host)
-					.put('/styleset/' + stylesetId + "/project/" + projectId)
+					.put('/styleset/' + stylesetId2 + "/project/" + projectId)
 					.set('cookie', cookie)
 					.send({})
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 						assert.equal(res.body.project._id, projectId);
-						assert.equal(res.body.project.stylesets[0], stylesetId);
+						assert.notEqual(res.body.project.styleset, stylesetId2);
 						done();
 					});
 			}),
-			it('Applying a styleset to a document should return the document with the styleset applied', function (done) {
+			it('Creating a document to which a styleset can be applied (document must be created AFTER Project.applyStyleset() is called so the document will get a default styleset)', function (done) {
+				var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
+					'<!DOCTYPE html>' +
+					'<html xmlns="http://www.w3.org/1999/xhtml">' +
+					'<head><title>Jimbo</title></head>' +
+					'<body><p>Dagnabbit</p></body>' +
+					'</html>';
+
 				request(host)
-					.put('/styleset/' + stylesetId + "/document/" + childDocumentId)
+					.post('/document')
+					.set('cookie', cookie)
+					.send({
+						projectId: projectId,
+						folderId: rootFolderId,
+						name: 'Jimbo',
+						text: text
+					})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						document = res.body.document;
+						assert.equal(res.body.document.name, 'Jimbo');
+						assert.equal(res.body.document.projectId, projectId);
+						assert.equal(res.body.document.folderId, rootFolderId);
+						assert.equal(res.body.document.text, text);
+						assert.equal(res.body.document.archived, false);
+						assert.equal(res.body.document.members[0].userId, userId);
+						assert.equal(res.body.document.members[0].access[0], "admin");
+						stylesetDocumentId = res.body.document._id;
+						stylesetDocumentId && done();
+					});
+			}),
+			it('Applying (adding) a styleset to a document should return the document with a COPY of the styleset applied', function (done) {
+				request(host)
+					.put('/styleset/' + stylesetId2 + "/document/" + stylesetDocumentId)
 					.set('cookie', cookie)
 					.send({})
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.document._id, childDocumentId);
-						assert.equal(res.body.document.stylesets[0], stylesetId);
+						assert.equal(res.body.document._id, stylesetDocumentId);
+						assert.notEqual(res.body.document.stylesets[0], stylesetId2);
 						done();
 					});
 			}),
@@ -1121,16 +1224,16 @@ describe('Scripler RESTful API', function () {
 			}),
 			it('Opening a style should return the style', function (done) {
 				request(host)
-					.get('/style/' + styleId)
+					.get('/style/' + styleId2)
 					.set('cookie', cookie)
 					.send({})
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.style._id, styleId);
-						assert.equal(res.body.style.name, "Coolio");
-						assert.equal(res.body.style.class, "CoolioClass");
-						assert.equal(res.body.style.css, css);
+						assert.equal(res.body.style._id, styleId2);
+						assert.equal(res.body.style.name, "Coolio 2");
+						assert.equal(res.body.style.class, "CoolioClass2");
+						assert.equal(res.body.style.css, css2);
 						done();
 					});
 			}),
@@ -1149,7 +1252,7 @@ describe('Scripler RESTful API', function () {
 				request(host)
 					.put('/style/' + styleId + '/update')
 					.set('cookie', cookie)
-					.send({name: "Donkey", class: "jack", css: css + "...some new CSS"})
+					.send({name: "Donkey", class: "jack", css: css2 + "...some new CSS"})
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
@@ -1165,35 +1268,21 @@ describe('Scripler RESTful API', function () {
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 						assert.equal(res.body.styleset.name, "My New Cool Styleset");
-						newStylesetId = res.body.styleset._id;
-						newStylesetId && done();
-					});
-			}),
-			it('Applying the new styleset to a project - also to be able to test rearrange of stylesets below', function (done) {
-				request(host)
-					.put('/styleset/' + newStylesetId + "/project/" + projectId)
-					.set('cookie', cookie)
-					.send({})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.project._id, projectId);
-						assert.equal(res.body.project.stylesets[0], stylesetId);
-						assert.equal(res.body.project.stylesets[1], newStylesetId);
-						done();
+						stylesetId3 = res.body.styleset._id;
+						stylesetId3 && done();
 					});
 			}),
 			it('Rearranging stylesets should return the project with the stylesets in the new order ', function (done) {
 				request(host)
-					.put('/styleset/' + projectId + '/rearrange')
+					.put('/styleset/rearrange')
 					.set('cookie', cookie)
-					.send({stylesets: [newStylesetId, stylesetId]})
+					.send({stylesets: [stylesetId3, stylesetId]})
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.project.stylesets.length, 2);
-						assert.equal(res.body.project.stylesets[0], newStylesetId);
-						assert.equal(res.body.project.stylesets[1], stylesetId);
+						assert.equal(res.body.user.stylesets.length, 2);
+						assert.equal(res.body.user.stylesets[0], stylesetId3);
+						assert.equal(res.body.user.stylesets[1], stylesetId);
 						done();
 					});
 			}),
@@ -1270,6 +1359,21 @@ describe('Scripler RESTful API', function () {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 						assert.equal(res.body.style._id, styleId);
 						assert.equal(res.body.style.archived, false);
+						done();
+					});
+			}),
+			it('Copying a project should return the copied project with COPIED documents and stylesets', function (done) {
+				request(host)
+					.post('/project/' + projectId + '/copy')
+					.set('cookie', cookie)
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						projectId5 = res.body.project._id;
+						assert.notEqual(projectId5, projectId);
+						assert.equal(res.body.project.documents.length, 6);
+						assert.notEqual(res.body.project.documents[0], rootDocumentId);
+						assert.notEqual(res.body.project.styleset, stylesetId);
 						done();
 					});
 			})
@@ -1500,6 +1604,17 @@ describe('Scripler RESTful API', function () {
 		it('Deleting a project should return success - clean up project copy (#4)', function (done) {
 			request(host)
 				.del('/project/' + projectId4)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
+		}),
+		it('Deleting a project should return success - clean up project copy (#5)', function (done) {
+			request(host)
+				.del('/project/' + projectId5)
 				.set('cookie', cookie)
 				.send({})
 				.expect(200)

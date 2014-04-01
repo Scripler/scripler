@@ -14,6 +14,16 @@ var UserSchema = new Schema({
 	projects: [
 		{ type: Schema.Types.ObjectId, ref: 'Project' }
 	],
+	deletedProjects: [
+		{ type: Schema.Types.ObjectId, ref: 'Project' }
+	],
+	stylesets: [
+		{ type: Schema.Types.ObjectId, ref: 'Styleset' }
+	],
+	// Currently not used: not possible to delete a styleset
+	deletedStylesets: [
+		{ type: Schema.Types.ObjectId, ref: 'Styleset' }
+	],
 	password: { type: String, required: true },
 	providers: [
 		{}

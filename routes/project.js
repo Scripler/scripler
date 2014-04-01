@@ -2,6 +2,8 @@ var Project = require('../models/project.js').Project;
 var User = require('../models/user.js').User;
 var Document = require('../models/document.js').Document;
 var Styleset = require('../models/styleset.js').Styleset;
+var copyStyleset = require('../models/styleset.js').copy;
+var Style = require('../models/style.js').Style;
 var utils = require('../lib/utils');
 var extend = require('xtend');
 var sanitize = require('sanitize-filename');
@@ -16,24 +18,13 @@ var epub3 = require('../lib/epub/epub3');
 exports.load = function (id) {
 	return function (req, res, next) {
 		id = id || req.body.projectId;
-		Project.findOne({"_id": id, "deleted": false}).populate('documents').exec(function (err, project) {
+		Project.findOne({"_id": id, "deleted": false}).exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
 			if (!utils.hasAccessToModel(req.user, project)) return next(403);
-
-			/*
-			 Filter out deleted documents manually.
-			 NB! If someone saves the project later in this request, we are screwed => ...TODO: use aggregation?
-			 */
-			for (var i=0; i<project.documents.length; i++) {
-				var document = project.documents[i];
-				if (document.deleted) {
-					project.documents.splice(i, 1);
-				}
-			}
 
 			req.project = project;
 			return next();
@@ -44,24 +35,13 @@ exports.load = function (id) {
 exports.loadPopulated = function (id) {
 	return function (req, res, next) {
 		id = id || req.body.projectId;
-		Project.findOne({"_id": id, "deleted": false}).populate('documents', 'name folderId modified archived deleted members type').exec(function (err, project) {
+		Project.findOne({"_id": id, "deleted": false}).populate({path: 'documents', match: {archived: false}, select: 'name folderId modified archived stylesets members type'}).exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
 			if (!utils.hasAccessToModel(req.user, project)) return next(403);
-
-			/*
-			 Filter out deleted documents manually.
-			 NB! If someone saves the project later in this request, we are screwed => ...TODO: use aggregation?
-			 */
-			for (var i=0; i<project.documents.length; i++) {
-				var document = project.documents[i];
-				if (document.deleted) {
-					project.documents.splice(i, 1);
-				}
-			}
 
 			req.project = project;
 			return next();
@@ -72,7 +52,7 @@ exports.loadPopulated = function (id) {
 exports.loadPopulatedFull = function (id) {
 	return function (req, res, next) {
 		id = id || req.body.projectId;
-		Project.findOne({"_id": id, "deleted": false}).populate('documents', 'name folderId modified archived deleted members type text').populate('stylesets').exec(function (err, project) {
+		Project.findOne({"_id": id, "deleted": false}).populate({path: 'documents', match: {archived: false}, select: 'name folderId modified archived stylesets members type text'}).exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
@@ -80,43 +60,8 @@ exports.loadPopulatedFull = function (id) {
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
 			if (!utils.hasAccessToModel(req.user, project)) return next(403);
 
-			/*
-			 Filter out deleted documents, stylesets and styles manually.
-			 NB! If someone saves the project later in this request, we are screwed => ...TODO: use aggregation?
-			 */
-
-			// Filter out deleted documents.
-			for (var i=0; i<project.documents.length; i++) {
-				var document = project.documents[i];
-				if (document.deleted) {
-					project.documents.splice(i, 1);
-				}
-			}
-
-			// Filter out deleted stylesets.
-			for (var i=0; i<project.stylesets.length; i++) {
-				var styleset = project.stylesets[i];
-				if (styleset.deleted) {
-					project.stylesets.splice(i, 1);
-				}
-
-				// Filter out deleted styles.
-				Styleset.findOne(styleset).populate({path: 'styles'}).exec(function (err, styleset) {
-					if (err) next(err);
-
-					if (styleset.styles != null && styleset.styles.length > 0) {
-						for (var j=0; j<styleset.styles.length; j++) {
-							var style = styleset.styles[j];
-							if (style.deleted) {
-								styleset.styles.splice(j, 1);
-							}
-						}
-					}
-
-					req.project = project;
-					return next();
-				});
-			}
+			req.project = project;
+			return next();
 		});
 	}
 }
@@ -127,14 +72,6 @@ var list = exports.list = function (req, res, next) {
 			return next(err);
 		}
 
-		// Filter out deleted projects. TODO: as above, use aggregation?
-		for (var i=0; i<user.projects.length; i++) {
-			var project = user.projects[i];
-			if (project.deleted) {
-				user.projects.splice(i, 1);
-			}
-		}
-
 		res.send({"projects": user.projects});
 	});
 };
@@ -142,7 +79,6 @@ var list = exports.list = function (req, res, next) {
 exports.create = function (req, res, next) {
 	var project = new Project({
 		name: req.body.name,
-		order: req.body.order,
 		members: [
 			{userId: req.user._id, access: ["admin"]}
 		]
@@ -212,16 +148,45 @@ exports.unarchive = function (req, res, next) {
 
 exports.delete = function (req, res, next) {
 	var project = req.project;
-	project.deleted = true;
-	project.save(function (err) {
+
+	User.update({"projects": project._id}, {"$pull": {"projects": project._id}}, {multi: true}, function (err, numberAffected, raw) {
 		if (err) {
 			return next(err);
 		}
 
-		// Stylesets and styles should not be "deleted" since they could be in use by other projects
-		Document.update({"projectId": project._id}, {"deleted": true}, {multi: true}).exec();
+		req.user.deletedProjects.push(project);
+		req.user.save();
 
-		res.send({});
+		// Delete documents. Stylesets and styles should not be "deleted" since they could be in use by other projects. // TODO: is this still true with copies?
+		Document.find({projectId: project._id}, function (err, documents) {
+			var numberOfDocumentsToBeDeleted = documents.length;
+			if (numberOfDocumentsToBeDeleted == 0) {
+				res.send({});
+			} else {
+				documents.forEach(function (document) {
+					Project.update({"documents": document._id}, {"$pull": {"documents": document._id}}, {multi: true}, function (err, numberAffected, raw) {
+						if (err) {
+							return next(err);
+						}
+
+						document.deleted = true;
+						document.save(function (err) {
+							if (err) {
+								return next(err);
+							}
+
+							project.deletedDocuments.push(document);
+							numberOfDocumentsToBeDeleted--;
+							if (numberOfDocumentsToBeDeleted == 0) {
+								project.deleted = true;
+								project.save();
+								res.send({});
+							}
+						});
+					});
+				});
+			}
+		});
 	});
 }
 
@@ -231,53 +196,62 @@ exports.copy = function (req, res, next) {
 	var newProject = new Project({
 		name: project.name + " - Copy",
 		order: project.order + 1,
-		folders: project.folders,
+		folders: project.folders, // Folders are only used inside a project => ids do not need to be copies
 		members: project.members,
 		metadata: extend({}, project.metadata)
 	});
 	newProject.metadata.toc = project.metadata.toc;
 
-	//Add to user (last project in order)
+	// Add to user (last project in order)
 	req.user.projects.addToSet(newProject);
 	req.user.save();
 
-	//Copy documents
+	// Copy documents
 	var newDocuments = [];
 	for (var i = 0; i < project.documents.length; i++) {
 		var document = project.documents[i];
 		var newDocument = new Document({
 			name: document.name,
 			text: document.text,
-			projectId: newProject,
+			projectId: newProject, // TODO: shouldn't this be newProject._id?
 			type: document.type,
 			folderId: document.folderId,
-			archived: document.archived,
-			deleted: document.deleted,
-			members: document.members
+			members: document.members,
+			archived: document.archived
 		});
 		newProject.documents.push(newDocument);
 		newDocuments.push(newDocument);
 	}
-	newProject.save(function (err) {
+
+	copyStyleset(project.styleset, function(err, copy) {
 		if (err) {
 			return next(err);
 		}
-		Document.create(newDocuments, function (err) {
+
+		newProject.styleset = copy;
+
+		newProject.save(function (err) {
 			if (err) {
 				return next(err);
 			}
 
-			var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
-			var imagesDir = path.join(projectDir, conf.epub.imagesDir);
-
-			var newProjectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + newProject._id);
-			var newImagesDir = path.join(newProjectDir, conf.epub.imagesDir);
-
-			ncp(projectDir, newProjectDir, function (err) {
+			Document.create(newDocuments, function (err) {
 				if (err) {
 					return next(err);
 				}
-				res.send({project: newProject});
+
+				var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
+				var imagesDir = path.join(projectDir, conf.epub.imagesDir);
+
+				var newProjectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + newProject._id);
+				var newImagesDir = path.join(newProjectDir, conf.epub.imagesDir);
+
+				ncp(projectDir, newProjectDir, function (err) {
+					if (err) {
+						return next(err);
+					}
+					res.send({project: newProject});
+				});
 			});
 		});
 	});
@@ -353,13 +327,25 @@ exports.compile = function (req, res) {
 }
 
 exports.applyStyleset = function (req, res, next) {
-	var project = req.project;
-	project.stylesets.addToSet(req.styleset);
-	project.save(function (err) {
-		if (err) {
-			return next(err);
-		}
+	var stylesetToApply = req.styleset; // This will always (?) be a styleset from User
+	var activeStyleset = req.project.styleset;
+	// Only apply the styleset if no styleset is already applied - or if the styleset applied is not the one the user is trying to apply.
+	// This is important because applying a styleset will COPY the styleset and we don't want a lot of unused stylesets lying around.
+	if (!activeStyleset || (activeStyleset && !(stylesetToApply._id.equals(activeStyleset)))) {
+		copyStyleset(stylesetToApply, function(err, copy) {
+			if (err) {
+				return next(err);
+			}
 
-		res.send({project: project});
-	})
+			req.project.styleset = copy;
+			req.project.save(function (err) {
+				if (err) {
+					return next(err);
+				}
+				res.send({project: req.project});
+			});
+		});
+	} else {
+		res.send({});
+	}
 }

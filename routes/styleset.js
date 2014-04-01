@@ -33,7 +33,14 @@ exports.create = function (req, res, next) {
 			return next(err);
 		}
 
-		res.send({styleset: styleset});
+		req.user.stylesets.addToSet(styleset);
+		req.user.save(function(err) {
+			if (err) {
+				return next(err);
+			}
+
+			res.send({styleset: styleset});
+		});
 	});
 
 }
@@ -55,13 +62,13 @@ exports.update = function (req, res, next) {
 }
 
 exports.rearrange = function (req, res, next) {
-	var project = req.project;
-	project.stylesets = req.body.stylesets;
-	project.save(function (err, project) {
+	var user = req.user;
+	user.stylesets = req.body.stylesets;
+	user.save(function (err, user) {
 		if (err) {
 			return next(err);
 		}
-		res.send({project: project});
+		res.send({user: user});
 	});
 }
 
@@ -72,6 +79,7 @@ exports.archive = function (req, res, next) {
 		if (err) {
 			return next(err);
 		}
+		// TODO: Fix: find/load the project and null "styleset"?
 		Project.update({"stylesets": styleset._id}, {"$pull": {"stylesets": styleset._id}}, {multi: true}, function (err, numberAffected, raw) {
 			if (err) {
 				return next(err);
@@ -92,6 +100,7 @@ exports.unarchive = function (req, res, next) {
 		for (var i = 0; i < styleset.members.length; i++) {
 			membersArray.push(styleset.members[i].userId);
 		}
+		// TODO: Fix: find/load the project and reset "styleset"?
 		Project.update({"members": {"$in": membersArray}}, {"$addToSet": {"stylesets": styleset._id}}, {multi: true}, function (err, numberAffected, raw) {
 			if (err) {
 				return next(err);

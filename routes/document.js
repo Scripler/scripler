@@ -1,5 +1,7 @@
 var Document = require('../models/document.js').Document;
 var Project = require('../models/project.js').Project;
+var Styleset = require('../models/styleset.js').Styleset;
+var copyStyleset = require('../models/styleset.js').copy;
 var utils = require('../lib/utils');
 var docConverter = require('../lib/doc-converter');
 var path = require('path');
@@ -24,28 +26,44 @@ exports.load = function (id) {
 
 exports.create = function (req, res, next) {
 	var project = req.project;
+	var defaultStyleset = project.styleset;
 
-	var document = new Document({
-		name: req.body.name,
-		text: req.body.text,
-		projectId: project._id,
-		folderId: req.body.folderId,
-		type: req.body.type,
-		members: [
-			{userId: req.user._id, access: ["admin"]}
-		]
-	});
-
-	document.save(function (err) {
+	Styleset.findOne({"_id": defaultStyleset}).exec(function (err, styleset) {
 		if (err) {
 			return next(err);
 		}
-		project.documents.addToSet(document);
-		project.save(function (err, project) {
+
+		copyStyleset(styleset, function(err, copy) {
 			if (err) {
 				return next(err);
 			}
-			res.send({document: document});
+
+			var document = new Document({
+				name: req.body.name,
+				text: req.body.text,
+				projectId: project._id,
+				folderId: req.body.folderId,
+				type: req.body.type,
+				members: [
+					{userId: req.user._id, access: ["admin"]}
+				]
+				//stylesets: copy // When a document is created, initially it will always only have this single styleset so no need to "addToSet()".
+			});
+
+			document.stylesets.addToSet(copy);
+			document.save(function (err) {
+				if (err) {
+					return next(err);
+				}
+
+				project.documents.addToSet(document);
+				project.save(function (err, project) {
+					if (err) {
+						return next(err);
+					}
+					res.send({document: document});
+				});
+			});
 		});
 	});
 }
@@ -100,13 +118,25 @@ exports.unarchive = function (req, res, next) {
 
 exports.delete = function (req, res, next) {
 	var document = req.document;
-	document.deleted = true;
-	document.save(function (err) {
+	var project = req.project;
+
+	project.documents.pull(document._id);
+	project.deletedDocuments.addToSet(document);
+	project.save(function (err) {
 		if (err) {
 			return next(err);
 		}
 
-		res.send({});
+		document.deleted = true;
+		// TODO: is this acceptable? How else can we filter out deleted documents from a folder? (c.f. Folder.open())
+		document.folderId = null;
+		document.save(function (err) {
+			if (err) {
+				return next(err);
+			}
+
+			res.send({});
+		});
 	});
 }
 
@@ -114,7 +144,8 @@ exports.rearrange = function (req, res, next) {
 	var errorMessage = "/document/rearrange can only rearrange existing documents (not e.g. add or delete documents)";
 	var project = req.project;
 
-	if (req.body.documents && req.body.documents.length == project.documents.length) {
+	var numberOfExistingDocuments = project.documents.length;
+	if (req.body.documents &&  numberOfExistingDocuments == req.body.documents.length) {
 		for (var i=0; i<req.body.documents.length; i++) {
 			var rearrangedDocument = req.body.documents[i];
 			var containsRearrangedDocument = utils.containsModel(req.body.documents, rearrangedDocument);
@@ -123,8 +154,8 @@ exports.rearrange = function (req, res, next) {
 			}
 		}
 
-		project.documents = req.body.documents;
-		project.save(function (err, project) {
+		req.project.documents = req.body.documents;
+		req.project.save(function (err, project) {
 			if (err) {
 				return next(err);
 			}
@@ -167,14 +198,25 @@ exports.upload = function (req, res, next) {
 }
 
 exports.applyStyleset = function (req, res, next) {
-	var document = req.document;
-	document.stylesets.addToSet(req.styleset);
-	document.save(function (err) {
-		if (err) {
-			return next(err);
-		}
+	var stylesetToApply = req.styleset;
+	var activeStylesets = req.document.stylesets;
+	// Only copy the styleset if it is not already applied to the document
+	if (!activeStylesets || activeStylesets.length < 1 || (!(utils.containsModel(activeStylesets, stylesetToApply)))) {
+		copyStyleset(stylesetToApply, function(err, copy) {
+			if (err) {
+				return next(err);
+			}
 
-		res.send({document: document});
-	})
+			req.document.stylesets.addToSet(copy);
+			req.document.save(function (err) {
+				if (err) {
+					return next(err);
+				}
+				res.send({document: req.document});
+			});
+		});
+	} else {
+		res.send({});
+	}
 }
 

@@ -30,6 +30,9 @@ var DocumentSchema = new Schema({
 	modified: { type: Date, default: Date.now },
 	stylesets: [
 		{ type: Schema.Types.ObjectId, ref: 'Styleset' }
+	],
+	deletedStylesets: [
+		{ type: Schema.Types.ObjectId, ref: 'Styleset' }
 	]
 });
 
