@@ -9,13 +9,6 @@
 	"db": {
 		"uri": "mongodb://localhost/scripler"
 	},
-	"smtp": {
-		"service": "Gmail",
-		"auth": {
-			"user": "xxxx@gmail.com",
-			"pass": "xxxx"
-		}
-	},
 	"mailchimp": {
 		"apiKey": "xxxx",
 		"memberListId": "xxxx",

@@ -34,11 +34,8 @@ function createController( $scope, $http, userService ) {
 			$scope.saveSubmitted = true;
 
 			if ( $scope.emailEditForm.$valid ) {
-				$http.put( '/user', angular.toJson( $scope.user ) )
-					.success( function( data ) {
-						userService.setUser( data.user );
-						$scope.showSettings = false;
-					})
+				userService.updateUser( $scope.user );
+				$scope.showSettings = false;
 			}
 		}
 
@@ -117,16 +114,13 @@ function PublicationsCtrl ( $scope, $http, localStorageService, projectsService 
 	};
 
 	$scope.archivePublication = function( publication ) {
-		var index = $scope.publications.indexOf( publication );
 		if ( $scope.user._id ) {
 			$http.put('/project/' + publication._id + '/archive')
 				.success( function() {
 					publication.archived = true;
-					$scope.publications[index] = publication;
 				});
 		} else {
 			publication.archived = true;
-			$scope.publications[index] = publication;
 			localStorageService.add( lsName, $scope.publications );
 		}
 	};
@@ -147,9 +141,10 @@ function PublicationsCtrl ( $scope, $http, localStorageService, projectsService 
 					$scope.publications.push( data.project );
 				});
 		} else {
-			var publication = publication;
-			this.publication.name = publication.name + ' - Copy';
-			$scope.publications.push( this.publication );
+			var copyPublication = {};
+			copyPublication._id = Date.now();
+			copyPublication.name = publication.name + ' - Copy';
+			$scope.publications.push( copyPublication );
 			localStorageService.add( lsName, $scope.publications );
 		}
 	};

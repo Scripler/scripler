@@ -195,7 +195,6 @@ exports.copy = function (req, res, next) {
 
 	var newProject = new Project({
 		name: project.name + " - Copy",
-		order: project.order + 1,
 		folders: project.folders, // Folders are only used inside a project => ids do not need to be copies
 		members: project.members,
 		metadata: extend({}, project.metadata)

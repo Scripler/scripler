@@ -11,7 +11,7 @@
 					</a>
 				</div>
 				<div class="logo-box">
-					<img class="logo" src="../images/logo.png">
+					<img class="logo" src="/images/logo.png">
 				</div>
 				<div class="uni-bottom-box" ng-show="user._id">
 					<div class="user-box">
@@ -69,7 +69,7 @@
 			</div>
 
 			<div class="publication" ng-animate="'animate'" ng-class="{ 'archived' : publication.archived }" ng-hide="publication.archived && !user.showArchived" ng-repeat="publication in publications track by $index">
-				<a class="publication-options-show" data-gui="{{publication._id}}" ng-click="showPublicationOptions = true">
+				<a class="publication-options-show" ng-click="showPublicationOptions = true">
 					<div class="arrow"></div>
 				</a>
 				<!--<p ng-hide="editingPublicationTitle" ng-click="editingPublicationTitle = true;">-->

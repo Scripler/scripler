@@ -21,19 +21,18 @@ module.exports = function (app, conf, mongoose) {
 
 	// all environments
 	app.set('port', conf.app.port);
-	app.set('views', __dirname + '/../views');
-	app.set('view engine', 'ejs');
-	app.engine('ejs', require('ejs-locals'));
-	if ('development' == app.get('env')) {
+	//TODO: Don't allow cross domain in production
+	//if ('development' == app.get('env')) {
 		// development only
 		app.use(allowCrossDomain);
-	}
+	//}
 	app.use(express.logger({format: 'short', stream: {write: function (msg) {
 		logger.info(msg.trim());
 	}}}));
 	app.use(express.bodyParser({
 		uploadDir: '/tmp/uploads',
-		keepExtensions: true
+		keepExtensions: true,
+		maxFieldsSize: '15728640'//15mb
 	}));
 	app.use(express.methodOverride());
 	app.use(express.cookieParser(conf.app.cookie_secret));
