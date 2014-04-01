@@ -130,11 +130,14 @@ body {
 }
 
 .editor {
-	background: #fff;
 	position: relative;
 	margin: 0 auto;
 	width: 800px;
 }
+.editor .toolbar-area {
+	height: 30px;
+}
+
 .menu-left ul li div .document {
 	padding: 0;
 }
