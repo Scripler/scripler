@@ -1,12 +1,26 @@
 'use strict'
 
-function projectController( $scope, $location, userService, projectsService, $http ) {
+function projectController( $scope, $location, userService, projectsService, $http, $upload ) {
 
 	$scope.testName = 'Documents Test';
 
 	$scope.updateUser = function() {
 		userService.updateUser( $scope.user );
 	}
+
+	$scope.onFileSelect = function($files) {
+		for (var i = 0; i < $files.length; i++) {
+			var file = $files[i];
+			$scope.upload = $upload.upload({
+				url: '/document/upload',
+				file: file
+			}).progress(function(evt) {
+				console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+			}).success(function(data, status, headers, config) {
+				console.log(data);
+			});
+		}
+	};
 
 	$scope.sortable_option = {
 		stop : function( list, drop_item ) {

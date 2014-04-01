@@ -72,12 +72,16 @@
 		</div>
 		<div id="menu-left-content-options" class="menu-left-options" ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
 			<div class="options-bottom-box">
-				<div ng-show="showNewOptions">new</div>
+				<div ng-show="showNewOptions">
+					<a ng-click="addProjectDocument()">New Document</a><br>
+					<a ng-click="">New Folder</a>
+				</div>
 				<div ng-show="showImportOptions">
-					import
+					<input type="file" ng-file-select="onFileSelect($files)">
 				</div>
 				<div ng-show="showBottomOptions">
 					<input type="checkbox" ng-model="user.showArchivedDocuments" ng-change="updateUser();">Show Archived Documents
+					<a ng-click="">Compile</a>
 				</div>
 			</div>
 		</div>
