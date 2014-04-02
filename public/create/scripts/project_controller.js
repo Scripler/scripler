@@ -1,6 +1,6 @@
 'use strict'
 
-function projectController( $scope, $location, userService, projectsService, $http, $upload ) {
+function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress ) {
 
 	$scope.testName = 'Documents Test';
 
@@ -11,14 +11,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.onFileSelect = function($files) {
 		for (var i = 0; i < $files.length; i++) {
 			var file = $files[i];
+			ngProgress.start();
 			$scope.upload = $upload.upload({
 				url: '/document/upload',
 				file: file
 			}).progress(function(evt) {
+				ngProgress.set(parseInt(100.0 * evt.loaded / evt.total) - 25);
 				console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
 			}).success(function(data, status, headers, config) {
+				ngProgress.complete();
 				console.log(data);
-
 			});
 		}
 	};
