@@ -18,6 +18,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
 			}).success(function(data, status, headers, config) {
 				console.log(data);
+
 			});
 		}
 	};

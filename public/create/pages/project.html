@@ -77,7 +77,10 @@
 					<a ng-click="">New Folder</a>
 				</div>
 				<div ng-show="showImportOptions">
+					<p>Scripler imports Word files and other common word processor formats (link).</p>
 					<input type="file" ng-file-select="onFileSelect($files)">
+					<div class="upload-box" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="dragover"
+						 ng-show="dropSupported" ng-file-drop-available="dropSupported=true">drop files here</div>
 				</div>
 				<div ng-show="showBottomOptions">
 					<input type="checkbox" ng-model="user.showArchivedDocuments" ng-change="updateUser();">Show Archived Documents
