@@ -2,6 +2,8 @@
 
 function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress ) {
 
+	$scope.entrybody = 'test';
+
 	$scope.testName = 'Documents Test';
 
 	$scope.updateUser = function() {
@@ -124,16 +126,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		// CK Editor Controls
 	    $scope.projectDocumentChoosen = function( projectDocument ) {
-			if (editor) {
-				$scope.entrybody = projectDocument.content;
-				$scope.entrybodyStyleset = projectDocument.styleSheet;
+				$scope.documentSelected = projectDocument;
+				$scope.ckEditorContent = projectDocument.content;
+				//$scope.ckEditorContent = projectDocument.styleSheet;
 				//Change to use the script settings and load content there
-				editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+projectDocument.styleSheet+'.css';
-			}
-			else {
-				console.log('error: no editor found')
-			}
-	    };
+				//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+projectDocument.styleSheet+'.css';
+		};
 
 	    $scope.changeStyle = function (name) {
 			if (editor) {

@@ -126,7 +126,7 @@ body {
 }
 
 .container {
-	padding: 40px;
+	padding: 20px;
 }
 
 .editor {
@@ -135,7 +135,6 @@ body {
 	width: 800px;
 }
 .editor .toolbar-area {
-	height: 30px;
 }
 
 .menu-left ul li div .document {
@@ -166,13 +165,20 @@ body {
 	-ms-user-select: none;
 	user-select: none;
 }
-
 .projectDocument p {
 	vertical-align: middle;
 	text-align: center;
 	cursor: pointer;
 	overflow: hidden;
 }
+[selected] {
+	background-color: #000;
+}
+[selected] a {
+	background-color: #000 !important;
+	color: #fff265;
+}
+
 .projectDocument .projectDocument-options-show {
 	position: absolute;
 	top: 5px;
@@ -193,7 +199,6 @@ body {
 	-o-transition: all 0.5s ease-in-out;
 	transition: all 0.5s ease-in-out;
 }
-
 .projectDocument .projectDocument-options-show .arrow {
 	width: 0;
 	height: 0;
