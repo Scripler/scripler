@@ -144,10 +144,9 @@ exports.upload = function (req, res, next) {
 	}
 	var completedFiles = 0;
 	var importedHtml = '';
-	// TODO: use actual user when editor is available in real test-setup
-	var user = 'test';
-	var userDir = path.join(conf.resources.usersDir, user);
-	var userUrl = conf.resources.usersUrl + '/' + user;
+	var user = req.user;
+	var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + user._id);
+	var userUrl = conf.resources.usersUrl + '/' + user._id;
 	for (var i = 0; i < files.length; i++) {
 		var file = files[i];
 		console.log('Uploaded file ' + file.name + ' to ' + file.path + ' (' + file.size + ')');

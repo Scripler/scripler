@@ -30,7 +30,7 @@ module.exports = function (app, conf, mongoose) {
 		logger.info(msg.trim());
 	}}}));
 	app.use(express.bodyParser({
-		uploadDir: '/tmp/uploads',
+		uploadDir: __dirname + '/../tmp/uploads',
 		keepExtensions: true,
 		maxFieldsSize: '15728640'//15mb
 	}));
