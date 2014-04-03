@@ -34,7 +34,7 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 			var demoOn = function() {
 				$rootScope.$broadcast('demo:mode', publications);
 			}
-			$timeout(demoOn, 1); //!important: timeout for createController to load
+			$timeout(demoOn, 100); //!important: timeout for createController to load
 		});
 
 		$scope.submitRegistration = function() {
