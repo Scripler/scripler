@@ -58,7 +58,7 @@
 		{
 			"id": "0531a4ab-d33d-2306-2a2c-38707e32beae",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/style/5318c3d1d6f326242f000004/archive",
+			"url": "http://{{hostname}}/style/5318c3d1d6f326242f000004/archive",
 			"pathVariables": {},
 			"method": "PUT",
 			"data": "{}",
@@ -74,7 +74,7 @@
 		},
 		{
 			"id": "09894815-4505-bd66-cac1-9967105911ae",
-			"url": "http://{{hostname}}:3000/folder/5249b768606c41b815000008/5249e4575c0ae1b405000005/archive",
+			"url": "http://{{hostname}}/folder/5249b768606c41b815000008/5249e4575c0ae1b405000005/archive",
 			"data": "{}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -88,7 +88,7 @@
 		},
 		{
 			"id": "120dcfe5-db5b-6963-5503-1265074e009f",
-			"url": "http://{{hostname}}:3000/folder/5249b768606c41b815000008/5249e4575c0ae1b405000005",
+			"url": "http://{{hostname}}/folder/5249b768606c41b815000008/5249e4575c0ae1b405000005",
 			"data": [],
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "params",
@@ -103,7 +103,7 @@
 		{
 			"id": "12ab8c78-77ea-3cd6-d613-a152f92bc972",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/style",
+			"url": "http://{{hostname}}/style",
 			"pathVariables": {},
 			"method": "POST",
 			"data": "{\"stylesetId\": \"530dee8066553bb00c000004\", \"name\": \"oooiii\", \"class\": \"KOOOL\", \"css\": \"...\"}",
@@ -119,7 +119,7 @@
 		},
 		{
 			"id": "1547cf1c-ad68-fec7-8a28-73ea9aab846e",
-			"url": "http://{{hostname}}:3000/project/5249b768606c41b815000008",
+			"url": "http://{{hostname}}/project/5249b768606c41b815000008",
 			"data": [],
 			"headers": "",
 			"dataMode": "params",
@@ -133,7 +133,7 @@
 		},
 		{
 			"id": "1955330f-d64d-7157-eb06-28bc93902f62",
-			"url": "http://{{hostname}}:3000/document/5249b784606c41b81500000a/rearrange",
+			"url": "http://{{hostname}}/document/5249b784606c41b81500000a/rearrange",
 			"data": "{\"documents\": [\"5249e4575c0ae1b405000005\", \"5249e4575c0ae1b40500000\"]}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -148,7 +148,7 @@
 		{
 			"id": "1c70efe9-8e36-1f5a-fec1-16de832641c6",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/styleset/530dee8066553bb00c000004",
+			"url": "http://{{hostname}}/styleset/530dee8066553bb00c000004",
 			"pathVariables": {},
 			"method": "GET",
 			"data": [],
@@ -165,7 +165,7 @@
 		{
 			"id": "230409d4-a71c-8683-1342-fb38ebbe31d2",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/styleset",
+			"url": "http://{{hostname}}/styleset",
 			"pathVariables": {},
 			"method": "POST",
 			"data": "{\"name\": \"jskdfjksdjk\"}",
@@ -184,7 +184,7 @@
 			"id": "31547930-c191-61fa-eec9-4d1af287d585",
 			"name": "User List",
 			"description": "",
-			"url": "http://{{hostname}}:3000/user/list",
+			"url": "http://{{hostname}}/user/list",
 			"method": "GET",
 			"headers": "",
 			"data": "{\"name\": \"Allan 2\", \"email\":\"allan@scripler.com\", \"password\":\"1234\"}",
@@ -198,7 +198,7 @@
 			"id": "33a1b5a3-4ec7-b5ac-b514-f3412837924e",
 			"name": "Project List",
 			"description": "",
-			"url": "http://{{hostname}}:3000/project/list",
+			"url": "http://{{hostname}}/project/list",
 			"method": "GET",
 			"headers": "",
 			"data": [],
@@ -211,7 +211,7 @@
 		{
 			"id": "3a2e02b6-912f-0c90-db0b-0fab99dee37c",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/styleset/530dee8066553bb00c000004/unarchive",
+			"url": "http://{{hostname}}/styleset/530dee8066553bb00c000004/unarchive",
 			"pathVariables": {},
 			"method": "PUT",
 			"data": "{}",
@@ -227,7 +227,7 @@
 		},
 		{
 			"id": "3bbd715f-c56d-5710-641d-790b7eb69a6c",
-			"url": "http://{{hostname}}:3000/document/5249b784606c41b81500000a/unarchive",
+			"url": "http://{{hostname}}/document/5249b784606c41b81500000a/unarchive",
 			"data": "{}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -242,7 +242,7 @@
 		{
 			"id": "3efb7ff0-1b7f-c7cb-0895-cb2aa34ebb33",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/styleset/530dee8066553bb00c000004/update",
+			"url": "http://{{hostname}}/styleset/530dee8066553bb00c000004/update",
 			"pathVariables": {},
 			"method": "PUT",
 			"data": "{\"name\": \"Wonkers\", \"styles\": [\"5316f7783527c1f021000004\"]}",
@@ -258,7 +258,7 @@
 		},
 		{
 			"id": "4184b3f0-1aae-9649-e1f8-fabe392ca6ad",
-			"url": "http://{{hostname}}:3000/folder",
+			"url": "http://{{hostname}}/folder",
 			"data": "{\"projectId\": \"5249b768606c41b815000008\", \"name\": \"Chapter 1\"}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -273,7 +273,7 @@
 		{
 			"id": "4eb0cb21-3471-6e74-1493-af7fbddbdde9",
 			"headers": "",
-			"url": "http://{{hostname}}:3000/style/archived",
+			"url": "http://{{hostname}}/style/archived",
 			"pathVariables": {},
 			"method": "GET",
 			"data": [],
@@ -290,7 +290,7 @@
 		{
 			"id": "5d8290c5-97b7-65b4-9f81-533c5a35f84a",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/style/5316f7783527c1f021000004",
+			"url": "http://{{hostname}}/style/5316f7783527c1f021000004",
 			"pathVariables": {},
 			"method": "GET",
 			"data": [],
@@ -307,7 +307,7 @@
 		{
 			"id": "5eeb0095-2904-3b9d-c1dd-5dec06a7738f",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/document",
+			"url": "http://{{hostname}}/document",
 			"pathVariables": {},
 			"method": "POST",
 			"data": "{\"projectId\":\"5249b768606c41b815000008\", \"name\": \"MyFirstDocument56565\", \"text\": \"It is my best document ever! FGFGFGFGFG\"}",
@@ -322,7 +322,7 @@
 		},
 		{
 			"id": "61f420ca-22c8-9d17-8870-cda108e67a81",
-			"url": "http://{{hostname}}:3000/user/login",
+			"url": "http://{{hostname}}/user/login",
 			"data": "{\"email\":\"morten.garboel.franck+scriplertest2@gmail.com\", \"password\":\"hejhej\"}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -339,7 +339,7 @@
 			"id": "68a5cc02-857c-9f05-256c-4e43e325b004",
 			"name": "User Logout",
 			"description": "",
-			"url": "http://{{hostname}}:3000/user/logout",
+			"url": "http://{{hostname}}/user/logout",
 			"method": "POST",
 			"headers": "Content-Type: application/json\n",
 			"data": "{}",
@@ -351,7 +351,7 @@
 		},
 		{
 			"id": "69c047fd-6761-10b2-09fd-feb3b72a217e",
-			"url": "http://{{hostname}}:3000/document/5249b784606c41b81500000a/rename",
+			"url": "http://{{hostname}}/document/5249b784606c41b81500000a/rename",
 			"data": "{\"name\":\"Jyttes dokument\"}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -365,7 +365,7 @@
 		},
 		{
 			"id": "72d3b659-7ec4-80fa-25a0-6c5c6f34a8a1",
-			"url": "http://{{hostname}}:3000/project/rearrange",
+			"url": "http://{{hostname}}/project/rearrange",
 			"data": "{\"projects\": [\n     \"51be1be3fb6b9cd004000002\",\n     \"520637be739310dc1f000007\"\n]}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -379,7 +379,7 @@
 		},
 		{
 			"id": "7915ea50-83f1-d25d-0ee5-affb525856e2",
-			"url": "http://{{hostname}}:3000/project/520637be739310dc1f000007/archive",
+			"url": "http://{{hostname}}/project/520637be739310dc1f000007/archive",
 			"data": "{}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -393,7 +393,7 @@
 		},
 		{
 			"id": "7b366539-b2bd-eab3-cf1f-83597b073dc0",
-			"url": "http://{{hostname}}:3000/folder/5249b768606c41b815000008/5249e4575c0ae1b405000005/unarchive",
+			"url": "http://{{hostname}}/folder/5249b768606c41b815000008/5249e4575c0ae1b405000005/unarchive",
 			"data": "{}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -407,7 +407,7 @@
 		},
 		{
 			"id": "7cb850e7-1e64-eb61-4d63-2889942e1984",
-			"url": "http://{{hostname}}:3000/document/5249b784606c41b81500000a",
+			"url": "http://{{hostname}}/document/5249b784606c41b81500000a",
 			"data": [],
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "params",
@@ -421,7 +421,7 @@
 		},
 		{
 			"id": "7efbf04d-cb95-7c8d-b66e-329004100e58",
-			"url": "http://{{hostname}}:3000/folder/5249b768606c41b815000008/5249e4575c0ae1b405000005",
+			"url": "http://{{hostname}}/folder/5249b768606c41b815000008/5249e4575c0ae1b405000005",
 			"data": "{}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -438,7 +438,7 @@
 			"id": "869616d3-f741-c775-55be-97d93e4abba0",
 			"name": "User Current",
 			"description": "",
-			"url": "http://{{hostname}}:3000/user",
+			"url": "http://{{hostname}}/user",
 			"method": "GET",
 			"headers": "",
 			"data": "{\"name\": \"Allan 2\", \"email\":\"allan@scripler.com\", \"password\":\"1234\"}",
@@ -452,7 +452,7 @@
 			"id": "89baf241-decf-dc11-5032-56556d1f7097",
 			"name": "Project Archived list",
 			"description": "",
-			"url": "http://{{hostname}}:3000/project/archived",
+			"url": "http://{{hostname}}/project/archived",
 			"method": "GET",
 			"headers": "",
 			"data": [],
@@ -466,7 +466,7 @@
 			"id": "90b935f6-e668-629e-4822-33515c33e2a2",
 			"name": "Project Rename",
 			"description": "",
-			"url": "http://{{hostname}}:3000/project/51bf79352500256c01000003/rename",
+			"url": "http://{{hostname}}/project/51bf79352500256c01000003/rename",
 			"method": "PUT",
 			"headers": "Content-Type: application/json\n",
 			"data": "{\"name\": \"Awesome Project - Copy Renamed\"}",
@@ -478,7 +478,7 @@
 		{
 			"id": "93b48408-6b4f-d628-8f67-7f0c2a02b435",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/folder/5249b768606c41b815000008/5249e4575c0ae1b405000005",
+			"url": "http://{{hostname}}/folder/5249b768606c41b815000008/5249e4575c0ae1b405000005",
 			"method": "GET",
 			"data": [],
 			"dataMode": "params",
@@ -494,7 +494,7 @@
 		{
 			"id": "a8623b50-d843-96ec-dfb8-f6cc55ac6efc",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/project/5249b768606c41b815000008/compile",
+			"url": "http://{{hostname}}/project/5249b768606c41b815000008/compile",
 			"pathVariables": {},
 			"method": "GET",
 			"data": [],
@@ -511,7 +511,7 @@
 		{
 			"id": "ae989197-3be5-5d5d-3bf0-5ff835aeb3b0",
 			"headers": "",
-			"url": "http://{{hostname}}:3000/styleset/archived",
+			"url": "http://{{hostname}}/styleset/archived",
 			"pathVariables": {},
 			"method": "GET",
 			"data": [],
@@ -528,7 +528,7 @@
 		{
 			"id": "b28b5e70-0a38-818d-3446-5ca5ec1836ec",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/styleset/530de9169531e61822000004/rearrange",
+			"url": "http://{{hostname}}/styleset/530de9169531e61822000004/rearrange",
 			"pathVariables": {},
 			"method": "PUT",
 			"data": "{\"stylesets\": [\"5316f7783527c1f021000004\", \"53170dd2ce71cdec2b000004\"]}",
@@ -545,7 +545,7 @@
 		{
 			"id": "b4d2dca4-488e-1d53-35ae-a11b973254dd",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/styleset/530dee8066553bb00c000004/project/5249b768606c41b815000008",
+			"url": "http://{{hostname}}/styleset/530dee8066553bb00c000004/project/5249b768606c41b815000008",
 			"pathVariables": {},
 			"method": "PUT",
 			"data": "{}",
@@ -561,7 +561,7 @@
 		},
 		{
 			"id": "b4d399e2-67af-c364-da6b-b07fffe30200",
-			"url": "http://{{hostname}}:3000/document/5249b784606c41b81500000a/archive",
+			"url": "http://{{hostname}}/document/5249b784606c41b81500000a/archive",
 			"data": "{}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -578,7 +578,7 @@
 			"id": "bff2e71d-9599-3dcf-da77-43307ab9489b",
 			"name": "User Current",
 			"description": "",
-			"url": "http://{{hostname}}:3000/user",
+			"url": "http://{{hostname}}/user",
 			"method": "GET",
 			"headers": "",
 			"data": "{\"name\": \"Allan 2\", \"email\":\"allan@scripler.com\", \"password\":\"1234\"}",
@@ -590,7 +590,7 @@
 		{
 			"id": "c7645fdc-8df4-902e-8b02-61f537970c87",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/style/5316f7783527c1f021000004/update",
+			"url": "http://{{hostname}}/style/5316f7783527c1f021000004/update",
 			"pathVariables": {},
 			"method": "PUT",
 			"data": "{\"name\": \"Bloody hell\", \"class\": \"imm\", \"css\": \"dyyyyyyt\"}",
@@ -607,7 +607,7 @@
 		{
 			"id": "c884aef0-10d8-7a9f-93f1-0781c821fd98",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/style/5318c3d1d6f326242f000004/unarchive",
+			"url": "http://{{hostname}}/style/5318c3d1d6f326242f000004/unarchive",
 			"pathVariables": {},
 			"method": "PUT",
 			"data": "{}",
@@ -623,7 +623,7 @@
 		},
 		{
 			"id": "d0005216-f8cd-e8ce-a7e3-52edbc677f7a",
-			"url": "http://{{hostname}}:3000/user/register",
+			"url": "http://{{hostname}}/user/register",
 			"data": "{\"name\":\"MF\", \"email\": \"morten.garboel.franck+scriplertest2@gmail.com\", \"password\":\"hejhej\"}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -640,7 +640,7 @@
 			"id": "d0adbc44-4b59-c525-4b08-20185744f16d",
 			"name": "Project Copy",
 			"description": "",
-			"url": "http://{{hostname}}:3000/project/51be1be3fb6b9cd004000002/copy",
+			"url": "http://{{hostname}}/project/51be1be3fb6b9cd004000002/copy",
 			"method": "POST",
 			"headers": "Content-Type: application/json\n",
 			"data": "{}",
@@ -652,7 +652,7 @@
 		{
 			"id": "d89dbd37-2f3c-be7e-2ce9-d866552b6ea1",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/styleset/530dee8066553bb00c000004/document/5314c34a7b4ea49020000004",
+			"url": "http://{{hostname}}/styleset/530dee8066553bb00c000004/document/5314c34a7b4ea49020000004",
 			"pathVariables": {},
 			"method": "PUT",
 			"data": "{}",
@@ -669,7 +669,7 @@
 		{
 			"id": "df358458-aafc-9ff2-923b-4e44ddcab2eb",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/project",
+			"url": "http://{{hostname}}/project",
 			"pathVariables": {},
 			"method": "POST",
 			"data": "{\"name\": \"Members Testy\"}",
@@ -684,7 +684,7 @@
 		},
 		{
 			"id": "dfb7879e-abde-fdb8-8efa-617e182b5a5a",
-			"url": "http://{{hostname}}:3000/user",
+			"url": "http://{{hostname}}/user",
 			"data": "{\"name\": \"Allan 2\", \"email\":\"allan@scripler.com\", \"password\":\"askldjalskdjsa\"}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -698,7 +698,7 @@
 		},
 		{
 			"id": "e635e33f-e4b2-611f-a139-394bc139b4fb",
-			"url": "http://{{hostname}}:3000/folder/5249e4575c0ae1b405000005/rename",
+			"url": "http://{{hostname}}/folder/5249e4575c0ae1b405000005/rename",
 			"data": "{\"projectId\": \"5249b768606c41b815000008\", \"name\": \"CoolFolderBro\"}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -712,7 +712,7 @@
 		},
 		{
 			"id": "ec251c5e-72db-e635-9aab-dfffe00efe63",
-			"url": "http://{{hostname}}:3000/document/5249b768606c41b815000008/5249b784606c41b81500000a",
+			"url": "http://{{hostname}}/document/5249b768606c41b815000008/5249b784606c41b81500000a",
 			"data": "{}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -726,7 +726,7 @@
 		},
 		{
 			"id": "ed2cedf3-a524-8cb2-141c-66290403e7de",
-			"url": "http://{{hostname}}:3000/project/51be1be3fb6b9cd004000002/unarchive",
+			"url": "http://{{hostname}}/project/51be1be3fb6b9cd004000002/unarchive",
 			"data": "{}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -740,7 +740,7 @@
 		},
 		{
 			"id": "f4134d9e-3342-f985-f865-29ee9baeb8c9",
-			"url": "http://{{hostname}}:3000/project/520a98dbd347d48432000006",
+			"url": "http://{{hostname}}/project/520a98dbd347d48432000006",
 			"data": "{}",
 			"headers": "Content-Type: application/json\n",
 			"dataMode": "raw",
@@ -755,7 +755,7 @@
 		{
 			"id": "feceed10-8a1b-1354-c556-a4f9c85e2b9d",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://{{hostname}}:3000/styleset/530dee8066553bb00c000004/archive",
+			"url": "http://{{hostname}}/styleset/530dee8066553bb00c000004/archive",
 			"pathVariables": {},
 			"method": "PUT",
 			"data": "{}",
