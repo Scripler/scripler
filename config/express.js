@@ -20,14 +20,13 @@ var allowCrossDomain = function (req, res, next) {
 };
 
 // If uploadDir hasn't been specified in configuration folder, default to subfolder in current dir
-if (conf.import.uploadDir == undefined) {
+if (conf.import.uploadDir == "") {
     conf.import.uploadDir = __dirname + '/../tmp/uploads';
 }
 // Ensure that uploadDir exists
 mkdirp(conf.import.uploadDir, function (err) {
     if (err) console.error(err);
 });
-
 
 module.exports = function (app, conf, mongoose) {
 
