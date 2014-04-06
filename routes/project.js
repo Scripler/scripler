@@ -11,6 +11,7 @@ var fs = require('fs');
 var rimraf = require('rimraf');
 var ncp = require('ncp').ncp;
 var epub3 = require('../lib/epub/epub3');
+var mkdirp = require('mkdirp');
 
 //Load project by id
 exports.load = function (id) {
@@ -158,7 +159,7 @@ exports.create = function (req, res, next) {
 			}
 
 			var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
-			fs.mkdir(projectDir, function (err) {
+            mkdirp(projectDir, function (err) {
 				if (err) {
 					return next(err);
 				}

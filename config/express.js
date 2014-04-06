@@ -2,7 +2,9 @@ var express = require('express')
 	, passport = require('passport')
 	, MongoStore = require('connect-mongo')(express)
 	, path = require('path')
-	, logger = require('../lib/logger');
+	, logger = require('../lib/logger')
+    , conf = require('config')
+    , mkdirp = require('mkdirp');
 
 
 var allowCrossDomain = function (req, res, next) {
@@ -17,6 +19,16 @@ var allowCrossDomain = function (req, res, next) {
 	}
 };
 
+// If uploadDir hasn't been specified in configuration folder, default to subfolder in current dir
+if (conf.import.uploadDir == undefined) {
+    conf.import.uploadDir = __dirname + '/../tmp/uploads';
+}
+// Ensure that uploadDir exists
+mkdirp(conf.import.uploadDir, function (err) {
+    if (err) console.error(err);
+});
+
+
 module.exports = function (app, conf, mongoose) {
 
 	// all environments
@@ -30,7 +42,7 @@ module.exports = function (app, conf, mongoose) {
 		logger.info(msg.trim());
 	}}}));
 	app.use(express.bodyParser({
-		uploadDir: __dirname + '/../tmp/uploads',
+		uploadDir: conf.import.uploadDir,
 		keepExtensions: true,
 		maxFieldsSize: '15728640'//15mb
 	}));
