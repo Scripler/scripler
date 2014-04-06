@@ -1445,13 +1445,6 @@ describe('Scripler RESTful API', function () {
             request(host)
                 .post('/document/'+projectId+'/upload')
                 .set('cookie', cookie)
-                /* .set('Content-Type', 'multipart/form-data; boundary=' + boundary)
-                 .write('--' + boundary + '\r\n')
-                 .write('Content-Disposition: form-data; name="image"; filename="'+filename+'"\r\n')
-                 .write('Content-Type: image/png\r\n')
-                 .write('\r\n')
-                 .write(fileContent)
-                 .write('\r\n--' + boundary + '--')*/
                 .attach('file', filepath)
                 .expect(200)
                 .end(function (err, res) {

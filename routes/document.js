@@ -164,15 +164,6 @@ exports.upload = function (req, res, next) {
 				// Update all img links to match the upload location
 				importedHtml = importedHtml.replace(/(<img[^>]*src=")([^"]+")/g, '$1' + userUrl + '/$2');
 				importedHtml = importedHtml.replace(/(<img[^>]*src=")[^"]+ObjectReplacements[^"]+/g, '$1http://scripler.com/images/broken_file.png');
-				//res.send(importedHtml);
-                /*
-
-                 name: req.body.name,
-                 text: req.body.text,
-                 projectId: project._id,
-                 folderId: req.body.folderId,
-                 type: req.body.type,
-                 */
                 req.body.name = name;
                 req.body.text = importedHtml;
                 return create(req, res, next);
