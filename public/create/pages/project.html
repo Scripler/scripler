@@ -70,14 +70,21 @@
 			<a ng-click="showImportOptions = !showImportOptions; showNewOptions = false; showBottomOptions = false;">import</a>
 			<a ng-click="showBottomOptions = !showBottomOptions; showNewOptions = false; showImportOptions = false;">options</a>
 		</div>
-		<div id="menu-left-content-options" class="menu-left-options" ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
+		<div id="menu-left-content-options" class="menu-left-options" ng-show="showDocuments" ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
 			<div class="options-bottom-box">
-				<div ng-show="showNewOptions">new</div>
+				<div ng-show="showNewOptions">
+					<a ng-click="addProjectDocument()">New Document</a><br>
+					<a ng-click="">New Folder</a>
+				</div>
 				<div ng-show="showImportOptions">
-					import
+					<p>Scripler imports Word files and other common word processor formats (link).</p>
+					<input type="file" ng-file-select="onFileSelect($files)">
+					<div class="upload-box" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="dragover"
+						 ng-show="dropSupported" ng-file-drop-available="dropSupported=true">drop files here</div>
 				</div>
 				<div ng-show="showBottomOptions">
 					<input type="checkbox" ng-model="user.showArchivedDocuments" ng-change="updateUser();">Show Archived Documents
+					<a ng-click="">Compile</a>
 				</div>
 			</div>
 		</div>
