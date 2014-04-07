@@ -6,6 +6,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	var lastSavedProjectDocument = null;
 
+	var documentWatch = false;
+
 	var secondsToWait = 5;
 
 	$scope.updateUser = function() {
@@ -17,13 +19,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			var file = $files[i];
 			ngProgress.start();
 			$scope.upload = $upload.upload({
-				url: '/document/upload',
+				url: '/document/' + $scope.pid + '/upload',
 				file: file
 			}).progress(function(evt) {
 				ngProgress.set(parseInt(100.0 * evt.loaded / evt.total) - 25);
 				console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
+				$scope.projectDocuments.push(data.document);
 				console.log(data);
 			});
 		}
@@ -66,6 +69,20 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.projectDocuments = $scope.project.documents;
 		});
 	});
+
+	$scope.openProjectDocument = function( projectDocument ) {
+		$http.get('/document/' + projectDocument._id)
+			.success( function( data ) {
+				var index = $scope.projectDocuments.indexOf( projectDocument );
+				$scope.projectDocuments[index] = data.document;
+				$scope.documentSelected = data.document;
+
+				if ( !documentWatch ) {
+					$scope.$watch('documentSelected', saveProjectDocumentUpdates, true);
+					documentWatch = true;
+				}
+			})
+	}
 
 	$scope.addProjectDocument = function() {
 		var order = $scope.projectDocuments.length + 1;
@@ -119,13 +136,17 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	var saveProjectDocumentUpdates = function( newVal, oldVal ) {
 		if ( newVal != oldVal ) {
+			var charsDiff = 0;
 			if ( lastSavedProjectDocument ) {
-				if ( (newVal.text.length - lastSavedProjectDocument.text.length) > 30 ) {
-					if ( timeout ) {
-						$timeout.cancel( timeout );
-					}
-					$scope.updateProjectDocument();
+				charsDiff = newVal.text.length - lastSavedProjectDocument.text.length;
+			} else {
+				charsDiff = newVal.text.length - $scope.documentSelected.text.length;
+			}
+			if ( charsDiff > 30 ) {
+				if ( timeout ) {
+					$timeout.cancel( timeout );
 				}
+				$scope.updateProjectDocument();
 			}
 			if ( timeout ) {
 				$timeout.cancel( timeout )
@@ -133,8 +154,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			timeout = $timeout( $scope.updateProjectDocument, secondsToWait * 1000 );
 		}
 	};
-
-	$scope.$watch('documentSelected', saveProjectDocumentUpdates, true);
 
     function initiateEditor(scope) {
     	$scope.ckContent = 'test';
@@ -158,11 +177,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
 
 		// CK Editor Controls
-	    $scope.projectDocumentChoosen = function( projectDocument ) {
-				$scope.documentSelected = projectDocument;
-				//$scope.ckEditorContent = projectDocument.styleSheet;
-				//Change to use the script settings and load content there
-				//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+projectDocument.styleSheet+'.css';
+		$scope.projectDocumentChosen = function( projectDocument ) {
+			$scope.openProjectDocument( projectDocument );
+
+			//$scope.ckEditorContent = projectDocument.styleSheet;
+			//Change to use the script settings and load content there
+			//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+projectDocument.styleSheet+'.css';
 		};
 
 	    $scope.changeStyle = function (name) {
