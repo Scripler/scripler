@@ -8,10 +8,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	var secondsToWait = 5;
 
-	$scope.entrybody = 'test';
-
-	$scope.testName = 'Documents Test';
-
 	$scope.updateUser = function() {
 		userService.updateUser( $scope.user );
 	}
