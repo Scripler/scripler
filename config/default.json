@@ -56,5 +56,8 @@
 	},
 	"epub3": {
 		"epubDir": "EPUB"
-	}
+	},
+    "import": {
+        "uploadDir": ""
+    }
 }
