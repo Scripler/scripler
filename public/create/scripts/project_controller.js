@@ -1,6 +1,12 @@
 'use strict'
 
-function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress ) {
+function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress, $timeout ) {
+
+	var timeout = null;
+
+	var lastSavedProjectDocument = null;
+
+	var secondsToWait = 5;
 
 	$scope.entrybody = 'test';
 
@@ -83,6 +89,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
+	$scope.updateProjectDocument = function() {
+		console.log($scope.documentSelected);
+		lastSavedProjectDocument = $scope.documentSelected;
+	};
+
 	$scope.archiveProjectDocument = function( projectDocument ) {
 		if ( $scope.user._id ) {
 			$http.put('/document/' + projectDocument._id + '/archive')
@@ -102,6 +113,25 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			//TODO save to localstorage
 		}
 	};
+
+	var saveProjectDocumentUpdates = function( newVal, oldVal ) {
+		if ( newVal != oldVal ) {
+			if ( lastSavedProjectDocument ) {
+				if ( (newVal.content.length - lastSavedProjectDocument.content.length) > 30 ) {
+					if ( timeout ) {
+						$timeout.cancel( timeout );
+					}
+					$scope.updateProjectDocument();
+				}
+			}
+			if ( timeout ) {
+				$timeout.cancel( timeout )
+			}
+			timeout = $timeout( $scope.updateProjectDocument, secondsToWait * 1000 );
+		}
+	};
+
+	$scope.$watch('documentSelected', saveProjectDocumentUpdates, true);
 
     function initiateEditor(scope) {
     	$scope.ckContent = 'test';
@@ -127,7 +157,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		// CK Editor Controls
 	    $scope.projectDocumentChoosen = function( projectDocument ) {
 				$scope.documentSelected = projectDocument;
-				$scope.ckEditorContent = projectDocument.content;
 				//$scope.ckEditorContent = projectDocument.styleSheet;
 				//Change to use the script settings and load content there
 				//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+projectDocument.styleSheet+'.css';
