@@ -76,9 +76,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				var index = $scope.projectDocuments.indexOf( projectDocument );
 				$scope.projectDocuments[index] = data.document;
 				$scope.documentSelected = data.document;
-				if ( data.document.text ) {
-					lastSavedDocumentLength = data.document.text.length;
-				}
+				lastSavedDocumentLength = data.document.text.length;
 
 				if ( !documentWatch ) {
 					$scope.$watch('documentSelected', saveProjectDocumentUpdates, true);
@@ -92,6 +90,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var name = "Document " + order;
 		var document = {};
 		document.name = name;
+		document.text = '';
 
 		if ( $scope.user._id ) {
 			document.projectId = $scope.pid;
@@ -141,9 +140,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	var saveProjectDocumentUpdates = function( newVal, oldVal ) {
 		if ( newVal != oldVal ) {
 			var charsDiff = 0;
-			if ( newVal.text && lastSavedDocumentLength != 0) {
+
+			if ( lastSavedDocumentLength != 0 ) {
 				charsDiff = newVal.text.length - lastSavedDocumentLength;
 			}
+
 			if ( charsDiff > 30 ) {
 				if ( timeout ) {
 					$timeout.cancel( timeout );
