@@ -38,7 +38,7 @@ exports.create = function (req, res, next) {
 		}
 
 		styleset.styles.addToSet(style);
-		styleset.save(function (err, styleset) {
+		styleset.save(function (err) {
 			if (err) {
 				return next(err);
 			}

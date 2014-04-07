@@ -41,6 +41,10 @@ var ProjectSchema = new Schema({
 	documents: [
 		{ type: Schema.Types.ObjectId, ref: 'Document' }
 	], // Referencing
+	deletedDocuments: [
+		{ type: Schema.Types.ObjectId, ref: 'Document' }
+	],
+	styleset: { type: Schema.Types.ObjectId, ref: 'Styleset' }, // The active styleset
 	folders: [FolderSchema], // Embedding, since amount of folder meta data is expected to be small.
 	members: [ProjectMemberSchema],
 	metadata: {
@@ -73,14 +77,11 @@ var ProjectSchema = new Schema({
 	archived: { type: Boolean, default: false},
 	deleted: { type: Boolean, default: false},
 	created: { type: Date, default: Date.now },
-	modified: { type: Date, default: Date.now },
-	stylesets: [
-		{ type: Schema.Types.ObjectId, ref: 'Styleset' }
-	]
+	modified: { type: Date, default: Date.now }
 });
 
 ProjectSchema.pre('remove', function (next) {
-	// TODO: add log message "WARN: Projects should not be deleted - why is this happening?"
+	// TODO: add log message "WARN: Projects should not be removed - why is this happening?"
 
 	var projectId = this._id;
 	if (Document == undefined) {

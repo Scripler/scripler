@@ -93,7 +93,7 @@ function archiveFolder(folder, archived) {
  * @param projectId
  * @param folder
  */
-function deleteFolder(projectId, folder) {
+function deleteFolder(projectId, folder, next) {
 	// Process child folders depth-first
 	if (folder.folders) {
 		for (var i = 0; i < folder.folders.length; i++) {
@@ -102,19 +102,33 @@ function deleteFolder(projectId, folder) {
 	}
 
 	// Delete documents
-	Document.find({ projectId: projectId, folderId: folder.id }, function (err, documents) {
-		documents.forEach(function (document) {
-			document.deleted = true;
-			document.save();
-		});
-	});
+	Project.findOne({"_id": projectId}, function (err, project) {
+		Document.find({ projectId: projectId, folderId: folder.id }, function (err, documents) {
+			documents.forEach(function (document) {
+				Project.update({"documents": document._id}, {"$pull": {"documents": document._id}}, {multi: true}, function (err, numberAffected, raw) {
+					if (err) {
+						return next(err);
+					}
 
-	// Delete folders (the parent folder deletes its child folders)
-	if (folder.folders) {
-		for (var i = 0; i < folder.folders.length; i++) {
-			folder.folders.pop();
+					project.deletedDocuments.push(document);
+					project.save(function (err) {
+						if (err) {
+							return next(err);
+						}
+						return next();
+					});
+				});
+			});
+		});
+
+		// Delete folders (the parent folder deletes its child folders)
+		if (folder.folders) {
+			for (var i = 0; i < folder.folders.length; i++) {
+				folder.folders.pop();
+			}
 		}
-	}
+		return next();
+	});
 }
 
 exports.create = function (req, res, next) {
@@ -186,7 +200,8 @@ exports.open = function (req, res, next) {
 				});
 			} else { // Return the folder's documents
 				// TODO: enable sorting for folders! How exactly?
-				Document.find({"projectId": req.params.projectId, "folderId": req.params.folderId, "archived": archived, "deleted": false}, function (err, docs) {
+				// Deleted documents are filtered out by null'ing their folderId when deleting a document
+				Document.find({"projectId": req.params.projectId, "folderId": req.params.folderId, "archived": archived}, function (err, docs) {
 					if (err) {
 						return next(err);
 					} else if (docs) {
@@ -269,28 +284,40 @@ exports.delete = function (req, res, next) {
 
 		// Remove folder contents, i.e. child folders and documents
 		var folder = findFolder(project.folders, req.params.folderId);
-		deleteFolder(req.params.projectId, folder);
+		if (folder) {
+			deleteFolder(req.params.projectId, folder, function(err) {
+				if (err) {
+					return next(err);
+				}
 
-		// Remove folder from parent, i.e. either the project or a parent folder...
+				// Remove folder from parent, i.e. either the project or a parent folder...
 
-		// Did the caller indicate that the folder has a parent folder?
-		if (req.params.parentFolderId) { // Yes, remove the folder on the parent folder
-			var parentFolder = findFolder(project.folders, req.params.parentFolderId);
-			if (parentFolder) {
-				parentFolder.folders.id(req.params.folderId).remove();
-			} else {
-				return next({message: "Parent folder specified but not found", status: 400});
-			}
-		} else { // No, remove the folder directly from the project
-			project.folders.id(req.params.folderId).remove();
+				// Did the caller indicate that the folder has a parent folder?
+				if (req.params.parentFolderId) { // Yes, remove the folder on the parent folder
+					var parentFolder = findFolder(project.folders, req.params.parentFolderId);
+					if (parentFolder) {
+						// TODO: why does array.id().remove() work below but not here?
+						var index = parentFolder.folders.indexOf(folder);
+						parentFolder.folders.splice(index, 1);
+						//parentFolder.folders.id(req.params.folderId).remove();
+						//parentFolder.folders[req.params.folderId].remove();
+					} else {
+						return next({message: "Parent folder specified but not found", status: 400});
+					}
+				} else { // No, remove the folder directly from the project
+					project.folders.id(req.params.folderId).remove();
+				}
+
+				project.save(function (err, project) {
+					if (err) {
+						return next(err);
+					}
+					res.send({});
+				});
+			});
+		} else {
+			return next({message: "Folder specified but not found", status: 400});
 		}
-
-		project.save(function (err, project) {
-			if (err) {
-				return next(err);
-			}
-			res.send({});
-		});
 	} else {
 		return next({message: "No folder specified", status: 400});
 	}
