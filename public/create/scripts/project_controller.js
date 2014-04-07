@@ -76,7 +76,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				var index = $scope.projectDocuments.indexOf( projectDocument );
 				$scope.projectDocuments[index] = data.document;
 				$scope.documentSelected = data.document;
-				lastSavedDocumentLength = data.document.text.length;
+				if ( data.document.text ) {
+					lastSavedDocumentLength = data.document.text.length;
+				}
 
 				if ( !documentWatch ) {
 					$scope.$watch('documentSelected', saveProjectDocumentUpdates, true);
@@ -139,7 +141,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	var saveProjectDocumentUpdates = function( newVal, oldVal ) {
 		if ( newVal != oldVal ) {
 			var charsDiff = 0;
-			if ( lastSavedDocumentLength != 0 ) {
+			if ( newVal.text && lastSavedDocumentLength != 0) {
 				charsDiff = newVal.text.length - lastSavedDocumentLength;
 			}
 			if ( charsDiff > 30 ) {
