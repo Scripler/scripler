@@ -139,14 +139,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	var saveProjectDocumentUpdates = function( newVal, oldVal ) {
 		if ( newVal != oldVal ) {
 			var charsDiff = 0;
-			console.log( newVal.text.length );
-			console.log( lastSavedDocumentLength );
-
 			if ( lastSavedDocumentLength != 0 ) {
 				charsDiff = newVal.text.length - lastSavedDocumentLength;
 			}
-
-			console.log(charsDiff);
 			if ( charsDiff > 30 ) {
 				if ( timeout ) {
 					$timeout.cancel( timeout );
