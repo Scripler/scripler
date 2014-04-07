@@ -27,13 +27,13 @@
 						<p>+</p>
 					</div>
 					<div html-sortable="sortable_option" ng-model="projectDocuments">
-						<div class="projectDocument" ng-repeat="projectDocument in projectDocuments track by projectDocument._id" ng-hide="projectDocument.archived && !user.showArchivedDocuments">
+						<div class="projectDocument" ng-repeat="projectDocument in projectDocuments track by projectDocument._id" ng-selected="documentSelected === projectDocument" ng-hide="projectDocument.archived && !user.showArchivedDocuments">
 							<a class="projectDocument-options-show" ng-click="showProjectDocumentOptions = true">
 								<div class="arrow"></div>
 							</a>
 
 							<p ng-hide="editingProjectDocumentTitle">
-								<a ng-click="projectDocumentChoosen(projectDocument)">{{projectDocument.name}}</a>
+								<a ng-click="projectDocumentChosen(projectDocument)">{{projectDocument.name}}</a>
 							</p>
 
 							<form ng-show="editingProjectDocumentTitle">
@@ -83,7 +83,7 @@
 						 ng-show="dropSupported" ng-file-drop-available="dropSupported=true">drop files here</div>
 				</div>
 				<div ng-show="showBottomOptions">
-					<input type="checkbox" ng-model="user.showArchivedDocuments" ng-change="updateUser();">Show Archived Documents
+					<input type="checkbox" ng-model="user.showArchivedDocuments" ng-change="updateUser();">Show Archived Documents<br>
 					<a ng-click="">Compile</a>
 				</div>
 			</div>
@@ -92,9 +92,7 @@
 
 	<div class="editor">
 		<div id="toolbar-area" class="toolbar-area"></div>
-		<textarea ck-editor="" ng-model="entrybody" class="form-control" id="bodyeditor" value="{{entrybody}}">
-			{{entrybody}}
-		</textarea>
+		<textarea ck-editor="" ng-model="documentSelected.text" class="form-control" id="bodyeditor"></textarea>
 	</div>
 
 	<div id="menu-right" class="menu-right">

@@ -34,7 +34,7 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 			var demoOn = function() {
 				$rootScope.$broadcast('demo:mode', publications);
 			}
-			$timeout(demoOn, 1); //!important: timeout for createController to load
+			$timeout(demoOn, 100); //!important: timeout for createController to load
 		});
 
 		$scope.submitRegistration = function() {
@@ -214,7 +214,8 @@ app.directive('ckEditor', function() {
 			var ck = CKEDITOR.replace('bodyeditor', {
 				allowedContent: true,
 				skin: 'scripler',
-				extraPlugins: 'scripler',
+				resize_enabled: false,
+				//extraPlugins: 'scripler',
 				height: 600,
 				width: 800,
 				font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
