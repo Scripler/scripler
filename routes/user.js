@@ -11,6 +11,7 @@ var User = require('../models/user.js').User
 	, path = require('path')
 	, fs = require('fs')
 	, utils = require('../lib/utils')
+    , mkdirp = require('mkdirp')
 ;
 
 var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
@@ -139,7 +140,7 @@ exports.register = function (req, res, next) {
 				}
 
 				var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + user._id);
-				fs.mkdir(userDir, function (err) {
+                mkdirp(userDir, function (err) {
 					if (err) {
 						return next(err);
 					} else {

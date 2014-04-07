@@ -4,9 +4,6 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node app.js"
-  },
-  "scripts": {
     "test": "mocha"
   },
   "dependencies": {
@@ -37,7 +34,8 @@
     "node-uuid": "~1.4.1",
     "async": "~0.2.9",
     "rimraf": "~2.2.5",
-    "express": "~3.4.8"
+    "express": "~3.4.8",
+    "mkdirp": "~0.3.5"
   },
   "readmeFilename": "README.md",
   "main": "app.js",

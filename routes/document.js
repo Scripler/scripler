@@ -4,6 +4,7 @@ var utils = require('../lib/utils');
 var docConverter = require('../lib/doc-converter');
 var path = require('path');
 var conf = require('config');
+var logger = require('../lib/logger');
 
 //Load a document by id
 exports.load = function (id) {
@@ -22,7 +23,7 @@ exports.load = function (id) {
 	}
 }
 
-exports.create = function (req, res, next) {
+var create = exports.create = function (req, res, next) {
 	var project = req.project;
 
 	var document = new Document({
@@ -145,11 +146,13 @@ exports.upload = function (req, res, next) {
 	var completedFiles = 0;
 	var importedHtml = '';
 	var user = req.user;
+    var name;
 	var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + user._id);
 	var userUrl = conf.resources.usersUrl + '/' + user._id;
 	for (var i = 0; i < files.length; i++) {
 		var file = files[i];
-		console.log('Uploaded file ' + file.name + ' to ' + file.path + ' (' + file.size + ')');
+        name = file.name;
+        logger.info('Uploaded file ' + file.name + ' to ' + file.path + ' (' + file.size + ')');
 		docConverter.execute(userDir, file.path, function (err, html) {
 			if (err) {
 				return next(new Error(err));
@@ -161,7 +164,9 @@ exports.upload = function (req, res, next) {
 				// Update all img links to match the upload location
 				importedHtml = importedHtml.replace(/(<img[^>]*src=")([^"]+")/g, '$1' + userUrl + '/$2');
 				importedHtml = importedHtml.replace(/(<img[^>]*src=")[^"]+ObjectReplacements[^"]+/g, '$1http://scripler.com/images/broken_file.png');
-				res.send(importedHtml);
+                req.body.name = name;
+                req.body.text = importedHtml;
+                return create(req, res, next);
 			}
 		});
 	}
