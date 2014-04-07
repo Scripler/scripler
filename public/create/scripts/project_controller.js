@@ -4,7 +4,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	var timeout = null;
 
-	var lastSavedProjectDocument = null;
+	var lastSavedDocumentLength = 0;
 
 	var documentWatch = false;
 
@@ -76,6 +76,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				var index = $scope.projectDocuments.indexOf( projectDocument );
 				$scope.projectDocuments[index] = data.document;
 				$scope.documentSelected = data.document;
+				lastSavedDocumentLength = data.document.text.length;
 
 				if ( !documentWatch ) {
 					$scope.$watch('documentSelected', saveProjectDocumentUpdates, true);
@@ -103,9 +104,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.updateProjectDocument = function() {
-		lastSavedProjectDocument = $scope.documentSelected;
+		var document = $scope.documentSelected;
+		lastSavedDocumentLength = document.text.length;
 		if ( $scope.user._id ) {
-			$http.put(/document/ + lastSavedProjectDocument._id + '/update', angular.toJson( lastSavedProjectDocument ))
+			$http.put(/document/ + document._id + '/update', angular.toJson( document ))
 				.success( function() {
 					//TODO inform user that document is saved
 				});
@@ -137,11 +139,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	var saveProjectDocumentUpdates = function( newVal, oldVal ) {
 		if ( newVal != oldVal ) {
 			var charsDiff = 0;
-			if ( lastSavedProjectDocument ) {
-				charsDiff = newVal.text.length - lastSavedProjectDocument.text.length;
-			} else {
-				charsDiff = newVal.text.length - $scope.documentSelected.text.length;
+			console.log( newVal.text.length );
+			console.log( lastSavedDocumentLength );
+
+			if ( lastSavedDocumentLength != 0 ) {
+				charsDiff = newVal.text.length - lastSavedDocumentLength;
 			}
+
+			console.log(charsDiff);
 			if ( charsDiff > 30 ) {
 				if ( timeout ) {
 					$timeout.cancel( timeout );
