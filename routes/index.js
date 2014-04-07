@@ -40,7 +40,7 @@ module.exports = function (app, auth) {
 	app.put('/project/:projectId/metadata', auth.isLoggedIn(), project.metadata);
 	app.put('/project/:projectId/toc', auth.isLoggedIn(), project.toc);
 	app.delete('/project/:projectId', auth.isLoggedIn(), project.delete);
-	app.post('/project/:projectIdPopulated/copy', auth.isLoggedIn(), project.copy);
+	app.post('/project/:projectIdPopulatedFull/copy', auth.isLoggedIn(), project.copy);
 
 	/* API Projectmanager (documents and folders) */
 	app.post('/document', auth.isLoggedIn(), project.load(), document.create);
@@ -69,7 +69,7 @@ module.exports = function (app, auth) {
 	app.get('/style/:styleId', auth.isLoggedIn(), style.open);
 	app.put('/styleset/:stylesetId/update', auth.isLoggedIn(), styleset.update);
 	app.put('/style/:styleId/update', auth.isLoggedIn(), style.update);
-	app.put('/styleset/:projectId/rearrange', auth.isLoggedIn(), styleset.rearrange);
+	app.put('/styleset/rearrange', auth.isLoggedIn(), styleset.rearrange);
 	app.put('/styleset/:stylesetId/archive', auth.isLoggedIn(), styleset.archive);
 	app.put('/styleset/:stylesetId/unarchive', auth.isLoggedIn(), styleset.unarchive);
 	app.put('/style/:styleId/archive', auth.isLoggedIn(), style.archive);
