@@ -90,8 +90,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.updateProjectDocument = function() {
-		console.log($scope.documentSelected);
 		lastSavedProjectDocument = $scope.documentSelected;
+		if ( $scope.user._id ) {
+			$http.put(/document/ + lastSavedProjectDocument._id + '/update', angular.toJson( lastSavedProjectDocument ))
+				.success( function() {
+					//TODO inform user that document is saved
+				});
+		} else {
+			//TODO save to localstorage
+		}
 	};
 
 	$scope.archiveProjectDocument = function( projectDocument ) {
