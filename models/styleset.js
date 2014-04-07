@@ -43,8 +43,8 @@ exports.copy = function (styleset, next) {
 			}
 
 			if (styleset.styles && styleset.styles.length > 0) {
-				var numberOfStylesToBeApplied = styleset.styles.length;
 				Style.find({"stylesetId": styleset._id}, function (err, styles) {
+					var numberOfStylesToBeApplied = styles.length;
 					styles.forEach(function (style) {
 						copyStyle(style, result._id, function(err, copy) {
 							if (err) {
