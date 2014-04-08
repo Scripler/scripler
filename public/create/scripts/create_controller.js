@@ -59,32 +59,41 @@ function createController( $scope, $http, userService ) {
 }
 //}]);
 
-function PublicationsCtrl ( $scope, $http, localStorageService, projectsService ) {
+function PublicationsCtrl ( $scope, $http, localStorageService, projectsService, userService, $q ) {
 	$scope.publications = [];
 	$scope.showPublicationOptions = false;
 	var lsName = 'demo-scripler-publications';
 
-	$scope.$on('demo:mode', function( event, publications ) {
+	$scope.$onRootScope('demo:mode', function( event, publications ) {
 		$scope.publications = publications;
 	});
 
-	$scope.$on('user:updated', function( event, user ) {
+	$scope.$onRootScope('user:updated', function( event, user ) {
 		$scope.user = user;
 		$scope.publications = projectsService.getList( user );
 	});
 
-	$scope.$on('user:registered', function( event, user ) {
+	$scope.$onRootScope('user:registered', function( event, user ) {
 		if ( user._id ) {
-			angular.forEach($scope.publications, function( publication, index ) {
+			uploadDemoPublications()
+				.then( function() {
+					localStorageService.remove( lsName );
+					userService.setUser( user );
+				});
+		}
+	});
+
+	var uploadDemoPublications = function() {
+		var deferred = $q.defer();
+		angular.forEach($scope.publications, function( publication, index ) {
 				$http.post('/project', angular.toJson( publication ) )
 					.success( function( data ) {
 						$scope.publications[index] = data.project;
+						deferred.resolve();
 				});
-			})
-			localStorageService.remove( lsName );
-			$scope.publications = projectsService.getList();
-		}
-	});
+		})
+		return deferred.promise;
+	};
 
 	$scope.toggleElement = function( element ) {
 		if ($scope.element != true && $scope.element != false) {
