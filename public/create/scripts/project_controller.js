@@ -71,6 +71,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	});
 
 	$scope.openProjectDocument = function( projectDocument ) {
+		if ( $scope.documentSelected._id ) {
+			$scope.updateProjectDocument();
+		}
+
 		$http.get('/document/' + projectDocument._id)
 			.success( function( data ) {
 				var index = $scope.projectDocuments.indexOf( projectDocument );
@@ -141,9 +145,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if ( newVal != oldVal ) {
 			var charsDiff = 0;
 
-			if ( lastSavedDocumentLength != 0 ) {
-				charsDiff = newVal.text.length - lastSavedDocumentLength;
-			}
+			charsDiff = newVal.text.length - lastSavedDocumentLength;
 
 			if ( charsDiff > 30 ) {
 				if ( timeout ) {
