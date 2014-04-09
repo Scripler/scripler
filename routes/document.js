@@ -11,8 +11,8 @@ var logger = require('../lib/logger');
 //Load a document by id
 exports.load = function (id) {
 	return function (req, res, next) {
-		id = id || req.body.documentId;
-		Document.findOne({"_id": id, "deleted": false}, function (err, document) {
+		var idCopy = id || req.body.documentId;
+		Document.findOne({"_id": idCopy, "deleted": false}, function (err, document) {
 			if (err) return next(err);
 			if (!document) {
 				return next({message: "Document not found", status: 404});

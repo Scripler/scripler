@@ -4,9 +4,8 @@ var Style = require('../models/style.js').Style;
 //Load style by id
 exports.load = function (id) {
 	return function (req, res, next) {
-		// TODO: specifying "id" as a var will cause its value to be undefined - WHY? (why is the "id" param not in scope anymore?)
-		id = id || req.body.styleId;
-		Style.findOne({"_id": id, "deleted": false}, function (err, style) {
+		var idCopy = id || req.body.styleId;
+		Style.findOne({"_id": idCopy, "deleted": false}, function (err, style) {
 			if (err) return next(err);
 			if (!style) {
 				return next({message: "Style not found", status: 404});

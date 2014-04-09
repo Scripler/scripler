@@ -5,9 +5,8 @@ var Project = require('../models/project.js').Project;
 //Load styleset by id
 exports.load = function (id) {
 	return function (req, res, next) {
-		// TODO: specifying "id" as a var will cause its value to be undefined - WHY? (why is the "id" param not in scope anymore?)
-		id = id || req.body.stylesetId;
-		Styleset.findOne({"_id": id, "deleted": false}, function (err, styleset) {
+		var idCopy = id || req.body.stylesetId;
+		Styleset.findOne({"_id": idCopy, "deleted": false}, function (err, styleset) {
 			if (err) return next(err);
 			if (!styleset) {
 				return next({message: "Styleset not found", status: 404});

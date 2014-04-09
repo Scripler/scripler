@@ -18,8 +18,9 @@ var mkdirp = require('mkdirp');
 //Load project by id
 exports.load = function (id) {
 	return function (req, res, next) {
-		id = id || req.body.projectId;
-		Project.findOne({"_id": id, "deleted": false}).exec(function (err, project) {
+		// Avoiding global scope!
+		var idCopy = id || req.body.projectId;
+		Project.findOne({"_id": idCopy, "deleted": false}).exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
@@ -35,8 +36,8 @@ exports.load = function (id) {
 
 exports.loadPopulated = function (id) {
 	return function (req, res, next) {
-		id = id || req.body.projectId;
-		Project.findOne({"_id": id, "deleted": false}).populate({path: 'documents', match: {archived: false}, select: 'name folderId modified archived stylesets members type'}).exec(function (err, project) {
+		var idCopy = id || req.body.projectId;
+		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', match: {archived: false}, select: 'name folderId modified archived stylesets members type'}).exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
@@ -52,8 +53,8 @@ exports.loadPopulated = function (id) {
 
 exports.loadPopulatedFull = function (id) {
 	return function (req, res, next) {
-		id = id || req.body.projectId;
-		Project.findOne({"_id": id, "deleted": false}).populate({path: 'documents', match: {archived: false}, select: 'name folderId modified archived stylesets members type text'}).exec(function (err, project) {
+		var idCopy = id || req.body.projectId;
+		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', match: {archived: false}, select: 'name folderId modified archived stylesets members type text'}).exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});

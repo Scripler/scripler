@@ -1144,10 +1144,7 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.style.class, "CoolioClass2");
 					assert.equal(res.body.style.css, css2);
 					styleId2 = res.body.style._id;
-					//console.log('styleId ' + styleId);
-					//console.log('styleId2 ' + styleId2);
-					// TODO: FIXME: this should be stylesetId2 - WHY the HELL doesn't it save stylesetId2?
-					assert.equal(res.body.style.stylesetId, stylesetId);
+					assert.equal(res.body.style.stylesetId, stylesetId2);
 					styleId2 && done();
 				});
 		}),
