@@ -527,6 +527,8 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.archived, false);
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
+						assert.notEqual(res.body.document.stylesets[0], stylesetId); // Stylesets are copied
+						assert.notEqual(res.body.document.defaultStyleset, stylesetId);
 						rootDocumentId = res.body.document._id;
 						rootDocumentId && done();
 					});
@@ -554,6 +556,8 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.archived, false);
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
+						assert.notEqual(res.body.document.stylesets[0], stylesetId); // Stylesets are copied
+						assert.notEqual(res.body.document.defaultStyleset, stylesetId);
 						childDocumentId = res.body.document._id;
 						childDocumentId && done();
 					});
@@ -588,6 +592,8 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
 						assert.equal(res.body.document.type, 'cover');
+						assert.notEqual(res.body.document.stylesets[0], stylesetId); // Stylesets are copied
+						assert.notEqual(res.body.document.defaultStyleset, stylesetId);
 						coverDocumentId = res.body.document._id;
 						coverDocumentId && done();
 					});
@@ -622,6 +628,8 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
 						assert.equal(res.body.document.type, 'titlepage');
+						assert.notEqual(res.body.document.stylesets[0], stylesetId); // Stylesets are copied
+						assert.notEqual(res.body.document.defaultStyleset, stylesetId);
 						titlePageDocumentId = res.body.document._id;
 						titlePageDocumentId && done();
 					});
@@ -656,6 +664,8 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
 						assert.equal(res.body.document.type, 'toc');
+						assert.notEqual(res.body.document.stylesets[0], stylesetId); // Stylesets are copied
+						assert.notEqual(res.body.document.defaultStyleset, stylesetId);
 						tocDocumentId = res.body.document._id;
 						tocDocumentId && done();
 					});
@@ -690,6 +700,8 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
 						assert.equal(res.body.document.type, 'colophon');
+						assert.notEqual(res.body.document.stylesets[0], stylesetId); // Stylesets are copied
+						assert.notEqual(res.body.document.defaultStyleset, stylesetId);
 						colophonDocumentId = res.body.document._id;
 						colophonDocumentId && done();
 					});

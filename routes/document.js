@@ -52,6 +52,7 @@ var create = exports.create = function (req, res, next) {
 			});
 
 			document.stylesets.addToSet(copy);
+			document.defaultStyleset = copy;
 			document.save(function (err) {
 				if (err) {
 					return next(err);
