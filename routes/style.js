@@ -11,7 +11,7 @@ exports.load = function (id) {
 				return next({message: "Style not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToModel(req.user, style)) return next(403);
+			if (!style.isSystem && !utils.hasAccessToModel(req.user, style)) return next(403);
 			req.style = style;
 			return next();
 		});
@@ -26,10 +26,14 @@ exports.create = function (req, res, next) {
 		class: req.body.class,
 		css: req.body.css,
 		stylesetId: styleset._id,
-		members: [
-			{userId: req.user._id, access: ["admin"]}
-		]
+		isSystem: req.body.isSystem
 	});
+
+	if (!req.body.isSystem) {
+		style.members = [
+			{userId: req.user._id, access: ["admin"]}
+		];
+	}
 
 	style.save(function(err) {
 		if (err) {

@@ -22,8 +22,9 @@ var StylesetSchema = new Schema({
 	// Currently not used: not possible to delete a style
 	deletedStyles: [ { type: Schema.Types.ObjectId, ref: 'Style' }],
 	members: [StylesetMemberSchema],
-	archived: { type: Boolean, default: false},
-	deleted: { type: Boolean, default: false}
+	archived: { type: Boolean, default: false },
+	deleted: { type: Boolean, default: false },
+	isSystem: { type: Boolean, default: false }
 });
 
 var InternalStyleset = mongoose.model('Styleset', StylesetSchema);

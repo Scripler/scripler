@@ -11,6 +11,8 @@ var User = require('../models/user.js').User
 	, fs = require('fs')
 	, utils = require('../lib/utils')
     , mkdirp = require('mkdirp')
+	, Styleset = require('../models/styleset.js').Styleset,
+	  copyStyleset = require('../models/styleset.js').copy
 ;
 
 var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
@@ -107,25 +109,56 @@ exports.register = function (req, res, next) {
 			password: req.body.password
 		});
 
-		user.save(function (err) {
+		// Copy all system/Scripler stylesets (and styles) to the user
+		Styleset.find({isSystem: true}, function (err, stylesets) {
 			if (err) {
-				// return error
-				if (err.code == 11000) {
-					return next({errors: "Email already registered", status: 400});
-				}
 				return next(err);
-			} else {
-				if ('test' != env) {
-					emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
-				}
+			}
 
-				var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + user._id);
-                mkdirp(userDir, function (err) {
+			var saveUser = function (next) {
+				user.save(function (err) {
 					if (err) {
+						// return error
+						if (err.code == 11000) {
+							return next({errors: "Email already registered", status: 400});
+						}
 						return next(err);
 					} else {
-						res.send({"user": user});
+						if ('test' != env) {
+							emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
+						}
+
+						var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + user._id);
+						mkdirp(userDir, function (err) {
+							if (err) {
+								return next(err);
+							} else {
+								res.send({"user": user});
+							}
+						});
 					}
+				});
+			}
+
+			var numberOfStylesetsToBeCopied = stylesets.length;
+			if (numberOfStylesetsToBeCopied == 0) {
+				return saveUser(next);
+			} else {
+				stylesets.forEach(function (styleset) {
+					copyStyleset(styleset, function(err, copy) {
+						if (err) {
+							return next(err);
+						}
+
+						user.stylesets.addToSet(copy);
+						user.defaultStyleset = copy; // TODO: which styleset should be the default?
+
+						numberOfStylesetsToBeCopied--;
+
+						if (numberOfStylesetsToBeCopied == 0) {
+							return saveUser(next);
+						}
+					});
 				});
 			}
 		});

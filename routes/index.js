@@ -29,7 +29,7 @@ module.exports = function (app, auth) {
 	app.post('/user/register', user.register);
 	app.get('/user/:id/verify/:hash', user.verify);
 
-	/* API Projectspace (projects) */
+	/* API Project Space: Project */
 	app.get('/project/list', auth.isLoggedIn(), project.list);
 	app.put('/project/rearrange', auth.isLoggedIn(), project.rearrange);
 	app.post('/project', auth.isLoggedIn(), project.create);
@@ -42,7 +42,7 @@ module.exports = function (app, auth) {
 	app.delete('/project/:projectId', auth.isLoggedIn(), project.delete);
 	app.post('/project/:projectIdPopulatedFull/copy', auth.isLoggedIn(), project.copy);
 
-	/* API Projectmanager (documents and folders) */
+	/* API Document Manager: Document and Folder */
 	app.post('/document', auth.isLoggedIn(), project.load(), document.create);
 	app.get('/document/:documentId', auth.isLoggedIn(), document.open);
 	app.put('/document/:documentId/update', auth.isLoggedIn(), document.update);
@@ -52,7 +52,6 @@ module.exports = function (app, auth) {
 	app.put('/document/:projectId/rearrange', auth.isLoggedIn(), document.rearrange);
 	app.delete('/document/:projectId/:documentId', auth.isLoggedIn(), document.delete);
 	app.post('/document/:projectId/upload', auth.isLoggedIn(), document.upload);
-
 	app.post('/folder', auth.isLoggedIn(), project.load(), folder.create);
 	app.get('/folder/:projectId/:folderId/:archived?', auth.isLoggedIn(), folder.open);
 	app.put('/folder/:id/rename', auth.isLoggedIn(), project.load(), folder.rename);
@@ -60,7 +59,8 @@ module.exports = function (app, auth) {
 	app.put('/folder/:projectId/:folderId/unarchive', auth.isLoggedIn(), folder.unarchive);
 	app.delete('/folder/:projectId/:parentFolderId?/:folderId', auth.isLoggedIn(), folder.delete);
 
-	/* API Styleset */
+	/* API Typography: Styleset and Style */
+	app.get('/styleset/list', auth.isLoggedIn(), styleset.list);
 	app.post('/styleset', auth.isLoggedIn(), styleset.create);
 	app.get('/styleset/archived', auth.isLoggedIn(), styleset.archived); // This path must come before paths with variables
 	app.get('/style/archived', auth.isLoggedIn(), style.archived); // This path must come before paths with variables

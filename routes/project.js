@@ -125,6 +125,10 @@ exports.rename = function (req, res, next) {
 exports.archive = function (req, res, next) {
 	var project = req.project;
 	project.archived = true;
+
+	// TODO: also archive the project's documents?
+	// TODO: also archive the stylesets and styles of the documents of the project since these are copies?
+
 	project.save(function (err) {
 		if (err) {
 			return next(err);
@@ -136,10 +140,16 @@ exports.archive = function (req, res, next) {
 exports.unarchive = function (req, res, next) {
 	var project = req.project;
 	project.archived = false;
+
+	// TODO: also unarchive the project's documents?
+	// TODO: also unarchive the stylesets and styles of the documents of the project since these are copies?
+
 	project.save(function (err) {
 		if (err) {
 			return next(err);
 		}
+
+		// TODO: don't add the members since we didn't remove them while archiving?
 		var membersArray = [];
 		for (var i = 0; i < project.members.length; i++) {
 			membersArray.push(project.members[i].userId);
@@ -159,7 +169,9 @@ exports.delete = function (req, res, next) {
 		req.user.deletedProjects.push(project);
 		req.user.save();
 
-		// Delete documents. Stylesets and styles should not be "deleted" since they could be in use by other projects. // TODO: is this still true with copies?
+		// TODO: also delete the stylesets and styles of the documents of the project since these are copies?
+
+		// "Delete" documents
 		Document.find({projectId: project._id}, function (err, documents) {
 			var numberOfDocumentsToBeDeleted = documents.length;
 			if (numberOfDocumentsToBeDeleted == 0) {

@@ -99,6 +99,9 @@ exports.rename = function (req, res, next) {
 exports.archive = function (req, res, next) {
 	var document = req.document;
 	document.archived = true;
+
+	// TODO: also archive the document's stylesets and styles since these were copied?
+
 	document.save(function (err) {
 		if (err) {
 			return next(err);
@@ -110,6 +113,9 @@ exports.archive = function (req, res, next) {
 exports.unarchive = function (req, res, next) {
 	var document = req.document;
 	document.archived = false;
+
+	// TODO: also unarchive the document's stylesets and styles since these are copies?
+
 	document.save(function (err) {
 		if (err) {
 			return next(err);
@@ -130,6 +136,9 @@ exports.delete = function (req, res, next) {
 		}
 
 		document.deleted = true;
+
+		// TODO: also delete the document's stylesets and styles since these are copies?
+
 		// TODO: is this acceptable? How else can we filter out deleted documents from a folder? (c.f. Folder.open())
 		document.folderId = null;
 		document.save(function (err) {

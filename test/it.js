@@ -14,6 +14,8 @@ var exec = require('child_process').exec,
 
 var host = '127.0.0.1:' + conf.app.port;
 var cookie;
+var systemStylesetId;
+var systemStyleId;
 var projectId;
 var projectId2;
 var projectId3;
@@ -84,7 +86,7 @@ describe('Scripler RESTful API', function () {
 			});
 		});
 	}),
-	describe('Frontpage (/user)', function () {
+	describe('Frontpage (/user) - initialization', function () {
 		it('Register a new user should return the user (dummy initialization)', function (done) {
 			request(host)
 				.post('/user/register')
@@ -97,91 +99,141 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-			it('Registering a new user should return the user', function (done) {
-				request(host)
-					.post('/user/register')
-					.send({name: "John Doe", email: "john@doe.com", password: "12345678"})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.user.firstname, "John");
-						assert.equal(res.body.user.lastname, "Doe");
-						done();
-					});
-			}),
-			it('Login should return current user', function (done) {
-				request(host)
-					.post('/user/login')
-					.send({email: "john@doe.com", password: "12345678"})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						cookie = res.headers['set-cookie'];
-						assert.equal(res.body.user.firstname, "John");
-						assert.equal(res.body.user.lastname, "Doe");
-						userId = res.body.user._id;
-						done();
-					});
-			}),
-			it('Get current user', function (done) {
-				request(host)
-					.get('/user')
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.user.firstname, "John");
-						assert.equal(res.body.user.lastname, "Doe");
-						done();
-					});
-			}),
-			it('Update current users profile name', function (done) {
-				request(host)
-					.put('/user')
-					.set('cookie', cookie)
-					.send({firstname: "John", lastname: "Doe, Jr."})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.user.firstname, "John");
-						assert.equal(res.body.user.lastname, "Doe, Jr.");
-						done();
-					});
-			}),
-			it('Update current users profile with invalid email shold return error', function (done) {
-				request(host)
-					.put('/user')
-					.set('cookie', cookie)
-					.send({email: "allan-scripler.com"})
-					.expect(400)
-					.end(function (err, res) {
-						if (err) throw new Error(err);
-						assert.equal(res.body.errorMessage, "Invalid email address");
-						done();
-					});
-			}),
-			it('Invalid login password should return error', function (done) {
-				request(host)
-					.post('/user/login')
-					.send({email: "john@doe.com", password: "xxx"})
-					.expect(401)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.errorMessage, "Invalid password");
-						done();
-					});
-			}),
-			it('Invalid login email should return error', function (done) {
-				request(host)
-					.post('/user/login')
-					.send({email: "someone@doe.com", password: "abc"})
-					.expect(401)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.errorMessage, "Unknown user someone@doe.com");
-						done();
-					});
-			})
+		it('Login the dummy user to be able to create system stylesets and styles.', function (done) {
+			request(host)
+				.post('/user/login')
+				.send({email: "dummy@doe.com", password: "12345678"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					cookie = res.headers['set-cookie'];
+					assert.equal(res.body.user.firstname, "Dummy");
+					assert.equal(res.body.user.lastname, "Doe");
+					done();
+				});
+		})
+	}),
+	describe('Add system/Scripler stylesets and styles', function () {
+		it('Creating a system styleset should return the new styleset', function (done) {
+			request(host)
+				.post('/styleset')
+				.set('cookie', cookie)
+				.send({name: "Scripler Styleset 1", isSystem: "true"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset.name, "Scripler Styleset 1");
+					assert.equal(res.body.styleset.isSystem, true);
+					systemStylesetId = res.body.styleset._id;
+					systemStylesetId && done();
+				});
+		}),
+		it('Creating a system style should return the new style', function (done) {
+			request(host)
+				.post('/style')
+				.set('cookie', cookie)
+				.send({stylesetId: systemStylesetId, name: "Scripler Style 1", class: "ScruplerZ", css: "some scripler css", isSystem: "true"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style.name, "Scripler Style 1");
+					assert.equal(res.body.style.class, "ScruplerZ");
+					assert.equal(res.body.style.css, "some scripler css");
+					assert.equal(res.body.style.isSystem, true);
+					assert.equal(res.body.style.stylesetId, systemStylesetId);
+					styleId = res.body.style._id;
+					styleId && done();
+				});
+		})
+	}),
+	describe('Frontpage (/user)', function () {
+		it('Registering a new user should return the user', function (done) {
+			request(host)
+				.post('/user/register')
+				.send({name: "John Doe", email: "john@doe.com", password: "12345678"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.user.firstname, "John");
+					assert.equal(res.body.user.lastname, "Doe");
+					assert.notEqual(res.body.user.stylesets[0], systemStylesetId); // Stylesets are copied
+					assert.notEqual(res.body.user.defaultStyleset, systemStylesetId);
+					done();
+				});
+		}),
+		it('Login should return current user', function (done) {
+			request(host)
+				.post('/user/login')
+				.send({email: "john@doe.com", password: "12345678"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					cookie = res.headers['set-cookie'];
+					assert.equal(res.body.user.firstname, "John");
+					assert.equal(res.body.user.lastname, "Doe");
+					userId = res.body.user._id;
+					done();
+				});
+		}),
+		it('Get current user', function (done) {
+			request(host)
+				.get('/user')
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.user.firstname, "John");
+					assert.equal(res.body.user.lastname, "Doe");
+					done();
+				});
+		}),
+		it('Update current users profile name', function (done) {
+			request(host)
+				.put('/user')
+				.set('cookie', cookie)
+				.send({firstname: "John", lastname: "Doe, Jr."})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.user.firstname, "John");
+					assert.equal(res.body.user.lastname, "Doe, Jr.");
+					done();
+				});
+		}),
+		it('Update current users profile with invalid email shold return error', function (done) {
+			request(host)
+				.put('/user')
+				.set('cookie', cookie)
+				.send({email: "allan-scripler.com"})
+				.expect(400)
+				.end(function (err, res) {
+					if (err) throw new Error(err);
+					assert.equal(res.body.errorMessage, "Invalid email address");
+					done();
+				});
+		}),
+		it('Invalid login password should return error', function (done) {
+			request(host)
+				.post('/user/login')
+				.send({email: "john@doe.com", password: "xxx"})
+				.expect(401)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.errorMessage, "Invalid password");
+					done();
+				});
+		}),
+		it('Invalid login email should return error', function (done) {
+			request(host)
+				.post('/user/login')
+				.send({email: "someone@doe.com", password: "abc"})
+				.expect(401)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.errorMessage, "Unknown user someone@doe.com");
+					done();
+				});
+		})
 	}),
 	describe('Projectspace (/project)', function () {
 		it('Creating a project should return the new project - 1', function (done) {
