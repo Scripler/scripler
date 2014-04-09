@@ -20,6 +20,11 @@
 		</div>
 	</div>
 	<div id="menu-left" class="menu-left" ng-class="{ 'open' : showDocuments || showTypo || showInsert }">
+		<div class="top">
+			<span ng-show="showDocuments" ng-bind="project.name"></span>
+			<span ng-show="showTypo">Stylesets</span>
+			<span ng-show="showInsert">Insert</span>
+		</div>
 		<div id="menu-left-content" class="content">
 			<div class="menu-item-left" ng-show="showDocuments">
 				<div  class="menu-content">

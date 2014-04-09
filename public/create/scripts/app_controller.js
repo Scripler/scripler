@@ -14,14 +14,14 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 
 		$scope.user = {};
 
-		$scope.$on('user:updated', function( event, user ) {
+		$scope.$onRootScope('user:updated', function( event, user ) {
 			$scope.user = user;
 			if (!$scope.user.emailValidated) {
 				$scope.registrationText = 'Hey there, remember to validate your email-address. Learn more.';
 			}
 		});
 
-		$scope.$on('login:failed', function( event ) {
+		$scope.$onRootScope('login:failed', function( event ) {
 			var publications = [];
 			var lsPublications = localStorageService.get('demo-scripler-publications');
 				if ( lsPublications ) {
@@ -32,7 +32,7 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 					publications = [ { _id: Date.now(), name:'Demo Title', order: 0 } ];
 				}
 			var demoOn = function() {
-				$rootScope.$broadcast('demo:mode', publications);
+				$rootScope.$emit('demo:mode', publications);
 			}
 			$timeout(demoOn, 100); //!important: timeout for createController to load
 		});
@@ -51,8 +51,7 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 							$http.post('/user/login/', angular.toJson( $scope.user ) )
 								.success( function( data ) {
 									if ( data.user ) {
-										userService.setUser( data.user );
-										$rootScope.$broadcast('user:registered', data.user);
+										$rootScope.$emit('user:registered', data.user);
 										$scope.registrationText = 'Great! We\'ve emailed you a confirmation link (learn more). You can keep writing though...';
 									}
 								});
@@ -71,7 +70,20 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 		}
 }]);
 
-app.config( function( $routeProvider, $httpProvider ) {
+app.config( function( $routeProvider, $httpProvider, $provide ) {
+
+	$provide.decorator( '$rootScope', [ '$delegate' , function( $delegate ) {
+
+		Object.defineProperty( $delegate.constructor.prototype, '$onRootScope', {
+			value: function( name, listener ){
+				var unsubscribe = $delegate.$on( name, listener );
+				this.$on( '$destroy', unsubscribe );
+			},
+			enumerable: false
+		});
+
+		return $delegate;
+	}]);
 
 	var isLoggedIn = [ '$q', '$http', '$timeout', '$rootScope', 'userService',
 		function( $q, $http, $timeout, $rootScope, userService ) {
@@ -85,7 +97,7 @@ app.config( function( $routeProvider, $httpProvider ) {
 					}
 				})
 				.error( function( data ) {
-					$rootScope.$broadcast('login:failed');
+					$rootScope.$emit('login:failed');
 					$timeout(deferred.resolve, 0);
 				});
 	}]
@@ -144,7 +156,7 @@ app.service('userService', function( $rootScope, $http ) {
 	return {
 		setUser: function( user ) {
 			this.user = user;
-			$rootScope.$broadcast('user:updated', this.user);
+			$rootScope.$emit('user:updated', this.user);
 		},
 		getUser: function() {
 			return this.user;
