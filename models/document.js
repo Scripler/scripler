@@ -31,6 +31,7 @@ var DocumentSchema = new Schema({
 	stylesets: [
 		{ type: Schema.Types.ObjectId, ref: 'Styleset' }
 	],
+	defaultStyleset: { type: Schema.Types.ObjectId, ref: 'Styleset' },
 	deletedStylesets: [
 		{ type: Schema.Types.ObjectId, ref: 'Styleset' }
 	]
