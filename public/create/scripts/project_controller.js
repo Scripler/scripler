@@ -34,11 +34,17 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.sortable_option = {
 		stop : function( list, drop_item ) {
-			var documentList = {};
-			documentList.documents = list;
+			var data = {};
+			var documentIds = [];
+
+			angular.forEach(list, function( document ) {
+				documentIds.push( document._id );
+			})
+
+			data.documents = listIds;
 
 			if ( $scope.user._id ) {
-				$http.put('/document/' + $scope.pid + '/rearrange', angular.toJson( documentList ) )
+				$http.put('/document/' + $scope.pid + '/rearrange', angular.toJson( data ) )
 					.success( function() {});
 			} else {
 				//save to localstorage
@@ -59,7 +65,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		{_id:'00008',name:'Document 8',text:'<h1>this is a test 8</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'}
 	];
 
-	$scope.$on('user:updated', function( event, user ) {
+	$scope.$onRootScope('user:updated', function( event, user ) {
 		$scope.user = user;
 		$scope.pid = ($location.search()).pid;
 
