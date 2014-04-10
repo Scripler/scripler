@@ -26,7 +26,7 @@
 			<span ng-show="showInsert">Insert</span>
 		</div>
 		<div id="menu-left-content" class="content">
-			<div class="menu-item-left" ng-show="showDocuments">
+			<div class="menu-item-left documents" ng-show="showDocuments">
 				<div  class="menu-content">
 					<div class="projectDocument new" ng-click="addProjectDocument()">
 						<p>+</p>
@@ -58,6 +58,7 @@
 			</div>
 			<div class="menu-item-left" ng-show="showTypo">
 				<div class="menu-content">
+					<div class="typo new">+</div>
 					Typography<br><br>
 					<a ng-click="changeStyle('bookbw')">bookbw</a><br>
 					<a ng-click="changeStyle('futurebw')">futurebw</a><br>
