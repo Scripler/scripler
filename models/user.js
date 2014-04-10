@@ -20,6 +20,7 @@ var UserSchema = new Schema({
 	stylesets: [
 		{ type: Schema.Types.ObjectId, ref: 'Styleset' }
 	],
+	defaultStyleset: { type: Schema.Types.ObjectId, ref: 'Styleset' },
 	// Currently not used: not possible to delete a styleset
 	deletedStylesets: [
 		{ type: Schema.Types.ObjectId, ref: 'Styleset' }
