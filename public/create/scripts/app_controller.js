@@ -23,13 +23,15 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 
 		$scope.$onRootScope('login:failed', function( event ) {
 			var publications = [];
-			var lsPublications = localStorageService.get('demo-scripler-publications');
+			var lsName = 'demo-scripler-publications';
+			var lsPublications = localStorageService.get( lsName );
 				if ( lsPublications ) {
 					if ( lsPublications.length !== 0 ) {
 						publications = lsPublications;
 					}
 				} else {
-					publications = [ { _id: Date.now(), name:'Demo Title', order: 0 } ];
+					publications = [ { _id: Date.now(), name:'Demo Title' } ];
+					localStorageService.add( lsName, publications );
 				}
 			var demoOn = function() {
 				$rootScope.$emit('demo:mode', publications);
