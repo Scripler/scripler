@@ -6,15 +6,15 @@
 
 
 	<div id="menu-left-tabs" class="menu-left-tabs" ondragstart="return false;" ondrop="return false;">
-		<div class="menu-left-tab" ng-class="{ 'shadow' : !showDocuments }" ng-click="showDocuments = !showDocuments; showTypo = false; showInsert = false;">
+		<div class="menu-left-tab" ng-class="{ 'selectedTab' : showDocuments }" ng-click="showDocuments = !showDocuments; showTypo = false; showInsert = false;">
 			<div class="center"></div>
 			<img src="pages/images/documents.svg" width="20">
 		</div>
-		<div class="menu-left-tab" ng-class="{ 'shadow' : !showTypo }" ng-click="showTypo = !showTypo; showDocuments = false; showInsert = false;">
+		<div class="menu-left-tab" ng-class="{ 'selectedTab' : showTypo }" ng-click="showTypo = !showTypo; showDocuments = false; showInsert = false;">
 			<div class="center"></div>
 			<img src="pages/images/typography.svg" width="20">
 		</div>
-		<div class="menu-left-tab" ng-class="{ 'shadow' : !showInsert }" ng-click="showInsert = !showInsert; showDocuments = false; showTypo = false;">
+		<div class="menu-left-tab" ng-class="{ 'selectedTab' : showInsert }" ng-click="showInsert = !showInsert; showDocuments = false; showTypo = false;">
 			<div class="center"></div>
 			<img src="pages/images/insert.svg" width="20">
 		</div>
