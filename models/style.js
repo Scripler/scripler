@@ -20,8 +20,9 @@ var StyleSchema = new Schema({
 	css: { type: String },
 	stylesetId: { type: Schema.Types.ObjectId, ref: 'Styleset', required: true },
 	members: [StyleMemberSchema],
-	archived: { type: Boolean, default: false},
-	deleted: { type: Boolean, default: false}
+	archived: { type: Boolean, default: false },
+	deleted: { type: Boolean, default: false },
+	isSystem: { type: Boolean, default: false }
 });
 
 var InternalStyle = mongoose.model('Style', StyleSchema);

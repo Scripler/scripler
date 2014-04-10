@@ -12,7 +12,7 @@ exports.load = function (id) {
 				return next({message: "Styleset not found", status: 404});
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToModel(req.user, styleset)) return next(403);
+			if (!styleset.isSystem && !utils.hasAccessToModel(req.user, styleset)) return next(403);
 			req.styleset = styleset;
 			return next();
 		});
@@ -22,24 +22,32 @@ exports.load = function (id) {
 exports.create = function (req, res, next) {
 	var styleset = new Styleset({
 		name: req.body.name,
-		members: [
-			{userId: req.user._id, access: ["admin"]}
-		]
+		isSystem: req.body.isSystem
 	});
+
+	if (!req.body.isSystem) {
+		styleset.members = [
+			{userId: req.user._id, access: ["admin"]}
+		];
+	}
 
 	styleset.save(function(err) {
 		if (err) {
 			return next(err);
 		}
 
-		req.user.stylesets.addToSet(styleset);
-		req.user.save(function(err) {
-			if (err) {
-				return next(err);
-			}
+		if (!req.body.isSystem) {
+			req.user.stylesets.addToSet(styleset);
+			req.user.save(function(err) {
+				if (err) {
+					return next(err);
+				}
 
+				res.send({styleset: styleset});
+			});
+		} else {
 			res.send({styleset: styleset});
-		});
+		}
 	});
 
 }
@@ -114,6 +122,16 @@ exports.archived = function (req, res, next) {
 		if (err) {
 			return next(err);
 		}
+		res.send({"stylesets": stylesets});
+	});
+};
+
+exports.list = function (req, res, next) {
+	Styleset.find({"isSystem": true}, function (err, stylesets) {
+		if (err) {
+			return next(err);
+		}
+
 		res.send({"stylesets": stylesets});
 	});
 };
