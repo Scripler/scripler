@@ -333,10 +333,23 @@ textarea#renameProjectDocument {
 .typo {
 	background-color: #fff;
 	height: 40px;
+	margin: 10px;
+	cursor: pointer;
 }
 .typo.new {
 	border: 2px dashed #c6c6c6;
 	text-align: center;
 	line-height: 35px;
+}
+ul, li {
+	list-style-type: none;
+	list-style-position: inside;
+	margin: 0;
+	padding: 0;
+}
+li.typo {
+	height: 100%;
+	padding: 10px;
+	border: 2px solid #c6c6c6;
 }
 

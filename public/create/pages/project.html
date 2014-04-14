@@ -59,10 +59,13 @@
 			<div class="menu-item-left" ng-show="showTypo">
 				<div class="menu-content">
 					<div class="typo new">+</div>
-					Typography<br><br>
-					<a ng-click="changeStyle('bookbw')">bookbw</a><br>
-					<a ng-click="changeStyle('futurebw')">futurebw</a><br>
-					<a ng-click="changeStyle('pleasantbw')">pleasantbw</a>
+					<ul>
+						<li ng-repeat="styleset in stylesets" class="typo" ng-click="visible=!visible">{{styleset.name}}
+							<ul ng-show="visible">
+								<li ng-repeat="style in styleset.styles">{{style.name}}</li>
+							</ul>
+						</li>
+					</ul>
 				</div>
 			</div>
 			<div class="menu-item-left" ng-show="showInsert">
