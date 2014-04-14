@@ -331,15 +331,18 @@ textarea#renameProjectDocument {
 	background-color: #F2F3F4;
 }
 .typo {
+	border: 2px solid #c6c6c6;
 	background-color: #fff;
-	height: 40px;
 	margin: 10px;
 	cursor: pointer;
+	position: relative;
 }
 .typo.new {
 	border: 2px dashed #c6c6c6;
 	text-align: center;
-	line-height: 35px;
+}
+.typo.open {
+	border: 2px solid #fff265;
 }
 ul, li {
 	list-style-type: none;
@@ -347,9 +350,19 @@ ul, li {
 	margin: 0;
 	padding: 0;
 }
-li.typo {
-	height: 100%;
-	padding: 10px;
-	border: 2px solid #c6c6c6;
+li.typo p {
+	padding-left: 10px;
+}
+ul.typo-children {
+}
+.typo-children li:first-child, .typo-children li:last-child {
+	border-top: 2px solid #fff265;
+	border-bottom: none;
 }
 
+.typo-children li {
+	background-color: #D6D6D6;
+	border-top: 2px solid #fff265;
+	border-bottom: 2px solid #fff265;
+	padding: 10px 0 10px 10px;
+}

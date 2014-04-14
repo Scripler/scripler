@@ -58,10 +58,19 @@
 			</div>
 			<div class="menu-item-left" ng-show="showTypo">
 				<div class="menu-content">
-					<div class="typo new">+</div>
-					<ul>
+					<div class="typo new"><p>+</p></div>
+					<!--<ul>
 						<li ng-repeat="styleset in stylesets" class="typo" ng-click="visible=!visible">{{styleset.name}}
-							<ul ng-show="visible">
+							<ul ng-show="visible" class="typo-children">
+								<li ng-repeat="style in styleset.styles">{{style.name}}</li>
+							</ul>
+						</li>
+					</ul>-->
+					<ul>
+						<li ng-repeat="styleset in stylesets" class="typo" ng-click="visible=!visible" ng-class="{ 'open' : visible == true}">
+							<p>{{styleset.name}}</p>
+
+							<ul ng-show="visible" class="typo-children">
 								<li ng-repeat="style in styleset.styles">{{style.name}}</li>
 							</ul>
 						</li>
