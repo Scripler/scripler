@@ -352,8 +352,9 @@ ul, li {
 }
 li.typo p {
 	padding-left: 10px;
-}
-ul.typo-children {
+	margin: 0;
+	padding-top: 15px;
+	padding-bottom: 15px;
 }
 .typo-children li:first-child, .typo-children li:last-child {
 	border-top: 2px solid #fff265;
