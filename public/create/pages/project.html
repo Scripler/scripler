@@ -58,7 +58,9 @@
 			</div>
 			<div class="menu-item-left" ng-show="showTypo">
 				<div class="menu-content">
-					<div class="typo new"><p>+</p></div>
+					<div class="typo new" ng-click="addNewStyleset()">
+						<p>+</p>
+					</div>
 					<!--<ul>
 						<li ng-repeat="styleset in stylesets" class="typo" ng-click="visible=!visible">{{styleset.name}}
 							<ul ng-show="visible" class="typo-children">
