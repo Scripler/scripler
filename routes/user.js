@@ -220,6 +220,8 @@ exports.edit = function (req, res, next) {
 	var newsletter = req.body.newsletter;
 	var showArchived = req.body.showArchived;
 	var showArchivedDocuments = req.body.showArchivedDocuments;
+	var defaultStyleset = req.body.defaultStyleset;
+
 	if (firstname) {
 		req.user.firstname = firstname;
 	}
@@ -251,6 +253,10 @@ exports.edit = function (req, res, next) {
 	if (typeof showArchivedDocuments === "boolean") {
 		req.user.showArchivedDocuments = showArchivedDocuments;
 	}
+	if (defaultStyleset) {
+		req.user.defaultStyleset = defaultStyleset;
+	}
+
 	req.user.save(function (err) {
 		if (err) {
 			return next(err);
