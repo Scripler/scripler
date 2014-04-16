@@ -25,6 +25,7 @@ exports.create = function (req, res, next) {
 		name: req.body.name,
 		class: req.body.class,
 		css: req.body.css,
+		tag: req.body.tag,
 		stylesetId: styleset._id,
 		isSystem: req.body.isSystem
 	});

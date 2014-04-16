@@ -1202,13 +1202,14 @@ describe('Scripler RESTful API', function () {
 			request(host)
 				.post('/style')
 				.set('cookie', cookie)
-				.send({stylesetId: stylesetId2, name: "Coolio 2", class: "CoolioClass2", css: css2})
+				.send({stylesetId: stylesetId2, name: "Coolio 2", class: "CoolioClass2", css: css2, tag: "h1"})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style.name, "Coolio 2");
 					assert.equal(res.body.style.class, "CoolioClass2");
 					assert.equal(res.body.style.css, css2);
+					assert.equal(res.body.style.tag, "h1");
 					styleId2 = res.body.style._id;
 					assert.equal(res.body.style.stylesetId, stylesetId2);
 					styleId2 && done();
@@ -1299,6 +1300,7 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.style.name, "Coolio 2");
 					assert.equal(res.body.style.class, "CoolioClass2");
 					assert.equal(res.body.style.css, css2);
+					assert.equal(res.body.style.tag, "h1");
 					done();
 				});
 		}),
