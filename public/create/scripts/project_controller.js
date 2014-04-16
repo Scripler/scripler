@@ -179,6 +179,18 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 	}
 
+	$scope.addNewStyle = function( styleset ) {
+		var style = {};
+		var length = stylesets.styles.length;
+		style.name = 'Style ' + length;
+		style.stylesetId = stylesets._id;
+
+		$http.post('/style', angular.toJson( style ) )
+			.success( function( data ) {
+				styleset.styles.push( data.style );
+			});
+	}
+
     function initiateEditor(scope) {
     	$scope.ckContent = 'test';
 
