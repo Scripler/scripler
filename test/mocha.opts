@@ -1,6 +1,6 @@
 --reporter spec
 --ui bdd
---slow 10
+--slow 100
 --colors
 --invert
 --check-leaks

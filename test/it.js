@@ -36,6 +36,8 @@ var stylesetId3;
 var styleId;
 var styleId2;
 var stylesetDocumentId;
+var stylesetCopiedId;
+var styleCopiedId;
 
 var cleanupEPUB = true;
 
@@ -1266,8 +1268,10 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.document._id, stylesetDocumentId);
-					assert.notEqual(res.body.document.stylesets[0], stylesetId2);
-					done();
+					assert.equal(res.body.document.stylesets.length, 2);
+					stylesetCopiedId = res.body.document.stylesets[1];
+					assert.notEqual(stylesetCopiedId, stylesetId2);
+					stylesetCopiedId && done();
 				});
 		}),
 		it('Opening a styleset should return the styleset', function (done) {
@@ -1295,6 +1299,31 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.style.name, "Coolio 2");
 					assert.equal(res.body.style.class, "CoolioClass2");
 					assert.equal(res.body.style.css, css2);
+					done();
+				});
+		}),
+		it('Opening a COPIED styleset should return the styleset pointing to its original styleset', function (done) {
+			request(host)
+				.get('/styleset/' + stylesetCopiedId)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset.original, stylesetId2);
+					styleCopiedId = res.body.styleset.styles[0];
+					styleCopiedId && done();
+				});
+		}),
+		it('Opening a COPIED style should return the style pointing to its original style', function (done) {
+			request(host)
+				.get('/style/' + styleCopiedId)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style.original, styleId2);
 					done();
 				});
 		}),
