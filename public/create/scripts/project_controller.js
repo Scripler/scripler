@@ -172,12 +172,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
+	$scope.addNewStyleset = function() {
+		$http.post('/styleset')
+			.success( function( data ) {
+				$scope.stylesets.push( data.styleset );
+			});
+	}
+
     function initiateEditor(scope) {
     	$scope.ckContent = 'test';
 
 //		var startChapter = $scope.documents[0];
 //		$scope.entrybody = startChapter.content;
-		// Mangler at tilføje stylen startChapter.documentstyleSheet
+		// Mangler at tilf??je stylen startChapter.documentstyleSheet
     }
 
     initiateEditor();
@@ -190,7 +197,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 //	    var startChapter = $scope.documents[0];
 //	    $scope.entrybody = startChapter.content;
-	    // Mangler at tilføje stylen startChapter.documentstyleSheet
+	    // Mangler at tilf??je stylen startChapter.documentstyleSheet
 		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
 
 		// CK Editor Controls
