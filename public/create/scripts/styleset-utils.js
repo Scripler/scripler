@@ -1,4 +1,13 @@
+var fs = require('fs');
+var path = require('path');
+
 (function(exports){
+
+	exports.getNonEditableCss = function () {
+		var nonEditableCssFilename = path.resolve(__dirname, '../stylesets', 'non-editable.css');
+		var nonEditableCss = fs.readFileSync(nonEditableCssFilename);
+		return nonEditableCss;
+	};
 
 	exports.getStylesetContents = function (styleset) {
 		var stylesetContents;
