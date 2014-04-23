@@ -56,16 +56,31 @@ exports.open = function (req, res) {
 	res.send({style: req.style});
 }
 
+/**
+ *
+ * Update a style, i.e. its name, class and/or CSS.
+ *
+ * This function does NOT create a copy of a style, since copying of styles is currently done on styleset level.
+ *
+ * For example, when updating a style in a styleset on a document (and not on a user), Styleset.update() should first be called:
+ * this will copy the styles of the styleset, including the style to be updated, and this function can then be called on
+ * the copied style.
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.update = function (req, res, next) {
 	var style = req.style;
-	style.name = style.name;
-	style.class = style.class;
-	style.css = style.css;
+	style.name = req.body.name;
+	style.class = req.body.class;
+	style.css = req.body.css;
 	style.save(function (err) {
 		if (err) {
 			return next(err);
 		}
-		res.send({});
+
+		res.send({style: style});
 	});
 }
 

@@ -340,25 +340,11 @@ exports.compile = function (req, res) {
 }
 
 exports.applyStyleset = function (req, res, next) {
-	var stylesetToApply = req.styleset; // This will always (?) be a styleset from User
-	var activeStyleset = req.project.styleset;
-	// Only apply the styleset if no styleset is already applied - or if the styleset applied is not the one the user is trying to apply.
-	// This is important because applying a styleset will COPY the styleset and we don't want a lot of unused stylesets lying around.
-	if (!activeStyleset || (activeStyleset && !(stylesetToApply._id.equals(activeStyleset)))) {
-		copyStyleset(stylesetToApply, function(err, copy) {
-			if (err) {
-				return next(err);
-			}
-
-			req.project.styleset = copy;
-			req.project.save(function (err) {
-				if (err) {
-					return next(err);
-				}
-				res.send({project: req.project});
-			});
-		});
-	} else {
-		res.send({});
-	}
+	req.project.styleset = req.styleset;
+	req.project.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+		res.send({project: req.project});
+	});
 }
