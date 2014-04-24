@@ -1,5 +1,8 @@
 var utils = require('../lib/utils');
 var Style = require('../models/style.js').Style;
+var Styleset = require('../models/styleset.js').Styleset;
+var copyStyleset = require('../models/styleset.js').copy;
+var copyStyle = require('../models/style.js').copy;
 
 //Load style by id
 exports.load = function (id) {
@@ -58,13 +61,15 @@ exports.open = function (req, res) {
 
 /**
  *
- * Update a style, i.e. its name, class and/or CSS.
+ * Update a style, i.e. its name, class or CSS.
  *
- * This function does NOT create a copy of a style, since copying of styles is currently done on styleset level.
- *
- * For example, when updating a style in a styleset on a document (and not on a user), Styleset.update() should first be called:
- * this will copy the styles of the styleset, including the style to be updated, and this function can then be called on
- * the copied style.
+ * 1. Check if the style's styleset has been copied...
+ * 2. If so, check if the style has been copied...
+ *   2.1. If so, update it and return the updated style.
+ *   2.2. If not, copy it, update it and return the updated copy.
+ * 3. If not, copy it, and check if the style has been copied...
+ *   3.1. If so, update it and return the updated style.
+ *   3.2. If not, copy it, update it and return the updated copy.
  *
  * @param req
  * @param res
@@ -72,15 +77,74 @@ exports.open = function (req, res) {
  */
 exports.update = function (req, res, next) {
 	var style = req.style;
-	style.name = req.body.name;
-	style.class = req.body.class;
-	style.css = req.body.css;
-	style.save(function (err) {
+
+	var updateStyle = function (style, next) {
+		if (style.original) {
+			style.name = req.body.name;
+			style.class = req.body.class;
+			style.css = req.body.css;
+			style.save(function (err) {
+				if (err) {
+					return next(err);
+				}
+
+				return next(null, style);
+			});
+		} else {
+			copyStyle(style, style.stylesetId, function(err, copy) {
+				if (err) {
+					return next(err);
+				}
+
+				copy.name = req.body.name;
+				copy.class = req.body.class;
+				copy.css = req.body.css;
+				copy.save(function (err) {
+					if (err) {
+						return next(err);
+					}
+
+					return next(null, copy);
+				});
+			});
+		}
+	};
+
+	Styleset.findOne({"_id": style.stylesetId}, function (err, styleset) {
 		if (err) {
 			return next(err);
 		}
 
-		res.send({style: style});
+		if (styleset.original) {
+			updateStyle(style, function(err, updatedStyle) {
+				if (err) {
+					return next(err);
+				}
+
+				res.send({style: updatedStyle});
+			});
+		} else {
+			// This also copies all styles in the styleset
+			copyStyleset(styleset, function(err, copy) {
+				if (err) {
+					return next(err);
+				}
+
+				Style.findOne({"original": style._id}, function (err, updatedStyle) {
+					if (err) {
+						return next(err);
+					}
+
+					updateStyle(updatedStyle, function(err, style) {
+						if (err) {
+							return next(err);
+						}
+
+						res.send({style: style});
+					});
+				});
+			});
+		}
 	});
 }
 

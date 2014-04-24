@@ -207,7 +207,6 @@ exports.applyStyleset = function (req, res, next) {
 				return next(err);
 			}
 
-			req.document.defaultStyleset = copy;
 			req.document.stylesets.addToSet(copy);
 			req.document.save(function (err) {
 				if (err) {

@@ -1255,7 +1255,7 @@ describe('Scripler RESTful API', function () {
 					stylesetDocumentId && done();
 				});
 		}),
-		it('Applying a(nother) styleset to a document should return the document with a COPY of that styleset set as its default styleset', function (done) {
+		it('Applying a(nother) styleset to a document should return the document with a COPY of that styleset added to the document\'s stylesets', function (done) {
 			request(host)
 				.put('/styleset/' + stylesetId2 + "/document/" + stylesetDocumentId)
 				.set('cookie', cookie)
@@ -1265,8 +1265,6 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.document._id, stylesetDocumentId);
 					stylesetCopiedId = res.body.document.stylesets[0];
-					assert.equal(res.body.document.defaultStyleset, stylesetCopiedId);
-					assert.notEqual(res.body.document.defaultStyleset, stylesetId2);
 					stylesetCopiedId && done();
 				});
 		}),
@@ -1354,19 +1352,21 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-		it('Updating a (non-copied, e.g. user) style should return success', function (done) {
+		it('The first time a style is updated, a COPY of the style should be returned', function (done) {
 			request(host)
-				.put('/style/' + styleId + '/update')
+				.put('/style/' + styleId2 + '/update')
 				.set('cookie', cookie)
 				.send({name: "Donkey", class: "jack", css: css2 + "...some new CSS"})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					//console.log('style name ' + res.body.style.name);
+					styleCopiedId = res.body.style._id;
+					assert.notEqual(styleCopiedId, styleId2);
+					assert.equal(res.body.style.name, "Donkey");
 					done();
 				});
 		}),
-		it('Updating a (copied, e.g. document) style should return success', function (done) {
+		it('Consecutive times when that style is updated, the same style with updated values should be returned', function (done) {
 			request(host)
 				.put('/style/' + styleId2 + '/update')
 				.set('cookie', cookie)
@@ -1374,7 +1374,10 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					//console.log('style name ' + res.body.style.name);
+					assert.equal(res.body.style._id, styleCopiedId);
+					assert.equal(res.body.style.name, "DonkeyKong");
+					assert.equal(res.body.style.class, "jytte");
+					assert.equal(res.body.style.css, css2 + "...And now some blue color!");
 					done();
 				});
 		}),

@@ -72,8 +72,7 @@ exports.open = function (req, res) {
 exports.update = function (req, res, next) {
 	var styleset = req.styleset;
 
-	// Only copy the first time an update is made
-	if (styleset.original) {
+	var updateStyleset = function(styleset, next) {
 		styleset.name = req.body.name;
 		styleset.styles = req.body.styles;
 		styleset.save(function (err) {
@@ -81,7 +80,18 @@ exports.update = function (req, res, next) {
 				return next(err);
 			}
 
-			res.send({styleset: styleset});
+			return next(null, styleset);
+		});
+	};
+
+	// Only copy the first time an update is made
+	if (styleset.original) {
+		updateStyleset(styleset, function (err, updatedStyleset) {
+			if (err) {
+				return next(err);
+			}
+
+			res.send({styleset: updatedStyleset});
 		});
 	} else {
 		copyStyleset(styleset, function(err, copy) {
@@ -89,14 +99,12 @@ exports.update = function (req, res, next) {
 				return next(err);
 			}
 
-			copy.name = req.body.name;
-			copy.styles = req.body.styles;
-			copy.save(function (err) {
+			updateStyleset(copy, function (err, updatedStyleset) {
 				if (err) {
 					return next(err);
 				}
 
-				res.send({styleset: copy});
+				res.send({styleset: updatedStyleset});
 			});
 		});
 	}
