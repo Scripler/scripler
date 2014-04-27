@@ -27,45 +27,29 @@ exports.load = function (id) {
 
 var create = exports.create = function (req, res, next) {
 	var project = req.project;
-	var defaultStyleset = project.styleset;
+	var document = new Document({
+		name: req.body.name,
+		text: req.body.text,
+		projectId: project._id,
+		folderId: req.body.folderId,
+		type: req.body.type,
+		members: [
+			{userId: req.user._id, access: ["admin"]}
+		]
+	});
 
-	Styleset.findOne({"_id": defaultStyleset}).exec(function (err, styleset) {
+	document.defaultStyleset = project.styleset;
+	document.save(function (err) {
 		if (err) {
 			return next(err);
 		}
 
-		copyStyleset(styleset, function(err, copy) {
+		project.documents.addToSet(document);
+		project.save(function (err, project) {
 			if (err) {
 				return next(err);
 			}
-
-			var document = new Document({
-				name: req.body.name,
-				text: req.body.text,
-				projectId: project._id,
-				folderId: req.body.folderId,
-				type: req.body.type,
-				members: [
-					{userId: req.user._id, access: ["admin"]}
-				]
-				//stylesets: copy // When a document is created, initially it will always only have this single styleset so no need to "addToSet()".
-			});
-
-			document.stylesets.addToSet(copy);
-			document.defaultStyleset = copy;
-			document.save(function (err) {
-				if (err) {
-					return next(err);
-				}
-
-				project.documents.addToSet(document);
-				project.save(function (err, project) {
-					if (err) {
-						return next(err);
-					}
-					res.send({document: document});
-				});
-			});
+			res.send({document: document});
 		});
 	});
 }

@@ -1,6 +1,7 @@
 var utils = require('../lib/utils');
 var Styleset = require('../models/styleset.js').Styleset;
 var Project = require('../models/project.js').Project;
+var copyStyleset = require('../models/styleset.js').copy;
 
 //Load styleset by id
 exports.load = function (id) {
@@ -56,16 +57,57 @@ exports.open = function (req, res) {
 	res.send({styleset: req.styleset});
 }
 
+/**
+ *
+ * Update a styleset, i.e. its name and/or styles.
+ *
+ * Check if copy of the styleset has been made, and if not, copy the styleset, including its styles.
+ *
+ * See also Style.update().
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.update = function (req, res, next) {
 	var styleset = req.styleset;
-	styleset.name = styleset.name;
-	styleset.styles = styleset.styles;
-	styleset.save(function (err) {
-		if (err) {
-			return next(err);
-		}
-		res.send({});
-	});
+
+	var updateStyleset = function(styleset, next) {
+		styleset.name = req.body.name;
+		styleset.styles = req.body.styles;
+		styleset.save(function (err) {
+			if (err) {
+				return next(err);
+			}
+
+			return next(null, styleset);
+		});
+	};
+
+	// Only copy the first time an update is made
+	if (styleset.original) {
+		updateStyleset(styleset, function (err, updatedStyleset) {
+			if (err) {
+				return next(err);
+			}
+
+			res.send({styleset: updatedStyleset});
+		});
+	} else {
+		copyStyleset(styleset, function(err, copy) {
+			if (err) {
+				return next(err);
+			}
+
+			updateStyleset(copy, function (err, updatedStyleset) {
+				if (err) {
+					return next(err);
+				}
+
+				res.send({styleset: updatedStyleset});
+			});
+		});
+	}
 }
 
 exports.rearrange = function (req, res, next) {

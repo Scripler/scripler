@@ -44,7 +44,7 @@ var ProjectSchema = new Schema({
 	deletedDocuments: [
 		{ type: Schema.Types.ObjectId, ref: 'Document' }
 	],
-	styleset: { type: Schema.Types.ObjectId, ref: 'Styleset' }, // The active styleset
+	styleset: { type: Schema.Types.ObjectId, ref: 'Styleset' }, // The default styleset for new documents in this project
 	folders: [FolderSchema], // Embedding, since amount of folder meta data is expected to be small.
 	members: [ProjectMemberSchema],
 	metadata: {
