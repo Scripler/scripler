@@ -27,44 +27,29 @@ exports.load = function (id) {
 
 var create = exports.create = function (req, res, next) {
 	var project = req.project;
-	var defaultStyleset = project.styleset;
+	var document = new Document({
+		name: req.body.name,
+		text: req.body.text,
+		projectId: project._id,
+		folderId: req.body.folderId,
+		type: req.body.type,
+		members: [
+			{userId: req.user._id, access: ["admin"]}
+		]
+	});
 
-	Styleset.findOne({"_id": defaultStyleset}).exec(function (err, styleset) {
+	document.defaultStyleset = project.styleset;
+	document.save(function (err) {
 		if (err) {
 			return next(err);
 		}
 
-		copyStyleset(styleset, function(err, copy) {
+		project.documents.addToSet(document);
+		project.save(function (err, project) {
 			if (err) {
 				return next(err);
 			}
-
-			var document = new Document({
-				name: req.body.name,
-				text: req.body.text,
-				projectId: project._id,
-				folderId: req.body.folderId,
-				type: req.body.type,
-				members: [
-					{userId: req.user._id, access: ["admin"]}
-				]
-				//stylesets: copy // When a document is created, initially it will always only have this single styleset so no need to "addToSet()".
-			});
-
-			document.stylesets.addToSet(copy);
-			document.save(function (err) {
-				if (err) {
-					return next(err);
-				}
-
-				project.documents.addToSet(document);
-				project.save(function (err, project) {
-					if (err) {
-						return next(err);
-					}
-					res.send({document: document});
-				});
-			});
+			res.send({document: document});
 		});
 	});
 }
@@ -98,6 +83,9 @@ exports.rename = function (req, res, next) {
 exports.archive = function (req, res, next) {
 	var document = req.document;
 	document.archived = true;
+
+	// TODO: also archive the document's stylesets and styles since these were copied?
+
 	document.save(function (err) {
 		if (err) {
 			return next(err);
@@ -109,6 +97,9 @@ exports.archive = function (req, res, next) {
 exports.unarchive = function (req, res, next) {
 	var document = req.document;
 	document.archived = false;
+
+	// TODO: also unarchive the document's stylesets and styles since these are copies?
+
 	document.save(function (err) {
 		if (err) {
 			return next(err);
@@ -129,6 +120,9 @@ exports.delete = function (req, res, next) {
 		}
 
 		document.deleted = true;
+
+		// TODO: also delete the document's stylesets and styles since these are copies?
+
 		// TODO: is this acceptable? How else can we filter out deleted documents from a folder? (c.f. Folder.open())
 		document.folderId = null;
 		document.save(function (err) {

@@ -22,8 +22,10 @@ var StylesetSchema = new Schema({
 	// Currently not used: not possible to delete a style
 	deletedStyles: [ { type: Schema.Types.ObjectId, ref: 'Style' }],
 	members: [StylesetMemberSchema],
-	archived: { type: Boolean, default: false},
-	deleted: { type: Boolean, default: false}
+	archived: { type: Boolean, default: false },
+	deleted: { type: Boolean, default: false },
+	isSystem: { type: Boolean, default: false },
+	original: { type: Schema.Types.ObjectId, ref: 'Styleset' }
 });
 
 var InternalStyleset = mongoose.model('Styleset', StylesetSchema);
@@ -34,7 +36,9 @@ exports.copy = function (styleset, next) {
 		var result = new InternalStyleset({
 			name: styleset.name + ' - Copy',
 			members: styleset.members,
-			archived: styleset.archived
+			archived: styleset.archived,
+			isSystem: styleset.isSystem,
+			original: styleset._id
 		});
 
 		result.save(function(err) {

@@ -18,10 +18,13 @@ var StyleSchema = new Schema({
 	name: { type: String, required: true },
 	class: { type: String },
 	css: { type: String },
+	tag: { type: String },
 	stylesetId: { type: Schema.Types.ObjectId, ref: 'Styleset', required: true },
 	members: [StyleMemberSchema],
-	archived: { type: Boolean, default: false},
-	deleted: { type: Boolean, default: false}
+	archived: { type: Boolean, default: false },
+	deleted: { type: Boolean, default: false },
+	isSystem: { type: Boolean, default: false },
+	original: { type: Schema.Types.ObjectId, ref: 'Style' }
 });
 
 var InternalStyle = mongoose.model('Style', StyleSchema);
@@ -33,9 +36,12 @@ exports.copy = function (style, newStylesetId, next) {
 			name: style.name + ' - Copy',
 			class: style.class,
 			css: style.css,
+			tag: style.tag,
 			stylesetId: newStylesetId,
 			members: style.members,
-			archived: style.archived
+			archived: style.archived,
+			isSystem: style.isSystem,
+			original: style._id
 		});
 
 		result.save(function (err) {

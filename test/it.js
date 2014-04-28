@@ -14,6 +14,8 @@ var exec = require('child_process').exec,
 
 var host = '127.0.0.1:' + conf.app.port;
 var cookie;
+var systemStylesetId;
+var systemStyleId;
 var projectId;
 var projectId2;
 var projectId3;
@@ -34,6 +36,8 @@ var stylesetId3;
 var styleId;
 var styleId2;
 var stylesetDocumentId;
+var stylesetCopiedId;
+var styleCopiedId;
 
 var cleanupEPUB = true;
 
@@ -84,7 +88,7 @@ describe('Scripler RESTful API', function () {
 			});
 		});
 	}),
-	describe('Frontpage (/user)', function () {
+	describe('Frontpage (/user) - initialization', function () {
 		it('Register a new user should return the user (dummy initialization)', function (done) {
 			request(host)
 				.post('/user/register')
@@ -97,91 +101,141 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-			it('Registering a new user should return the user', function (done) {
-				request(host)
-					.post('/user/register')
-					.send({name: "John Doe", email: "john@doe.com", password: "12345678"})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.user.firstname, "John");
-						assert.equal(res.body.user.lastname, "Doe");
-						done();
-					});
-			}),
-			it('Login should return current user', function (done) {
-				request(host)
-					.post('/user/login')
-					.send({email: "john@doe.com", password: "12345678"})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						cookie = res.headers['set-cookie'];
-						assert.equal(res.body.user.firstname, "John");
-						assert.equal(res.body.user.lastname, "Doe");
-						userId = res.body.user._id;
-						done();
-					});
-			}),
-			it('Get current user', function (done) {
-				request(host)
-					.get('/user')
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.user.firstname, "John");
-						assert.equal(res.body.user.lastname, "Doe");
-						done();
-					});
-			}),
-			it('Update current users profile name', function (done) {
-				request(host)
-					.put('/user')
-					.set('cookie', cookie)
-					.send({firstname: "John", lastname: "Doe, Jr."})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.user.firstname, "John");
-						assert.equal(res.body.user.lastname, "Doe, Jr.");
-						done();
-					});
-			}),
-			it('Update current users profile with invalid email shold return error', function (done) {
-				request(host)
-					.put('/user')
-					.set('cookie', cookie)
-					.send({email: "allan-scripler.com"})
-					.expect(400)
-					.end(function (err, res) {
-						if (err) throw new Error(err);
-						assert.equal(res.body.errorMessage, "Invalid email address");
-						done();
-					});
-			}),
-			it('Invalid login password should return error', function (done) {
-				request(host)
-					.post('/user/login')
-					.send({email: "john@doe.com", password: "xxx"})
-					.expect(401)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.errorMessage, "Invalid password");
-						done();
-					});
-			}),
-			it('Invalid login email should return error', function (done) {
-				request(host)
-					.post('/user/login')
-					.send({email: "someone@doe.com", password: "abc"})
-					.expect(401)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.errorMessage, "Unknown user someone@doe.com");
-						done();
-					});
-			})
+		it('Login the dummy user to be able to create system stylesets and styles.', function (done) {
+			request(host)
+				.post('/user/login')
+				.send({email: "dummy@doe.com", password: "12345678"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					cookie = res.headers['set-cookie'];
+					assert.equal(res.body.user.firstname, "Dummy");
+					assert.equal(res.body.user.lastname, "Doe");
+					done();
+				});
+		})
+	}),
+	describe('Add system/Scripler stylesets and styles', function () {
+		it('Creating a system styleset should return the new styleset', function (done) {
+			request(host)
+				.post('/styleset')
+				.set('cookie', cookie)
+				.send({name: "Scripler Styleset 1", isSystem: "true"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset.name, "Scripler Styleset 1");
+					assert.equal(res.body.styleset.isSystem, true);
+					systemStylesetId = res.body.styleset._id;
+					systemStylesetId && done();
+				});
+		}),
+		it('Creating a system style should return the new style', function (done) {
+			request(host)
+				.post('/style')
+				.set('cookie', cookie)
+				.send({stylesetId: systemStylesetId, name: "Scripler Style 1", class: "ScruplerZ", css: "some scripler css", isSystem: "true"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style.name, "Scripler Style 1");
+					assert.equal(res.body.style.class, "ScruplerZ");
+					assert.equal(res.body.style.css, "some scripler css");
+					assert.equal(res.body.style.isSystem, true);
+					assert.equal(res.body.style.stylesetId, systemStylesetId);
+					styleId = res.body.style._id;
+					styleId && done();
+				});
+		})
+	}),
+	describe('Frontpage (/user)', function () {
+		it('Registering a new user should return the user', function (done) {
+			request(host)
+				.post('/user/register')
+				.send({name: "John Doe", email: "john@doe.com", password: "12345678"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.user.firstname, "John");
+					assert.equal(res.body.user.lastname, "Doe");
+					assert.notEqual(res.body.user.stylesets[0], systemStylesetId); // Stylesets are copied
+					assert.notEqual(res.body.user.defaultStyleset, systemStylesetId);
+					done();
+				});
+		}),
+		it('Login should return current user', function (done) {
+			request(host)
+				.post('/user/login')
+				.send({email: "john@doe.com", password: "12345678"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					cookie = res.headers['set-cookie'];
+					assert.equal(res.body.user.firstname, "John");
+					assert.equal(res.body.user.lastname, "Doe");
+					userId = res.body.user._id;
+					done();
+				});
+		}),
+		it('Get current user', function (done) {
+			request(host)
+				.get('/user')
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.user.firstname, "John");
+					assert.equal(res.body.user.lastname, "Doe");
+					done();
+				});
+		}),
+		it('Update current users profile name', function (done) {
+			request(host)
+				.put('/user')
+				.set('cookie', cookie)
+				.send({firstname: "John", lastname: "Doe, Jr."})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.user.firstname, "John");
+					assert.equal(res.body.user.lastname, "Doe, Jr.");
+					done();
+				});
+		}),
+		it('Update current users profile with invalid email shold return error', function (done) {
+			request(host)
+				.put('/user')
+				.set('cookie', cookie)
+				.send({email: "allan-scripler.com"})
+				.expect(400)
+				.end(function (err, res) {
+					if (err) throw new Error(err);
+					assert.equal(res.body.errorMessage, "Invalid email address");
+					done();
+				});
+		}),
+		it('Invalid login password should return error', function (done) {
+			request(host)
+				.post('/user/login')
+				.send({email: "john@doe.com", password: "xxx"})
+				.expect(401)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.errorMessage, "Invalid password");
+					done();
+				});
+		}),
+		it('Invalid login email should return error', function (done) {
+			request(host)
+				.post('/user/login')
+				.send({email: "someone@doe.com", password: "abc"})
+				.expect(401)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.errorMessage, "Unknown user someone@doe.com");
+					done();
+				});
+		})
 	}),
 	describe('Projectspace (/project)', function () {
 		it('Creating a project should return the new project - 1', function (done) {
@@ -420,7 +474,7 @@ describe('Scripler RESTful API', function () {
 					styleId && done();
 				});
 		}),
-		it('Applying a styleset to a project should return the project with a COPY of the styleset applied', function (done) {
+		it('Applying a styleset to a project should return the project with the styleset applied (set)', function (done) {
 			request(host)
 				.put('/styleset/' + stylesetId + "/project/" + projectId)
 				.set('cookie', cookie)
@@ -429,7 +483,7 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.project._id, projectId);
-					assert.notEqual(res.body.project.styleset, stylesetId);
+					assert.equal(res.body.project.styleset, stylesetId);
 					done();
 				});
 		})
@@ -527,6 +581,7 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.archived, false);
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
+						assert.equal(res.body.document.defaultStyleset, stylesetId);
 						rootDocumentId = res.body.document._id;
 						rootDocumentId && done();
 					});
@@ -554,6 +609,7 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.archived, false);
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
+						assert.equal(res.body.document.defaultStyleset, stylesetId);
 						childDocumentId = res.body.document._id;
 						childDocumentId && done();
 					});
@@ -588,6 +644,7 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
 						assert.equal(res.body.document.type, 'cover');
+						assert.equal(res.body.document.defaultStyleset, stylesetId);
 						coverDocumentId = res.body.document._id;
 						coverDocumentId && done();
 					});
@@ -622,6 +679,7 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
 						assert.equal(res.body.document.type, 'titlepage');
+						assert.equal(res.body.document.defaultStyleset, stylesetId);
 						titlePageDocumentId = res.body.document._id;
 						titlePageDocumentId && done();
 					});
@@ -656,6 +714,7 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
 						assert.equal(res.body.document.type, 'toc');
+						assert.equal(res.body.document.defaultStyleset, stylesetId);
 						tocDocumentId = res.body.document._id;
 						tocDocumentId && done();
 					});
@@ -690,6 +749,7 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
 						assert.equal(res.body.document.type, 'colophon');
+						assert.equal(res.body.document.defaultStyleset, stylesetId);
 						colophonDocumentId = res.body.document._id;
 						colophonDocumentId && done();
 					});
@@ -1136,19 +1196,20 @@ describe('Scripler RESTful API', function () {
 			request(host)
 				.post('/style')
 				.set('cookie', cookie)
-				.send({stylesetId: stylesetId2, name: "Coolio 2", class: "CoolioClass2", css: css2})
+				.send({stylesetId: stylesetId2, name: "Coolio 2", class: "CoolioClass2", css: css2, tag: "h1"})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style.name, "Coolio 2");
 					assert.equal(res.body.style.class, "CoolioClass2");
 					assert.equal(res.body.style.css, css2);
+					assert.equal(res.body.style.tag, "h1");
 					styleId2 = res.body.style._id;
 					assert.equal(res.body.style.stylesetId, stylesetId2);
 					styleId2 && done();
 				});
 		}),
-		it('Applying a styleset to a project should return the project with a COPY of the styleset applied', function (done) {
+		it('Applying a styleset to a project should return the project with the styleset applied/set', function (done) {
 			request(host)
 				.put('/styleset/' + stylesetId2 + "/project/" + projectId)
 				.set('cookie', cookie)
@@ -1157,7 +1218,7 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.project._id, projectId);
-					assert.notEqual(res.body.project.styleset, stylesetId2);
+					assert.equal(res.body.project.styleset, stylesetId2);
 					done();
 				});
 		}),
@@ -1189,11 +1250,12 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.document.archived, false);
 					assert.equal(res.body.document.members[0].userId, userId);
 					assert.equal(res.body.document.members[0].access[0], "admin");
+					assert.equal(res.body.document.defaultStyleset, stylesetId2);
 					stylesetDocumentId = res.body.document._id;
 					stylesetDocumentId && done();
 				});
 		}),
-		it('Applying (adding) a styleset to a document should return the document with a COPY of the styleset applied', function (done) {
+		it('Applying a(nother) styleset to a document should return the document with a COPY of that styleset added to the document\'s stylesets', function (done) {
 			request(host)
 				.put('/styleset/' + stylesetId2 + "/document/" + stylesetDocumentId)
 				.set('cookie', cookie)
@@ -1202,8 +1264,8 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.document._id, stylesetDocumentId);
-					assert.notEqual(res.body.document.stylesets[0], stylesetId2);
-					done();
+					stylesetCopiedId = res.body.document.stylesets[0];
+					stylesetCopiedId && done();
 				});
 		}),
 		it('Opening a styleset should return the styleset', function (done) {
@@ -1231,28 +1293,91 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.style.name, "Coolio 2");
 					assert.equal(res.body.style.class, "CoolioClass2");
 					assert.equal(res.body.style.css, css2);
+					assert.equal(res.body.style.tag, "h1");
 					done();
 				});
 		}),
-		it('Updating a styleset should return success', function (done) {
+		it('Opening a COPIED styleset should return the styleset pointing to its original styleset', function (done) {
 			request(host)
-				.put('/styleset/' + stylesetId + '/update')
+				.get('/styleset/' + stylesetCopiedId)
 				.set('cookie', cookie)
-				.send({name: "OK, Maybe not the BEST, but...", styles: [styleId]})
+				.send({})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset.original, stylesetId2);
+					styleCopiedId = res.body.styleset.styles[0];
+					styleCopiedId && done();
+				});
+		}),
+		it('Opening a COPIED style should return the style pointing to its original style', function (done) {
+			request(host)
+				.get('/style/' + styleCopiedId)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style.original, styleId2);
 					done();
 				});
 		}),
-		it('Updating a style should return success', function (done) {
+		it('The first time a styleset is updated, a COPY of the styleset should be returned', function (done) {
+			var styles = [styleId];
 			request(host)
-				.put('/style/' + styleId + '/update')
+				.put('/styleset/' + stylesetId + '/update')
+				.set('cookie', cookie)
+				.send({name: "OK, Maybe not the BEST, but...", styles: styles})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					stylesetCopiedId = res.body.styleset._id;
+					assert.notEqual(stylesetCopiedId, stylesetId);
+					assert.equal(res.body.styleset.name, "OK, Maybe not the BEST, but...");
+					styleId2 = res.body.styleset.styles[0];
+					assert.equal(styleId2, styles[0]);
+					done();
+				});
+		}),
+		it('Consecutive times when that styleset is updated, the same styleset with updated values should be returned', function (done) {
+			request(host)
+				.put('/styleset/' + stylesetCopiedId + '/update')
+				.set('cookie', cookie)
+				.send({name: "Actually, it is my best!"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset._id, stylesetCopiedId);
+					assert.equal(res.body.styleset.name, "Actually, it is my best!");
+					done();
+				});
+		}),
+		it('The first time a style is updated, a COPY of the style should be returned', function (done) {
+			request(host)
+				.put('/style/' + styleId2 + '/update')
 				.set('cookie', cookie)
 				.send({name: "Donkey", class: "jack", css: css2 + "...some new CSS"})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					styleCopiedId = res.body.style._id;
+					assert.notEqual(styleCopiedId, styleId2);
+					assert.equal(res.body.style.name, "Donkey");
+					done();
+				});
+		}),
+		it('Consecutive times when that style is updated, the same style with updated values should be returned', function (done) {
+			request(host)
+				.put('/style/' + styleId2 + '/update')
+				.set('cookie', cookie)
+				.send({name: "DonkeyKong", class: "jytte", css: css2 + "...And now some blue color!"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style._id, styleCopiedId);
+					assert.equal(res.body.style.name, "DonkeyKong");
+					assert.equal(res.body.style.class, "jytte");
+					assert.equal(res.body.style.css, css2 + "...And now some blue color!");
 					done();
 				});
 		}),
