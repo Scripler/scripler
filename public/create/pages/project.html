@@ -61,13 +61,6 @@
 					<div class="typo new" ng-click="addNewStyleset()">
 						<p>+</p>
 					</div>
-					<!--<ul>
-						<li ng-repeat="styleset in stylesets" class="typo" ng-click="visible=!visible">{{styleset.name}}
-							<ul ng-show="visible" class="typo-children">
-								<li ng-repeat="style in styleset.styles">{{style.name}}</li>
-							</ul>
-						</li>
-					</ul>-->
 					<ul>
 						<li ng-repeat="styleset in stylesets" class="typo" ng-class="{ 'open' : visible == true }">
 							<p ng-click="visible=!visible">{{styleset.name}}</p>
