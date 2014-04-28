@@ -6,15 +6,15 @@
 
 
 	<div id="menu-left-tabs" class="menu-left-tabs" ondragstart="return false;" ondrop="return false;">
-		<div class="menu-left-tab" ng-class="{ 'shadow' : !showDocuments }" ng-click="showDocuments = !showDocuments; showTypo = false; showInsert = false;">
+		<div class="menu-left-tab" ng-class="{ 'selectedTab' : showDocuments }" ng-click="showDocuments = !showDocuments; showTypo = false; showInsert = false;">
 			<div class="center"></div>
 			<img src="pages/images/documents.svg" width="20">
 		</div>
-		<div class="menu-left-tab" ng-class="{ 'shadow' : !showTypo }" ng-click="showTypo = !showTypo; showDocuments = false; showInsert = false;">
+		<div class="menu-left-tab" ng-class="{ 'selectedTab' : showTypo }" ng-click="showTypo = !showTypo; showDocuments = false; showInsert = false;">
 			<div class="center"></div>
 			<img src="pages/images/typography.svg" width="20">
 		</div>
-		<div class="menu-left-tab" ng-class="{ 'shadow' : !showInsert }" ng-click="showInsert = !showInsert; showDocuments = false; showTypo = false;">
+		<div class="menu-left-tab" ng-class="{ 'selectedTab' : showInsert }" ng-click="showInsert = !showInsert; showDocuments = false; showTypo = false;">
 			<div class="center"></div>
 			<img src="pages/images/insert.svg" width="20">
 		</div>
@@ -26,7 +26,7 @@
 			<span ng-show="showInsert">Insert</span>
 		</div>
 		<div id="menu-left-content" class="content">
-			<div class="menu-item-left" ng-show="showDocuments">
+			<div class="menu-item-left documents" ng-show="showDocuments">
 				<div  class="menu-content">
 					<div class="projectDocument new" ng-click="addProjectDocument()">
 						<p>+</p>
@@ -58,10 +58,19 @@
 			</div>
 			<div class="menu-item-left" ng-show="showTypo">
 				<div class="menu-content">
-					Typography<br><br>
-					<a ng-click="changeStyle('bookbw')">bookbw</a><br>
-					<a ng-click="changeStyle('futurebw')">futurebw</a><br>
-					<a ng-click="changeStyle('pleasantbw')">pleasantbw</a>
+					<div class="typo new" ng-click="addNewStyleset()">
+						<p>+</p>
+					</div>
+					<ul>
+						<li ng-repeat="styleset in stylesets" class="typo" ng-class="{ 'open' : visible == true }">
+							<p ng-click="visible=!visible">{{styleset.name}}</p>
+
+							<ul ng-hide="visible" class="typo-children">
+								<li ng-repeat="style in styleset.styles" ng-click="x=!x">{{style.name}}</li>
+								<li class="new style" ng-click="addNewStyle( styleset )"><p>+</p></li>
+							</ul>
+						</li>
+					</ul>
 				</div>
 			</div>
 			<div class="menu-item-left" ng-show="showInsert">
