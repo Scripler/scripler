@@ -230,7 +230,7 @@ app.directive('ckEditor', function( $window ) {
 				skin: 'scripler',
 				resize_enabled: false,
 				//extraPlugins: 'scripler',
-				height: $window.innerHeight - 100,
+				height: $window.innerHeight - 90,
 				width: 800,
 				font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
 				//contentsCss: ['stylesets/pleasantbw.css', 'contents.css', 'http://fonts.googleapis.com/css?family=Ribeye'],
