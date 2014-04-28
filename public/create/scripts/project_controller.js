@@ -65,11 +65,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		{_id:'00008',name:'Document 8',text:'<h1>this is a test 8</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'}
 	];
 
-	$scope.stylesets = [
-		{ name: 'Styleset 1', styles: [ { name: 'Style 1' }, { name: 'Style 2' } ] },
-		{ name: 'Styleset 2', styles: [ { name: 'Style 3' }, { name: 'Style 4' } ] },
-		{ name: 'Styleset 3', styles: [ { name: 'Style 5' }, { name: 'Style 6' } ] }
-	];
+	$scope.stylesets = [];
 
 	$scope.$onRootScope('user:updated', function( event, user ) {
 		$scope.user = user;
@@ -79,6 +75,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		projectPromise.then( function( project ) {
 			$scope.project = project;
 			$scope.projectDocuments = $scope.project.documents;
+			$scope.stylesets = project.stylesets;
 		});
 	});
 
@@ -173,7 +170,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 
 	$scope.addNewStyleset = function() {
-		$http.post('/styleset')
+		var length = $scope.stylesets.length + 1;
+		var styleset = {};
+		styleset.name = 'Styleset ' + length;
+
+		$http.post('/styleset', angular.toJson( styleset ) )
 			.success( function( data ) {
 				$scope.stylesets.push( data.styleset );
 			});
@@ -181,9 +182,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.addNewStyle = function( styleset ) {
 		var style = {};
-		var length = stylesets.styles.length;
+		var length = styleset.styles.length + 1;
 		style.name = 'Style ' + length;
-		style.stylesetId = stylesets._id;
+		style.stylesetId = styleset._id;
 
 		$http.post('/style', angular.toJson( style ) )
 			.success( function( data ) {

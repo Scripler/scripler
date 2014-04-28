@@ -69,12 +69,12 @@
 						</li>
 					</ul>-->
 					<ul>
-						<li ng-repeat="styleset in stylesets" class="typo" ng-class="{ 'open' : visible == true}">
+						<li ng-repeat="styleset in stylesets" class="typo" ng-class="{ 'open' : visible == true }">
 							<p ng-click="visible=!visible">{{styleset.name}}</p>
 
-							<ul ng-show="visible" class="typo-children">
+							<ul ng-hide="visible" class="typo-children">
 								<li ng-repeat="style in styleset.styles" ng-click="x=!x">{{style.name}}</li>
-								<li class="typo new" ng-click="addNewStyle( styleset )"><p>+</p></li>
+								<li class="new style" ng-click="addNewStyle( styleset )"><p>+</p></li>
 							</ul>
 						</li>
 					</ul>
