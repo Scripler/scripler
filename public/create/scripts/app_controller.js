@@ -221,7 +221,7 @@ app.directive('onEnter', function() {
 	};
 });
 
-app.directive('ckEditor', function() {
+app.directive('ckEditor', function( $window ) {
 	return {
 		require: '?ngModel',
 		link: function(scope, elm, attr, ngModel) {
@@ -230,7 +230,7 @@ app.directive('ckEditor', function() {
 				skin: 'scripler',
 				resize_enabled: false,
 				//extraPlugins: 'scripler',
-				height: 600,
+				height: $window.innerHeight - 100,
 				width: 800,
 				font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
 				//contentsCss: ['stylesets/pleasantbw.css', 'contents.css', 'http://fonts.googleapis.com/css?family=Ribeye'],
