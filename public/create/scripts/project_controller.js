@@ -110,6 +110,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$http.post('/document', angular.toJson( document ) )
 				.success( function( data ) {
 					$scope.projectDocuments.push( data.document );
+					$scope.openProjectDocument( data.document );
 				})
 		} else {
 			document._id = Date.now();
