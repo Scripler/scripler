@@ -230,6 +230,13 @@ app.directive('ckEditor', function( $window ) {
 				skin: 'scripler',
 				resize_enabled: false,
 				//extraPlugins: 'scripler',
+				extraPlugins: 'floating-tools,line-height',
+				floatingtools: 'Basic',
+				floatingtools_Basic: [
+					{ name: 'styles', items: [ 'Font' ] },
+					'/',
+					{ name: 'styles', items: [ 'FontSize', 'line-height' ] }
+				],
 				height: $window.innerHeight - 90,
 				width: 800,
 				font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
