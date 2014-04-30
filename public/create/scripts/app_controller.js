@@ -23,13 +23,15 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 
 		$scope.$onRootScope('login:failed', function( event ) {
 			var publications = [];
-			var lsPublications = localStorageService.get('demo-scripler-publications');
+			var lsName = 'demo-scripler-publications';
+			var lsPublications = localStorageService.get( lsName );
 				if ( lsPublications ) {
 					if ( lsPublications.length !== 0 ) {
 						publications = lsPublications;
 					}
 				} else {
-					publications = [ { _id: Date.now(), name:'Demo Title', order: 0 } ];
+					publications = [ { _id: Date.now(), name:'Demo Title' } ];
+					localStorageService.add( lsName, publications );
 				}
 			var demoOn = function() {
 				$rootScope.$emit('demo:mode', publications);
@@ -219,7 +221,7 @@ app.directive('onEnter', function() {
 	};
 });
 
-app.directive('ckEditor', function() {
+app.directive('ckEditor', function( $window ) {
 	return {
 		require: '?ngModel',
 		link: function(scope, elm, attr, ngModel) {
@@ -228,7 +230,7 @@ app.directive('ckEditor', function() {
 				skin: 'scripler',
 				resize_enabled: false,
 				//extraPlugins: 'scripler',
-				height: 600,
+				height: $window.innerHeight - 90,
 				width: 800,
 				font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
 				//contentsCss: ['stylesets/pleasantbw.css', 'contents.css', 'http://fonts.googleapis.com/css?family=Ribeye'],

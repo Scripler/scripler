@@ -220,6 +220,7 @@ div.half {
 	font-family: 'Roboto', sans-serif;
 }
 .button {
+	outline: none;
 	-moz-border-radius: 1px;
 	-webkit-border-radius: 1px;
 	border-radius: 1px;

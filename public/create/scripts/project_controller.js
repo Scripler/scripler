@@ -26,7 +26,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
-				$scope.projectDocuments.push(data.document);
+				$scope.projectDocuments.push( data.document );
+				$scope.openProjectDocument( data.document );
 				console.log(data);
 			});
 		}
@@ -64,6 +65,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		{_id:'00007',name:'Document 7',text:'<h1>this is a test 7</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'},
 		{_id:'00008',name:'Document 8',text:'<h1>this is a test 8</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'}
 	];
+
+	$scope.stylesets = [];
 
 	$scope.$onRootScope('user:updated', function( event, user ) {
 		$scope.user = user;
@@ -107,6 +110,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$http.post('/document', angular.toJson( document ) )
 				.success( function( data ) {
 					$scope.projectDocuments.push( data.document );
+					$scope.openProjectDocument( data.document );
 				})
 		} else {
 			document._id = Date.now();
@@ -166,12 +170,35 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
+	$scope.addNewStyleset = function() {
+		var length = $scope.stylesets.length + 1;
+		var styleset = {};
+		styleset.name = 'Styleset ' + length;
+
+		$http.post('/styleset', angular.toJson( styleset ) )
+			.success( function( data ) {
+				$scope.stylesets.push( data.styleset );
+			});
+	}
+
+	$scope.addNewStyle = function( styleset ) {
+		var style = {};
+		var length = styleset.styles.length + 1;
+		style.name = 'Style ' + length;
+		style.stylesetId = styleset._id;
+
+		$http.post('/style', angular.toJson( style ) )
+			.success( function( data ) {
+				styleset.styles.push( data.style );
+			});
+	}
+
     function initiateEditor(scope) {
     	$scope.ckContent = 'test';
 
 //		var startChapter = $scope.documents[0];
 //		$scope.entrybody = startChapter.content;
-		// Mangler at tilføje stylen startChapter.documentstyleSheet
+		// Mangler at tilf??je stylen startChapter.documentstyleSheet
     }
 
     initiateEditor();
@@ -184,7 +211,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 //	    var startChapter = $scope.documents[0];
 //	    $scope.entrybody = startChapter.content;
-	    // Mangler at tilføje stylen startChapter.documentstyleSheet
+	    // Mangler at tilf??je stylen startChapter.documentstyleSheet
 		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
 
 		// CK Editor Controls

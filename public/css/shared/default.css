@@ -136,6 +136,7 @@ a:hover {
 }
 
 .main > section button {
+	outline: none;
 	border: none;
 	background: #ffff99;
 	color: #000;
@@ -145,10 +146,6 @@ a:hover {
 	cursor: pointer;
 	margin: 5px 0 0;
 	font-size: 0.8em;
-}
-
-.main > section button:hover {
-	background: #E6E680;
 }
 
 .main > section button.active {
