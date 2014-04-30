@@ -76,11 +76,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		projectPromise.then( function( project ) {
 			$scope.project = project;
 			$scope.projectDocuments = $scope.project.documents;
+			$scope.openProjectDocument( $scope.projectDocuments[0] );
 		});
 	});
 
 	$scope.openProjectDocument = function( projectDocument ) {
-		if ( $scope.documentSelected._id ) {
+		if ( typeof $scope.documentSelected == 'object' ) {
 			$scope.updateProjectDocument();
 		}
 
