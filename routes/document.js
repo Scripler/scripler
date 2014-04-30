@@ -233,7 +233,7 @@ exports.listStylesets = function (req, res, next) {
 	}
 
 	// Populate the stylesets
-	Styleset.find({"_id": {$in: resultStylesets}}, function (err, stylesets) {
+	Styleset.find({"_id": {$in: resultStylesets}}).populate({path: 'styles'}).exec(function (err, stylesets) {
 		if (err) {
 			return next(err);
 		}
