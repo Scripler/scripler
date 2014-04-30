@@ -220,3 +220,25 @@ exports.applyStyleset = function (req, res, next) {
 	}
 }
 
+exports.listStylesets = function (req, res, next) {
+	var documentStylesets = req.document.stylesets;
+	var userStylesets = req.user.stylesets;
+	var resultStylesets = documentStylesets.slice(0);
+
+	for (var i=0; i<userStylesets.length; i++) {
+		var userStyleset = userStylesets[i];
+		if (!utils.containsCopy(documentStylesets, userStyleset)) {
+			resultStylesets.push(userStyleset);
+		}
+	}
+
+	// Populate the stylesets
+	Styleset.find({"_id": {$in: resultStylesets}}, function (err, stylesets) {
+		if (err) {
+			return next(err);
+		}
+
+		res.send({"stylesets": stylesets});
+	});
+};
+

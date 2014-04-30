@@ -7,36 +7,44 @@ var assert = require("assert")
 	, request = require('supertest')
 	, fs = require('fs')
 	, path = require('path')
-	, moment = require('moment');
+	, moment = require('moment')
+	, utils = require('../lib/utils');
 
 var exec = require('child_process').exec,
 	child;
 
 var host = '127.0.0.1:' + conf.app.port;
 var cookie;
+
 var systemStylesetId;
-var systemStyleId;
+var userStylesetId;
+
+var userId;
+
 var projectId;
 var projectId2;
 var projectId3;
 var projectId4;
 var projectId5;
-var userId;
+
 var rootFolderId;
 var childFolderId;
+
 var rootDocumentId;
 var childDocumentId;
 var coverDocumentId;
 var titlePageDocumentId;
 var tocDocumentId;
 var colophonDocumentId;
+var stylesetDocumentId;
+
 var stylesetId;
 var stylesetId2;
 var stylesetId3;
+var stylesetCopiedId;
+
 var styleId;
 var styleId2;
-var stylesetDocumentId;
-var stylesetCopiedId;
 var styleCopiedId;
 
 var cleanupEPUB = true;
@@ -158,7 +166,8 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.user.firstname, "John");
 					assert.equal(res.body.user.lastname, "Doe");
-					assert.notEqual(res.body.user.stylesets[0], systemStylesetId); // Stylesets are copied
+					userStylesetId = res.body.user.stylesets[0];
+					assert.notEqual(userStylesetId, systemStylesetId); // Stylesets are copied
 					assert.notEqual(res.body.user.defaultStyleset, systemStylesetId);
 					done();
 				});
@@ -1266,6 +1275,23 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.document._id, stylesetDocumentId);
 					stylesetCopiedId = res.body.document.stylesets[0];
 					stylesetCopiedId && done();
+				});
+		}),
+		it('Listing stylesets for a document should return the union of the document\'s stylesets and all user stylesets not already copied to the document', function (done) {
+			request(host)
+				.get('/document/' + stylesetDocumentId + '/stylesets')
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.stylesets.length, 4);
+					// Currently document stylesets are returned before user stylesets but we should not rely on this => just check if the id exists *somewhere* in the list.
+					assert.equal(utils.containsId(res.body.stylesets, stylesetCopiedId), true);
+					assert.equal(utils.containsId(res.body.stylesets, userStylesetId), true);
+					assert.equal(utils.containsId(res.body.stylesets, stylesetId), true);
+					assert.equal(utils.containsId(res.body.stylesets, stylesetId2), true);
+					assert.equal(utils.containsId(res.body.stylesets, systemStylesetId), false);
+					done();
 				});
 		}),
 		it('Opening a styleset should return the styleset', function (done) {
