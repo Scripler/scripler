@@ -66,11 +66,11 @@ exports.open = function (req, res) {
  *
  * 1. Check if the style's styleset has been copied...
  * 2. If so, check if the style has been copied...
- *   2.1. If so, update it and return the updated style.
- *   2.2. If not, copy it, update it and return the updated copy.
+ *   2.1. If so, update it, save the changes on the original style and return the updated style.
+ *   2.2. If not, copy it, update it, save the changes on the original style and return the updated copy.
  * 3. If not, copy it, and check if the style has been copied...
- *   3.1. If so, update it and return the updated style.
- *   3.2. If not, copy it, update it and return the updated copy.
+ *   3.1. If so, update it, save the changes on the original style and return the updated style.
+ *   3.2. If not, copy it, update it, save the changes on the original style and return the updated copy.
  *
  * @param req
  * @param res
@@ -80,33 +80,51 @@ exports.update = function (req, res, next) {
 	var style = req.style;
 
 	var updateStyle = function (style, next) {
-		if (style.original) {
-			style.name = req.body.name;
-			style.class = req.body.class;
-			style.css = req.body.css;
-			style.save(function (err) {
-				if (err) {
-					return next(err);
-				}
+		style.name = req.body.name;
+		style.class = req.body.class;
+		style.css = req.body.css;
+		style.save(function (err) {
+			if (err) {
+				return next(err);
+			}
 
+			// Update the original style if one such exists
+			if (style.original) {
+				Style.findOne({"_id": style.original}, function (err, originalStyle) {
+					if (err) {
+						return next(err);
+					}
+
+					originalStyle.name = style.name;
+					originalStyle.class = style.class;
+					originalStyle.css = style.css;
+					originalStyle.save(function (err) {
+						if (err) {
+							return next(err);
+						}
+
+						// NB! The updated style, not the original, is returned
+						return next(null, style);
+					});
+				});
+			} else {
 				return next(null, style);
-			});
+			}
+
+			return next(null, style);
+		});
+	};
+
+	var checkAndUpdateStyle = function (style, next) {
+		if (style.original) {
+			return updateStyle(style, next);
 		} else {
 			copyStyle(style, style.stylesetId, function(err, copy) {
 				if (err) {
 					return next(err);
 				}
 
-				copy.name = req.body.name;
-				copy.class = req.body.class;
-				copy.css = req.body.css;
-				copy.save(function (err) {
-					if (err) {
-						return next(err);
-					}
-
-					return next(null, copy);
-				});
+				return updateStyle(copy, next);
 			});
 		}
 	};
@@ -117,7 +135,7 @@ exports.update = function (req, res, next) {
 		}
 
 		if (styleset.original) {
-			updateStyle(style, function(err, updatedStyle) {
+			checkAndUpdateStyle(style, function(err, updatedStyle) {
 				if (err) {
 					return next(err);
 				}
@@ -136,7 +154,7 @@ exports.update = function (req, res, next) {
 						return next(err);
 					}
 
-					updateStyle(updatedStyle, function(err, style) {
+					checkAndUpdateStyle(updatedStyle, function(err, style) {
 						if (err) {
 							return next(err);
 						}

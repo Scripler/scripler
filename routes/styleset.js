@@ -62,7 +62,7 @@ exports.open = function (req, res) {
  *
  * Update a styleset, i.e. its name and/or styles.
  *
- * Check if copy of the styleset has been made, and if not, copy the styleset, including its styles.
+ * Check if copy of the styleset has been made, and if not, copy the styleset, including its styles, save the changes on the original styleset, and return the updated styleset.
  *
  * See also Style.update().
  *
@@ -81,7 +81,27 @@ exports.update = function (req, res, next) {
 				return next(err);
 			}
 
-			return next(null, styleset);
+			// Update the original styleset if one such exists
+			if (styleset.original) {
+				Styleset.findOne({"_id": styleset.original}, function (err, originalStyleset) {
+					if (err) {
+						return next(err);
+					}
+
+					originalStyleset.name = styleset.name;
+					originalStyleset.styles = styleset.styles;
+					originalStyleset.save(function (err) {
+						if (err) {
+							return next(err);
+						}
+
+						// NB! The updated styleset, not the original, is returned
+						return next(null, styleset);
+					});
+				});
+			} else {
+				return next(null, styleset);
+			}
 		});
 	};
 
@@ -129,13 +149,10 @@ exports.archive = function (req, res, next) {
 		if (err) {
 			return next(err);
 		}
-		// TODO: Fix: find/load the project and null "styleset"?
-		Project.update({"stylesets": styleset._id}, {"$pull": {"stylesets": styleset._id}}, {multi: true}, function (err, numberAffected, raw) {
-			if (err) {
-				return next(err);
-			}
-			res.send({styleset: styleset});
-		});
+
+		// TODO: remove (pull) styleset from all documents it is used in?
+
+		res.send({styleset: styleset});
 	});
 }
 
@@ -146,17 +163,10 @@ exports.unarchive = function (req, res, next) {
 		if (err) {
 			return next(err);
 		}
-		var membersArray = [];
-		for (var i = 0; i < styleset.members.length; i++) {
-			membersArray.push(styleset.members[i].userId);
-		}
-		// TODO: Fix: find/load the project and reset "styleset"?
-		Project.update({"members": {"$in": membersArray}}, {"$addToSet": {"stylesets": styleset._id}}, {multi: true}, function (err, numberAffected, raw) {
-			if (err) {
-				return next(err);
-			}
-			res.send({styleset: styleset});
-		});
+
+		// TODO: put (push) styleset back on ....what? How can we know which documents it was used in?
+
+		res.send({styleset: styleset});
 	});
 }
 

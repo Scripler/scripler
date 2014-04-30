@@ -1365,6 +1365,18 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
+		it('Opening a(n original) styleset whose COPY was updated should return the updated contents on the styleset - 1', function (done) {
+			request(host)
+				.get('/styleset/' + stylesetId)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset.name, "OK, Maybe not the BEST, but...");
+					done();
+				});
+		}),
 		it('Consecutive times when that styleset is updated, the same styleset with updated values should be returned', function (done) {
 			request(host)
 				.put('/styleset/' + stylesetCopiedId + '/update')
@@ -1374,6 +1386,18 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset._id, stylesetCopiedId);
+					assert.equal(res.body.styleset.name, "Actually, it is my best!");
+					done();
+				});
+		}),
+		it('Opening a(n original) styleset whose COPY was updated should return the updated contents on the styleset - 2', function (done) {
+			request(host)
+				.get('/styleset/' + stylesetId)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset.name, "Actually, it is my best!");
 					done();
 				});
@@ -1392,6 +1416,20 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
+		it('Opening a(n original) style whose COPY was updated should return the updated contents on the style - 1', function (done) {
+			request(host)
+				.get('/style/' + styleId2)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style.name, "Donkey");
+					assert.equal(res.body.style.class, "jack");
+					assert.equal(res.body.style.css, css2 + "...some new CSS");
+					done();
+				});
+		}),
 		it('Consecutive times when that style is updated, the same style with updated values should be returned', function (done) {
 			request(host)
 				.put('/style/' + styleId2 + '/update')
@@ -1401,6 +1439,20 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style._id, styleCopiedId);
+					assert.equal(res.body.style.name, "DonkeyKong");
+					assert.equal(res.body.style.class, "jytte");
+					assert.equal(res.body.style.css, css2 + "...And now some blue color!");
+					done();
+				});
+		}),
+		it('Opening a(n original) style whose COPY was updated should return the updated contents on the style - 2', function (done) {
+			request(host)
+				.get('/style/' + styleId2)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style.name, "DonkeyKong");
 					assert.equal(res.body.style.class, "jytte");
 					assert.equal(res.body.style.css, css2 + "...And now some blue color!");
@@ -1442,7 +1494,7 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset.name, "My Best Styleset");
+					assert.equal(res.body.styleset.name, "Actually, it is my best!");
 					assert.equal(res.body.styleset.archived, true);
 					done();
 				});
@@ -1455,7 +1507,7 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.stylesets.length, 1);
-					assert.equal(res.body.stylesets[0].name, "My Best Styleset");
+					assert.equal(res.body.stylesets[0].name, "Actually, it is my best!");
 					done();
 				});
 		}),
@@ -1467,7 +1519,7 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset.name, "My Best Styleset");
+					assert.equal(res.body.styleset.name, "Actually, it is my best!");
 					assert.equal(res.body.styleset.archived, false);
 					done();
 				});
