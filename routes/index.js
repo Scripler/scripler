@@ -76,6 +76,7 @@ module.exports = function (app, auth) {
 	app.put('/style/:styleId/unarchive', auth.isLoggedIn(), style.unarchive);
 	app.put('/styleset/:stylesetId/project/:projectId', auth.isLoggedIn(), project.applyStyleset);
 	app.put('/styleset/:stylesetId/document/:documentId', auth.isLoggedIn(), document.applyStyleset);
+	app.get('/document/:documentId/stylesets', auth.isLoggedIn(), document.listStylesets);
 
 	/* API Output */
 	app.get('/project/:projectIdPopulatedFull/compile', auth.isLoggedIn(), project.compile);
