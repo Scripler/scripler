@@ -90,6 +90,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				var index = $scope.projectDocuments.indexOf( projectDocument );
 				$scope.projectDocuments[index] = data.document;
 				$scope.documentSelected = data.document;
+				$scope.openStylesets( projectDocument );
 				lastSavedDocumentLength = data.document.text.length;
 
 				if ( !documentWatch ) {
@@ -170,6 +171,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			timeout = $timeout( $scope.updateProjectDocument, secondsToWait * 1000 );
 		}
 	};
+
+	$scope.openStylesets = function( projectDocument ) {
+		$http.get('/document/' + projectDocument._id + '/stylesets')
+			.success( function( data ) {
+				$scope.stylesets = data.stylesets;
+			});
+	}
 
 	$scope.addNewStyleset = function() {
 		var length = $scope.stylesets.length + 1;
