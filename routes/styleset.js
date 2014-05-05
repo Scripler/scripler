@@ -26,7 +26,8 @@ exports.create = function (req, res, next) {
 		isSystem: req.body.isSystem
 	});
 
-	if (!req.body.isSystem) {
+	// TODO: refactor into "isFalsy" utility method - one such already exists?
+	if (!req.body.isSystem || req.body.isSystem == "false") {
 		styleset.members = [
 			{userId: req.user._id, access: ["admin"]}
 		];

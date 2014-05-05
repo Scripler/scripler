@@ -115,19 +115,19 @@ exports.register = function (req, res, next) {
 				return next(err);
 			}
 
-			var saveUser = function (next) {
-				user.save(function (err) {
-					if (err) {
-						// return error
-						if (err.code == 11000) {
-							return next({errors: "Email already registered", status: 400});
-						}
-						return next(err);
-					} else {
-						if ('test' != env) {
-							emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
-						}
+			user.save(function (err) {
+				if (err) {
+					// return error
+					if (err.code == 11000) {
+						return next({errors: "Email already registered", status: 400});
+					}
+					return next(err);
+				} else {
+					if ('test' != env) {
+						emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
+					}
 
+					var createDirectories = function (next) {
 						var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + user._id);
 						mkdirp(userDir, function (err) {
 							if (err) {
@@ -137,30 +137,38 @@ exports.register = function (req, res, next) {
 							}
 						});
 					}
-				});
-			}
 
-			var numberOfStylesetsToBeCopied = stylesets.length;
-			if (numberOfStylesetsToBeCopied == 0) {
-				return saveUser(next);
-			} else {
-				stylesets.forEach(function (styleset) {
-					copyStyleset(styleset, function(err, copy) {
-						if (err) {
-							return next(err);
-						}
+					var numberOfStylesetsToBeCopied = stylesets.length;
+					if (numberOfStylesetsToBeCopied == 0) {
+						return createDirectories(next);
+					} else {
+						stylesets.forEach(function (styleset) {
+							styleset.isSystem = false;
+							styleset.members = [{userId: user._id, access: ["admin"]}];
+							copyStyleset(styleset, function(err, copy) {
+								if (err) {
+									return next(err);
+								}
 
-						user.stylesets.addToSet(copy);
-						user.defaultStyleset = copy; // TODO: which styleset should be the default?
+								user.stylesets.addToSet(copy);
+								user.defaultStyleset = copy; // TODO: which styleset should be the default?
 
-						numberOfStylesetsToBeCopied--;
+								numberOfStylesetsToBeCopied--;
 
-						if (numberOfStylesetsToBeCopied == 0) {
-							return saveUser(next);
-						}
-					});
-				});
-			}
+								if (numberOfStylesetsToBeCopied == 0) {
+									user.save(function (err) {
+										if (err) {
+											return next(err);
+										}
+
+										return createDirectories(next);
+									});
+								}
+							});
+						});
+					}
+				}
+			});
 		});
 	}
 };
