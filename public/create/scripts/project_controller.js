@@ -76,6 +76,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		projectPromise.then( function( project ) {
 			$scope.project = project;
 			$scope.projectDocuments = $scope.project.documents;
+			if ( $scope.projectDocuments.length == 0 ) {
+				$scope.addProjectDocument();
+			}
 			$scope.openProjectDocument( $scope.projectDocuments[0] );
 		});
 	});
