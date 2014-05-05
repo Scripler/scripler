@@ -230,12 +230,16 @@ app.directive('ckEditor', function( $window ) {
 				skin: 'scripler',
 				resize_enabled: false,
 				//extraPlugins: 'scripler',
-				extraPlugins: 'floating-tools,line-height',
+				extraPlugins: 'floating-tools,line-height,texttransform',
 				floatingtools: 'Basic',
 				floatingtools_Basic: [
 					{ name: 'styles', items: [ 'Font' ] },
 					'/',
-					{ name: 'styles', items: [ 'FontSize', 'line-height' ] }
+					{ name: 'fontstyles', items: [ 'FontSize', 'line-height' ] },
+					'/',
+					['Bold'], ['Italic'], ['Underline'], ['TransformTextToUppercase'], ['Subscript'], ['Superscript'],
+					'/',
+					['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList']
 				],
 				height: $window.innerHeight - 90,
 				width: 800,
