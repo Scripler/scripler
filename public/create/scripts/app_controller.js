@@ -229,7 +229,7 @@ app.directive('ckEditor', function( $window ) {
 				allowedContent: true,
 				skin: 'scripler',
 				resize_enabled: false,
-				extraPlugins: 'scripler,floating-tools,line-height,texttransform',
+				extraPlugins: 'scripler,floating-tools,line-height,texttransform,indent2',
 				floatingtools: 'Basic',
 				floatingtools_Basic: [
 					{ name: 'styles', items: [ 'Font' ] },
@@ -238,8 +238,15 @@ app.directive('ckEditor', function( $window ) {
 					'/',
 					['Bold'], ['Italic'], ['Underline'], ['TransformTextToUppercase'], ['Subscript'], ['Superscript'],
 					'/',
-					['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList']
+					['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'],
+					'/',
+					['Outdent'], ['Indent'],
+					'/',
+					['Outdent2'], ['Indent2']
 				],
+				indentUnit: 'em',
+				indentOffset: 2,
+				enterMode: CKEDITOR.ENTER_P,
 				height: $window.innerHeight - 90,
 				width: 800,
 				font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
