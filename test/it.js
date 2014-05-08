@@ -142,13 +142,14 @@ describe('Scripler RESTful API', function () {
 			request(host)
 				.post('/style')
 				.set('cookie', cookie)
-				.send({stylesetId: systemStylesetId, name: "Scripler Style 1", class: "ScruplerZ", css: "some scripler css", isSystem: "true"})
+				.send({stylesetId: systemStylesetId, name: "Scripler Style 1", class: "ScruplerZ", css: {"key1": "value1", "key2": "value2"}, isSystem: "true"})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style.name, "Scripler Style 1");
 					assert.equal(res.body.style.class, "ScruplerZ");
-					assert.equal(res.body.style.css, "some scripler css");
+					assert.equal(res.body.style.css.key1, "value1");
+                    assert.equal(res.body.style.css.key2, "value2");
 					assert.equal(res.body.style.isSystem, true);
 					assert.equal(res.body.style.stylesetId, systemStylesetId);
 					styleId = res.body.style._id;
@@ -434,25 +435,17 @@ describe('Scripler RESTful API', function () {
 		})
 	}),
 	describe('Initialize Typography (Project.applyStyleset() (such that EPUB will contain styles))', function () {
-		var css = '.container > header nav a:after {' +
-			'content: attr(data-info);' +
-			'color: #47a3da;' +
-			'position: absolute;' +
-			'width: 600%;' +
-			'top: 120%;' +
-			'text-align: right;' +
-			'right: 0;' +
-			'opacity: 0;' +
-			'pointer-events: none;' +
-			'}' +
-
-			'.container > header nav a:hover:after {' +
-			'	opacity: 1;' +
-			'}' +
-
-			'.container > header nav a:hover {' +
-			'	background: #47a3da;' +
-			'}';
+		var css = {
+                'content': 'attr(data-info)',
+                'color': '#47a3da',
+                'position': 'absolute',
+                'width': '600%',
+                'top': '120%',
+                'text-align': 'right',
+                'right': '0',
+                'opacity': '0',
+                'pointer-events': 'none'
+			};
 
 		it('Creating a styleset should return the new styleset', function (done) {
 			request(host)
@@ -477,7 +470,7 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style.name, "Coolio");
 					assert.equal(res.body.style.class, "CoolioClass");
-					assert.equal(res.body.style.css, css);
+					assert.deepEqual(res.body.style.css, css);
 					assert.equal(res.body.style.stylesetId, stylesetId);
 					styleId = res.body.style._id;
 					styleId && done();
@@ -1168,25 +1161,18 @@ describe('Scripler RESTful API', function () {
 			})
 	}),
 	describe('Typography (Styleset & Style)', function () {
-		var css2 = '.container > header nav a:after {' +
-			'content: attr(data-info);' +
-			'color: #47a3da;' +
-			'position: absolute;' +
-			'width: 600%;' +
-			'top: 120%;' +
-			'text-align: right;' +
-			'right: 0;' +
-			'opacity: 0;' +
-			'pointer-events: none;' +
-			'}' +
+        var css2 = {
+            'content': 'attr(data-info)',
+            'color': '#27a3da',
+            'position': 'absolute',
+            'width': '500%',
+            'top': '110%',
+            'text-align': 'left',
+            'right': '5',
+            'opacity': '10',
+            'pointer-events': 'none'
+        };
 
-			'.container > header nav a:hover:after {' +
-			'	opacity: 1;' +
-			'}' +
-
-			'.container > header nav a:hover {' +
-			'	background: #47a3d2;' +
-			'}';
 
 		it('Creating a styleset should return the new styleset - 2', function (done) {
 			request(host)
@@ -1211,7 +1197,7 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style.name, "Coolio 2");
 					assert.equal(res.body.style.class, "CoolioClass2");
-					assert.equal(res.body.style.css, css2);
+					assert.deepEqual(res.body.style.css, css2);
 					assert.equal(res.body.style.tag, "h1");
 					styleId2 = res.body.style._id;
 					assert.equal(res.body.style.stylesetId, stylesetId2);
@@ -1318,7 +1304,7 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.style._id, styleId2);
 					assert.equal(res.body.style.name, "Coolio 2");
 					assert.equal(res.body.style.class, "CoolioClass2");
-					assert.equal(res.body.style.css, css2);
+					assert.deepEqual(res.body.style.css, css2);
 					assert.equal(res.body.style.tag, "h1");
 					done();
 				});
@@ -1379,13 +1365,15 @@ describe('Scripler RESTful API', function () {
 				});
 		}),
 		it('The first time a style is updated, a COPY of the style should be returned', function (done) {
+            css2["another-key"] = 'another value';
 			request(host)
 				.put('/style/' + styleId2 + '/update')
 				.set('cookie', cookie)
-				.send({name: "Donkey", class: "jack", css: css2 + "...some new CSS"})
+				.send({name: "Donkey", class: "jack", css: css2})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    console.log(res.body);
 					styleCopiedId = res.body.style._id;
 					assert.notEqual(styleCopiedId, styleId2);
 					assert.equal(res.body.style.name, "Donkey");
@@ -1393,17 +1381,19 @@ describe('Scripler RESTful API', function () {
 				});
 		}),
 		it('Consecutive times when that style is updated, the same style with updated values should be returned', function (done) {
+            css2["another-key"] = 'yet another value';
 			request(host)
-				.put('/style/' + styleId2 + '/update')
+				.put('/style/' + styleCopiedId + '/update')
 				.set('cookie', cookie)
-				.send({name: "DonkeyKong", class: "jytte", css: css2 + "...And now some blue color!"})
+				.send({name: "DonkeyKong", class: "jytte", css: css2})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    console.log(res.body);
 					assert.equal(res.body.style._id, styleCopiedId);
 					assert.equal(res.body.style.name, "DonkeyKong");
 					assert.equal(res.body.style.class, "jytte");
-					assert.equal(res.body.style.css, css2 + "...And now some blue color!");
+					assert.deepEqual(res.body.style.css, css2);
 					done();
 				});
 		}),
