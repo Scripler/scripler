@@ -110,9 +110,7 @@ exports.update = function (req, res, next) {
 					return next(err);
 				}
 
-				//console.log("Updating original styleset " + populatedOriginalStyleset.name + " (" + populatedOriginalStyleset._id + ")...");
 				styleset_utils.updateOriginalStyleset(populatedOriginalStyleset, populatedNewStyleset, function (err) {
-					//console.log("Updated original styleset " + populatedOriginalStyleset.name + " (" + populatedOriginalStyleset._id + ")...");
 					populatedOriginalStyleset.save(function (err, updatedOriginalStyleset) {
 						if (err) {
 							return next(err);

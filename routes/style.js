@@ -103,9 +103,7 @@ exports.update = function (req, res, next) {
 					return next(err);
 				}
 
-				//console.log("Updating original style " + populatedOriginalStyle.name + " (" + populatedOriginalStyle._id + ")...");
 				styleset_utils.updateOriginalStyle(populatedOriginalStyle, populatedNewStyle, function (err) {
-					//console.log("Updated original style " + populatedOriginalStyle.name + " (" + populatedOriginalStyle._id + ")...");
 					populatedOriginalStyle.save(function (err, updatedOriginalStyle) {
 						if (err) {
 							return next(err);
@@ -118,6 +116,7 @@ exports.update = function (req, res, next) {
 		});
 	};
 
+	// TODO: move to models/Style
 	style.name = req.body.name;
 	style.class = req.body.class;
 	style.css = req.body.css;

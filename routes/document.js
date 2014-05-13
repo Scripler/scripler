@@ -247,15 +247,10 @@ exports.listStylesets = function (req, res, next) {
 			return next(err);
 		}
 
-		//console.log("-----> documentStylesets: " + JSON.stringify(documentStylesets));
 		for (var i=0; i<userStylesets.length; i++) {
 			var userStyleset = userStylesets[i];
-			//console.log("-----> userStyleset: " + JSON.stringify(userStyleset));
 			if (!utils.containsOriginal(documentStylesets, userStyleset)) {
-				//console.log("-----> userStyleset is a copy ");
 				resultStylesets.push(userStyleset._id);
-			} else {
-				//console.log("-----> userStyleset is NOT a copy ");
 			}
 		}
 

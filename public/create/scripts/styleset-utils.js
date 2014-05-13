@@ -40,15 +40,8 @@ var async = require('async');
 		if (originalStyle != null && newStyle != null) {
 			// TODO: remove this check when implementing "reset" because a document style's original is the user style but the document style is being reset to the system style
 			if (newStyle.original == originalStyle.id) {
-				/*
-				var newStyle = new Style({
-					name: newStyle.name,
-					class: newStyle.class,
-					css: newStyle.css
-				});
-				originalStyle = newStyle;
-				*/
 
+				// TODO: move to models/Style
 				// Create new String objects in memory (old values will be garbage collected). TODO: is this necessary?
 				originalStyle.name = new String(newStyle.name);
 				originalStyle.class = new String(newStyle.class);
@@ -77,11 +70,6 @@ var async = require('async');
 		if (originalStyleset != null && newStyleset != null) {
 			// TODO: remove this check when implementing "reset" because a document styleset's original is the user styleset but the document styleset is being reset to the system styleset
 			if (newStyleset.original == originalStyleset.id) {
-				//console.log("originalStyleset");
-				//console.log(originalStyleset);
-				//console.log("newStyleset");
-				//console.log(newStyleset);
-
 				// Create a new String object in memory (old value of originalStyleset.name will be garbage collected). TODO: is this necessary?
 				originalStyleset.name = new String(newStyleset.name);
 
@@ -99,8 +87,7 @@ var async = require('async');
 						var originalStyle = originalStyles[i];
 						var matchingNewStyle = utils.containsOriginal(newStyles, originalStyle);
 						if (matchingNewStyle) {
-							//console.log("A style in the new styles has " + originalStyle.name + " as original: updating it.");
-							// TODO: move to function in Style model
+							// TODO: move to models/Style
 							originalStyle.name = matchingNewStyle.name;
 							originalStyle.class = matchingNewStyle.class;
 							originalStyle.css = matchingNewStyle.css;
@@ -110,7 +97,6 @@ var async = require('async');
 							originalStyleset.styles.push(originalStyle);
 						} else {
 							//console.log("Deleting " + originalStyle.name);
-							//console.log("newStyles " + newStyles);
 							originalStyleset.styles.splice(i, 1);
 						}
 					}
