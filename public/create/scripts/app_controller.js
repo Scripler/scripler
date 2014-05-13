@@ -221,7 +221,7 @@ app.directive('onEnter', function() {
 	};
 });
 
-app.directive('ckEditor', function( $window ) {
+app.directive('ckEditor', function( $window, $rootScope ) {
 	return {
 		require: '?ngModel',
 		link: function(scope, elm, attr, ngModel) {
@@ -229,7 +229,7 @@ app.directive('ckEditor', function( $window ) {
 				allowedContent: true,
 				skin: 'scripler',
 				resize_enabled: false,
-				extraPlugins: 'scripler,floating-tools,line-height,texttransform,indent2',
+				extraPlugins: 'scripler,floating-tools,line-height,texttransform,indent2,indent-top',
 				floatingtools: 'Basic',
 				floatingtools_Basic: [
 					{ name: 'styles', items: [ 'Font' ] },
@@ -240,9 +240,9 @@ app.directive('ckEditor', function( $window ) {
 					'/',
 					['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'],
 					'/',
-					['Outdent'], ['Indent'],
-					'/',
-					['Outdent2'], ['Indent2']
+					['Indent'], ['Indent2'], ['IndentTop'], ['IndentBottom'],
+					'#',
+					['Outdent'], ['Outdent2'], ['OutdentTop'], ['OutdentBottom']
 				],
 				indentUnit: 'em',
 				indentOffset: 2,
@@ -284,6 +284,7 @@ app.directive('ckEditor', function( $window ) {
 			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 )
 			CKEDITOR.tools.enableHtml5Elements( document );
 
+			$rootScope.ck = ck;
 		}
 	};
 });
