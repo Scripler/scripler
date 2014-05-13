@@ -1,13 +1,37 @@
 var utils = require('../lib/utils');
 var Styleset = require('../models/styleset.js').Styleset;
+var Style = require('../models/style.js').Style;
 var Project = require('../models/project.js').Project;
-var copyStyleset = require('../models/styleset.js').copy;
+var styleset_utils = require('../public/create/scripts/styleset-utils.js');
 
 //Load styleset by id
 exports.load = function (id) {
 	return function (req, res, next) {
 		var idCopy = id || req.body.stylesetId;
 		Styleset.findOne({"_id": idCopy, "deleted": false}, function (err, styleset) {
+			if (err) return next(err);
+			if (!styleset) {
+				return next({message: "Styleset not found", status: 404});
+			}
+			if (!req.user) return next();//Let missing authentication be handled in auth middleware
+			if (!styleset.isSystem && !utils.hasAccessToModel(req.user, styleset)) return next(403);
+			req.styleset = styleset;
+			return next();
+		});
+	}
+}
+
+exports.loadPopulated = function (id) {
+	return function (req, res, next) {
+		var idCopy = id || req.body.stylesetId;
+		/*
+		 Don't use "match" to in populate() below if you plan on later saving the object - this will throw the following error:
+
+		 	"For your own good, using `document.save()` to update an array which was selected using an $elemMatch projection OR populated using skip, limit, query conditions, or exclusion of the _id field when the operation results in a $pop or $set of the entire array is not supported. The following path(s) would have been modified unsafely..."
+
+		 This makes sense: how should Mongoose know what to do when we have filtered out some of the styles and then try to save only some of them?
+		 */
+		Styleset.findOne({"_id": idCopy, "deleted": false}).populate({path: 'styles'}).exec(function (err, styleset) {
 			if (err) return next(err);
 			if (!styleset) {
 				return next({message: "Styleset not found", status: 404});
@@ -60,9 +84,9 @@ exports.open = function (req, res) {
 
 /**
  *
- * Update a styleset, i.e. its name and/or styles.
+ * Update a styleset, i.e. its name and styles.
  *
- * Check if copy of the styleset has been made, and if not, copy the styleset, including its styles, save the changes on the original styleset, and return the updated styleset.
+ * If the styleset is copied, i.e. has an original, also update the original.
  *
  * See also Style.update().
  *
@@ -73,62 +97,57 @@ exports.open = function (req, res) {
 exports.update = function (req, res, next) {
 	var styleset = req.styleset;
 
-	var updateStyleset = function(styleset, next) {
-		styleset.name = req.body.name;
-		styleset.styles = req.body.styles;
-		styleset.save(function (err) {
+	var updateOriginalStyleset = function(styleset, next) {
+		// The new/updated styleset is populated by loadPopulated(), so just populate the original
+		Styleset.findOne({"_id": styleset.original}).populate({path: 'styles'}).exec(function (err, populatedOriginalStyleset) {
 			if (err) {
 				return next(err);
 			}
 
-			// Update the original styleset if one such exists
-			if (styleset.original) {
-				Styleset.findOne({"_id": styleset.original}, function (err, originalStyleset) {
-					if (err) {
-						return next(err);
-					}
-
-					originalStyleset.name = styleset.name;
-					originalStyleset.styles = styleset.styles;
-					originalStyleset.save(function (err) {
-						if (err) {
-							return next(err);
-						}
-
-						// NB! The updated styleset, not the original, is returned
-						return next(null, styleset);
-					});
-				});
-			} else {
-				return next(null, styleset);
-			}
-		});
-	};
-
-	// Only copy the first time an update is made
-	if (styleset.original) {
-		updateStyleset(styleset, function (err, updatedStyleset) {
-			if (err) {
-				return next(err);
-			}
-
-			res.send({styleset: updatedStyleset});
-		});
-	} else {
-		copyStyleset(styleset, function(err, copy) {
-			if (err) {
-				return next(err);
-			}
-
-			updateStyleset(copy, function (err, updatedStyleset) {
+			// TODO: why is it necessary to populate the new/updated styleset here, c.f. comment above?
+			Styleset.findOne({"_id": styleset._id}).populate({path: 'styles'}).exec(function (err, populatedNewStyleset) {
 				if (err) {
 					return next(err);
 				}
 
-				res.send({styleset: updatedStyleset});
+				//console.log("Updating original styleset " + populatedOriginalStyleset.name + " (" + populatedOriginalStyleset._id + ")...");
+				styleset_utils.updateOriginalStyleset(populatedOriginalStyleset, populatedNewStyleset, function (err) {
+					//console.log("Updated original styleset " + populatedOriginalStyleset.name + " (" + populatedOriginalStyleset._id + ")...");
+					populatedOriginalStyleset.save(function (err, updatedOriginalStyleset) {
+						if (err) {
+							return next(err);
+						}
+
+						return next(null, updatedOriginalStyleset);
+					});
+				});
 			});
 		});
-	}
+	};
+
+	styleset.name = req.body.name;
+	// TODO: implement some sort of safety check ensuring that we only accept styles from the current styleset? See also TODO in models/Styleset.styles
+	styleset.styles = req.body.styles;
+	styleset.save(function (err, updatedStyleset) {
+		if (err) {
+			return next(err);
+		}
+
+		// Update the original styleset if one such exists
+		if (updatedStyleset.original) {
+			updateOriginalStyleset(updatedStyleset, function (err, updatedOriginalStyleset) {
+				if (err) {
+					return next(err);
+				}
+
+				// NB! The updated styleset from the request, not the updated original, is returned!
+				res.send({styleset: updatedStyleset});
+			});
+		} else {
+			res.send({styleset: updatedStyleset});
+		}
+	});
+
 }
 
 exports.rearrange = function (req, res, next) {

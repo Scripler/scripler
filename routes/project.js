@@ -236,38 +236,45 @@ exports.copy = function (req, res, next) {
 		newDocuments.push(newDocument);
 	}
 
-	copyStyleset(project.styleset, function(err, copy) {
+	Styleset.findOne({"_id": project.styleset}).exec(function (err, styleset) {
 		if (err) {
 			return next(err);
 		}
 
-		newProject.styleset = copy;
-
-		newProject.save(function (err) {
+		copyStyleset(styleset, function(err, copy) {
 			if (err) {
 				return next(err);
 			}
 
-			Document.create(newDocuments, function (err) {
+			newProject.styleset = copy;
+
+			newProject.save(function (err) {
 				if (err) {
 					return next(err);
 				}
 
-				var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
-				var imagesDir = path.join(projectDir, conf.epub.imagesDir);
-
-				var newProjectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + newProject._id);
-				var newImagesDir = path.join(newProjectDir, conf.epub.imagesDir);
-
-				ncp(projectDir, newProjectDir, function (err) {
+				Document.create(newDocuments, function (err) {
 					if (err) {
 						return next(err);
 					}
-					res.send({project: newProject});
+
+					var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
+					var imagesDir = path.join(projectDir, conf.epub.imagesDir);
+
+					var newProjectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + newProject._id);
+					var newImagesDir = path.join(newProjectDir, conf.epub.imagesDir);
+
+					ncp(projectDir, newProjectDir, function (err) {
+						if (err) {
+							return next(err);
+						}
+						res.send({project: newProject});
+					});
 				});
 			});
 		});
 	});
+
 }
 
 exports.rearrange = function (req, res, next) {

@@ -18,6 +18,8 @@ var StylesetMemberSchema = new Schema({
  */
 var StylesetSchema = new Schema({
 	name: { type: String, required: true },
+	// Embed Style instead of referencing? A style must always only be part of one styleset (copies are made at relevant times) so it seems like an obvious way to implement it.
+	// See also TODO in routes/Styleset.update()
 	styles: [ { type: Schema.Types.ObjectId, ref: 'Style' }],
 	// Currently not used: not possible to delete a style
 	deletedStyles: [ { type: Schema.Types.ObjectId, ref: 'Style' }],
@@ -33,8 +35,10 @@ exports.Styleset = InternalStyleset;
 
 exports.copy = function (styleset, next) {
 	if (styleset) {
+		// TODO: populate styleset here. What happens if styleset is already populated?
+
 		var result = new InternalStyleset({
-			name: styleset.name + ' - Copy',
+			name: styleset.name,
 			members: styleset.members,
 			archived: styleset.archived,
 			isSystem: styleset.isSystem,
@@ -62,6 +66,8 @@ exports.copy = function (styleset, next) {
 									if (err) {
 										return next(err);
 									}
+
+									//console.log("Saved styleset copy " + result);
 
 									return next(null, result);
 								});

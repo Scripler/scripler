@@ -33,7 +33,7 @@ exports.Style = InternalStyle;
 exports.copy = function (style, newStylesetId, next) {
 	if (style) {
 		var result = new InternalStyle({
-			name: style.name + ' - Copy',
+			name: style.name,
 			class: style.class,
 			css: style.css,
 			tag: style.tag,
@@ -48,6 +48,9 @@ exports.copy = function (style, newStylesetId, next) {
 			if (err) {
 				return next(err);
 			}
+
+			//console.log("Saved style copy " + result);
+
 			return next(null, result);
 		});
 	} else {

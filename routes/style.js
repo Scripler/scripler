@@ -1,8 +1,7 @@
 var utils = require('../lib/utils');
 var Style = require('../models/style.js').Style;
 var Styleset = require('../models/styleset.js').Styleset;
-var copyStyleset = require('../models/styleset.js').copy;
-var copyStyle = require('../models/style.js').copy;
+var styleset_utils = require('../public/create/scripts/styleset-utils.js');
 
 //Load style by id
 exports.load = function (id) {
@@ -20,6 +19,23 @@ exports.load = function (id) {
 		});
 	}
 }
+
+exports.loadPopulated = function (id) {
+	return function (req, res, next) {
+		var idCopy = id || req.body.styleId;
+		Style.findOne({"_id": idCopy, "deleted": false}).exec(function (err, style) {
+			if (err) return next(err);
+			if (!style) {
+				return next({message: "Style not found", status: 404});
+			}
+			if (!req.user) return next();//Let missing authentication be handled in auth middleware
+			if (!style.isSystem && !utils.hasAccessToModel(req.user, style)) return next(403);
+			req.style = style;
+			return next();
+		});
+	}
+}
+
 
 exports.create = function (req, res, next) {
 	var styleset = req.styleset;
@@ -62,15 +78,11 @@ exports.open = function (req, res) {
 
 /**
  *
- * Update a style, i.e. its name, class or CSS.
+ * Update a style, i.e. its name, class, css and tag.
  *
- * 1. Check if the style's styleset has been copied...
- * 2. If so, check if the style has been copied...
- *   2.1. If so, update it, save the changes on the original style and return the updated style.
- *   2.2. If not, copy it, update it, save the changes on the original style and return the updated copy.
- * 3. If not, copy it, and check if the style has been copied...
- *   3.1. If so, update it, save the changes on the original style and return the updated style.
- *   3.2. If not, copy it, update it, save the changes on the original style and return the updated copy.
+ * If the style is copied, i.e. has an original, also update the original.
+ *
+ * See also Styleset.update().
  *
  * @param req
  * @param res
@@ -79,90 +91,54 @@ exports.open = function (req, res) {
 exports.update = function (req, res, next) {
 	var style = req.style;
 
-	var updateStyle = function (style, next) {
-		style.name = req.body.name;
-		style.class = req.body.class;
-		style.css = req.body.css;
-		style.save(function (err) {
+	var updateOriginalStyle = function(style, next) {
+		Style.findOne({"_id": style.original}).exec(function (err, populatedOriginalStyle) {
 			if (err) {
 				return next(err);
 			}
 
-			// Update the original style if one such exists
-			if (style.original) {
-				Style.findOne({"_id": style.original}, function (err, originalStyle) {
-					if (err) {
-						return next(err);
-					}
-
-					originalStyle.name = style.name;
-					originalStyle.class = style.class;
-					originalStyle.css = style.css;
-					originalStyle.save(function (err) {
-						if (err) {
-							return next(err);
-						}
-
-						// NB! The updated style, not the original, is returned
-						return next(null, style);
-					});
-				});
-			} else {
-				return next(null, style);
-			}
-
-			return next(null, style);
-		});
-	};
-
-	var checkAndUpdateStyle = function (style, next) {
-		if (style.original) {
-			return updateStyle(style, next);
-		} else {
-			copyStyle(style, style.stylesetId, function(err, copy) {
+			// TODO: "style" is just an id, not a model object, here - why (oh why?)
+			Style.findOne({"_id": style._id}).exec(function (err, populatedNewStyle) {
 				if (err) {
 					return next(err);
 				}
 
-				return updateStyle(copy, next);
+				//console.log("Updating original style " + populatedOriginalStyle.name + " (" + populatedOriginalStyle._id + ")...");
+				styleset_utils.updateOriginalStyle(populatedOriginalStyle, populatedNewStyle, function (err) {
+					//console.log("Updated original style " + populatedOriginalStyle.name + " (" + populatedOriginalStyle._id + ")...");
+					populatedOriginalStyle.save(function (err, updatedOriginalStyle) {
+						if (err) {
+							return next(err);
+						}
+
+						return next(null, updatedOriginalStyle);
+					});
+				});
 			});
-		}
+		});
 	};
 
-	Styleset.findOne({"_id": style.stylesetId}, function (err, styleset) {
+	style.name = req.body.name;
+	style.class = req.body.class;
+	style.css = req.body.css;
+	style.tag = req.body.tag;
+	style.save(function (err, updatedStyle) {
 		if (err) {
 			return next(err);
 		}
 
-		if (styleset.original) {
-			checkAndUpdateStyle(style, function(err, updatedStyle) {
+		// Update the original style if one such exists
+		if (updatedStyle.original) {
+			updateOriginalStyle(updatedStyle, function (err, updatedOriginalStyle) {
 				if (err) {
 					return next(err);
 				}
 
+				// NB! The updated style from the request, not the updated original, is returned!
 				res.send({style: updatedStyle});
 			});
 		} else {
-			// This also copies all styles in the styleset
-			copyStyleset(styleset, function(err, copy) {
-				if (err) {
-					return next(err);
-				}
-
-				Style.findOne({"original": style._id}, function (err, updatedStyle) {
-					if (err) {
-						return next(err);
-					}
-
-					checkAndUpdateStyle(updatedStyle, function(err, style) {
-						if (err) {
-							return next(err);
-						}
-
-						res.send({style: style});
-					});
-				});
-			});
+			res.send({style: updatedStyle});
 		}
 	});
 }

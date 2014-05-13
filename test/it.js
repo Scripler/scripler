@@ -42,10 +42,13 @@ var stylesetId;
 var stylesetId2;
 var stylesetId3;
 var stylesetCopiedId;
+var stylesetCopiedId2;
 
 var styleId;
 var styleId2;
+var styleId3;
 var styleCopiedId;
+var styleCopiedId2;
 
 var cleanupEPUB = true;
 
@@ -1188,7 +1191,7 @@ describe('Scripler RESTful API', function () {
 			'	background: #47a3d2;' +
 			'}';
 
-		it('Creating a styleset should return the new styleset - 2', function (done) {
+		it('Creating a styleset should return the new styleset, a user styleset', function (done) {
 			request(host)
 				.post('/styleset')
 				.set('cookie', cookie)
@@ -1201,7 +1204,7 @@ describe('Scripler RESTful API', function () {
 					stylesetId2 && done();
 				});
 		}),
-		it('Creating a style should return the new style - 2', function (done) {
+		it('Creating a style should return the new style, a user style', function (done) {
 			request(host)
 				.post('/style')
 				.set('cookie', cookie)
@@ -1284,26 +1287,27 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.stylesets.length, 4);
+					assert.equal(res.body.stylesets.length, 3);
 					// Currently document stylesets are returned before user stylesets but we should not rely on this => just check if the id exists *somewhere* in the list.
 					assert.equal(utils.containsId(res.body.stylesets, stylesetCopiedId), true);
 					assert.equal(utils.containsId(res.body.stylesets, userStylesetId), true);
 					assert.equal(utils.containsId(res.body.stylesets, stylesetId), true);
-					assert.equal(utils.containsId(res.body.stylesets, stylesetId2), true);
+					assert.equal(utils.containsId(res.body.stylesets, stylesetId2), false);
 					assert.equal(utils.containsId(res.body.stylesets, systemStylesetId), false);
 					done();
 				});
 		}),
-		it('Opening a styleset should return the styleset', function (done) {
+		it('Opening a copied (document) styleset should return the styleset', function (done) {
 			request(host)
-				.get('/styleset/' + stylesetId)
+				.get('/styleset/' + stylesetCopiedId)
 				.set('cookie', cookie)
 				.send({})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset._id, stylesetId);
-					assert.equal(res.body.styleset.name, "My Best Styleset");
+					assert.equal(res.body.styleset._id, stylesetCopiedId);
+					assert.equal(res.body.styleset.name, "My Best Styleset 2");
+					styleCopiedId = res.body.styleset.styles[0];
 					done();
 				});
 		}),
@@ -1323,7 +1327,7 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-		it('Opening a COPIED styleset should return the styleset pointing to its original styleset', function (done) {
+		it('Opening a copied (document) styleset should return the styleset pointing to its original styleset', function (done) {
 			request(host)
 				.get('/styleset/' + stylesetCopiedId)
 				.set('cookie', cookie)
@@ -1336,7 +1340,7 @@ describe('Scripler RESTful API', function () {
 					styleCopiedId && done();
 				});
 		}),
-		it('Opening a COPIED style should return the style pointing to its original style', function (done) {
+		it('Opening a copied (document) style should return the style pointing to its original style', function (done) {
 			request(host)
 				.get('/style/' + styleCopiedId)
 				.set('cookie', cookie)
@@ -1348,70 +1352,105 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-		it('The first time a styleset is updated, a COPY of the styleset should be returned', function (done) {
-			var styles = [styleId];
+		it('Creating a new style for testing updating a styleset by adding a style to it', function (done) {
 			request(host)
-				.put('/styleset/' + stylesetId + '/update')
+				.post('/style')
+				.set('cookie', cookie)
+				.send({stylesetId: stylesetCopiedId, name: "Vuf", class: "VufClass", css: css2 + "vuf", tag: ""})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style.name, "Vuf");
+					assert.equal(res.body.style.class, "VufClass");
+					assert.equal(res.body.style.css, css2 + "vuf");
+					assert.equal(res.body.style.tag, "");
+					styleId3 = res.body.style._id;
+					assert.equal(res.body.style.stylesetId, stylesetCopiedId);
+					styleId3 && done();
+				});
+		}),
+		it('Updating a copied (document) styleset by adding a new style to it and removing an existing style from it, should return the updated styleset.', function (done) {
+			var styles = [styleId3];
+			request(host)
+				.put('/styleset/' + stylesetCopiedId + '/update')
 				.set('cookie', cookie)
 				.send({name: "OK, Maybe not the BEST, but...", styles: styles})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					stylesetCopiedId = res.body.styleset._id;
-					assert.notEqual(stylesetCopiedId, stylesetId);
+					assert.equal(res.body.styleset._id, stylesetCopiedId);
+					assert.equal(res.body.styleset.styles.length, 1);
+					assert.equal(res.body.styleset.styles[0], styleId3);
+					assert.notEqual(res.body.styleset.styles[0], styleCopiedId);
 					assert.equal(res.body.styleset.name, "OK, Maybe not the BEST, but...");
-					styleId2 = res.body.styleset.styles[0];
-					assert.equal(styleId2, styles[0]);
 					done();
 				});
 		}),
-		it('Opening a(n original) styleset whose COPY was updated should return the updated contents on the styleset - 1', function (done) {
+		it('Opening a(n original) (user) styleset whose COPY was updated should return the updated contents on the styleset', function (done) {
 			request(host)
-				.get('/styleset/' + stylesetId)
+				.get('/styleset/' + stylesetId2)
 				.set('cookie', cookie)
 				.send({})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset.name, "OK, Maybe not the BEST, but...");
+					assert.equal(res.body.styleset.styles.length, 1);
+					styleCopiedId2 = res.body.styleset.styles[0];
+					done();
+				});
+		}),
+		it('Opening a style from which a copy was made during addition of a style to a styleset, should return the style with the copy as its original', function (done) {
+			request(host)
+				.get('/style/' + styleId3)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style.original, styleCopiedId2);
+					assert.equal(res.body.style.stylesetId, stylesetCopiedId);
+					done();
+				});
+		}),
+		it('Opening a style that was ADDED, i.e. copied, to a styleset as part of updating the styleset, should return the style with an empty original', function (done) {
+			request(host)
+				.get('/style/' + styleCopiedId2)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style.original, null);
+					assert.equal(res.body.style.stylesetId, stylesetId2);
 					done();
 				});
 		}),
 		it('Consecutive times when that styleset is updated, the same styleset with updated values should be returned', function (done) {
+			var styles = [styleId3];
 			request(host)
 				.put('/styleset/' + stylesetCopiedId + '/update')
 				.set('cookie', cookie)
-				.send({name: "Actually, it is my best!"})
+				.send({name: "Actually, it is my best!", styles: styles})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset._id, stylesetCopiedId);
 					assert.equal(res.body.styleset.name, "Actually, it is my best!");
+					assert.equal(res.body.styleset.styles.length, 1);
+					assert.equal(res.body.styleset.styles[0], styleId3);
 					done();
 				});
 		}),
-		it('Opening a(n original) styleset whose COPY was updated should return the updated contents on the styleset - 2', function (done) {
+		it('The first time a style is updated, the updated style should be returned.', function (done) {
 			request(host)
-				.get('/styleset/' + stylesetId)
-				.set('cookie', cookie)
-				.send({})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset.name, "Actually, it is my best!");
-					done();
-				});
-		}),
-		it('The first time a style is updated, a COPY of the style should be returned', function (done) {
-			request(host)
-				.put('/style/' + styleId2 + '/update')
+				.put('/style/' + styleCopiedId + '/update')
 				.set('cookie', cookie)
 				.send({name: "Donkey", class: "jack", css: css2 + "...some new CSS"})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					styleCopiedId = res.body.style._id;
-					assert.notEqual(styleCopiedId, styleId2);
+					assert.equal(res.body.style._id, styleCopiedId);
 					assert.equal(res.body.style.name, "Donkey");
 					done();
 				});
@@ -1432,7 +1471,7 @@ describe('Scripler RESTful API', function () {
 		}),
 		it('Consecutive times when that style is updated, the same style with updated values should be returned', function (done) {
 			request(host)
-				.put('/style/' + styleId2 + '/update')
+				.put('/style/' + styleCopiedId + '/update')
 				.set('cookie', cookie)
 				.send({name: "DonkeyKong", class: "jytte", css: css2 + "...And now some blue color!"})
 				.expect(200)
@@ -1494,7 +1533,7 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset.name, "Actually, it is my best!");
+					assert.equal(res.body.styleset.name, "My Best Styleset");
 					assert.equal(res.body.styleset.archived, true);
 					done();
 				});
@@ -1507,7 +1546,7 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.stylesets.length, 1);
-					assert.equal(res.body.stylesets[0].name, "Actually, it is my best!");
+					assert.equal(res.body.stylesets[0].name, "My Best Styleset");
 					done();
 				});
 		}),
@@ -1519,7 +1558,7 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset.name, "Actually, it is my best!");
+					assert.equal(res.body.styleset.name, "My Best Styleset");
 					assert.equal(res.body.styleset.archived, false);
 					done();
 				});

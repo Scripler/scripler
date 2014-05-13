@@ -25,6 +25,22 @@ exports.load = function (id) {
 	}
 }
 
+exports.loadPopulated = function (id) {
+	return function (req, res, next) {
+		var idCopy = id || req.body.documentId;
+		Document.findOne({"_id": idCopy, "deleted": false}).populate({path: 'stylesets'}).exec(function (err, document) {
+			if (err) return next(err);
+			if (!document) {
+				return next({message: "Document not found", status: 404});
+			}
+			if (!req.user) return next();//Let missing authentication be handled in auth middleware
+			if (!utils.hasAccessToModel(req.user, document)) return next(403);
+			req.document = document;
+			return next();
+		});
+	}
+}
+
 var create = exports.create = function (req, res, next) {
 	var project = req.project;
 	var document = new Document({
@@ -222,23 +238,35 @@ exports.applyStyleset = function (req, res, next) {
 
 exports.listStylesets = function (req, res, next) {
 	var documentStylesets = req.document.stylesets;
-	var userStylesets = req.user.stylesets;
+	var userStylesetIds = req.user.stylesets;
 	var resultStylesets = documentStylesets.slice(0);
 
-	for (var i=0; i<userStylesets.length; i++) {
-		var userStyleset = userStylesets[i];
-		if (!utils.containsCopy(documentStylesets, userStyleset)) {
-			resultStylesets.push(userStyleset);
-		}
-	}
-
-	// Populate the stylesets
-	Styleset.find({"_id": {$in: resultStylesets}}, function (err, stylesets) {
+	// Get user stylesets
+	Styleset.find({"_id": {$in: userStylesetIds}}).exec(function (err, userStylesets) {
 		if (err) {
 			return next(err);
 		}
 
-		res.send({"stylesets": stylesets});
-	});
-};
+		//console.log("-----> documentStylesets: " + JSON.stringify(documentStylesets));
+		for (var i=0; i<userStylesets.length; i++) {
+			var userStyleset = userStylesets[i];
+			//console.log("-----> userStyleset: " + JSON.stringify(userStyleset));
+			if (!utils.containsOriginal(documentStylesets, userStyleset)) {
+				//console.log("-----> userStyleset is a copy ");
+				resultStylesets.push(userStyleset._id);
+			} else {
+				//console.log("-----> userStyleset is NOT a copy ");
+			}
+		}
 
+		// Populate the stylesets
+		Styleset.find({"_id": {$in: resultStylesets}}, function (err, stylesets) {
+			if (err) {
+				return next(err);
+			}
+
+			res.send({"stylesets": stylesets});
+		});
+	});
+
+};
