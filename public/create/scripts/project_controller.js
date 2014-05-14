@@ -207,12 +207,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.showStyleEditor = function() {
 		if ( $scope.styleEditorVisible ) {
-			$rootScope.ck.commands.hideFloatingTools.exec();
-			$scope.styleEditorVisible = false;
+			$scope.hideStyleEditor();
 		} else {
 			$rootScope.ck.commands.showFloatingTools.exec();
 			$scope.styleEditorVisible = true;
 		}
+	}
+
+	$scope.hideStyleEditor = function() {
+		$rootScope.ck.commands.hideFloatingTools.exec();
+		$scope.styleEditorVisible = false;
 	}
 
     function initiateEditor(scope) {
