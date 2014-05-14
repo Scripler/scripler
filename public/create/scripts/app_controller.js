@@ -229,7 +229,7 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 				allowedContent: true,
 				skin: 'scripler',
 				resize_enabled: false,
-				extraPlugins: 'scripler,floating-tools,line-height,texttransform,indent2,indent-top',
+				extraPlugins: 'scripler,floating-tools,line-height,texttransform,indent-right,indentations',
 				floatingtools: 'Basic',
 				floatingtools_Basic: [
 					{ name: 'styles', items: [ 'Font' ] },
@@ -240,9 +240,11 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 					'/',
 					['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'],
 					'/',
-					['Indent'], ['Indent2'], ['IndentTop'], ['IndentBottom'], ['IndentText'],
+					['Indent'], ['IndentRight'], ['IndentTop'], ['IndentBottom'], ['IndentText'],
 					'#',
-					['Outdent'], ['Outdent2'], ['OutdentTop'], ['OutdentBottom'], ['OutdentText']
+					['IndentTopIcon'], ['IndentTopIcon'], ['IndentTopIcon'], ['IndentBottomIcon'], ['IndentTextIcon'],
+					'#',
+					['Outdent'], ['OutdentRight'], ['OutdentTop'], ['OutdentBottom'], ['OutdentText']
 				],
 				indentUnit: 'em',
 				indentOffset: 2,
