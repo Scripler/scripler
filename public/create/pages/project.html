@@ -84,6 +84,11 @@
 			<a ng-click="showImportOptions = !showImportOptions; showNewOptions = false; showBottomOptions = false;">import</a>
 			<a ng-click="showBottomOptions = !showBottomOptions; showNewOptions = false; showImportOptions = false;">options</a>
 		</div>
+
+		<div class="stylesets-options-bottom-buttons" ng-show="showTypo">
+			<a ng-click="showStyleEditor()">style editor</a>
+		</div>
+
 		<div id="menu-left-content-options" class="menu-left-options" ng-show="showDocuments" ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
 			<div class="options-bottom-box">
 				<div ng-show="showNewOptions">

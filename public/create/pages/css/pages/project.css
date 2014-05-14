@@ -115,7 +115,7 @@
 .menu-left-options.open {
 	margin-bottom: 23px !important;
 }
-.documents-options-bottom-buttons {
+.documents-options-bottom-buttons, .stylesets-options-bottom-buttons {
 	background-color: #231F20;
 	height: 25px;
 	width: 100%;
@@ -123,7 +123,7 @@
 	z-index: 2;
 	bottom: 0;
 }
-.documents-options-bottom-buttons a {
+.documents-options-bottom-buttons a, .stylesets-options-bottom-buttons a {
 	color: #fff;
 	margin-left: 20px;
 	margin-right: 20px;
@@ -131,7 +131,10 @@
 	text-decoration: underline;
 	cursor: pointer;
 }
-.documents-options-bottom-buttons a:hover {
+.stylesets-options-bottom-buttons a {
+	margin-left: 90px;
+}
+.documents-options-bottom-buttons a:hover, .stylesets-options-bottom-buttons a:hover {
 	color: #999;
 }
 
@@ -375,4 +378,21 @@ li.typo p {
 .style.new p {
 	padding: 0;
 	margin-left: -10px;
+}
+.cke_floatingtools {
+	position: absolute;
+	z-index: 1;
+	left: -350px;
+	bottom: -180px;
+	width: 259px;
+	padding: 5px 0 0 6px;
+	border: 1px solid #b1b1b1;
+	transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	-ms-transition: all 0.5s;
+	-webkit-transition: all 0.5s;
+	-o-transition: all 0.5s;
+}
+.cke_floatingtools.open {
+	bottom: 0 !important;
 }
