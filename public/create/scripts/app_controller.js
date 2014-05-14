@@ -247,7 +247,7 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 				indentUnit: 'em',
 				indentOffset: 2,
 				enterMode: CKEDITOR.ENTER_P,
-				height: $window.innerHeight - 90,
+				height: $window.innerHeight - 30,
 				width: 800,
 				font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
 				//contentsCss: ['stylesets/pleasantbw.css', 'contents.css', 'http://fonts.googleapis.com/css?family=Ribeye'],
