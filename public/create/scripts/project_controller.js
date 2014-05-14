@@ -1,6 +1,6 @@
 'use strict'
 
-function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress, $timeout ) {
+function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress, $timeout, $rootScope ) {
 
 	var timeout = null;
 
@@ -93,7 +93,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				var index = $scope.projectDocuments.indexOf( projectDocument );
 				$scope.projectDocuments[index] = data.document;
 				$scope.documentSelected = data.document;
-				$scope.openStylesets( projectDocument );
+				//$scope.openStylesets( projectDocument );
 				lastSavedDocumentLength = data.document.text.length;
 
 				if ( !documentWatch ) {
@@ -203,6 +203,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			.success( function( data ) {
 				styleset.styles.push( data.style );
 			});
+	}
+
+	$scope.showStyleEditor = function() {
+		if ( $scope.styleEditorVisible ) {
+			$rootScope.ck.commands.hideFloatingTools.exec();
+			$scope.styleEditorVisible = false;
+		} else {
+			$rootScope.ck.commands.showFloatingTools.exec();
+			$scope.styleEditorVisible = true;
+		}
 	}
 
     function initiateEditor(scope) {
