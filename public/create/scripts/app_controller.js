@@ -240,9 +240,9 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 					'/',
 					['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'],
 					'/',
-					['Indent'], ['Indent2'], ['IndentTop'], ['IndentBottom'],
+					['Indent'], ['Indent2'], ['IndentTop'], ['IndentBottom'], ['IndentText'],
 					'#',
-					['Outdent'], ['Outdent2'], ['OutdentTop'], ['OutdentBottom']
+					['Outdent'], ['Outdent2'], ['OutdentTop'], ['OutdentBottom'], ['OutdentText']
 				],
 				indentUnit: 'em',
 				indentOffset: 2,
