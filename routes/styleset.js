@@ -50,8 +50,7 @@ exports.create = function (req, res, next) {
 		isSystem: req.body.isSystem
 	});
 
-	// TODO: refactor into "isFalsy" utility method - one such already exists?
-	if (!req.body.isSystem || req.body.isSystem == "false") {
+	if (!req.body.isSystem) {
 		styleset.members = [
 			{userId: req.user._id, access: ["admin"]}
 		];
@@ -97,15 +96,15 @@ exports.open = function (req, res) {
 exports.update = function (req, res, next) {
 	var styleset = req.styleset;
 
-	var updateOriginalStyleset = function(styleset, next) {
-		// The new/updated styleset is populated by loadPopulated(), so just populate the original
-		Styleset.findOne({"_id": styleset.original}).populate({path: 'styles'}).exec(function (err, populatedOriginalStyleset) {
+	var updateOriginalStyleset = function(newStyleset, next) {
+		// Populate the original styleset (was not loaded)
+		Styleset.findOne({"_id": newStyleset.original}).populate({path: 'styles'}).exec(function (err, populatedOriginalStyleset) {
 			if (err) {
 				return next(err);
 			}
 
-			// TODO: why is it necessary to populate the new/updated styleset here, c.f. comment above?
-			Styleset.findOne({"_id": styleset._id}).populate({path: 'styles'}).exec(function (err, populatedNewStyleset) {
+			// We must populate "styles" of the new styleset because even though they were populated (during load), they were overwritten by the input styles which were only object ids
+			Styleset.findOne({"_id": newStyleset._id}).populate({path: 'styles'}).exec(function (err, populatedNewStyleset) {
 				if (err) {
 					return next(err);
 				}
@@ -124,8 +123,10 @@ exports.update = function (req, res, next) {
 	};
 
 	styleset.name = req.body.name;
+
 	// TODO: implement some sort of safety check ensuring that we only accept styles from the current styleset? See also TODO in models/Styleset.styles
 	styleset.styles = req.body.styles;
+
 	styleset.save(function (err, updatedStyleset) {
 		if (err) {
 			return next(err);

@@ -280,15 +280,18 @@ exports.copy = function (req, res, next) {
 exports.rearrange = function (req, res, next) {
 	var errorMessage = "/project/rearrange can only rearrange existing projects (not e.g. add or delete projects)";
 
-	if (req.body.projects && req.body.projects.length == req.user.projects.length) {
-		for (var i=0; i<req.body.projects.length; i++) {
-			var rearrangedProject = req.body.projects[i];
-			var containsRearrangedProject = utils.containsModel(req.body.projects, rearrangedProject);
-			if (!containsRearrangedProject) {
+	var rearrangedProjectIds = req.body.projects;
+	var existingProjectIds = req.user.projects;
+
+	if (rearrangedProjectIds && rearrangedProjectIds.length == existingProjectIds.length) {
+		for (var i=0; i<rearrangedProjectIds.length; i++) {
+			var rearrangedProjectId = rearrangedProjectIds[i];
+			var containsRearrangedProjectId = rearrangedProjectIds.indexOf(rearrangedProjectId) > -1;
+			if (!containsRearrangedProjectId) {
 				return next({message: errorMessage, status: 400});
 			}
 		}
-		req.user.projects = req.body.projects;
+		req.user.projects = rearrangedProjectIds;
 		req.user.save(function (err) {
 			if (err) {
 				return next(err);

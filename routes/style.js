@@ -2,6 +2,7 @@ var utils = require('../lib/utils');
 var Style = require('../models/style.js').Style;
 var Styleset = require('../models/styleset.js').Styleset;
 var styleset_utils = require('../public/create/scripts/styleset-utils.js');
+var copyStyleValues = require('..//models/style.js').copyValues;
 
 //Load style by id
 exports.load = function (id) {
@@ -49,8 +50,7 @@ exports.create = function (req, res, next) {
 		isSystem: req.body.isSystem
 	});
 
-	// TODO: refactor into "isFalsy" utility method - one such already exists?
-	if (!req.body.isSystem || req.body.isSystem == "false") {
+	if (!req.body.isSystem) {
 		style.members = [
 			{userId: req.user._id, access: ["admin"]}
 		];
@@ -91,36 +91,33 @@ exports.open = function (req, res) {
 exports.update = function (req, res, next) {
 	var style = req.style;
 
-	var updateOriginalStyle = function(style, next) {
-		Style.findOne({"_id": style.original}).exec(function (err, populatedOriginalStyle) {
+	var updateOriginalStyle = function(newStyle, next) {
+		// Populate the original style (was not loaded)
+		Style.findOne({"_id": newStyle.original}).exec(function (err, populatedOriginalStyle) {
 			if (err) {
 				return next(err);
 			}
 
-			// TODO: "style" is just an id, not a model object, here - why (oh why?)
-			Style.findOne({"_id": style._id}).exec(function (err, populatedNewStyle) {
-				if (err) {
-					return next(err);
-				}
+			styleset_utils.updateOriginalStyle(populatedOriginalStyle, newStyle, function (err) {
+				populatedOriginalStyle.save(function (err, updatedOriginalStyle) {
+					if (err) {
+						return next(err);
+					}
 
-				styleset_utils.updateOriginalStyle(populatedOriginalStyle, populatedNewStyle, function (err) {
-					populatedOriginalStyle.save(function (err, updatedOriginalStyle) {
-						if (err) {
-							return next(err);
-						}
-
-						return next(null, updatedOriginalStyle);
-					});
+					return next(null, updatedOriginalStyle);
 				});
 			});
 		});
 	};
 
-	// TODO: move to models/Style
-	style.name = req.body.name;
-	style.class = req.body.class;
-	style.css = req.body.css;
-	style.tag = req.body.tag;
+	var newStyle = new Style({
+		name: req.body.name,
+		class: req.body.class,
+		css: req.body.css,
+		tag: req.body.tag
+	});
+	copyStyleValues(newStyle, style);
+
 	style.save(function (err, updatedStyle) {
 		if (err) {
 			return next(err);

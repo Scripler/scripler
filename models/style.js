@@ -30,30 +30,87 @@ var StyleSchema = new Schema({
 var InternalStyle = mongoose.model('Style', StyleSchema);
 exports.Style = InternalStyle;
 
+/**
+ * Is style populated?
+ *
+ * TODO: does Mongoose provide this functionality?
+ *
+ * @param style
+ * @returns {boolean}
+ */
+var isPopulatedPrivate = function (style) {
+	// "members" are not defined for system styles, so don't check them
+	// "tag" is optional, so don't check it
+	return style
+		&& style._id != undefined
+		&& style.name != undefined
+		&& style.class != undefined
+		&& style.css != undefined
+		&& style.archived != undefined
+		&& style.isSystem != undefined;
+}
+
+exports.isPopulated = isPopulatedPrivate;
+
 exports.copy = function (style, newStylesetId, next) {
 	if (style) {
-		var result = new InternalStyle({
-			name: style.name,
-			class: style.class,
-			css: style.css,
-			tag: style.tag,
-			stylesetId: newStylesetId,
-			members: style.members,
-			archived: style.archived,
-			isSystem: style.isSystem,
-			original: style._id
-		});
+		// TODO: why is the Mongoose model object id, newStylesetId, an object here but a string in utils.containsIdPrivate()?
+		if ('object' == typeof style && 'object' == typeof newStylesetId) {
 
-		result.save(function (err) {
-			if (err) {
-				return next(err);
+			/*
+			console.log("Style.copy - name: " + style.name);
+			console.log("Style.copy - class: " + style.class);
+			console.log("Style.copy - css: " + style.css);
+			console.log("Style.copy - tag: " + style.tag);
+			console.log("Style.copy - members: " + style.members);
+			console.log("Style.copy - archived: " + style.archived);
+			console.log("Style.copy - isSystem: " + style.isSystem);
+			console.log("Style.copy - original: " + style._id);
+			*/
+
+			if (isPopulatedPrivate(style)) {
+				var result = new InternalStyle({
+					name: style.name,
+					class: style.class,
+					css: style.css,
+					tag: style.tag,
+					stylesetId: newStylesetId,
+					members: style.members,
+					archived: style.archived,
+					isSystem: style.isSystem,
+					original: style._id
+				});
+
+				result.save(function (err) {
+					if (err) {
+						return next(err);
+					}
+
+					//console.log("Saved style copy " + result);
+
+					return next(null, result);
+				});
+			} else {
+				console.log("ERROR: style must be populated");
 			}
-
-			//console.log("Saved style copy " + result);
-
-			return next(null, result);
-		});
+		} else {
+			console.log("ERROR: invalid arguments: must be of type \'object\' and 'string' (Mongoose model object id)");
+		}
 	} else {
 		return next(null, null);
 	}
 }
+
+var copyValuesInternal = function (from, to) {
+	// TODO: can we improve this check to check for Mongoose model objects?
+	if ('object' == typeof from && 'object' == typeof to) {
+		to.name = from.name;
+		to.class = from.class;
+		to.css = from.css;
+		to.tag = from.tag;
+	} else {
+		console.log("WARN: invalid arguments: must be of type \'object\'");
+	}
+}
+
+exports.copyValues = copyValuesInternal;

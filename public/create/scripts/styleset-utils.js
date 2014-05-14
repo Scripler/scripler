@@ -1,10 +1,13 @@
 var fs = require('fs');
 var path = require('path');
 var utils = require('../../../lib/utils');
+var async = require('async');
 var Styleset = require('../../../models/styleset.js').Styleset;
+var isStylesetPopulated = require('../../../models/styleset.js').isPopulated;
 var Style = require('../../../models/style.js').Style;
 var copyStyle = require('../../../models/style.js').copy;
-var async = require('async');
+var copyStyleValues = require('../../../models/style.js').copyValues;
+var isStylePopulated = require('../../../models/style.js').isPopulated;
 
 (function(exports){
 
@@ -37,23 +40,16 @@ var async = require('async');
 	 * @param next
 	 */
 	exports.updateOriginalStyle = function (originalStyle, newStyle, next) {
-		if (originalStyle != null && newStyle != null) {
+		if (isStylePopulated(originalStyle) && isStylePopulated(newStyle)) {
 			// TODO: remove this check when implementing "reset" because a document style's original is the user style but the document style is being reset to the system style
 			if (newStyle.original == originalStyle.id) {
-
-				// TODO: move to models/Style
-				// Create new String objects in memory (old values will be garbage collected). TODO: is this necessary?
-				originalStyle.name = new String(newStyle.name);
-				originalStyle.class = new String(newStyle.class);
-				originalStyle.css = new String(newStyle.css);
-				originalStyle.tag = new String(newStyle.tag);
-
+				copyStyleValues(newStyle, originalStyle);
 				return next(null);
 			} else {
 				return next("Original style can only be updated with styles originating from it => nothing has been updated!");
 			}
 		} else {
-			return next("Original or new style empty");
+			return next("ERROR: invalid arguments: original style and new style must be non-empty and populated");
 		}
 	};
 
@@ -67,11 +63,10 @@ var async = require('async');
 	 * @returns {*}
 	 */
 	exports.updateOriginalStyleset = function (originalStyleset, newStyleset, next) {
-		if (originalStyleset != null && newStyleset != null) {
+		if (isStylesetPopulated(originalStyleset) && isStylesetPopulated(newStyleset)) {
 			// TODO: remove this check when implementing "reset" because a document styleset's original is the user styleset but the document styleset is being reset to the system styleset
 			if (newStyleset.original == originalStyleset.id) {
-				// Create a new String object in memory (old value of originalStyleset.name will be garbage collected). TODO: is this necessary?
-				originalStyleset.name = new String(newStyleset.name);
+				originalStyleset.name = newStyleset.name;
 
 				var originalStyles = originalStyleset.styles;
 				var newStyles = newStyleset.styles;
@@ -79,24 +74,23 @@ var async = require('async');
 				/*
 				 Update any existing styles or remove any missing styles from original?
 
-				 Loop over styles in the original styleset and check if any style is NOT set as original on the new styles
+				 Loop over styles in the original styleset and check if any style is NOT set as original on the new styles.
+
+				 It is safe to delete the style from the original styleset because a style can always only belong to one styleset, so we know the style is not being used by another styleset.
 				 */
-				// TODO: is it possible that a style from the original styleset is in use by ANOTHER styleset than the one we are checking? If so, we must not remove it! Ask David!
 				if (originalStyles != null && originalStyles.length > 0) {
 					for (var i=0; i<originalStyles.length; i++) {
 						var originalStyle = originalStyles[i];
 						var matchingNewStyle = utils.containsOriginal(newStyles, originalStyle);
 						if (matchingNewStyle) {
-							// TODO: move to models/Style
-							originalStyle.name = matchingNewStyle.name;
-							originalStyle.class = matchingNewStyle.class;
-							originalStyle.css = matchingNewStyle.css;
-							originalStyle.tag = matchingNewStyle.tag;
-							// TODO: implement prettier way of overwriting entry (or is it even necessary since references are used?)
-							originalStyleset.styles.splice(i, 1);
-							originalStyleset.styles.push(originalStyle);
+							//console.log("Found matching new style " + matchingNewStyle.name + " in new styles: copying changes back to original style " + originalStyle.name);
+							copyStyleValues(matchingNewStyle, originalStyle);
+							// TODO: changing the value of e.g. originalStyle.name, e.g. originalStyle.name = 'hej', does not break the "verify changes copied back to original" ITs - why not?
+
+							// No need to update the "styles" array on originalStyleset: the array simply references the object that was changed
+							//originalStyleset.styles[i] = originalStyle;
 						} else {
-							//console.log("Deleting " + originalStyle.name);
+							//console.log("Did not find original style " + originalStyle.name + " in new styles: deleting original style");
 							originalStyleset.styles.splice(i, 1);
 						}
 					}
@@ -113,9 +107,9 @@ var async = require('async');
 						var newStyle = newStyles[i];
 						var containsNewStyle = utils.containsCopy(originalStyles, newStyle);
 						if (containsNewStyle) {
-							//console.log("The original of new style " + newStyle.name + " already exists in original styles; not adding " + newStyle.name + " to original styles.");
+							//console.log("Found new style " + newStyle.name + " in original styles: not adding to original styles");
 						} else {
-							//console.log("Adding " + newStyle.name);
+							//console.log("Did not find new style " + newStyle.name + " in original styles: adding new style to original styles");
 							styleIdsToBeAdded.push(newStyle);
 						}
 					}
@@ -174,7 +168,7 @@ var async = require('async');
 				return next("Original styleset can only be updated with stylesets originating from it => nothing has been updated!");
 			}
 		} else {
-			return next("Original or new styleset empty");
+			return next("ERROR: invalid arguments: original styleset and new styleset must be non-empty and populated");
 		}
 	};
 

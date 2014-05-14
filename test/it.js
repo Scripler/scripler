@@ -131,7 +131,7 @@ describe('Scripler RESTful API', function () {
 			request(host)
 				.post('/styleset')
 				.set('cookie', cookie)
-				.send({name: "Scripler Styleset 1", isSystem: "true"})
+				.send({name: "Scripler Styleset 1", isSystem: true})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
@@ -145,7 +145,7 @@ describe('Scripler RESTful API', function () {
 			request(host)
 				.post('/style')
 				.set('cookie', cookie)
-				.send({stylesetId: systemStylesetId, name: "Scripler Style 1", class: "ScruplerZ", css: "some scripler css", isSystem: "true"})
+				.send({stylesetId: systemStylesetId, name: "Scripler Style 1", class: "ScruplerZ", css: "some scripler css", isSystem: true})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
@@ -461,7 +461,7 @@ describe('Scripler RESTful API', function () {
 			request(host)
 				.post('/styleset')
 				.set('cookie', cookie)
-				.send({name: "My Best Styleset"})
+				.send({name: "My Best Styleset", isSystem: false})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
@@ -474,7 +474,7 @@ describe('Scripler RESTful API', function () {
 			request(host)
 				.post('/style')
 				.set('cookie', cookie)
-				.send({stylesetId: stylesetId, name: "Coolio", class: "CoolioClass", css: css})
+				.send({stylesetId: stylesetId, name: "Coolio", class: "CoolioClass", css: css, isSystem: false})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
@@ -1452,6 +1452,8 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style._id, styleCopiedId);
 					assert.equal(res.body.style.name, "Donkey");
+					assert.equal(res.body.style.class, "jack");
+					assert.equal(res.body.style.css, css2 + "...some new CSS");
 					done();
 				});
 		}),
@@ -1495,6 +1497,52 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.style.name, "DonkeyKong");
 					assert.equal(res.body.style.class, "jytte");
 					assert.equal(res.body.style.css, css2 + "...And now some blue color!");
+					done();
+				});
+		}),
+		it('Updating a copied (document) style to test if the values are copied back to the original style, when the STYLESET is updated.', function (done) {
+			request(host)
+				.put('/style/' + styleId3 + '/update')
+				.set('cookie', cookie)
+				.send({name: "FancyPantsy", class: "pantsy", css: css2 + "Fancy CSS"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style._id, styleId3);
+					assert.equal(res.body.style.name, "FancyPantsy");
+					assert.equal(res.body.style.class, "pantsy");
+					assert.equal(res.body.style.css, css2 + "Fancy CSS");
+					done();
+				});
+		}),
+		it('Update the styleset for the test described in the test above', function (done) {
+			var styles = [styleId3];
+			request(host)
+				.put('/styleset/' + stylesetCopiedId + '/update')
+				.set('cookie', cookie)
+				.send({name: "Robotnix", styles: styles})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset._id, stylesetCopiedId);
+					assert.equal(res.body.styleset.name, "Robotnix");
+					assert.equal(res.body.styleset.styles.length, 1);
+					assert.equal(res.body.styleset.styles[0], styleId3);
+					done();
+				});
+		}),
+		it('Verify that changes to the copied (document) style were copied back to the original style, c.f. description above', function (done) {
+			request(host)
+				.get('/style/' + styleCopiedId2)
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style._id, styleCopiedId2);
+					assert.equal(res.body.style.name, "FancyPantsy");
+					assert.equal(res.body.style.class, "pantsy");
+					assert.equal(res.body.style.css, css2 + "Fancy CSS");
 					done();
 				});
 		}),

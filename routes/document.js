@@ -153,19 +153,20 @@ exports.delete = function (req, res, next) {
 
 exports.rearrange = function (req, res, next) {
 	var errorMessage = "/document/rearrange can only rearrange existing documents (not e.g. add or delete documents)";
-	var project = req.project;
 
-	var numberOfExistingDocuments = project.documents.length;
-	if (req.body.documents &&  numberOfExistingDocuments == req.body.documents.length) {
-		for (var i=0; i<req.body.documents.length; i++) {
-			var rearrangedDocument = req.body.documents[i];
-			var containsRearrangedDocument = utils.containsModel(req.body.documents, rearrangedDocument);
-			if (!containsRearrangedDocument) {
+	var rearrangedDocumentIds = req.body.documents;
+	var existingDocumentIds = req.project.documents;
+
+	if (rearrangedDocumentIds && rearrangedDocumentIds.length == existingDocumentIds.length) {
+		for (var i=0; i<rearrangedDocumentIds.length; i++) {
+			var rearrangedDocumentId = rearrangedDocumentIds[i];
+			var containsRearrangedDocumentId = rearrangedDocumentIds.indexOf(rearrangedDocumentId) > -1;
+			if (!containsRearrangedDocumentId) {
 				return next({message: errorMessage, status: 400});
 			}
 		}
 
-		req.project.documents = req.body.documents;
+		req.project.documents = rearrangedDocumentIds;
 		req.project.save(function (err, project) {
 			if (err) {
 				return next(err);
@@ -215,9 +216,22 @@ exports.upload = function (req, res, next) {
 
 exports.applyStyleset = function (req, res, next) {
 	var stylesetToApply = req.styleset;
-	var activeStylesets = req.document.stylesets;
-	// Only copy the styleset if it is not already applied to the document
-	if (!activeStylesets || activeStylesets.length < 1 || (!(utils.containsModel(activeStylesets, stylesetToApply)))) {
+	var stylesetToApplyId = stylesetToApply._id;
+	var documentStylesetIds = req.document.stylesets;
+	var defaultStylesetId = req.document.defaultStyleset;
+
+	console.log("documentStylesets: " + JSON.stringify(documentStylesetIds));
+
+	/*
+	 Only copy the styleset if it is not already applied to the document, i.e. if:
+	   - The document does not have any stylesets and the styleset to apply is not the document's default styleset
+	     OR
+	   - The styleset to apply is not in the document's stylesets and the styleset to apply is not the document's default styleset
+
+	   TODO: could use an IT.
+	 */
+	if ((!documentStylesetIds || documentStylesetIds.length == 0) && stylesetToApply._id != defaultStylesetId
+		|| (documentStylesetIds.indexOf(stylesetToApply._id) < 0 && stylesetToApply._id != defaultStylesetId)) {
 		copyStyleset(stylesetToApply, function(err, copy) {
 			if (err) {
 				return next(err);
