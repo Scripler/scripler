@@ -222,14 +222,17 @@ exports.applyStyleset = function (req, res, next) {
 
 	/*
 	 Only copy the styleset if it is not already applied to the document, i.e. if:
-	 - The document does not have any stylesets and the styleset to apply is not the document's default styleset
+	 - The styleset to apply is not the same as the default styleset
+	 AND
+	 (
+	 - The document does not have any stylesets
 	 OR
-	 - The styleset to apply is not in the document's stylesets and the styleset to apply is not the document's default styleset
+	 - The styleset to apply is not in the document's stylesets
+	 )
 
-	 TODO: could use an IT.
+	 TODO: could use an IT or two.
 	 */
-	if ((!documentStylesetIds || documentStylesetIds.length == 0) && stylesetToApply._id != defaultStylesetId
-		|| (documentStylesetIds.indexOf(stylesetToApply._id) < 0 && stylesetToApply._id != defaultStylesetId)) {
+	if (stylesetToApply._id != defaultStylesetId && (!documentStylesetIds || documentStylesetIds.length == 0) || documentStylesetIds.indexOf(stylesetToApply._id) < 0) {
 		copyStyleset(stylesetToApply, function(err, copy) {
 			if (err) {
 				return next(err);

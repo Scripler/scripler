@@ -98,15 +98,21 @@ exports.update = function (req, res, next) {
 
 	var updateOriginalStyleset = function(newStyleset, next) {
 		// Populate the original styleset (was not loaded)
-		Styleset.findOne({"_id": newStyleset.original}).populate({path: 'styles'}).exec(function (err, populatedOriginalStyleset) {
+		Styleset.find({"_id": {$in: [newStyleset._id, newStyleset.original]}}).populate({path: 'styles'}).exec(function (err, populatedStylesets) {
 			if (err) {
 				return next(err);
 			}
 
-			// We must populate "styles" of the new styleset because even though they were populated (during load), they were overwritten by the input styles which were only object ids
-			Styleset.findOne({"_id": newStyleset._id}).populate({path: 'styles'}).exec(function (err, populatedNewStyleset) {
-				if (err) {
-					return next(err);
+			if (populatedStylesets.length==2) {
+				var populatedOriginalStyleset;
+				var populatedNewStyleset;
+
+				if (populatedStylesets[0]._id == newStyleset.original) {
+					populatedNewStyleset = populatedStylesets[0];
+					populatedOriginalStyleset  = populatedStylesets[1];
+				} else {
+					populatedOriginalStyleset = populatedStylesets[0];
+					populatedNewStyleset = populatedStylesets[1];
 				}
 
 				styleset_utils.updateOriginalStyleset(populatedOriginalStyleset, populatedNewStyleset, function (err) {
@@ -118,7 +124,9 @@ exports.update = function (req, res, next) {
 						return next(null, updatedOriginalStyleset);
 					});
 				});
-			});
+			} else {
+				return next("ERROR: could not find both new and original styleset!");
+			}
 		});
 	};
 

@@ -91,10 +91,10 @@ exports.copy = function (style, newStylesetId, next) {
 					return next(null, result);
 				});
 			} else {
-				console.log("ERROR: style must be populated");
+				return next("ERROR: style must be populated");
 			}
 		} else {
-			console.log("ERROR: invalid arguments: must be of type \'object\' and 'string' (Mongoose model object id)");
+			return next("ERROR: invalid arguments: must be of type \'object\' and 'string' (Mongoose model object id)");
 		}
 	} else {
 		return next(null, null);

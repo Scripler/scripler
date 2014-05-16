@@ -82,16 +82,15 @@ var isStylePopulated = require('../../../models/style.js').isPopulated;
 					for (var i=0; i<originalStyles.length; i++) {
 						var originalStyle = originalStyles[i];
 						var matchingNewStyle = utils.containsOriginal(newStyles, originalStyle);
-						if (matchingNewStyle) {
-							//console.log("Found matching new style " + matchingNewStyle.name + " in new styles: copying changes back to original style " + originalStyle.name);
-							copyStyleValues(matchingNewStyle, originalStyle);
-							// TODO: changing the value of e.g. originalStyle.name, e.g. originalStyle.name = 'hej', does not break the "verify changes copied back to original" ITs - why not?
-
-							// No need to update the "styles" array on originalStyleset: the array simply references the object that was changed
-							//originalStyleset.styles[i] = originalStyle;
-						} else {
+						if (!matchingNewStyle) {
 							//console.log("Did not find original style " + originalStyle.name + " in new styles: deleting original style");
 							originalStyleset.styles.splice(i, 1);
+						} else {
+							/*
+							console.log("DEBUG: do nothing: style " + matchingNewStyle.name + " already exists in the original styleset. " +
+								" When updating a styleset, it is not possible to also update a style. " +
+								" This means that copying of the actual style values should have taken place in a Style.update() call prior to this update of the styleset and its original.");
+							*/
 						}
 					}
 				} else {

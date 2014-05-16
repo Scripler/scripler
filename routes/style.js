@@ -2,7 +2,7 @@ var utils = require('../lib/utils');
 var Style = require('../models/style.js').Style;
 var Styleset = require('../models/styleset.js').Styleset;
 var styleset_utils = require('../public/create/scripts/styleset-utils.js');
-var copyStyleValues = require('..//models/style.js').copyValues;
+var copyStyleValues = require('../models/style.js').copyValues;
 
 //Load style by id
 exports.load = function (id) {
@@ -110,13 +110,10 @@ exports.update = function (req, res, next) {
 		});
 	};
 
-	var newStyle = new Style({
-		name: req.body.name,
-		class: req.body.class,
-		css: req.body.css,
-		tag: req.body.tag
-	});
-	copyStyleValues(newStyle, style);
+	style.name = req.body.name;
+	style.class = req.body.class;
+	style.css = req.body.css;
+	style.tag = req.body.tag;
 
 	style.save(function (err, updatedStyle) {
 		if (err) {

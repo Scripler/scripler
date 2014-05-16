@@ -108,10 +108,10 @@ exports.copy = function (styleset, next) {
 					}
 				});
 			} else {
-				console.log("ERROR: styleset must be populated");
+				return next("ERROR: styleset must be populated");
 			}
 		} else {
-			console.log("ERROR: invalid argument: must be of type \'object\'");
+			return next("ERROR: invalid argument: must be of type \'object\'");
 		}
 	} else {
 		return next(null, null);
