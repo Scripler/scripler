@@ -232,7 +232,7 @@ exports.applyStyleset = function (req, res, next) {
 
 	 TODO: could use an IT or two.
 	 */
-	if (stylesetToApply._id != defaultStylesetId && (!documentStylesetIds || documentStylesetIds.length == 0) || documentStylesetIds.indexOf(stylesetToApply._id) < 0) {
+	if (stylesetToApply._id != defaultStylesetId && (!documentStylesetIds || documentStylesetIds.length == 0 || documentStylesetIds.indexOf(stylesetToApply._id) < 0)) {
 		copyStyleset(stylesetToApply, function(err, copy) {
 			if (err) {
 				return next(err);
