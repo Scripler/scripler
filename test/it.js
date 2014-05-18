@@ -1373,7 +1373,7 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    console.log(res.body);
+                    //console.log(res.body);
 					styleCopiedId = res.body.style._id;
 					assert.notEqual(styleCopiedId, styleId2);
 					assert.equal(res.body.style.name, "Donkey");
@@ -1389,7 +1389,7 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    console.log(res.body);
+                    //console.log(res.body);
 					assert.equal(res.body.style._id, styleCopiedId);
 					assert.equal(res.body.style.name, "DonkeyKong");
 					assert.equal(res.body.style.class, "jytte");
