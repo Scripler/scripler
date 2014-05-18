@@ -42,7 +42,6 @@ var stylesetId;
 var stylesetId2;
 var stylesetId3;
 var stylesetCopiedId;
-var stylesetCopiedId2;
 
 var styleId;
 var styleId2;
@@ -74,7 +73,7 @@ function containsDocWithFolderId(documents, folderId) {
 	return result;
 }
 
-if (conf.db.uri.match('_test$') === null) {
+if (conf.db.uri.match(/_test$/) === null) {
 	console.log("You shouldn't be running this test on any database not being specifically meant for 'test'!");
 	console.log("You tried with this database: " + conf.db.uri);
 	process.exit(1);
@@ -578,7 +577,6 @@ describe('Scripler RESTful API', function () {
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						document = res.body.document;
 						assert.equal(res.body.document.name, 'MyFirstDocument');
 						assert.equal(res.body.document.projectId, projectId);
 						assert.equal(res.body.document.folderId, rootFolderId);
@@ -606,7 +604,6 @@ describe('Scripler RESTful API', function () {
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						document = res.body.document;
 						assert.equal(res.body.document.name, 'MySecondDocument');
 						assert.equal(res.body.document.projectId, projectId);
 						assert.equal(res.body.document.folderId, childFolderId);
@@ -640,7 +637,6 @@ describe('Scripler RESTful API', function () {
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						document = res.body.document;
 						assert.equal(res.body.document.name, 'Cover');
 						assert.equal(res.body.document.projectId, projectId);
 						assert.equal(res.body.document.folderId, rootFolderId);
@@ -675,7 +671,6 @@ describe('Scripler RESTful API', function () {
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						document = res.body.document;
 						assert.equal(res.body.document.name, 'TitlePage');
 						assert.equal(res.body.document.projectId, projectId);
 						assert.equal(res.body.document.folderId, rootFolderId);
@@ -710,7 +705,6 @@ describe('Scripler RESTful API', function () {
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						document = res.body.document;
 						assert.equal(res.body.document.name, 'ToC');
 						assert.equal(res.body.document.projectId, projectId);
 						assert.equal(res.body.document.folderId, rootFolderId);
@@ -745,7 +739,6 @@ describe('Scripler RESTful API', function () {
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						document = res.body.document;
 						assert.equal(res.body.document.name, 'Colophon');
 						assert.equal(res.body.document.projectId, projectId);
 						assert.equal(res.body.document.folderId, rootFolderId);
@@ -1150,7 +1143,6 @@ describe('Scripler RESTful API', function () {
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						document = res.body.document;
 						assert.equal(res.body.document.name, 'Sikke et dokument');
 						assert.equal(res.body.document.projectId, projectId);
 						assert.equal(res.body.document.folderId, childFolderId);
@@ -1240,7 +1232,6 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					document = res.body.document;
 					assert.equal(res.body.document.name, 'Jimbo');
 					assert.equal(res.body.document.projectId, projectId);
 					assert.equal(res.body.document.folderId, rootFolderId);
@@ -1724,7 +1715,7 @@ describe('Scripler RESTful API', function () {
 				.set('cookie', cookie)
 				.send({entries: [
 					{title: "Cover", target: "HTML/Cover.html", "level": "0"},
-					{title: "Title Page", target: "HTML/TitlePage.html", "level": "0"},
+					{title: "Title Page", target: "HTML/TitlePage.html", "level": "0"}
 				]})
 				.expect(200)
 				.end(function (err, res) {
@@ -1793,7 +1784,7 @@ describe('Scripler RESTful API', function () {
 						callback(null, new Buffer(res.data, 'binary'));
 					});
 				}).end(function (err, res) {
-					if (err) return done(err);
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 
 					// binary response data is in res.body as a buffer
 					assert.ok(Buffer.isBuffer(res.body));
@@ -1817,10 +1808,8 @@ describe('Scripler RESTful API', function () {
 	}),
 	describe('Import', function () {
 		it('Uploading/Importing a file to a project, should return the a new document with the imported content', function (done) {
-			var fileContent = 'This is some file content';
 			var filename = 'test.docx';
 			var filepath = path.join('test', 'resources', 'import', filename);
-			var boundary = Math.random();
 
 			request(host)
 				.post('/document/'+projectId+'/upload')
@@ -1829,7 +1818,6 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					document = res.body.document;
 					assert.equal(res.body.document.name, filename);
 					assert.equal(res.body.document.projectId, projectId);
 					//TODO: When we got a proper semi-automated docvert setup on both Windows and Unix, do assertion of imported text!
@@ -1927,4 +1915,4 @@ describe('Scripler RESTful API', function () {
 				});
 		})
 	})
-})
+});
