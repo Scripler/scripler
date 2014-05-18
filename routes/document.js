@@ -25,6 +25,22 @@ exports.load = function (id) {
 	}
 }
 
+exports.loadPopulated = function (id) {
+	return function (req, res, next) {
+		var idCopy = id || req.body.documentId;
+		Document.findOne({"_id": idCopy, "deleted": false}).populate({path: 'stylesets'}).exec(function (err, document) {
+			if (err) return next(err);
+			if (!document) {
+				return next({message: "Document not found", status: 404});
+			}
+			if (!req.user) return next();//Let missing authentication be handled in auth middleware
+			if (!utils.hasAccessToModel(req.user, document)) return next(403);
+			req.document = document;
+			return next();
+		});
+	}
+}
+
 var create = exports.create = function (req, res, next) {
 	var project = req.project;
 	var document = new Document({
@@ -137,19 +153,20 @@ exports.delete = function (req, res, next) {
 
 exports.rearrange = function (req, res, next) {
 	var errorMessage = "/document/rearrange can only rearrange existing documents (not e.g. add or delete documents)";
-	var project = req.project;
 
-	var numberOfExistingDocuments = project.documents.length;
-	if (req.body.documents &&  numberOfExistingDocuments == req.body.documents.length) {
-		for (var i=0; i<req.body.documents.length; i++) {
-			var rearrangedDocument = req.body.documents[i];
-			var containsRearrangedDocument = utils.containsModel(req.body.documents, rearrangedDocument);
-			if (!containsRearrangedDocument) {
+	var rearrangedDocumentIds = req.body.documents;
+	var existingDocumentIds = req.project.documents;
+
+	if (rearrangedDocumentIds && rearrangedDocumentIds.length == existingDocumentIds.length) {
+		for (var i=0; i<rearrangedDocumentIds.length; i++) {
+			var rearrangedDocumentId = rearrangedDocumentIds[i];
+			var containsRearrangedDocumentId = rearrangedDocumentIds.indexOf(rearrangedDocumentId) > -1;
+			if (!containsRearrangedDocumentId) {
 				return next({message: errorMessage, status: 400});
 			}
 		}
 
-		req.project.documents = req.body.documents;
+		req.project.documents = rearrangedDocumentIds;
 		req.project.save(function (err, project) {
 			if (err) {
 				return next(err);
@@ -199,9 +216,23 @@ exports.upload = function (req, res, next) {
 
 exports.applyStyleset = function (req, res, next) {
 	var stylesetToApply = req.styleset;
-	var activeStylesets = req.document.stylesets;
-	// Only copy the styleset if it is not already applied to the document
-	if (!activeStylesets || activeStylesets.length < 1 || (!(utils.containsModel(activeStylesets, stylesetToApply)))) {
+	var stylesetToApplyId = stylesetToApply._id;
+	var documentStylesetIds = req.document.stylesets;
+	var defaultStylesetId = req.document.defaultStyleset;
+
+	/*
+	 Only copy the styleset if it is not already applied to the document, i.e. if:
+	 - The styleset to apply is not the same as the default styleset
+	 AND
+	 (
+	 - The document does not have any stylesets
+	 OR
+	 - The styleset to apply is not in the document's stylesets
+	 )
+
+	 TODO: could use an IT or two.
+	 */
+	if (stylesetToApply._id != defaultStylesetId && (!documentStylesetIds || documentStylesetIds.length == 0 || documentStylesetIds.indexOf(stylesetToApply._id) < 0)) {
 		copyStyleset(stylesetToApply, function(err, copy) {
 			if (err) {
 				return next(err);
@@ -222,23 +253,31 @@ exports.applyStyleset = function (req, res, next) {
 
 exports.listStylesets = function (req, res, next) {
 	var documentStylesets = req.document.stylesets;
-	var userStylesets = req.user.stylesets;
+	var userStylesetIds = req.user.stylesets;
 	var resultStylesets = documentStylesets.slice(0);
 
-	for (var i=0; i<userStylesets.length; i++) {
-		var userStyleset = userStylesets[i];
-		if (!utils.containsCopy(documentStylesets, userStyleset)) {
-			resultStylesets.push(userStyleset);
-		}
-	}
-
-	// Populate the stylesets
-	Styleset.find({"_id": {$in: resultStylesets}}).populate({path: 'styles'}).exec(function (err, stylesets) {
+	// Get user stylesets
+	Styleset.find({"_id": {$in: userStylesetIds}}).exec(function (err, userStylesets) {
 		if (err) {
 			return next(err);
 		}
 
-		res.send({"stylesets": stylesets});
+		for (var i=0; i<userStylesets.length; i++) {
+			var userStyleset = userStylesets[i];
+			if (!utils.containsOriginal(documentStylesets, userStyleset)) {
+				resultStylesets.push(userStyleset._id);
+			}
+		}
+
+		// Populate the stylesets
+		Styleset.find({"_id": {$in: resultStylesets}}).populate({path: 'styles'}).exec(function (err, stylesets) {
+			if (err) {
+				return next(err);
+			}
+
+			res.send({"stylesets": stylesets});
+		});
 	});
+
 };
 
