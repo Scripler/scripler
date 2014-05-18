@@ -280,6 +280,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			.success( function( data ) {
 				style.archived = true;
 			});
+
+	$scope.insertOptionChoosen = function(insertoption) {
+		if ($scope.activeInsertOption === insertoption) {
+			$scope.activeInsertOption = null;
+		}
+		else {
+			$scope.activeInsertOption = insertoption;
+		}
 	}
 
     function initiateEditor(scope) {

@@ -58,9 +58,8 @@
 	height: calc(100% / 3);
 	min-height: 178px;
 }
-.menu-item-left.documents {
-	padding-left: 20px;
-	padding-top: 20px;
+.menu-item-left.documents, .menu-item-left.inserts {
+	padding: 10px 0 0 10px;
 }
 .menu-item-left {
 	opacity:1;
@@ -159,8 +158,8 @@
 }
 .projectDocument {
 	position: relative;
-	margin: 0 15px 15px 0;
-	width: 59px;
+	margin: 0 10px 10px 0;
+	width: 72px;
 	height: 95px;
 	background: none #fefefe;
 	float: left;
@@ -413,3 +412,54 @@ li.typo p {
 .cke_floatingtools.open {
 	bottom: 0 !important;
 }
+
+.insertOption {
+	position: relative;
+	margin: 0 10px 10px 0;
+	padding: 16px 0 0 16px;
+	width: 114px;
+	height: 114px;
+	background: none #fefefe;
+	float: left;
+	border: 1px solid #ffff99;
+	box-shadow: 0px 5px 5px -5px #ccc;
+	cursor: pointer;
+}
+.insertOption.expanded {
+	height: 124px;
+	margin-bottom: 0;
+	border-bottom: 0px;
+	box-shadow: none;
+	z-index: 2;
+}
+.insertOptionProperties {
+	height: 0;
+	overflow: hidden;
+/*	-webkit-transition: all 0.5s ease-in-out;
+	-moz-transition: all 0.5s ease-in-out;
+	-o-transition: all 0.5s ease-in-out;
+	transition: all 0.5s ease-in-out;*/
+}
+.insertOptionProperties.expanded {
+	display: block;
+	position: relative;
+	margin: -1px 10px 10px 0;
+	padding: 16px;
+	width: 238px;
+	height: auto;
+	background: none #fefefe;
+	float: left;
+	border: 1px solid #ffff99;
+	box-shadow: 0px 5px 5px -5px #ccc;
+}
+/*.insertOptionProperties input[type="text"] {
+	background: none #efefef;
+	border: 1px solid #ffff99;
+	padding: 5px 10px;
+	width: 100%;
+	margin: 0 0 10px 0;
+}
+.insertOptionProperties input[type="text"]:focus {
+	background: none #fff;
+	outline: none;
+}*/

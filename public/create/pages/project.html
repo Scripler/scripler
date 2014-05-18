@@ -107,9 +107,64 @@
 					</ul>
 				</div>
 			</div>
-			<div class="menu-item-left" ng-show="showInsert">
+			<div class="menu-item-left inserts" ng-show="showInsert">
 				<div class="menu-content">
-					Insert
+					<ul>
+						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertBoxOptions');">
+								<img src="pages/images/insert_box_button.png" width="80" height="80" />
+							</a>
+						</li>
+						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertHyperlinkOptions');">
+								<img src="pages/images/insert_hyperlink_button.png" width="80" height="80" />
+							</a>
+						</li>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
+							this is the options for insert box
+						</li>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
+							this is the options for hyperlink box
+<!--							<input type="text" name="link_address" id="link_address" placeholder="Address" />
+							<input type="text" name="link_text" id="link_text" placeholder="Text..." />
+							<!-- I think these should be part of the template or style and not something you can define for each single link -->
+<!--							<button alt="link underline"></button>
+							<button alt="link color"></button>
+							<!-- Needs to load anchors available in the document -->
+<!--							<select>
+								<option>Anchor list</option>
+							</select>
+							<button alt="close">X</button>-->
+						</li>
+						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertImageOptions');">
+								<img src="pages/images/insert_image_button.png" width="80" height="80" />
+							</a>
+						</li>
+						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertPagebreakOptions');">
+								<img src="pages/images/insert_pagebreak_button.png" width="80" height="80" />
+							</a>
+						</li>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
+							this is the options for insert image
+						</li>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
+							this is the options for insert pagebreak
+						</li>
+						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertAnchorOptions');">
+								<img src="pages/images/insert_anchor_button.png" width="80" height="80" />
+							</a>
+						</li>
+						<!--<li class="insertOption"><img src="pages/images/insert_cover_button.png" width="80" height="80"></li>-->
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
+							this is the options for insert anchor
+						</li>
+						<!--<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions'showInsertHyperlinkOptions }">
+							this is the options for insert hyperlink
+						</li>-->
+					</ul>
 				</div>
 			</div>
 		</div>
