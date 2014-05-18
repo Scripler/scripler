@@ -1330,16 +1330,17 @@ describe('Scripler RESTful API', function () {
 				});
 		}),
 		it('Creating a new style for testing updating a styleset by adding a style to it', function (done) {
+            css2["vuf"] = "5px";
 			request(host)
 				.post('/style')
 				.set('cookie', cookie)
-				.send({stylesetId: stylesetCopiedId, name: "Vuf", class: "VufClass", css: css2 + "vuf", tag: ""})
+				.send({stylesetId: stylesetCopiedId, name: "Vuf", class: "VufClass", css: css2, tag: ""})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style.name, "Vuf");
 					assert.equal(res.body.style.class, "VufClass");
-					assert.equal(res.body.style.css, css2 + "vuf");
+					assert.equal(res.body.style.css.vuf, "5px");
 					assert.equal(res.body.style.tag, "");
 					styleId3 = res.body.style._id;
 					assert.equal(res.body.style.stylesetId, stylesetCopiedId);
@@ -1431,7 +1432,7 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.style._id, styleCopiedId);
 					assert.equal(res.body.style.name, "Donkey");
 					assert.equal(res.body.style.class, "jack");
-					assert.equal(res.body.style.css, css2 + "...some new CSS");
+					assert.equal(res.body.style.css["another-key"], "another value");
 					done();
 				});
 		}),
@@ -1445,7 +1446,7 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style.name, "Donkey");
 					assert.equal(res.body.style.class, "jack");
-					assert.equal(res.body.style.css, css2 + "...some new CSS");
+                    assert.equal(res.body.style.css["another-key"], "another value");
 					done();
 				});
 		}),
@@ -1476,22 +1477,24 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style.name, "DonkeyKong");
 					assert.equal(res.body.style.class, "jytte");
-					assert.equal(res.body.style.css, css2 + "...And now some blue color!");
+                    assert.equal(res.body.style.css["another-key"], "yet another value");
+                    assert.deepEqual(res.body.style.css, css2);
 					done();
 				});
 		}),
 		it('Updating a copied (document) style to test if the values are copied back to the original style, when the STYLESET is updated.', function (done) {
-			request(host)
+            css2.fancy = 'ew ew ew';
+            request(host)
 				.put('/style/' + styleId3 + '/update')
 				.set('cookie', cookie)
-				.send({name: "FancyPantsy", class: "pantsy", css: css2 + "Fancy CSS"})
+				.send({name: "FancyPantsy", class: "pantsy", css: css2})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style._id, styleId3);
 					assert.equal(res.body.style.name, "FancyPantsy");
 					assert.equal(res.body.style.class, "pantsy");
-					assert.equal(res.body.style.css, css2 + "Fancy CSS");
+					assert.equal(res.body.style.css.fancy, "ew ew ew");
 					done();
 				});
 		}),
@@ -1522,7 +1525,7 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.style._id, styleCopiedId2);
 					assert.equal(res.body.style.name, "FancyPantsy");
 					assert.equal(res.body.style.class, "pantsy");
-					assert.equal(res.body.style.css, css2 + "Fancy CSS");
+                    assert.deepEqual(res.body.style.css, css2);
 					done();
 				});
 		}),
