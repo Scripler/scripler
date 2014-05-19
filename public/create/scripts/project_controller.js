@@ -1,6 +1,6 @@
 'use strict'
 
-function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress, $timeout ) {
+function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress, $timeout, $rootScope ) {
 
 	var timeout = null;
 
@@ -76,11 +76,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		projectPromise.then( function( project ) {
 			$scope.project = project;
 			$scope.projectDocuments = $scope.project.documents;
+			if ( $scope.projectDocuments.length == 0 ) {
+				$scope.addProjectDocument();
+			}
+			$scope.openProjectDocument( $scope.projectDocuments[0] );
 		});
 	});
 
 	$scope.openProjectDocument = function( projectDocument ) {
-		if ( $scope.documentSelected._id ) {
+		if ( typeof $scope.documentSelected == 'object' ) {
 			$scope.updateProjectDocument();
 		}
 
@@ -89,6 +93,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				var index = $scope.projectDocuments.indexOf( projectDocument );
 				$scope.projectDocuments[index] = data.document;
 				$scope.documentSelected = data.document;
+				$scope.openStylesets( projectDocument );
 				lastSavedDocumentLength = data.document.text.length;
 
 				if ( !documentWatch ) {
@@ -170,6 +175,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
+	$scope.openStylesets = function( projectDocument ) {
+		$http.get('/document/' + projectDocument._id + '/stylesets')
+			.success( function( data ) {
+				$scope.stylesets = data.stylesets;
+			});
+	}
+
 	$scope.addNewStyleset = function() {
 		var length = $scope.stylesets.length + 1;
 		var styleset = {};
@@ -183,14 +195,61 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.addNewStyle = function( styleset ) {
 		var style = {};
-		var length = styleset.styles.length + 1;
-		style.name = 'Style ' + length;
+
+		var length = styleset.styles.length;
+		var number = length + 1;
+
+		if ( length > 1) {
+			var styleIndex = length - 1;
+			var lastStyle = styleset.styles[styleIndex];
+			number = parseInt( lastStyle.name.replace( /^\D+/g, '') );
+			number = number + 1;
+		}
+
+		style.name = 'Style ' + number;
 		style.stylesetId = styleset._id;
 
 		$http.post('/style', angular.toJson( style ) )
 			.success( function( data ) {
 				styleset.styles.push( data.style );
 			});
+	}
+
+	$scope.archiveStyleset = function( styleset ) {
+		var index = $scope.stylesets.indexOf( styleset );
+		$http.put('/styleset/' + styleset._id + '/archive')
+			.success( function( data ) {
+				if ( index > -1 ) {
+					$scope.stylesets.splice( index, 1 );
+				}
+			});
+	}
+
+	$scope.archiveStyle = function( styleset, style ) {
+		var stylesetIndex = $scope.stylesets.indexOf( styleset );
+		var styleIndex = styleset.styles.indexOf( style );
+		$http.put('/style/' + style._id + '/archive')
+			.success( function( data ) {
+				if ( stylesetIndex > -1 ) {
+					if ( styleIndex > -1 ) {
+						$scope.stylesets[stylesetIndex].styles.splice( styleIndex, 1);
+					}
+				}
+			});
+	}
+
+	$scope.showStyleEditor = function() {
+		if ( $scope.styleEditorVisible ) {
+			$scope.hideStyleEditor();
+		} else {
+			$rootScope.ck.commands.showFloatingTools.exec();
+			$scope.styleEditorVisible = true;
+		}
+	}
+
+	$scope.hideStyleEditor = function() {
+		$rootScope.ck.commands.hideFloatingTools.exec();
+		$scope.styleEditorVisible = false;
 	}
 
     function initiateEditor(scope) {

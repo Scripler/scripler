@@ -221,7 +221,7 @@ app.directive('onEnter', function() {
 	};
 });
 
-app.directive('ckEditor', function( $window ) {
+app.directive('ckEditor', function( $window, $rootScope ) {
 	return {
 		require: '?ngModel',
 		link: function(scope, elm, attr, ngModel) {
@@ -229,8 +229,27 @@ app.directive('ckEditor', function( $window ) {
 				allowedContent: true,
 				skin: 'scripler',
 				resize_enabled: false,
-				//extraPlugins: 'scripler',
-				height: $window.innerHeight - 90,
+				extraPlugins: 'scripler,floating-tools,line-height,texttransform,indent-right,indentations',
+				floatingtools: 'Basic',
+				floatingtools_Basic: [
+					{ name: 'styles', items: [ 'Font' ] },
+					'/',
+					{ name: 'fontstyles', items: [ 'FontSize', 'line-height' ] },
+					'/',
+					['Bold'], ['Italic'], ['Underline'], ['TransformTextToUppercase'], ['Subscript'], ['Superscript'],
+					'/',
+					['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'],
+					'/',
+					['Indent'], ['IndentRight'], ['IndentTop'], ['IndentBottom'], ['IndentText'],
+					'#',
+					['IndentTopIcon'], ['IndentTopIcon'], ['IndentTopIcon'], ['IndentBottomIcon'], ['IndentTextIcon'],
+					'#',
+					['Outdent'], ['OutdentRight'], ['OutdentTop'], ['OutdentBottom'], ['OutdentText']
+				],
+				indentUnit: 'em',
+				indentOffset: 2,
+				enterMode: CKEDITOR.ENTER_P,
+				height: $window.innerHeight - 30,
 				width: 800,
 				font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
 				//contentsCss: ['stylesets/pleasantbw.css', 'contents.css', 'http://fonts.googleapis.com/css?family=Ribeye'],
@@ -267,6 +286,7 @@ app.directive('ckEditor', function( $window ) {
 			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 )
 			CKEDITOR.tools.enableHtml5Elements( document );
 
+			$rootScope.ck = ck;
 		}
 	};
 });
