@@ -1442,6 +1442,19 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
+		it('Renaming a styleset should return the renamed styleset', function (done) {
+			request(host)
+				.put('/styleset/' + stylesetCopiedId + '/rename')
+				.set('cookie', cookie)
+				.send({name: "TooCoolForSchool"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset._id, stylesetCopiedId);
+					assert.equal(res.body.styleset.name, "TooCoolForSchool");
+					done();
+				});
+		}),
 		it('The first time a style is updated, the updated style should be returned.', function (done) {
 			request(host)
 				.put('/style/' + styleCopiedId + '/update')
@@ -1483,6 +1496,19 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.style.name, "DonkeyKong");
 					assert.equal(res.body.style.class, "jytte");
 					assert.equal(res.body.style.css, css2 + "...And now some blue color!");
+					done();
+				});
+		}),
+		it('Renaming a style should return the renamed style', function (done) {
+			request(host)
+				.put('/style/' + styleCopiedId + '/rename')
+				.set('cookie', cookie)
+				.send({name: "DaStijl"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style._id, styleCopiedId);
+					assert.equal(res.body.style.name, "DaStijl");
 					done();
 				});
 		}),

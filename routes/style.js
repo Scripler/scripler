@@ -136,6 +136,17 @@ exports.update = function (req, res, next) {
 	});
 }
 
+exports.rename = function (req, res, next) {
+	var style = req.style;
+	style.name = req.body.name;
+	style.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+		res.send({style: style});
+	});
+}
+
 exports.archive = function (req, res, next) {
 	var style = req.style;
 	style.archived = true;

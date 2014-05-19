@@ -157,6 +157,17 @@ exports.update = function (req, res, next) {
 
 }
 
+exports.rename = function (req, res, next) {
+	var styleset = req.styleset;
+	styleset.name = req.body.name;
+	styleset.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+		res.send({styleset: styleset});
+	});
+}
+
 exports.rearrange = function (req, res, next) {
 	var user = req.user;
 	user.stylesets = req.body.stylesets;
