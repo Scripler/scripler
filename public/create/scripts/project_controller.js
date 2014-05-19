@@ -183,9 +183,18 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.addNewStyleset = function() {
-		var length = $scope.stylesets.length + 1;
 		var styleset = {};
-		styleset.name = 'Styleset ' + length;
+		var length = $scope.stylesets.length;
+		var number = length + 1;
+
+		if ( length > 1 ) {
+			var stylesetIndex = length - 1;
+			var lastStyleset = $scope.stylesets[stylesetIndex];
+			number = parseInt( lastStyleset.name.replace( /^\D+/g, '') );
+			number = number + 1;
+		}
+
+		styleset.name = 'Styleset ' + number;
 
 		$http.post('/styleset', angular.toJson( styleset ) )
 			.success( function( data ) {
@@ -199,7 +208,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var length = styleset.styles.length;
 		var number = length + 1;
 
-		if ( length > 1) {
+		if ( length > 1 ) {
 			var styleIndex = length - 1;
 			var lastStyle = styleset.styles[styleIndex];
 			number = parseInt( lastStyle.name.replace( /^\D+/g, '') );
