@@ -63,10 +63,30 @@
 					</div>
 					<ul>
 						<li ng-repeat="styleset in stylesets" class="typo" ng-class="{ 'open' : visible == true }">
+							<a class="styleset-options-show" ng-click="showStylesetOptions = true">
+								<div class="arrow"></div>
+							</a>
+
 							<p ng-click="visible=!visible">{{styleset.name}}</p>
 
+							<div class="styleset-options" ng-show="showStylesetOptions">
+								<div class="styleset-options-hide" ng-click="showStylesetOptions = false;" title="Close Options">x</div>
+								<div class="styleset-options-menupoint first" ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>
+							</div>
+
 							<ul ng-hide="visible" class="typo-children">
-								<li ng-repeat="style in styleset.styles" ng-click="x=!x">{{style.name}}</li>
+								<li ng-repeat="style in styleset.styles" ng-click="x=!x">
+									<a class="style-options-show" ng-click="showStyleOptions = true">
+										<div class="arrow"></div>
+									</a>
+
+									<span>{{style.name}}</span>
+
+									<div class="style-options" ng-show="showStyleOptions">
+										<div class="style-options-hide" ng-click="showStyleOptions = false;" title="Close Options">x</div>
+										<div class="style-options-menupoint first" ng-click="archiveStyle(styleset, style); showStyleOptions = false;">archive</div>
+									</div>
+								</li>
 								<li class="new style" ng-click="addNewStyle( styleset )"><p>+</p></li>
 							</ul>
 						</li>
