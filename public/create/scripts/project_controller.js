@@ -202,6 +202,17 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 	}
 
+	$scope.renameStyleset = function( styleset ) {
+		$http.put('/styleset/' + styleset._id + '/rename', angular.toJson( styleset ) );
+	}
+
+	$scope.archiveStyleset = function( styleset ) {
+		$http.put('/styleset/' + styleset._id + '/archive')
+			.success( function( data ) {
+				styleset.archived = true;
+			});
+	}
+
 	$scope.addNewStyle = function( styleset ) {
 		var style = {};
 
@@ -224,41 +235,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 	}
 
-	$scope.archiveStyleset = function( styleset ) {
-		var index = $scope.stylesets.indexOf( styleset );
-		$http.put('/styleset/' + styleset._id + '/archive')
-			.success( function( data ) {
-				if ( index > -1 ) {
-					$scope.stylesets.splice( index, 1 );
-				}
-			});
+	$scope.renameStyle = function( style ) {
+		$http.put('/style/' + style._id + '/rename', angular.toJson( style ) );
 	}
 
-	$scope.archiveStyle = function( styleset, style ) {
-		var stylesetIndex = $scope.stylesets.indexOf( styleset );
-		var styleIndex = styleset.styles.indexOf( style );
+	$scope.archiveStyle = function( style ) {
 		$http.put('/style/' + style._id + '/archive')
 			.success( function( data ) {
-				if ( stylesetIndex > -1 ) {
-					if ( styleIndex > -1 ) {
-						$scope.stylesets[stylesetIndex].styles.splice( styleIndex, 1);
-					}
-				}
+				style.archived = true;
 			});
-	}
-
-	$scope.showStyleEditor = function() {
-		if ( $scope.styleEditorVisible ) {
-			$scope.hideStyleEditor();
-		} else {
-			$rootScope.ck.commands.showFloatingTools.exec();
-			$scope.styleEditorVisible = true;
-		}
-	}
-
-	$scope.hideStyleEditor = function() {
-		$rootScope.ck.commands.hideFloatingTools.exec();
-		$scope.styleEditorVisible = false;
 	}
 
     function initiateEditor(scope) {
@@ -273,7 +258,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	angular.element(document).ready(function () {
 
+		$scope.showStyleEditor = function() {
+			if ( $scope.styleEditorVisible ) {
+				$scope.hideStyleEditor();
+			} else {
+				$rootScope.ck.commands.showFloatingTools.exec();
+				$scope.styleEditorVisible = true;
+			}
+		}
 
+		$scope.hideStyleEditor = function() {
+			$rootScope.ck.commands.hideFloatingTools.exec();
+			$scope.styleEditorVisible = false;
+		}
 
 		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
 

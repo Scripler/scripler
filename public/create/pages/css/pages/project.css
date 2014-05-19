@@ -273,7 +273,7 @@
 .projectDocument-archived {
 	opacity: 0.5;
 }
-textarea#renameProjectDocument {
+textarea#renameProjectDocument, textarea#renameStyleset, textarea#renameStyle {
 	width: 90%;
 	height: auto;
 	border: 1px solid #ffff99;
