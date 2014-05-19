@@ -93,7 +93,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				var index = $scope.projectDocuments.indexOf( projectDocument );
 				$scope.projectDocuments[index] = data.document;
 				$scope.documentSelected = data.document;
-				//$scope.openStylesets( projectDocument );
+				$scope.openStylesets( projectDocument );
 				lastSavedDocumentLength = data.document.text.length;
 
 				if ( !documentWatch ) {
@@ -195,13 +195,46 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.addNewStyle = function( styleset ) {
 		var style = {};
-		var length = styleset.styles.length + 1;
-		style.name = 'Style ' + length;
+
+		var length = styleset.styles.length;
+		var number = length + 1;
+
+		if ( length > 1) {
+			var styleIndex = length - 1;
+			var lastStyle = styleset.styles[styleIndex];
+			number = parseInt( lastStyle.name.replace( /^\D+/g, '') );
+			number = number + 1;
+		}
+
+		style.name = 'Style ' + number;
 		style.stylesetId = styleset._id;
 
 		$http.post('/style', angular.toJson( style ) )
 			.success( function( data ) {
 				styleset.styles.push( data.style );
+			});
+	}
+
+	$scope.archiveStyleset = function( styleset ) {
+		var index = $scope.stylesets.indexOf( styleset );
+		$http.put('/styleset/' + styleset._id + '/archive')
+			.success( function( data ) {
+				if ( index > -1 ) {
+					$scope.stylesets.splice( index, 1 );
+				}
+			});
+	}
+
+	$scope.archiveStyle = function( styleset, style ) {
+		var stylesetIndex = $scope.stylesets.indexOf( styleset );
+		var styleIndex = styleset.styles.indexOf( style );
+		$http.put('/style/' + style._id + '/archive')
+			.success( function( data ) {
+				if ( stylesetIndex > -1 ) {
+					if ( styleIndex > -1 ) {
+						$scope.stylesets[stylesetIndex].styles.splice( styleIndex, 1);
+					}
+				}
 			});
 	}
 
