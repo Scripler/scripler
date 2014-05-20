@@ -87,7 +87,7 @@
 										<div class="arrow"></div>
 									</a>
 
-									<span ng-hide="editingStyleName">{{style.name}}</span>
+									<span ng-hide="editingStyleName" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
 
 									<form ng-show="editingStyleName">
 										<textarea id="renameStyle" rows="1" ng-model="style.name" focus-on="!!editingStyleName" on-enter="editingStyleName = false; renameStyle(style);"></textarea>
