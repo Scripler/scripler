@@ -1,6 +1,7 @@
 'use strict'
 
-function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress, $timeout, $rootScope ) {
+function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress,
+							$timeout, $rootScope, stylesetUtilsService ) {
 
 	var timeout = null;
 

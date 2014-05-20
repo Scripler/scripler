@@ -1,7 +1,7 @@
 'use strict';
 
 var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload',
-										 	'ngProgress'] );
+										 	'ngProgress', 'stylesetUtilsSharedModule'] );
 
 app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStorageService', '$rootScope', '$timeout',
 	function( $http, $scope, userService, localStorageService, $rootScope, $timeout ) {
@@ -25,6 +25,7 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 			var publications = [];
 			var lsName = 'demo-scripler-publications';
 			var lsPublications = localStorageService.get( lsName );
+
 				if ( lsPublications ) {
 					if ( lsPublications.length !== 0 ) {
 						publications = lsPublications;
@@ -33,10 +34,8 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 					publications = [ { _id: Date.now(), name:'Demo Title' } ];
 					localStorageService.add( lsName, publications );
 				}
-			var demoOn = function() {
+
 				$rootScope.$emit('demo:mode', publications);
-			}
-			$timeout(demoOn, 100); //!important: timeout for createController to load
 		});
 
 		$scope.submitRegistration = function() {
@@ -105,13 +104,13 @@ app.config( function( $routeProvider, $httpProvider, $provide ) {
 	}]
 
 	$routeProvider
-		.when('/', { templateUrl:'pages/create.html', controller: createController,
+		.when('/', { templateUrl:'pages/project-space.html', controller: projectSpaceController,
 					resolve: { access: isLoggedIn }
 					})
 		.when('/project', { templateUrl:'pages/project.html', controller: projectController,
 							resolve: { access: isLoggedIn }
 							})
-		.when('/error', { templateUrl:'pages/error.html', controller: createController })
+		.when('/error', { templateUrl:'pages/error.html' })
 		.otherwise({ redirectTo:'/' });
 });
 

@@ -2,7 +2,7 @@ var utils = require('../lib/utils');
 var Styleset = require('../models/styleset.js').Styleset;
 var Style = require('../models/style.js').Style;
 var Project = require('../models/project.js').Project;
-var styleset_utils = require('../public/create/scripts/styleset-utils.js');
+var styleset_utils = require('../lib/styleset-utils.js');
 
 //Load styleset by id
 exports.load = function (id) {
