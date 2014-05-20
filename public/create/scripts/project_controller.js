@@ -213,6 +213,22 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 	}
 
+	$scope.applyStyle = function( styleset, style ) {
+		var stylesetIndex = $scope.stylesets.indexOf( styleset );
+		var styleIndex = styleset.styles.indexOf( style );
+
+		$http.put('/styleset/' + styleset._id + '/document/' + $scope.documentSelected._id)
+			.success( function( data ) {
+				if ( data.styleset._id === styleset._id ) {
+					//TODO apply style to ck editor
+				} else {
+					$scope.stylesets[stylesetIndex] = data.styleset;
+					//TODO apply style to ck editor
+				}
+			})
+
+	}
+
 	$scope.addNewStyle = function( styleset ) {
 		var style = {};
 
