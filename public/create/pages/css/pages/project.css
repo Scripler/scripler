@@ -98,11 +98,11 @@
 	cursor: pointer;
 }
 .menu-left-options {
-	background-color: #F2F3F4;
-	height: 150px;
+	padding: 10px;
+	background-color: #fff;
+	height: auto;
 	width: 100%;
 	position: absolute;
-	border: 2px solid #666;
 	bottom: 0;
 	z-index: 1;
 	margin-bottom: -150px;
@@ -117,19 +117,29 @@
 }
 .documents-options-bottom-buttons, .stylesets-options-bottom-buttons {
 	background-color: #231F20;
-	height: 25px;
 	width: 100%;
 	position: absolute;
 	z-index: 2;
 	bottom: 0;
 }
 .documents-options-bottom-buttons a, .stylesets-options-bottom-buttons a {
-	color: #fff;
-	margin-left: 20px;
-	margin-right: 20px;
-	line-height: 25px;
+	float: left;
+	padding: 5px;
+	width: calc(100% / 3);;
+	padding-left: 15px;
+	display: block;
 	text-decoration: underline;
 	cursor: pointer;
+	background-color: #000;
+	color: #fff;
+	border-right: 2px solid #fff;
+}
+.documents-options-bottom-buttons a.open {
+	background-color: #fff;
+	color: #000;
+}
+.documents-options-bottom-buttons a.last {
+	border: none;
 }
 .stylesets-options-bottom-buttons a {
 	margin-left: 90px;
@@ -335,17 +345,16 @@ textarea#renameProjectDocument, textarea#renameStyleset, textarea#renameStyle {
 	background: #F8F8F8;
 	border: 3px dashed #DDD;
 	width: inherit;
-	height: 60px;
+	height: 50px;
 	text-align: center;
-	padding-top: 15px;
-	margin-top: 10px;
+	padding-top: 12px;
 }
 .upload-box.dragover {
 	border: 3px dashed #fff265;
 }
 .options-bottom-box p {
 	margin-top: 6px;
-	margin-bottom: 10px;
+	margin-bottom: 6px;
 	font-size: 90%;
 }
 .selectedTab {
