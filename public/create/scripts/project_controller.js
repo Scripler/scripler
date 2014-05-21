@@ -215,6 +215,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 	}
 
+	$scope.applyStylesetToProject = function( styleset ) {
+		$http.put('/styleset/' + styleset._id + '/project/' + $scope.project._id)
+			.success( function( data ) {
+				$scope.project = data.project;
+			});
+	}
+
 	$scope.applyStylesetToDocument = function( styleset ) {
 		var deferred = $q.defer();
 
