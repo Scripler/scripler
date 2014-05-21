@@ -67,10 +67,8 @@ module.exports = function (app, auth) {
 	app.get('/styleset/:stylesetId', auth.isLoggedIn(), styleset.open);
 	app.post('/style', auth.isLoggedIn(), styleset.load(), style.create);
 	app.get('/style/:styleId', auth.isLoggedIn(), style.open);
-	app.put('/styleset/:stylesetId/rename', auth.isLoggedIn(), styleset.rename);
 	app.put('/styleset/:stylesetIdPopulated/update', auth.isLoggedIn(), styleset.update);
 	app.put('/style/:styleIdPopulated/update', auth.isLoggedIn(), style.update);
-	app.put('/style/:styleId/rename', auth.isLoggedIn(), style.rename);
 	app.put('/styleset/rearrange', auth.isLoggedIn(), styleset.rearrange);
 	app.put('/styleset/:stylesetId/archive', auth.isLoggedIn(), styleset.archive);
 	app.put('/styleset/:stylesetId/unarchive', auth.isLoggedIn(), styleset.unarchive);
