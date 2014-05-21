@@ -205,7 +205,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.renameStyleset = function( styleset ) {
-		$http.put('/styleset/' + styleset._id + '/rename', angular.toJson( styleset ) );
+		$http.put('/styleset/' + styleset._id + '/update', angular.toJson( styleset ) );
 	}
 
 	$scope.archiveStyleset = function( styleset ) {
@@ -255,7 +255,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.renameStyle = function( style ) {
-		$http.put('/style/' + style._id + '/rename', angular.toJson( style ) );
+		$http.put('/style/' + style._id + '/update', angular.toJson( style ) );
 	}
 
 	$scope.archiveStyle = function( style ) {
