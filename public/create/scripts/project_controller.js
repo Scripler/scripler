@@ -79,8 +79,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.projectDocuments = $scope.project.documents;
 			if ( $scope.projectDocuments.length == 0 ) {
 				$scope.addProjectDocument();
+			} else {
+				$scope.openProjectDocument( $scope.projectDocuments[0] );
 			}
-			$scope.openProjectDocument( $scope.projectDocuments[0] );
 		});
 	});
 
@@ -223,6 +224,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				if ( data.styleset._id === styleset._id ) {
 					//TODO apply style to ck editor
 				} else {
+					//replace styleset with new copied styleset because they have different ids
 					$scope.stylesets[stylesetIndex] = data.styleset;
 					//TODO apply style to ck editor
 				}
