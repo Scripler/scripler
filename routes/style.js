@@ -69,7 +69,7 @@ exports.create = function (req, res, next) {
 
 			if (styleset.original) {
 				//console.log("Style was created in a copied styleset: updating original styleset...");
-				styleset_route.updateOriginalStyleset(styleset, function (err) {
+				styleset_route.populateAndUpdateOriginalStyleset(styleset, function (err) {
 					if (err) {
 						return next(err);
 					}

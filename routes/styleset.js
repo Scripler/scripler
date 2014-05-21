@@ -81,7 +81,12 @@ exports.open = function (req, res) {
 	res.send({styleset: req.styleset});
 }
 
-var updateOriginalStyleset = exports.updateOriginalStyleset = function(newStyleset, next) {
+/**
+ * TODO: remove this function and require callers to populate the stylesets and call styleset_utils.updateOriginalStyleset() themselves?
+ * 
+ * @type {Function}
+ */
+var populateAndUpdateOriginalStyleset = exports.populateAndUpdateOriginalStyleset = function(newStyleset, next) {
 	// Populate the original styleset (was not loaded)
 	Styleset.find({"_id": {$in: [newStyleset._id, newStyleset.original]}}).populate({path: 'styles'}).exec(function (err, populatedStylesets) {
 		if (err) {
@@ -141,7 +146,7 @@ exports.update = function (req, res, next) {
 
 		// Update the original styleset if one such exists
 		if (updatedStyleset.original) {
-			updateOriginalStyleset(updatedStyleset, function (err, updatedOriginalStyleset) {
+			populateAndUpdateOriginalStyleset(updatedStyleset, function (err, updatedOriginalStyleset) {
 				if (err) {
 					return next(err);
 				}
