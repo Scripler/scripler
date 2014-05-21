@@ -80,6 +80,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			if ( $scope.projectDocuments.length == 0 ) {
 				$scope.addProjectDocument();
 			}
+			$scope.openProjectDocument( $scope.projectDocuments[0] );
 		});
 	});
 
@@ -114,9 +115,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			document.projectId = $scope.pid;
 			$http.post('/document', angular.toJson( document ) )
 				.success( function( data ) {
-					var document = data.document;
-					$scope.projectDocuments.push( document );
-					$scope.openProjectDocument( document );
+					$scope.projectDocuments.push( data.document );
+					$scope.openProjectDocument( data.document );
 				})
 		} else {
 			document._id = Date.now();
