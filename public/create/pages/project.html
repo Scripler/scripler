@@ -79,6 +79,8 @@
 								<div class="styleset-options-hide" ng-click="showStylesetOptions = false;" title="Close Options">x</div>
 								<div class="styleset-options-menupoint first" ng-click="editingStylesetName = true; showStylesetOptions = false;">rename</div>
 								<div class="styleset-options-menupoint" ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>
+								<div class="styleset-options-menupoint" ng-click="applyStylesetToDocument(styleset); showStylesetOptions = false;">apply to document</div>
+								<div class="styleset-options-menupoint" ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to project</div>
 							</div>
 
 							<ul ng-hide="visible" class="typo-children">
@@ -96,7 +98,7 @@
 									<div class="style-options" ng-show="showStyleOptions">
 										<div class="style-options-hide" ng-click="showStyleOptions = false;" title="Close Options">x</div>
 										<div class="style-options-menupoint first" ng-click="editingStyleName = true; showStyleOptions = false;">rename</div>
-										<div class="style-options-menupoint first" ng-click="archiveStyle(style); showStyleOptions = false;">archive</div>
+										<div class="style-options-menupoint" ng-click="archiveStyle(style); showStyleOptions = false;">archive</div>
 									</div>
 								</li>
 								<li class="new style" ng-click="addNewStyle( styleset )"><p>+</p></li>
