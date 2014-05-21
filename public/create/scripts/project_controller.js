@@ -1,6 +1,7 @@
 'use strict'
 
-function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress, $timeout, $rootScope ) {
+function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress,
+							$timeout, $rootScope, stylesetUtilsService ) {
 
 	var timeout = null;
 
@@ -78,8 +79,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.projectDocuments = $scope.project.documents;
 			if ( $scope.projectDocuments.length == 0 ) {
 				$scope.addProjectDocument();
+			} else {
+				$scope.openProjectDocument( $scope.projectDocuments[0] );
 			}
-			$scope.openProjectDocument( $scope.projectDocuments[0] );
 		});
 	});
 
@@ -183,14 +185,51 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.addNewStyleset = function() {
-		var length = $scope.stylesets.length + 1;
 		var styleset = {};
-		styleset.name = 'Styleset ' + length;
+		var length = $scope.stylesets.length;
+		var number = length + 1;
+
+		if ( length > 1 ) {
+			var stylesetIndex = length - 1;
+			var lastStyleset = $scope.stylesets[stylesetIndex];
+			number = parseInt( lastStyleset.name.replace( /^\D+/g, '') );
+			number = number + 1;
+		}
+
+		styleset.name = 'Styleset ' + number;
 
 		$http.post('/styleset', angular.toJson( styleset ) )
 			.success( function( data ) {
 				$scope.stylesets.push( data.styleset );
 			});
+	}
+
+	$scope.renameStyleset = function( styleset ) {
+		$http.put('/styleset/' + styleset._id + '/rename', angular.toJson( styleset ) );
+	}
+
+	$scope.archiveStyleset = function( styleset ) {
+		$http.put('/styleset/' + styleset._id + '/archive')
+			.success( function( data ) {
+				styleset.archived = true;
+			});
+	}
+
+	$scope.applyStyle = function( styleset, style ) {
+		var stylesetIndex = $scope.stylesets.indexOf( styleset );
+		var styleIndex = styleset.styles.indexOf( style );
+
+		$http.put('/styleset/' + styleset._id + '/document/' + $scope.documentSelected._id)
+			.success( function( data ) {
+				if ( data.styleset._id === styleset._id ) {
+					//TODO apply style to ck editor
+				} else {
+					//replace styleset with new copied styleset because they have different ids
+					$scope.stylesets[stylesetIndex] = data.styleset;
+					//TODO apply style to ck editor
+				}
+			})
+
 	}
 
 	$scope.addNewStyle = function( styleset ) {
@@ -199,7 +238,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var length = styleset.styles.length;
 		var number = length + 1;
 
-		if ( length > 1) {
+		if ( length > 1 ) {
 			var styleIndex = length - 1;
 			var lastStyle = styleset.styles[styleIndex];
 			number = parseInt( lastStyle.name.replace( /^\D+/g, '') );
@@ -215,41 +254,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 	}
 
-	$scope.archiveStyleset = function( styleset ) {
-		var index = $scope.stylesets.indexOf( styleset );
-		$http.put('/styleset/' + styleset._id + '/archive')
-			.success( function( data ) {
-				if ( index > -1 ) {
-					$scope.stylesets.splice( index, 1 );
-				}
-			});
+	$scope.renameStyle = function( style ) {
+		$http.put('/style/' + style._id + '/rename', angular.toJson( style ) );
 	}
 
-	$scope.archiveStyle = function( styleset, style ) {
-		var stylesetIndex = $scope.stylesets.indexOf( styleset );
-		var styleIndex = styleset.styles.indexOf( style );
+	$scope.archiveStyle = function( style ) {
 		$http.put('/style/' + style._id + '/archive')
 			.success( function( data ) {
-				if ( stylesetIndex > -1 ) {
-					if ( styleIndex > -1 ) {
-						$scope.stylesets[stylesetIndex].styles.splice( styleIndex, 1);
-					}
-				}
+				style.archived = true;
 			});
-	}
-
-	$scope.showStyleEditor = function() {
-		if ( $scope.styleEditorVisible ) {
-			$scope.hideStyleEditor();
-		} else {
-			$rootScope.ck.commands.showFloatingTools.exec();
-			$scope.styleEditorVisible = true;
-		}
-	}
-
-	$scope.hideStyleEditor = function() {
-		$rootScope.ck.commands.hideFloatingTools.exec();
-		$scope.styleEditorVisible = false;
 	}
 
     function initiateEditor(scope) {
@@ -264,7 +277,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	angular.element(document).ready(function () {
 
+		$scope.showStyleEditor = function() {
+			if ( $scope.styleEditorVisible ) {
+				$scope.hideStyleEditor();
+			} else {
+				$rootScope.ck.commands.showFloatingTools.exec();
+				$scope.styleEditorVisible = true;
+			}
+		}
 
+		$scope.hideStyleEditor = function() {
+			$rootScope.ck.commands.hideFloatingTools.exec();
+			$scope.styleEditorVisible = false;
+		}
 
 		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
 

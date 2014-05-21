@@ -1,7 +1,7 @@
 var utils = require('../lib/utils');
 var Style = require('../models/style.js').Style;
 var Styleset = require('../models/styleset.js').Styleset;
-var styleset_utils = require('../public/create/scripts/styleset-utils.js');
+var styleset_utils = require('../lib/styleset-utils.js');
 var copyStyleValues = require('../models/style.js').copyValues;
 
 //Load style by id
