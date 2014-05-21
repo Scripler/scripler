@@ -240,6 +240,10 @@
 	border-radius: 5px;
 	border: 1px solid #eee;
 }
+.styleset-options {
+	width: 170px;
+	padding: 5px;
+}
 .style-options {
 	top: inherit;
 }

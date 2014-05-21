@@ -1,7 +1,7 @@
 'use strict'
 
 function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress,
-							$timeout, $rootScope, stylesetUtilsService ) {
+							$timeout, $rootScope, stylesetUtilsService, $q ) {
 
 	var timeout = null;
 
@@ -205,7 +205,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.renameStyleset = function( styleset ) {
-		$http.put('/styleset/' + styleset._id + '/rename', angular.toJson( styleset ) );
+		$http.put('/styleset/' + styleset._id + '/update', angular.toJson( styleset ) );
 	}
 
 	$scope.archiveStyleset = function( styleset ) {
@@ -215,21 +215,38 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 	}
 
-	$scope.applyStyle = function( styleset, style ) {
-		var stylesetIndex = $scope.stylesets.indexOf( styleset );
-		var styleIndex = styleset.styles.indexOf( style );
+	$scope.applyStylesetToProject = function( styleset ) {
+		$http.put('/styleset/' + styleset._id + '/project/' + $scope.project._id)
+			.success( function( data ) {
+				$scope.project = data.project;
+			});
+	}
 
+	$scope.applyStylesetToDocument = function( styleset ) {
+		var deferred = $q.defer();
+
+		var stylesetIndex = $scope.stylesets.indexOf( styleset );
 		$http.put('/styleset/' + styleset._id + '/document/' + $scope.documentSelected._id)
 			.success( function( data ) {
-				if ( data.styleset._id === styleset._id ) {
-					//TODO apply style to ck editor
-				} else {
-					//replace styleset with new copied styleset because they have different ids
-					$scope.stylesets[stylesetIndex] = data.styleset;
-					//TODO apply style to ck editor
+				if ( data.styleset ) {
+					if ( data.styleset._id !== styleset._id ) {
+						$scope.stylesets[stylesetIndex] = data.styleset;
+					}
 				}
-			})
+				deferred.resolve( data.styleset );
+			});
 
+		return deferred.promise;
+	}
+
+	$scope.applyStyle = function( styleset, style ) {
+		var styleIndex = styleset.styles.indexOf( style );
+
+		var promise = $scope.applyStylesetToDocument( styleset );
+
+		promise.then( function( styleset ) {
+			//TODO apply style to ckEditor
+		});
 	}
 
 	$scope.addNewStyle = function( styleset ) {
@@ -255,7 +272,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.renameStyle = function( style ) {
-		$http.put('/style/' + style._id + '/rename', angular.toJson( style ) );
+		$http.put('/style/' + style._id + '/update', angular.toJson( style ) );
 	}
 
 	$scope.archiveStyle = function( style ) {
