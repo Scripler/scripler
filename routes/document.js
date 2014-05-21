@@ -243,7 +243,7 @@ exports.applyStyleset = function (req, res, next) {
 				if (err) {
 					return next(err);
 				}
-				res.send({document: req.document});
+				res.send({styleset: copy});
 			});
 		});
 	} else {

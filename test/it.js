@@ -1267,7 +1267,7 @@ describe('Scripler RESTful API', function () {
 					stylesetDocumentId && done();
 				});
 		}),
-		it('Applying a(nother) styleset to a document should return the document with a COPY of that styleset added to the document\'s stylesets', function (done) {
+		it('Applying a(nother) styleset to a document should return a styleset should return a potentially copied styleset - this is tested below', function (done) {
 			request(host)
 				.put('/styleset/' + stylesetId2 + "/document/" + stylesetDocumentId)
 				.set('cookie', cookie)
@@ -1275,8 +1275,7 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.document._id, stylesetDocumentId);
-					stylesetCopiedId = res.body.document.stylesets[0];
+					stylesetCopiedId = res.body.styleset._id;
 					stylesetCopiedId && done();
 				});
 		}),
