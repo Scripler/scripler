@@ -44,10 +44,7 @@ var isPopulatedPrivate = function (style) {
 	return style
 		&& style._id != undefined
 		&& style.name != undefined
-		&& style.class != undefined
-		&& style.css != undefined
-		&& style.archived != undefined
-		&& style.isSystem != undefined;
+		&& style.archived != undefined;
 }
 
 exports.isPopulated = isPopulatedPrivate;
