@@ -2,7 +2,7 @@ var utils = require('../lib/utils');
 var Style = require('../models/style.js').Style;
 var Styleset = require('../models/styleset.js').Styleset;
 var styleset_utils = require('../lib/styleset-utils.js');
-var copyStyleValues = require('../models/style.js').copyValues;
+var styleset_route = require('./styleset');
 
 //Load style by id
 exports.load = function (id) {
@@ -66,7 +66,21 @@ exports.create = function (req, res, next) {
 			if (err) {
 				return next(err);
 			}
-			res.send({style: style});
+
+			if (styleset.original) {
+				//console.log("Style was created in a copied styleset: updating original styleset...");
+				styleset_route.populateAndUpdateOriginalStyleset(styleset, function (err) {
+					if (err) {
+						return next(err);
+					}
+
+					//console.log("Original styleset was updated...");
+					res.send({style: style});
+				});
+			} else {
+				//console.log("Style was created in a non-copied styleset: no original to update, just return the style");
+				res.send({style: style});
+			}
 		});
 	});
 
