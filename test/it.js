@@ -1276,6 +1276,7 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					stylesetCopiedId = res.body.styleset._id;
+					assert.equal(res.body.styleset.styles[0].name, "Coolio 2");
 					stylesetCopiedId && done();
 				});
 		}),
