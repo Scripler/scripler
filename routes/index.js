@@ -67,8 +67,8 @@ module.exports = function (app, auth) {
 	app.get('/styleset/:stylesetId', auth.isLoggedIn(), styleset.open);
 	app.post('/style', auth.isLoggedIn(), styleset.load(), style.create);
 	app.get('/style/:styleId', auth.isLoggedIn(), style.open);
-	app.put('/styleset/:stylesetId/update', auth.isLoggedIn(), styleset.update);
-	app.put('/style/:styleId/update', auth.isLoggedIn(), style.update);
+	app.put('/styleset/:stylesetIdPopulated/update', auth.isLoggedIn(), styleset.update);
+	app.put('/style/:styleIdPopulated/update', auth.isLoggedIn(), style.update);
 	app.put('/styleset/rearrange', auth.isLoggedIn(), styleset.rearrange);
 	app.put('/styleset/:stylesetId/archive', auth.isLoggedIn(), styleset.archive);
 	app.put('/styleset/:stylesetId/unarchive', auth.isLoggedIn(), styleset.unarchive);
@@ -76,7 +76,7 @@ module.exports = function (app, auth) {
 	app.put('/style/:styleId/unarchive', auth.isLoggedIn(), style.unarchive);
 	app.put('/styleset/:stylesetId/project/:projectId', auth.isLoggedIn(), project.applyStyleset);
 	app.put('/styleset/:stylesetId/document/:documentId', auth.isLoggedIn(), document.applyStyleset);
-	app.get('/document/:documentId/stylesets', auth.isLoggedIn(), document.listStylesets);
+	app.get('/document/:documentIdPopulatedStylesets/stylesets', auth.isLoggedIn(), document.listStylesets);
 
 	/* API Output */
 	app.get('/project/:projectIdPopulatedFull/compile', auth.isLoggedIn(), project.compile);
@@ -94,10 +94,19 @@ module.exports = function (app, auth) {
 	app.param('documentId', function (req, res, next, id) {
 		return document.load(id)(req, res, next);
 	});
+	app.param('documentIdPopulatedStylesets', function (req, res, next, id) {
+		return document.loadPopulated(id)(req, res, next);
+	});
 	app.param('stylesetId', function (req, res, next, id) {
 		return styleset.load(id)(req, res, next);
 	});
+	app.param('stylesetIdPopulated', function (req, res, next, id) {
+		return styleset.loadPopulated(id)(req, res, next);
+	});
 	app.param('styleId', function (req, res, next, id) {
 		return style.load(id)(req, res, next);
+	});
+	app.param('styleIdPopulated', function (req, res, next, id) {
+		return style.loadPopulated(id)(req, res, next);
 	});
 }

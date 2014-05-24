@@ -1,65 +1,44 @@
 'use strict'
 
-function createController( $scope, $http, userService ) {
+function projectSpaceController( $scope, $http, localStorageService, projectsService, userService, $q ) {
 
-		$scope.changePassword = function() {
-			$scope.passwordSubmitted = true;
+	$scope.changePassword = function() {
+		$scope.passwordSubmitted = true;
 
-			if ( $scope.newPassword !== $scope.newPasswordRetype ) {
-				$scope.editPasswordForm.$valid = false;
-				$scope.editPasswordForm.newPassword.$invalid = true;
-				$scope.editPasswordForm.newPasswordRetype.$invalid = true;
-			}
-
-			if ( $scope.editPasswordForm.$valid ) {
-				var user = {};
-				user.email = $scope.user.email;
-				user.password = $scope.password;
-
-				$http.post( '/user/login', angular.toJson( user ) )
-					.success( function( data ) {
-						user.password = $scope.newPassword;
-						$http.put( '/user', angular.toJson( user ) )
-							.success( function( data ) {
-								$scope.editPassword = !$scope.editPassword;
-							});
-					})
-					.error( function( data ) {
-						$scope.editPasswordForm.currentPassword.$invalid = true;
-					});
-			}
+		if ( $scope.newPassword !== $scope.newPasswordRetype ) {
+			$scope.editPasswordForm.$valid = false;
+			$scope.editPasswordForm.newPassword.$invalid = true;
+			$scope.editPasswordForm.newPasswordRetype.$invalid = true;
 		}
 
-		$scope.updateUser = function() {
-			$scope.saveSubmitted = true;
+		if ( $scope.editPasswordForm.$valid ) {
+			var user = {};
+			user.email = $scope.user.email;
+			user.password = $scope.password;
 
-			if ( $scope.emailEditForm.$valid ) {
-				userService.updateUser( $scope.user );
-				$scope.showSettings = false;
-			}
+			$http.post( '/user/login', angular.toJson( user ) )
+			.success( function( data ) {
+				user.password = $scope.newPassword;
+				$http.put( '/user', angular.toJson( user ) )
+				.success( function( data ) {
+					$scope.editPassword = !$scope.editPassword;
+				});
+			})
+			.error( function( data ) {
+				$scope.editPasswordForm.currentPassword.$invalid = true;
+			});
 		}
+	}
 
-	/*$.ajax({
-		url: 'http://scripler.com:3000/user/login',
-		type: 'POST',
-		contentType: 'application/json',
-		data: JSON.stringify({
-			"email":"allan@scripler.com",
-			"password":"askldjalskdjsa"
-		}),
-		dataType: 'json',
-		success: function(data) {
-		  console.dir(data);
-		},
-		error: function(jqxhr, status, errormsg) {
-		  console.log("status: " + status + " errormsg: " + errormsg)
+	$scope.updateUser = function() {
+		$scope.saveSubmitted = true;
+
+		if ( $scope.emailEditForm.$valid ) {
+			userService.updateUser( $scope.user );
+			$scope.showSettings = false;
 		}
-	});*/
+	}
 
-}
-//}]);
-
-function PublicationsCtrl ( $scope, $http, localStorageService, projectsService, userService, $q ) {
 	$scope.publications = [];
 	$scope.showPublicationOptions = false;
 	var lsName = 'demo-scripler-publications';

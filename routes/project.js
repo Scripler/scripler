@@ -236,52 +236,62 @@ exports.copy = function (req, res, next) {
 		newDocuments.push(newDocument);
 	}
 
-	copyStyleset(project.styleset, function(err, copy) {
+	Styleset.findOne({"_id": project.styleset}).exec(function (err, styleset) {
 		if (err) {
 			return next(err);
 		}
 
-		newProject.styleset = copy;
-
-		newProject.save(function (err) {
+		copyStyleset(styleset, function(err, copy) {
 			if (err) {
 				return next(err);
 			}
 
-			Document.create(newDocuments, function (err) {
+			newProject.styleset = copy;
+
+			newProject.save(function (err) {
 				if (err) {
 					return next(err);
 				}
 
-				var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
-				var imagesDir = path.join(projectDir, conf.epub.imagesDir);
-
-				var newProjectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + newProject._id);
-				var newImagesDir = path.join(newProjectDir, conf.epub.imagesDir);
-
-				ncp(projectDir, newProjectDir, function (err) {
+				Document.create(newDocuments, function (err) {
 					if (err) {
 						return next(err);
 					}
-					res.send({project: newProject});
+
+					var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
+					var imagesDir = path.join(projectDir, conf.epub.imagesDir);
+
+					var newProjectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + newProject._id);
+					var newImagesDir = path.join(newProjectDir, conf.epub.imagesDir);
+
+					ncp(projectDir, newProjectDir, function (err) {
+						if (err) {
+							return next(err);
+						}
+						res.send({project: newProject});
+					});
 				});
 			});
 		});
 	});
+
 }
 
 exports.rearrange = function (req, res, next) {
 	var errorMessage = "/project/rearrange can only rearrange existing projects (not e.g. add or delete projects)";
 
-	if (req.body.projects && req.body.projects.length == req.user.projects.length) {
-		for (var i=0; i<req.body.projects.length; i++) {
-			var rearrangedProject = req.body.projects[i];
-			var containsRearrangedProject = utils.containsModel(req.body.projects, rearrangedProject);
-			if (!containsRearrangedProject) {
+	var rearrangedProjectIds = req.body.projects;
+	var existingProjectIds = req.user.projects;
+
+	if (rearrangedProjectIds && rearrangedProjectIds.length == existingProjectIds.length) {
+		for (var i=0; i<rearrangedProjectIds.length; i++) {
+			var rearrangedProjectId = rearrangedProjectIds[i];
+			var containsRearrangedProjectId = rearrangedProjectIds.indexOf(rearrangedProjectId) > -1;
+			if (!containsRearrangedProjectId) {
 				return next({message: errorMessage, status: 400});
 			}
 		}
-		req.user.projects = req.body.projects;
+		req.user.projects = rearrangedProjectIds;
 		req.user.save(function (err) {
 			if (err) {
 				return next(err);

@@ -29,7 +29,8 @@ body {
 	background: none #F8F9F9;
 	font-family: 'Lato', Calibri, Arial, sans-serif;
 	color: #666;
-	overflow-x: hidden
+	overflow-x: hidden;
+	overflow-y: hidden;
 }
 
 h1 {
