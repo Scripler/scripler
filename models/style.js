@@ -17,7 +17,7 @@ var StyleMemberSchema = new Schema({
 var StyleSchema = new Schema({
 	name: { type: String, required: true },
 	class: { type: String },
-	css: { type: String },
+	css: { type: Schema.Types.Mixed },
 	tag: { type: String },
 	stylesetId: { type: Schema.Types.ObjectId, ref: 'Styleset', required: true },
 	members: [StyleMemberSchema],
@@ -52,6 +52,7 @@ exports.isPopulated = isPopulatedPrivate;
 exports.copy = function (style, newStylesetId, next) {
 	if (style) {
 		// TODO: why is the Mongoose model object id, newStylesetId, an object here but a string in utils.containsIdPrivate()?
+		// See: http://stackoverflow.com/questions/15724272/mongoose-and-node-js-id-and-id
 		if ('object' == typeof style && 'object' == typeof newStylesetId) {
 
 			/*

@@ -42,11 +42,11 @@ var stylesetId;
 var stylesetId2;
 var stylesetId3;
 var stylesetCopiedId;
-var stylesetCopiedId2;
 
 var styleId;
 var styleId2;
 var styleId3;
+var styleId4;
 var styleCopiedId;
 var styleCopiedId2;
 
@@ -74,7 +74,7 @@ function containsDocWithFolderId(documents, folderId) {
 	return result;
 }
 
-if (conf.db.uri.match('_test$') === null) {
+if (conf.db.uri.match(/_test$/) === null) {
 	console.log("You shouldn't be running this test on any database not being specifically meant for 'test'!");
 	console.log("You tried with this database: " + conf.db.uri);
 	process.exit(1);
@@ -145,13 +145,14 @@ describe('Scripler RESTful API', function () {
 			request(host)
 				.post('/style')
 				.set('cookie', cookie)
-				.send({stylesetId: systemStylesetId, name: "Scripler Style 1", class: "ScruplerZ", css: "some scripler css", isSystem: true})
+				.send({stylesetId: systemStylesetId, name: "Scripler Style 1", class: "ScruplerZ", css: {"key1": "value1", "key2": "value2"}, isSystem: true})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style.name, "Scripler Style 1");
 					assert.equal(res.body.style.class, "ScruplerZ");
-					assert.equal(res.body.style.css, "some scripler css");
+					assert.equal(res.body.style.css.key1, "value1");
+                    assert.equal(res.body.style.css.key2, "value2");
 					assert.equal(res.body.style.isSystem, true);
 					assert.equal(res.body.style.stylesetId, systemStylesetId);
 					styleId = res.body.style._id;
@@ -437,25 +438,17 @@ describe('Scripler RESTful API', function () {
 		})
 	}),
 	describe('Initialize Typography (Project.applyStyleset() (such that EPUB will contain styles))', function () {
-		var css = '.container > header nav a:after {' +
-			'content: attr(data-info);' +
-			'color: #47a3da;' +
-			'position: absolute;' +
-			'width: 600%;' +
-			'top: 120%;' +
-			'text-align: right;' +
-			'right: 0;' +
-			'opacity: 0;' +
-			'pointer-events: none;' +
-			'}' +
-
-			'.container > header nav a:hover:after {' +
-			'	opacity: 1;' +
-			'}' +
-
-			'.container > header nav a:hover {' +
-			'	background: #47a3da;' +
-			'}';
+		var css = {
+                'content': 'attr(data-info)',
+                'color': '#47a3da',
+                'position': 'absolute',
+                'width': '600%',
+                'top': '120%',
+                'text-align': 'right',
+                'right': '0',
+                'opacity': '0',
+                'pointer-events': 'none'
+			};
 
 		it('Creating a styleset should return the new styleset', function (done) {
 			request(host)
@@ -480,7 +473,7 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style.name, "Coolio");
 					assert.equal(res.body.style.class, "CoolioClass");
-					assert.equal(res.body.style.css, css);
+					assert.deepEqual(res.body.style.css, css);
 					assert.equal(res.body.style.stylesetId, stylesetId);
 					styleId = res.body.style._id;
 					styleId && done();
@@ -585,7 +578,6 @@ describe('Scripler RESTful API', function () {
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						document = res.body.document;
 						assert.equal(res.body.document.name, 'MyFirstDocument');
 						assert.equal(res.body.document.projectId, projectId);
 						assert.equal(res.body.document.folderId, rootFolderId);
@@ -613,7 +605,6 @@ describe('Scripler RESTful API', function () {
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						document = res.body.document;
 						assert.equal(res.body.document.name, 'MySecondDocument');
 						assert.equal(res.body.document.projectId, projectId);
 						assert.equal(res.body.document.folderId, childFolderId);
@@ -647,7 +638,6 @@ describe('Scripler RESTful API', function () {
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						document = res.body.document;
 						assert.equal(res.body.document.name, 'Cover');
 						assert.equal(res.body.document.projectId, projectId);
 						assert.equal(res.body.document.folderId, rootFolderId);
@@ -682,7 +672,6 @@ describe('Scripler RESTful API', function () {
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						document = res.body.document;
 						assert.equal(res.body.document.name, 'TitlePage');
 						assert.equal(res.body.document.projectId, projectId);
 						assert.equal(res.body.document.folderId, rootFolderId);
@@ -717,7 +706,6 @@ describe('Scripler RESTful API', function () {
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						document = res.body.document;
 						assert.equal(res.body.document.name, 'ToC');
 						assert.equal(res.body.document.projectId, projectId);
 						assert.equal(res.body.document.folderId, rootFolderId);
@@ -752,7 +740,6 @@ describe('Scripler RESTful API', function () {
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						document = res.body.document;
 						assert.equal(res.body.document.name, 'Colophon');
 						assert.equal(res.body.document.projectId, projectId);
 						assert.equal(res.body.document.folderId, rootFolderId);
@@ -1157,7 +1144,6 @@ describe('Scripler RESTful API', function () {
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						document = res.body.document;
 						assert.equal(res.body.document.name, 'Sikke et dokument');
 						assert.equal(res.body.document.projectId, projectId);
 						assert.equal(res.body.document.folderId, childFolderId);
@@ -1171,25 +1157,18 @@ describe('Scripler RESTful API', function () {
 			})
 	}),
 	describe('Typography (Styleset & Style)', function () {
-		var css2 = '.container > header nav a:after {' +
-			'content: attr(data-info);' +
-			'color: #47a3da;' +
-			'position: absolute;' +
-			'width: 600%;' +
-			'top: 120%;' +
-			'text-align: right;' +
-			'right: 0;' +
-			'opacity: 0;' +
-			'pointer-events: none;' +
-			'}' +
+        var css2 = {
+            'content': 'attr(data-info)',
+            'color': '#27a3da',
+            'position': 'absolute',
+            'width': '500%',
+            'top': '110%',
+            'text-align': 'left',
+            'right': '5',
+            'opacity': '10',
+            'pointer-events': 'none'
+        };
 
-			'.container > header nav a:hover:after {' +
-			'	opacity: 1;' +
-			'}' +
-
-			'.container > header nav a:hover {' +
-			'	background: #47a3d2;' +
-			'}';
 
 		it('Creating a styleset should return the new styleset, a user styleset', function (done) {
 			request(host)
@@ -1214,7 +1193,7 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style.name, "Coolio 2");
 					assert.equal(res.body.style.class, "CoolioClass2");
-					assert.equal(res.body.style.css, css2);
+					assert.deepEqual(res.body.style.css, css2);
 					assert.equal(res.body.style.tag, "h1");
 					styleId2 = res.body.style._id;
 					assert.equal(res.body.style.stylesetId, stylesetId2);
@@ -1254,7 +1233,6 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					document = res.body.document;
 					assert.equal(res.body.document.name, 'Jimbo');
 					assert.equal(res.body.document.projectId, projectId);
 					assert.equal(res.body.document.folderId, rootFolderId);
@@ -1322,7 +1300,7 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.style._id, styleId2);
 					assert.equal(res.body.style.name, "Coolio 2");
 					assert.equal(res.body.style.class, "CoolioClass2");
-					assert.equal(res.body.style.css, css2);
+					assert.deepEqual(res.body.style.css, css2);
 					assert.equal(res.body.style.tag, "h1");
 					done();
 				});
@@ -1353,24 +1331,42 @@ describe('Scripler RESTful API', function () {
 				});
 		}),
 		it('Creating a new style for testing updating a styleset by adding a style to it', function (done) {
+            css2["vuf"] = "5px";
 			request(host)
 				.post('/style')
 				.set('cookie', cookie)
-				.send({stylesetId: stylesetCopiedId, name: "Vuf", class: "VufClass", css: css2 + "vuf", tag: ""})
+				.send({stylesetId: stylesetCopiedId, name: "Vuf", class: "VufClass", css: css2, tag: ""})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style.name, "Vuf");
 					assert.equal(res.body.style.class, "VufClass");
-					assert.equal(res.body.style.css, css2 + "vuf");
+					assert.equal(res.body.style.css.vuf, "5px");
 					assert.equal(res.body.style.tag, "");
 					styleId3 = res.body.style._id;
 					assert.equal(res.body.style.stylesetId, stylesetCopiedId);
 					styleId3 && done();
 				});
 		}),
-		it('Updating a copied (document) styleset by adding a new style to it and removing an existing style from it, should return the updated styleset.', function (done) {
-			var styles = [styleId3];
+        it('Creating an extra new style for for the same styleset', function (done) {
+            request(host)
+                .post('/style')
+                .set('cookie', cookie)
+                .send({stylesetId: stylesetCopiedId, name: "Vuf - 2", class: "xxx123", css: {some: "stuff"}, tag: "h3"})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    assert.equal(res.body.style.name, "Vuf - 2");
+                    assert.equal(res.body.style.class, "xxx123");
+                    assert.equal(res.body.style.css.some, "stuff");
+                    assert.equal(res.body.style.tag, "h3");
+                    assert.equal(res.body.style.stylesetId, stylesetCopiedId);
+                    styleId4 = res.body.style._id;
+                    styleId4 && done();
+                });
+        }),
+		it('Updating a copied (document) styleset by adding two new styles to it and removing an existing style from it, should return the updated styleset.', function (done) {
+			var styles = [styleId3, styleId4];
 			request(host)
 				.put('/styleset/' + stylesetCopiedId + '/update')
 				.set('cookie', cookie)
@@ -1379,8 +1375,9 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset._id, stylesetCopiedId);
-					assert.equal(res.body.styleset.styles.length, 1);
+					assert.equal(res.body.styleset.styles.length, 2);
 					assert.equal(res.body.styleset.styles[0], styleId3);
+                    assert.equal(res.body.styleset.styles[1], styleId4);
 					assert.notEqual(res.body.styleset.styles[0], styleCopiedId);
 					assert.equal(res.body.styleset.name, "OK, Maybe not the BEST, but...");
 					done();
@@ -1395,7 +1392,7 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset.name, "OK, Maybe not the BEST, but...");
-					assert.equal(res.body.styleset.styles.length, 1);
+					assert.equal(res.body.styleset.styles.length, 2);
 					styleCopiedId2 = res.body.styleset.styles[0];
 					done();
 				});
@@ -1427,7 +1424,7 @@ describe('Scripler RESTful API', function () {
 				});
 		}),
 		it('Consecutive times when that styleset is updated, the same styleset with updated values should be returned', function (done) {
-			var styles = [styleId3];
+			var styles = [styleId3, styleId4];
 			request(host)
 				.put('/styleset/' + stylesetCopiedId + '/update')
 				.set('cookie', cookie)
@@ -1437,23 +1434,25 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset._id, stylesetCopiedId);
 					assert.equal(res.body.styleset.name, "Actually, it is my best!");
-					assert.equal(res.body.styleset.styles.length, 1);
+					assert.equal(res.body.styleset.styles.length, 2);
 					assert.equal(res.body.styleset.styles[0], styleId3);
+                    assert.equal(res.body.styleset.styles[1], styleId4);
 					done();
 				});
 		}),
 		it('The first time a style is updated, the updated style should be returned.', function (done) {
+            css2["another-key"] = 'another value';
 			request(host)
 				.put('/style/' + styleCopiedId + '/update')
 				.set('cookie', cookie)
-				.send({name: "Donkey", class: "jack", css: css2 + "...some new CSS"})
+				.send({name: "Donkey", class: "jack", css: css2})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style._id, styleCopiedId);
 					assert.equal(res.body.style.name, "Donkey");
 					assert.equal(res.body.style.class, "jack");
-					assert.equal(res.body.style.css, css2 + "...some new CSS");
+					assert.equal(res.body.style.css["another-key"], "another value");
 					done();
 				});
 		}),
@@ -1467,22 +1466,24 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style.name, "Donkey");
 					assert.equal(res.body.style.class, "jack");
-					assert.equal(res.body.style.css, css2 + "...some new CSS");
+                    assert.equal(res.body.style.css["another-key"], "another value");
 					done();
 				});
 		}),
 		it('Consecutive times when that style is updated, the same style with updated values should be returned', function (done) {
+            css2["another-key"] = 'yet another value';
 			request(host)
 				.put('/style/' + styleCopiedId + '/update')
 				.set('cookie', cookie)
-				.send({name: "DonkeyKong", class: "jytte", css: css2 + "...And now some blue color!"})
+				.send({name: "DonkeyKong", class: "jytte", css: css2})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    //console.log(res.body);
 					assert.equal(res.body.style._id, styleCopiedId);
 					assert.equal(res.body.style.name, "DonkeyKong");
 					assert.equal(res.body.style.class, "jytte");
-					assert.equal(res.body.style.css, css2 + "...And now some blue color!");
+					assert.deepEqual(res.body.style.css, css2);
 					done();
 				});
 		}),
@@ -1496,27 +1497,29 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style.name, "DonkeyKong");
 					assert.equal(res.body.style.class, "jytte");
-					assert.equal(res.body.style.css, css2 + "...And now some blue color!");
+                    assert.equal(res.body.style.css["another-key"], "yet another value");
+                    assert.deepEqual(res.body.style.css, css2);
 					done();
 				});
 		}),
 		it('Updating a copied (document) style to test if the values are copied back to the original style, when the STYLESET is updated.', function (done) {
-			request(host)
+            css2.fancy = 'ew ew ew';
+            request(host)
 				.put('/style/' + styleId3 + '/update')
 				.set('cookie', cookie)
-				.send({name: "FancyPantsy", class: "pantsy", css: css2 + "Fancy CSS"})
+				.send({name: "FancyPantsy", class: "pantsy", css: css2})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style._id, styleId3);
 					assert.equal(res.body.style.name, "FancyPantsy");
 					assert.equal(res.body.style.class, "pantsy");
-					assert.equal(res.body.style.css, css2 + "Fancy CSS");
+					assert.equal(res.body.style.css.fancy, "ew ew ew");
 					done();
 				});
 		}),
 		it('Update the styleset for the test described in the test above', function (done) {
-			var styles = [styleId3];
+			var styles = [styleId3, styleId4];
 			request(host)
 				.put('/styleset/' + stylesetCopiedId + '/update')
 				.set('cookie', cookie)
@@ -1526,8 +1529,9 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset._id, stylesetCopiedId);
 					assert.equal(res.body.styleset.name, "Robotnix");
-					assert.equal(res.body.styleset.styles.length, 1);
+                    assert.equal(res.body.styleset.styles.length, 2);
 					assert.equal(res.body.styleset.styles[0], styleId3);
+                    assert.equal(res.body.styleset.styles[1], styleId4);
 					done();
 				});
 		}),
@@ -1542,7 +1546,7 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.style._id, styleCopiedId2);
 					assert.equal(res.body.style.name, "FancyPantsy");
 					assert.equal(res.body.style.class, "pantsy");
-					assert.equal(res.body.style.css, css2 + "Fancy CSS");
+                    assert.deepEqual(res.body.style.css, css2);
 					done();
 				});
 		}),
@@ -1735,7 +1739,7 @@ describe('Scripler RESTful API', function () {
 				.set('cookie', cookie)
 				.send({entries: [
 					{title: "Cover", target: "HTML/Cover.html", "level": "0"},
-					{title: "Title Page", target: "HTML/TitlePage.html", "level": "0"},
+					{title: "Title Page", target: "HTML/TitlePage.html", "level": "0"}
 				]})
 				.expect(200)
 				.end(function (err, res) {
@@ -1804,7 +1808,7 @@ describe('Scripler RESTful API', function () {
 						callback(null, new Buffer(res.data, 'binary'));
 					});
 				}).end(function (err, res) {
-					if (err) return done(err);
+                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 
 					// binary response data is in res.body as a buffer
 					assert.ok(Buffer.isBuffer(res.body));
@@ -1828,10 +1832,8 @@ describe('Scripler RESTful API', function () {
 	}),
 	describe('Import', function () {
 		it('Uploading/Importing a file to a project, should return the a new document with the imported content', function (done) {
-			var fileContent = 'This is some file content';
 			var filename = 'test.docx';
 			var filepath = path.join('test', 'resources', 'import', filename);
-			var boundary = Math.random();
 
 			request(host)
 				.post('/document/'+projectId+'/upload')
@@ -1840,7 +1842,6 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					document = res.body.document;
 					assert.equal(res.body.document.name, filename);
 					assert.equal(res.body.document.projectId, projectId);
 					//TODO: When we got a proper semi-automated docvert setup on both Windows and Unix, do assertion of imported text!
@@ -1938,4 +1939,4 @@ describe('Scripler RESTful API', function () {
 				});
 		})
 	})
-})
+});
