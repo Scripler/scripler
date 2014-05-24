@@ -17,13 +17,23 @@ var isStylePopulated = require('../../../models/style.js').isPopulated;
 		return nonEditableCss;
 	};
 
-	exports.getStylesetContents = function (styleset) {
-		var stylesetContents;
+	exports.getStylesetContents = function (styleset, isDefault) {
+		var stylesetContents = "";
 
-		if (styleset && styleset.styles != null && styleset.styles.length > 0) {
+		if (styleset && styleset.styles && styleset.styles.length > 0) {
 			for (var j=0; j<styleset.styles.length; j++) {
 				var style = styleset.styles[j];
-				stylesetContents += style.css + '\n';
+				if (style.tag) {
+                    if (!isDefault) {
+                        stylesetContents += ".styleset-" + styleset._id + " ";
+                    }
+                    stylesetContents += style.tag + ", ";
+                }
+                stylesetContents += ".style-" + style._id + " {\n";
+                for (var cssProperty in style.css) {
+                    stylesetContents += cssProperty + ": " + style.css[cssProperty] + ";\n";
+                }
+                stylesetContents += "}\n";
 			}
 		}
 
