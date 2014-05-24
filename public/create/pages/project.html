@@ -114,13 +114,13 @@
 			</div>
 		</div>
 		<div class="documents-options-bottom-buttons" ng-show="showDocuments">
-			<a ng-click="showNewOptions = !showNewOptions; showImportOptions = false; showBottomOptions = false;">new</a>
-			<a ng-click="showImportOptions = !showImportOptions; showNewOptions = false; showBottomOptions = false;">import</a>
-			<a ng-click="showBottomOptions = !showBottomOptions; showNewOptions = false; showImportOptions = false;">options</a>
+			<a ng-class="{ 'open' : showNewOptions }" ng-click="showNewOptions = !showNewOptions; showImportOptions = false; showBottomOptions = false;">new</a>
+			<a ng-class="{ 'open' : showImportOptions }" ng-click="showImportOptions = !showImportOptions; showNewOptions = false; showBottomOptions = false;">import</a>
+			<a class="last" ng-class="{ 'open' : showBottomOptions }" ng-click="showBottomOptions = !showBottomOptions; showNewOptions = false; showImportOptions = false;">options</a>
 		</div>
 
 		<div class="stylesets-options-bottom-buttons" ng-show="showTypo">
-			<a ng-click="showStyleEditor()">style editor</a>
+			<a ng-click="showStyleEditor()" ng-class="{ 'open' : styleEditorVisible }">style editor</a>
 		</div>
 
 		<div id="menu-left-content-options" class="menu-left-options" ng-show="showDocuments" ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
@@ -130,10 +130,10 @@
 					<a ng-click="">New Folder</a>
 				</div>
 				<div ng-show="showImportOptions">
-					<p>Scripler imports Word files and other common word processor formats (link).</p>
-					<input type="file" ng-file-select="onFileSelect($files)">
 					<div class="upload-box" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="dragover"
 						 ng-show="dropSupported" ng-file-drop-available="dropSupported=true">drop files here</div>
+					<p>Scripler imports Word files and other common word processor formats (link).</p>
+					<input type="file" ng-file-select="onFileSelect($files)">
 				</div>
 				<div ng-show="showBottomOptions">
 					<input type="checkbox" ng-model="user.showArchivedDocuments" ng-change="updateUser();">Show Archived Documents<br>

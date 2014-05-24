@@ -308,9 +308,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.styleEditorVisible = false;
 		}
 
+		$scope.$watch('showTypo', function() {
+			if ( !$scope.showTypo && $scope.styleEditorVisible ) {
+				$scope.hideStyleEditor();
+			}
+		});
+
 		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
 
-//	    var startChapter = $scope.documents[0];
+//	    var startChapter = $scope.documents[0];i
 //	    $scope.entrybody = startChapter.content;
 	    // Mangler at tilf??je stylen startChapter.documentstyleSheet
 		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
