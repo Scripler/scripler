@@ -1,7 +1,7 @@
 'use strict';
 
 var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload',
-										 	'ngProgress'] );
+										 	'ngProgress', 'stylesetUtilsSharedModule'] );
 
 app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStorageService', '$rootScope', '$timeout',
 	function( $http, $scope, userService, localStorageService, $rootScope, $timeout ) {
@@ -25,6 +25,7 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 			var publications = [];
 			var lsName = 'demo-scripler-publications';
 			var lsPublications = localStorageService.get( lsName );
+
 				if ( lsPublications ) {
 					if ( lsPublications.length !== 0 ) {
 						publications = lsPublications;
@@ -33,10 +34,8 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 					publications = [ { _id: Date.now(), name:'Demo Title' } ];
 					localStorageService.add( lsName, publications );
 				}
-			var demoOn = function() {
+
 				$rootScope.$emit('demo:mode', publications);
-			}
-			$timeout(demoOn, 100); //!important: timeout for createController to load
 		});
 
 		$scope.submitRegistration = function() {
@@ -105,13 +104,13 @@ app.config( function( $routeProvider, $httpProvider, $provide ) {
 	}]
 
 	$routeProvider
-		.when('/', { templateUrl:'pages/create.html', controller: createController,
+		.when('/', { templateUrl:'pages/project-space.html', controller: projectSpaceController,
 					resolve: { access: isLoggedIn }
 					})
 		.when('/project', { templateUrl:'pages/project.html', controller: projectController,
 							resolve: { access: isLoggedIn }
 							})
-		.when('/error', { templateUrl:'pages/error.html', controller: createController })
+		.when('/error', { templateUrl:'pages/error.html' })
 		.otherwise({ redirectTo:'/' });
 });
 
@@ -221,7 +220,7 @@ app.directive('onEnter', function() {
 	};
 });
 
-app.directive('ckEditor', function( $window ) {
+app.directive('ckEditor', function( $window, $rootScope ) {
 	return {
 		require: '?ngModel',
 		link: function(scope, elm, attr, ngModel) {
@@ -229,8 +228,27 @@ app.directive('ckEditor', function( $window ) {
 				allowedContent: true,
 				skin: 'scripler',
 				resize_enabled: false,
-				//extraPlugins: 'scripler',
-				height: $window.innerHeight - 90,
+				extraPlugins: 'scripler,floating-tools,line-height,texttransform,indent-right,indentations',
+				floatingtools: 'Basic',
+				floatingtools_Basic: [
+					{ name: 'styles', items: [ 'Font' ] },
+					'/',
+					{ name: 'fontstyles', items: [ 'FontSize', 'line-height' ] },
+					'/',
+					['Bold'], ['Italic'], ['Underline'], ['TransformTextToUppercase'], ['Subscript'], ['Superscript'],
+					'/',
+					['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'],
+					'/',
+					['Indent'], ['IndentRight'], ['IndentTop'], ['IndentBottom'], ['IndentText'],
+					'#',
+					['IndentTopIcon'], ['IndentTopIcon'], ['IndentTopIcon'], ['IndentBottomIcon'], ['IndentTextIcon'],
+					'#',
+					['Outdent'], ['OutdentRight'], ['OutdentTop'], ['OutdentBottom'], ['OutdentText']
+				],
+				indentUnit: 'em',
+				indentOffset: 2,
+				enterMode: CKEDITOR.ENTER_P,
+				height: $window.innerHeight - 30,
 				width: 800,
 				font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
 				//contentsCss: ['stylesets/pleasantbw.css', 'contents.css', 'http://fonts.googleapis.com/css?family=Ribeye'],
@@ -267,6 +285,7 @@ app.directive('ckEditor', function( $window ) {
 			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 )
 			CKEDITOR.tools.enableHtml5Elements( document );
 
+			$rootScope.ck = ck;
 		}
 	};
 });

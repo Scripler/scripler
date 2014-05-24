@@ -2,7 +2,7 @@ var utils = require('../lib/utils');
 var Styleset = require('../models/styleset.js').Styleset;
 var Style = require('../models/style.js').Style;
 var Project = require('../models/project.js').Project;
-var styleset_utils = require('../public/create/scripts/styleset-utils.js');
+var styleset_utils = require('../lib/styleset-utils.js');
 
 //Load styleset by id
 exports.load = function (id) {
@@ -82,6 +82,45 @@ exports.open = function (req, res) {
 }
 
 /**
+ * TODO: remove this function and require callers to populate the stylesets and call styleset_utils.updateOriginalStyleset() themselves?
+ * 
+ * @type {Function}
+ */
+var populateAndUpdateOriginalStyleset = exports.populateAndUpdateOriginalStyleset = function(newStyleset, next) {
+	// Populate the original styleset (was not loaded)
+	Styleset.find({"_id": {$in: [newStyleset._id, newStyleset.original]}}).populate({path: 'styles'}).exec(function (err, populatedStylesets) {
+		if (err) {
+			return next(err);
+		}
+
+		if (populatedStylesets.length==2) {
+			var populatedOriginalStyleset;
+			var populatedNewStyleset;
+
+			if (populatedStylesets[0]._id == newStyleset.original) {
+				populatedNewStyleset = populatedStylesets[0];
+				populatedOriginalStyleset  = populatedStylesets[1];
+			} else {
+				populatedOriginalStyleset = populatedStylesets[0];
+				populatedNewStyleset = populatedStylesets[1];
+			}
+
+			styleset_utils.updateOriginalStyleset(populatedOriginalStyleset, populatedNewStyleset, function (err) {
+				populatedOriginalStyleset.save(function (err, updatedOriginalStyleset) {
+					if (err) {
+						return next(err);
+					}
+
+					return next(null, updatedOriginalStyleset);
+				});
+			});
+		} else {
+			return next("ERROR: could not find both new and original styleset!");
+		}
+	});
+}
+
+/**
  *
  * Update a styleset, i.e. its name and styles.
  *
@@ -96,42 +135,7 @@ exports.open = function (req, res) {
 exports.update = function (req, res, next) {
 	var styleset = req.styleset;
 
-	var updateOriginalStyleset = function(newStyleset, next) {
-		// Populate the original styleset (was not loaded)
-		Styleset.find({"_id": {$in: [newStyleset._id, newStyleset.original]}}).populate({path: 'styles'}).exec(function (err, populatedStylesets) {
-			if (err) {
-				return next(err);
-			}
-
-			if (populatedStylesets.length==2) {
-				var populatedOriginalStyleset;
-				var populatedNewStyleset;
-
-				if (populatedStylesets[0]._id == newStyleset.original) {
-					populatedNewStyleset = populatedStylesets[0];
-					populatedOriginalStyleset  = populatedStylesets[1];
-				} else {
-					populatedOriginalStyleset = populatedStylesets[0];
-					populatedNewStyleset = populatedStylesets[1];
-				}
-
-				styleset_utils.updateOriginalStyleset(populatedOriginalStyleset, populatedNewStyleset, function (err) {
-					populatedOriginalStyleset.save(function (err, updatedOriginalStyleset) {
-						if (err) {
-							return next(err);
-						}
-
-						return next(null, updatedOriginalStyleset);
-					});
-				});
-			} else {
-				return next("ERROR: could not find both new and original styleset!");
-			}
-		});
-	};
-
 	styleset.name = req.body.name;
-
 	// TODO: implement some sort of safety check ensuring that we only accept styles from the current styleset? See also TODO in models/Styleset.styles
 	styleset.styles = req.body.styles;
 
@@ -142,7 +146,7 @@ exports.update = function (req, res, next) {
 
 		// Update the original styleset if one such exists
 		if (updatedStyleset.original) {
-			updateOriginalStyleset(updatedStyleset, function (err, updatedOriginalStyleset) {
+			populateAndUpdateOriginalStyleset(updatedStyleset, function (err, updatedOriginalStyleset) {
 				if (err) {
 					return next(err);
 				}

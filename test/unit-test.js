@@ -5,7 +5,7 @@ var epub = require('../lib/epub')
   , assert = require("assert")
   , TOCEntry = require('../models/project.js').TOCEntry
   , Document = require('../models/document.js').Document
-  , styleset_utils = require('../public/create/scripts/styleset-utils.js');
+  , styleset_utils = require('../public/create/scripts/styleset-utils-shared.js');
 
 describe('epub', function () {
 	it('getCloseNavPointsString', function () {

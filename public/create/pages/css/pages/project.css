@@ -115,7 +115,7 @@
 .menu-left-options.open {
 	margin-bottom: 23px !important;
 }
-.documents-options-bottom-buttons {
+.documents-options-bottom-buttons, .stylesets-options-bottom-buttons {
 	background-color: #231F20;
 	height: 25px;
 	width: 100%;
@@ -123,7 +123,7 @@
 	z-index: 2;
 	bottom: 0;
 }
-.documents-options-bottom-buttons a {
+.documents-options-bottom-buttons a, .stylesets-options-bottom-buttons a {
 	color: #fff;
 	margin-left: 20px;
 	margin-right: 20px;
@@ -131,7 +131,10 @@
 	text-decoration: underline;
 	cursor: pointer;
 }
-.documents-options-bottom-buttons a:hover {
+.stylesets-options-bottom-buttons a {
+	margin-left: 90px;
+}
+.documents-options-bottom-buttons a:hover, .stylesets-options-bottom-buttons a:hover {
 	color: #999;
 }
 
@@ -189,7 +192,7 @@
 	color: #fff265;
 }
 
-.projectDocument .projectDocument-options-show {
+.projectDocument .projectDocument-options-show, .styleset-options-show {
 	position: absolute;
 	top: 5px;
 	right: 5px;
@@ -202,6 +205,13 @@
 	-o-transition: all 0.5s ease-in-out;
 	transition: all 0.5s ease-in-out;
 }
+.style-options-show {
+	position: absolute;
+	right: 5px;
+	border-radius: 2px;
+	padding: 4px 2px;
+	cursor: pointer;
+}
 .projectDocument:hover .projectDocument-options-show, .projectDocument .projectDocument-options-show.active {
 	background-color: #eee;
 	-webkit-transition: all 0.5s ease-in-out;
@@ -209,14 +219,17 @@
 	-o-transition: all 0.5s ease-in-out;
 	transition: all 0.5s ease-in-out;
 }
-.projectDocument .projectDocument-options-show .arrow {
+.arrow {
 	width: 0;
 	height: 0;
 	border-left: 5px solid transparent;
 	border-right: 5px solid transparent;
 	border-top: 5px solid #fff;
 }
-.projectDocument-options {
+.styleset-options-show .arrow {
+	border-top: 5px solid #000;
+}
+.projectDocument-options, .styleset-options, .style-options {
 	position: absolute;
 	top: 20px;
 	right: 0;
@@ -227,24 +240,31 @@
 	border-radius: 5px;
 	border: 1px solid #eee;
 }
+.styleset-options {
+	width: 170px;
+	padding: 5px;
+}
+.style-options {
+	top: inherit;
+}
 .projectDocument-options-header {
 	border-bottom: 1px solid #eee;
 	text-align: center;
 	padding: 5px 0 10px;
 }
-.projectDocument-options-hide {
+.projectDocument-options-hide, .styleset-options-hide, .style-options-hide {
 	position: absolute;
 	top: 5px;
 	right: 10px;
 	cursor: pointer;
 }
-.projectDocument-options-menupoint {
+.projectDocument-options-menupoint, .styleset-options-menupoint, .style-options-menupoint {
 	cursor: pointer;
 	margin: 2px -10px;
 	padding: 5px 15px;
 	text-transform: capitalize;
 }
-.projectDocument-options-menupoint.first {
+.projectDocument-options-menupoint.first, .styleset-options-menupoint.first, .style-options-menupoint.first {
 	margin-top: 10px;
 }
 .projectDocument-options-menupoint:hover {
@@ -257,7 +277,7 @@
 .projectDocument-archived {
 	opacity: 0.5;
 }
-textarea#renameProjectDocument {
+textarea#renameProjectDocument, textarea#renameStyleset, textarea#renameStyle {
 	width: 90%;
 	height: auto;
 	border: 1px solid #ffff99;
@@ -375,4 +395,21 @@ li.typo p {
 .style.new p {
 	padding: 0;
 	margin-left: -10px;
+}
+.cke_floatingtools {
+	position: fixed;
+	z-index: 1;
+	left: 50px;
+	bottom: -210px;
+	width: 259px;
+	padding: 5px 0 0 6px;
+	border: 1px solid #b1b1b1;
+	transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	-ms-transition: all 0.5s;
+	-webkit-transition: all 0.5s;
+	-o-transition: all 0.5s;
+}
+.cke_floatingtools.open {
+	bottom: 0 !important;
 }

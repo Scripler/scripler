@@ -44,10 +44,7 @@ var isPopulatedPrivate = function (style) {
 	return style
 		&& style._id != undefined
 		&& style.name != undefined
-		&& style.class != undefined
-		&& style.css != undefined
-		&& style.archived != undefined
-		&& style.isSystem != undefined;
+		&& style.archived != undefined;
 }
 
 exports.isPopulated = isPopulatedPrivate;
@@ -55,6 +52,7 @@ exports.isPopulated = isPopulatedPrivate;
 exports.copy = function (style, newStylesetId, next) {
 	if (style) {
 		// TODO: why is the Mongoose model object id, newStylesetId, an object here but a string in utils.containsIdPrivate()?
+		// See: http://stackoverflow.com/questions/15724272/mongoose-and-node-js-id-and-id
 		if ('object' == typeof style && 'object' == typeof newStylesetId) {
 
 			/*

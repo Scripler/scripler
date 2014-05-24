@@ -10,7 +10,7 @@
 			<div class="center"></div>
 			<img src="pages/images/documents.svg" width="20">
 		</div>
-		<div class="menu-left-tab" ng-class="{ 'selectedTab' : showTypo }" ng-click="showTypo = !showTypo; showDocuments = false; showInsert = false;">
+		<div class="menu-left-tab" ng-class="{ 'selectedTab' : showTypo }" ng-click="showTypo = !showTypo; hideStyleEditor(); showDocuments = false; showInsert = false;">
 			<div class="center"></div>
 			<img src="pages/images/typography.svg" width="20">
 		</div>
@@ -62,11 +62,45 @@
 						<p>+</p>
 					</div>
 					<ul>
-						<li ng-repeat="styleset in stylesets" class="typo" ng-class="{ 'open' : visible == true }">
-							<p ng-click="visible=!visible">{{styleset.name}}</p>
+						<li ng-repeat="styleset in stylesets" class="typo" ng-class="{ 'open' : visible == true }" ng-hide="styleset.archived">
+							<a class="styleset-options-show" ng-click="showStylesetOptions = true">
+								<div class="arrow"></div>
+							</a>
+
+							<p ng-click="visible=!visible" ng-hide="editingStylesetName">{{styleset.name}}</p>
+
+							<form ng-show="editingStylesetName">
+								<p>
+									<textarea id="renameStyleset" rows="1" ng-model="styleset.name" focus-on="!!editingStylesetName" on-enter="editingStylesetName = false; renameStyleset(styleset);"></textarea>
+								</p>
+							</form>
+
+							<div class="styleset-options" ng-show="showStylesetOptions">
+								<div class="styleset-options-hide" ng-click="showStylesetOptions = false;" title="Close Options">x</div>
+								<div class="styleset-options-menupoint first" ng-click="editingStylesetName = true; showStylesetOptions = false;">rename</div>
+								<div class="styleset-options-menupoint" ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>
+								<div class="styleset-options-menupoint" ng-click="applyStylesetToDocument(styleset); showStylesetOptions = false;">apply to document</div>
+								<div class="styleset-options-menupoint" ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to project</div>
+							</div>
 
 							<ul ng-hide="visible" class="typo-children">
-								<li ng-repeat="style in styleset.styles" ng-click="x=!x">{{style.name}}</li>
+								<li ng-repeat="style in styleset.styles" ng-click="x=!x" ng-hide="style.archived">
+									<a class="style-options-show" ng-click="showStyleOptions = true">
+										<div class="arrow"></div>
+									</a>
+
+									<span ng-hide="editingStyleName" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
+
+									<form ng-show="editingStyleName">
+										<textarea id="renameStyle" rows="1" ng-model="style.name" focus-on="!!editingStyleName" on-enter="editingStyleName = false; renameStyle(style);"></textarea>
+									</form>
+
+									<div class="style-options" ng-show="showStyleOptions">
+										<div class="style-options-hide" ng-click="showStyleOptions = false;" title="Close Options">x</div>
+										<div class="style-options-menupoint first" ng-click="editingStyleName = true; showStyleOptions = false;">rename</div>
+										<div class="style-options-menupoint" ng-click="archiveStyle(style); showStyleOptions = false;">archive</div>
+									</div>
+								</li>
 								<li class="new style" ng-click="addNewStyle( styleset )"><p>+</p></li>
 							</ul>
 						</li>
@@ -84,6 +118,11 @@
 			<a ng-click="showImportOptions = !showImportOptions; showNewOptions = false; showBottomOptions = false;">import</a>
 			<a ng-click="showBottomOptions = !showBottomOptions; showNewOptions = false; showImportOptions = false;">options</a>
 		</div>
+
+		<div class="stylesets-options-bottom-buttons" ng-show="showTypo">
+			<a ng-click="showStyleEditor()">style editor</a>
+		</div>
+
 		<div id="menu-left-content-options" class="menu-left-options" ng-show="showDocuments" ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
 			<div class="options-bottom-box">
 				<div ng-show="showNewOptions">

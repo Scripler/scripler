@@ -243,7 +243,14 @@ exports.applyStyleset = function (req, res, next) {
 				if (err) {
 					return next(err);
 				}
-				res.send({document: req.document});
+
+				Styleset.findOne({"_id": copy._id}).populate('styles').exec(function (err, populatedCopy) {
+					if (err) {
+						return next(err);
+					}
+
+					res.send({styleset: populatedCopy});
+				});
 			});
 		});
 	} else {
