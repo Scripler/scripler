@@ -184,7 +184,7 @@ p {
 
 /*Name: Quote*/
 blockquote {
- 	quotes: "“" "”" "‘" "’";
+ 	quotes: "\201C" "\201D" "\2018" "\2019";
 	font-family: "Source Sans Pro", arial, sans-serif;
 	font-style:italic;
 	font-weight:600;
@@ -201,8 +201,8 @@ blockquote {
 }
 
 /*Name: Speech*/
-q { 
-	quotes: "“" "”" "‘" "’";
+q {
+	quotes: "\201C" "\201D" "\2018" "\2019";
 }
 
 /*Name: Hyperlink*/
@@ -319,7 +319,7 @@ td {
 	font-weight: 700;
 	line-height:1.42;
 	color:#000000;
-	
+
 }
 
 /*Name: Colophon*/
