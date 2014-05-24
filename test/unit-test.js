@@ -4,7 +4,8 @@ var epub = require('../lib/epub')
   , epub3 = require('../lib/epub/epub3')
   , assert = require("assert")
   , TOCEntry = require('../models/project.js').TOCEntry
-  , Document = require('../models/document.js').Document;
+  , Document = require('../models/document.js').Document
+  , styleset_utils = require('../public/create/scripts/styleset-utils-shared.js');
 
 describe('epub', function () {
 	it('getCloseNavPointsString', function () {
@@ -232,7 +233,45 @@ describe('epub', function () {
 
 		var result = epub.getGuideString('colophon', documents);
 		assert.equal(result, '<reference href="HTML/Colophon.html" title="Colophon" type="colophon" />');
-	})
+	}),
+    it('getStylesetContents', function () {
+        var styleset = {
+            _id: "abc123",
+            name:   "StyleSet test",
+            styles: [
+                {_id: "xxx123", name: "Style 1", tag: "h1", css: {
+	                    "font-weight": "11px",
+	                    "color":       "red"
+                	}
+                },
+                {_id: "yyy123", name: "Style 2", class:"testclass", css: {
+	                    "margin-left": "5px",
+	                    "color":       "green"
+	                }
+                },
+                {_id: "zzz123", name: "Style 3", class:"anotherclass", tag: "p", css: {
+	                    "color":       "black"
+	                }
+                }
+            ]
+        }
+
+        //Generate default styleset CSS
+        var stylesetContents = styleset_utils.getStylesetContents(styleset, true);
+        stylesetContents = stylesetContents.replace(/[\n\r]+/g, "|");
+        assert.equal(stylesetContents, 
+        		'h1, .style-xxx123 {|font-weight: 11px;|color: red;|}|'+
+        		'.testclass, .style-yyy123 {|margin-left: 5px;|color: green;|}|'+
+        		'p.anotherclass, .style-zzz123 {|color: black;|}|');
+
+        //Generate non-default styleset CSS
+        stylesetContents = styleset_utils.getStylesetContents(styleset, false);
+        stylesetContents = stylesetContents.replace(/[\n\r]+/g, "|");
+        assert.equal(stylesetContents, 
+        		'.styleset-abc123 h1, .style-xxx123 {|font-weight: 11px;|color: red;|}|'+
+        		'.testclass, .style-yyy123 {|margin-left: 5px;|color: green;|}|'+
+        		'.styleset-abc123 p.anotherclass, .style-zzz123 {|color: black;|}|');
+    })
 }),
 describe('epub3', function () {
 	it('getTocString', function () {

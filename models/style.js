@@ -17,7 +17,7 @@ var StyleMemberSchema = new Schema({
 var StyleSchema = new Schema({
 	name: { type: String, required: true },
 	class: { type: String },
-	css: { type: String },
+	css: { type: Schema.Types.Mixed },
 	tag: { type: String },
 	stylesetId: { type: Schema.Types.ObjectId, ref: 'Styleset', required: true },
 	members: [StyleMemberSchema],
