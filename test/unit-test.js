@@ -240,14 +240,18 @@ describe('epub', function () {
             name:   "StyleSet test",
             styles: [
                 {_id: "xxx123", name: "Style 1", tag: "h1", css: {
-                    "font-weight": "11px",
-                    "color":       "red"
-                }
+	                    "font-weight": "11px",
+	                    "color":       "red"
+                	}
                 },
-                {_id: "yyy123", name: "Style 2", css: {
-                    "margin-left": "5px",
-                    "color":       "green"
-                }
+                {_id: "yyy123", name: "Style 2", class:"testclass", css: {
+	                    "margin-left": "5px",
+	                    "color":       "green"
+	                }
+                },
+                {_id: "zzz123", name: "Style 3", class:"anotherclass", tag: "p", css: {
+	                    "color":       "black"
+	                }
                 }
             ]
         }
@@ -255,13 +259,18 @@ describe('epub', function () {
         //Generate default styleset CSS
         var stylesetContents = styleset_utils.getStylesetContents(styleset, true);
         stylesetContents = stylesetContents.replace(/[\n\r]+/g, "|");
-        assert.equal(stylesetContents, 'h1, .style-xxx123 {|font-weight: 11px;|color: red;|}|.style-yyy123 {|margin-left: 5px;|color: green;|}|');
+        assert.equal(stylesetContents, 
+        		'h1, .style-xxx123 {|font-weight: 11px;|color: red;|}|'+
+        		'.testclass, .style-yyy123 {|margin-left: 5px;|color: green;|}|'+
+        		'p.anotherclass, .style-zzz123 {|color: black;|}|');
 
         //Generate non-default styleset CSS
         stylesetContents = styleset_utils.getStylesetContents(styleset, false);
         stylesetContents = stylesetContents.replace(/[\n\r]+/g, "|");
-        assert.equal(stylesetContents, '.styleset-abc123 h1, .style-xxx123 {|font-weight: 11px;|color: red;|}|.style-yyy123 {|margin-left: 5px;|color: green;|}|');
-
+        assert.equal(stylesetContents, 
+        		'.styleset-abc123 h1, .style-xxx123 {|font-weight: 11px;|color: red;|}|'+
+        		'.testclass, .style-yyy123 {|margin-left: 5px;|color: green;|}|'+
+        		'.styleset-abc123 p.anotherclass, .style-zzz123 {|color: black;|}|');
     })
 }),
 describe('epub3', function () {
