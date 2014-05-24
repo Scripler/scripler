@@ -113,10 +113,9 @@
 	-o-transition: all 0.5s;
 }
 .menu-left-options.open {
-	margin-bottom: 23px !important;
+	margin-bottom: 28px !important;
 }
 .documents-options-bottom-buttons, .stylesets-options-bottom-buttons {
-	background-color: #231F20;
 	width: 100%;
 	position: absolute;
 	z-index: 2;
@@ -134,7 +133,7 @@
 	color: #fff;
 	border-right: 2px solid #fff;
 }
-.documents-options-bottom-buttons a.open {
+.documents-options-bottom-buttons a.open, .stylesets-options-bottom-buttons a.open {
 	background-color: #fff;
 	color: #000;
 }
@@ -420,7 +419,4 @@ li.typo p {
 	-ms-transition: all 0.5s;
 	-webkit-transition: all 0.5s;
 	-o-transition: all 0.5s;
-}
-.cke_floatingtools.open {
-	bottom: 0 !important;
 }
