@@ -147,7 +147,72 @@
 							</a>
 						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
-							this is the options for insert image
+							<div class="left-menu-options">
+								<span class="left-menu-box inputfield">
+									<input type="text" placeholder="Choose image">
+								</span>
+								<span class="left-menu-button">
+									<a ng-click="insertImageOption('addNewImage');">+</a>
+								</span>
+							</div>
+							<div class="left-menu-options left-menu-parameter-margin">
+								<span class="left-menu-button">
+									<a ng-click="alignImageLeft(); insertImageOption('')">
+										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Left" />
+									</a>
+								</span>
+								<span class="left-menu-button">
+									<a ng-click="alignImageCenter(); insertImageOption('')">
+										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Center" />
+									</a>
+								</span>
+								<span class="left-menu-button">
+									<a ng-click="alignImageRight(); insertImageOption('')">
+										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Right" />
+									</a>
+								</span>
+								<span class="left-menu-button">
+									<a ng-click="insertImageOption('turnImage')">
+										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Turn Image" />
+									</a>
+								</span>
+								<span class="left-menu-button">
+									<a ng-click="duplicateImage(); insertImageOption('')">
+										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Duplicate Image" />
+									</a>
+								</span>
+								<span class="left-menu-button">
+									<a ng-click="insertImageOption('resizeImage')">
+										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Resize Image" />
+									</a>
+								</span>
+							</div>
+							<div class="left-menu-options-parameters left-menu-parameter-margin">
+								<div ng-class="{ 'expanded' : activeImageOption === 'turnImage' }">
+									<span class="left-menu-button">
+										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Resize Image Set Procentages" />
+									</span>
+									<span class="left-menu-box inputfield">
+										<input type="text" value="45" class="show-info">
+										<span class="extra-info">&deg;</span>
+									</span>
+								</div>
+								<div ng-class="{ 'expanded' : activeImageOption === 'resizeImage' }">
+									<span class="left-menu-button">
+										<img src="/create/ckeditor/skins/scripler/icons/maximize.png" title="Resize Image Set Procentages" />
+									</span>
+									<span class="left-menu-box inputfield">
+										<input type="text" value="100" class="show-info">
+										<span class="extra-info">%</span>
+									</span>
+								</div>
+							</div>
+							<div class="left-menu-divider"></div>
+							<div class="left-menu-icons">
+								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChoosen('showInsertImageOptions');">
+									X
+								</span>
+							</div>
 						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
 							<div>

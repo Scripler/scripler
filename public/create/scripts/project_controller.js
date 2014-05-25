@@ -291,6 +291,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
+	$scope.insertImageOption = function(imageoption) {
+		if ($scope.activeImageOption === imageoption) {
+			$scope.activeImageOption = null;
+		}
+		else {
+			$scope.activeImageOption = imageoption;
+		}
+	}
+
     function initiateEditor(scope) {
     	$scope.ckContent = 'test';
 
@@ -311,7 +320,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$scope.styleEditorVisible = true;
 			}
 		}
-
 		$scope.hideStyleEditor = function() {
 			$rootScope.ck.commands.hideFloatingTools.exec();
 			$scope.styleEditorVisible = false;
