@@ -471,13 +471,19 @@ li.typo p {
 	width: calc(100% - 36px);
 	padding: 0;
 }
+.left-menu-box.inputfield.full-size {
+	position: relative;
+	width: 100%;
+	padding: 0;
+}
 .left-menu-box.inputfield input {
 	background: none white;
 	width: 100%;
 	height: 28px;
+	padding: 5px 10px;
 }
 .left-menu-box.inputfield input.show-info {
-	padding-right: 40px;
+	padding-right: 30px;
 	text-align: right;
 }
 .left-menu-box.inputfield .extra-info {

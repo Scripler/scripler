@@ -124,17 +124,26 @@
 							this is the options for insert box
 						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
-							this is the options for hyperlink box
-<!--							<input type="text" name="link_address" id="link_address" placeholder="Address" />
-							<input type="text" name="link_text" id="link_text" placeholder="Text..." />
-							<!-- I think these should be part of the template or style and not something you can define for each single link -->
-<!--							<button alt="link underline"></button>
-							<button alt="link color"></button>
-							<!-- Needs to load anchors available in the document -->
-<!--							<select>
-								<option>Anchor list</option>
-							</select>
-							<button alt="close">X</button>-->
+							<div class="left-menu-options">
+								<span class="left-menu-box inputfield full-size">
+									<input type="text" placeholder="Address">
+								</span>
+								<span class="left-menu-box inputfield full-size left-menu-parameter-margin">
+									<input type="text" placeholder="Text">
+								</span>
+								<span class="left-menu-box left-menu-parameter-margin">
+									<span class="option"><a ng-click="linkAnchorOption('chooseAnchor');">Anchor in document</a></span>
+									<span class="option"><a ng-click="linkAnchorOption('chooseAnchor');">Anchor in document</a></span>
+									<span class="option"><a ng-click="linkAnchorOption('chooseAnchor');">Anchor in document</a></span>
+								</span>
+							</div>
+
+							<div class="left-menu-divider"></div>
+							<div class="left-menu-icons">
+								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChoosen('showInsertHyperlinkOptions');">
+									X
+								</span>
+							</div>
 						</li>
 						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
 							<a ng-click="insertOptionChoosen('showInsertImageOptions');">
