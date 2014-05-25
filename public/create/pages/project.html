@@ -4,7 +4,6 @@
 
 <div class="container">
 
-
 	<div id="menu-left-tabs" class="menu-left-tabs" ondragstart="return false;" ondrop="return false;">
 		<div class="menu-left-tab" ng-class="{ 'selectedTab' : showDocuments }" ng-click="showDocuments = !showDocuments; showTypo = false; showInsert = false;">
 			<div class="center"></div>
@@ -120,9 +119,19 @@
 								<img src="pages/images/insert_hyperlink_button.png" width="80" height="80" />
 							</a>
 						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
-							this is the options for insert box
-						</li>
+						<!--<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
+							line properties
+							<div class="left-menu-divider"></div>
+							padding settings
+							<div class="left-menu-divider"></div>
+							margin settings
+							<div class="left-menu-divider"></div>
+							<div class="left-menu-icons">
+								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChoosen('showInsertBoxOptions');">
+									X
+								</span>
+							</div>
+						</li>-->
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
 							<div class="left-menu-options">
 								<span class="left-menu-box inputfield full-size">
@@ -295,6 +304,8 @@
 					<a ng-click="">New Folder</a>
 				</div>
 				<div ng-show="showImportOptions">
+					<p>Scripler imports Word files and other common word processor formats (link).</p>
+					<input type="file" ng-file-select="onFileSelect($files)">
 					<div class="upload-box" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="dragover"
 						 ng-show="dropSupported" ng-file-drop-available="dropSupported=true">drop files here</div>
 					<p>Scripler imports Word files and other common word processor formats (link).</p>
