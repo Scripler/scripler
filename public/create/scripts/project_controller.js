@@ -323,6 +323,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 		});
 
+		$scope.insertPageBreak = function() {
+			$rootScope.ck.commands.pagebreak.exec();
+		}
+		$scope.insertPageBreakAvoid = function() {
+			$rootScope.ck.commands.pagebreakavoid.exec();
+		}
+
 		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
 
 //	    var startChapter = $scope.documents[0];i
