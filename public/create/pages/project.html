@@ -241,7 +241,26 @@
 						</li>
 						<!--<li class="insertOption"><img src="pages/images/insert_cover_button.png" width="80" height="80"></li>-->
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
-							this is the options for insert anchor
+							<div class="left-menu-options">
+								<span class="left-menu-box inputfield">
+									<input type="text" placeholder="Anchor name">
+								</span>
+								<span class="left-menu-button">
+									<a ng-click="insertAnchorOption('addNewAnchor');">+</a>
+								</span>
+
+								<span class="left-menu-box left-menu-parameter-margin">
+									<span class="option"><a ng-click="insertAnchorOption('chooseAnchor');">Anchor in document</a></span>
+									<span class="option"><a ng-click="insertAnchorOption('chooseAnchor');">Anchor in document</a></span>
+									<span class="option"><a ng-click="insertAnchorOption('chooseAnchor');">Anchor in document</a></span>
+								</span>
+							</div>
+							<div class="left-menu-divider"></div>
+							<div class="left-menu-icons">
+								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChoosen('showInsertAnchorOptions');">
+									X
+								</span>
+							</div>
 						</li>
 						<!--<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions'showInsertHyperlinkOptions }">
 							this is the options for insert hyperlink
