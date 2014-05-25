@@ -2,9 +2,11 @@ var Document = require('../models/document.js').Document;
 var Project = require('../models/project.js').Project;
 var Styleset = require('../models/styleset.js').Styleset;
 var copyStyleset = require('../models/styleset.js').copy;
+var utils_shared = require('../public/create/scripts/utils-shared');
 var utils = require('../lib/utils');
 var docConverter = require('../lib/doc-converter');
 var path = require('path');
+var async = require('async');
 var conf = require('config');
 var logger = require('../lib/logger');
 
@@ -61,7 +63,7 @@ var create = exports.create = function (req, res, next) {
 		}
 
 		project.documents.addToSet(document);
-		project.save(function (err, project) {
+		project.save(function (err) {
 			if (err) {
 				return next(err);
 			}
@@ -76,12 +78,36 @@ exports.open = function (req, res) {
 
 exports.update = function (req, res, next) {
 	var document = req.document;
-	document.text = req.body.text;
-	document.save(function (err) {
+	// Is text to be changed?
+	if (req.body.text !== undefined) {
+		document.text = req.body.text;
+	}
+	// Is defaultStylset to be changed?
+	if (req.body.defaultStyleset !== undefined &&
+		!utils_shared.mongooseEquals(document.defaultStyleset, req.body.defaultStyleset)) {
+		var newDefaultStylset = req.body.defaultStyleset;
+		if (newDefaultStylset) {
+			var oldDefaultStylset = document.defaultStyleset;
+			document.defaultStyleset = newDefaultStylset;
+			// Remove any reference of the new defaultStyleset from the array of non-default stylesets.
+			for (var i = 0; i < document.stylesets.length; i++) {
+				if (utils_shared.mongooseEquals(newDefaultStylset, document.stylesets[i])) {
+					document.stylesets.slice(i, 1);
+					// Since stylsets is a set, a maximum of one occource should be expected.
+					// We found it, and removed it, so just break the loop.
+					break;
+				}
+			}
+			document.stylesets.addToSet(oldDefaultStylset);
+		} else {
+			return next({message: "Document can not have defaultStyleset set to null!", status: 404});
+		}
+	}
+	document.save(function (err, document) {
 		if (err) {
 			return next(err);
 		}
-		res.send({});
+		res.send({document: document});
 	});
 }
 
@@ -158,21 +184,24 @@ exports.rearrange = function (req, res, next) {
 	var existingDocumentIds = req.project.documents;
 
 	if (rearrangedDocumentIds && rearrangedDocumentIds.length == existingDocumentIds.length) {
-		for (var i=0; i<rearrangedDocumentIds.length; i++) {
-			var rearrangedDocumentId = rearrangedDocumentIds[i];
-			var containsRearrangedDocumentId = rearrangedDocumentIds.indexOf(rearrangedDocumentId) > -1;
-			if (!containsRearrangedDocumentId) {
-				return next({message: errorMessage, status: 400});
-			}
-		}
-
-		req.project.documents = rearrangedDocumentIds;
-		req.project.save(function (err, project) {
-			if (err) {
-				return next(err);
-			}
-			res.send({project: project});
-		});
+		async.each(rearrangedDocumentIds, function (rearrangedDocumentId, callback) {
+            var containsRearrangedDocumentId = rearrangedDocumentIds.indexOf(rearrangedDocumentId) > -1;
+            if (!containsRearrangedDocumentId) {
+                return callback({message: errorMessage, status: 400});
+            }
+            return callback();
+        }, function (err){
+            if (err) {
+                return next(err);
+            }
+            req.project.documents = rearrangedDocumentIds;
+            req.project.save(function (err, project) {
+                if (err) {
+                    return next(err);
+                }
+                return res.send({project: project});
+            });
+        });
 	} else {
 		return next({message: errorMessage, status: 400});
 	}

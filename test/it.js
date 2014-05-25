@@ -770,7 +770,7 @@ describe('Scripler RESTful API', function () {
 						done();
 					});
 			}),
-			it('Updating a document should return success', function (done) {
+			it('Updating a document text should return success', function (done) {
 				var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
 					'<!DOCTYPE html>' +
 					'<html xmlns="http://www.w3.org/1999/xhtml">' +
@@ -781,10 +781,27 @@ describe('Scripler RESTful API', function () {
 				request(host)
 					.put('/document/' + rootDocumentId + '/update')
 					.set('cookie', cookie)
-					.send({text: text})
+					.send({text: text, defaultStyleset: stylesetId})
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.document.defaultStyleset, stylesetId);
+						assert.equal(utils.containsId(res.body.document.stylesets, userStylesetId), false);
+						assert.equal(utils.containsId(res.body.document.stylesets, stylesetId), false);
+						done();
+					});
+			}),
+			it('Updating a documents defaultStyleset should return success', function (done) {
+				request(host)
+					.put('/document/' + rootDocumentId + '/update')
+					.set('cookie', cookie)
+					.send({defaultStyleset: userStylesetId})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.document.defaultStyleset, userStylesetId);
+						assert.equal(utils.containsId(res.body.document.stylesets, userStylesetId), false);
+						assert.equal(utils.containsId(res.body.document.stylesets, stylesetId), true);
 						done();
 					});
 			}),

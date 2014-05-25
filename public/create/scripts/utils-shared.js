@@ -42,10 +42,37 @@
 
 		return stylesetContents;
 	}
-	;
+
+    // Check if two Mongoose objects are idential based on _id.
+    // Input objects can be either ObjectId, _id string, or complete Mongoose object.
+    function mongooseEquals( obj1, obj2 ) {
+        return getMongooseId(obj1) == getMongooseId(obj2);
+    }
+
+    // Return Mongoose primitive ObjectId _id of object.
+    // Input object can be either ObjectId, _id string, or complete Mongoose object.
+    function getMongooseId( obj ) {
+        var ret = null;
+        if (!obj) {
+            ret = null;
+        } else if (typeof obj == 'string') {
+            ret = obj;
+        } else if (obj instanceof String) {
+            ret = obj.valueOf();
+        } else if (obj.constructor && obj.constructor.name == 'ObjectID') {
+            ret = obj.toString();
+        } else if (typeof obj == 'object' && obj._id) {
+            ret = obj._id;
+        } else {
+            throw new Error('Unknown object in getMongooseId: ' + obj);
+        }
+        return ret;
+    }
 
 	return {
-		getStylesetContents : getStylesetContents
+		getStylesetContents : getStylesetContents,
+        mongooseEquals : mongooseEquals,
+        getMongooseId : getMongooseId
 	}
 
 }()))
