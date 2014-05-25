@@ -109,14 +109,19 @@
 			<div class="menu-item-left inserts" ng-show="showInsert">
 				<div class="menu-content">
 					<ul>
-						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
+						<!--<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
 							<a ng-click="insertOptionChoosen('showInsertBoxOptions');">
 								<img src="pages/images/insert_box_button.png" width="80" height="80" />
 							</a>
-						</li>
+						</li>-->
 						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
 							<a ng-click="insertOptionChoosen('showInsertHyperlinkOptions');">
 								<img src="pages/images/insert_hyperlink_button.png" width="80" height="80" />
+							</a>
+						</li>
+						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertImageOptions');">
+								<img src="pages/images/insert_image_button.png" width="80" height="80" />
 							</a>
 						</li>
 						<!--<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
@@ -153,16 +158,6 @@
 									X
 								</span>
 							</div>
-						</li>
-						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
-							<a ng-click="insertOptionChoosen('showInsertImageOptions');">
-								<img src="pages/images/insert_image_button.png" width="80" height="80" />
-							</a>
-						</li>
-						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
-							<a ng-click="insertOptionChoosen('showInsertPagebreakOptions');">
-								<img src="pages/images/insert_pagebreak_button.png" width="80" height="80" />
-							</a>
 						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
 							<div class="left-menu-options">
@@ -232,6 +227,17 @@
 								</span>
 							</div>
 						</li>
+
+						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertPagebreakOptions');">
+								<img src="pages/images/insert_pagebreak_button.png" width="80" height="80" />
+							</a>
+						</li>
+						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertAnchorOptions');">
+								<img src="pages/images/insert_anchor_button.png" width="80" height="80" />
+							</a>
+						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
 							<div>
 								<span class="left-menu-button">
@@ -251,11 +257,6 @@
 									X
 								</span>
 							</div>
-						</li>
-						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
-							<a ng-click="insertOptionChoosen('showInsertAnchorOptions');">
-								<img src="pages/images/insert_anchor_button.png" width="80" height="80" />
-							</a>
 						</li>
 						<!--<li class="insertOption"><img src="pages/images/insert_cover_button.png" width="80" height="80"></li>-->
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
