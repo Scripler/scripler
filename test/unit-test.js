@@ -5,7 +5,9 @@ var epub = require('../lib/epub')
   , assert = require("assert")
   , TOCEntry = require('../models/project.js').TOCEntry
   , Document = require('../models/document.js').Document
-  , styleset_utils = require('../public/create/scripts/styleset-utils-shared.js');
+  , Image = require('../models/image.js').Image
+  , styleset_utils = require('../public/create/scripts/styleset-utils-shared.js')
+  , conf = require('config');
 
 describe('epub', function () {
 	it('getCloseNavPointsString', function () {
@@ -94,7 +96,7 @@ describe('epub', function () {
 	}),
 	it('getManifestHtmlFilesString', function () {
 		var folderName = 'HTML';
-		var prefix = 'doc_';
+		var prefix = conf.epub.documentPrefix;
 
 		var htmlFiles = [];
 		var result = epub.getManifestFilesString(prefix, folderName, htmlFiles);
@@ -121,28 +123,26 @@ describe('epub', function () {
 	}),
 	it('getManifestImageFilesString', function () {
 		var folderName = 'Images';
-		var prefix = 'img_';
+		var prefix = conf.epub.imagePrefix;
 
 		var images = [];
 		var result = epub.getManifestFilesString(prefix, folderName, images);
 		assert.equal(result, '');
 
-		var image1 = {
-			"name": "img_frontpage.jpg",
-			"fileExtension": "jpg",
-			"mediaType": "image/jpeg"
-		};
+		var image1 = new Image;
+		image1.name = "img_frontpage.jpg";
+		image1.fileExtension = "jpg";
+		image1.mediaType = "image/jpeg";
 
 		images = [image1];
 
 		var result = epub.getManifestFilesString(prefix, folderName, images);
 		assert.equal(result, '<item id="img_frontpage.jpg" href="Images/img_frontpage.jpg" media-type="image/jpeg" />');
 
-		var image2 = {
-			"name": "img_fun_image.png",
-			"fileExtension": "png",
-			"mediaType": "image/png"
-		};
+		var image2 = new Image;
+		image2.name = "img_fun_image.png";
+		image2.fileExtension = "png";
+		image2.mediaType = "image/png";
 
 		images = [image1, image2];
 		var result = epub.getManifestFilesString(prefix, folderName, images);
@@ -151,7 +151,7 @@ describe('epub', function () {
 	}),
 	it('getManifestFontFilesString', function () {
 		var folderName = 'Fonts';
-		var prefix = 'font_';
+		var prefix = conf.epub.fontPrefix;
 
 		var fonts = [];
 		var result = epub.getManifestFilesString(prefix, folderName, fonts);

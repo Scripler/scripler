@@ -50,6 +50,8 @@ var styleId4;
 var styleCopiedId;
 var styleCopiedId2;
 
+var imageId;
+
 var cleanupEPUB = true;
 
 function containsId(items, id) {
@@ -1772,25 +1774,41 @@ describe('Scripler RESTful API', function () {
 				done();
 			});
 		}),
-		it('Uploading an image to a project should return success', function (done) {
-			// TODO: when an API call for this exists, change this code to use it. For now, fake it...
-
-			// Copy image from source, test dir, to destination, public dir
+		it('Uploading an image to a project should return the Mongoose model object representing the uploaded image', function (done) {
 			var imageName = 'Scripler_logo.jpg';
 			var srcImagesDir = path.join('test', 'resources', 'images');
 			var srcImage = path.join(srcImagesDir, imageName);
 
-			var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + projectId);
-			var dstImagesDir = path.join(projectDir, conf.epub.imagesDir);
-
-			fs.mkdir(dstImagesDir, function (err) {
-				if (err) {
-					throw err;
-				}
-				var dstImage = path.join(dstImagesDir, imageName);
-				fs.createReadStream(srcImage).pipe(fs.createWriteStream(dstImage));
-				done();
-			});
+			request(host)
+				.post('/image/' + projectId + '/upload')
+				.set('cookie', cookie)
+				.attach('file', srcImage)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.images.length, 1);
+					var image = res.body.images[0];
+					imageId = image._id;
+					assert.equal(image.name, conf.epub.imagePrefix + imageName);
+					assert.equal(image.projectId, projectId);
+					assert.equal(image.fileExtension, "jpg");
+					assert.equal(image.mediaType, "image/jpeg");
+					assert.equal(image.url, conf.app.url_prefix + '/users/' + userId + '/projects/' + projectId + '/images/' + conf.epub.imagePrefix + imageName);
+					assert.equal(image.members[0].userId, userId);
+					assert.equal(image.members[0].access[0], "admin");
+					done();
+				});
+		}),
+		it('Opening the project that an image was added to, should return the project with the added image', function (done) {
+			request(host)
+				.get('/project/' + projectId)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.project.images[0], imageId);
+					done();
+				});
 		}),
 		it('Compiling a project should return the compiled project (as an EPUB archive)', function (done) {
 			request(host)

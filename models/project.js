@@ -77,7 +77,11 @@ var ProjectSchema = new Schema({
 	archived: { type: Boolean, default: false},
 	deleted: { type: Boolean, default: false},
 	created: { type: Date, default: Date.now },
-	modified: { type: Date, default: Date.now }
+	modified: { type: Date, default: Date.now },
+	images: [
+		{ type: Schema.Types.ObjectId, ref: 'Image' }
+	]
+
 });
 
 ProjectSchema.pre('remove', function (next) {

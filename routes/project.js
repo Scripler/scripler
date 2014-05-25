@@ -100,7 +100,15 @@ exports.create = function (req, res, next) {
 				if (err) {
 					return next(err);
 				}
-				res.send({project: project});
+
+				var dstImagesDir = path.join(projectDir, conf.epub.imagesDir);
+				fs.mkdir(dstImagesDir, function (err) {
+					if (err) {
+						return next(err);
+					}
+
+					res.send({project: project});
+				});
 			});
 
 		});
