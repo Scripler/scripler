@@ -332,7 +332,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
 
-//	    var startChapter = $scope.documents[0];i
+//	    var startChapter = $scope.documents[0];
 //	    $scope.entrybody = startChapter.content;
 	    // Mangler at tilf??je stylen startChapter.documentstyleSheet
 		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
