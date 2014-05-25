@@ -1,15 +1,3 @@
-/*FONTS*/
-/*font-family should always be named with the full name of the font, to avoid confusion. Weight is given like this:
-100 = thin
-200 = extra-light
-300 = light
-400 = normal, book
-500 = medium
-600 = demi-bold
-700 = bold
-800 = heavy
-900 = black*/
-
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:normal;
@@ -213,12 +201,6 @@ a {
 	font-weight:inherit;
 }
 
-/*Insert: Link*/
-/*	a:link { color: #0000ff; text-decoration:underline;}
-	a:visited { color: #0000ff; text-decoration:underline;}
-	a:hover { color: #000000; text-decoration:underline;}
-	a:active { color: #000000; text-decoration:underline;}*/
-
 /*Name: Code*/
 .code {
 	font-family: "Source Code Pro", monospace;
@@ -242,16 +224,6 @@ figcaption {
 	color:#000000;
 	margin:.3em 0em 0em 0em;
 }
-
-/*Epub2-fallback css*/
-/*p.figcaption {
-	font-family: "Source Sans Pro", arial, sans-serif;
-	font-style:italic;
-	font-weight:400;
-	font-size:.9em;
-	line-height:1.64;
-	margin:.3em 0em 0em 0em;
-}*/
 
 /*Name: Author*/
 .titlepageAuthor {
@@ -313,7 +285,7 @@ td {
 }
 
 /*Name: Table of content*/
-.toc {
+.toc-item {
 	font-size: 1.2em;
 	font-style:normal;
 	font-weight: 700;
@@ -323,7 +295,7 @@ td {
 }
 
 /*Name: Colophon*/
-p.colophon {
+.colophon {
 	font-size:.9em;
 	text-indent:0;
 	text-align:right;
