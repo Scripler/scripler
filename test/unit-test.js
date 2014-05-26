@@ -129,20 +129,22 @@ describe('epub', function () {
 		var result = epub.getManifestFilesString(prefix, folderName, images);
 		assert.equal(result, '');
 
-		var image1 = new Image;
-		image1.name = "img_frontpage.jpg";
-		image1.fileExtension = "jpg";
-		image1.mediaType = "image/jpeg";
+		var image1 = new Image({
+			name: "frontpage.jpg",
+			fileExtension: "jpg",
+			mediaType: "image/jpeg"
+		});
 
 		images = [image1];
 
 		var result = epub.getManifestFilesString(prefix, folderName, images);
 		assert.equal(result, '<item id="img_frontpage.jpg" href="Images/img_frontpage.jpg" media-type="image/jpeg" />');
 
-		var image2 = new Image;
-		image2.name = "img_fun_image.png";
-		image2.fileExtension = "png";
-		image2.mediaType = "image/png";
+		var image2 = new Image({
+			name: "fun_image.png",
+			fileExtension: "png",
+			mediaType: "image/png"
+		});
 
 		images = [image1, image2];
 		var result = epub.getManifestFilesString(prefix, folderName, images);

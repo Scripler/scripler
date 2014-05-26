@@ -2,18 +2,9 @@ var mongoose = require('mongoose')
 	, Schema = mongoose.Schema
 	, Project // Lazy-loaded, c.f. DocumentSchema.pre()
 	, Styleset = require('./styleset.js').Styleset
+	, MemberSchema = require('./member_schema').MemberSchema
 	, bcrypt = require('bcrypt')
 	, SALT_WORK_FACTOR = 10;
-
-/**
- * User-Member schema
- */
-var DocumentMemberSchema = new Schema({
-	userId: { type: String, required: true },
-	access: [
-		{ type: String }
-	]
-}, { _id: false });
 
 /**
  * Document Schema
@@ -23,7 +14,7 @@ var DocumentSchema = new Schema({
 	text: { type: String },
 	projectId: { type: Schema.Types.ObjectId, required: true },
 	folderId: { type: Schema.Types.ObjectId },
-	members: [DocumentMemberSchema],
+	members: [MemberSchema],
 	archived: { type: Boolean, default: false},
 	deleted: { type: Boolean, default: false},
 	type: { type: String, enum: ["cover", "titlepage", "toc", "colophon"] },

@@ -4,17 +4,8 @@ var mongoose = require('mongoose')
 	, User = require('./user.js').User
 	, Styleset = require('./styleset.js').Styleset
 	, bcrypt = require('bcrypt')
+	, MemberSchema = require('./member_schema').MemberSchema
 	, SALT_WORK_FACTOR = 10;
-
-/**
- * User Member Sub-Schema
- */
-var ProjectMemberSchema = new Schema({
-	userId: { type: String, required: true },
-	access: [
-		{ type: String }
-	]
-}, { _id: false });
 
 /**
  * Meta TOC Entry Schema
@@ -46,7 +37,7 @@ var ProjectSchema = new Schema({
 	],
 	styleset: { type: Schema.Types.ObjectId, ref: 'Styleset' }, // The default styleset for new documents in this project
 	folders: [FolderSchema], // Embedding, since amount of folder meta data is expected to be small.
-	members: [ProjectMemberSchema],
+	members: [MemberSchema],
 	metadata: {
 		title: { type: String },
 		description: { type: String },

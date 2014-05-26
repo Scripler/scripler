@@ -1,15 +1,6 @@
 var mongoose = require('mongoose')
-	, Schema = mongoose.Schema;
-
-/**
- * Style-Member schema
- */
-var StyleMemberSchema = new Schema({
-	userId: { type: String, required: true },
-	access: [
-		{ type: String }
-	]
-}, { _id: false });
+	, Schema = mongoose.Schema
+	, MemberSchema = require('./member_schema').MemberSchema;
 
 /**
  * Style Schema
@@ -20,7 +11,7 @@ var StyleSchema = new Schema({
 	css: { type: Schema.Types.Mixed },
 	tag: { type: String },
 	stylesetId: { type: Schema.Types.ObjectId, ref: 'Styleset', required: true },
-	members: [StyleMemberSchema],
+	members: [MemberSchema],
 	archived: { type: Boolean, default: false },
 	deleted: { type: Boolean, default: false },
 	isSystem: { type: Boolean, default: false },

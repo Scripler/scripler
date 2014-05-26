@@ -51,6 +51,7 @@ var styleCopiedId;
 var styleCopiedId2;
 
 var imageId;
+var imageName = 'Scripler_logo.jpg';
 
 var cleanupEPUB = true;
 
@@ -1775,7 +1776,6 @@ describe('Scripler RESTful API', function () {
 			});
 		}),
 		it('Uploading an image to a project should return the Mongoose model object representing the uploaded image', function (done) {
-			var imageName = 'Scripler_logo.jpg';
 			var srcImagesDir = path.join('test', 'resources', 'images');
 			var srcImage = path.join(srcImagesDir, imageName);
 
@@ -1789,11 +1789,10 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.images.length, 1);
 					var image = res.body.images[0];
 					imageId = image._id;
-					assert.equal(image.name, conf.epub.imagePrefix + imageName);
+					assert.equal(image.name, imageName);
 					assert.equal(image.projectId, projectId);
 					assert.equal(image.fileExtension, "jpg");
 					assert.equal(image.mediaType, "image/jpeg");
-					assert.equal(image.url, conf.app.url_prefix + '/users/' + userId + '/projects/' + projectId + '/images/' + conf.epub.imagePrefix + imageName);
 					assert.equal(image.members[0].userId, userId);
 					assert.equal(image.members[0].access[0], "admin");
 					done();
@@ -1807,6 +1806,35 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.project.images[0], imageId);
+					done();
+				});
+		}),
+		it('Opening an uploaded image should return the image but in this case we just test for success', function (done) {
+			request(host)
+				.get('/project/' + projectId + '/images/' + imageName)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
+		}),
+		it('Attempting to open an uploaded image which the user does not have access to, should return an error', function (done) {
+			request(host)
+				.get('/project/' + projectId + '/images/' + imageName)
+				.expect(401)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
+		}),
+		it('Opening a non-existing file should return an error', function (done) {
+			request(host)
+				.get('/project/' + projectId + '/images/QUBSE')
+				.set('cookie', cookie)
+				.expect(404)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					done();
 				});
 		}),

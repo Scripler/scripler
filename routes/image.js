@@ -19,10 +19,9 @@ exports.create = function (req, res, next) {
 	var images = [];
 
 	async.each(files, function (file, callback) {
-		var name = imagePrefix + file.originalFilename;
+		var name = file.originalFilename;
 		var fileExtension = utils.getFileExtension(file.originalFilename);
 		var mediaType = utils.getMediaType(fileExtension);
-		var url = conf.app.url_prefix + '/users/' + req.user._id + '/projects/' + project._id + '/images/' + name;
 
 		var image = new Image({
 			name: name,
@@ -32,7 +31,6 @@ exports.create = function (req, res, next) {
 			],
 			fileExtension: fileExtension,
 			mediaType: mediaType,
-			url: url
 		});
 
 		image.save(function (err) {
@@ -50,9 +48,16 @@ exports.create = function (req, res, next) {
 			var dstImagesDir = path.join(projectDir, conf.epub.imagesDir);
 			var dstImage = path.join(dstImagesDir, name);
 
-			fs.createReadStream(file.path).pipe(fs.createWriteStream(dstImage));
+			var dstImageWriteStream = fs.createWriteStream(dstImage);
+			fs.createReadStream(file.path).pipe(dstImageWriteStream);
 
-			return callback(null);
+			dstImageWriteStream.on('error', function (err) {
+				return callback(err);
+			});
+
+			dstImageWriteStream.on('finish', function () {
+				return callback(null);
+			});
 		});
 	}, function (err) {
 		if (err) {
@@ -68,4 +73,29 @@ exports.create = function (req, res, next) {
 		})
 	});
 
+}
+
+exports.get = function(req, res, next) {
+	var filename = req.params[0];
+	if (filename) {
+		Image.findOne({"projectId": req.project._id, "name": filename}, function (err, image) {
+			if (err) {
+				return next(err);
+			}
+
+			if (!image) {
+				return next({message: "Image not found", status: 404});
+			}
+			if (!utils.hasAccessToModel(req.user, image)) return next(403);
+
+			var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + req.project._id);
+			var imagesDir = path.join(projectDir, conf.epub.imagesDir);
+			var imagePath = path.join(imagesDir, image.name);
+
+			res.sendfile(imagePath);
+		});
+
+	} else {
+		return next({message: "Image not found", status: 404});
+	}
 }
