@@ -10,9 +10,27 @@
 		"uri": "mongodb://localhost/scripler_test"
 	},
 	"resources": {
-			"projectsDir": "/tmp",
-			"usersDir": "/tmp",
-			"projectsUrl": "http://localhost:3000/public/resources/projects",
-			"usersUrl": "http://localhost:3000/public/resources/users"
+		"projectsDir": "/tmp",
+		"usersDir": "/tmp",
+		"projectsUrl": "http://localhost:3000/public/resources/projects",
+		"usersUrl": "http://localhost:3000/public/resources/users"
+	},
+	"epub": {
+		"userDirPrefix": "user",
+		"fontsDir": "Fonts",
+		"projectDirPrefix": "project",
+		"htmlDir": "HTML",
+		"imagesDir": "Images",
+		"stylesDir": "Styles",
+		"documentPrefix": "doc_",
+		"fontPrefix": "font_",
+		"imagePrefix": "img_",
+		"stylePrefix": "style_"
+	},
+	"epub2": {
+		"oepbsDir": "OEBPS"
+	},
+	"epub3": {
+		"epubDir": "EPUB"
 	}
 }

@@ -96,13 +96,16 @@ exports.create = function (req, res, next) {
 			}
 
 			var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
-            mkdirp(projectDir, function (err) {
+			var dstImagesDir = path.join(projectDir, conf.epub.imagesDir);
+
+			// mkdirp automatically creates all missing parent folders so we can simply create one of the sub folders, e.g. Images
+            mkdirp(dstImagesDir, function (err) {
 				if (err) {
 					return next(err);
 				}
+
 				res.send({project: project});
 			});
-
 		});
 	});
 }

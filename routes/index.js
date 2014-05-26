@@ -5,6 +5,7 @@ var frontpage = require('./frontpage')
 	, document = require('./document')
 	, styleset = require('./styleset')
 	, style = require('./style')
+	, image = require('./image')
 	, utils = require('../lib/utils');
 
 module.exports = function (app, auth) {
@@ -41,6 +42,8 @@ module.exports = function (app, auth) {
 	app.put('/project/:projectId/toc', auth.isLoggedIn(), project.toc);
 	app.delete('/project/:projectId', auth.isLoggedIn(), project.delete);
 	app.post('/project/:projectIdPopulatedFull/copy', auth.isLoggedIn(), project.copy);
+	app.post('/image/:projectId/upload', auth.isLoggedIn(), image.create);
+	app.get('/project/:projectId/images/*', auth.isLoggedIn(), image.get);
 
 	/* API Document Manager: Document and Folder */
 	app.post('/document', auth.isLoggedIn(), project.load(), document.create);

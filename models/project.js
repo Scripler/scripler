@@ -4,17 +4,8 @@ var mongoose = require('mongoose')
 	, User = require('./user').User
 	, Styleset = require('./styleset').Styleset
 	, bcrypt = require('bcrypt')
+	, MemberSchema = require('./member_schema').MemberSchema
 	, SALT_WORK_FACTOR = 10;
-
-/**
- * User Member Sub-Schema
- */
-var ProjectMemberSchema = new Schema({
-	userId: { type: String, required: true },
-	access: [
-		{ type: String }
-	]
-}, { _id: false });
 
 /**
  * Meta TOC Entry Schema
@@ -46,7 +37,7 @@ var ProjectSchema = new Schema({
 	],
 	styleset: { type: Schema.Types.ObjectId, ref: 'Styleset' }, // The default styleset for new documents in this project
 	folders: [FolderSchema], // Embedding, since amount of folder meta data is expected to be small.
-	members: [ProjectMemberSchema],
+	members: [MemberSchema],
 	metadata: {
 		title: { type: String },
 		description: { type: String },
@@ -77,7 +68,11 @@ var ProjectSchema = new Schema({
 	archived: { type: Boolean, default: false},
 	deleted: { type: Boolean, default: false},
 	created: { type: Date, default: Date.now },
-	modified: { type: Date, default: Date.now }
+	modified: { type: Date, default: Date.now },
+	images: [
+		{ type: Schema.Types.ObjectId, ref: 'Image' }
+	]
+
 });
 
 ProjectSchema.pre('remove', function (next) {

@@ -1,17 +1,8 @@
 var mongoose = require('mongoose')
 	, Schema = mongoose.Schema
-	, Style = require('./style').Style
-	, copyStyle = require('../models/style').copy;
-
-/**
- * Styleset-Member schema
- */
-var StylesetMemberSchema = new Schema({
-	userId: { type: String, required: true },
-	access: [
-		{ type: String }
-	]
-}, { _id: false });
+	, Style = require('../models/style.js').Style
+	, copyStyle = require('../models/style.js').copy
+	, MemberSchema = require('./member_schema').MemberSchema;
 
 /**
  * Styleset Schema
@@ -23,7 +14,7 @@ var StylesetSchema = new Schema({
 	styles: [ { type: Schema.Types.ObjectId, ref: 'Style' }],
 	// Currently not used: not possible to delete a style
 	deletedStyles: [ { type: Schema.Types.ObjectId, ref: 'Style' }],
-	members: [StylesetMemberSchema],
+	members: [MemberSchema],
 	archived: { type: Boolean, default: false },
 	deleted: { type: Boolean, default: false },
 	isSystem: { type: Boolean, default: false },

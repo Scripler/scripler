@@ -3,11 +3,13 @@ process.env.NODE_ENV = 'test';
 var epub = require('../lib/epub')
   , epub3 = require('../lib/epub/epub3')
   , assert = require("assert")
-  , TOCEntry = require('../models/project').TOCEntry
-  , Document = require('../models/document').Document
-  , styleset_utils = require('../public/create/scripts/utils-shared')
   , utils = require('../public/create/scripts/utils-shared')
-  , ObjectId = require('mongoose').Types.ObjectId;
+  , styleset_utils = require('../public/create/scripts/utils-shared')
+  , ObjectId = require('mongoose').Types.ObjectId
+  , conf = require('config')
+  , Document = require('../models/document.js').Document
+  , TOCEntry = require('../models/project.js').TOCEntry
+  , Image = require('../models/image.js').Image;
 
 describe('utils', function () {
     var str1 = "4eed2d88c3dedf0d0300001a";
@@ -126,7 +128,7 @@ describe('epub', function () {
 	}),
 	it('getManifestHtmlFilesString', function () {
 		var folderName = 'HTML';
-		var prefix = 'doc_';
+		var prefix = conf.epub.documentPrefix;
 
 		var htmlFiles = [];
 		var result = epub.getManifestFilesString(prefix, folderName, htmlFiles);
@@ -153,28 +155,28 @@ describe('epub', function () {
 	}),
 	it('getManifestImageFilesString', function () {
 		var folderName = 'Images';
-		var prefix = 'img_';
+		var prefix = conf.epub.imagePrefix;
 
 		var images = [];
 		var result = epub.getManifestFilesString(prefix, folderName, images);
 		assert.equal(result, '');
 
-		var image1 = {
-			"name": "img_frontpage.jpg",
-			"fileExtension": "jpg",
-			"mediaType": "image/jpeg"
-		};
+		var image1 = new Image({
+			name: "frontpage.jpg",
+			fileExtension: "jpg",
+			mediaType: "image/jpeg"
+		});
 
 		images = [image1];
 
 		var result = epub.getManifestFilesString(prefix, folderName, images);
 		assert.equal(result, '<item id="img_frontpage.jpg" href="Images/img_frontpage.jpg" media-type="image/jpeg" />');
 
-		var image2 = {
-			"name": "img_fun_image.png",
-			"fileExtension": "png",
-			"mediaType": "image/png"
-		};
+		var image2 = new Image({
+			name: "fun_image.png",
+			fileExtension: "png",
+			mediaType: "image/png"
+		});
 
 		images = [image1, image2];
 		var result = epub.getManifestFilesString(prefix, folderName, images);
@@ -183,7 +185,7 @@ describe('epub', function () {
 	}),
 	it('getManifestFontFilesString', function () {
 		var folderName = 'Fonts';
-		var prefix = 'font_';
+		var prefix = conf.epub.fontPrefix;
 
 		var fonts = [];
 		var result = epub.getManifestFilesString(prefix, folderName, fonts);
