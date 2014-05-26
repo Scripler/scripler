@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
 	, Schema = mongoose.Schema
-	, Style = require('./style.js').Style
-	, copyStyle = require('../models/style.js').copy;
+	, Style = require('./style').Style
+	, copyStyle = require('../models/style').copy;
 
 /**
  * Styleset-Member schema
