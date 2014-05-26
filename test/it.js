@@ -8,7 +8,7 @@ var assert = require("assert")
 	, fs = require('fs')
 	, path = require('path')
 	, moment = require('moment')
-	, utils = require('../lib/utils');
+	, utils = require('../public/create/scripts/utils-shared');
 
 var exec = require('child_process').exec,
 	child;
@@ -788,8 +788,8 @@ describe('Scripler RESTful API', function () {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 						assert.equal(res.body.document.defaultStyleset, stylesetId);
 						assert.equal(res.body.document.text, text);
-						assert.equal(utils.containsId(res.body.document.stylesets, userStylesetId), false);
-						assert.equal(utils.containsId(res.body.document.stylesets, stylesetId), false);
+						assert.equal(utils.containsModel(res.body.document.stylesets, userStylesetId), false);
+						assert.equal(utils.containsModel(res.body.document.stylesets, stylesetId), false);
 						done();
 					});
 			}),
@@ -803,8 +803,8 @@ describe('Scripler RESTful API', function () {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 						assert.equal(res.body.document.defaultStyleset, userStylesetId);
 						assert.equal(res.body.document.text, text);
-						assert.equal(utils.containsId(res.body.document.stylesets, userStylesetId), false);
-						assert.equal(utils.containsId(res.body.document.stylesets, stylesetId), true);
+						assert.equal(utils.containsModel(res.body.document.stylesets, userStylesetId), false);
+						assert.equal(utils.containsModel(res.body.document.stylesets, stylesetId), true);
 						done();
 					});
 			}),
@@ -818,8 +818,8 @@ describe('Scripler RESTful API', function () {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 						assert.equal(res.body.document.defaultStyleset, userStylesetId);
 						assert.equal(res.body.document.text, text);
-						assert.equal(utils.containsId(res.body.document.stylesets, userStylesetId), false);
-						assert.equal(utils.containsId(res.body.document.stylesets, stylesetId), true);
+						assert.equal(utils.containsModel(res.body.document.stylesets, userStylesetId), false);
+						assert.equal(utils.containsModel(res.body.document.stylesets, stylesetId), true);
 						done();
 					});
 			}),
@@ -833,8 +833,8 @@ describe('Scripler RESTful API', function () {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 						assert.equal(res.body.document.defaultStyleset, userStylesetId);
 						assert.equal(res.body.document.text, "");
-						assert.equal(utils.containsId(res.body.document.stylesets, userStylesetId), false);
-						assert.equal(utils.containsId(res.body.document.stylesets, stylesetId), true);
+						assert.equal(utils.containsModel(res.body.document.stylesets, userStylesetId), false);
+						assert.equal(utils.containsModel(res.body.document.stylesets, stylesetId), true);
 						done();
 					});
 			}),
@@ -1317,11 +1317,11 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.stylesets.length, 3);
 					// Currently document stylesets are returned before user stylesets but we should not rely on this => just check if the id exists *somewhere* in the list.
-					assert.equal(utils.containsId(res.body.stylesets, stylesetCopiedId), true);
-					assert.equal(utils.containsId(res.body.stylesets, userStylesetId), true);
-					assert.equal(utils.containsId(res.body.stylesets, stylesetId), true);
-					assert.equal(utils.containsId(res.body.stylesets, stylesetId2), false);
-					assert.equal(utils.containsId(res.body.stylesets, systemStylesetId), false);
+					assert.equal(utils.containsModel(res.body.stylesets, stylesetCopiedId), true);
+					assert.equal(utils.containsModel(res.body.stylesets, userStylesetId), true);
+					assert.equal(utils.containsModel(res.body.stylesets, stylesetId), true);
+					assert.equal(utils.containsModel(res.body.stylesets, stylesetId2), false);
+					assert.equal(utils.containsModel(res.body.stylesets, systemStylesetId), false);
 					done();
 				});
 		}),
