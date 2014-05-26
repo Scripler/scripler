@@ -102,11 +102,31 @@
 		return result;
 	}
 
+	/**
+	 * Check if one of the documents exist in the specified folder.
+	 *
+	 * @param documents
+	 * @param folderId
+	 * @returns {boolean}
+	 */
+	function containsDocWithFolderId(documents, folderId) {
+		var result = false;
+		for (var i = 0; i < documents.length; i++) {
+			if (documents[i].folderId == folderId) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
+
+
 	return {
 		getStylesetContents : getStylesetContents,
         mongooseEquals : mongooseEquals,
         getMongooseId : getMongooseId,
-		containsModel : containsModel
+		containsModel : containsModel,
+		containsDocWithFolderId: containsDocWithFolderId
 	}
 
 }()))

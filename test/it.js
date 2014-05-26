@@ -52,47 +52,15 @@ var styleCopiedId;
 var styleCopiedId2;
 
 var imageId;
-var imageName = 'Scripler_logo.jpg';
+var imageName;
 
 var cleanupEPUB = true;
-
-function containsId(items, id) {
-	var result = false;
-	for (var i = 0; i < items.length; i++) {
-		if (items[i]._id == id) {
-			result = true;
-			break;
-		}
-	}
-	return result;
-}
-
-function containsDocWithFolderId(documents, folderId) {
-	var result = false;
-	for (var i = 0; i < documents.length; i++) {
-		if (documents[i].folderId == folderId) {
-			result = true;
-			break;
-		}
-	}
-	return result;
-}
 
 if (conf.db.uri.match(/_test$/) === null) {
 	console.log("You shouldn't be running this test on any database not being specifically meant for 'test'!");
 	console.log("You tried with this database: " + conf.db.uri);
 	process.exit(1);
 }
-
-/*
-
- NB! When creating or changing tests that ADD documents, be sure to include ALL document ids in the REARRANGE DOCUMENTS test
- since this test will currently overwrite all previously set document ids which will probably cause unexpected behaviour
- in any test following the rearrange test.
-
- See: https://github.com/Scripler/scripler/issues/14
-
- */
 
 describe('Scripler RESTful API', function () {
 	before(function (done) {
@@ -874,9 +842,9 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.result.folders.length, 1);
 						assert.equal(res.body.result.folders[0]._id, childFolderId);
 						assert.equal(res.body.result.docs.length, 5);
-						assert.equal(containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
-						assert.equal(containsId(res.body.result.docs, rootDocumentId), true);
-						assert.equal(containsId(res.body.result.docs, coverDocumentId), true);
+						assert.equal(utils.containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
+						assert.equal(utils.containsModel(res.body.result.docs, rootDocumentId), true);
+						assert.equal(utils.containsModel(res.body.result.docs, coverDocumentId), true);
 						done();
 					});
 			}),
@@ -900,9 +868,9 @@ describe('Scripler RESTful API', function () {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 						assert.equal(res.body.result.folders.length, 0);
 						assert.equal(res.body.result.docs.length, 5);
-						assert.equal(containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
-						assert.equal(containsId(res.body.result.docs, rootDocumentId), true);
-						assert.equal(containsId(res.body.result.docs, coverDocumentId), true);
+						assert.equal(utils.containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
+						assert.equal(utils.containsModel(res.body.result.docs, rootDocumentId), true);
+						assert.equal(utils.containsModel(res.body.result.docs, coverDocumentId), true);
 						done();
 					});
 			}),
@@ -952,12 +920,12 @@ describe('Scripler RESTful API', function () {
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 						assert.equal(res.body.result.folders.length, 1);
-						assert.equal(containsId(res.body.result.folders, childFolderId), true);
+						assert.equal(utils.containsModel(res.body.result.folders, childFolderId), true);
 
 						assert.equal(res.body.result.docs.length, 5);
-						assert.equal(containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
-						assert.equal(containsId(res.body.result.docs, rootDocumentId), true);
-						assert.equal(containsId(res.body.result.docs, coverDocumentId), true);
+						assert.equal(utils.containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
+						assert.equal(utils.containsModel(res.body.result.docs, rootDocumentId), true);
+						assert.equal(utils.containsModel(res.body.result.docs, coverDocumentId), true);
 						done();
 					});
 			}),
@@ -1826,6 +1794,7 @@ describe('Scripler RESTful API', function () {
 			});
 		}),
 		it('Uploading an image to a project should return the Mongoose model object representing the uploaded image', function (done) {
+			imageName = 'Scripler_logo.jpg';
 			var srcImagesDir = path.join('test', 'resources', 'images');
 			var srcImage = path.join(srcImagesDir, imageName);
 
