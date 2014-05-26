@@ -82,19 +82,19 @@ exports.update = function (req, res, next) {
 	if (req.body.text != undefined) {
 		document.text = req.body.text;
 	}
-	// Is defaultStylset to be changed?
+	// Is defaultstyleset to be changed?
 	if (req.body.defaultStyleset != undefined &&
 		!utils_shared.mongooseEquals(document.defaultStyleset, req.body.defaultStyleset)) {
-		var newDefaultStylset = req.body.defaultStyleset;
-		if (newDefaultStylset) {
-			var oldDefaultStylset = document.defaultStyleset;
-			document.defaultStyleset = newDefaultStylset;
+		var newDefaultstyleset = req.body.defaultStyleset;
+		if (newDefaultstyleset) {
+			var oldDefaultstyleset = document.defaultStyleset;
+			document.defaultStyleset = newDefaultstyleset;
 			// Remove any reference of the new defaultStyleset from the array of non-default stylesets.
-			var stylesetIndex = document.stylesets.indexOf(newDefaultStylset);
+			var stylesetIndex = document.stylesets.indexOf(newDefaultstyleset);
 			if (stylesetIndex >= 0) {
 				document.stylesets.slice(stylesetIndex, 1);
 			}
-			document.stylesets.addToSet(oldDefaultStylset);
+			document.stylesets.addToSet(oldDefaultstyleset);
 		} else {
 			return next({message: "Document can not have defaultStyleset set to null!", status: 400});
 		}
