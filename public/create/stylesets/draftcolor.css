@@ -21,7 +21,9 @@
 		@font-face {
 		font-family: courierprimebolditalic;
 		src: local(courierprimebolditalic), url('fonte/courierprimebolditalic.ttf') format('truetype');
-		}				
+		}
+
+						
 
 		h1 {
 		font-family: courierprimebold;

@@ -8,7 +8,7 @@ var assert = require("assert")
 	, fs = require('fs')
 	, path = require('path')
 	, moment = require('moment')
-	, utils = require('../lib/utils');
+	, utils = require('../public/create/scripts/utils-shared');
 
 var exec = require('child_process').exec,
 	child;
@@ -16,6 +16,7 @@ var exec = require('child_process').exec,
 var host = '127.0.0.1:' + conf.app.port;
 var cookie;
 
+var text;
 var systemStylesetId;
 var userStylesetId;
 
@@ -773,8 +774,8 @@ describe('Scripler RESTful API', function () {
 						done();
 					});
 			}),
-			it('Updating a document should return success', function (done) {
-				var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
+			it('Updating a document text should return the updated document', function (done) {
+				text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
 					'<!DOCTYPE html>' +
 					'<html xmlns="http://www.w3.org/1999/xhtml">' +
 					'<head><title>MyFirstDocument</title></head>' +
@@ -784,10 +785,59 @@ describe('Scripler RESTful API', function () {
 				request(host)
 					.put('/document/' + rootDocumentId + '/update')
 					.set('cookie', cookie)
-					.send({text: text})
+					.send({text: text, defaultStyleset: stylesetId})
 					.expect(200)
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.document.defaultStyleset, stylesetId);
+						assert.equal(res.body.document.text, text);
+						assert.equal(utils.containsModel(res.body.document.stylesets, userStylesetId), false);
+						assert.equal(utils.containsModel(res.body.document.stylesets, stylesetId), false);
+						done();
+					});
+			}),
+			it('Updating a documents defaultStyleset should return the updated document', function (done) {
+				request(host)
+					.put('/document/' + rootDocumentId + '/update')
+					.set('cookie', cookie)
+					.send({defaultStyleset: userStylesetId})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.document.defaultStyleset, userStylesetId);
+						assert.equal(res.body.document.text, text);
+						assert.equal(utils.containsModel(res.body.document.stylesets, userStylesetId), false);
+						assert.equal(utils.containsModel(res.body.document.stylesets, stylesetId), true);
+						done();
+					});
+			}),
+			it('Trying to update a documents text to null should be ignored, and return the unchanged document', function (done) {
+				request(host)
+					.put('/document/' + rootDocumentId + '/update')
+					.set('cookie', cookie)
+					.send({text: null})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.document.defaultStyleset, userStylesetId);
+						assert.equal(res.body.document.text, text);
+						assert.equal(utils.containsModel(res.body.document.stylesets, userStylesetId), false);
+						assert.equal(utils.containsModel(res.body.document.stylesets, stylesetId), true);
+						done();
+					});
+			}),
+			it('Update a documents text to empty string should return the changed document', function (done) {
+				request(host)
+					.put('/document/' + rootDocumentId + '/update')
+					.set('cookie', cookie)
+					.send({text: ""})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.document.defaultStyleset, userStylesetId);
+						assert.equal(res.body.document.text, "");
+						assert.equal(utils.containsModel(res.body.document.stylesets, userStylesetId), false);
+						assert.equal(utils.containsModel(res.body.document.stylesets, stylesetId), true);
 						done();
 					});
 			}),
@@ -1270,11 +1320,11 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.stylesets.length, 3);
 					// Currently document stylesets are returned before user stylesets but we should not rely on this => just check if the id exists *somewhere* in the list.
-					assert.equal(utils.containsId(res.body.stylesets, stylesetCopiedId), true);
-					assert.equal(utils.containsId(res.body.stylesets, userStylesetId), true);
-					assert.equal(utils.containsId(res.body.stylesets, stylesetId), true);
-					assert.equal(utils.containsId(res.body.stylesets, stylesetId2), false);
-					assert.equal(utils.containsId(res.body.stylesets, systemStylesetId), false);
+					assert.equal(utils.containsModel(res.body.stylesets, stylesetCopiedId), true);
+					assert.equal(utils.containsModel(res.body.stylesets, userStylesetId), true);
+					assert.equal(utils.containsModel(res.body.stylesets, stylesetId), true);
+					assert.equal(utils.containsModel(res.body.stylesets, stylesetId2), false);
+					assert.equal(utils.containsModel(res.body.stylesets, systemStylesetId), false);
 					done();
 				});
 		}),

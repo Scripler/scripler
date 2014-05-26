@@ -3,12 +3,44 @@ process.env.NODE_ENV = 'test';
 var epub = require('../lib/epub')
   , epub3 = require('../lib/epub/epub3')
   , assert = require("assert")
-  , TOCEntry = require('../models/project.js').TOCEntry
+  , utils = require('../public/create/scripts/utils-shared')
+  , styleset_utils = require('../public/create/scripts/utils-shared')
+  , ObjectId = require('mongoose').Types.ObjectId
+  , conf = require('config')
   , Document = require('../models/document.js').Document
-  , Image = require('../models/image.js').Image
-  , styleset_utils = require('../public/create/scripts/styleset-utils-shared.js')
-  , conf = require('config');
+  , TOCEntry = require('../models/project.js').TOCEntry
+  , Image = require('../models/image.js').Image;
 
+describe('utils', function () {
+    var str1 = "4eed2d88c3dedf0d0300001a";
+    var str2 = "4eed2d88c3dedf0d0300001b";
+    var document1 = new Document({});
+    var document2 = new Document({});
+    it('getMongooseId', function () {
+        assert.equal(utils.getMongooseId(null), utils.getMongooseId(null));
+        assert.notEqual(utils.getMongooseId(null), utils.getMongooseId(str1));
+        assert.equal(utils.getMongooseId(str1), utils.getMongooseId(str1));
+        assert.notEqual(utils.getMongooseId(str1), utils.getMongooseId(str2));
+        assert.equal(utils.getMongooseId(str1), utils.getMongooseId(new String(str1)));
+        assert.notEqual(utils.getMongooseId(str1), utils.getMongooseId(new String(str2)));
+        assert.equal(utils.getMongooseId(str1), utils.getMongooseId(ObjectId.fromString(str1)));
+        assert.notEqual(utils.getMongooseId(str1), utils.getMongooseId(ObjectId.fromString(str2)));
+        assert.equal(utils.getMongooseId(document1._id), utils.getMongooseId(document1));
+        assert.notEqual(utils.getMongooseId(document1._id), utils.getMongooseId(document2));
+    }),
+    it('mongooseEquals', function () {
+        assert.equal(utils.mongooseEquals(null, null), true);
+        assert.equal(utils.mongooseEquals(null, str1), false);
+        assert.equal(utils.mongooseEquals(str1, str1), true);
+        assert.equal(utils.mongooseEquals(str1, str2), false);
+        assert.equal(utils.mongooseEquals(str1, new String(str1)), true);
+        assert.equal(utils.mongooseEquals(str1, new String(str2)), false);
+        assert.equal(utils.mongooseEquals(str1, ObjectId.fromString(str1)), true);
+        assert.equal(utils.mongooseEquals(str1, ObjectId.fromString(str2)), false);
+        assert.equal(utils.mongooseEquals(document1._id, document1), true);
+        assert.equal(utils.mongooseEquals(document1._id, document2), false);
+    })
+}),
 describe('epub', function () {
 	it('getCloseNavPointsString', function () {
 		var result = epub.getCloseNavPointsString(0, 0);

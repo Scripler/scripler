@@ -2,9 +2,11 @@ var Document = require('../models/document.js').Document;
 var Project = require('../models/project.js').Project;
 var Styleset = require('../models/styleset.js').Styleset;
 var copyStyleset = require('../models/styleset.js').copy;
+var utils_shared = require('../public/create/scripts/utils-shared');
 var utils = require('../lib/utils');
 var docConverter = require('../lib/doc-converter');
 var path = require('path');
+var async = require('async');
 var conf = require('config');
 var logger = require('../lib/logger');
 
@@ -61,7 +63,7 @@ var create = exports.create = function (req, res, next) {
 		}
 
 		project.documents.addToSet(document);
-		project.save(function (err, project) {
+		project.save(function (err) {
 			if (err) {
 				return next(err);
 			}
@@ -76,12 +78,32 @@ exports.open = function (req, res) {
 
 exports.update = function (req, res, next) {
 	var document = req.document;
-	document.text = req.body.text;
-	document.save(function (err) {
+	// Is text to be changed?
+	if (req.body.text != undefined) {
+		document.text = req.body.text;
+	}
+	// Is defaultstyleset to be changed?
+	if (req.body.defaultStyleset != undefined &&
+		!utils_shared.mongooseEquals(document.defaultStyleset, req.body.defaultStyleset)) {
+		var newDefaultstyleset = req.body.defaultStyleset;
+		if (newDefaultstyleset) {
+			var oldDefaultstyleset = document.defaultStyleset;
+			document.defaultStyleset = newDefaultstyleset;
+			// Remove any reference of the new defaultStyleset from the array of non-default stylesets.
+			var stylesetIndex = document.stylesets.indexOf(newDefaultstyleset);
+			if (stylesetIndex >= 0) {
+				document.stylesets.slice(stylesetIndex, 1);
+			}
+			document.stylesets.addToSet(oldDefaultstyleset);
+		} else {
+			return next({message: "Document can not have defaultStyleset set to null!", status: 400});
+		}
+	}
+	document.save(function (err, document) {
 		if (err) {
 			return next(err);
 		}
-		res.send({});
+		res.send({document: document});
 	});
 }
 
@@ -158,20 +180,23 @@ exports.rearrange = function (req, res, next) {
 	var existingDocumentIds = req.project.documents;
 
 	if (rearrangedDocumentIds && rearrangedDocumentIds.length == existingDocumentIds.length) {
-		for (var i=0; i<rearrangedDocumentIds.length; i++) {
-			var rearrangedDocumentId = rearrangedDocumentIds[i];
+		async.each(rearrangedDocumentIds, function (rearrangedDocumentId, callback) {
 			var containsRearrangedDocumentId = rearrangedDocumentIds.indexOf(rearrangedDocumentId) > -1;
 			if (!containsRearrangedDocumentId) {
-				return next({message: errorMessage, status: 400});
+				return callback({message: errorMessage, status: 400});
 			}
-		}
-
-		req.project.documents = rearrangedDocumentIds;
-		req.project.save(function (err, project) {
+			return callback();
+		}, function (err) {
 			if (err) {
 				return next(err);
 			}
-			res.send({project: project});
+			req.project.documents = rearrangedDocumentIds;
+			req.project.save(function (err, project) {
+				if (err) {
+					return next(err);
+				}
+				return res.send({project: project});
+			});
 		});
 	} else {
 		return next({message: errorMessage, status: 400});
@@ -188,13 +213,13 @@ exports.upload = function (req, res, next) {
 	var completedFiles = 0;
 	var importedHtml = '';
 	var user = req.user;
-    var name;
+	var name;
 	var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + user._id);
 	var userUrl = conf.resources.usersUrl + '/' + user._id;
 	for (var i = 0; i < files.length; i++) {
 		var file = files[i];
-        name = file.name;
-        logger.info('Uploaded file ' + file.name + ' to ' + file.path + ' (' + file.size + ')');
+		name = file.name;
+		logger.info('Uploaded file ' + file.name + ' to ' + file.path + ' (' + file.size + ')');
 		docConverter.execute(userDir, file.path, function (err, html) {
 			if (err) {
 				return next(new Error(err));
@@ -206,9 +231,9 @@ exports.upload = function (req, res, next) {
 				// Update all img links to match the upload location
 				importedHtml = importedHtml.replace(/(<img[^>]*src=")([^"]+")/g, '$1' + userUrl + '/$2');
 				importedHtml = importedHtml.replace(/(<img[^>]*src=")[^"]+ObjectReplacements[^"]+/g, '$1http://scripler.com/images/broken_file.png');
-                req.body.name = name;
-                req.body.text = importedHtml;
-                return create(req, res, next);
+				req.body.name = name;
+				req.body.text = importedHtml;
+				return create(req, res, next);
 			}
 		});
 	}

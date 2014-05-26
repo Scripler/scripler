@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
 	, Schema = mongoose.Schema
 	, Project // Lazy-loaded, c.f. DocumentSchema.pre()
-	, Styleset = require('./styleset.js').Styleset
+	, Styleset = require('./styleset').Styleset
 	, MemberSchema = require('./member_schema').MemberSchema
 	, bcrypt = require('bcrypt')
 	, SALT_WORK_FACTOR = 10;
