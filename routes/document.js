@@ -79,28 +79,24 @@ exports.open = function (req, res) {
 exports.update = function (req, res, next) {
 	var document = req.document;
 	// Is text to be changed?
-	if (req.body.text !== undefined) {
+	if (req.body.text != undefined) {
 		document.text = req.body.text;
 	}
 	// Is defaultStylset to be changed?
-	if (req.body.defaultStyleset !== undefined &&
+	if (req.body.defaultStyleset != undefined &&
 		!utils_shared.mongooseEquals(document.defaultStyleset, req.body.defaultStyleset)) {
 		var newDefaultStylset = req.body.defaultStyleset;
 		if (newDefaultStylset) {
 			var oldDefaultStylset = document.defaultStyleset;
 			document.defaultStyleset = newDefaultStylset;
 			// Remove any reference of the new defaultStyleset from the array of non-default stylesets.
-			for (var i = 0; i < document.stylesets.length; i++) {
-				if (utils_shared.mongooseEquals(newDefaultStylset, document.stylesets[i])) {
-					document.stylesets.slice(i, 1);
-					// Since stylsets is a set, a maximum of one occource should be expected.
-					// We found it, and removed it, so just break the loop.
-					break;
-				}
+			var stylesetIndex = document.stylesets.indexOf(newDefaultStylset);
+			if (stylesetIndex >= 0) {
+				document.stylesets.slice(stylesetIndex, 1);
 			}
 			document.stylesets.addToSet(oldDefaultStylset);
 		} else {
-			return next({message: "Document can not have defaultStyleset set to null!", status: 404});
+			return next({message: "Document can not have defaultStyleset set to null!", status: 400});
 		}
 	}
 	document.save(function (err, document) {
@@ -185,23 +181,23 @@ exports.rearrange = function (req, res, next) {
 
 	if (rearrangedDocumentIds && rearrangedDocumentIds.length == existingDocumentIds.length) {
 		async.each(rearrangedDocumentIds, function (rearrangedDocumentId, callback) {
-            var containsRearrangedDocumentId = rearrangedDocumentIds.indexOf(rearrangedDocumentId) > -1;
-            if (!containsRearrangedDocumentId) {
-                return callback({message: errorMessage, status: 400});
-            }
-            return callback();
-        }, function (err){
-            if (err) {
-                return next(err);
-            }
-            req.project.documents = rearrangedDocumentIds;
-            req.project.save(function (err, project) {
-                if (err) {
-                    return next(err);
-                }
-                return res.send({project: project});
-            });
-        });
+			var containsRearrangedDocumentId = rearrangedDocumentIds.indexOf(rearrangedDocumentId) > -1;
+			if (!containsRearrangedDocumentId) {
+				return callback({message: errorMessage, status: 400});
+			}
+			return callback();
+		}, function (err) {
+			if (err) {
+				return next(err);
+			}
+			req.project.documents = rearrangedDocumentIds;
+			req.project.save(function (err, project) {
+				if (err) {
+					return next(err);
+				}
+				return res.send({project: project});
+			});
+		});
 	} else {
 		return next({message: errorMessage, status: 400});
 	}
@@ -217,13 +213,13 @@ exports.upload = function (req, res, next) {
 	var completedFiles = 0;
 	var importedHtml = '';
 	var user = req.user;
-    var name;
+	var name;
 	var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + user._id);
 	var userUrl = conf.resources.usersUrl + '/' + user._id;
 	for (var i = 0; i < files.length; i++) {
 		var file = files[i];
-        name = file.name;
-        logger.info('Uploaded file ' + file.name + ' to ' + file.path + ' (' + file.size + ')');
+		name = file.name;
+		logger.info('Uploaded file ' + file.name + ' to ' + file.path + ' (' + file.size + ')');
 		docConverter.execute(userDir, file.path, function (err, html) {
 			if (err) {
 				return next(new Error(err));
@@ -235,9 +231,9 @@ exports.upload = function (req, res, next) {
 				// Update all img links to match the upload location
 				importedHtml = importedHtml.replace(/(<img[^>]*src=")([^"]+")/g, '$1' + userUrl + '/$2');
 				importedHtml = importedHtml.replace(/(<img[^>]*src=")[^"]+ObjectReplacements[^"]+/g, '$1http://scripler.com/images/broken_file.png');
-                req.body.name = name;
-                req.body.text = importedHtml;
-                return create(req, res, next);
+				req.body.name = name;
+				req.body.text = importedHtml;
+				return create(req, res, next);
 			}
 		});
 	}

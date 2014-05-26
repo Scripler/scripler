@@ -16,6 +16,7 @@ var exec = require('child_process').exec,
 var host = '127.0.0.1:' + conf.app.port;
 var cookie;
 
+var text;
 var systemStylesetId;
 var userStylesetId;
 
@@ -770,8 +771,8 @@ describe('Scripler RESTful API', function () {
 						done();
 					});
 			}),
-			it('Updating a document text should return success', function (done) {
-				var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
+			it('Updating a document text should return the updated document', function (done) {
+				text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
 					'<!DOCTYPE html>' +
 					'<html xmlns="http://www.w3.org/1999/xhtml">' +
 					'<head><title>MyFirstDocument</title></head>' +
@@ -786,12 +787,13 @@ describe('Scripler RESTful API', function () {
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 						assert.equal(res.body.document.defaultStyleset, stylesetId);
+						assert.equal(res.body.document.text, text);
 						assert.equal(utils.containsId(res.body.document.stylesets, userStylesetId), false);
 						assert.equal(utils.containsId(res.body.document.stylesets, stylesetId), false);
 						done();
 					});
 			}),
-			it('Updating a documents defaultStyleset should return success', function (done) {
+			it('Updating a documents defaultStyleset should return the updated document', function (done) {
 				request(host)
 					.put('/document/' + rootDocumentId + '/update')
 					.set('cookie', cookie)
@@ -800,6 +802,37 @@ describe('Scripler RESTful API', function () {
 					.end(function (err, res) {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 						assert.equal(res.body.document.defaultStyleset, userStylesetId);
+						assert.equal(res.body.document.text, text);
+						assert.equal(utils.containsId(res.body.document.stylesets, userStylesetId), false);
+						assert.equal(utils.containsId(res.body.document.stylesets, stylesetId), true);
+						done();
+					});
+			}),
+			it('Trying to update a documents text to null should be ignored, and return the unchanged document', function (done) {
+				request(host)
+					.put('/document/' + rootDocumentId + '/update')
+					.set('cookie', cookie)
+					.send({text: null})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.document.defaultStyleset, userStylesetId);
+						assert.equal(res.body.document.text, text);
+						assert.equal(utils.containsId(res.body.document.stylesets, userStylesetId), false);
+						assert.equal(utils.containsId(res.body.document.stylesets, stylesetId), true);
+						done();
+					});
+			}),
+			it('Update a documents text to empty string should return the changed document', function (done) {
+				request(host)
+					.put('/document/' + rootDocumentId + '/update')
+					.set('cookie', cookie)
+					.send({text: ""})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.document.defaultStyleset, userStylesetId);
+						assert.equal(res.body.document.text, "");
 						assert.equal(utils.containsId(res.body.document.stylesets, userStylesetId), false);
 						assert.equal(utils.containsId(res.body.document.stylesets, stylesetId), true);
 						done();

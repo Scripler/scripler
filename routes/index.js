@@ -30,17 +30,17 @@ module.exports = function (app, auth) {
 	app.get('/user/:id/verify/:hash', user.verify);
 
 	/* API Project Space: Project */
-    app.get('/project/list', auth.isLoggedIn(), project.list);
-    app.put('/project/rearrange', auth.isLoggedIn(), project.rearrange);
-    app.post('/project', auth.isLoggedIn(), project.create);
-    app.get('/project/:projectIdPopulated', auth.isLoggedIn(), project.open);
-    app.put('/project/:projectId/rename', auth.isLoggedIn(), project.rename);
-    app.put('/project/:projectId/archive', auth.isLoggedIn(), project.archive);
-    app.put('/project/:projectId/unarchive', auth.isLoggedIn(), project.unarchive);
-    app.put('/project/:projectId/metadata', auth.isLoggedIn(), project.metadata);
-    app.put('/project/:projectId/toc', auth.isLoggedIn(), project.toc);
-    app.delete('/project/:projectId', auth.isLoggedIn(), project.delete);
-    app.post('/project/:projectIdPopulatedFull/copy', auth.isLoggedIn(), project.copy);
+	app.get('/project/list', auth.isLoggedIn(), project.list);
+	app.put('/project/rearrange', auth.isLoggedIn(), project.rearrange);
+	app.post('/project', auth.isLoggedIn(), project.create);
+	app.get('/project/:projectIdPopulated', auth.isLoggedIn(), project.open);
+	app.put('/project/:projectId/rename', auth.isLoggedIn(), project.rename);
+	app.put('/project/:projectId/archive', auth.isLoggedIn(), project.archive);
+	app.put('/project/:projectId/unarchive', auth.isLoggedIn(), project.unarchive);
+	app.put('/project/:projectId/metadata', auth.isLoggedIn(), project.metadata);
+	app.put('/project/:projectId/toc', auth.isLoggedIn(), project.toc);
+	app.delete('/project/:projectId', auth.isLoggedIn(), project.delete);
+	app.post('/project/:projectIdPopulatedFull/copy', auth.isLoggedIn(), project.copy);
 
 	/* API Document Manager: Document and Folder */
 	app.post('/document', auth.isLoggedIn(), project.load(), document.create);
