@@ -53,6 +53,7 @@ function projectSpaceController( $scope, $http, localStorageService, projectsSer
 
 	$scope.$onRootScope('user:registered', function( event, user ) {
 		if ( user._id ) {
+			$scope.user = user;
 			uploadDemoPublications()
 				.then( function() {
 					localStorageService.remove( lsName );
