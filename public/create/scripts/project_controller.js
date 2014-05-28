@@ -1,7 +1,7 @@
 'use strict'
 
 function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress,
-							$timeout, $rootScope, stylesetUtilsService, $q ) {
+							$timeout, $rootScope, stylesetUtilsService, $q, user ) {
 
 	var timeout = null;
 
@@ -10,6 +10,31 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	var documentWatch = false;
 
 	var secondsToWait = 5;
+
+	$scope.pid = ($location.search()).pid;
+
+	$scope.user = user;
+
+	$scope.projectDocuments = [];
+
+	$scope.stylesets = [];
+
+	if ( $scope.user === undefined ) {
+		//demo mode
+	} else {
+		var projectPromise = projectsService.getProject( $scope.pid );
+
+		projectPromise.then( function( project ) {
+			$scope.project = project;
+			$scope.projectDocuments = $scope.project.documents;
+
+			if ( $scope.projectDocuments.length == 0 ) {
+				$scope.addProjectDocument();
+			} else {
+				$scope.openProjectDocument( $scope.projectDocuments[0] );
+			}
+		});
+	}
 
 	$scope.updateUser = function() {
 		userService.updateUser( $scope.user );
@@ -53,37 +78,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 		}
 	};
-
-	// Scope, Project
-	$scope.projectDocuments = [
-		//ADD/FIX: Get Publications API Call, on success do change
-		{_id:'00001',name:'Document 1',text:'<h1>this is a test</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'},
-		{_id:'00002',name:'Document 2',text:'<h1>this is a test 2</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'},
-		{_id:'00003',name:'Document 3',text:'<h1>this is a test 3</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'futurebw'},
-		{_id:'00004',name:'Document 4',text:'<h1>this is a test 4</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'futurebw'},
-		{_id:'00005',name:'Document 5',text:'<h1>this is a test 5</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'pleasantbw'},
-		{_id:'00006',name:'Document 6',text:'<h1>this is a test 6</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'pleasantbw'},
-		{_id:'00007',name:'Document 7',text:'<h1>this is a test 7</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'},
-		{_id:'00008',name:'Document 8',text:'<h1>this is a test 8</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'}
-	];
-
-	$scope.stylesets = [];
-
-	$scope.$onRootScope('user:updated', function( event, user ) {
-		$scope.user = user;
-		$scope.pid = ($location.search()).pid;
-
-		var projectPromise = projectsService.getProject( $scope.pid );
-		projectPromise.then( function( project ) {
-			$scope.project = project;
-			$scope.projectDocuments = $scope.project.documents;
-			if ( $scope.projectDocuments.length == 0 ) {
-				$scope.addProjectDocument();
-			} else {
-				$scope.openProjectDocument( $scope.projectDocuments[0] );
-			}
-		});
-	});
 
 	$scope.openProjectDocument = function( projectDocument ) {
 		if ( typeof $scope.documentSelected == 'object' ) {
@@ -304,8 +298,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 
 		$scope.hideStyleEditor = function() {
-			$rootScope.ck.commands.hideFloatingTools.exec();
-			$scope.styleEditorVisible = false;
+			if ( $scope.styleEditorVisible ) {
+				$rootScope.ck.commands.hideFloatingTools.exec();
+				$scope.styleEditorVisible = false;
+			}
 		}
 
 		$scope.$watch('showTypo', function() {

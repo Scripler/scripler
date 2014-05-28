@@ -34,8 +34,6 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 					publications = [ { _id: Date.now(), name:'Demo Title' } ];
 					localStorageService.add( lsName, publications );
 				}
-
-				$rootScope.$emit('demo:mode', publications);
 		});
 
 		$scope.submitRegistration = function() {
@@ -94,21 +92,23 @@ app.config( function( $routeProvider, $httpProvider, $provide ) {
 				.success( function( data ) {
 					if ( data.user ) {
 						userService.setUser( data.user );
-						$timeout(deferred.resolve, 0);
+						deferred.resolve( data.user );
 					}
 				})
 				.error( function( data ) {
 					$rootScope.$emit('login:failed');
-					$timeout(deferred.resolve, 0);
+					deferred.resolve();
 				});
+
+			return deferred.promise;
 	}]
 
 	$routeProvider
 		.when('/', { templateUrl:'pages/project-space.html', controller: projectSpaceController,
-					resolve: { access: isLoggedIn }
+					resolve: { user: isLoggedIn }
 					})
 		.when('/project', { templateUrl:'pages/project.html', controller: projectController,
-							resolve: { access: isLoggedIn }
+							resolve: { user: isLoggedIn }
 							})
 		.when('/error', { templateUrl:'pages/error.html' })
 		.otherwise({ redirectTo:'/' });
