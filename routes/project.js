@@ -37,7 +37,7 @@ exports.load = function (id) {
 exports.loadPopulated = function (id) {
 	return function (req, res, next) {
 		var idCopy = id || req.body.projectId;
-		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', match: {archived: false}, select: 'name folderId modified archived stylesets members type'}).exec(function (err, project) {
+		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', match: {archived: false}, select: 'name folderId modified archived styleset members type'}).exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
@@ -54,7 +54,7 @@ exports.loadPopulated = function (id) {
 exports.loadPopulatedFull = function (id) {
 	return function (req, res, next) {
 		var idCopy = id || req.body.projectId;
-		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', match: {archived: false}, select: 'name folderId modified archived stylesets members type text'}).exec(function (err, project) {
+		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', match: {archived: false}, select: 'name folderId modified archived styleset members type text'}).exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
@@ -83,7 +83,8 @@ exports.create = function (req, res, next) {
 		name: req.body.name,
 		members: [
 			{userId: req.user._id, access: ["admin"]}
-		]
+		],
+		styleset: req.user.defaultStyleset
 	});
 	project.save(function (err) {
 		if (err) {
