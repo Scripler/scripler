@@ -419,9 +419,6 @@ li.typo p {
 	-webkit-transition: all 0.5s;
 	-o-transition: all 0.5s;
 }
-.cke_floatingtools.open {
-	bottom: 0 !important;
-}
 
 .left-menu-divider {
 	display: block;
@@ -525,10 +522,6 @@ li.typo p {
 .insertOptionProperties {
 	height: 0;
 	overflow: hidden;
-/*	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;*/
 }
 .insertOptionProperties.expanded {
 	display: block;
@@ -542,14 +535,3 @@ li.typo p {
 	border: 1px solid #ffff99;
 	box-shadow: 0px 5px 5px -5px #ccc;
 }
-/*.insertOptionProperties input[type="text"] {
-	background: none #efefef;
-	border: 1px solid #ffff99;
-	padding: 5px 10px;
-	width: 100%;
-	margin: 0 0 10px 0;
-}
-.insertOptionProperties input[type="text"]:focus {
-	background: none #fff;
-	outline: none;
-}*/
