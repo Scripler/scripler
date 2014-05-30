@@ -282,6 +282,24 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 	}
 
+	$scope.insertOptionChoosen = function(insertoption) {
+		if ($scope.activeInsertOption === insertoption) {
+			$scope.activeInsertOption = null;
+		}
+		else {
+			$scope.activeInsertOption = insertoption;
+		}
+	}
+
+	$scope.insertImageOption = function(imageoption) {
+		if ($scope.activeImageOption === imageoption) {
+			$scope.activeImageOption = null;
+		}
+		else {
+			$scope.activeImageOption = imageoption;
+		}
+	}
+
     function initiateEditor(scope) {
     	$scope.ckContent = 'test';
 
@@ -302,7 +320,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$scope.styleEditorVisible = true;
 			}
 		}
-
 		$scope.hideStyleEditor = function() {
 			$rootScope.ck.commands.hideFloatingTools.exec();
 			$scope.styleEditorVisible = false;
@@ -314,9 +331,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 		});
 
+		$scope.insertPageBreak = function() {
+			$rootScope.ck.commands.pagebreak.exec();
+		}
+		$scope.insertPageBreakAvoid = function() {
+			$rootScope.ck.commands.pagebreakavoid.exec();
+		}
+
 		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
 
-//	    var startChapter = $scope.documents[0];i
+//	    var startChapter = $scope.documents[0];
 //	    $scope.entrybody = startChapter.content;
 	    // Mangler at tilf??je stylen startChapter.documentstyleSheet
 		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';

@@ -4,7 +4,6 @@
 
 <div class="container">
 
-
 	<div id="menu-left-tabs" class="menu-left-tabs" ondragstart="return false;" ondrop="return false;">
 		<div class="menu-left-tab" ng-class="{ 'selectedTab' : showDocuments }" ng-click="showDocuments = !showDocuments; showTypo = false; showInsert = false;">
 			<div class="center"></div>
@@ -107,9 +106,185 @@
 					</ul>
 				</div>
 			</div>
-			<div class="menu-item-left" ng-show="showInsert">
+			<div class="menu-item-left inserts" ng-show="showInsert">
 				<div class="menu-content">
-					Insert
+					<ul>
+						<!--<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertBoxOptions');">
+								<img src="pages/images/insert_box_button.png" width="80" height="80" />
+							</a>
+						</li>-->
+						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertHyperlinkOptions');">
+								<img src="pages/images/insert_hyperlink_button.png" width="80" height="80" />
+							</a>
+						</li>
+						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertImageOptions');">
+								<img src="pages/images/insert_image_button.png" width="80" height="80" />
+							</a>
+						</li>
+						<!--<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
+							line properties
+							<div class="left-menu-divider"></div>
+							padding settings
+							<div class="left-menu-divider"></div>
+							margin settings
+							<div class="left-menu-divider"></div>
+							<div class="left-menu-icons">
+								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChoosen('showInsertBoxOptions');">
+									X
+								</span>
+							</div>
+						</li>-->
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
+							<div class="left-menu-options">
+								<span class="left-menu-box inputfield full-size">
+									<input type="text" placeholder="Address">
+								</span>
+								<span class="left-menu-box inputfield full-size left-menu-parameter-margin">
+									<input type="text" placeholder="Text">
+								</span>
+								<span class="left-menu-box left-menu-parameter-margin">
+									<span class="option"><a ng-click="linkAnchorOption('chooseAnchor');">Anchor in document</a></span>
+									<span class="option"><a ng-click="linkAnchorOption('chooseAnchor');">Anchor in document</a></span>
+									<span class="option"><a ng-click="linkAnchorOption('chooseAnchor');">Anchor in document</a></span>
+								</span>
+							</div>
+
+							<div class="left-menu-divider"></div>
+							<div class="left-menu-icons">
+								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChoosen('showInsertHyperlinkOptions');">
+									X
+								</span>
+							</div>
+						</li>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
+							<div class="left-menu-options">
+								<span class="left-menu-box inputfield">
+									<input type="text" placeholder="Choose image">
+								</span>
+								<span class="left-menu-button">
+									<a ng-click="insertImageOption('addNewImage');">+</a>
+								</span>
+							</div>
+							<div class="left-menu-options left-menu-parameter-margin">
+								<span class="left-menu-button">
+									<a ng-click="alignImageLeft(); insertImageOption('')">
+										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Left" />
+									</a>
+								</span>
+								<span class="left-menu-button">
+									<a ng-click="alignImageCenter(); insertImageOption('')">
+										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Center" />
+									</a>
+								</span>
+								<span class="left-menu-button">
+									<a ng-click="alignImageRight(); insertImageOption('')">
+										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Right" />
+									</a>
+								</span>
+								<span class="left-menu-button">
+									<a ng-click="insertImageOption('turnImage')">
+										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Turn Image" />
+									</a>
+								</span>
+								<span class="left-menu-button">
+									<a ng-click="duplicateImage(); insertImageOption('')">
+										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Duplicate Image" />
+									</a>
+								</span>
+								<span class="left-menu-button">
+									<a ng-click="insertImageOption('resizeImage')">
+										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Resize Image" />
+									</a>
+								</span>
+							</div>
+							<div class="left-menu-options-parameters left-menu-parameter-margin">
+								<div ng-class="{ 'expanded' : activeImageOption === 'turnImage' }">
+									<span class="left-menu-button">
+										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Resize Image Set Procentages" />
+									</span>
+									<span class="left-menu-box inputfield">
+										<input type="text" value="45" class="show-info">
+										<span class="extra-info">&deg;</span>
+									</span>
+								</div>
+								<div ng-class="{ 'expanded' : activeImageOption === 'resizeImage' }">
+									<span class="left-menu-button">
+										<img src="/create/ckeditor/skins/scripler/icons/maximize.png" title="Resize Image Set Procentages" />
+									</span>
+									<span class="left-menu-box inputfield">
+										<input type="text" value="100" class="show-info">
+										<span class="extra-info">%</span>
+									</span>
+								</div>
+							</div>
+							<div class="left-menu-divider"></div>
+							<div class="left-menu-icons">
+								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChoosen('showInsertImageOptions');">
+									X
+								</span>
+							</div>
+						</li>
+
+						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertPagebreakOptions');">
+								<img src="pages/images/insert_pagebreak_button.png" width="80" height="80" />
+							</a>
+						</li>
+						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertAnchorOptions');">
+								<img src="pages/images/insert_anchor_button.png" width="80" height="80" />
+							</a>
+						</li>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
+							<div>
+								<span class="left-menu-button">
+									<a ng-click="insertPageBreak()">
+										<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Insert the pagebreak" />
+									</a>
+								</span>
+								<span class="left-menu-button">
+									<a ng-click="insertPageBreakAvoid()">
+										<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Avoid pagebreak" />
+									</a>
+								</span>
+							</div>
+							<div class="left-menu-divider"></div>
+							<div class="left-menu-icons">
+								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChoosen('showInsertPagebreakOptions');">
+									X
+								</span>
+							</div>
+						</li>
+						<!--<li class="insertOption"><img src="pages/images/insert_cover_button.png" width="80" height="80"></li>-->
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
+							<div class="left-menu-options">
+								<span class="left-menu-box inputfield">
+									<input type="text" placeholder="Anchor name">
+								</span>
+								<span class="left-menu-button">
+									<a ng-click="insertAnchorOption('addNewAnchor');">+</a>
+								</span>
+
+								<span class="left-menu-box left-menu-parameter-margin">
+									<span class="option"><a ng-click="insertAnchorOption('chooseAnchor');">Anchor in document</a></span>
+									<span class="option"><a ng-click="insertAnchorOption('chooseAnchor');">Anchor in document</a></span>
+									<span class="option"><a ng-click="insertAnchorOption('chooseAnchor');">Anchor in document</a></span>
+								</span>
+							</div>
+							<div class="left-menu-divider"></div>
+							<div class="left-menu-icons">
+								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChoosen('showInsertAnchorOptions');">
+									X
+								</span>
+							</div>
+						</li>
+						<!--<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions'showInsertHyperlinkOptions }">
+							this is the options for insert hyperlink
+						</li>-->
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -130,6 +305,8 @@
 					<a ng-click="">New Folder</a>
 				</div>
 				<div ng-show="showImportOptions">
+					<p>Scripler imports Word files and other common word processor formats (link).</p>
+					<input type="file" ng-file-select="onFileSelect($files)">
 					<div class="upload-box" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="dragover"
 						 ng-show="dropSupported" ng-file-drop-available="dropSupported=true">drop files here</div>
 					<p>Scripler imports Word files and other common word processor formats (link).</p>
