@@ -1,0 +1,414 @@
+/*EDITABLE CSS*/
+
+/*FONTS*/
+/*font-family should always be named with the full name of the font, to avoid confusion. Weight is given like this:
+100 = thin
+200 = extra-light
+300 = light
+400 = normal, book
+500 = medium
+600 = demi-bold
+700 = bold
+800 = heavy
+900 = black*/
+
+/*SOURCE CODE PRO*/
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:200;
+	src : url("../Fonts/sourcecodeproextralight.otf");
+}
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:300;
+	src : url("../Fonts/sourcecodeprolight.otf");
+}
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:400;
+	src : url("../Fonts/sourcecodeproregular.otf");
+}
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:600;
+	src : url("../Fonts/sourcecodeprosemibold.otf");
+}
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:700;
+	src : url("../Fonts/sourcecodeprobold.otf");
+}
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:900;
+	src : url("../Fonts/sourcecodeproblack.otf");
+}
+
+/*QUICKSAND*/
+
+@font-face {
+	font-family:"Quicksand";
+	font-style:normal;
+	font-weight:200;
+	src : url("../Fonts/quicksanddash.otf");
+}
+
+@font-face {
+	font-family:"Quicksand";
+	font-style:normal;
+	font-weight:300;
+	src : url("../Fonts/quicksandlight.otf");
+}
+
+@font-face {
+	font-family: "Quicksand";
+	font-style:italic;
+	font-weight:300;
+	src : url("../Fonts/quicksandlightitalic.otf");
+}
+
+@font-face {
+	font-family:"Quicksand";
+	font-style:normal;
+	font-weight:400;
+	src : url("../Fonts/quicksandbook.otf");
+}
+
+@font-face {
+	font-family: "Quicksand";
+	font-style:italic;
+	font-weight:400;
+	src : url("../Fonts/quicksandbookitalic.otf");
+}
+
+@font-face {
+	font-family: "Quicksand";
+	font-style:normal;
+	font-weight:700;
+	src : url("../Fonts/quicksandbold.otf");
+}
+
+@font-face {
+	font-family: "Quicksand";
+	font-style:italic;
+	font-weight:700;
+	src : url("../Fonts/quicksandbolditalic.otf");
+}
+
+/*RAMBLA*/
+
+@font-face {
+	font-family: "Rambla";
+	font-style:normal;
+	font-weight:400;
+	src : url("../Fonts/ramblaregular.ttf");
+}
+
+@font-face {
+	font-family: "Rambla";
+	font-style:italic;
+	font-weight:400;
+	src : url("../Fonts/ramblaitalic.ttf");
+}
+
+@font-face {
+	font-family: "Rambla";
+	font-style:normal;
+	font-weight:700;
+	src : url("../Fonts/ramblabold.ttf");
+}
+
+@font-face {
+	font-family: "Rambla";
+	font-style:italic;
+	font-weight:700;
+	src : url("../Fonts/ramblabolditalic.ttf");
+}
+
+/*STYLES*/
+/*Name: Heading 1*/
+h1 {
+	font-family: "Quicksand", sans-serif;
+	font-style:normal;
+	font-weight:300;
+	font-size:3.5em;
+	line-height:1.35;
+	color:#25768F;
+	margin:1.5em 0 0 0;
+}
+
+/*Name: Heading 2*/
+h2 {
+	font-family: "Quicksand", sans-serif;
+	font-style:normal;
+	font-weight:300;
+	font-size:2.8em;
+	line-height:1.38;
+	color:#25768F;
+	margin:1.5em 0 0 0;
+}
+
+/*Name: Heading 3*/
+h3 {
+	font-family: "Quicksand", sans-serif;
+	font-style:normal;
+	font-weight:300;
+	font-size:2.3em;
+	line-height:1.44;
+	color:#25768F;
+	margin:1.5em 0 0 0;
+}
+
+/*Name: Heading 4*/
+h4 {
+	font-family: "Quicksand", sans-serif;
+	font-style:normal;
+	font-weight:300;
+	font-size:1.8em;
+	line-height:1.45;
+	color:#25768F;
+	margin:1.5em 0 0 0;
+}
+
+/*Name: Heading 5*/
+h5 {
+	font-family: "Quicksand", sans-serif;
+	font-style:normal;
+	font-weight:300;
+	font-size:1.5em;
+	line-height:1.53;
+	color:#25768F;
+	margin:1.5em 0 0 0;
+}
+
+/*Name: Heading 6*/
+h6 {
+	font-family: "Quicksand", sans-serif;
+	font-style:normal;
+	font-weight:300;
+	font-size:1.3em;
+	line-height:1.56;
+	color:#25768F;
+	margin:1.5em 0 0 0;
+}
+
+
+/*Name: Paragraph*/
+p {
+	font-family: "Rambla", sans-serif;
+	font-style:normal;
+	font-weight:400;
+	font-size:1em;
+	line-height: 1.60;
+	color:#000000;
+	margin: 1em 0 0 0;
+	hyphens: auto;
+	-moz-hyphens: auto;
+	-webkit-hyphens: auto;
+}
+
+/*Name: Quote*/
+blockquote {
+	quotes: "\203A" "\2039" "\2018" "\2019";
+	font-family: "Rambla", sans-serif;
+	font-style: italic;
+	font-weight: 700;
+	text-align: left;
+	font-size:1.4em;
+	line-height:1.42;
+	color:#ffffff;
+/*Border-shorthand is WIDTH STYLE COLOR*/
+	background-color: #25768F;
+	border:0px solid #000000;
+	padding:1em;
+/*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
+/*Here margin-top is defined as 1.2em instead of 1.5em - it is an approximation of <p> 1em (or rem)*/
+	margin:1.5em 30% 1.5em 0%;
+	page-break-inside:avoid;
+}
+
+/*Name: Speech*/
+q { 
+	quotes: "\203A" "\2039" "\2018" "\2019";
+	font-style:italic;
+}
+
+
+/*Name: Hyperlink*/
+a {
+	text-decoration:underline;
+	color:#25768F;
+	line-height:inherit;
+	font-weight:inherit;
+}
+
+a:link { color: #25768F; text-decoration:underline; }
+a:visited { color: #25768F; text-decoration:underline; }
+/*I think for templates the disappearing link is asking for trouble :)*/
+a:hover { color: #000000; text-decoration:underline; }
+a:active { color: #000000; text-decoration:none; }
+
+
+/*Name: Code*/
+.code {
+	font-family: "Source Code Pro", monospace;
+	font-style:normal;
+	font-weight:400;
+	font-size:1em;
+	text-indent:0;
+	color:#ffffff;
+	background:#000000;
+	margin:1.5em 30% 0em 0%;
+	padding:1em;
+}
+
+
+/*Name: Caption*/
+figcaption {
+	font-family: "Rambla", sans-serif;
+	font-style:normal;
+	font-weight:400;
+	font-size:0.9em;
+	line-height:1.64;
+	color:#000000;
+	margin:1em 20% 0 0%;
+}
+/*Epub2-fallback css*/
+/*p.figcaption {
+	font-family: "Source Sans Pro", arial, sans-serif;
+	font-style:italic;
+	font-weight:400;
+	font-size:.9em;
+	line-height:1.64;
+	margin:.3em 0em 0em 0em;
+}*/
+
+/*Name: Author*/
+.titlepageAuthor {
+	font-size:0.9em;
+	font-style:italic;
+	font-weight:400;
+	line-height: 1.3;
+	color:#25768F;
+	text-align:center;
+	text-indent:0;
+}
+
+/*Name: Title*/
+.titlepageTitle {
+	font-family: "Quicksand", sans-serif;	
+	font-size:3em;
+	font-style:normal;
+	font-weight: 300;
+	line-height: 1.5;
+	color:#25768F;
+	text-align:center;
+	text-indent:0;
+}
+
+/*Name: Table of content*/
+.toc-item {
+	font-size: 1.1em;
+	font-style:normal;
+	font-weight: 400;
+	line-height:1.42;
+	color:#25768F;
+
+}
+
+/*Name: Colophon*/
+.colophon {
+	font-size:0.9em;
+	text-indent:0;
+	text-align:right;
+}
+
+
+
+/*INSERT ELEMENTS*/
+
+/*Insert: List*/
+ol {
+	list-style:decimal;
+	font-family: "Rambla", sans-serif;
+	font-style:normal;
+	font-weight:400;
+	font-size:1em;
+	line-height: 1.56;
+	color:#000000;
+	margin: 1em 0 0 0;
+	hyphens: auto;
+	-moz-hyphens: auto;
+	-webkit-hyphens: auto;
+}
+ul {
+	list-style:disc;
+	font-family: "Rambla", sans-serif;
+	font-style:normal;
+	font-weight:400;
+	font-size:1em;
+	line-height: 1.56;
+	color:#000000;
+	margin: 1em 0 0 0;
+	hyphens: auto;
+	-moz-hyphens: auto;
+	-webkit-hyphens: auto;
+}
+
+/*Insert: Image*/
+img {
+	width: 80%;
+	margin: 0 20% 0 0%;
+	height: auto;
+	page-break-inside:avoid;
+}
+
+/*Insert: Table*/
+
+/*Name: Table heading*/
+th {
+	font-family: "Rambla", sans-serif;
+	font-style:normal;
+	font-weight:700;
+	font-size:1em;
+	line-height: 1.56;
+	color:#ffffff;
+	background-color: #25768F;
+	border: 3px solid #25768F;
+	padding: .5em;
+}
+
+/*Name: Table cells*/
+td {
+	font-family: "Rambla", sans-serif;
+	font-style:normal;
+	font-weight:400;
+	font-size:1.1em;
+	line-height: 1.56;
+	color:#000000;
+	background-color: #ffffff;
+	border: 3px solid #25768F;
+	padding: .5em;
+}
+
+table {
+	vertical-align: left;
+	table-layout: auto;
+	border-collapse: collapse;
+	border-spacing: 0;
+	margin:0 auto 0 0;
+/*Already in figure:
+	page-break-inside:avoid;*/
+}
