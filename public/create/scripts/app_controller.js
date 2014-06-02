@@ -233,7 +233,7 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 				floatingtools_Basic: [
 					{ name: 'styles', items: [ 'Font' ] },
 					'/',
-					{ name: 'fontstyles', items: [ 'FontSize', 'lineHeight' ] },
+					{ name: 'fontstyles', items: [ 'FontSize', 'LineHeight' ] },
 					'/',
 					['Bold'], ['Italic'], ['Underline'], ['TransformTextToUppercase'], ['Subscript'], ['Superscript'],
 					'/',
