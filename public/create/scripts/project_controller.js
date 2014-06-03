@@ -80,6 +80,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 
 	$scope.openProjectDocument = function( projectDocument ) {
+
 		if ( typeof $scope.documentSelected == 'object' ) {
 			$scope.updateProjectDocument();
 		}
@@ -233,6 +234,22 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return deferred.promise;
 	}
 
+	$scope.applyDefaultStyleset = function() {
+		for ( var i = 0; i < $scope.stylesets.length; i++ ) {
+			if ( $scope.documentSelected.defaultStyleset === $scope.stylesets[i]._id ) {
+				$scope.applyStylesetToEditor( $scope.stylesets[i], true );
+				break;
+			}
+		}
+	}
+
+	$scope.applyStylesetToEditor = function( styleset, isDefault ) {
+
+		$scope.currentStylesetCSS = stylesetUtilsService.getStylesetContents( styleset, isDefault );
+
+		$rootScope.ck.document.appendStyleText( $scope.currentStylesetCSS );
+	}
+
 	$scope.applyStyle = function( styleset, style ) {
 		var styleIndex = styleset.styles.indexOf( style );
 
@@ -284,7 +301,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		// Mangler at tilf??je stylen startChapter.documentstyleSheet
     }
 
-    initiateEditor();
+	initiateEditor();
+
+	$scope.$onRootScope('ckDocument:ready', function( event ) {
+		$scope.applyDefaultStyleset();
+	});
 
 	angular.element(document).ready(function () {
 
@@ -309,6 +330,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$scope.hideStyleEditor();
 			}
 		});
+
+
 
 		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
 

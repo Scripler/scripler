@@ -282,8 +282,14 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 				ck.setData(ngModel.$viewValue);
 			};
 
-			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 )
-			CKEDITOR.tools.enableHtml5Elements( document );
+			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 ) {
+				CKEDITOR.tools.enableHtml5Elements( document );
+			}
+
+			ck.on('instanceReady', function() {
+				ck.setData(ngModel.$viewValue);
+				$rootScope.$emit('ckDocument:ready');
+			});
 
 			$rootScope.ck = ck;
 		}
