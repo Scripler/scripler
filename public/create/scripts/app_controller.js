@@ -269,9 +269,11 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 			});
 
 			function updateModel() {
-				scope.$apply(function() {
-					ngModel.$setViewValue(ck.getData());
-				});
+				if ( !$scope.$$phase ) {
+					scope.$apply(function() {
+						ngModel.$setViewValue(ck.getData());
+					});
+				}
 			}
 
 			ck.on('change', updateModel);
