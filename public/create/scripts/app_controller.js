@@ -269,7 +269,7 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 			});
 
 			function updateModel() {
-				if ( !$scope.$$phase ) {
+				if ( !scope.$$phase ) {
 					scope.$apply(function() {
 						ngModel.$setViewValue(ck.getData());
 					});
