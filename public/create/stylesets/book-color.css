@@ -391,7 +391,6 @@ ul {
 img {
 	width: 80%;
 	margin: 0 10% 0 10%;
-	border: 3px solid #CD7400;
 	height: auto;
 	page-break-inside:avoid;
 }
