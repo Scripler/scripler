@@ -14,6 +14,9 @@ var rimraf = require('rimraf');
 var ncp = require('ncp').ncp;
 var epub3 = require('../lib/epub/epub3');
 var mkdirp = require('mkdirp');
+var async = require('async');
+var project_utils = require('../lib/project-utils');
+var TOCEntry = require('../models/project.js').TOCEntry;
 
 //Load project by id
 exports.load = function (id) {
@@ -333,7 +336,7 @@ exports.metadata = function (req, res, next) {
 	});
 }
 
-exports.toc = function (req, res, next) {
+exports.set_toc = function (req, res, next) {
 	var project = req.project;
 	project.metadata.toc = req.body;
 	project.save(function (err) {
@@ -341,6 +344,50 @@ exports.toc = function (req, res, next) {
 			return next(err);
 		}
 		res.send({project: project});
+	});
+}
+
+exports.get_toc = function (req, res, next) {
+	var project = req.project;
+	var documents = project.documents;
+	var tocEntries = [];
+
+	var getDocumentToC = function (document, callback) {
+		if (project_utils.includeInEbook(document)) {
+			var documentId = document._id;
+			var documentType = document.type;
+			var documentFilename;
+			if (project_utils.isSystemType(documentType)) {
+				var documentTypeName = project_utils.getDocumentTypeName(documentType, documents);
+				documentFilename = documentTypeName + ".html";
+			} else {
+				documentFilename = conf.epub.documentPrefix + documentId + ".html";
+			}
+
+			var target = conf.epub.htmlDir + '/' + documentFilename;
+
+			var tocEntry = new TOCEntry({
+				id: documentId,
+				type: 'document',
+				level: 0,
+				target: target,
+				text: document.name
+			});
+			tocEntries.push(tocEntry);
+
+			var documentToC = project_utils.generateToCJSON(target, document.text);
+			Array.prototype.push.apply(tocEntries, documentToC);
+		}
+
+		callback();
+	};
+
+	async.each(documents, getDocumentToC, function(err) {
+		if (err) {
+			return next(err);
+		}
+
+	 	res.send({toc: tocEntries});
 	});
 }
 

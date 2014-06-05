@@ -5,11 +5,13 @@ var epub = require('../lib/epub')
   , assert = require("assert")
   , utils = require('../public/create/scripts/utils-shared')
   , styleset_utils = require('../public/create/scripts/utils-shared')
+  , project_utils = require('../lib/project-utils')
   , ObjectId = require('mongoose').Types.ObjectId
   , conf = require('config')
   , Document = require('../models/document.js').Document
   , TOCEntry = require('../models/project.js').TOCEntry
-  , Image = require('../models/image.js').Image;
+  , Image = require('../models/image.js').Image
+  , _ = require("underscore");
 
 describe('utils', function () {
     var str1 = "4eed2d88c3dedf0d0300001a";
@@ -41,6 +43,269 @@ describe('utils', function () {
         assert.equal(utils.mongooseEquals(document1._id, document2), false);
     })
 }),
+describe('project-utils', function () {
+	it('generateToCJSON', function () {
+
+		var document1HTML = '<html>' +
+								'<head></head>' +
+								'<body>' +
+									'<h1 id="1">Introduction</h1>' +
+										'<p>Some fluffy text</p>' +
+										'<h2 id="2">Hi</h2>' +
+											'<p>Some smokey text</p>' +
+											'<p>Some funky text</p>' +
+											'<h3 id="62">A new start</h3>' +
+												'<p><a id="hej" title="fisk" href="blabla">Some fat text</a></p>' +
+										'<h2 id="8">Something else</h2>' +
+											'<p>Some <a id="15" title="My Anc" />text</p>' +
+									'<h1 id="991">Moving on</h1>' +
+										'<p>Some cool text</p>' +
+										'<p>Some other text</p>' +
+										'<p>Some nice text</p>' +
+										'<h6 id="3">Cool story, bro</h6>' +
+											'<p>Some text</p>' +
+										'<h6 id="27">Not too shabby</h6>' +
+											'<a id="88" title="y0" />' +
+								'</body>' +
+							'</html>';
+
+		var document1ToCEntriesJSONActual = project_utils.generateToCJSON('Document1.html', document1HTML);
+		//console.log('document1ToCEntriesJSONActual');
+		//console.log(document1ToCEntriesJSONActual);
+
+		var tocEntry1 = new TOCEntry({
+			id: "1",
+			type: "h1",
+			level: 1,
+			target: "Document1.html#" + conf.epub.anchorIdPrefix + "1",
+			text: "Introduction"
+		});
+
+		var tocEntry2 = new TOCEntry({
+			"id": "2",
+			"type": "h2",
+			"level": 2,
+			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "2",
+			"text": "Hi"
+		});
+
+		var tocEntry3 = new TOCEntry({
+			"id": "62",
+			"type": "h3",
+			"level": 3,
+			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "62",
+			"text": "A new start"
+		});
+
+		var tocEntry4 = new TOCEntry({
+			"id": "8",
+			"type": "h2",
+			"level": 2,
+			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "8",
+			"text": "Something else"
+		});
+
+		var tocEntry5 = new TOCEntry({
+			"id": "15",
+			"type": "a",
+			"level": 3,
+			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "15",
+			"text": "My Anc"
+		});
+
+		var tocEntry6 = new TOCEntry({
+			"id": "991",
+			"type": "h1",
+			"level": 1,
+			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "991",
+			"text": "Moving on"
+		});
+
+		var tocEntry7 = new TOCEntry({
+			"id": "3",
+			"type": "h6",
+			"level": 2,
+			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "3",
+			"text": "Cool story, bro"
+		});
+
+		var tocEntry8 = new TOCEntry({
+			"id": "27",
+			"type": "h6",
+			"level": 2,
+			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "27",
+			"text": "Not too shabby"
+		});
+
+		var tocEntry9 = new TOCEntry({
+			"id": "88",
+			"type": "a",
+			"level": 3,
+			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "88",
+			"text": "y0"
+		});
+
+		var document1ToCEntriesJSONExpected = [tocEntry1, tocEntry2, tocEntry3, tocEntry4, tocEntry5, tocEntry6, tocEntry7, tocEntry8, tocEntry9];
+
+		/*
+		var document1ToCJSONExpected = [
+			{
+				"id": "1",
+				"type": "h1",
+				"level": 1,
+				"target": "Document1.html#1",
+				"text": "Introduction"
+			},
+			{
+				"id": "2",
+				"type": "h2",
+				"level": 2,
+				"target": "Document1.html#2",
+				"text": "Hi"
+			},
+			{
+				"id": "62",
+				"type": "h3",
+				"level": 3,
+				"target": "Document1.html#62",
+				"text": "A new start"
+			},
+			{
+				"id": "8",
+				"type": "h2",
+				"level": 2,
+				"target": "Document1.html#8",
+				"text": "Something else"
+			},
+			{
+				"id": "15",
+				"type": "a",
+				"level": 3,
+				"target": "Document1.html#15",
+				"text": "My Anc"
+			},
+			{
+				"id": "991",
+				"type": "h1",
+				"level": 1,
+				"target": "Document1.html#991",
+				"text": "Moving on"
+			},
+			{
+				"id": "3",
+				"type": "h6",
+				"level": 2,
+				"target": "Document1.html#3",
+				"text": "Cool story, bro"
+			},
+			{
+				"id": "27",
+				"type": "h6",
+				"level": 2,
+				"target": "Document1.html#27",
+				"text": "Not too shabby"
+			},
+			{
+				"id": "88",
+				"type": "a",
+				"level": 3,
+				"target": "Document1.html#88",
+				"text": "y0"
+
+			}
+		];
+		*/
+
+		//console.log('document1ToCEntriesJSONExpected');
+		//console.log(document1ToCEntriesJSONExpected);
+
+		_.isEqual(document1ToCEntriesJSONActual, document1ToCEntriesJSONExpected);
+
+		/*
+		var document1JSONExpected = {
+			"id":"document1",
+			"type":"document",
+			"level":"0",
+			"text":"Document 1",
+			"children":[
+				{
+					"id":"document1_1",
+					"type":"heading",
+					"level":"1",
+					"text":"Introduction",
+					"children":[
+						{
+							"id":"document1_2",
+							"type":"heading",
+							"level":"2",
+							"text":"Hi",
+							"children":[
+								{
+									"id":"document1_62",
+									"type":"heading",
+									"level":"3",
+									"text":"A new start",
+									"children":[
+
+									]
+								}
+							]
+						},
+						{
+							"id":"document1_8",
+							"type":"heading",
+							"level":"2",
+							"text":"Something else",
+							"children":[
+								{
+									"id":"document1_15",
+									"type":"anchor",
+									"text":"My Anc",
+									"level":"3"
+								}
+							]
+						}
+					]
+				},
+				{
+					"id":"document1_991",
+					"type":"heading",
+					"level":"1",
+					"text":"Moving on",
+					"children":[
+						{
+							"id":"document1_3",
+							"type":"heading",
+							"level":"2",
+							"text":"Cool story bro",
+							"children":[
+
+							]
+						},
+						{
+							"id":"document1_27",
+							"type":"heading",
+							"level":"2",
+							"text":"Not too shabby",
+							"children":[
+								 {
+								 "id":"document1_88",
+								 "type":"anchor",
+								 "text":"y0",
+								 "level":"1"
+								 }
+							]
+						}
+					]
+				}
+			]
+		};
+
+		assert.equal(document1JSONActual, document1JSONExpected);
+		*/
+
+	})
+}),
 describe('epub', function () {
 	it('getCloseNavPointsString', function () {
 		var result = epub.getCloseNavPointsString(0, 0);
@@ -67,7 +332,7 @@ describe('epub', function () {
 		assert.equal(result, '');
 
 		var tocEntry1 = new TOCEntry;
-		tocEntry1.title = 'Kapitel Einz';
+		tocEntry1.text = 'Kapitel Einz';
 		tocEntry1.target = 'Kapitel Einz.html';
 		tocEntry1.level = 0;
 
@@ -75,13 +340,13 @@ describe('epub', function () {
 		result = epub.getNavPointsString(tocEntries);
 		assert.equal(result, '<navPoint id="navpoint-1" playOrder="1">' +
 			'<navLabel>' +
-			'<text>' + tocEntry1.title + '</text>' +
+			'<text>' + tocEntry1.text + '</text>' +
 			'</navLabel>' +
 			'<content src="' + tocEntry1.target + '"/>' +
 			'</navPoint>');
 
 		var tocEntry2 = new TOCEntry;
-		tocEntry2.title = 'Kapitel Zwei';
+		tocEntry2.text = 'Kapitel Zwei';
 		tocEntry2.target = 'Kapitel Zwei.html';
 		tocEntry2.level = 1;
 
@@ -89,19 +354,19 @@ describe('epub', function () {
 		result = epub.getNavPointsString(tocEntries);
 		assert.equal(result, '<navPoint id="navpoint-1" playOrder="1">' +
 			'<navLabel>' +
-			'<text>' + tocEntry1.title + '</text>' +
+			'<text>' + tocEntry1.text + '</text>' +
 			'</navLabel>' +
 			'<content src="' + tocEntry1.target + '"/>' +
 			'<navPoint id="navpoint-2" playOrder="2">' +
 			'<navLabel>' +
-			'<text>' + tocEntry2.title + '</text>' +
+			'<text>' + tocEntry2.text + '</text>' +
 			'</navLabel>' +
 			'<content src="' + tocEntry2.target + '"/>' +
 			'</navPoint>' +
 			'</navPoint>');
 
 		var tocEntry3 = new TOCEntry;
-		tocEntry3.title = 'Kapitel Drei';
+		tocEntry3.text = 'Kapitel Drei';
 		tocEntry3.target = 'Kapitel Drei.html';
 		tocEntry3.level = 0;
 
@@ -109,19 +374,19 @@ describe('epub', function () {
 		result = epub.getNavPointsString(tocEntries);
 		assert.equal(result, '<navPoint id="navpoint-1" playOrder="1">' +
 			'<navLabel>' +
-			'<text>' + tocEntry1.title + '</text>' +
+			'<text>' + tocEntry1.text + '</text>' +
 			'</navLabel>' +
 			'<content src="' + tocEntry1.target + '"/>' +
 			'<navPoint id="navpoint-2" playOrder="2">' +
 			'<navLabel>' +
-			'<text>' + tocEntry2.title + '</text>' +
+			'<text>' + tocEntry2.text + '</text>' +
 			'</navLabel>' +
 			'<content src="' + tocEntry2.target + '"/>' +
 			'</navPoint>' +
 			'</navPoint>' +
 			'<navPoint id="navpoint-3" playOrder="3">' +
 			'<navLabel>' +
-			'<text>' + tocEntry3.title + '</text>' +
+			'<text>' + tocEntry3.text + '</text>' +
 			'</navLabel>' +
 			'<content src="' + tocEntry3.target + '"/>' +
 			'</navPoint>');
@@ -314,7 +579,7 @@ describe('epub3', function () {
 		assert.equal(result, '');
 
 		var tocEntry1 = new TOCEntry;
-		tocEntry1.title = 'Kapitel Einz';
+		tocEntry1.text = 'Kapitel Einz';
 		tocEntry1.target = 'Kapitel Einz.html';
 		tocEntry1.level = 0;
 
@@ -323,7 +588,7 @@ describe('epub3', function () {
 		assert.equal(result, '<li><a href="Kapitel Einz.html">Kapitel Einz</a></li>');
 
 		var tocEntry2 = new TOCEntry;
-		tocEntry2.title = 'Kapitel Zwei';
+		tocEntry2.text = 'Kapitel Zwei';
 		tocEntry2.target = 'Kapitel Zwei.html';
 		tocEntry2.level = 1;
 

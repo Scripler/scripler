@@ -39,7 +39,8 @@ module.exports = function (app, auth) {
 	app.put('/project/:projectId/archive', auth.isLoggedIn(), project.archive);
 	app.put('/project/:projectId/unarchive', auth.isLoggedIn(), project.unarchive);
 	app.put('/project/:projectId/metadata', auth.isLoggedIn(), project.metadata);
-	app.put('/project/:projectId/toc', auth.isLoggedIn(), project.toc);
+	app.put('/project/:projectId/toc', auth.isLoggedIn(), project.set_toc);
+	app.get('/project/:projectIdPopulatedFull/toc', auth.isLoggedIn(), project.get_toc);
 	app.delete('/project/:projectId', auth.isLoggedIn(), project.delete);
 	app.post('/project/:projectIdPopulatedFull/copy', auth.isLoggedIn(), project.copy);
 	app.post('/image/:projectId/upload', auth.isLoggedIn(), image.create);
