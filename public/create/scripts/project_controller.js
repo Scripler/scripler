@@ -79,6 +79,29 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
+	$scope.saveProjectDocumentUpdates = function( newVal, oldVal ) {
+		if ( newVal != oldVal ) {
+			var charsDiff = 0;
+
+			charsDiff = newVal.text.length - lastSavedDocumentLength;
+
+			if ( charsDiff > 30 ) {
+				if ( typeof $scope.timeout !== 'undefined' ) {
+					if ( $scope.timeout ) {
+						$timeout.cancel( $scope.timeout );
+					}
+				}
+				$scope.updateProjectDocument();
+			}
+			if ( typeof $scope.timeout !== 'undefined' ) {
+				if ( $scope.timeout ) {
+					$timeout.cancel( $scope.timeout )
+				}
+			}
+			$scope.timeout = $timeout( $scope.updateProjectDocument, secondsToWait * 1000 );
+		}
+	};
+
 	$scope.openProjectDocument = function( projectDocument ) {
 
 		if ( typeof $scope.documentSelected == 'object' ) {
@@ -94,8 +117,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				lastSavedDocumentLength = data.document.text.length;
 
 				if ( !documentWatch ) {
-					$scope.$watch('documentSelected', saveProjectDocumentUpdates, true);
+					$scope.$watch('documentSelected', $scope.saveProjectDocumentUpdates, true);
 					documentWatch = true;
+				}
+
+				if ( typeof $scope.ckReady == 'boolean' ) {
+					if ( $scope.ckReady) {
+						$scope.applyDefaultStyleset();
+					}
 				}
 			})
 	}
@@ -153,25 +182,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
-	var saveProjectDocumentUpdates = function( newVal, oldVal ) {
-		if ( newVal != oldVal ) {
-			var charsDiff = 0;
-
-			charsDiff = newVal.text.length - lastSavedDocumentLength;
-
-			if ( charsDiff > 30 ) {
-				if ( timeout ) {
-					$timeout.cancel( timeout );
-				}
-				$scope.updateProjectDocument();
-			}
-			if ( timeout ) {
-				$timeout.cancel( timeout )
-			}
-			timeout = $timeout( $scope.updateProjectDocument, secondsToWait * 1000 );
-		}
-	};
-
 	$scope.openStylesets = function( projectDocument ) {
 		$http.get('/document/' + projectDocument._id + '/stylesets')
 			.success( function( data ) {
@@ -187,8 +197,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if ( length > 1 ) {
 			var stylesetIndex = length - 1;
 			var lastStyleset = $scope.stylesets[stylesetIndex];
-			number = parseInt( lastStyleset.name.replace( /^\D+/g, '') );
-			number = number + 1;
+			var lastNumber = parseInt( lastStyleset.name.replace( /^\D+/g, '') );
+			if ( lastNumber > 1 ) {
+				number = lastNumber + 1;
+			}
 		}
 
 		styleset.name = 'Styleset ' + number;
@@ -226,6 +238,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				if ( data.styleset ) {
 					if ( data.styleset._id !== styleset._id ) {
 						$scope.stylesets[stylesetIndex] = data.styleset;
+						$scope.documentSelected.defaultStyleset = data.styleset._id;
+						$scope.updateProjectDocument();
+						$scope.applyStylesetToEditor( data.styleset, true );
 					}
 				}
 				deferred.resolve( data.styleset );
@@ -256,7 +271,37 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var promise = $scope.applyStylesetToDocument( styleset );
 
 		promise.then( function( styleset ) {
-			//TODO apply style to ckEditor
+			var selection = $rootScope.ck.getSelection();
+			var selectionLength = selection.getSelectedText().length;
+			var tag = selection.getStartElement().getName();
+			console.log(selectionLength);
+
+			if ( selectionLength === 0 ) {
+				var parents = selection.getStartElement().getParents();
+
+				for ( var i = 0; i < parents.length; i++ ) {
+					if ( parents[i].getName() === 'body' ) {
+						var element = parents[i+1];
+
+						if ( typeof style.tag !== 'undefined' ) {
+
+							if ( element.getName() !== style.tag ) {
+								element.removeAttribute( 'class' );
+								element.renameNode( style.tag );
+							}
+
+						} else {
+
+							if ( typeof style.class !== 'undefined' ) {
+								element.addClass( style.class );
+							}
+
+						}
+
+						break;
+					}
+				}
+			}
 		});
 	}
 
@@ -269,8 +314,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if ( length > 1 ) {
 			var styleIndex = length - 1;
 			var lastStyle = styleset.styles[styleIndex];
-			number = parseInt( lastStyle.name.replace( /^\D+/g, '') );
-			number = number + 1;
+			var lastNumber = parseInt( lastStyle.name.replace( /^\D+/g, '') );
+			if ( lastNumber > 1 ) {
+				number = lastNumber + 1;
+			}
 		}
 
 		style.name = 'Style ' + number;
@@ -304,6 +351,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	initiateEditor();
 
 	$scope.$onRootScope('ckDocument:ready', function( event ) {
+		$scope.ckReady = true;
 		$scope.applyDefaultStyleset();
 	});
 
