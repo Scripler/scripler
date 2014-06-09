@@ -1155,7 +1155,10 @@ describe('Scripler RESTful API', function () {
 					'<!DOCTYPE html>' +
 					'<html xmlns="http://www.w3.org/1999/xhtml">' +
 					'<head><title>Sikke et dokument</title></head>' +
-					'<body><p>It is another one of my worst documents ever!</p></body>' +
+					'<body>' +
+					'<h1 id="id_1">Introduction</h1>' +
+					'<p>It is another one of my worst documents ever!</p>' +
+					'</body>' +
 					'</html>';
 
 				request(host)
@@ -1239,7 +1242,13 @@ describe('Scripler RESTful API', function () {
 				'<!DOCTYPE html>' +
 				'<html xmlns="http://www.w3.org/1999/xhtml">' +
 				'<head><title>Jimbo</title></head>' +
-				'<body><p>Dagnabbit</p></body>' +
+				'<body>' +
+				'<h1 id="id_97">Partey</h1>' +
+				'<p>Dagnabbit</p>' +
+				'<h6 id="id_453">Not important</h6>' +
+				'<p><a id="id_24" title="NoGo" href="http://www.scripler.com">This is not an anchor and should not be included in the ToC</a></p>' +
+				'<p><a id="id_25" title="LinkyDinky">This IS an anchor and should be included in the ToC</a></p>' +
+				'</body>' +
 				'</html>';
 
 			request(host)
@@ -1690,6 +1699,35 @@ describe('Scripler RESTful API', function () {
 				});
 		})
 	}),
+	describe('Insert', function () {
+		it('Getting a ToC (i.e. the DOM structure for each document in a project) should return an array with all documents and their headings and user-defined anchors.', function (done) {
+			request(host)
+				.get('/project/' + projectId + '/toc')
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					//console.log(res.body.toc);
+					assert.equal(res.body.toc.length, 10);
+					assert.equal(res.body.toc[0].id, coverDocumentId);
+					assert.equal(res.body.toc[0].type, 'document');
+					assert.equal(res.body.toc[0].level, 0);
+					assert.equal(res.body.toc[0].target, conf.epub.htmlDir + '/Cover.html');
+					assert.equal(res.body.toc[0].text, 'Cover');
+					assert.equal(res.body.toc[4].id, childDocumentId);
+					assert.equal(res.body.toc[4].type, 'document');
+					assert.equal(res.body.toc[4].level, 0);
+					assert.equal(res.body.toc[4].target, conf.epub.htmlDir + '/' + conf.epub.documentPrefix + childDocumentId + ".html");
+					assert.equal(res.body.toc[4].text, 'Sikke et dokument');
+					assert.equal(res.body.toc[9].id, "id_25");
+					assert.equal(res.body.toc[9].type, 'a');
+					assert.equal(res.body.toc[9].level, 3);
+					assert.equal(res.body.toc[9].target, conf.epub.htmlDir + '/' + conf.epub.documentPrefix + stylesetDocumentId + ".html#id_25");
+					assert.equal(res.body.toc[9].text, 'LinkyDinky');
+					done();
+				});
+		})
+	}),
 	describe('Output', function () {
 		it('Set all metadata - should return updated project', function (done) {
 			var now = new Date;
@@ -1759,17 +1797,31 @@ describe('Scripler RESTful API', function () {
 				.put('/project/' + projectId + '/toc')
 				.set('cookie', cookie)
 				.send({entries: [
-					{title: "Cover", target: "HTML/Cover.html", "level": "0"},
-					{title: "Title Page", target: "HTML/TitlePage.html", "level": "0"}
+					{text: "Cover", target: "HTML/Cover.html", "level": "0"},
+					{text: "Title Page", target: "HTML/TitlePage.html", "level": "0"},
+					{text: "Table of Contents", target: "HTML/ToC.html", "level": "0"},
+					{text: "Colophon", target: "HTML/Colophon.html", "level": "0"},
+					{text: "Document 1", target: "HTML/" + conf.epub.documentPrefix + childDocumentId + ".html", "level": "0"},
+					{text: "Document 2", target: "HTML/" + conf.epub.documentPrefix + stylesetDocumentId + ".html", "level": "0"},
+					{text: "Introduction", target: "HTML/" + conf.epub.documentPrefix + childDocumentId + ".html#" + conf.epub.anchorIdPrefix + "1", "level": "1"},
+					{text: "Partey", target: "HTML/" + conf.epub.documentPrefix + stylesetDocumentId + ".html#" + conf.epub.anchorIdPrefix + "453", "level": "2"},
+					{text: "LinkyDinky", target: "HTML/" + conf.epub.documentPrefix + stylesetDocumentId + ".html#" + conf.epub.anchorIdPrefix + "25", "level": "3"}
 				]})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.project.metadata.title, "Space: From Earth to the Edge of the Universe");
 					assert.equal(res.body.project.metadata.authors.length, 3);
-					assert.equal(res.body.project.metadata.toc.entries.length, 2);
-					assert.equal(res.body.project.metadata.toc.entries[0].title, "Cover");
-					assert.equal(res.body.project.metadata.toc.entries[1].title, "Title Page");
+					assert.equal(res.body.project.metadata.toc.entries.length, 9);
+					assert.equal(res.body.project.metadata.toc.entries[0].text, "Cover");
+					assert.equal(res.body.project.metadata.toc.entries[1].text, "Title Page");
+					assert.equal(res.body.project.metadata.toc.entries[2].text, "Table of Contents");
+					assert.equal(res.body.project.metadata.toc.entries[3].text, "Colophon");
+					assert.equal(res.body.project.metadata.toc.entries[4].text, "Document 1");
+					assert.equal(res.body.project.metadata.toc.entries[5].text, "Document 2");
+					assert.equal(res.body.project.metadata.toc.entries[6].text, "Introduction");
+					assert.equal(res.body.project.metadata.toc.entries[7].text, "Partey");
+					assert.equal(res.body.project.metadata.toc.entries[8].text, "LinkyDinky");
 					done();
 				});
 		}),
