@@ -148,6 +148,8 @@ describe('project-utils', function () {
 													'<h6 id="id_666">Hola, Señor Coconut</h6>' +
 														'<p>Some smokey text</p>' +
 											'<h3 id="id_32">Gutenberg\'s Drawer</h3>' +
+												'<p>Some <a id="id_101" title="Anchor1" />Omar</p>' +
+												'<p>Some <a id="id_109" title="Anchor2" />Pontus</p>' +
 										'<p>Some smokey text</p>'
 								'</body>' +
 							'</html>';
@@ -184,6 +186,18 @@ describe('project-utils', function () {
 			"level": 2,
 			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "32",
 			"text": "Gutenberg's Drawer"
+		}), new TOCEntry({
+			"id": "id_101",
+			"type": "a",
+			"level": 3,
+			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "101",
+			"text": "Anchor1"
+		}), new TOCEntry({
+			"id": "id_109",
+			"type": "a",
+			"level": 3,
+			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "109",
+			"text": "Anchor2"
 		})];
 
 		// Same comment as above
