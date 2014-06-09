@@ -294,6 +294,7 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 			});
 
 			$rootScope.ck = ck;
+			$rootScope.CKEDITOR = CKEDITOR;
 		}
 	};
 });

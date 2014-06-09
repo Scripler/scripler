@@ -86,14 +86,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			charsDiff = newVal.text.length - lastSavedDocumentLength;
 
 			if ( charsDiff > 30 ) {
-				if ( typeof $scope.timeout !== 'undefined' ) {
+				if ( typeof $scope.timeout != 'undefined' ) {
 					if ( $scope.timeout ) {
 						$timeout.cancel( $scope.timeout );
 					}
 				}
 				$scope.updateProjectDocument();
 			}
-			if ( typeof $scope.timeout !== 'undefined' ) {
+			if ( typeof $scope.timeout != 'undefined' ) {
 				if ( $scope.timeout ) {
 					$timeout.cancel( $scope.timeout )
 				}
@@ -269,6 +269,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var styleIndex = styleset.styles.indexOf( style );
 
 		var promise = $scope.applyStylesetToDocument( styleset );
+		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
 
 		promise.then( function( styleset ) {
 			var selection = $rootScope.ck.getSelection();
@@ -276,32 +277,62 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			var tag = selection.getStartElement().getName();
 			console.log(selectionLength);
 
-			if ( selectionLength === 0 ) {
+			var lineHeight = style.css['line-height'];
+			var margin = style.css['margin'];
+			var padding = style.css['padding'];
+
+			if ( typeof lineHeight == 'undefined' &&
+				 typeof margin == 'undefined' &&
+				 typeof padding == 'undefined' ) {
+
+				//apply character style
+				if ( selectionLength == 0 ) {
+					var span = '<span class="' + style.class + '">';
+					var element = $rootScope.CKEDITOR.dom.element.createFromHtml( span + '</span>' );
+					editor.insertElement( element );
+					var range = editor.createRange();
+					range.moveToElementEditablePosition(element);
+					range.select();
+				} else {
+					$rootScope.ck.applyStyle( new CKEDITOR.style( {
+						element : 'span',
+						attributes : { class : style.class },
+					}));
+				}
+
+			} else {
 				var parents = selection.getStartElement().getParents();
+				var element;
 
 				for ( var i = 0; i < parents.length; i++ ) {
 					if ( parents[i].getName() === 'body' ) {
-						var element = parents[i+1];
+						element = parents[i+1];
+						break;
+					}
+				}
 
-						if ( typeof style.tag !== 'undefined' ) {
-
+				//apply on block level
+				if ( typeof element != 'undefined' ) {
+					if ( selectionLength == 0 ) {
+						//apply on single block
+						if ( typeof style.tag != 'undefined' ) {
 							if ( element.getName() !== style.tag ) {
 								element.removeAttribute( 'class' );
 								element.renameNode( style.tag );
 							}
-
 						} else {
-
-							if ( typeof style.class !== 'undefined' ) {
+							if ( typeof style.class != 'undefined' ) {
 								element.addClass( style.class );
 							}
-
 						}
 
-						break;
+					} else {
+						//apply on selection or multiple blocks
+
 					}
 				}
 			}
+
 		});
 	}
 
