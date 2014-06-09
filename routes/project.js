@@ -350,7 +350,7 @@ exports.set_toc = function (req, res, next) {
 exports.get_toc = function (req, res, next) {
 	var project = req.project;
 	var documents = project.documents;
-	var tocEntries = [];
+	var documentToCs = [];
 
 	var getDocumentToC = function (document, callback) {
 		if (project_utils.includeInEbook(document)) {
@@ -373,10 +373,11 @@ exports.get_toc = function (req, res, next) {
 				target: target,
 				text: document.name
 			});
-			tocEntries.push(tocEntry);
 
-			var documentToC = project_utils.generateToCJSON(target, document.text);
-			Array.prototype.push.apply(tocEntries, documentToC);
+			var documentToCEntries = [tocEntry];
+			var documentChildToCEntries = project_utils.generateToCJSON(target, document.text);
+			Array.prototype.push.apply(documentToCEntries, documentChildToCEntries);
+			documentToCs[documentId] = documentToCEntries;
 		}
 
 		callback();
@@ -387,7 +388,9 @@ exports.get_toc = function (req, res, next) {
 			return next(err);
 		}
 
-	 	res.send({toc: tocEntries});
+		// async.each() does not guarantee to process elements in order, so we must do it ourselves - because we still like to get things done in parallel
+		var sortedToCEntries = project_utils.sortToCEntries(documents, documentToCs);
+	 	res.send({toc: sortedToCEntries});
 	});
 }
 

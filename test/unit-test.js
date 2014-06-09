@@ -45,112 +45,149 @@ describe('utils', function () {
 }),
 describe('project-utils', function () {
 	it('generateToCJSON', function () {
-
 		var document1HTML = '<html>' +
 								'<head></head>' +
 								'<body>' +
-									'<h1 id="1">Introduction</h1>' +
+									'<h1 id="id_1">Introduction</h1>' +
 										'<p>Some fluffy text</p>' +
-										'<h2 id="2">Hi</h2>' +
+										'<h2 id="id_2">Hi</h2>' +
 											'<p>Some smokey text</p>' +
 											'<p>Some funky text</p>' +
-											'<h3 id="62">A new start</h3>' +
-												'<p><a id="hej" title="fisk" href="blabla">Some fat text</a></p>' +
-										'<h2 id="8">Something else</h2>' +
-											'<p>Some <a id="15" title="My Anc" />text</p>' +
-									'<h1 id="991">Moving on</h1>' +
+											'<h3 id="id_62">A new start</h3>' +
+												'<p><a id="id_hej" title="fisk" href="blabla">Some fat text</a></p>' +
+										'<h2 id="id_8">Something else</h2>' +
+											'<p>Some <a id="id_15" title="My Anc" />text</p>' +
+									'<h1 id="id_991">Moving on</h1>' +
 										'<p>Some cool text</p>' +
 										'<p>Some other text</p>' +
 										'<p>Some nice text</p>' +
-										'<h6 id="3">Cool story, bro</h6>' +
+										'<h6 id="id_3">Cool story, bro</h6>' +
 											'<p>Some text</p>' +
-										'<h6 id="27">Not too shabby</h6>' +
-											'<a id="88" title="y0" />' +
+										'<h6 id="id_27">Not too shabby</h6>' +
+											'<a id="id_88" title="y0" />' +
 								'</body>' +
 							'</html>';
 
 		var document1ToCEntriesJSONActual = project_utils.generateToCJSON('Document1.html', document1HTML);
-		//console.log('document1ToCEntriesJSONActual');
-		//console.log(document1ToCEntriesJSONActual);
 
-		var tocEntry1 = new TOCEntry({
-			id: "1",
+		var document1ToCEntriesJSONExpected = [new TOCEntry({
+			id: "id_1",
 			type: "h1",
 			level: 1,
 			target: "Document1.html#" + conf.epub.anchorIdPrefix + "1",
 			text: "Introduction"
-		});
-
-		var tocEntry2 = new TOCEntry({
-			"id": "2",
+		}), new TOCEntry({
+			"id": "id_2",
 			"type": "h2",
 			"level": 2,
 			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "2",
 			"text": "Hi"
-		});
-
-		var tocEntry3 = new TOCEntry({
-			"id": "62",
+		}), new TOCEntry({
+			"id": "id_62",
 			"type": "h3",
 			"level": 3,
 			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "62",
 			"text": "A new start"
-		});
-
-		var tocEntry4 = new TOCEntry({
-			"id": "8",
+		}), new TOCEntry({
+			"id": "id_8",
 			"type": "h2",
 			"level": 2,
 			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "8",
 			"text": "Something else"
-		});
-
-		var tocEntry5 = new TOCEntry({
-			"id": "15",
+		}), new TOCEntry({
+			"id": "id_15",
 			"type": "a",
 			"level": 3,
 			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "15",
 			"text": "My Anc"
-		});
-
-		var tocEntry6 = new TOCEntry({
-			"id": "991",
+		}), new TOCEntry({
+			"id": "id_991",
 			"type": "h1",
 			"level": 1,
 			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "991",
 			"text": "Moving on"
-		});
-
-		var tocEntry7 = new TOCEntry({
-			"id": "3",
+		}), new TOCEntry({
+			"id": "id_3",
 			"type": "h6",
-			"level": 2,
+			"level": 4,
 			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "3",
 			"text": "Cool story, bro"
-		});
-
-		var tocEntry8 = new TOCEntry({
-			"id": "27",
+		}), new TOCEntry({
+			"id": "id_27",
 			"type": "h6",
-			"level": 2,
+			"level": 4,
 			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "27",
 			"text": "Not too shabby"
-		});
-
-		var tocEntry9 = new TOCEntry({
-			"id": "88",
+		}), new TOCEntry({
+			"id": "id_88",
 			"type": "a",
-			"level": 3,
+			"level": 5,
 			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "88",
 			"text": "y0"
-		});
+		})];
 
-		var document1ToCEntriesJSONExpected = [tocEntry1, tocEntry2, tocEntry3, tocEntry4, tocEntry5, tocEntry6, tocEntry7, tocEntry8, tocEntry9];
+		/*
+		  This...is...horrible: if we don't use JSON.stringify(), the arrays won't be equal.
 
-		//console.log('document1ToCEntriesJSONExpected');
-		//console.log(document1ToCEntriesJSONExpected);
+		  The following comparison methods were UNSUCCESSFULLY tried:
+		    * assert.deepEqual()
+		    * _.isEqual()
+		    * A custom function that called one of the above for each element
+		 */
+		assert.equal(JSON.stringify(document1ToCEntriesJSONActual), JSON.stringify(document1ToCEntriesJSONExpected));
 
-		_.isEqual(document1ToCEntriesJSONActual, document1ToCEntriesJSONExpected);
+		var document2HTML = '<html>' +
+								'<head></head>' +
+								'<body>' +
+										'<h2 id="id_741">Introduction</h2>' +
+												'<p>Some smokey text</p>' +
+												'<h4 id="id_90">Popeye\'s Left Eye</h4>' +
+													'<p>Some smokey text</p>' +
+												'<h4 id="id_10">Mein Gott!</h4> ' +
+													'<p>Some smokey text</p>' +
+													'<h6 id="id_666">Hola, Señor Coconut</h6>' +
+														'<p>Some smokey text</p>' +
+											'<h3 id="id_32">Gutenberg\'s Drawer</h3>' +
+										'<p>Some smokey text</p>'
+								'</body>' +
+							'</html>';
+
+		var document2ToCEntriesJSONActual = project_utils.generateToCJSON('Document2.html', document2HTML);
+
+		var document2ToCEntriesJSONExpected = [new TOCEntry({
+			id: "id_741",
+			type: "h2",
+			level: 1,
+			target: "Document2.html#" + conf.epub.anchorIdPrefix + "741",
+			text: "Introduction"
+		}), new TOCEntry({
+			"id": "id_90",
+			"type": "h4",
+			"level": 3,
+			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "90",
+			"text": "Popeye's Left Eye"
+		}), new TOCEntry({
+			"id": "id_10",
+			"type": "h4",
+			"level": 3,
+			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "10",
+			"text": "Mein Gott!"
+		}), new TOCEntry({
+			"id": "id_666",
+			"type": "h6",
+			"level": 4,
+			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "666",
+			"text": "Hola, Señor Coconut"
+		}), new TOCEntry({
+			"id": "id_32",
+			"type": "h3",
+			"level": 2,
+			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "32",
+			"text": "Gutenberg's Drawer"
+		})];
+
+		// Same comment as above
+		assert.equal(JSON.stringify(document2ToCEntriesJSONActual), JSON.stringify(document2ToCEntriesJSONExpected));
 	})
 }),
 describe('epub', function () {
