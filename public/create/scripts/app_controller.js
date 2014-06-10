@@ -34,8 +34,6 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 					publications = [ { _id: Date.now(), name:'Demo Title' } ];
 					localStorageService.add( lsName, publications );
 				}
-
-				$rootScope.$emit('demo:mode', publications);
 		});
 
 		$scope.submitRegistration = function() {
@@ -94,21 +92,23 @@ app.config( function( $routeProvider, $httpProvider, $provide ) {
 				.success( function( data ) {
 					if ( data.user ) {
 						userService.setUser( data.user );
-						$timeout(deferred.resolve, 0);
+						deferred.resolve( data.user );
 					}
 				})
 				.error( function( data ) {
 					$rootScope.$emit('login:failed');
-					$timeout(deferred.resolve, 0);
+					deferred.resolve();
 				});
+
+			return deferred.promise;
 	}]
 
 	$routeProvider
 		.when('/', { templateUrl:'pages/project-space.html', controller: projectSpaceController,
-					resolve: { access: isLoggedIn }
+					resolve: { user: isLoggedIn }
 					})
 		.when('/project', { templateUrl:'pages/project.html', controller: projectController,
-							resolve: { access: isLoggedIn }
+							resolve: { user: isLoggedIn }
 							})
 		.when('/error', { templateUrl:'pages/error.html' })
 		.otherwise({ redirectTo:'/' });
@@ -251,9 +251,8 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 				height: $window.innerHeight - 30,
 				width: 800,
 				font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
-				//contentsCss: ['stylesets/pleasantbw.css', 'contents.css', 'http://fonts.googleapis.com/css?family=Ribeye'],
 				//Change to standard font we want to start all projects with :)
-				contentsCss: ['stylesets/pleasantbw.css'],
+				contentsCss: ['stylesets/pleasant-bw.css'],
 				//Load css sheet via angualr here
 				toolbar: [
 					//['Source'], ['Undo'], ['Redo'], ['Paste'], ['PasteFromWord'], ['Styles'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['Image'], ['Link'], ['TextColor'], ['BGColor']
@@ -269,9 +268,11 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 			});
 
 			function updateModel() {
-				scope.$apply(function() {
-					ngModel.$setViewValue(ck.getData());
-				});
+				if ( !scope.$$phase ) {
+					scope.$apply(function() {
+						ngModel.$setViewValue(ck.getData());
+					});
+				}
 			}
 
 			ck.on('change', updateModel);
@@ -282,10 +283,17 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 				ck.setData(ngModel.$viewValue);
 			};
 
-			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 )
-			CKEDITOR.tools.enableHtml5Elements( document );
+			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 ) {
+				CKEDITOR.tools.enableHtml5Elements( document );
+			}
+
+			ck.on('instanceReady', function() {
+				ck.setData(ngModel.$viewValue);
+				$rootScope.$emit('ckDocument:ready');
+			});
 
 			$rootScope.ck = ck;
+			$rootScope.CKEDITOR = CKEDITOR;
 		}
 	};
 });

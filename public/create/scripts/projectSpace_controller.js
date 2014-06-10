@@ -1,6 +1,18 @@
 'use strict'
 
-function projectSpaceController( $scope, $http, localStorageService, projectsService, userService, $q ) {
+function projectSpaceController( $scope, $http, localStorageService, projectsService, userService, $q, user ) {
+
+	$scope.user = user;
+
+	$scope.showPublicationOptions = false;
+
+	var lsName = 'demo-scripler-publications';
+
+	if ( $scope.user === undefined ) {
+		$scope.publications = localStorageService.get( lsName );
+	} else {
+		$scope.publications = projectsService.getList( $scope.user );
+	}
 
 	$scope.changePassword = function() {
 		$scope.passwordSubmitted = true;
@@ -39,21 +51,9 @@ function projectSpaceController( $scope, $http, localStorageService, projectsSer
 		}
 	}
 
-	$scope.publications = [];
-	$scope.showPublicationOptions = false;
-	var lsName = 'demo-scripler-publications';
-
-	$scope.$onRootScope('demo:mode', function( event, publications ) {
-		$scope.publications = publications;
-	});
-
-	$scope.$onRootScope('user:updated', function( event, user ) {
-		$scope.user = user;
-		$scope.publications = projectsService.getList( user );
-	});
-
 	$scope.$onRootScope('user:registered', function( event, user ) {
 		if ( user._id ) {
+			$scope.user = user;
 			uploadDemoPublications()
 				.then( function() {
 					localStorageService.remove( lsName );
@@ -89,7 +89,7 @@ function projectSpaceController( $scope, $http, localStorageService, projectsSer
 		var publication = {};
 		publication.name = name;
 
-		if ( $scope.user._id ) {
+		if ( $scope.user ) {
 			$http.post('/project', angular.toJson( publication ) )
 				.success( function( data ) {
 					$scope.publications.push( data.project );
@@ -102,7 +102,7 @@ function projectSpaceController( $scope, $http, localStorageService, projectsSer
 	};
 
 	$scope.archivePublication = function( publication ) {
-		if ( $scope.user._id ) {
+		if ( $scope.user ) {
 			$http.put('/project/' + publication._id + '/archive')
 				.success( function() {
 					publication.archived = true;
@@ -114,7 +114,7 @@ function projectSpaceController( $scope, $http, localStorageService, projectsSer
 	};
 
 	$scope.renamePublication = function( publication ) {
-		if ( $scope.user._id ) {
+		if ( $scope.user ) {
 			$http.put('/project/' + publication._id + '/rename', angular.toJson( publication ) )
 				.success( function() {});
 		} else {
@@ -123,7 +123,7 @@ function projectSpaceController( $scope, $http, localStorageService, projectsSer
 	};
 
 	$scope.copyPublication = function( publication ) {
-		if ( $scope.user._id ) {
+		if ( $scope.user ) {
 			$http.post('/project/' + publication._id + '/copy')
 				.success( function( data ) {
 					$scope.publications.push( data.project );

@@ -1,7 +1,7 @@
 'use strict'
 
 function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress,
-							$timeout, $rootScope, stylesetUtilsService, $q ) {
+							$timeout, $rootScope, stylesetUtilsService, $q, user ) {
 
 	var timeout = null;
 
@@ -10,6 +10,31 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	var documentWatch = false;
 
 	var secondsToWait = 5;
+
+	$scope.pid = ($location.search()).pid;
+
+	$scope.user = user;
+
+	$scope.projectDocuments = [];
+
+	$scope.stylesets = [];
+
+	if ( $scope.user === undefined ) {
+		//demo mode
+	} else {
+		var projectPromise = projectsService.getProject( $scope.pid );
+
+		projectPromise.then( function( project ) {
+			$scope.project = project;
+			$scope.projectDocuments = $scope.project.documents;
+
+			if ( $scope.projectDocuments.length == 0 ) {
+				$scope.addProjectDocument();
+			} else {
+				$scope.openProjectDocument( $scope.projectDocuments[0] );
+			}
+		});
+	}
 
 	$scope.updateUser = function() {
 		userService.updateUser( $scope.user );
@@ -54,38 +79,31 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
-	// Scope, Project
-	$scope.projectDocuments = [
-		//ADD/FIX: Get Publications API Call, on success do change
-		{_id:'00001',name:'Document 1',text:'<h1>this is a test</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'},
-		{_id:'00002',name:'Document 2',text:'<h1>this is a test 2</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'},
-		{_id:'00003',name:'Document 3',text:'<h1>this is a test 3</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'futurebw'},
-		{_id:'00004',name:'Document 4',text:'<h1>this is a test 4</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'futurebw'},
-		{_id:'00005',name:'Document 5',text:'<h1>this is a test 5</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'pleasantbw'},
-		{_id:'00006',name:'Document 6',text:'<h1>this is a test 6</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'pleasantbw'},
-		{_id:'00007',name:'Document 7',text:'<h1>this is a test 7</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'},
-		{_id:'00008',name:'Document 8',text:'<h1>this is a test 8</h1><p>First line of text</p><h2>this is a test</h2><p>Second line of text</p><h3>this is a test</h3><p>Third line of text</p>',styleSheet:'bookbw'}
-	];
+	$scope.saveProjectDocumentUpdates = function( newVal, oldVal ) {
+		if ( newVal != oldVal ) {
+			var charsDiff = 0;
 
-	$scope.stylesets = [];
+			charsDiff = newVal.text.length - lastSavedDocumentLength;
 
-	$scope.$onRootScope('user:updated', function( event, user ) {
-		$scope.user = user;
-		$scope.pid = ($location.search()).pid;
-
-		var projectPromise = projectsService.getProject( $scope.pid );
-		projectPromise.then( function( project ) {
-			$scope.project = project;
-			$scope.projectDocuments = $scope.project.documents;
-			if ( $scope.projectDocuments.length == 0 ) {
-				$scope.addProjectDocument();
-			} else {
-				$scope.openProjectDocument( $scope.projectDocuments[0] );
+			if ( charsDiff > 30 ) {
+				if ( typeof $scope.timeout != 'undefined' ) {
+					if ( $scope.timeout ) {
+						$timeout.cancel( $scope.timeout );
+					}
+				}
+				$scope.updateProjectDocument();
 			}
-		});
-	});
+			if ( typeof $scope.timeout != 'undefined' ) {
+				if ( $scope.timeout ) {
+					$timeout.cancel( $scope.timeout )
+				}
+			}
+			$scope.timeout = $timeout( $scope.updateProjectDocument, secondsToWait * 1000 );
+		}
+	};
 
 	$scope.openProjectDocument = function( projectDocument ) {
+
 		if ( typeof $scope.documentSelected == 'object' ) {
 			$scope.updateProjectDocument();
 		}
@@ -99,8 +117,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				lastSavedDocumentLength = data.document.text.length;
 
 				if ( !documentWatch ) {
-					$scope.$watch('documentSelected', saveProjectDocumentUpdates, true);
+					$scope.$watch('documentSelected', $scope.saveProjectDocumentUpdates, true);
 					documentWatch = true;
+				}
+
+				if ( typeof $scope.ckReady == 'boolean' ) {
+					if ( $scope.ckReady) {
+						$scope.applyDefaultStyleset();
+					}
 				}
 			})
 	}
@@ -158,25 +182,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
-	var saveProjectDocumentUpdates = function( newVal, oldVal ) {
-		if ( newVal != oldVal ) {
-			var charsDiff = 0;
-
-			charsDiff = newVal.text.length - lastSavedDocumentLength;
-
-			if ( charsDiff > 30 ) {
-				if ( timeout ) {
-					$timeout.cancel( timeout );
-				}
-				$scope.updateProjectDocument();
-			}
-			if ( timeout ) {
-				$timeout.cancel( timeout )
-			}
-			timeout = $timeout( $scope.updateProjectDocument, secondsToWait * 1000 );
-		}
-	};
-
 	$scope.openStylesets = function( projectDocument ) {
 		$http.get('/document/' + projectDocument._id + '/stylesets')
 			.success( function( data ) {
@@ -192,8 +197,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if ( length > 1 ) {
 			var stylesetIndex = length - 1;
 			var lastStyleset = $scope.stylesets[stylesetIndex];
-			number = parseInt( lastStyleset.name.replace( /^\D+/g, '') );
-			number = number + 1;
+			var lastNumber = parseInt( lastStyleset.name.replace( /^\D+/g, '') );
+			if ( lastNumber > 1 ) {
+				number = lastNumber + 1;
+			}
 		}
 
 		styleset.name = 'Styleset ' + number;
@@ -231,6 +238,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				if ( data.styleset ) {
 					if ( data.styleset._id !== styleset._id ) {
 						$scope.stylesets[stylesetIndex] = data.styleset;
+						$scope.documentSelected.defaultStyleset = data.styleset._id;
+						$scope.updateProjectDocument();
+						$scope.applyStylesetToEditor( data.styleset, true );
 					}
 				}
 				deferred.resolve( data.styleset );
@@ -239,14 +249,147 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return deferred.promise;
 	}
 
+	$scope.applyDefaultStyleset = function() {
+		for ( var i = 0; i < $scope.stylesets.length; i++ ) {
+			if ( $scope.documentSelected.defaultStyleset === $scope.stylesets[i]._id ) {
+				$scope.applyStylesetToEditor( $scope.stylesets[i], true );
+				break;
+			}
+		}
+	}
+
+	$scope.applyStylesetToEditor = function( styleset, isDefault ) {
+
+		$scope.currentStylesetCSS = stylesetUtilsService.getStylesetContents( styleset, isDefault );
+
+		$rootScope.ck.document.appendStyleText( $scope.currentStylesetCSS );
+	}
+
 	$scope.applyStyle = function( styleset, style ) {
 		var styleIndex = styleset.styles.indexOf( style );
 
 		var promise = $scope.applyStylesetToDocument( styleset );
+		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
 
 		promise.then( function( styleset ) {
-			//TODO apply style to ckEditor
+			var selection = $rootScope.ck.getSelection();
+			var selectionLength = selection.getSelectedText().length;
+			var tag = selection.getStartElement().getName();
+
+			var lineHeight = style.css['line-height'];
+			var margin = style.css['margin'];
+			var padding = style.css['padding'];
+
+			if ( typeof lineHeight == 'undefined' &&
+				 typeof margin == 'undefined' &&
+				 typeof padding == 'undefined' ) {
+
+				//apply character style
+				if ( selectionLength == 0 ) {
+					var insert;
+					if ( typeof style.tag != 'undefined' ) {
+						insert = '<' + style.tag + '></' + style.tag + '>';
+					} else {
+						insert = '<span class="' + style.class + '"></span>';
+					}
+					var element = $rootScope.CKEDITOR.dom.element.createFromHtml( insert );
+					editor.insertElement( element );
+					var range = editor.createRange();
+					range.moveToElementEditablePosition(element);
+					range.select();
+				} else {
+					if ( typeof style.tag != 'undefined' ) {
+						$rootScope.ck.applyStyle( new CKEDITOR.style( {
+							element : style.tag
+						}));
+					} else {
+						$rootScope.ck.applyStyle( new CKEDITOR.style( {
+							element : 'span',
+							attributes : { class : style.class }
+						}));
+					}
+				}
+
+			} else {
+				var parents = selection.getStartElement().getParents();
+				var firstElement;
+
+				for ( var i = 0; i < parents.length; i++ ) {
+					if ( parents[i].getName() === 'body' ) {
+						firstElement = parents[i+1];
+						break;
+					}
+				}
+
+				//apply on block level
+				if ( typeof firstElement != 'undefined' ) {
+					if ( selectionLength == 0 ) {
+						//apply on single block
+						$scope.applyStyleToElement( firstElement, style );
+					} else {
+						//apply on selection or multiple blocks
+						var range = editor.getSelection().getRanges();
+						var walker = new CKEDITOR.dom.walker( range[0] ), node;
+						var isNotWhitespace = CKEDITOR.dom.walker.whitespaces( true );
+						var applyToParent = false;
+						var counter = 0;
+						var endNode = range[0].endContainer;
+
+						walker.guard = function( node, isMoveout )
+						{
+							if ( node.$.nodeName === endNode.$.nodeName &&
+								node.$.nodeType === endNode.$.nodeType &&
+								node.$.nodeValue === endNode.$.nodeValue &&
+								node.$.parentNode === endNode.$.parentNode &&
+								node.$.length === endNode.$.length ) {
+
+								return false; //ends walker
+							}
+
+							return true;
+						};
+
+						while ( node = walker.next() ) {
+
+							//if first element in a selection is a text node
+							//apply style to parent node closest to the document body
+							//this happens if a user selects a span in a paragraph and applies block level style
+							if ( counter === 0 && node.type === 3 ) {
+								applyToParent = true;
+							}
+
+							//if a node is an element
+							if ( node.type === 1 && isNotWhitespace( node ) ) {
+								var computedStyle = node.getComputedStyle( 'display' );
+
+								if ( computedStyle === 'block' ) {
+									$scope.applyStyleToElement( node, style );
+								}
+							}
+
+							counter++;
+						}
+
+						//!!!this is done after the walker because it messes up the selection if done inside the walker
+						if ( applyToParent ) {
+							$scope.applyStyleToElement( firstElement, style );
+						}
+					}
+				}
+			}
+
 		});
+	}
+
+	$scope.applyStyleToElement = function( element, style ) {
+		if ( typeof style.tag != 'undefined' ) {
+			element.removeAttribute( 'class' );
+			element.renameNode( style.tag );
+		} else {
+			if ( typeof style.class != 'undefined' ) {
+				element.addClass( style.class );
+			}
+		}
 	}
 
 	$scope.addNewStyle = function( styleset ) {
@@ -258,8 +401,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if ( length > 1 ) {
 			var styleIndex = length - 1;
 			var lastStyle = styleset.styles[styleIndex];
-			number = parseInt( lastStyle.name.replace( /^\D+/g, '') );
-			number = number + 1;
+			var lastNumber = parseInt( lastStyle.name.replace( /^\D+/g, '') );
+			if ( lastNumber > 1 ) {
+				number = lastNumber + 1;
+			}
 		}
 
 		style.name = 'Style ' + number;
@@ -308,7 +453,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		// Mangler at tilf??je stylen startChapter.documentstyleSheet
     }
 
-    initiateEditor();
+	initiateEditor();
+
+	$scope.$onRootScope('ckDocument:ready', function( event ) {
+		$scope.ckReady = true;
+		$scope.applyDefaultStyleset();
+	});
 
 	angular.element(document).ready(function () {
 
@@ -321,8 +471,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 		}
 		$scope.hideStyleEditor = function() {
-			$rootScope.ck.commands.hideFloatingTools.exec();
-			$scope.styleEditorVisible = false;
+			if ( $scope.styleEditorVisible ) {
+				$rootScope.ck.commands.hideFloatingTools.exec();
+				$scope.styleEditorVisible = false;
+			}
 		}
 
 		$scope.$watch('showTypo', function() {

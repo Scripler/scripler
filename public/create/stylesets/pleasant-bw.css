@@ -18,7 +18,7 @@
 	font-family:"Gabriela";
 	font-style:normal;
 	font-weight:400;
-	src : url("../Fonts/gabrielaregular.ttf");
+	src : url("../stylesets/Fonts/gabrielaregular.ttf");
 }
 
 /*SOURCE SANS PRO*/
@@ -27,84 +27,84 @@
 	font-family:"Source Sans Pro";
 	font-style:normal;
 	font-weight:200;
-	src : url("../Fonts/sourcesansproextralight.otf");
+	src : url("../stylesets/Fonts/sourcesansproextralight.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:italic;
 	font-weight:200;
-	src : url("../Fonts/sourcesansproextralightitalic.otf");
+	src : url("../stylesets/Fonts/sourcesansproextralightitalic.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:normal;
 	font-weight:300;
-	src : url("../Fonts/sourcesansprolight.otf");
+	src : url("../stylesets/Fonts/sourcesansprolight.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:italic;
 	font-weight:300;
-	src : url("../Fonts/sourcesansprolightitalic.otf");
+	src : url("../stylesets/Fonts/sourcesansprolightitalic.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:normal;
 	font-weight:400;
-	src : url("../Fonts/sourcesansproregular.otf");
+	src : url("../stylesets/Fonts/sourcesansproregular.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:italic;
 	font-weight:400;
-	src : url("../Fonts/sourcesansproitalic.otf");
+	src : url("../stylesets/Fonts/sourcesansproitalic.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:normal;
 	font-weight:600;
-	src : url("../Fonts/sourcesansprosemibold.otf");
+	src : url("../stylesets/Fonts/sourcesansprosemibold.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:italic;
 	font-weight:600;
-	src : url("../Fonts/sourcesansprosemibolditalic.otf");
+	src : url("../stylesets/Fonts/sourcesansprosemibolditalic.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:normal;
 	font-weight:700;
-	src : url("../Fonts/sourcesansprobold.otf");
+	src : url("../stylesets/Fonts/sourcesansprobold.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:italic;
 	font-weight:700;
-	src : url("../Fonts/sourcesansprobolditalic.otf");
+	src : url("../stylesets/Fonts/sourcesansprobolditalic.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:normal;
 	font-weight:900;
-	src : url("../Fonts/sourcesansproblack.otf");
+	src : url("../stylesets/Fonts/sourcesansproblack.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:italic;
 	font-weight:900;
-	src : url("../Fonts/sourcesansproblackitalic.otf");
+	src : url("../stylesets/Fonts/sourcesansproblackitalic.otf");
 }
 
 /*UBUNTU MONO*/
@@ -113,28 +113,28 @@
 	font-family:"Ubuntu Mono";
 	font-style:normal;
 	font-weight:400;
-	src : url("../Fonts/ubuntumonoregular.ttf");
+	src : url("../stylesets/Fonts/ubuntumonoregular.ttf");
 }
 
 @font-face {
 	font-family:"Ubuntu Mono";
 	font-style:italic;
 	font-weight:400;
-	src : url("../Fonts/ubuntumonoregularitalic.ttf");
+	src : url("../stylesets/Fonts/ubuntumonoregularitalic.ttf");
 }
 
 @font-face {
 	font-family:"Ubuntu Mono";
 	font-style:normal;
 	font-weight:700;
-	src : url("../Fonts/ubuntumonobold.ttf");
+	src : url("../stylesets/Fonts/ubuntumonobold.ttf");
 }
 
 @font-face {
 	font-family:"Ubuntu Mono";
 	font-style:italic;
 	font-weight:700;
-	src : url("../Fonts/ubuntumonobolditalic.ttf");
+	src : url("../stylesets/Fonts/ubuntumonobolditalic.ttf");
 }
 
 /*STYLES*/
