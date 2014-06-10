@@ -275,7 +275,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			var selection = $rootScope.ck.getSelection();
 			var selectionLength = selection.getSelectedText().length;
 			var tag = selection.getStartElement().getName();
-			console.log(selectionLength);
 
 			var lineHeight = style.css['line-height'];
 			var margin = style.css['margin'];
@@ -302,38 +301,69 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 			} else {
 				var parents = selection.getStartElement().getParents();
-				var element;
+				var firstElement;
 
 				for ( var i = 0; i < parents.length; i++ ) {
 					if ( parents[i].getName() === 'body' ) {
-						element = parents[i+1];
+						firstElement = parents[i+1];
 						break;
 					}
 				}
 
 				//apply on block level
-				if ( typeof element != 'undefined' ) {
+				if ( typeof firstElement != 'undefined' ) {
 					if ( selectionLength == 0 ) {
 						//apply on single block
-						if ( typeof style.tag != 'undefined' ) {
-							if ( element.getName() !== style.tag ) {
-								element.removeAttribute( 'class' );
-								element.renameNode( style.tag );
-							}
-						} else {
-							if ( typeof style.class != 'undefined' ) {
-								element.addClass( style.class );
-							}
-						}
-
+						$scope.applyStyleToElement( firstElement, style );
 					} else {
 						//apply on selection or multiple blocks
+						var range = editor.getSelection().getRanges();
+						var walker = new CKEDITOR.dom.walker( range[0] );
+						var node;
+						var applyToParent = false;
 
+						var counter = 0;
+						while ( node = walker.next() ) {
+
+							//if first element in a selection is a text node
+							//apply style to parent node closest to the document body
+							//this happens if a user selects a span in a paragraph and applies block level style
+							if ( counter === 0 && node.type === 3 ) {
+								applyToParent = true;
+							}
+
+							//if a node is an element
+							if ( node.type === 1 ) {
+								var computedStyle = node.getComputedStyle( 'display' );
+
+								if ( computedStyle === 'block' ) {
+									$scope.applyStyleToElement( node, style );
+								}
+							}
+
+							counter++;
+						}
+
+						//!!!this is done after the walker because it messes up the selection if done inside the walker
+						if ( applyToParent ) {
+							$scope.applyStyleToElement( firstElement, style );
+						}
 					}
 				}
 			}
 
 		});
+	}
+
+	$scope.applyStyleToElement = function( element, style ) {
+		if ( typeof style.tag != 'undefined' ) {
+			element.removeAttribute( 'class' );
+			element.renameNode( style.tag );
+		} else {
+			if ( typeof style.class != 'undefined' ) {
+				element.addClass( style.class );
+			}
+		}
 	}
 
 	$scope.addNewStyle = function( styleset ) {
