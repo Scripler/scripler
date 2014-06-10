@@ -286,8 +286,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 				//apply character style
 				if ( selectionLength == 0 ) {
-					var span = '<span class="' + style.class + '">';
-					var element = $rootScope.CKEDITOR.dom.element.createFromHtml( span + '</span>' );
+					var insert;
+					if ( typeof style.tag != 'undefined' ) {
+						insert = '<' + style.tag + '></' + style.tag + '>';
+					} else {
+						insert = '<span class="' + style.class + '"></span>';
+					}
+					var element = $rootScope.CKEDITOR.dom.element.createFromHtml( insert );
 					editor.insertElement( element );
 					var range = editor.createRange();
 					range.moveToElementEditablePosition(element);
