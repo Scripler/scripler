@@ -11,9 +11,11 @@ var mongoose = require('mongoose')
  * Meta TOC Entry Schema
  */
 var TOCEntrySchema = new Schema({
-	title: { type: String },
+	id: { type: String },
+	type: { type: String },
+	level: { type: Number },
 	target: { type: String },
-	level: {type: Number}
+	text: { type: String }
 }, { _id: false });
 
 /**

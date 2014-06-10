@@ -5,11 +5,13 @@ var epub = require('../lib/epub')
   , assert = require("assert")
   , utils = require('../public/create/scripts/utils-shared')
   , styleset_utils = require('../public/create/scripts/utils-shared')
+  , project_utils = require('../lib/project-utils')
   , ObjectId = require('mongoose').Types.ObjectId
   , conf = require('config')
   , Document = require('../models/document.js').Document
   , TOCEntry = require('../models/project.js').TOCEntry
-  , Image = require('../models/image.js').Image;
+  , Image = require('../models/image.js').Image
+  , _ = require("underscore");
 
 describe('utils', function () {
     var str1 = "4eed2d88c3dedf0d0300001a";
@@ -41,6 +43,167 @@ describe('utils', function () {
         assert.equal(utils.mongooseEquals(document1._id, document2), false);
     })
 }),
+describe('project-utils', function () {
+	it('generateToCJSON', function () {
+		var document1HTML = '<html>' +
+								'<head></head>' +
+								'<body>' +
+									'<h1 id="id_1">Introduction</h1>' +
+										'<p>Some fluffy text</p>' +
+										'<h2 id="id_2">Hi</h2>' +
+											'<p>Some smokey text</p>' +
+											'<p>Some funky text</p>' +
+											'<h3 id="id_62">A new start</h3>' +
+												'<p><a id="id_hej" title="fisk" href="blabla">Some fat text</a></p>' +
+										'<h2 id="id_8">Something else</h2>' +
+											'<p>Some <a id="id_15" title="My Anc" />text</p>' +
+									'<h1 id="id_991">Moving on</h1>' +
+										'<p>Some cool text</p>' +
+										'<p>Some other text</p>' +
+										'<p>Some nice text</p>' +
+										'<h6 id="id_3">Cool story, bro</h6>' +
+											'<p>Some text</p>' +
+										'<h6 id="id_27">Not too shabby</h6>' +
+											'<a id="id_88" title="y0" />' +
+								'</body>' +
+							'</html>';
+
+		var document1ToCEntriesJSONActual = project_utils.generateToCJSON('Document1.html', document1HTML);
+
+		var document1ToCEntriesJSONExpected = [new TOCEntry({
+			id: "id_1",
+			type: "h1",
+			level: 1,
+			target: "Document1.html#" + conf.epub.anchorIdPrefix + "1",
+			text: "Introduction"
+		}), new TOCEntry({
+			"id": "id_2",
+			"type": "h2",
+			"level": 2,
+			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "2",
+			"text": "Hi"
+		}), new TOCEntry({
+			"id": "id_62",
+			"type": "h3",
+			"level": 3,
+			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "62",
+			"text": "A new start"
+		}), new TOCEntry({
+			"id": "id_8",
+			"type": "h2",
+			"level": 2,
+			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "8",
+			"text": "Something else"
+		}), new TOCEntry({
+			"id": "id_15",
+			"type": "a",
+			"level": 3,
+			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "15",
+			"text": "My Anc"
+		}), new TOCEntry({
+			"id": "id_991",
+			"type": "h1",
+			"level": 1,
+			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "991",
+			"text": "Moving on"
+		}), new TOCEntry({
+			"id": "id_3",
+			"type": "h6",
+			"level": 4,
+			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "3",
+			"text": "Cool story, bro"
+		}), new TOCEntry({
+			"id": "id_27",
+			"type": "h6",
+			"level": 4,
+			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "27",
+			"text": "Not too shabby"
+		}), new TOCEntry({
+			"id": "id_88",
+			"type": "a",
+			"level": 5,
+			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "88",
+			"text": "y0"
+		})];
+
+		/*
+		  This...is...horrible: if we don't use JSON.stringify(), the arrays won't be equal.
+
+		  The following comparison methods were UNSUCCESSFULLY tried:
+		    * assert.deepEqual()
+		    * _.isEqual()
+		    * A custom function that called one of the above for each element
+		 */
+		assert.equal(JSON.stringify(document1ToCEntriesJSONActual), JSON.stringify(document1ToCEntriesJSONExpected));
+
+		var document2HTML = '<html>' +
+								'<head></head>' +
+								'<body>' +
+										'<h2 id="id_741">Introduction</h2>' +
+												'<p>Some smokey text</p>' +
+												'<h4 id="id_90">Popeye\'s Left Eye</h4>' +
+													'<p>Some smokey text</p>' +
+												'<h4 id="id_10">Mein Gott!</h4> ' +
+													'<p>Some smokey text</p>' +
+													'<h6 id="id_666">Hola, Señor Coconut</h6>' +
+														'<p>Some smokey text</p>' +
+											'<h3 id="id_32">Gutenberg\'s Drawer</h3>' +
+												'<p>Some <a id="id_101" title="Anchor1" />Omar</p>' +
+												'<p>Some <a id="id_109" title="Anchor2" />Pontus</p>' +
+										'<p>Some smokey text</p>'
+								'</body>' +
+							'</html>';
+
+		var document2ToCEntriesJSONActual = project_utils.generateToCJSON('Document2.html', document2HTML);
+
+		var document2ToCEntriesJSONExpected = [new TOCEntry({
+			id: "id_741",
+			type: "h2",
+			level: 1,
+			target: "Document2.html#" + conf.epub.anchorIdPrefix + "741",
+			text: "Introduction"
+		}), new TOCEntry({
+			"id": "id_90",
+			"type": "h4",
+			"level": 3,
+			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "90",
+			"text": "Popeye's Left Eye"
+		}), new TOCEntry({
+			"id": "id_10",
+			"type": "h4",
+			"level": 3,
+			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "10",
+			"text": "Mein Gott!"
+		}), new TOCEntry({
+			"id": "id_666",
+			"type": "h6",
+			"level": 4,
+			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "666",
+			"text": "Hola, Señor Coconut"
+		}), new TOCEntry({
+			"id": "id_32",
+			"type": "h3",
+			"level": 2,
+			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "32",
+			"text": "Gutenberg's Drawer"
+		}), new TOCEntry({
+			"id": "id_101",
+			"type": "a",
+			"level": 3,
+			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "101",
+			"text": "Anchor1"
+		}), new TOCEntry({
+			"id": "id_109",
+			"type": "a",
+			"level": 3,
+			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "109",
+			"text": "Anchor2"
+		})];
+
+		// Same comment as above
+		assert.equal(JSON.stringify(document2ToCEntriesJSONActual), JSON.stringify(document2ToCEntriesJSONExpected));
+	})
+}),
 describe('epub', function () {
 	it('getCloseNavPointsString', function () {
 		var result = epub.getCloseNavPointsString(0, 0);
@@ -67,7 +230,7 @@ describe('epub', function () {
 		assert.equal(result, '');
 
 		var tocEntry1 = new TOCEntry;
-		tocEntry1.title = 'Kapitel Einz';
+		tocEntry1.text = 'Kapitel Einz';
 		tocEntry1.target = 'Kapitel Einz.html';
 		tocEntry1.level = 0;
 
@@ -75,13 +238,13 @@ describe('epub', function () {
 		result = epub.getNavPointsString(tocEntries);
 		assert.equal(result, '<navPoint id="navpoint-1" playOrder="1">' +
 			'<navLabel>' +
-			'<text>' + tocEntry1.title + '</text>' +
+			'<text>' + tocEntry1.text + '</text>' +
 			'</navLabel>' +
 			'<content src="' + tocEntry1.target + '"/>' +
 			'</navPoint>');
 
 		var tocEntry2 = new TOCEntry;
-		tocEntry2.title = 'Kapitel Zwei';
+		tocEntry2.text = 'Kapitel Zwei';
 		tocEntry2.target = 'Kapitel Zwei.html';
 		tocEntry2.level = 1;
 
@@ -89,19 +252,19 @@ describe('epub', function () {
 		result = epub.getNavPointsString(tocEntries);
 		assert.equal(result, '<navPoint id="navpoint-1" playOrder="1">' +
 			'<navLabel>' +
-			'<text>' + tocEntry1.title + '</text>' +
+			'<text>' + tocEntry1.text + '</text>' +
 			'</navLabel>' +
 			'<content src="' + tocEntry1.target + '"/>' +
 			'<navPoint id="navpoint-2" playOrder="2">' +
 			'<navLabel>' +
-			'<text>' + tocEntry2.title + '</text>' +
+			'<text>' + tocEntry2.text + '</text>' +
 			'</navLabel>' +
 			'<content src="' + tocEntry2.target + '"/>' +
 			'</navPoint>' +
 			'</navPoint>');
 
 		var tocEntry3 = new TOCEntry;
-		tocEntry3.title = 'Kapitel Drei';
+		tocEntry3.text = 'Kapitel Drei';
 		tocEntry3.target = 'Kapitel Drei.html';
 		tocEntry3.level = 0;
 
@@ -109,19 +272,19 @@ describe('epub', function () {
 		result = epub.getNavPointsString(tocEntries);
 		assert.equal(result, '<navPoint id="navpoint-1" playOrder="1">' +
 			'<navLabel>' +
-			'<text>' + tocEntry1.title + '</text>' +
+			'<text>' + tocEntry1.text + '</text>' +
 			'</navLabel>' +
 			'<content src="' + tocEntry1.target + '"/>' +
 			'<navPoint id="navpoint-2" playOrder="2">' +
 			'<navLabel>' +
-			'<text>' + tocEntry2.title + '</text>' +
+			'<text>' + tocEntry2.text + '</text>' +
 			'</navLabel>' +
 			'<content src="' + tocEntry2.target + '"/>' +
 			'</navPoint>' +
 			'</navPoint>' +
 			'<navPoint id="navpoint-3" playOrder="3">' +
 			'<navLabel>' +
-			'<text>' + tocEntry3.title + '</text>' +
+			'<text>' + tocEntry3.text + '</text>' +
 			'</navLabel>' +
 			'<content src="' + tocEntry3.target + '"/>' +
 			'</navPoint>');
@@ -314,7 +477,7 @@ describe('epub3', function () {
 		assert.equal(result, '');
 
 		var tocEntry1 = new TOCEntry;
-		tocEntry1.title = 'Kapitel Einz';
+		tocEntry1.text = 'Kapitel Einz';
 		tocEntry1.target = 'Kapitel Einz.html';
 		tocEntry1.level = 0;
 
@@ -323,7 +486,7 @@ describe('epub3', function () {
 		assert.equal(result, '<li><a href="Kapitel Einz.html">Kapitel Einz</a></li>');
 
 		var tocEntry2 = new TOCEntry;
-		tocEntry2.title = 'Kapitel Zwei';
+		tocEntry2.text = 'Kapitel Zwei';
 		tocEntry2.target = 'Kapitel Zwei.html';
 		tocEntry2.level = 1;
 

@@ -228,7 +228,7 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 				allowedContent: true,
 				skin: 'scripler',
 				resize_enabled: false,
-				extraPlugins: 'scripler,floating-tools,lineHeight,texttransform,indent-right,indentations',
+				extraPlugins: 'scripler,floating-tools,lineHeight,texttransform,indent-right,indentations,scripler_pagebreak,scripler_pagebreakavoid',
 				floatingtools: 'Basic',
 				floatingtools_Basic: [
 					{ name: 'styles', items: [ 'Font' ] },

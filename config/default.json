@@ -49,7 +49,12 @@
 		"projectDirPrefix": "project",
 		"htmlDir": "HTML",
 		"imagesDir": "Images",
-		"stylesDir": "Styles"
+		"stylesDir": "Styles",
+		"documentPrefix": "doc_",
+		"fontPrefix": "font_",
+		"imagePrefix": "img_",
+		"stylePrefix": "style_",
+		"anchorIdPrefix": "id_" // TODO: move somewhere the frontend can access it when generating anchors
 	},
 	"epub2": {
 		"oepbsDir": "OEBPS"

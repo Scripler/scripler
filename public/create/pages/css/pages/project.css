@@ -58,9 +58,8 @@
 	height: calc(100% / 3);
 	min-height: 178px;
 }
-.menu-item-left.documents {
-	padding-left: 20px;
-	padding-top: 20px;
+.menu-item-left.documents, .menu-item-left.inserts {
+	padding: 10px 0 0 10px;
 }
 .menu-item-left {
 	opacity:1;
@@ -170,8 +169,8 @@
 }
 .projectDocument {
 	position: relative;
-	margin: 0 15px 15px 0;
-	width: 59px;
+	margin: 0 10px 10px 0;
+	width: 72px;
 	height: 95px;
 	background: none #fefefe;
 	float: left;
@@ -419,4 +418,120 @@ li.typo p {
 	-ms-transition: all 0.5s;
 	-webkit-transition: all 0.5s;
 	-o-transition: all 0.5s;
+}
+
+.left-menu-divider {
+	display: block;
+	clear: left;
+	border-bottom: 1px solid #efefef;
+	margin-bottom: 8px;
+	padding-top: 8px;
+}
+.left-menu-options {
+	display: block;
+	text-align: center;
+}
+.left-menu-options-parameters div {
+	display: none;
+}
+.left-menu-options-parameters div.expanded {
+	display: block;
+}
+.left-menu-icons {
+	display: block;
+	text-align: center;
+}
+.left-menu-button {
+	display: inline-block;
+	width: 30px;
+	height: 30px;
+	padding: 5px 0;
+	border: 1px solid #fff56c;
+	cursor: default;
+	text-align: center;
+	cursor: pointer;
+}
+.left-menu-box {
+	display: inline-block;
+	width: 100%;
+	padding: 5px 10px;
+	border: 1px solid #efefef;
+	cursor: default;
+	text-align: left;
+	cursor: pointer;
+}
+.left-menu-parameter-margin {
+	margin-top: 10px;
+}
+.left-menu-box.inputfield {
+	position: relative;
+	width: calc(100% - 36px);
+	padding: 0;
+}
+.left-menu-box.inputfield.full-size {
+	position: relative;
+	width: 100%;
+	padding: 0;
+}
+.left-menu-box.inputfield input {
+	background: none white;
+	width: 100%;
+	height: 28px;
+	padding: 5px 10px;
+}
+.left-menu-box.inputfield input.show-info {
+	padding-right: 30px;
+	text-align: right;
+}
+.left-menu-box.inputfield .extra-info {
+	position: absolute;
+	top: 5px;
+	right: 10px;
+	color: #ccc;
+}
+.left-menu-box.inputfield input:focus {
+	outline:none;
+}
+.left-menu-box .option {
+	display: block;
+}
+
+.left-menu-close-item {
+	color: #cc0000;
+}
+
+.insertOption {
+	position: relative;
+	margin: 0 10px 10px 0;
+	padding: 16px 0 0 16px;
+	width: 114px;
+	height: 114px;
+	background: none #fefefe;
+	float: left;
+	border: 1px solid #ffff99;
+	box-shadow: 0px 5px 5px -5px #ccc;
+	cursor: pointer;
+}
+.insertOption.expanded {
+	height: 124px;
+	margin-bottom: 0;
+	border-bottom: 0px;
+	box-shadow: none;
+	z-index: 2;
+}
+.insertOptionProperties {
+	height: 0;
+	overflow: hidden;
+}
+.insertOptionProperties.expanded {
+	display: block;
+	position: relative;
+	margin: -1px 10px 10px 0;
+	padding: 16px;
+	width: 238px;
+	height: auto;
+	background: none #fefefe;
+	float: left;
+	border: 1px solid #ffff99;
+	box-shadow: 0px 5px 5px -5px #ccc;
 }

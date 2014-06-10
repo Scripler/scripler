@@ -103,7 +103,7 @@ p.empty-paragraph {
 	margin-top:0;
 }
 
-p.toc + p.toc {
+p.toc-item + p.toc-item {
 	text-indent:0;
 }
 
