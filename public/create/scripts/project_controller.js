@@ -318,11 +318,26 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					} else {
 						//apply on selection or multiple blocks
 						var range = editor.getSelection().getRanges();
-						var walker = new CKEDITOR.dom.walker( range[0] );
-						var node;
+						var walker = new CKEDITOR.dom.walker( range[0] ), node;
+						var isNotWhitespace = CKEDITOR.dom.walker.whitespaces( true );
 						var applyToParent = false;
-
 						var counter = 0;
+						var endNode = range[0].endContainer;
+
+						walker.guard = function( node, isMoveout )
+						{
+							if ( node.$.nodeName === endNode.$.nodeName &&
+								node.$.nodeType === endNode.$.nodeType &&
+								node.$.nodeValue === endNode.$.nodeValue &&
+								node.$.parentNode === endNode.$.parentNode &&
+								node.$.length === endNode.$.length ) {
+
+								return false; //ends walker
+							}
+
+							return true;
+						};
+
 						while ( node = walker.next() ) {
 
 							//if first element in a selection is a text node
@@ -333,7 +348,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 							}
 
 							//if a node is an element
-							if ( node.type === 1 ) {
+							if ( node.type === 1 && isNotWhitespace( node ) ) {
 								var computedStyle = node.getComputedStyle( 'display' );
 
 								if ( computedStyle === 'block' ) {
