@@ -293,10 +293,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					range.moveToElementEditablePosition(element);
 					range.select();
 				} else {
-					$rootScope.ck.applyStyle( new CKEDITOR.style( {
-						element : 'span',
-						attributes : { class : style.class },
-					}));
+					if ( typeof style.tag != 'undefined' ) {
+						$rootScope.ck.applyStyle( new CKEDITOR.style( {
+							element : style.tag
+						}));
+					} else {
+						$rootScope.ck.applyStyle( new CKEDITOR.style( {
+							element : 'span',
+							attributes : { class : style.class }
+						}));
+					}
 				}
 
 			} else {
