@@ -395,6 +395,8 @@ li.typo p {
 	background-color: #D6D6D6;
 	border-top: 2px solid #fff265;
 	padding: 10px 0 10px 10px;
+	height: 60px;
+	overflow: hidden;
 }
 
 .style.new {
