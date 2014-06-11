@@ -83,12 +83,12 @@
 							</div>
 
 							<ul ng-hide="visible" class="typo-children">
-								<li ng-repeat="style in styleset.styles" ng-click="x=!x" ng-hide="style.archived">
+								<li ng-repeat="style in styleset.styles" ng-click="x=!x" ng-hide="style.archived" ng-selected="selectedStyle.name === style.name && selectedStyle._id === style._id">
 									<a class="style-options-show" ng-click="showStyleOptions = true">
 										<div class="arrow"></div>
 									</a>
 
-									<span ng-hide="editingStyleName" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
+									<span ng-style="style.css" ng-hide="editingStyleName" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
 
 									<form ng-show="editingStyleName">
 										<textarea id="renameStyle" rows="1" ng-model="style.name" focus-on="!!editingStyleName" on-enter="editingStyleName = false; renameStyle(style);"></textarea>
@@ -305,8 +305,6 @@
 					<a ng-click="">New Folder</a>
 				</div>
 				<div ng-show="showImportOptions">
-					<p>Scripler imports Word files and other common word processor formats (link).</p>
-					<input type="file" ng-file-select="onFileSelect($files)">
 					<div class="upload-box" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="dragover"
 						 ng-show="dropSupported" ng-file-drop-available="dropSupported=true">drop files here</div>
 					<p>Scripler imports Word files and other common word processor formats (link).</p>

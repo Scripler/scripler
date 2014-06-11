@@ -81,8 +81,8 @@
 }
 .menu-left .content {
 	width: 100%;
-	height: 100%;
-	min-height: 100%;
+	height: 94%;
+	min-height: 94%;
 }
 .menu-right .content {
 	width: 200px;
@@ -195,12 +195,13 @@
 	overflow: hidden;
 }
 [selected] {
-	background-color: #000;
+	background-color: #000 !important;
 }
-[selected] a {
+[selected] a, [selected] span {
 	background-color: #000 !important;
 	color: #fff265;
 }
+
 
 .projectDocument .projectDocument-options-show, .styleset-options-show {
 	position: absolute;
@@ -390,11 +391,12 @@ li.typo p {
 	border-top: 2px solid #fff265;
 	border-bottom: none;
 }
-
 .typo-children li {
 	background-color: #D6D6D6;
 	border-top: 2px solid #fff265;
 	padding: 10px 0 10px 10px;
+	height: 60px;
+	overflow: hidden;
 }
 
 .style.new {
