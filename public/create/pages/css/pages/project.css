@@ -199,7 +199,7 @@
 }
 [selected] a, [selected] span {
 	background-color: #000 !important;
-	color: #fff265;
+	color: #fff265 !important;
 }
 
 
