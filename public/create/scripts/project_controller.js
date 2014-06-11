@@ -544,8 +544,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				});
 			}
 
-			console.log( $scope.selectedStyle );
-
 		}, this );
 
 		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
