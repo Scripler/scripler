@@ -122,7 +122,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				}
 
 				if ( typeof $scope.ckReady == 'boolean' ) {
-					if ( $scope.ckReady) {
+					if ( $scope.ckReady ) {
 						$scope.applyDefaultStyleset();
 					}
 				}
@@ -252,6 +252,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.applyDefaultStyleset = function() {
 		for ( var i = 0; i < $scope.stylesets.length; i++ ) {
 			if ( $scope.documentSelected.defaultStyleset === $scope.stylesets[i]._id ) {
+				$scope.defaultStyleset = $scope.stylesets[i];
 				$scope.applyStylesetToEditor( $scope.stylesets[i], true );
 				break;
 			}
@@ -337,7 +338,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 						walker.guard = function( node, isMoveout )
 						{
-							if ( node.$.nodeName === endNode.$.nodeName &&
+							if ( counter != 0 &&
+								node.$.nodeName === endNode.$.nodeName &&
 								node.$.nodeType === endNode.$.nodeType &&
 								node.$.nodeValue === endNode.$.nodeValue &&
 								node.$.parentNode === endNode.$.parentNode &&
@@ -489,6 +491,62 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.insertPageBreakAvoid = function() {
 			$rootScope.ck.commands.pagebreakavoid.exec();
 		}
+
+		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
+		editor.on( 'selectionChange', function( ev ) {
+			var elementPath = ev.data.path;
+			var elements = elementPath.elements;
+			var isSet = false;
+			var defaultDocStyles = $scope.defaultStyleset.styles;
+			var selectedStyle = '';
+
+			// For each element into the elements path.
+			for ( var i = 0, count = elements.length, element; i < count; i++ ) {
+				element = elements[ i ];
+
+				if ( element.getName() === 'body' ) {
+					break;
+				}
+
+				if ( element.hasAttribute( 'class' ) ) {
+					var eClass = element.getAttribute( 'class' );
+
+					for ( var x = 0; x < defaultDocStyles.length; x++ ) {
+						var sClass = defaultDocStyles[x].class;
+						if ( eClass === sClass ) {
+							selectedStyle = defaultDocStyles[x];
+							isSet = true;
+							break;
+						}
+					}
+				} else {
+					//check for tag
+					var tag = element.getName();
+					for ( var z = 0; z < defaultDocStyles.length; z++ ) {
+						var sTag = defaultDocStyles[z].tag;
+						if ( tag === sTag ) {
+							selectedStyle = defaultDocStyles[z];
+							isSet = true;
+							break;
+						}
+					}
+				}
+			}
+
+			//if selected style was not set, remove active selection
+			if ( !isSet ) {
+				selectedStyle = {};
+			}
+
+			if ( !$scope.$$phase ) {
+				$scope.$apply(function() {
+					$scope.selectedStyle = selectedStyle;
+				});
+			}
+
+			console.log( $scope.selectedStyle );
+
+		}, this );
 
 		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
 
