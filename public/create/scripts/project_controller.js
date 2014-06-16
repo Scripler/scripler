@@ -116,9 +116,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$scope.openStylesets( projectDocument );
 				lastSavedDocumentLength = data.document.text.length;
 
-				if ( !documentWatch ) {
+				if ( !$scope.documentWatch ) {
 					$scope.$watch('documentSelected', $scope.saveProjectDocumentUpdates, true);
-					documentWatch = true;
+					$scope.documentWatch = true;
 				}
 
 				if ( typeof $scope.ckReady == 'boolean' ) {
@@ -151,7 +151,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.updateProjectDocument = function() {
 		var document = $scope.documentSelected;
-		document.text = $rootScope.CKEDITOR.instances.bodyeditor.getData();
 		lastSavedDocumentLength = document.text.length;
 
 		if ( $scope.user._id ) {
@@ -391,6 +390,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					}
 				}
 			}
+
+			//change document selected text because angular does not detect tag changes
+			$scope.documentSelected.text = $rootScope.CKEDITOR.instances.bodyeditor.getData();
+
+			//apply default styleset for now
+			$scope.applyDefaultStyleset();
 
 		});
 	}

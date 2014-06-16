@@ -252,7 +252,7 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 				width: 800,
 				font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
 				//Change to standard font we want to start all projects with :)
-				contentsCss: ['stylesets/pleasant-bw.css', 'stylesets/non-editable.css'],
+				contentsCss: ['stylesets/non-editable.css'],
 				//Load css sheet via angualr here
 				toolbar: [
 					//['Source'], ['Undo'], ['Redo'], ['Paste'], ['PasteFromWord'], ['Styles'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['Image'], ['Link'], ['TextColor'], ['BGColor']
