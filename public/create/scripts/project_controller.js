@@ -151,7 +151,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.updateProjectDocument = function() {
 		var document = $scope.documentSelected;
+		document.text = $rootScope.CKEDITOR.instances.bodyeditor.getData();
 		lastSavedDocumentLength = document.text.length;
+
 		if ( $scope.user._id ) {
 			$http.put(/document/ + document._id + '/update', angular.toJson( document ))
 				.success( function() {
