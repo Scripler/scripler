@@ -393,6 +393,34 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	}
 
+	$scope.isBlock = function( style ) {
+
+		if ( isBlockHelper( style ) ) {
+			return 'character';
+		}
+
+		return 'block';
+	}
+
+	var isBlockHelper = function( style ) {
+		try {
+			var lineHeight = typeof style.css['line-height'];
+			var margin = typeof style.css['margin'];
+			var padding = typeof style.css['padding'];
+		} catch (e) {
+			//silence exception if value is undefined
+			//only used to determine if style is block or character
+		}
+
+			if ( lineHeight == 'undefined' &&
+				 margin == 'undefined' &&
+				 padding == 'undefined' ) {
+					return true;
+			}
+
+		return false;
+	}
+
 	$scope.applyStyleToElement = function( element, style ) {
 		if ( typeof style.tag != 'undefined' ) {
 			element.removeAttribute( 'class' );

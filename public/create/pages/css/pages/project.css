@@ -407,6 +407,12 @@ li.typo p {
 	padding: 0;
 	margin-left: -10px;
 }
+.style-isblock {
+	position: absolute;
+	right: 30px;
+	color: #fff;
+	font-size: 80%;
+}
 .cke_floatingtools {
 	position: fixed;
 	z-index: 1;
