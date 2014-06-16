@@ -151,7 +151,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.updateProjectDocument = function() {
 		var document = $scope.documentSelected;
+		document.text = $rootScope.CKEDITOR.instances.bodyeditor.getData();
 		lastSavedDocumentLength = document.text.length;
+
 		if ( $scope.user._id ) {
 			$http.put(/document/ + document._id + '/update', angular.toJson( document ))
 				.success( function() {
@@ -393,6 +395,34 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	}
 
+	$scope.isBlock = function( style ) {
+
+		if ( isBlockHelper( style ) ) {
+			return 'character';
+		}
+
+		return 'block';
+	}
+
+	var isBlockHelper = function( style ) {
+		try {
+			var lineHeight = typeof style.css['line-height'];
+			var margin = typeof style.css['margin'];
+			var padding = typeof style.css['padding'];
+		} catch (e) {
+			//silence exception if value is undefined
+			//only used to determine if style is block or character
+		}
+
+			if ( lineHeight == 'undefined' &&
+				 margin == 'undefined' &&
+				 padding == 'undefined' ) {
+					return true;
+			}
+
+		return false;
+	}
+
 	$scope.applyStyleToElement = function( element, style ) {
 		if ( typeof style.tag != 'undefined' ) {
 			element.removeAttribute( 'class' );
@@ -504,11 +534,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
 		editor.on( 'selectionChange', function( ev ) {
-			if ( typeof $scope.defaultStyleset != 'undefined') {
+			if ( typeof $scope.stylesets != 'undefined') {
 				var elementPath = ev.data.path;
 				var elements = elementPath.elements;
 				var isSet = false;
-				var defaultDocStyles = $scope.defaultStyleset.styles;
+				var stylesets = $scope.stylesets;
 				var selectedStyle = '';
 
 				// For each element into the elements path.
@@ -519,29 +549,40 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						break;
 					}
 
-					if ( element.hasAttribute( 'class' ) ) {
-						var eClass = element.getAttribute( 'class' );
 
-						for ( var x = 0; x < defaultDocStyles.length; x++ ) {
-							var sClass = defaultDocStyles[x].class;
-							if ( eClass === sClass ) {
-								selectedStyle = defaultDocStyles[x];
-								isSet = true;
-								break;
+					for ( var x = 0; x < stylesets.length; x++ ) {
+						var styles = stylesets[x].styles;
+
+						if ( element.hasAttribute( 'class' ) ) {
+							var eClass = element.getAttribute( 'class' );
+
+							for ( var p = 0; p < styles.length; p++ ) {
+								var sClass = styles[p].class;
+								if ( eClass === sClass ) {
+									selectedStyle = styles[p];
+									isSet = true;
+									//break both loops
+									p = styles.length;
+									x = stylesets.length;
+								}
 							}
-						}
-					} else {
-						//check for tag
-						var tag = element.getName();
-						for ( var z = 0; z < defaultDocStyles.length; z++ ) {
-							var sTag = defaultDocStyles[z].tag;
-							if ( tag === sTag ) {
-								selectedStyle = defaultDocStyles[z];
-								isSet = true;
-								break;
+
+						} else {
+							//check for tag
+							var tag = element.getName();
+							for ( var y = 0; y < styles.length; y++ ) {
+								var sTag = styles[y].tag;
+								if ( tag === sTag ) {
+									selectedStyle = styles[y];
+									isSet = true;
+									//break both loops
+									y = styles.length;
+									x = stylesets.length;
+								}
 							}
 						}
 					}
+
 				}
 
 				//if selected style was not set, remove active selection

@@ -199,7 +199,7 @@
 }
 [selected] a, [selected] span {
 	background-color: #000 !important;
-	color: #fff265;
+	color: #fff265 !important;
 }
 
 
@@ -406,6 +406,12 @@ li.typo p {
 .style.new p {
 	padding: 0;
 	margin-left: -10px;
+}
+.style-isblock {
+	position: absolute;
+	right: 30px;
+	color: #fff;
+	font-size: 80%;
 }
 .cke_floatingtools {
 	position: fixed;

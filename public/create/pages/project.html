@@ -88,6 +88,8 @@
 										<div class="arrow"></div>
 									</a>
 
+									<span class="style-isblock" ng-bind="isBlock(style)"></span>
+
 									<span ng-style="style.css" ng-hide="editingStyleName" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
 
 									<form ng-show="editingStyleName">
