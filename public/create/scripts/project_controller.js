@@ -474,6 +474,43 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 	}
 
+	function getStyle( el, styleProp )
+	{
+		if ( el.currentStyle )
+			var y = el.currentStyle[styleProp];
+		else if ( window.getComputedStyle )
+			var y = document.defaultView.getComputedStyle( el, null ).getPropertyValue( styleProp );
+		return y;
+	}
+
+	$scope.saveAsCharStyle = function( style ) {
+		var selection = $rootScope.ck.getSelection();
+		var element = selection.getStartElement();
+
+		var styleCSS = element.getAttribute( 'style' );
+		var inlineCSS = {};
+		var matches = styleCSS.match( /([\w-]+)\s*:\s*([^;]+)\s*;?/ );
+
+		for ( var x = 0; x < matches.length; x++ ) {
+			if ( x % 3 !== 0 ) {
+				inlineCSS[matches[x]] = matches[x+1];
+				x++; //skip next one because it has been assigned
+			}
+		}
+
+		var styles = [ 'font-weight', 'font-style', 'text-decoration' ];
+		styles.forEach(function(style) {
+			var cssStyle = getStyle(element.$, style);
+			if ( cssStyle !== "" && cssStyle !== null ) {
+				inlineCSS[style] = cssStyle;
+			}
+		});
+
+		//save new style
+		console.log(style);
+
+	}
+
 	$scope.insertOptionChoosen = function(insertoption) {
 		if ($scope.activeInsertOption === insertoption) {
 			$scope.activeInsertOption = null;
@@ -544,7 +581,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				var elements = elementPath.elements;
 				var isSet = false;
 				var stylesets = $scope.stylesets;
-				var selectedStyle = '';
+				var selectedStyle = {};
+				$scope.copyCSS = false;
 
 				// For each element into the elements path.
 				for ( var i = 0, count = elements.length, element; i < count; i++ ) {
@@ -587,7 +625,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 							}
 						}
 					}
+				}
 
+				//logic for copying styles when css has been changed
+				if ( elements.length > 0 ) {
+					var element = elements[0];
+
+					if ( element.hasAttribute( 'style' ) || element.is( 'em' ) || element.is('strong') || element.is('u') ||
+						 element.is('s') ) {
+						$scope.copyCSS = true;
+					}
 				}
 
 				//if selected style was not set, remove active selection
