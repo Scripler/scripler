@@ -439,8 +439,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
-	$scope.addNewStyle = function( styleset, styleCSS ) {
-		var style = {};
+	$scope.addNewStyle = function( styleset, style ) {
+		var newStyle = {};
+
+		if ( typeof style !== 'undefined' ) {
+			newStyle = style;
+		}
 
 		var length = styleset.styles.length;
 		var number = length + 1;
@@ -454,14 +458,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 		}
 
-		style.name = 'Style ' + number;
-		style.stylesetId = styleset._id;
+		newStyle.name = 'Style ' + number;
+		newStyle.stylesetId = styleset._id;
 
-		if ( typeof styleCSS !== 'undefined' ) {
-			style.css = styleCSS;
-		}
-
-		$http.post('/style', angular.toJson( style ) )
+		$http.post('/style', angular.toJson( newStyle ) )
 			.success( function( data ) {
 				styleset.styles.push( data.style );
 			});
@@ -514,36 +514,46 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.saveAsCharStyle = function( styleset ) {
 		var selection = $rootScope.ck.getSelection();
 		var element = selection.getStartElement();
-
-		var styleAttributes = element.getAttribute( 'style' );
 		var inlineCSS = {};
-		var matches = styleAttributes.match( /([\w-]+)\s*:\s*([^;]+)\s*;?/ );
 
-		for ( var x = 0; x < matches.length; x++ ) {
-			if ( x % 3 !== 0 ) {
-				inlineCSS[matches[x]] = matches[x+1];
-				x++; //skip next one because it has been assigned
+		if ( element.hasAttribute( 'style' ) ) {
+			var styleAttributes = element.getAttribute( 'style' );
+
+			var matches = styleAttributes.match( /([\w-]+)\s*:\s*([^;]+)\s*;?/ );
+
+			for ( var x = 0; x < matches.length; x++ ) {
+				if ( x % 3 !== 0 ) {
+					inlineCSS[matches[x]] = matches[x+1];
+					x++; //skip next one because it has been assigned
+				}
 			}
 		}
 
 		var styles = [ 'font-weight', 'font-style', 'text-decoration' ];
 		inlineCSS = getStyles( element, styles, inlineCSS );
 
-		$scope.addNewStyle( styleset, inlineCSS );
+		var style = {};
+		style.css = inlineCSS;
+		//style.class = 'style-' + Date.now();
+
+		$scope.addNewStyle( styleset, style );
 	}
 
-	$scope.saveAsBlockStyle = function( styleset ) {
+	$scope.saveAsBlockStyle = function( styleset, style ) {
 		var activeCSS = getStyleCSS();
+		var newStyle = angular.copy( style );
+		newStyle.css = activeCSS;
 
-		$scope.addNewStyle( styleset, activeCSS );
+		$scope.addNewStyle( styleset, newStyle );
 	}
 
 	$scope.overrideStyle = function( style ) {
 		var activeCSS = getStyleCSS();
 
-		style.css = activeCSS;
+		var newStyle = angular.copy( style );
+		newStyle.css = activeCSS;
 
-		$scope.updateStyle( style );
+		$scope.updateStyle( newStyle );
 	}
 
 	$scope.insertOptionChoosen = function(insertoption) {
