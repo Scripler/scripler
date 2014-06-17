@@ -439,7 +439,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
-	$scope.addNewStyle = function( styleset ) {
+	$scope.addNewStyle = function( styleset, styleCSS ) {
 		var style = {};
 
 		var length = styleset.styles.length;
@@ -456,6 +456,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		style.name = 'Style ' + number;
 		style.stylesetId = styleset._id;
+
+		if ( typeof styleCSS !== 'undefined' ) {
+			style.css = styleCSS;
+		}
 
 		$http.post('/style', angular.toJson( style ) )
 			.success( function( data ) {
@@ -483,13 +487,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return y;
 	}
 
-	$scope.saveAsCharStyle = function( style ) {
+	$scope.saveAsCharStyle = function( styleset ) {
 		var selection = $rootScope.ck.getSelection();
 		var element = selection.getStartElement();
 
-		var styleCSS = element.getAttribute( 'style' );
+		var styleAttributes = element.getAttribute( 'style' );
 		var inlineCSS = {};
-		var matches = styleCSS.match( /([\w-]+)\s*:\s*([^;]+)\s*;?/ );
+		var matches = styleAttributes.match( /([\w-]+)\s*:\s*([^;]+)\s*;?/ );
 
 		for ( var x = 0; x < matches.length; x++ ) {
 			if ( x % 3 !== 0 ) {
@@ -499,16 +503,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 
 		var styles = [ 'font-weight', 'font-style', 'text-decoration' ];
-		styles.forEach(function(style) {
+		styles.forEach(function( style ) {
 			var cssStyle = getStyle(element.$, style);
 			if ( cssStyle !== "" && cssStyle !== null ) {
 				inlineCSS[style] = cssStyle;
 			}
 		});
 
-		//save new style
-		console.log(style);
-
+		$scope.addNewStyle( styleset, inlineCSS );
 	}
 
 	$scope.insertOptionChoosen = function(insertoption) {
