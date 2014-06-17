@@ -467,7 +467,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 	}
 
-	$scope.renameStyle = function( style ) {
+	$scope.updateStyle = function( style ) {
 		$http.put('/style/' + style._id + '/update', angular.toJson( style ) );
 	}
 
@@ -487,6 +487,30 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return y;
 	}
 
+	function getStyles( element, styles, activeCSS ) {
+		styles.forEach(function( style ) {
+			var cssStyle = getStyle(element.$, style);
+			if ( cssStyle !== "" && cssStyle !== null ) {
+				activeCSS[style] = cssStyle;
+			}
+		});
+
+		return activeCSS;
+	}
+
+	function getStyleCSS() {
+		var selection = $rootScope.ck.getSelection();
+		var element = selection.getStartElement();
+
+		var styles = [ 'font-size', 'font-family', 'font-weight', 'font-style', 'color', 'text-decoration',
+					  'margin', 'padding', 'line-height', 'hyphens', 'page-break-inside', 'quotes', 'border',
+					  'text-indent', 'background-color', 'list-style' ];
+		var activeCSS = {};
+		activeCSS = getStyles( element, styles, activeCSS );
+
+		return activeCSS;
+	}
+
 	$scope.saveAsCharStyle = function( styleset ) {
 		var selection = $rootScope.ck.getSelection();
 		var element = selection.getStartElement();
@@ -503,14 +527,23 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 
 		var styles = [ 'font-weight', 'font-style', 'text-decoration' ];
-		styles.forEach(function( style ) {
-			var cssStyle = getStyle(element.$, style);
-			if ( cssStyle !== "" && cssStyle !== null ) {
-				inlineCSS[style] = cssStyle;
-			}
-		});
+		inlineCSS = getStyles( element, styles, inlineCSS );
 
 		$scope.addNewStyle( styleset, inlineCSS );
+	}
+
+	$scope.saveAsBlockStyle = function( styleset ) {
+		var activeCSS = getStyleCSS();
+
+		$scope.addNewStyle( styleset, activeCSS );
+	}
+
+	$scope.overrideStyle = function( style ) {
+		var activeCSS = getStyleCSS();
+
+		style.css = activeCSS;
+
+		$scope.updateStyle( style );
 	}
 
 	$scope.insertOptionChoosen = function(insertoption) {
