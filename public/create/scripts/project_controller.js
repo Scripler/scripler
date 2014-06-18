@@ -429,14 +429,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.applyStyleToElement = function( element, style ) {
+
 		if ( typeof style.tag != 'undefined' ) {
 			element.removeAttribute( 'class' );
 			element.renameNode( style.tag );
-		} else {
-			if ( typeof style.class != 'undefined' ) {
-				element.addClass( style.class );
-			}
 		}
+
+		if ( typeof style.class != 'undefined' ) {
+			element.addClass( style.class );
+		}
+
 	}
 
 	$scope.addNewStyle = function( styleset, style, isBlock ) {
@@ -466,16 +468,18 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				var style = data.style;
 
 				if ( typeof isBlock !== 'undefined' ) {
-					style.class = ".style-" + style._id;
+					style.class = "style-" + style._id;
 				}
 
 				styleset.styles.push( style );
+				console.log(style);
 
-				if ( $scope.defaultStyleset._id == style.stylesetId ) {
-					$scope.applyStylesetToEditor( styleset, true );
-				} else {
-					$scope.applyStylesetToEditor( styleset, false );
-				}
+				//if ( $scope.defaultStyleset._id == style.stylesetId ) {
+				//TODO make work with non-default styleset
+				$scope.applyStylesetToEditor( styleset, true );
+				//} else {
+				//	$scope.applyStylesetToEditor( styleset, false );
+				//}
 
 			});
 	}
