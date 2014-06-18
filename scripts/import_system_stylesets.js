@@ -9,6 +9,32 @@ var Styleset = require('../models/styleset.js').Styleset;
 var Style = require('../models/style.js').Style;
 var cssNames = require(path.join(__dirname, '../lib/css-names.json'));
 
+function getCssKey ( cssNames, name ) {
+	for (var key in cssNames) {
+		if (cssNames.hasOwnProperty(key)) {
+			if(cssNames[key].name == name) {
+				return key;
+			}
+		}
+	}
+}
+
+/**
+ * Sort the styles by "system style order", i.e. so they appear in the same order as in "CSS names".
+ *
+ * @param s1
+ * @param s2
+ * @returns {number}
+ */
+function systemStyleOrder (s1, s2) {
+	var s1KeyName = getCssKey(cssNames, s1.name);
+	var s2KeyName = getCssKey(cssNames, s2.name);
+
+	var s1Order = cssNames[s1KeyName] ? cssNames[s1KeyName].order : 9999;
+	var s2Order = cssNames[s2KeyName] ? cssNames[s2KeyName].order : 9999;
+	return s1Order - s2Order;
+}
+
 function createStyleset(stylesheetName, jsonStyleset, next) {
 	var styleset = new Styleset({
 		name: stylesheetName,
@@ -29,6 +55,7 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 				var name;
 				var clazz;
 				var tag;
+				var hidden;
 
 				if (type == 'fontface') {
 					console.log('Skipping "fontface" style...(should be added as non-editable CSS (that is only included if used))');
@@ -39,10 +66,24 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 
 					if (isClass) {
 						clazz = selector.slice(1);
-						name = cssNames[clazz];
+						// "Insert system styles" do not need a human-readable name
+						if (cssNames[clazz]) {
+							name = cssNames[clazz].name;
+						} else {
+							name = clazz;
+							hidden = true;
+						}
+						//console.log('isClazz name: ' + clazz + ', name: ' + name);
 					} else {
 						tag = selector;
-						name = cssNames[tag];
+						// "Insert system styles" do not need a human-readable name
+						if (cssNames[tag]) {
+							name = cssNames[tag].name;
+						} else {
+							name = tag;
+							hidden = true;
+						}
+						//console.log('tag name: ' + tag + ', name: ' + name);
 					}
 
 					var declarations = jsonStyle['declarations'];
@@ -53,13 +94,16 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 						css: declarations,
 						tag: tag,
 						stylesetId: styleset._id,
-						isSystem: true
+						isSystem: true,
+						hidden: hidden
 					});
 
 					style.save(function (err, style) {
 						if (err) {
 							callback(err);
 						}
+
+						console.log('Created style: ' + JSON.stringify(style));
 
 						styleset.styles.addToSet(style);
 						callback(null);
@@ -73,21 +117,42 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 				return next(err);
 			}
 
-			// The styles we just created were also added to the styleset so we must save the styleset again
-			styleset.save(function (err, styleset) {
+			// Save styleset such that the styles added above can be populated, c.f. comment below
+			styleset.save(function (err, savedStyleset) {
 				if (err) {
 					return next(err);
 				}
 
-				return next(null, styleset);
-			});
+				// Styles must be populated for sorting to work, see below
+				Styleset.findOne({"_id": savedStyleset._id}).populate('styles').exec(function (err, populatedStyleset) {
+					if (err) {
+						return next(err);
+					}
 
+					//console.log('BEFORE');
+					//console.log(JSON.stringify(populatedStyleset.styles));
+
+					populatedStyleset.styles.sort(systemStyleOrder);
+
+					//console.log('AFTER');
+					//console.log(JSON.stringify(populatedStyleset.styles));
+
+					// The styles we just created were also added to the styleset so we must save the styleset again
+					populatedStyleset.save(function (err, savedStyleset) {
+						if (err) {
+							return next(err);
+						}
+
+						return next(null, savedStyleset);
+					});
+				});
+			});
 		});
 	});
 }
 
 // TODO: read all stylesheets (.css files) in the system stylesets dir
-var stylesheetName = 'simplecolor';
+var stylesheetName = 'simple-color';
 var cssFilename = path.join(__dirname, '../public/create/stylesets/' + stylesheetName + '.css');
 console.log(cssFilename);
 
