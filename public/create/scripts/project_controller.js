@@ -539,8 +539,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 			for ( var x = 0; x < matches.length; x++ ) {
 				if ( x % 3 !== 0 ) {
-					inlineCSS[matches[x]] = matches[x+1];
-					x++; //skip next one because it has been assigned
+					if ( matches[x] !== 'margin' && matches[x] !== 'padding' && matches[x] !== 'line-height' &&
+						 matches[x] !== 'margin-top' && matches[x] !== 'margin-bottom' && matches[x] !== 'margin-right' &&
+						 matches[x] !== 'margin-left' && matches[x] !== 'padding-top' && matches[x] !== 'padding-bottom' &&
+						 matches[x] !== 'padding-right' && matches[x] !== 'padding-left' ) {
+						inlineCSS[matches[x]] = matches[x+1];
+						x++; //skip next one because it has been assigned
+					}
 				}
 			}
 		}
