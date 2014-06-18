@@ -241,7 +241,7 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 					'/',
 					['Indent'], ['IndentRight'], ['IndentTop'], ['IndentBottom'], ['IndentText'],
 					'#',
-					['IndentTopIcon'], ['IndentTopIcon'], ['IndentTopIcon'], ['IndentBottomIcon'], ['IndentTextIcon'],
+					['IndentLeftIcon'], ['IndentRightIcon'], ['IndentTopIcon'], ['IndentBottomIcon'], ['IndentTextIcon'],
 					'#',
 					['Outdent'], ['OutdentRight'], ['OutdentTop'], ['OutdentBottom'], ['OutdentText']
 				],
