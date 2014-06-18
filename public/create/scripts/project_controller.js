@@ -439,7 +439,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
-	$scope.addNewStyle = function( styleset, style ) {
+	$scope.addNewStyle = function( styleset, style, isBlock ) {
 		var newStyle = {};
 
 		if ( typeof style !== 'undefined' ) {
@@ -463,7 +463,20 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		$http.post('/style', angular.toJson( newStyle ) )
 			.success( function( data ) {
-				styleset.styles.push( data.style );
+				var style = data.style;
+
+				if ( typeof isBlock !== 'undefined' ) {
+					style.class = ".style-" + style._id;
+				}
+
+				styleset.styles.push( style );
+
+				if ( $scope.defaultStyleset._id == style.stylesetId ) {
+					$scope.applyStylesetToEditor( styleset, true );
+				} else {
+					$scope.applyStylesetToEditor( styleset, false );
+				}
+
 			});
 	}
 
@@ -534,7 +547,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		var style = {};
 		style.css = inlineCSS;
-		//style.class = 'style-' + Date.now();
 
 		$scope.addNewStyle( styleset, style );
 	}
@@ -544,7 +556,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var newStyle = angular.copy( style );
 		newStyle.css = activeCSS;
 
-		$scope.addNewStyle( styleset, newStyle );
+		$scope.addNewStyle( styleset, newStyle, true);
 	}
 
 	$scope.overrideStyle = function( style ) {
