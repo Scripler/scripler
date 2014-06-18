@@ -441,7 +441,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	}
 
-	$scope.addNewStyle = function( styleset, style, isBlock ) {
+	$scope.addNewStyle = function( styleset, style ) {
 		var newStyle = {};
 
 		if ( typeof style !== 'undefined' ) {
@@ -465,18 +465,17 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		$http.post('/style', angular.toJson( newStyle ) )
 			.success( function( data ) {
-				var style = data.style;
+				var style = data.style
 
-				if ( typeof isBlock !== 'undefined' ) {
-					style.class = "style-" + style._id;
-				}
+				style.class = "style-" + style._id;
+				$scope.updateStyle( style );
 
 				styleset.styles.push( style );
 				console.log(style);
 
 				//if ( $scope.defaultStyleset._id == style.stylesetId ) {
 				//TODO make work with non-default styleset
-				$scope.applyStylesetToEditor( styleset, true );
+				//$scope.applyStylesetToEditor( styleset, true );
 				//} else {
 				//	$scope.applyStylesetToEditor( styleset, false );
 				//}
@@ -560,7 +559,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var newStyle = angular.copy( style );
 		newStyle.css = activeCSS;
 
-		$scope.addNewStyle( styleset, newStyle, true);
+		$scope.addNewStyle( styleset, newStyle );
 	}
 
 	$scope.overrideStyle = function( style ) {
