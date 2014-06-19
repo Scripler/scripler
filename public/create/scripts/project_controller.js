@@ -116,9 +116,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$scope.openStylesets( projectDocument );
 				lastSavedDocumentLength = data.document.text.length;
 
-				if ( !documentWatch ) {
+				if ( !$scope.documentWatch ) {
 					$scope.$watch('documentSelected', $scope.saveProjectDocumentUpdates, true);
-					documentWatch = true;
+					$scope.documentWatch = true;
 				}
 
 				if ( typeof $scope.ckReady == 'boolean' ) {
@@ -151,7 +151,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.updateProjectDocument = function() {
 		var document = $scope.documentSelected;
-		document.text = $rootScope.CKEDITOR.instances.bodyeditor.getData();
 		lastSavedDocumentLength = document.text.length;
 
 		if ( $scope.user._id ) {
@@ -392,6 +391,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				}
 			}
 
+			//change document selected text because angular does not detect tag changes
+			$scope.documentSelected.text = $rootScope.CKEDITOR.instances.bodyeditor.getData();
+
+			//apply default styleset for now
+			$scope.applyDefaultStyleset();
+
 		});
 	}
 
@@ -424,18 +429,24 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.applyStyleToElement = function( element, style ) {
+
 		if ( typeof style.tag != 'undefined' ) {
 			element.removeAttribute( 'class' );
 			element.renameNode( style.tag );
-		} else {
-			if ( typeof style.class != 'undefined' ) {
-				element.addClass( style.class );
-			}
 		}
+
+		if ( typeof style.class != 'undefined' ) {
+			element.addClass( style.class );
+		}
+
 	}
 
-	$scope.addNewStyle = function( styleset ) {
-		var style = {};
+	$scope.addNewStyle = function( styleset, style ) {
+		var newStyle = {};
+
+		if ( typeof style !== 'undefined' ) {
+			newStyle = style;
+		}
 
 		var length = styleset.styles.length;
 		var number = length + 1;
@@ -449,16 +460,30 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 		}
 
-		style.name = 'Style ' + number;
-		style.stylesetId = styleset._id;
+		newStyle.name = 'Style ' + number;
+		newStyle.stylesetId = styleset._id;
 
-		$http.post('/style', angular.toJson( style ) )
+		$http.post('/style', angular.toJson( newStyle ) )
 			.success( function( data ) {
-				styleset.styles.push( data.style );
+				var style = data.style
+
+				style.class = "style-" + style._id;
+				$scope.updateStyle( style );
+
+				styleset.styles.push( style );
+				console.log(style);
+
+				//if ( $scope.defaultStyleset._id == style.stylesetId ) {
+				//TODO make work with non-default styleset
+				//$scope.applyStylesetToEditor( styleset, true );
+				//} else {
+				//	$scope.applyStylesetToEditor( styleset, false );
+				//}
+
 			});
 	}
 
-	$scope.renameStyle = function( style ) {
+	$scope.updateStyle = function( style ) {
 		$http.put('/style/' + style._id + '/update', angular.toJson( style ) );
 	}
 
@@ -467,6 +492,88 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			.success( function( data ) {
 				style.archived = true;
 			});
+	}
+
+	function getStyle( el, styleProp )
+	{
+		if ( el.currentStyle )
+			var y = el.currentStyle[styleProp];
+		else if ( window.getComputedStyle )
+			var y = document.defaultView.getComputedStyle( el, null ).getPropertyValue( styleProp );
+		return y;
+	}
+
+	function getStyles( element, styles, activeCSS ) {
+		styles.forEach(function( style ) {
+			var cssStyle = getStyle(element.$, style);
+			if ( cssStyle !== "" && cssStyle !== null ) {
+				activeCSS[style] = cssStyle;
+			}
+		});
+
+		return activeCSS;
+	}
+
+	function getStyleCSS() {
+		var selection = $rootScope.ck.getSelection();
+		var element = selection.getStartElement();
+
+		var styles = [ 'font-size', 'font-family', 'font-weight', 'font-style', 'color', 'text-decoration',
+					  'margin', 'padding', 'line-height', 'hyphens', 'page-break-inside', 'quotes', 'border',
+					  'text-indent', 'background-color', 'list-style' ];
+		var activeCSS = {};
+		activeCSS = getStyles( element, styles, activeCSS );
+
+		return activeCSS;
+	}
+
+	$scope.saveAsCharStyle = function( styleset ) {
+		var selection = $rootScope.ck.getSelection();
+		var element = selection.getStartElement();
+		var inlineCSS = {};
+
+		if ( element.hasAttribute( 'style' ) ) {
+			var styleAttributes = element.getAttribute( 'style' );
+
+			var matches = styleAttributes.match( /([\w-]+)\s*:\s*([^;]+)\s*;?/ );
+
+			for ( var x = 0; x < matches.length; x++ ) {
+				if ( x % 3 !== 0 ) {
+					if ( matches[x] !== 'margin' && matches[x] !== 'padding' && matches[x] !== 'line-height' &&
+						 matches[x] !== 'margin-top' && matches[x] !== 'margin-bottom' && matches[x] !== 'margin-right' &&
+						 matches[x] !== 'margin-left' && matches[x] !== 'padding-top' && matches[x] !== 'padding-bottom' &&
+						 matches[x] !== 'padding-right' && matches[x] !== 'padding-left' ) {
+						inlineCSS[matches[x]] = matches[x+1];
+						x++; //skip next one because it has been assigned
+					}
+				}
+			}
+		}
+
+		var styles = [ 'font-weight', 'font-style', 'text-decoration' ];
+		inlineCSS = getStyles( element, styles, inlineCSS );
+
+		var style = {};
+		style.css = inlineCSS;
+
+		$scope.addNewStyle( styleset, style );
+	}
+
+	$scope.saveAsBlockStyle = function( styleset, style ) {
+		var activeCSS = getStyleCSS();
+		var newStyle = angular.copy( style );
+		newStyle.css = activeCSS;
+
+		$scope.addNewStyle( styleset, newStyle );
+	}
+
+	$scope.overrideStyle = function( style ) {
+		var activeCSS = getStyleCSS();
+
+		var newStyle = angular.copy( style );
+		newStyle.css = activeCSS;
+
+		$scope.updateStyle( newStyle );
 	}
 
 	$scope.insertOptionChoosen = function(insertoption) {
@@ -539,7 +646,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				var elements = elementPath.elements;
 				var isSet = false;
 				var stylesets = $scope.stylesets;
-				var selectedStyle = '';
+				var selectedStyle = {};
+				$scope.copyCSS = false;
 
 				// For each element into the elements path.
 				for ( var i = 0, count = elements.length, element; i < count; i++ ) {
@@ -582,7 +690,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 							}
 						}
 					}
+				}
 
+				//logic for copying styles when css has been changed
+				if ( elements.length > 0 ) {
+					var element = elements[0];
+
+					if ( element.hasAttribute( 'style' ) || element.is( 'em' ) || element.is('strong') || element.is('u') ||
+						 element.is('s') ) {
+						$scope.copyCSS = true;
+					}
 				}
 
 				//if selected style was not set, remove active selection

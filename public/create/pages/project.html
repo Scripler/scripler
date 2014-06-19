@@ -83,17 +83,27 @@
 							</div>
 
 							<ul ng-hide="visible" class="typo-children">
-								<li ng-repeat="style in styleset.styles" ng-click="x=!x" ng-hide="style.archived" ng-selected="selectedStyle.name === style.name && selectedStyle._id === style._id">
+								<li ng-repeat="style in styleset.styles" ng-click="x=!x" ng-hide="style.archived" ng-selected="selectedStyle._id === style._id">
 									<a class="style-options-show" ng-click="showStyleOptions = true">
 										<div class="arrow"></div>
 									</a>
 
 									<span class="style-isblock" ng-bind="isBlock(style)"></span>
 
-									<span ng-style="style.css" ng-hide="editingStyleName" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
+									<div class="style-height">
+										<span ng-style="style.css" ng-hide="editingStyleName" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
+									</div>
+
+									<div class="style-copy-options" ng-show="copyCSS && selectedStyle._id === style._id">
+										<ul>
+											<li><a ng-click="saveAsCharStyle(styleset)">save as character style</a></li>
+											<li><a ng-click="saveAsBlockStyle(styleset, style)">save as block style</a></li>
+											<li><a ng-click="overrideStyle(style)">override style</a></li>
+										</ul>
+									</div>
 
 									<form ng-show="editingStyleName">
-										<textarea id="renameStyle" rows="1" ng-model="style.name" focus-on="!!editingStyleName" on-enter="editingStyleName = false; renameStyle(style);"></textarea>
+										<textarea id="renameStyle" rows="1" ng-model="style.name" focus-on="!!editingStyleName" on-enter="editingStyleName = false; updateStyle(style);"></textarea>
 									</form>
 
 									<div class="style-options" ng-show="showStyleOptions">

@@ -197,7 +197,7 @@
 [selected] {
 	background-color: #000 !important;
 }
-[selected] a, [selected] span {
+[selected] a, [selected] span, [selected] ul, [selected] .style-copy-options li {
 	background-color: #000 !important;
 	color: #fff265 !important;
 }
@@ -395,8 +395,6 @@ li.typo p {
 	background-color: #D6D6D6;
 	border-top: 2px solid #fff265;
 	padding: 10px 0 10px 10px;
-	height: 60px;
-	overflow: hidden;
 }
 
 .style.new {
@@ -413,6 +411,24 @@ li.typo p {
 	color: #fff;
 	font-size: 80%;
 }
+.style-height {
+	height: 60px;
+	overflow: hidden;
+	padding: 8px;
+}
+.style-copy-options ul {
+	list-style: none;
+}
+.style-copy-options li {
+	display: block;
+	border: none !important;
+	padding: 2px 0 2px 0;
+	text-decoration: underline;
+}
+.style-copy-options li a:hover {
+	color: #fff !important;
+}
+
 .cke_floatingtools {
 	position: fixed;
 	z-index: 1;
