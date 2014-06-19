@@ -99,9 +99,11 @@ exports.copy = function (styleset, next) {
 					}
 				});
 			} else {
+				// TODO: this is not returned to the IT (and other places?)
 				return next("ERROR: styleset must be populated");
 			}
 		} else {
+			// TODO: is this returned to the IT (and other places)?
 			return next("ERROR: invalid argument: must be of type \'object\'");
 		}
 	} else {
