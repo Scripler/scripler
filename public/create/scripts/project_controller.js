@@ -53,7 +53,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
 				$scope.projectDocuments.push( data.document );
-				$scope.applyStylesetToDocument( data.document.defaultStyleset, data.document );
+				$scope.openProjectDocument( data.document );
+				$scope.applyDefaultStyleset();
 				console.log(data);
 			});
 		}
@@ -141,7 +142,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$http.post('/document', angular.toJson( document ) )
 				.success( function( data ) {
 					$scope.projectDocuments.push( data.document );
-					$scope.applyStylesetToDocument( data.document.defaultStyleset, data.document );
+					$scope.openProjectDocument( data.document );
 				})
 		} else {
 			document._id = Date.now();
@@ -255,17 +256,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.applyDefaultStyleset = function() {
-		var promise = $scope.openStylesets( $scope.documentSelected );
-
-		promise.then( function() {
-			for ( var i = 0; i < $scope.stylesets.length; i++ ) {
-				if ( $scope.documentSelected.defaultStyleset === $scope.stylesets[i]._id ) {
-					$scope.defaultStyleset = $scope.stylesets[i];
-					$scope.applyStylesetToEditor( $scope.stylesets[i], true );
-					break;
-				}
-			}
-		});
+		$http.get('/styleset/' + $scope.documentSelected.defaultStyleset)
+			.success( function( data ) {
+				$scope.defaultStyleset = data.styleset;
+				$scope.applyStylesetToEditor( data.styleset, true );
+			});
 	}
 
 	$scope.applyStylesetToEditor = function( styleset, isDefault ) {
