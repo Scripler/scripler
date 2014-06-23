@@ -252,7 +252,7 @@ exports.applyStyleset = function (req, res, next) {
 	var defaultStylesetId = req.document.defaultStyleset;
 
 	/*
-	 Only add styleset if it is not already applied to the document, i.e. iff:
+	 Only copy the styleset if it is not already applied to the document, i.e. if:
 	 - The styleset to apply is not the same as the default styleset
 	 AND
 	 (
@@ -264,18 +264,20 @@ exports.applyStyleset = function (req, res, next) {
 	 TODO: could use an IT or two.
 	 */
 	if (stylesetToApply._id != defaultStylesetId && (!documentStylesetIds || documentStylesetIds.length == 0 || documentStylesetIds.indexOf(stylesetToApply._id) < 0)) {
-		req.document.stylesets.addToSet(stylesetToApply);
-		req.document.save(function (err) {
-			if (err) {
-				return next(err);
-			}
-
-			Styleset.findOne({"_id": stylesetToApplyId}).populate('styles').exec(function (err, populatedStyleset) {
+		copyStyleset(stylesetToApply, function(err, copy) {
+			req.document.stylesets.addToSet(copy);
+			req.document.save(function (err) {
 				if (err) {
 					return next(err);
 				}
 
-				res.send({styleset: populatedStyleset});
+				Styleset.findOne({"_id": copy._id}).populate('styles').exec(function (err, populatedCopy) {
+					if (err) {
+						return next(err);
+					}
+
+					res.send({styleset: populatedCopy});
+				});
 			});
 		});
 	} else {

@@ -99,12 +99,10 @@ exports.copy = function (styleset, next) {
 					}
 				});
 			} else {
-				// TODO: this is not returned to the IT (and other places?)
-				return next("ERROR: styleset must be populated");
+				return next({message: "ERROR: styleset must be populated", status: 400});
 			}
 		} else {
-			// TODO: is this returned to the IT (and other places)?
-			return next("ERROR: invalid argument: must be of type \'object\'");
+			return next({message: "ERROR: invalid argument: must be of type \'object\'", status: 400});
 		}
 	} else {
 		return next(null, null);
