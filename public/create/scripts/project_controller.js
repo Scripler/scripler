@@ -576,6 +576,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.updateStyle( newStyle );
 	}
 
+	$scope.setStylesetStyling = function( styleset, style ) {
+		var stylesetCSS = style.css;
+		stylesetCSS[ 'padding' ] = '15px 0 15px 10px';
+		stylesetCSS[ 'font-size' ] = '1.5em';
+		delete stylesetCSS[ 'margin' ];
+		delete stylesetCSS[ 'line-height' ];
+		styleset.css = stylesetCSS;
+	}
+
 	$scope.insertOptionChoosen = function(insertoption) {
 		if ($scope.activeInsertOption === insertoption) {
 			$scope.activeInsertOption = null;
