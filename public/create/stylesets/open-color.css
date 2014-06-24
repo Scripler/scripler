@@ -213,7 +213,7 @@ blockquote {
 	line-height:1.42;
 	color:#FF0600;
 
-	border:0px solid #000000;
+	
 	padding:0em;
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
 
