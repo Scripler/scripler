@@ -231,7 +231,7 @@ blockquote {
 	color:#7F7E7E;
 
 	
-	padding:0em;
+	
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
 
 	margin:1.5em 30% 1.5em 20%;
