@@ -2,6 +2,148 @@
   NON-EDITABLE CSS
 */
 
+/*FONTS*/
+/*font-family should always be named with the full name of the font, to avoid confusion. Weight is given like this:
+100 = thin
+200 = extra-light
+300 = light
+400 = normal, book
+500 = medium
+600 = demi-bold
+700 = bold
+800 = heavy
+900 = black*/
+
+/*SOURCE SANS PRO*/
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:normal;
+	font-weight:200;
+	src : url("Fonts/sourcesansproextralight.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:italic;
+	font-weight:200;
+	src : url("Fonts/sourcesansproextralightitalic.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:normal;
+	font-weight:300;
+	src : url("Fonts/sourcesansprolight.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:italic;
+	font-weight:300;
+	src : url("Fonts/sourcesansprolightitalic.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/sourcesansproregular.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/sourcesansproitalic.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:normal;
+	font-weight:600;
+	src : url("Fonts/sourcesansprosemibold.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:italic;
+	font-weight:600;
+	src : url("Fonts/sourcesansprosemibolditalic.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/sourcesansprobold.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/sourcesansprobolditalic.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:normal;
+	font-weight:900;
+	src : url("Fonts/sourcesansproblack.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:italic;
+	font-weight:900;
+	src : url("Fonts/sourcesansproblackitalic.otf");
+}
+
+/*SOURCE CODE PRO*/
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:200;
+	src : url("Fonts/sourcecodeproextralight.otf");
+}
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:300;
+	src : url("Fonts/sourcecodeprolight.otf");
+}
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/sourcecodeproregular.otf");
+}
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:600;
+	src : url("Fonts/sourcecodeprosemibold.otf");
+}
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/sourcecodeprobold.otf");
+}
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:900;
+	src : url("Fonts/sourcecodeproblack.otf");
+}
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
