@@ -339,6 +339,7 @@ ol {
 	-moz-hyphens: auto;
 	-webkit-hyphens: auto;
 }
+
 ul {
 	list-style:disc;
 	font-family: "Crimson", serif;
@@ -362,7 +363,6 @@ img {
 }
 
 /*Insert: Table*/
-
 
 th {
 	font-family: "Crimson", serif;

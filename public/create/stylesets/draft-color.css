@@ -134,11 +134,7 @@ blockquote {
 	font-size:1.4em;
 	line-height:1.42;
 	color:#2E2E8A;
-
-	
-	
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
-
 	margin:1.5em 30% 1.5em 10%;
 	page-break-inside:avoid;
 }
@@ -160,7 +156,6 @@ a {
 
 a:link { color: #2E2E8A; text-decoration:underline; }
 a:visited { color: #2E2E8A; text-decoration:underline; }
-
 a:hover { color: #2E2E8A; text-decoration:underline; }
 a:active { color: #2E2E8A; text-decoration:underline; }
 
@@ -228,7 +223,6 @@ figcaption {
 	font-weight: 700;
 	line-height:1.42;
 	color:#000000;
-
 }
 
 /*Name: Colophon*/
@@ -237,8 +231,6 @@ figcaption {
 	text-indent:0;
 	text-align:right;
 }
-
-
 
 /*INSERT ELEMENTS*/
 
@@ -292,7 +284,6 @@ th {
 	border: 3px solid #2E2E8A;
 	padding: .5em;
 }
-
 
 td {
 	font-family: "Courier Prime", Courier, monospace;

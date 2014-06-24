@@ -337,8 +337,6 @@ figcaption {
 	text-align:right;
 }
 
-
-
 /*INSERT ELEMENTS*/
 
 /*Insert: List*/
@@ -355,6 +353,7 @@ ol {
 	-moz-hyphens: auto;
 	-webkit-hyphens: auto;
 }
+
 ul {
 	list-style:square;
 	font-family: "Source Sans Pro", sans-serif;
@@ -378,7 +377,6 @@ img {
 }
 
 /*Insert: Table*/
-
 
 th {
 	font-family: "Source Sans Pro", sans-serif;
