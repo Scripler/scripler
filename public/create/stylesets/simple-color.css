@@ -234,7 +234,7 @@ blockquote {
 	font-size:1.3em;
 	line-height:1.42;
 	color:#000000;
-/*Border-shorthand is WIDTH STYLE COLOR*/
+
 	border:3px solid #0000ff;
 	padding:1em;
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/

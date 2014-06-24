@@ -18,28 +18,28 @@
 	font-family:"Courier Prime";
 	font-style:normal;
 	font-weight:400;
-	src : url("../Fonts/courierprime.ttf");
+	src : url("/Fonts/courierprime.ttf");
 }
 
 @font-face {
 	font-family: "Courier Prime";
 	font-style:italic;
 	font-weight:400;
-	src : url("../Fonts/courierprimeitalic.ttf");
+	src : url("/Fonts/courierprimeitalic.ttf");
 }
 
 @font-face {
 	font-family: "Courier Prime";
 	font-style:normal;
 	font-weight:700;
-	src : url("../Fonts/courierprimebold.ttf");
+	src : url("/Fonts/courierprimebold.ttf");
 }
 
 @font-face {
 	font-family: "Courier Prime";
 	font-style:italic;
 	font-weight:700;
-	src : url("../Fonts/courierprimebolditalic.ttf");
+	src : url("/Fonts/courierprimebolditalic.ttf");
 }
 
 /*STYLES*/
@@ -134,11 +134,11 @@ blockquote {
 	font-size:1.4em;
 	line-height:1.42;
 	color:#2E2E8A;
-/*Border-shorthand is WIDTH STYLE COLOR*/
+
 	border:0px solid #000000;
 	padding:0em;
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
-/*Here margin-top is defined as 1.2em instead of 1.5em - it is an approximation of <p> 1em (or rem)*/
+
 	margin:1.5em 30% 1.5em 10%;
 	page-break-inside:avoid;
 }
@@ -160,7 +160,7 @@ a {
 
 a:link { color: #2E2E8A; text-decoration:underline; }
 a:visited { color: #2E2E8A; text-decoration:underline; }
-/*I think for templates the disappearing link is asking for trouble :)*/
+
 a:hover { color: #2E2E8A; text-decoration:underline; }
 a:active { color: #2E2E8A; text-decoration:underline; }
 
