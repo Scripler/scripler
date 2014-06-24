@@ -254,7 +254,7 @@ a:active { color: #000000; text-decoration:none; }
 	text-indent:0;
 	color:#ffffff;
 	background:#000000;
-	margin:1.5em 0 0em 40%;
+	margin:1.5em 0 0 40%;
 	padding:1em;
 }
 
@@ -276,7 +276,7 @@ figcaption {
 	font-weight:400;
 	font-size:.9em;
 	line-height:1.64;
-	margin:.3em 0em 0em 0em;
+	margin:.3em 0 0 0;
 }*/
 
 /*Name: Author*/

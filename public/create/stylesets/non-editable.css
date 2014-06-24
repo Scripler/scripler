@@ -72,7 +72,7 @@ figure {
 }
 /*Epub2-fallback css*/
 /*div.figure {
-	margin: 1em 0em;
+	margin: 1em 0;
 	page-break-inside:avoid;
 }*/
 
@@ -94,7 +94,7 @@ p + p {
 
 /*This removes first line indent from paragraphs that comes after empty paragraphs*/
 p.empty-paragraph + p {
-	text-indent: 0em;
+	text-indent: 0;
 }
 
 /*When empty paragraphs are added, the should not have margin-top, since they are themselves acting as a sort of margin-top with their emptyness. The line-height is then specified to have the same height as the same removed margin-top.*/

@@ -174,7 +174,7 @@ a:active { color: #2E2E8A; text-decoration:underline; }
 	text-indent:0;
 	color:#ffffff;
 	background:#2E2E8A;
-	margin:1.5em 40% 0em 0em;
+	margin:1.5em 40% 0 0;
 	padding:1em;
 }
 
@@ -196,7 +196,7 @@ figcaption {
 	font-weight:400;
 	font-size:.9em;
 	line-height:1.64;
-	margin:.3em 0em 0em 0em;
+	margin:.3em 0 0 0;
 }*/
 
 /*Name: Author*/
