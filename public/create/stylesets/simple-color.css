@@ -210,7 +210,7 @@ h6 {
 }
 
 
-/*Name: Paragraph*/
+/*Name: Body text*/
 p {
 	font-family: "Source Sans Pro", sans-serif;
 	font-style:normal;
@@ -378,7 +378,7 @@ img {
 
 /*Insert: Table*/
 
-/*Name: Table heading*/
+
 th {
 	font-family: "Source Sans Pro", sans-serif;
 	font-style:normal;
@@ -391,7 +391,7 @@ th {
 	padding: .5em;
 }
 
-/*Name: Table cells*/
+
 td {
 	font-family: "Source Sans Pro", sans-serif;
 	font-style:normal;

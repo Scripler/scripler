@@ -188,7 +188,7 @@ h6 {
 }
 
 
-/*Name: Paragraph*/
+/*Name: Body text*/
 p {
 	font-family: "Open Sans", sans-serif;
 	font-style:normal;
@@ -359,7 +359,7 @@ img {
 
 /*Insert: Table*/
 
-/*Name: Table heading*/
+
 th {
 	font-family: "Open Sans", sans-serif;
 	font-style:normal;
@@ -372,7 +372,7 @@ th {
 	padding: .5em;
 }
 
-/*Name: Table cells*/
+
 td {
 	font-family: "Open Sans", sans-serif;
 	font-style:normal;

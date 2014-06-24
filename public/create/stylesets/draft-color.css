@@ -110,7 +110,7 @@ h6 {
 }
 
 
-/*Name: Paragraph*/
+/*Name: Body text*/
 p {
 	font-family: "Courier Prime", Courier, monospace;
 	font-style:normal;
@@ -280,7 +280,7 @@ img {
 
 /*Insert: Table*/
 
-/*Name: Table heading*/
+
 th {
 	font-family: "Courier Prime", Courier, monospace;
 	font-style:normal;
@@ -293,7 +293,7 @@ th {
 	padding: .5em;
 }
 
-/*Name: Table cells*/
+
 td {
 	font-family: "Courier Prime", Courier, monospace;
 	font-style:normal;
