@@ -18,42 +18,42 @@
 	font-family:"Source Code Pro";
 	font-style:normal;
 	font-weight:200;
-	src : url("/Fonts/sourcecodeproextralight.otf");
+	src : url("Fonts/sourcecodeproextralight.otf");
 }
 
 @font-face {
 	font-family:"Source Code Pro";
 	font-style:normal;
 	font-weight:300;
-	src : url("/Fonts/sourcecodeprolight.otf");
+	src : url("Fonts/sourcecodeprolight.otf");
 }
 
 @font-face {
 	font-family:"Source Code Pro";
 	font-style:normal;
 	font-weight:400;
-	src : url("/Fonts/sourcecodeproregular.otf");
+	src : url("Fonts/sourcecodeproregular.otf");
 }
 
 @font-face {
 	font-family:"Source Code Pro";
 	font-style:normal;
 	font-weight:600;
-	src : url("/Fonts/sourcecodeprosemibold.otf");
+	src : url("Fonts/sourcecodeprosemibold.otf");
 }
 
 @font-face {
 	font-family:"Source Code Pro";
 	font-style:normal;
 	font-weight:700;
-	src : url("/Fonts/sourcecodeprobold.otf");
+	src : url("Fonts/sourcecodeprobold.otf");
 }
 
 @font-face {
 	font-family:"Source Code Pro";
 	font-style:normal;
 	font-weight:900;
-	src : url("/Fonts/sourcecodeproblack.otf");
+	src : url("Fonts/sourcecodeproblack.otf");
 }
 
 /*CRIMSON*/
@@ -62,42 +62,42 @@
 	font-family:"Crimson";
 	font-style:normal;
 	font-weight:400;
-	src : url("/Fonts/crimsonregular.ttf");
+	src : url("Fonts/crimsonregular.ttf");
 }
 
 @font-face {
 	font-family: "Crimson";
 	font-style:italic;
 	font-weight:400;
-	src : url("/Fonts/crimsonitalic.ttf");
+	src : url("Fonts/crimsonitalic.ttf");
 }
 
 @font-face {
 	font-family: "Crimson";
 	font-style:normal;
 	font-weight:600;
-	src : url("/Fonts/crimsonsemibold.ttf");
+	src : url("Fonts/crimsonsemibold.ttf");
 }
 
 @font-face {
 	font-family: "Crimson";
 	font-style:italic;
 	font-weight:600;
-	src : url("/Fonts/crimsonsemibolditalic.ttf");
+	src : url("Fonts/crimsonsemibolditalic.ttf");
 }
 
 @font-face {
 	font-family: "Crimson";
 	font-style:normal;
 	font-weight:700;
-	src : url("/Fonts/crimsonbold.ttf");
+	src : url("Fonts/crimsonbold.ttf");
 }
 
 @font-face {
 	font-family: "Crimson";
 	font-style:italic;
 	font-weight:700;
-	src : url("/Fonts/crimsonbolditalic.ttf");
+	src : url("Fonts/crimsonbolditalic.ttf");
 }
 
 /*AUTOUR ONE*/
@@ -106,7 +106,7 @@
 	font-family: "Autour One";
 	font-style:normal;
 	font-weight:400;
-	src : url("/Fonts/autouroneregular.ttf");
+	src : url("Fonts/autouroneregular.ttf");
 }
 
 /*STYLES*/

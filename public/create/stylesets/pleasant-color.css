@@ -18,7 +18,7 @@
 	font-family:"Gabriela";
 	font-style:normal;
 	font-weight:400;
-	src : url("/Fonts/gabrielaregular.ttf");
+	src : url("Fonts/gabrielaregular.ttf");
 }
 
 /*SOURCE SANS PRO*/
@@ -27,84 +27,84 @@
 	font-family:"Source Sans Pro";
 	font-style:normal;
 	font-weight:200;
-	src : url("/Fonts/sourcesansproextralight.otf");
+	src : url("Fonts/sourcesansproextralight.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:italic;
 	font-weight:200;
-	src : url("/Fonts/sourcesansproextralightitalic.otf");
+	src : url("Fonts/sourcesansproextralightitalic.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:normal;
 	font-weight:300;
-	src : url("/Fonts/sourcesansprolight.otf");
+	src : url("Fonts/sourcesansprolight.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:italic;
 	font-weight:300;
-	src : url("/Fonts/sourcesansprolightitalic.otf");
+	src : url("Fonts/sourcesansprolightitalic.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:normal;
 	font-weight:400;
-	src : url("/Fonts/sourcesansproregular.otf");
+	src : url("Fonts/sourcesansproregular.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:italic;
 	font-weight:400;
-	src : url("/Fonts/sourcesansproitalic.otf");
+	src : url("Fonts/sourcesansproitalic.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:normal;
 	font-weight:600;
-	src : url("/Fonts/sourcesansprosemibold.otf");
+	src : url("Fonts/sourcesansprosemibold.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:italic;
 	font-weight:600;
-	src : url("/Fonts/sourcesansprosemibolditalic.otf");
+	src : url("Fonts/sourcesansprosemibolditalic.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:normal;
 	font-weight:700;
-	src : url("/Fonts/sourcesansprobold.otf");
+	src : url("Fonts/sourcesansprobold.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:italic;
 	font-weight:700;
-	src : url("/Fonts/sourcesansprobolditalic.otf");
+	src : url("Fonts/sourcesansprobolditalic.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:normal;
 	font-weight:900;
-	src : url("/Fonts/sourcesansproblack.otf");
+	src : url("Fonts/sourcesansproblack.otf");
 }
 
 @font-face {
 	font-family:"Source Sans Pro";
 	font-style:italic;
 	font-weight:900;
-	src : url("/Fonts/sourcesansproblackitalic.otf");
+	src : url("Fonts/sourcesansproblackitalic.otf");
 }
 
 /*UBUNTU MONO*/
@@ -113,28 +113,28 @@
 	font-family:"Ubuntu Mono";
 	font-style:normal;
 	font-weight:400;
-	src : url("/Fonts/ubuntumonoregular.ttf");
+	src : url("Fonts/ubuntumonoregular.ttf");
 }
 
 @font-face {
 	font-family:"Ubuntu Mono";
 	font-style:italic;
 	font-weight:400;
-	src : url("/Fonts/ubuntumonoregularitalic.ttf");
+	src : url("Fonts/ubuntumonoregularitalic.ttf");
 }
 
 @font-face {
 	font-family:"Ubuntu Mono";
 	font-style:normal;
 	font-weight:700;
-	src : url("/Fonts/ubuntumonobold.ttf");
+	src : url("Fonts/ubuntumonobold.ttf");
 }
 
 @font-face {
 	font-family:"Ubuntu Mono";
 	font-style:italic;
 	font-weight:700;
-	src : url("/Fonts/ubuntumonobolditalic.ttf");
+	src : url("Fonts/ubuntumonobolditalic.ttf");
 }
 
 /*STYLES*/
@@ -229,11 +229,7 @@ blockquote {
 	font-size:1.3em;
 	line-height:1.42;
 	color:#1A0C96;
-
-	
-	
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
-
 	margin:1.5em 30% 1.5em 20%;
 	page-break-inside:avoid;
 }
@@ -256,7 +252,6 @@ a {
 
 a:link { color: #1A0C96; text-decoration:underline; }
 a:visited { color: #1A0C96; text-decoration:underline; }
-
 a:hover { color: #1A0C96; text-decoration:underline; }
 a:active { color: #ffffff; text-decoration:none; }
 
@@ -273,7 +268,6 @@ a:active { color: #ffffff; text-decoration:none; }
 	margin:1.5em 30% 0 20%;
 	padding:1em;
 }
-
 
 /*Name: Caption*/
 figcaption {
@@ -325,7 +319,6 @@ figcaption {
 	font-weight: 600;
 	line-height:1.42;
 	color:#000000;
-
 }
 
 /*Name: Colophon*/
@@ -334,8 +327,6 @@ figcaption {
 	text-indent:0;
 	text-align:right;
 }
-
-
 
 /*INSERT ELEMENTS*/
 
@@ -377,7 +368,6 @@ img {
 
 /*Insert: Table*/
 
-
 th {
 	font-family: "Source Sans Pro", sans-serif;
 	font-style:normal;
@@ -389,7 +379,6 @@ th {
 	border: 2px solid #33CCFF;
 	padding: .5em;
 }
-
 
 td {
 	font-family: "Source Sans Pro", sans-serif;

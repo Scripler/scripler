@@ -18,42 +18,42 @@
 	font-family:"Source Code Pro";
 	font-style:normal;
 	font-weight:200;
-	src : url("/Fonts/sourcecodeproextralight.otf");
+	src : url("Fonts/sourcecodeproextralight.otf");
 }
 
 @font-face {
 	font-family:"Source Code Pro";
 	font-style:normal;
 	font-weight:300;
-	src : url("/Fonts/sourcecodeprolight.otf");
+	src : url("Fonts/sourcecodeprolight.otf");
 }
 
 @font-face {
 	font-family:"Source Code Pro";
 	font-style:normal;
 	font-weight:400;
-	src : url("/Fonts/sourcecodeproregular.otf");
+	src : url("Fonts/sourcecodeproregular.otf");
 }
 
 @font-face {
 	font-family:"Source Code Pro";
 	font-style:normal;
 	font-weight:600;
-	src : url("/Fonts/sourcecodeprosemibold.otf");
+	src : url("Fonts/sourcecodeprosemibold.otf");
 }
 
 @font-face {
 	font-family:"Source Code Pro";
 	font-style:normal;
 	font-weight:700;
-	src : url("/Fonts/sourcecodeprobold.otf");
+	src : url("Fonts/sourcecodeprobold.otf");
 }
 
 @font-face {
 	font-family:"Source Code Pro";
 	font-style:normal;
 	font-weight:900;
-	src : url("/Fonts/sourcecodeproblack.otf");
+	src : url("Fonts/sourcecodeproblack.otf");
 }
 
 /*QUICKSAND*/
@@ -62,49 +62,49 @@
 	font-family:"Quicksand";
 	font-style:normal;
 	font-weight:200;
-	src : url("/Fonts/quicksanddash.otf");
+	src : url("Fonts/quicksanddash.otf");
 }
 
 @font-face {
 	font-family:"Quicksand";
 	font-style:normal;
 	font-weight:300;
-	src : url("/Fonts/quicksandlight.otf");
+	src : url("Fonts/quicksandlight.otf");
 }
 
 @font-face {
 	font-family: "Quicksand";
 	font-style:italic;
 	font-weight:300;
-	src : url("/Fonts/quicksandlightitalic.otf");
+	src : url("Fonts/quicksandlightitalic.otf");
 }
 
 @font-face {
 	font-family:"Quicksand";
 	font-style:normal;
 	font-weight:400;
-	src : url("/Fonts/quicksandbook.otf");
+	src : url("Fonts/quicksandbook.otf");
 }
 
 @font-face {
 	font-family: "Quicksand";
 	font-style:italic;
 	font-weight:400;
-	src : url("/Fonts/quicksandbookitalic.otf");
+	src : url("Fonts/quicksandbookitalic.otf");
 }
 
 @font-face {
 	font-family: "Quicksand";
 	font-style:normal;
 	font-weight:700;
-	src : url("/Fonts/quicksandbold.otf");
+	src : url("Fonts/quicksandbold.otf");
 }
 
 @font-face {
 	font-family: "Quicksand";
 	font-style:italic;
 	font-weight:700;
-	src : url("/Fonts/quicksandbolditalic.otf");
+	src : url("Fonts/quicksandbolditalic.otf");
 }
 
 /*RAMBLA*/
@@ -113,28 +113,28 @@
 	font-family: "Rambla";
 	font-style:normal;
 	font-weight:400;
-	src : url("/Fonts/ramblaregular.ttf");
+	src : url("Fonts/ramblaregular.ttf");
 }
 
 @font-face {
 	font-family: "Rambla";
 	font-style:italic;
 	font-weight:400;
-	src : url("/Fonts/ramblaitalic.ttf");
+	src : url("Fonts/ramblaitalic.ttf");
 }
 
 @font-face {
 	font-family: "Rambla";
 	font-style:normal;
 	font-weight:700;
-	src : url("/Fonts/ramblabold.ttf");
+	src : url("Fonts/ramblabold.ttf");
 }
 
 @font-face {
 	font-family: "Rambla";
 	font-style:italic;
 	font-weight:700;
-	src : url("/Fonts/ramblabolditalic.ttf");
+	src : url("Fonts/ramblabolditalic.ttf");
 }
 
 /*STYLES*/
@@ -229,12 +229,9 @@ blockquote {
 	font-size:1.4em;
 	line-height:1.42;
 	color:#000000;
-
 	background-color: #f6f6f6;
-	
 	padding:1em;
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
-
 	margin:1.5em 30% 1.5em 0%;
 	page-break-inside:avoid;
 }
@@ -244,7 +241,6 @@ q {
 	quotes: "\203A" "\2039" "\2018" "\2019";
 	font-style:italic;
 }
-
 
 /*Name: Hyperlink*/
 a {
@@ -256,10 +252,8 @@ a {
 
 a:link { color: #000000; text-decoration:underline; }
 a:visited { color: #000000; text-decoration:underline; }
-
 a:hover { color: #000000; text-decoration:underline; }
 a:active { color: #000000; text-decoration:none; }
-
 
 /*Name: Code*/
 .code {
@@ -273,7 +267,6 @@ a:active { color: #000000; text-decoration:none; }
 	margin:1.5em 30% 0 0%;
 	padding:1em;
 }
-
 
 /*Name: Caption*/
 figcaption {
@@ -335,8 +328,6 @@ figcaption {
 	text-align:right;
 }
 
-
-
 /*INSERT ELEMENTS*/
 
 /*Insert: List*/
@@ -377,7 +368,6 @@ img {
 
 /*Insert: Table*/
 
-
 th {
 	font-family: "Rambla", sans-serif;
 	font-style:normal;
@@ -389,7 +379,6 @@ th {
 	border: 3px solid #f6f6f6;
 	padding: .5em;
 }
-
 
 td {
 	font-family: "Rambla", sans-serif;
