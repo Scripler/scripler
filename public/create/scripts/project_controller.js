@@ -244,7 +244,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			.success( function( data ) {
 				if ( data.styleset ) {
 					$scope.stylesets[ index ] = data.styleset;
-					$scope.applyStylesetToEditor( data.styleset, false );
+					//$scope.applyStylesetToEditor( data.styleset, false );
 				}
 				deferred.resolve( data.styleset );
 			});
@@ -253,11 +253,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.applyDefaultStyleset = function() {
-		$http.get('/styleset/' + $scope.documentSelected.defaultStyleset)
+		var deferred = $q.defer();
+
+		$http.get('/styleset/' + $scope.documentSelected.defaultStyleset )
 			.success( function( data ) {
 				$scope.defaultStyleset = data.styleset;
-				$scope.applyStylesetToEditor( data.styleset, true );
+				deferred.resolve( data.styleset );
+				//$scope.applyStylesetToEditor( data.styleset, true );
 			});
+
+		return deferred.promise;
 	}
 
 	$scope.applyStylesetToEditor = function( styleset, isDefault ) {
@@ -266,6 +271,33 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		if ( $scope.ckReady ) {
 			$rootScope.ck.document.appendStyleText( $scope.currentStylesetCSS );
+		}
+	}
+
+	$scope.applyStylesetsToEditor = function() {
+		if ( typeof $scope.stylesets == 'undefined' ) {
+			var promise = $scope.openStylesets( $scope.documentSelected );
+
+			promise.then( function() {
+				applyStylesets();
+			});
+		} else {
+			applyStylesets();
+		}
+	}
+
+	var applyStylesets = function() {
+		var combinedCSS = '';
+		for ( var i = 0; i < $scope.stylesets; i++ ) {
+			if ( defaultStyleset._id == $scope.stylesets[i]._id ) {
+				combinedCSS += stylesetUtilsService.getStylesetContents( $scope.stylesets[i], true );
+			} else {
+				combinedCSS += stylesetUtilsService.getStylesetContents( $scope.stylesets[i], false );
+			}
+		}
+
+		if ( combinedCSS != '' ) {
+			$rootScope.ck.document.appendStyleText( combinedCSS );
 		}
 	}
 
@@ -389,8 +421,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			//change document selected text because angular does not detect tag changes
 			$scope.documentSelected.text = $rootScope.CKEDITOR.instances.bodyeditor.getData();
 
-			//apply default styleset for now
-			$scope.applyDefaultStyleset();
+			$scope.applyStylesetsToEditor();
 
 		});
 	}
@@ -605,7 +636,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.$onRootScope('ckDocument:ready', function( event ) {
 		$scope.ckReady = true;
-		$scope.applyDefaultStyleset();
+		$scope.applyStylesetsToEditor();
 	});
 
 	angular.element(document).ready(function () {
