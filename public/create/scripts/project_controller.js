@@ -244,9 +244,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			.success( function( data ) {
 				if ( data.styleset ) {
 					$scope.stylesets[ index ] = data.styleset;
+					deferred.resolve( data.styleset );
 					//$scope.applyStylesetToEditor( data.styleset, false );
 				}
-				deferred.resolve( data.styleset );
 			});
 
 		return deferred.promise;
