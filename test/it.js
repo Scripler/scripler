@@ -557,7 +557,7 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.archived, false);
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
-						assert.equal(res.body.document.defaultStyleset, stylesetId);
+						assert.notEqual(res.body.document.defaultStyleset, stylesetId);
 						rootDocumentId = res.body.document._id;
 						rootDocumentId && done();
 					});
@@ -584,7 +584,7 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.archived, false);
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
-						assert.equal(res.body.document.defaultStyleset, stylesetId);
+						assert.notEqual(res.body.document.defaultStyleset, stylesetId);
 						childDocumentId = res.body.document._id;
 						childDocumentId && done();
 					});
@@ -618,7 +618,7 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
 						assert.equal(res.body.document.type, 'cover');
-						assert.equal(res.body.document.defaultStyleset, stylesetId);
+						assert.notEqual(res.body.document.defaultStyleset, stylesetId);
 						coverDocumentId = res.body.document._id;
 						coverDocumentId && done();
 					});
@@ -652,7 +652,7 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
 						assert.equal(res.body.document.type, 'titlepage');
-						assert.equal(res.body.document.defaultStyleset, stylesetId);
+						assert.notEqual(res.body.document.defaultStyleset, stylesetId);
 						titlePageDocumentId = res.body.document._id;
 						titlePageDocumentId && done();
 					});
@@ -686,7 +686,7 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
 						assert.equal(res.body.document.type, 'toc');
-						assert.equal(res.body.document.defaultStyleset, stylesetId);
+						assert.notEqual(res.body.document.defaultStyleset, stylesetId);
 						tocDocumentId = res.body.document._id;
 						tocDocumentId && done();
 					});
@@ -720,7 +720,7 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.members[0].userId, userId);
 						assert.equal(res.body.document.members[0].access[0], "admin");
 						assert.equal(res.body.document.type, 'colophon');
-						assert.equal(res.body.document.defaultStyleset, stylesetId);
+						assert.notEqual(res.body.document.defaultStyleset, stylesetId);
 						colophonDocumentId = res.body.document._id;
 						colophonDocumentId && done();
 					});
@@ -774,8 +774,6 @@ describe('Scripler RESTful API', function () {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 						assert.equal(res.body.document.defaultStyleset, userStylesetId);
 						assert.equal(res.body.document.text, text);
-						assert.equal(utils.containsModel(res.body.document.stylesets, userStylesetId), false);
-						assert.equal(utils.containsModel(res.body.document.stylesets, stylesetId), true);
 						done();
 					});
 			}),
@@ -789,8 +787,6 @@ describe('Scripler RESTful API', function () {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 						assert.equal(res.body.document.defaultStyleset, userStylesetId);
 						assert.equal(res.body.document.text, text);
-						assert.equal(utils.containsModel(res.body.document.stylesets, userStylesetId), false);
-						assert.equal(utils.containsModel(res.body.document.stylesets, stylesetId), true);
 						done();
 					});
 			}),
@@ -804,8 +800,6 @@ describe('Scripler RESTful API', function () {
 						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 						assert.equal(res.body.document.defaultStyleset, userStylesetId);
 						assert.equal(res.body.document.text, "");
-						assert.equal(utils.containsModel(res.body.document.stylesets, userStylesetId), false);
-						assert.equal(utils.containsModel(res.body.document.stylesets, stylesetId), true);
 						done();
 					});
 			}),
@@ -1270,25 +1264,15 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.document.archived, false);
 					assert.equal(res.body.document.members[0].userId, userId);
 					assert.equal(res.body.document.members[0].access[0], "admin");
-					assert.equal(res.body.document.defaultStyleset, stylesetId2);
+					assert.notEqual(res.body.document.defaultStyleset, stylesetId2);
+					assert.equal(utils.containsModel(res.body.document.stylesets, stylesetId2), false);
+					stylesetCopiedId = res.body.document.defaultStyleset;
+					assert.equal(utils.containsModel(res.body.document.stylesets, stylesetCopiedId), true);
 					stylesetDocumentId = res.body.document._id;
 					stylesetDocumentId && done();
 				});
 		}),
-		it('Applying a(nother) styleset to a document should return a styleset should return a potentially copied styleset - this is tested below', function (done) {
-			request(host)
-				.put('/styleset/' + stylesetId2 + "/document/" + stylesetDocumentId)
-				.set('cookie', cookie)
-				.send({})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					stylesetCopiedId = res.body.styleset._id;
-					assert.equal(res.body.styleset.styles[0].name, "Coolio 2");
-					stylesetCopiedId && done();
-				});
-		}),
-		it('Listing stylesets for a document should return the union of the document\'s stylesets and all user stylesets not already copied to the document', function (done) {
+		it('Listing stylesets for a document should return the union of the document\'s stylesets (including the default) and all user stylesets not already copied to the document', function (done) {
 			request(host)
 				.get('/document/' + stylesetDocumentId + '/stylesets')
 				.set('cookie', cookie)
@@ -1300,8 +1284,6 @@ describe('Scripler RESTful API', function () {
 					assert.equal(utils.containsModel(res.body.stylesets, stylesetCopiedId), true);
 					assert.equal(utils.containsModel(res.body.stylesets, userStylesetId), true);
 					assert.equal(utils.containsModel(res.body.stylesets, stylesetId), true);
-					assert.equal(utils.containsModel(res.body.stylesets, stylesetId2), false);
-					assert.equal(utils.containsModel(res.body.stylesets, systemStylesetId), false);
 					done();
 				});
 		}),

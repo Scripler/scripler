@@ -56,18 +56,31 @@ var create = exports.create = function (req, res, next) {
 		]
 	});
 
-	document.defaultStyleset = project.styleset;
-	document.save(function (err) {
+	Styleset.findOne({"_id": project.styleset}, function (err, populatedStyleset) {
 		if (err) {
 			return next(err);
 		}
 
-		project.documents.addToSet(document);
-		project.save(function (err) {
+		copyStyleset(populatedStyleset, function(err, copy) {
 			if (err) {
 				return next(err);
 			}
-			res.send({document: document});
+
+			document.defaultStyleset = copy;
+			document.stylesets.addToSet(copy);
+			document.save(function (err) {
+				if (err) {
+					return next(err);
+				}
+
+				project.documents.addToSet(document);
+				project.save(function (err) {
+					if (err) {
+						return next(err);
+					}
+					res.send({document: document});
+				});
+			});
 		});
 	});
 }
@@ -87,14 +100,7 @@ exports.update = function (req, res, next) {
 		!utils_shared.mongooseEquals(document.defaultStyleset, req.body.defaultStyleset)) {
 		var newDefaultstyleset = req.body.defaultStyleset;
 		if (newDefaultstyleset) {
-			var oldDefaultstyleset = document.defaultStyleset;
 			document.defaultStyleset = newDefaultstyleset;
-			// Remove any reference of the new defaultStyleset from the array of non-default stylesets.
-			var stylesetIndex = document.stylesets.indexOf(newDefaultstyleset);
-			if (stylesetIndex >= 0) {
-				document.stylesets.slice(stylesetIndex, 1);
-			}
-			document.stylesets.addToSet(oldDefaultstyleset);
 		} else {
 			return next({message: "Document can not have defaultStyleset set to null!", status: 400});
 		}
@@ -259,10 +265,6 @@ exports.applyStyleset = function (req, res, next) {
 	 */
 	if (stylesetToApply._id != defaultStylesetId && (!documentStylesetIds || documentStylesetIds.length == 0 || documentStylesetIds.indexOf(stylesetToApply._id) < 0)) {
 		copyStyleset(stylesetToApply, function(err, copy) {
-			if (err) {
-				return next(err);
-			}
-
 			req.document.stylesets.addToSet(copy);
 			req.document.save(function (err) {
 				if (err) {
@@ -288,15 +290,21 @@ exports.listStylesets = function (req, res, next) {
 	var userStylesetIds = req.user.stylesets;
 	var resultStylesets = documentStylesets.slice(0);
 
+	//console.log('resultStylesets: ' + resultStylesets);
+	//console.log('documentStylesets: ' + documentStylesets);
+
 	// Get user stylesets
 	Styleset.find({"_id": {$in: userStylesetIds}}).exec(function (err, userStylesets) {
 		if (err) {
 			return next(err);
 		}
 
+		//console.log('userStylesets: ' + userStylesets);
+
 		for (var i=0; i<userStylesets.length; i++) {
 			var userStyleset = userStylesets[i];
 			if (!utils.containsOriginal(documentStylesets, userStyleset)) {
+				//console.log('Adding user styleset...' + userStyleset);
 				resultStylesets.push(userStyleset._id);
 			}
 		}

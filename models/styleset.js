@@ -99,10 +99,10 @@ exports.copy = function (styleset, next) {
 					}
 				});
 			} else {
-				return next("ERROR: styleset must be populated");
+				return next({message: "ERROR: styleset must be populated", status: 400});
 			}
 		} else {
-			return next("ERROR: invalid argument: must be of type \'object\'");
+			return next({message: "ERROR: invalid argument: must be of type \'object\'", status: 400});
 		}
 	} else {
 		return next(null, null);
