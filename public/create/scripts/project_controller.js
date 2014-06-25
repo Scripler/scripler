@@ -236,18 +236,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 	}
 
-	$scope.applyStylesetToDocument = function( stylesetId, document ) {
+	$scope.applyStylesetToDocument = function( styleset, document ) {
 		var deferred = $q.defer();
+		var index = $scope.stylesets.indexOf( styleset );
 
-		$http.put('/styleset/' + stylesetId + '/document/' + document._id)
+		$http.put('/styleset/' + styleset._id + '/document/' + document._id)
 			.success( function( data ) {
 				if ( data.styleset ) {
-					if ( data.styleset._id !== stylesetId ) {
-						document.defaultStyleset = data.styleset._id;
-						$scope.documentSelected = document;
-						$scope.openProjectDocument( document );
-						$scope.applyStylesetToEditor( data.styleset, true );
-					}
+					$scope.stylesets[ index ] = data.styleset;
+					$scope.applyStylesetToEditor( data.styleset, false );
 				}
 				deferred.resolve( data.styleset );
 			});
@@ -275,10 +272,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.applyStyle = function( styleset, style ) {
 		var styleIndex = styleset.styles.indexOf( style );
 
-		var promise = $scope.applyStylesetToDocument( styleset._id, $scope.documentSelected );
+		var promise = $scope.applyStylesetToDocument( styleset, $scope.documentSelected );
 		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
 
 		promise.then( function( styleset ) {
+			//when applying styleset to document, the styles get copied to new (document) styleset
+			if ( style._id != styleset.styles[styleIndex]._id ) style = styleset.styles[styleIndex];
+
 			var selection = $rootScope.ck.getSelection();
 			var selectionLength = selection.getSelectedText().length;
 			var tag = selection.getStartElement().getName();
@@ -457,6 +457,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		newStyle.name = 'Style ' + number;
 		newStyle.stylesetId = styleset._id;
+
+		if ( typeof newStyle.css == 'undefined' ) {
+			newStyle.css = { 'color' : '#ffff00' };
+		}
 
 		$http.post('/style', angular.toJson( newStyle ) )
 			.success( function( data ) {
