@@ -466,15 +466,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$scope.updateStyle( style );
 
 				styleset.styles.push( style );
-				console.log(style);
-
-				//if ( $scope.defaultStyleset._id == style.stylesetId ) {
-				//TODO make work with non-default styleset
-				//$scope.applyStylesetToEditor( styleset, true );
-				//} else {
-				//	$scope.applyStylesetToEditor( styleset, false );
-				//}
-
 			});
 	}
 
@@ -714,8 +705,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				if ( !$scope.$$phase ) {
 					$scope.$apply(function() {
 						$scope.selectedStyle = selectedStyle;
+						var elm = document.getElementById( selectedStyle._id );
+						if ( elm ) {
+							elm.scrollIntoView();
+						}
+
 					});
 				}
+
 			}
 
 		}, this );
