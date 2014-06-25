@@ -48,6 +48,7 @@ h1 {
 	font-family: "Courier Prime", Courier, monospace;
 	font-style:normal;
 	font-weight:700;
+
 	font-size:3.5em;
 	line-height:1.35;
 	color:#2E2E8A;
@@ -135,7 +136,7 @@ blockquote {
 	line-height:1.42;
 	color:#2E2E8A;
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
-	margin:1.5em 30% 1.5em 10%;
+margin:1.5em 15% 1.5em 10%;
 	page-break-inside:avoid;
 }
 
@@ -169,7 +170,11 @@ a:active { color: #2E2E8A; text-decoration:underline; }
 	text-indent:0;
 	color:#ffffff;
 	background:#2E2E8A;
+<<<<<<< HEAD
 	margin:1.5em 40% 0 0;
+=======
+	margin:1.5em 15% 0em 0em;
+>>>>>>> cc46bd0afd95664d333f2311b27e8063ec3201f6
 	padding:1em;
 }
 
@@ -182,7 +187,7 @@ figcaption {
 	font-size:0.7em;
 	line-height:1.64;
 	color:#000000;
-	margin:1em 20% 0 0;
+	margin:1em 15% 0 0;
 }
 /*Epub2-fallback css*/
 /*p.figcaption {
@@ -223,6 +228,7 @@ figcaption {
 	font-weight: 700;
 	line-height:1.42;
 	color:#000000;
+
 }
 
 /*Name: Colophon*/
@@ -231,6 +237,8 @@ figcaption {
 	text-indent:0;
 	text-align:right;
 }
+
+
 
 /*INSERT ELEMENTS*/
 
@@ -264,8 +272,8 @@ ul {
 
 /*Insert: Image*/
 img {
-	width: 80%;
-	margin:0 20% 0 0;
+	width: 85%;
+	margin:0 15% 0 0;
 	height: auto;
 	page-break-inside:avoid;
 }
@@ -285,6 +293,7 @@ th {
 	padding: .5em;
 }
 
+
 td {
 	font-family: "Courier Prime", Courier, monospace;
 	font-style:normal;
@@ -301,7 +310,7 @@ table {
 	table-layout: auto;
 	border-collapse: collapse;
 	border-spacing: 0;
-	margin:0 20% 0 0;
+	margin:0 15% 0 0;
 /*Already in figure:
 	page-break-inside:avoid;*/
 }
