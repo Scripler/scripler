@@ -137,3 +137,556 @@ p.toc-item + p.toc-item {
 .right {
 	text-align:right;
 }
+
+/*FONTS*/
+
+/*AUTOUR ONE*/
+
+@font-face {
+	font-family: "Autour One";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/autouroneregular.ttf");
+}
+
+/*COURIER PRIME*/
+
+@font-face {
+	font-family:"Courier Prime";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/courierprime.ttf");
+}
+
+@font-face {
+	font-family: "Courier Prime";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/courierprimeitalic.ttf");
+}
+
+@font-face {
+	font-family: "Courier Prime";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/courierprimebold.ttf");
+}
+
+@font-face {
+	font-family: "Courier Prime";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/courierprimebolditalic.ttf");
+}
+
+/*CRIMSON*/
+
+@font-face {
+	font-family:"Crimson";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/crimsonregular.ttf");
+}
+
+@font-face {
+	font-family: "Crimson";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/crimsonitalic.ttf");
+}
+
+@font-face {
+	font-family: "Crimson";
+	font-style:normal;
+	font-weight:600;
+	src : url("Fonts/crimsonsemibold.ttf");
+}
+
+@font-face {
+	font-family: "Crimson";
+	font-style:italic;
+	font-weight:600;
+	src : url("Fonts/crimsonsemibolditalic.ttf");
+}
+
+@font-face {
+	font-family: "Crimson";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/crimsonbold.ttf");
+}
+
+@font-face {
+	font-family: "Crimson";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/crimsonbolditalic.ttf");
+}
+
+/*DEJA-VU SANS MONO*/
+
+@font-face {
+	font-family: "Deja Vu Mono";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/dejavusansmono.ttf");
+}
+
+@font-face {
+	font-family: "Deja Vu Mono";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/dejavusansmonoitalic.ttf");
+}
+
+@font-face {
+	font-family: "Deja Vu Mono";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/dejavusansmonobold.ttf");
+}
+
+@font-face {
+	font-family: "Deja Vu Mono";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/dejavusansmonobolditalic.ttf");
+}
+
+/*GABRIELA*/
+
+@font-face {
+	font-family:"Gabriela";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/gabrielaregular.ttf");
+}
+
+/*JUNICODE*/
+
+@font-face {
+	font-family:"Junicode";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/junicode.ttf");
+}
+
+@font-face {
+	font-family: "Junicode";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/junicodeitalic.ttf");
+}
+
+@font-face {
+	font-family: "Junicode";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/junicodebold.ttf");
+}
+
+@font-face {
+	font-family: "Junicode";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/junicodebolditalic.ttf");
+}
+
+/*OPEN SANS*/
+
+@font-face {
+	font-family: "Open Sans";
+	font-style:normal;
+	font-weight:300;
+	src : url("Fonts/opensanslight.ttf");
+}
+
+@font-face {
+	font-family: "Open Sans";
+	font-style:italic;
+	font-weight:300;
+	src : url("Fonts/opensanslightitalic.ttf");
+}
+
+@font-face {
+	font-family: "Open Sans";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/opensansregular.ttf");
+}
+
+@font-face {
+	font-family: "Open Sans";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/opensansitalic.ttf");
+}
+
+@font-face {
+	font-family: "Open Sans";
+	font-style:normal;
+	font-weight:600;
+	src : url("Fonts/opensanssemibold.ttf");
+}
+
+@font-face {
+	font-family: "Open Sans";
+	font-style:italic;
+	font-weight:600;
+	src : url("Fonts/opensanssemibolditalic.ttf");
+}
+
+@font-face {
+	font-family: "Open Sans";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/opensansbold.ttf");
+}
+
+@font-face {
+	font-family: "Open Sans";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/opensansbolditalic.ttf");
+}
+
+@font-face {
+	font-family: "Open Sans";
+	font-style:normal;
+	font-weight:800;
+	src : url("Fonts/opensansextrabold.ttf");
+}
+
+@font-face {
+	font-family: "Open Sans";
+	font-style:italic;
+	font-weight:800;
+	src : url("Fonts/opensansextrabolditalic.ttf");
+}
+
+/*QUICKSAND*/
+
+@font-face {
+	font-family:"Quicksand";
+	font-style:normal;
+	font-weight:200;
+	src : url("Fonts/quicksanddash.otf");
+}
+
+@font-face {
+	font-family:"Quicksand";
+	font-style:normal;
+	font-weight:300;
+	src : url("Fonts/quicksandlight.otf");
+}
+
+@font-face {
+	font-family: "Quicksand";
+	font-style:italic;
+	font-weight:300;
+	src : url("Fonts/quicksandlightitalic.otf");
+}
+
+@font-face {
+	font-family:"Quicksand";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/quicksandbook.otf");
+}
+
+@font-face {
+	font-family: "Quicksand";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/quicksandbookitalic.otf");
+}
+
+@font-face {
+	font-family: "Quicksand";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/quicksandbold.otf");
+}
+
+@font-face {
+	font-family: "Quicksand";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/quicksandbolditalic.otf");
+}
+
+/*RAMBLA*/
+
+@font-face {
+	font-family: "Rambla";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/ramblaregular.ttf");
+}
+
+@font-face {
+	font-family: "Rambla";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/ramblaitalic.ttf");
+}
+
+@font-face {
+	font-family: "Rambla";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/ramblabold.ttf");
+}
+
+@font-face {
+	font-family: "Rambla";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/ramblabolditalic.ttf");
+}
+
+/*ROBOTO*/
+
+@font-face {
+	font-family: "Roboto";
+	font-style:normal;
+	font-weight:100;
+	src : url("Fonts/robotothin.ttf");
+}
+
+@font-face {
+	font-family: "Roboto";
+	font-style:italic;
+	font-weight:100;
+	src : url("Fonts/robotothinitalic.ttf");
+}
+
+@font-face {
+	font-family: "Roboto";
+	font-style:normal;
+	font-weight:300;
+	src : url("Fonts/robotolight.ttf");
+}
+
+@font-face {
+	font-family: "Roboto";
+	font-style:italic;
+	font-weight:300;
+	src : url("Fonts/robotolightitalic.ttf");
+}
+
+@font-face {
+	font-family: "Roboto";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/robotoregular.ttf");
+}
+
+@font-face {
+	font-family: "Roboto";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/robotoitalic.ttf");
+}
+
+@font-face {
+	font-family: "Roboto";
+	font-style:normal;
+	font-weight:600;
+	src : url("Fonts/robotomedium.ttf");
+}
+
+@font-face {
+	font-family: "Roboto";
+	font-style:italic;
+	font-weight:600;
+	src : url("Fonts/robotomediumitalic.ttf");
+}
+
+@font-face {
+	font-family: "Roboto";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/robotobold.ttf");
+}
+
+@font-face {
+	font-family: "Roboto";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/robotobolditalic.ttf");
+}
+
+@font-face {
+	font-family: "Roboto";
+	font-style:normal;
+	font-weight:900;
+	src : url("Fonts/robotoblack.ttf");
+}
+
+@font-face {
+	font-family: "Roboto";
+	font-style:italic;
+	font-weight:900;
+	src : url("Fonts/robotoblackitalic.ttf");
+}
+
+/*SOURCE CODE PRO*/
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:200;
+	src : url("Fonts/sourcecodeproextralight.otf");
+}
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:300;
+	src : url("Fonts/sourcecodeprolight.otf");
+}
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/sourcecodeproregular.otf");
+}
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:600;
+	src : url("Fonts/sourcecodeprosemibold.otf");
+}
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/sourcecodeprobold.otf");
+}
+
+@font-face {
+	font-family:"Source Code Pro";
+	font-style:normal;
+	font-weight:900;
+	src : url("Fonts/sourcecodeproblack.otf");
+}
+
+/*SOURCE SANS PRO*/
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:normal;
+	font-weight:200;
+	src : url("Fonts/sourcesansproextralight.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:italic;
+	font-weight:200;
+	src : url("Fonts/sourcesansproextralightitalic.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:normal;
+	font-weight:300;
+	src : url("Fonts/sourcesansprolight.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:italic;
+	font-weight:300;
+	src : url("Fonts/sourcesansprolightitalic.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/sourcesansproregular.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/sourcesansproitalic.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:normal;
+	font-weight:600;
+	src : url("Fonts/sourcesansprosemibold.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:italic;
+	font-weight:600;
+	src : url("Fonts/sourcesansprosemibolditalic.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/sourcesansprobold.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/sourcesansprobolditalic.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:normal;
+	font-weight:900;
+	src : url("Fonts/sourcesansproblack.otf");
+}
+
+@font-face {
+	font-family:"Source Sans Pro";
+	font-style:italic;
+	font-weight:900;
+	src : url("Fonts/sourcesansproblackitalic.otf");
+}
+
+/*UBUNTU MONO*/
+
+@font-face {
+	font-family:"Ubuntu Mono";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/ubuntumonoregular.ttf");
+}
+
+@font-face {
+	font-family:"Ubuntu Mono";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/ubuntumonoregularitalic.ttf");
+}
+
+@font-face {
+	font-family:"Ubuntu Mono";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/ubuntumonobold.ttf");
+}
+
+@font-face {
+	font-family:"Ubuntu Mono";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/ubuntumonobolditalic.ttf");
+}
