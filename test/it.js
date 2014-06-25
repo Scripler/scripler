@@ -1315,7 +1315,7 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset._id, stylesetCopiedId);
 					assert.equal(res.body.styleset.name, "My Best Styleset 2");
-					styleCopiedId = res.body.styleset.styles[0];
+					styleCopiedId = res.body.styleset.styles[0]._id;
 					done();
 				});
 		}),
@@ -1344,7 +1344,7 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset.original, stylesetId2);
-					styleCopiedId = res.body.styleset.styles[0];
+					styleCopiedId = res.body.styleset.styles[0]._id;
 					styleCopiedId && done();
 				});
 		}),
@@ -1423,7 +1423,7 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset.name, "OK, Maybe not the BEST, but...");
 					assert.equal(res.body.styleset.styles.length, 2);
-					styleCopiedId2 = res.body.styleset.styles[0];
+					styleCopiedId2 = res.body.styleset.styles[0]._id;
 					done();
 				});
 		}),
