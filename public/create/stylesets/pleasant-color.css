@@ -234,7 +234,7 @@ blockquote {
 	padding:0em;
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
 /*Here margin-top is defined as 1.2em instead of 1.5em - it is an approximation of <p> 1em (or rem)*/
-	margin:1.5em 30% 1.5em 20%;
+	margin:1.5em 20% 1.5em 10%;
 	page-break-inside:avoid;
 }
 
@@ -270,7 +270,7 @@ a:active { color: #ffffff; text-decoration:none; }
 	text-indent:0;
 	color:#33CCFF;
 	background:#000000;
-	margin:1.5em 30% 0em 20%;
+	margin:1.5em 20% 0em 10%;
 	padding:1em;
 }
 
@@ -283,7 +283,7 @@ figcaption {
 	font-size:0.8em;
 	line-height:1.64;
 	color:#000000;
-	margin:1em 30% 0 20%;
+	margin:1em 20% 0 10%;
 }
 /*Epub2-fallback css*/
 /*p.figcaption {
@@ -370,7 +370,7 @@ ul {
 /*Insert: Image*/
 img {
 	width: 50%;
-	margin: 0 30% 0 20%;
+	margin: 0 20% 0 10%;
 	height: auto;
 	page-break-inside:avoid;
 }
