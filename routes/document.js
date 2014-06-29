@@ -1,6 +1,7 @@
 var Document = require('../models/document.js').Document;
 var Project = require('../models/project.js').Project;
 var Styleset = require('../models/styleset.js').Styleset;
+var Font = require('../models/font.js').Font;
 var copyStyleset = require('../models/styleset.js').copy;
 var utils_shared = require('../public/create/scripts/utils-shared');
 var utils = require('../lib/utils');
@@ -86,15 +87,17 @@ var create = exports.create = function (req, res, next) {
 }
 
 exports.open = function (req, res) {
-	res.send({ document: req.document});
+	res.send({document: req.document});
 }
 
 exports.update = function (req, res, next) {
 	var document = req.document;
+
 	// Is text to be changed?
 	if (req.body.text != undefined) {
 		document.text = req.body.text;
 	}
+
 	// Is defaultstyleset to be changed?
 	if (req.body.defaultStyleset != undefined &&
 		!utils_shared.mongooseEquals(document.defaultStyleset, req.body.defaultStyleset)) {
@@ -105,12 +108,49 @@ exports.update = function (req, res, next) {
 			return next({message: "Document can not have defaultStyleset set to null!", status: 400});
 		}
 	}
-	document.save(function (err, document) {
-		if (err) {
-			return next(err);
-		}
-		res.send({document: document});
-	});
+
+	var saveDocument = function (err) {
+		document.save(function (err, document) {
+			if (err) {
+				return next(err);
+			}
+
+			//console.log('document.fonts: ' + document.fonts);
+
+			res.send({document: document});
+		});
+	}
+
+	if (req.body.fonts != undefined) {
+		// TODO: can this be optimized by looking up ALL ids in one query (using $in)?
+		async.each(req.body.fonts, function (font, callback) {
+			// Frontend does not know the Mongo ids of fonts so we must translate (family, style, weight) to an id for it
+			//console.log('font: ' + JSON.stringify(font));
+			Font.findOne({"family": font.family, "style": font.style, "weight": font.weight}, function (err, font) {
+				if (err) {
+					callback(err);
+				}
+
+				font.documentId = document._id;
+				font.save(function (err, font) {
+					if (err) {
+						callback(err);
+					}
+
+					document.fonts.addToSet(font);
+					callback();
+				});
+			})
+		}, function (err) {
+			if (err) {
+				saveDocument(err);
+			}
+
+			saveDocument();
+		});
+	} else {
+		saveDocument();
+	}
 }
 
 exports.rename = function (req, res, next) {
