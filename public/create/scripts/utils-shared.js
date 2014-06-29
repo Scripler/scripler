@@ -59,56 +59,6 @@
 	}
 
 	/**
-	 * Get style contents from JSON produced by "cssparser".
-	 *
-	 * Logic copied from getStyleContentsFromScriplerJSON().
-	 *
-	 * TODO: merge/combine with getStyleContentsFromScriplerJSON()?
-	 *
-	 * @param style
-	 * @returns {string}
-	 */
-	function getStyleContentsFromCssparserJSON(style) {
-		var styleContents = "";
-
-		// TODO: selector for e.g. ".code + .code" has the value ".code+.code" (no space) - WHY?
-		var selector = style['selector'];
-		var isClass = selector.indexOf('.') == 0;
-		var tag;
-		var clazz;
-
-		if (isClass) {
-			clazz = selector.slice(1);
-		} else {
-			tag = selector;
-		}
-
-		if (tag) {
-			styleContents += tag;
-		}
-
-		if (clazz) {
-			styleContents += "." + clazz;
-		}
-
-		/*
-		if (tag || clazz) {
-			styleContents += ", ";
-		}
-		*/
-
-		styleContents += " { \n";
-		for (var cssProperty in style.declarations) {
-			styleContents += cssProperty + ": " + style.declarations[cssProperty] + ";\n";
-		}
-
-		styleContents += "}\n\n";
-
-		//console.log('styleContents: ' + styleContents);
-		return styleContents;
-	}
-
-	/**
 	 * Check if two Mongoose objects are idential based on _id.
 	 *
 	 * @param obj1 Either ObjectId, _id string, or complete Mongoose object
@@ -187,7 +137,6 @@
 
 
 	return {
-		getStyleContentsFromCssparserJSON : getStyleContentsFromCssparserJSON,
 		getStylesetContents : getStylesetContents,
         mongooseEquals : mongooseEquals,
         getMongooseId : getMongooseId,
