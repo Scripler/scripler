@@ -40,7 +40,7 @@ exports.create = function (req, res, next) {
 		}
 
 		if (!req.body.isSystem) {
-			// TODO: add to user.fonts when "user fonts" will be a feature
+			// TODO: add to user.fonts when "user fonts" becomes a feature
 			/*
 			req.user.fonts.addToSet(font);
 			req.user.save(function(err) {
@@ -63,15 +63,3 @@ exports.create = function (req, res, next) {
 exports.open = function (req, res) {
 	res.send({font: req.font});
 }
-
-/*
-exports.create_system_fonts = function (req, res, next) {
-	font_utils.import_system_fonts(true, false, function (err) {
-		if (err) {
-			callback(err);
-		}
-
-		res.send();
-	});
-}
-*/
