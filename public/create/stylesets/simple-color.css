@@ -9,7 +9,7 @@ h1 {
 	font-size:4em;
 	line-height:1.35;
 	color:#0000ff;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 /*Name: Heading 2*/
@@ -20,7 +20,7 @@ h2 {
 	font-size:3em;
 	line-height:1.38;
 	color:#000000;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 /*Name: Heading 3*/
@@ -31,7 +31,7 @@ h3 {
 	font-size:2.4em;
 	line-height:1.44;
 	color:#000000;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 /*Name: Heading 4*/
@@ -42,7 +42,7 @@ h4 {
 	font-size:2em;
 	line-height:1.45;
 	color:#000000;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 /*Name: Heading 5*/
@@ -53,7 +53,7 @@ h5 {
 	font-size:1.6em;
 	line-height:1.53;
 	color:#000000;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 /*Name: Heading 6*/
@@ -64,11 +64,11 @@ h6 {
 	font-size:1.4em;
 	line-height:1.56;
 	color:#000000;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 
-/*Name: Paragraph*/
+/*Name: Body text*/
 p {
 	font-family: "Source Sans Pro", sans-serif;
 	font-style:normal;
@@ -76,7 +76,7 @@ p {
 	font-size:1em;
 	line-height: 1.56;
 	color:#000000;
-	margin: 1em 0 0 0;
+	margin: 1.5em 0 0 0;
 	hyphens: auto;
 	-moz-hyphens: auto;
 	-webkit-hyphens: auto;
@@ -92,11 +92,10 @@ blockquote {
 	font-size:1.3em;
 	line-height:1.42;
 	color:#000000;
-/*Border-shorthand is WIDTH STYLE COLOR*/
+
 	border:3px solid #0000ff;
 	padding:1em;
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
-/*Here margin-top is defined as 1.2em instead of 1.5em - it is an approximation of <p> 1em (or rem)*/
 	margin:1.5em 10% 1.5em 10%;
 	page-break-inside:avoid;
 }
@@ -118,7 +117,6 @@ a {
 
 a:link { color: #0000ff; text-decoration:underline; }
 a:visited { color: #0000ff; text-decoration:underline; }
-/*I think for templates the disappearing link is asking for trouble :)*/
 a:hover { color: #0000ff; text-decoration:none; }
 a:active { color: #0000ff; text-decoration:none; }
 
@@ -154,7 +152,7 @@ figcaption {
 	font-weight:400;
 	font-size:.9em;
 	line-height:1.64;
-	margin:.3em 0em 0em 0em;
+	margin:.3em 0 0 0;
 }*/
 
 /*Name: Author*/
@@ -209,7 +207,7 @@ ol {
 	font-size:1em;
 	line-height: 1.56;
 	color:#000000;
-	margin: 1em 0 0 0;
+	margin: 1.5em 0 0 0;
 	hyphens: auto;
 	-moz-hyphens: auto;
 	-webkit-hyphens: auto;
@@ -222,7 +220,7 @@ ul {
 	font-size:1em;
 	line-height: 1.56;
 	color:#000000;
-	margin: 1em 0 0 0;
+	margin: 1.5em 0 0 0;
 	hyphens: auto;
 	-moz-hyphens: auto;
 	-webkit-hyphens: auto;
@@ -230,17 +228,15 @@ ul {
 
 /*Insert: Image*/
 img {
-	width: 70%;
+	width: 80%;
 	margin: 0 10% 0 10%;
-	border: 0px solid #000000;
-	padding: 1em;
 	height: auto;
 	page-break-inside:avoid;
 }
 
 /*Insert: Table*/
 
-/*Name: Table heading*/
+
 th {
 	font-family: "Source Sans Pro", sans-serif;
 	font-style:normal;
@@ -253,7 +249,7 @@ th {
 	padding: .5em;
 }
 
-/*Name: Table cells*/
+
 td {
 	font-family: "Source Sans Pro", sans-serif;
 	font-style:normal;

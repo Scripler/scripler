@@ -14,100 +14,22 @@
 
 /*SOURCE CODE PRO*/
 
-@font-face {
-	font-family:"Source Code Pro";
-	font-style:normal;
-	font-weight:200;
-	src : url("../Fonts/sourcecodeproextralight.otf");
-}
 
-@font-face {
-	font-family:"Source Code Pro";
-	font-style:normal;
-	font-weight:300;
-	src : url("../Fonts/sourcecodeprolight.otf");
-}
 
-@font-face {
-	font-family:"Source Code Pro";
-	font-style:normal;
-	font-weight:400;
-	src : url("../Fonts/sourcecodeproregular.otf");
-}
 
-@font-face {
-	font-family:"Source Code Pro";
-	font-style:normal;
-	font-weight:600;
-	src : url("../Fonts/sourcecodeprosemibold.otf");
-}
 
-@font-face {
-	font-family:"Source Code Pro";
-	font-style:normal;
-	font-weight:700;
-	src : url("../Fonts/sourcecodeprobold.otf");
-}
 
-@font-face {
-	font-family:"Source Code Pro";
-	font-style:normal;
-	font-weight:900;
-	src : url("../Fonts/sourcecodeproblack.otf");
-}
 
 /*CRIMSON*/
 
-@font-face {
-	font-family:"Crimson";
-	font-style:normal;
-	font-weight:400;
-	src : url("../Fonts/crimsonregular.ttf");
-}
 
-@font-face {
-	font-family: "Crimson";
-	font-style:italic;
-	font-weight:400;
-	src : url("../Fonts/crimsonitalic.ttf");
-}
 
-@font-face {
-	font-family: "Crimson";
-	font-style:normal;
-	font-weight:600;
-	src : url("../Fonts/crimsonsemibold.ttf");
-}
 
-@font-face {
-	font-family: "Crimson";
-	font-style:italic;
-	font-weight:600;
-	src : url("../Fonts/crimsonsemibolditalic.ttf");
-}
 
-@font-face {
-	font-family: "Crimson";
-	font-style:normal;
-	font-weight:700;
-	src : url("../Fonts/crimsonbold.ttf");
-}
 
-@font-face {
-	font-family: "Crimson";
-	font-style:italic;
-	font-weight:700;
-	src : url("../Fonts/crimsonbolditalic.ttf");
-}
 
 /*AUTOUR ONE*/
 
-@font-face {
-	font-family: "Autour One";
-	font-style:normal;
-	font-weight:400;
-	src : url("../Fonts/autouroneregular.ttf");
-}
 
 /*STYLES*/
 /*Name: Heading 1*/
@@ -120,7 +42,7 @@ h1 {
 	font-size:4em;
 	line-height:1.35;
 	color:#606060;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 /*Name: Heading 2*/
@@ -133,7 +55,7 @@ h2 {
 	font-size:3.5em;
 	line-height:1.38;
 	color:#606060;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 /*Name: Heading 3*/
@@ -146,7 +68,7 @@ h3 {
 	font-size:2.5em;
 	line-height:1.44;
 	color:#606060;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 /*Name: Heading 4*/
@@ -159,7 +81,7 @@ h4 {
 	font-size:2em;
 	line-height:1.45;
 	color:#606060;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 /*Name: Heading 5*/
@@ -172,7 +94,7 @@ h5 {
 	font-size:1.6em;
 	line-height:1.53;
 	color:#606060;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 /*Name: Heading 6*/
@@ -185,11 +107,11 @@ h6 {
 	font-size:1.3em;
 	line-height:1.56;
 	color:#606060;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 
-/*Name: Paragraph*/
+/*Name: Body text*/
 p {
 	font-family: "Crimson", serif;
 	font-style:normal;
@@ -197,7 +119,7 @@ p {
 	font-size:1em;
 	line-height: 1.56;
 	color:#606060;
-	margin: 1em 0 0 0;
+	margin: 1.5em 0 0 0;
 	hyphens: auto;
 	-moz-hyphens: auto;
 	-webkit-hyphens: auto;
@@ -214,11 +136,8 @@ blockquote {
 	line-height:1.42;
 	color:#ffffff;
 	background:#606060;
-/*Border-shorthand is WIDTH STYLE COLOR*/
-	border:0px solid #000000;
 	padding:1em;
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
-/*Here margin-top is defined as 1.2em instead of 1.5em - it is an approximation of <p> 1em (or rem)*/
 	margin:1.5em 0 1.5em 40%;
 	page-break-inside:avoid;
 }
@@ -240,7 +159,7 @@ a {
 
 a:link { color: #000000; text-decoration:underline; }
 a:visited { color: #000000; text-decoration:underline; }
-/*I think for templates the disappearing link is asking for trouble :)*/
+
 a:hover { color: #000000; text-decoration:none; }
 a:active { color: #000000; text-decoration:none; }
 
@@ -254,7 +173,7 @@ a:active { color: #000000; text-decoration:none; }
 	text-indent:0;
 	color:#ffffff;
 	background:#000000;
-	margin:1.5em 0 0em 40%;
+	margin:1.5em 0 0 40%;
 	padding:1em;
 }
 
@@ -276,7 +195,7 @@ figcaption {
 	font-weight:400;
 	font-size:.9em;
 	line-height:1.64;
-	margin:.3em 0em 0em 0em;
+	margin:.3em 0 0 0;
 }*/
 
 /*Name: Author*/
@@ -311,7 +230,6 @@ figcaption {
 	font-weight: 600;
 	line-height:1.42;
 	color:#000000;
-
 }
 
 /*Name: Colophon*/
@@ -320,8 +238,6 @@ figcaption {
 	text-indent:0;
 	text-align:right;
 }
-
-
 
 /*INSERT ELEMENTS*/
 
@@ -334,11 +250,12 @@ ol {
 	font-size:1em;
 	line-height: 1.56;
 	color:#606060;
-	margin: 1em 0 0 0;
+	margin: 1.5em 0 0 0;
 	hyphens: auto;
 	-moz-hyphens: auto;
 	-webkit-hyphens: auto;
 }
+
 ul {
 	list-style:disc;
 	font-family: "Crimson", serif;
@@ -347,7 +264,7 @@ ul {
 	font-size:1em;
 	line-height: 1.56;
 	color:#606060;
-	margin: 1em 0 0 0;
+	margin: 1.5em 0 0 0;
 	hyphens: auto;
 	-moz-hyphens: auto;
 	-webkit-hyphens: auto;
@@ -363,7 +280,6 @@ img {
 
 /*Insert: Table*/
 
-/*Name: Table heading*/
 th {
 	font-family: "Crimson", serif;
 	font-style:normal;
@@ -375,7 +291,6 @@ th {
 	padding: .5em;
 }
 
-/*Name: Table cells*/
 td {
 	font-family: "Crimson", serif;
 	font-style:normal;

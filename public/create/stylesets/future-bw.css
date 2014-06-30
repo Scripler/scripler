@@ -14,133 +14,25 @@
 
 /*SOURCE CODE PRO*/
 
-@font-face {
-	font-family:"Source Code Pro";
-	font-style:normal;
-	font-weight:200;
-	src : url("../Fonts/sourcecodeproextralight.otf");
-}
 
-@font-face {
-	font-family:"Source Code Pro";
-	font-style:normal;
-	font-weight:300;
-	src : url("../Fonts/sourcecodeprolight.otf");
-}
 
-@font-face {
-	font-family:"Source Code Pro";
-	font-style:normal;
-	font-weight:400;
-	src : url("../Fonts/sourcecodeproregular.otf");
-}
 
-@font-face {
-	font-family:"Source Code Pro";
-	font-style:normal;
-	font-weight:600;
-	src : url("../Fonts/sourcecodeprosemibold.otf");
-}
 
-@font-face {
-	font-family:"Source Code Pro";
-	font-style:normal;
-	font-weight:700;
-	src : url("../Fonts/sourcecodeprobold.otf");
-}
 
-@font-face {
-	font-family:"Source Code Pro";
-	font-style:normal;
-	font-weight:900;
-	src : url("../Fonts/sourcecodeproblack.otf");
-}
 
 /*ROBOTO*/
 
-@font-face {
-	font-family: "Roboto";
-	font-style:normal;
-	font-weight:100;
-	src : url("../Fonts/robotothin.ttf");
-}
 
-@font-face {
-	font-family: "Roboto";
-	font-style:italic;
-	font-weight:100;
-	src : url("../Fonts/robotothinitalic.ttf");
-}
 
-@font-face {
-	font-family: "Roboto";
-	font-style:normal;
-	font-weight:300;
-	src : url("../Fonts/robotolight.ttf");
-}
 
-@font-face {
-	font-family: "Roboto";
-	font-style:italic;
-	font-weight:300;
-	src : url("../Fonts/robotolightitalic.ttf");
-}
 
-@font-face {
-	font-family: "Roboto";
-	font-style:normal;
-	font-weight:400;
-	src : url("../Fonts/robotoregular.ttf");
-}
 
-@font-face {
-	font-family: "Roboto";
-	font-style:italic;
-	font-weight:400;
-	src : url("../Fonts/robotoitalic.ttf");
-}
 
-@font-face {
-	font-family: "Roboto";
-	font-style:normal;
-	font-weight:600;
-	src : url("../Fonts/robotomedium.ttf");
-}
 
-@font-face {
-	font-family: "Roboto";
-	font-style:italic;
-	font-weight:600;
-	src : url("../Fonts/robotomediumitalic.ttf");
-}
 
-@font-face {
-	font-family: "Roboto";
-	font-style:normal;
-	font-weight:700;
-	src : url("../Fonts/robotobold.ttf");
-}
 
-@font-face {
-	font-family: "Roboto";
-	font-style:italic;
-	font-weight:700;
-	src : url("../Fonts/robotobolditalic.ttf");
-}
 
-@font-face {
-	font-family: "Roboto";
-	font-style:normal;
-	font-weight:900;
-	src : url("../Fonts/robotoblack.ttf");
-}
 
-@font-face {
-	font-family: "Roboto";
-	font-style:italic;
-	font-weight:900;
-	src : url("../Fonts/robotoblackitalic.ttf");
-}
 
 /*STYLES*/
 /*Name: Heading 1*/
@@ -152,7 +44,7 @@ h1 {
 	line-height:1.35;
 	text-align: center;
 	color:#000000;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 /*Name: Heading 2*/
@@ -164,7 +56,7 @@ h2 {
 	line-height:1.38;
 	text-align: center;
 	color:#848482;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 /*Name: Heading 3*/
@@ -176,7 +68,7 @@ h3 {
 	line-height:1.44;
 	text-align: center;
 	color:#848482;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 /*Name: Heading 4*/
@@ -188,7 +80,7 @@ h4 {
 	line-height:1.45;
 	text-align: center;
 	color:#848482;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 /*Name: Heading 5*/
@@ -200,7 +92,7 @@ h5 {
 	line-height:1.53;
 	text-align: center;
 	color:#848482;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
 /*Name: Heading 6*/
@@ -212,11 +104,10 @@ h6 {
 	line-height:1.56;
 	text-align: center;
 	color:#848482;
-	margin:1.5em 0 0 0;
+	margin:1em 0 0 0;
 }
 
-
-/*Name: Paragraph*/
+/*Name: Body text*/
 p {
 	font-family: "Roboto", sans-serif;
 	font-style:normal;
@@ -224,7 +115,7 @@ p {
 	font-size:1em;
 	line-height: 1.56;
 	color:#000000;
-	margin: 1em 0 0 0;
+	margin: 1.5em 0 0 0;
 	hyphens: auto;
 	-moz-hyphens: auto;
 	-webkit-hyphens: auto;
@@ -240,11 +131,9 @@ blockquote {
 	font-size:1.3em;
 	line-height:1.42;
 	color:#848482;
-/*Border-shorthand is WIDTH STYLE COLOR*/
 	border:2px solid #848482;
 	padding:2em;
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
-/*Here margin-top is defined as 1.2em instead of 1.5em - it is an approximation of <p> 1em (or rem)*/
 	margin:1.5em 30% 1.5em 30%;
 	page-break-inside:avoid;
 }
@@ -254,7 +143,6 @@ q {
 	quotes: "\00BB" "\00AB" "\203A" "\2039";
 	font-style:italic;
 }
-
 
 /*Name: Hyperlink*/
 a {
@@ -266,7 +154,6 @@ a {
 
 a:link { color: #000000; text-decoration:underline; }
 a:visited { color: #000000; text-decoration:underline; }
-/*I think for templates the disappearing link is asking for trouble :)*/
 a:hover { color: #000000; text-decoration:underline; }
 a:active { color: #000000; text-decoration:none; }
 
@@ -280,10 +167,9 @@ a:active { color: #000000; text-decoration:none; }
 	text-indent:0;
 	color:#ffffff;
 	background:#000000;
-	margin:1.5em 20% 0em 20%;
+	margin:1.5em 20% 0 20%;
 	padding:1em;
 }
-
 
 /*Name: Caption*/
 figcaption {
@@ -302,7 +188,7 @@ figcaption {
 	font-weight:400;
 	font-size:.9em;
 	line-height:1.64;
-	margin:.3em 0em 0em 0em;
+	margin:.3em 0 0 0;
 }*/
 
 /*Name: Author*/
@@ -335,7 +221,6 @@ figcaption {
 	font-weight: 700;
 	line-height:1.42;
 	color:#000000;
-
 }
 
 /*Name: Colophon*/
@@ -344,8 +229,6 @@ figcaption {
 	text-indent:0;
 	text-align:right;
 }
-
-
 
 /*INSERT ELEMENTS*/
 
@@ -358,11 +241,12 @@ ol {
 	font-size:1em;
 	line-height: 1.56;
 	color:#000000;
-	margin: 1em 0 0 0;
+	margin: 1.5em 0 0 0;
 	hyphens: auto;
 	-moz-hyphens: auto;
 	-webkit-hyphens: auto;
 }
+
 ul {
 	list-style:disc;
 	font-family: "Roboto", sans-serif;
@@ -371,7 +255,7 @@ ul {
 	font-size:1em;
 	line-height: 1.56;
 	color:#000000;
-	margin: 1em 0 0 0;
+	margin: 1.5em 0 0 0;
 	hyphens: auto;
 	-moz-hyphens: auto;
 	-webkit-hyphens: auto;
@@ -387,7 +271,6 @@ img {
 
 /*Insert: Table*/
 
-/*Name: Table heading*/
 th {
 	font-family: "Roboto", sans-serif;
 	font-style:normal;
@@ -400,7 +283,6 @@ th {
 	padding: .5em;
 }
 
-/*Name: Table cells*/
 td {
 	font-family: "Roboto", sans-serif;
 	font-style:normal;
