@@ -10,3 +10,4 @@ config/*
 debug.log
 exceptions.log
 tmp/*
+*.epub

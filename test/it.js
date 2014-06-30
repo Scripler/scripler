@@ -8,7 +8,9 @@ var assert = require("assert")
 	, fs = require('fs')
 	, path = require('path')
 	, moment = require('moment')
-	, utils = require('../public/create/scripts/utils-shared');
+	, utils = require('../public/create/scripts/utils-shared')
+	, font_utils = require('../lib/font-utils')
+	, Font = require('../models/font.js').Font;
 
 var exec = require('child_process').exec,
 	child;
@@ -54,7 +56,7 @@ var styleCopiedId2;
 var imageId;
 var imageName;
 
-var cleanupEPUB = true;
+var cleanupEPUB = false;
 
 if (conf.db.uri.match(/_test$/) === null) {
 	console.log("You shouldn't be running this test on any database not being specifically meant for 'test'!");
@@ -130,6 +132,15 @@ describe('Scripler RESTful API', function () {
 					styleId = res.body.style._id;
 					styleId && done();
 				});
+		}),
+		it('Create all system fonts such that they are available for the EPUB generation (GET /project/compile)', function (done) {
+			font_utils.import_system_fonts(true, false, function (err) {
+				if (err) {
+					callback(err);
+				}
+
+				done()
+			});
 		})
 	}),
 	describe('Frontpage (/user)', function () {
@@ -1172,6 +1183,25 @@ describe('Scripler RESTful API', function () {
 						childDocumentId = res.body.document._id;
 						childDocumentId && done();
 					});
+			}),
+			it('Updating a document\'s fonts the updated document', function (done) {
+				var font1 = {family: "Source Sans Pro", style: "normal", weight: 200};
+				var font2 = {family: "Source Sans Pro", style: "italic", weight: 200};
+				var fonts = [font1, font2];
+
+				request(host)
+					.put('/document/' + childDocumentId + '/update')
+					.set('cookie', cookie)
+					.send({fonts: fonts})
+					.expect(200)
+					.end(function (err, res) {
+						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+						assert.equal(res.body.document.fonts.length, 2);
+						//console.log('res.body.document.fonts: ' + res.body.document.fonts);
+						assert(res.body.document.fonts[0]);
+						assert(res.body.document.fonts[1]);
+						done();
+					});
 			})
 	}),
 	describe('Typography (Styleset & Style)', function () {
@@ -1297,7 +1327,6 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset._id, stylesetCopiedId);
 					assert.equal(res.body.styleset.name, "My Best Styleset 2");
-					styleCopiedId = res.body.styleset.styles[0];
 					done();
 				});
 		}),
@@ -1326,7 +1355,7 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset.original, stylesetId2);
-					styleCopiedId = res.body.styleset.styles[0];
+					styleCopiedId = res.body.styleset.styles[0]._id;
 					styleCopiedId && done();
 				});
 		}),
@@ -1405,7 +1434,7 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset.name, "OK, Maybe not the BEST, but...");
 					assert.equal(res.body.styleset.styles.length, 2);
-					styleCopiedId2 = res.body.styleset.styles[0];
+					styleCopiedId2 = res.body.styleset.styles[0]._id;
 					done();
 				});
 		}),

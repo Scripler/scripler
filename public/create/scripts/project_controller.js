@@ -53,7 +53,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
 				$scope.projectDocuments.push( data.document );
-				$scope.applyStylesetToDocument( data.document.defaultStyleset, data.document );
+				$scope.openProjectDocument( data.document );
+				$scope.applyDefaultStyleset();
 				console.log(data);
 			});
 		}
@@ -141,7 +142,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$http.post('/document', angular.toJson( document ) )
 				.success( function( data ) {
 					$scope.projectDocuments.push( data.document );
-					$scope.applyStylesetToDocument( data.document.defaultStyleset, data.document );
+					$scope.openProjectDocument( data.document );
 				})
 		} else {
 			document._id = Date.now();
@@ -235,37 +236,35 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 	}
 
-	$scope.applyStylesetToDocument = function( stylesetId, document ) {
+	$scope.applyStylesetToDocument = function( styleset, document ) {
 		var deferred = $q.defer();
+		var index = $scope.stylesets.indexOf( styleset );
 
-		$http.put('/styleset/' + stylesetId + '/document/' + document._id)
+		$http.put('/styleset/' + styleset._id + '/document/' + document._id)
 			.success( function( data ) {
 				if ( data.styleset ) {
-					if ( data.styleset._id !== stylesetId ) {
-						document.defaultStyleset = data.styleset._id;
-						$scope.documentSelected = document;
-						$scope.openProjectDocument( document );
-						$scope.applyStylesetToEditor( data.styleset, true );
-					}
+					$scope.stylesets[ index ] = data.styleset;
+					deferred.resolve( data.styleset );
+					//$scope.applyStylesetToEditor( data.styleset, false );
+				} else {
+					deferred.resolve( styleset );
 				}
-				deferred.resolve( data.styleset );
 			});
 
 		return deferred.promise;
 	}
 
 	$scope.applyDefaultStyleset = function() {
-		var promise = $scope.openStylesets( $scope.documentSelected );
+		var deferred = $q.defer();
 
-		promise.then( function() {
-			for ( var i = 0; i < $scope.stylesets.length; i++ ) {
-				if ( $scope.documentSelected.defaultStyleset === $scope.stylesets[i]._id ) {
-					$scope.defaultStyleset = $scope.stylesets[i];
-					$scope.applyStylesetToEditor( $scope.stylesets[i], true );
-					break;
-				}
-			}
-		});
+		$http.get('/styleset/' + $scope.documentSelected.defaultStyleset )
+			.success( function( data ) {
+				$scope.defaultStyleset = data.styleset;
+				deferred.resolve( data.styleset );
+				//$scope.applyStylesetToEditor( data.styleset, true );
+			});
+
+		return deferred.promise;
 	}
 
 	$scope.applyStylesetToEditor = function( styleset, isDefault ) {
@@ -277,13 +276,46 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
+	$scope.applyStylesetsToEditor = function() {
+		if ( typeof $scope.stylesets == 'undefined' ) {
+			var promise = $scope.openStylesets( $scope.documentSelected );
+
+			promise.then( function() {
+				applyStylesets();
+			});
+		} else {
+			applyStylesets();
+		}
+	}
+
+	var applyStylesets = function() {
+		var combinedCSS = '';
+		for ( var i = 0; i < $scope.stylesets.length; i++ ) {
+			if ( $scope.documentSelected.defaultStyleset == $scope.stylesets[i]._id ) {
+				combinedCSS += stylesetUtilsService.getStylesetContents( $scope.stylesets[i], true );
+			} else {
+				combinedCSS += stylesetUtilsService.getStylesetContents( $scope.stylesets[i], false );
+			}
+		}
+
+		if ( combinedCSS != '' ) {
+			$rootScope.ck.document.appendStyleText( combinedCSS );
+		}
+	}
+
 	$scope.applyStyle = function( styleset, style ) {
 		var styleIndex = styleset.styles.indexOf( style );
 
-		var promise = $scope.applyStylesetToDocument( styleset._id, $scope.documentSelected );
+		var promise = $scope.applyStylesetToDocument( styleset, $scope.documentSelected );
 		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
 
 		promise.then( function( styleset ) {
+
+			//when applying styleset to document, the styles get copied to new (document) styleset
+			if ( style._id != styleset.styles[styleIndex]._id ) {
+				style = styleset.styles[styleIndex];
+			}
+
 			var selection = $rootScope.ck.getSelection();
 			var selectionLength = selection.getSelectedText().length;
 			var tag = selection.getStartElement().getName();
@@ -394,8 +426,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			//change document selected text because angular does not detect tag changes
 			$scope.documentSelected.text = $rootScope.CKEDITOR.instances.bodyeditor.getData();
 
-			//apply default styleset for now
-			$scope.applyDefaultStyleset();
+			$scope.applyStylesetsToEditor();
 
 		});
 	}
@@ -463,6 +494,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		newStyle.name = 'Style ' + number;
 		newStyle.stylesetId = styleset._id;
 
+		if ( typeof newStyle.css == 'undefined' ) {
+			newStyle.css = { 'color' : '#ffff00' };
+		}
+
 		$http.post('/style', angular.toJson( newStyle ) )
 			.success( function( data ) {
 				var style = data.style
@@ -471,15 +506,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$scope.updateStyle( style );
 
 				styleset.styles.push( style );
-				console.log(style);
-
-				//if ( $scope.defaultStyleset._id == style.stylesetId ) {
-				//TODO make work with non-default styleset
-				//$scope.applyStylesetToEditor( styleset, true );
-				//} else {
-				//	$scope.applyStylesetToEditor( styleset, false );
-				//}
-
 			});
 	}
 
@@ -576,6 +602,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.updateStyle( newStyle );
 	}
 
+	$scope.setStylesetStyling = function( styleset, style ) {
+		var stylesetCSS = style.css;
+		stylesetCSS[ 'padding' ] = '15px 0 15px 10px';
+		stylesetCSS[ 'font-size' ] = '1.5em';
+		delete stylesetCSS[ 'margin' ];
+		delete stylesetCSS[ 'line-height' ];
+		styleset.css = stylesetCSS;
+	}
+
 	$scope.insertOptionChoosen = function(insertoption) {
 		if ($scope.activeInsertOption === insertoption) {
 			$scope.activeInsertOption = null;
@@ -606,7 +641,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.$onRootScope('ckDocument:ready', function( event ) {
 		$scope.ckReady = true;
-		$scope.applyDefaultStyleset();
+		$scope.applyStylesetsToEditor();
 	});
 
 	angular.element(document).ready(function () {
@@ -710,8 +745,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				if ( !$scope.$$phase ) {
 					$scope.$apply(function() {
 						$scope.selectedStyle = selectedStyle;
+						var elm = document.getElementById( selectedStyle._id );
+						if ( elm ) {
+							elm.scrollIntoView();
+						}
+
 					});
 				}
+
 			}
 
 		}, this );

@@ -8,7 +8,7 @@ var styleset_utils = require('../lib/styleset-utils.js');
 exports.load = function (id) {
 	return function (req, res, next) {
 		var idCopy = id || req.body.stylesetId;
-		Styleset.findOne({"_id": idCopy, "deleted": false}, function (err, styleset) {
+		Styleset.findOne({"_id": idCopy, "deleted": false}).populate({path: 'styles'}).exec(function (err, styleset) {
 			if (err) return next(err);
 			if (!styleset) {
 				return next({message: "Styleset not found", status: 404});
@@ -83,7 +83,7 @@ exports.open = function (req, res) {
 
 /**
  * TODO: remove this function and require callers to populate the stylesets and call styleset_utils.updateOriginalStyleset() themselves?
- * 
+ *
  * @type {Function}
  */
 var populateAndUpdateOriginalStyleset = exports.populateAndUpdateOriginalStyleset = function(newStyleset, next) {

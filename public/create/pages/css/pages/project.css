@@ -7,17 +7,23 @@
 	-ms-transition: all 1s;
 	-webkit-transition: all 1s;
 	-o-transition: all 1s;
-}
-.menu-left {
 	background-color: #F2F3F4;
 	height: 100%;
 	min-height: 100%;
+	width: 260px;
+}
+.menu-left {
 	left: 0;
 	margin: 0 0 0 -260px;
-	width: 260px;
 	border-right: 1px solid #000;
 }
-.menu-left .top {
+.menu-right {
+	right: 0;
+	margin: 0 -260px 0 0;
+	border-left: 1px solid #000;
+}
+
+.menu-left .top, .menu-right .top {
 	height: 25px;
 	background-color: #000;
 	color: #fff;
@@ -25,22 +31,17 @@
 	width: 100%;
 	line-height: 23px;
 }
-.menu-right {
-	right: 0;
-	margin: 0 -200px 0 0;
-}
 .menu-left.open {
 	margin-left: 50px !important;
 }
 .menu-right.open {
-	margin: 0 !important;
+	margin-right: 50px !important;
 }
 
-.menu-left-tabs {
+.menu-left-tabs, .menu-right-tabs {
 	z-index: 2;
 	position: fixed;
 	top: 0;
-	left: 0;
 	margin: auto;
 	width: 50px;
 	min-height: 100%; /* Minimum height for modern browsers */
@@ -51,22 +52,37 @@
 	-webkit-user-select: none;
 	user-select: none;
 }
-.menu-left-tab {
+.menu-left-tabs {
+	left: 0;
+}
+.menu-right-tabs {
+	right: 0;
+}
+
+.menu-left-tab, .menu-right-tab {
 	font-size: 130%;
 	cursor: pointer;
-	padding: 10px;
 	height: calc(100% / 3);
 	min-height: 178px;
+	padding: 0; 
 }
-.menu-item-left.documents, .menu-item-left.inserts {
+.menu-left-tab {
+	padding-left: 12px;
+}
+.menu-right-tab {
+	padding-left: 14px
+}
+
+.menu-item-left.documents, .menu-item-left.inserts, .menu-item-right.inserts, .menu-item-right.output {
 	padding: 10px 0 0 10px;
 }
-.menu-item-left {
+.menu-item-left, .menu-item-right {
 	opacity:1;
 }
-.menu-item-left.ng-hide {
+.menu-item-left.ng-hide, .menu-item-right.ng-hide {
 	opacity: 0;
 }
+
 .content.ng-hide-add,
 .content.ng-hide-remove {
 	display:block!important;
@@ -79,14 +95,12 @@
 	overflow-y: auto;
 	float: left;
 }
-.menu-left .content {
+.menu-left .content, .menu-right .content {
 	width: 100%;
 	height: 94%;
 	min-height: 94%;
 }
-.menu-right .content {
-	width: 200px;
-}
+
 .menu-left .content-icon, .menu-right .content-icon {
 	background: #fff;
 	width: 42px;
@@ -96,7 +110,7 @@
 	float: left;
 	cursor: pointer;
 }
-.menu-left-options {
+.menu-left-options, .menu-right-options {
 	padding: 10px;
 	background-color: #fff;
 	height: auto;
@@ -111,9 +125,10 @@
 	-webkit-transition: all 0.5s;
 	-o-transition: all 0.5s;
 }
-.menu-left-options.open {
+.menu-left-options.open, .menu-right-options.open {
 	margin-bottom: 28px !important;
 }
+
 .documents-options-bottom-buttons, .stylesets-options-bottom-buttons {
 	width: 100%;
 	position: absolute;
@@ -444,7 +459,7 @@ li.typo p {
 	-o-transition: all 0.5s;
 }
 
-.left-menu-divider {
+.left-menu-divider, .right-menu-divider {
 	display: block;
 	clear: left;
 	border-bottom: 1px solid #efefef;
@@ -461,11 +476,11 @@ li.typo p {
 .left-menu-options-parameters div.expanded {
 	display: block;
 }
-.left-menu-icons {
+.left-menu-icons, .right-menu-icons {
 	display: block;
 	text-align: center;
 }
-.left-menu-button {
+.left-menu-button, .right-menu-button {
 	display: inline-block;
 	width: 30px;
 	height: 30px;
@@ -520,7 +535,7 @@ li.typo p {
 	display: block;
 }
 
-.left-menu-close-item {
+.left-menu-close-item, .right-menu-close-item {
 	color: #cc0000;
 }
 
