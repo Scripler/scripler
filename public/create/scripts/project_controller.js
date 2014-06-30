@@ -290,8 +290,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	var applyStylesets = function() {
 		var combinedCSS = '';
-		for ( var i = 0; i < $scope.stylesets; i++ ) {
-			if ( defaultStyleset._id == $scope.stylesets[i]._id ) {
+		for ( var i = 0; i < $scope.stylesets.length; i++ ) {
+			if ( $scope.documentSelected.defaultStyleset == $scope.stylesets[i]._id ) {
 				combinedCSS += stylesetUtilsService.getStylesetContents( $scope.stylesets[i], true );
 			} else {
 				combinedCSS += stylesetUtilsService.getStylesetContents( $scope.stylesets[i], false );
