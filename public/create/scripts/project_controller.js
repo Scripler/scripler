@@ -246,6 +246,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					$scope.stylesets[ index ] = data.styleset;
 					deferred.resolve( data.styleset );
 					//$scope.applyStylesetToEditor( data.styleset, false );
+				} else {
+					deferred.resolve( styleset );
 				}
 			});
 
@@ -308,8 +310,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
 
 		promise.then( function( styleset ) {
+
 			//when applying styleset to document, the styles get copied to new (document) styleset
-			if ( style._id != styleset.styles[styleIndex]._id ) style = styleset.styles[styleIndex];
+			if ( style._id != styleset.styles[styleIndex]._id ) {
+				style = styleset.styles[styleIndex];
+			}
 
 			var selection = $rootScope.ck.getSelection();
 			var selectionLength = selection.getSelectedText().length;
