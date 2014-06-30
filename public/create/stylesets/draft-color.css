@@ -14,33 +14,9 @@
 
 /*COURIER PRIME*/
 
-@font-face {
-	font-family:"Courier Prime";
-	font-style:normal;
-	font-weight:400;
-	src : url("Fonts/courierprime.ttf");
-}
 
-@font-face {
-	font-family: "Courier Prime";
-	font-style:italic;
-	font-weight:400;
-	src : url("Fonts/courierprimeitalic.ttf");
-}
 
-@font-face {
-	font-family: "Courier Prime";
-	font-style:normal;
-	font-weight:700;
-	src : url("Fonts/courierprimebold.ttf");
-}
 
-@font-face {
-	font-family: "Courier Prime";
-	font-style:italic;
-	font-weight:700;
-	src : url("Fonts/courierprimebolditalic.ttf");
-}
 
 /*STYLES*/
 /*Name: Heading 1*/
