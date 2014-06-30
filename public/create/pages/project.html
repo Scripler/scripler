@@ -336,19 +336,98 @@
 		<textarea ck-editor="" ng-model="documentSelected.text" class="form-control" id="bodyeditor"></textarea>
 	</div>
 
-	<div id="menu-right" class="menu-right">
-		<div id="menu-right-showhide" class="content-icon">
-			<span class="icon icon-reorder"></span>
+	<div id="menu-right-tabs" class="menu-right-tabs" ondragstart="return false;" ondrop="return false;">
+		<div class="menu-right-tab" ng-class="{ 'selectedTab' : showInsertOptions }" ng-click="showInsertOptions = !showInsertOptions; showOutput = false;">
+			<div class="center"></div>
+			<img src="pages/images/insert.svg" width="20">
 		</div>
-		<div class="content">
-			<ul>
-				<li class="menu-item open">
-					<div class="menu-text"><span class="icon icon-signout"></span>Output</div>
-					<div class="menu-content">
-					Content
-					</div>
-				</li>
-			</ul>
+		<div class="menu-right-tab" ng-class="{ 'selectedTab' : showOutput }" ng-click="showOutput = !showOutput; showInsertOptions = false;">
+			<div class="center"></div>
+			<img src="pages/images/output.svg" width="20">
+		</div>
+	</div>
+	<div id="menu-right" class="menu-right" ng-class="{ 'open' : showInsertOptions || showOutput }">
+		<div class="top">
+			<span ng-show="showInsertOptions">Insert</span>
+			<span ng-show="showOutput">Output</span>
+		</div>
+		<div id="menu-right-content" class="content">
+			<div class="menu-item-right inserts" ng-show="showInsertOptions">
+				<div class="menu-content">
+					<ul>
+						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertColophonOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertColophonOptions');">
+								colophon
+							</a>
+						</li>
+						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertCoverOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertCoverOptions');">
+								<img src="pages/images/insert_cover_button.png" width="80" height="80" />
+							</a>
+						</li>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertColophonOptions' }">
+							<div class="right-menu-options">
+								&nbsp;
+							</div>
+							<div class="right-menu-divider"></div>
+							<div class="right-menu-icons">
+								<span class="right-menu-button right-menu-close-item" ng-click="insertOptionChoosen('showInsertColophonOptions');">
+									X
+								</span>
+							</div>
+						</li>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertCoverOptions' }">
+							<div class="right-menu-options">
+								&nbsp;
+							</div>
+							<div class="right-menu-divider"></div>
+							<div class="right-menu-icons">
+								<span class="right-menu-button right-menu-close-item" ng-click="insertOptionChoosen('showInsertCoverOptions');">
+									X
+								</span>
+							</div>
+						</li>
+
+						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertTocOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertTocOptions');">
+								toc
+							</a>
+						</li>
+						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertTitlepageOptions' }">
+							<a ng-click="insertOptionChoosen('showInsertTitlepageOptions');">
+								title page
+							</a>
+						</li>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertTocOptions' }">
+							<div class="right-menu-options">
+								&nbsp;
+							</div>
+							<div class="right-menu-divider"></div>
+							<div class="right-menu-icons">
+								<span class="right-menu-button right-menu-close-item" ng-click="insertOptionChoosen('showInsertTocOptions');">
+									X
+								</span>
+							</div>
+						</li>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertTitlepageOptions' }">
+							<div class="right-menu-options">
+								&nbsp;
+							</div>
+							<div class="right-menu-divider"></div>
+							<div class="right-menu-icons">
+								<span class="right-menu-button right-menu-close-item" ng-click="insertOptionChoosen('showInsertTitlepageOptions');">
+									X
+								</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="menu-item-right output" ng-show="showOutput">
+				<div class="menu-content">
+					Output
+				</div>
+			</div>
 		</div>
 	</div>
 
