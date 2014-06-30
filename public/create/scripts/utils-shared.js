@@ -11,35 +11,50 @@
 
 }(function() {
 
+	/**
+	 * Get style contents from the "Style" Mongo model JSON.
+	 *
+	 * @param style
+	 * @param stylesetId
+	 * @param isDefault
+	 * @returns {string}
+	 */
+	function getStyleContentsFromScriplerJSON(style, stylesetId, isDefault) {
+		var styleContents = "";
+		if (style._id && style.css) {
+			if (style.tag) {
+				if (!isDefault) {
+					styleContents += ".styleset-" + stylesetId + " ";
+				}
+				styleContents += style.tag;
+			}
+			if (style.class) {
+				styleContents += "." + style.class;
+			}
+			if (style.tag || style.class) {
+				styleContents += ", ";
+			}
+			styleContents += ".style-" + style._id + " {\n";
+			for ( var cssProperty in style.css) {
+				styleContents += cssProperty + ": "
+					+ style.css[cssProperty] + ";\n";
+			}
+			styleContents += "}\n";
+		}
+
+		//console.log('styleContents: ' + styleContents);
+		return styleContents;
+	}
+
 	function getStylesetContents(styleset, isDefault) {
 		var stylesetContents = "";
-
 		if (styleset && styleset.styles && styleset.styles.length > 0) {
 			for (var j = 0; j < styleset.styles.length; j++) {
 				var style = styleset.styles[j];
-				if (style._id && style.css) {
-					if (style.tag) {
-						if (!isDefault) {
-							stylesetContents += ".styleset-" + styleset._id + " ";
-						}
-						stylesetContents += style.tag;
-					}
-					if (style.class) {
-						stylesetContents += "." + style.class;
-					}
-					if (style.tag || style.class) {
-						stylesetContents += ", ";
-					}
-					stylesetContents += ".style-" + style._id + " {\n";
-					for ( var cssProperty in style.css) {
-						stylesetContents += cssProperty + ": "
-								+ style.css[cssProperty] + ";\n";
-					}
-					stylesetContents += "}\n";
-				}
+				//console.log('style: ' + JSON.stringify(style));
+				stylesetContents += getStyleContentsFromScriplerJSON(style, styleset._id, isDefault);
 			}
 		}
-
 		return stylesetContents;
 	}
 

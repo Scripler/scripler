@@ -4,5 +4,6 @@
 	"jpg": "image/jpeg",
 	"png": "image/png",
 	"svg": "image/svg+xml",
-	"ttf": "application/x-font-ttf"
+	"ttf": "application/x-font-ttf",
+	"otf": "application/vnd.ms-opentype"
 }

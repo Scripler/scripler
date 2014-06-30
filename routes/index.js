@@ -6,6 +6,7 @@ var frontpage = require('./frontpage')
 	, styleset = require('./styleset')
 	, style = require('./style')
 	, image = require('./image')
+	, font = require('./font')
 	, utils = require('../lib/utils');
 
 module.exports = function (app, auth) {
@@ -81,6 +82,7 @@ module.exports = function (app, auth) {
 	app.put('/styleset/:stylesetId/project/:projectId', auth.isLoggedIn(), project.applyStyleset);
 	app.put('/styleset/:stylesetId/document/:documentId', auth.isLoggedIn(), document.applyStyleset);
 	app.get('/document/:documentIdPopulatedStylesets/stylesets', auth.isLoggedIn(), document.listStylesets);
+	app.post('/font', auth.isLoggedIn(), font.create);
 
 	/* API Output */
 	app.get('/project/:projectIdPopulatedFull/compile', auth.isLoggedIn(), project.compile);
