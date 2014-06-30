@@ -217,7 +217,7 @@ blockquote {
 	padding:0em;
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
 /*Here margin-top is defined as 1.2em instead of 1.5em - it is an approximation of <p> 1em (or rem)*/
-	margin:1.5em 20% 1.5em 20%;
+	margin:1.5em 15% 1.5em 15%;
 	page-break-inside:avoid;
 }
 
@@ -252,7 +252,7 @@ a:active { color: #ffffff; text-decoration:underline; }
 	text-indent:0;
 	color:#ffffff;
 	background:#000000;
-	margin:1.5em 20% 0em 20%;
+	margin:1.5em 15% 0em 15%;
 	padding:1em;
 }
 
@@ -351,7 +351,7 @@ ul {
 
 /*Insert: Image*/
 img {
-	width: 80%;
+	width: 70%;
 	margin: 0 30% 0 0;
 	height: auto;
 	page-break-inside:avoid;

@@ -355,7 +355,7 @@ describe('epub', function () {
 		assert.equal(result, '');
 
 		var font1 = {
-			"name": "font_Scripler1.ttf",
+			"id": "font_Scripler1.ttf",
 			"fileExtension": "ttf",
 			"mediaType": "application/x-font-ttf"
 		};
@@ -365,7 +365,7 @@ describe('epub', function () {
 		assert.equal(result, '<item id="font_Scripler1.ttf" href="Fonts/font_Scripler1.ttf" media-type="application/x-font-ttf" />');
 
 		var font2 = {
-			"name": "font_Scrupler33.ttf",
+			"id": "font_Scrupler33.ttf",
 			"fileExtension": "ttf",
 			"mediaType": "application/x-font-ttf"
 		};
