@@ -66,7 +66,7 @@
 								<div class="arrow"></div>
 							</a>
 
-							<p ng-click="visible=!visible" ng-hide="editingStylesetName">{{styleset.name}}</p>
+							<p ng-style="styleset.css" ng-click="visible=!visible" ng-hide="editingStylesetName">{{styleset.name}}</p>
 
 							<form ng-show="editingStylesetName">
 								<p>
@@ -83,11 +83,12 @@
 							</div>
 
 							<ul ng-hide="visible" class="typo-children">
-								<li ng-repeat="style in styleset.styles" ng-click="x=!x" ng-hide="style.archived" ng-selected="selectedStyle._id === style._id">
+								<li ng-repeat="style in styleset.styles" id="{{style._id}}" ng-hide="style.archived" ng-selected="selectedStyle._id === style._id">
 									<a class="style-options-show" ng-click="showStyleOptions = true">
 										<div class="arrow"></div>
 									</a>
 
+									{{style.tag === 'h1' && setStylesetStyling(styleset, style) || ''}}
 									<span class="style-isblock" ng-bind="isBlock(style)"></span>
 
 									<div class="style-height">
