@@ -8,6 +8,8 @@ var async = require('async');
 var Styleset = require('../models/styleset.js').Styleset;
 var Style = require('../models/style.js').Style;
 var cssNames = require(path.join(__dirname, '../lib/css-names.json'));
+var filewalker = require('filewalker');
+var utils = require('../lib/utils');
 
 function getCssKey ( cssNames, name ) {
 	for (var key in cssNames) {
@@ -151,25 +153,42 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 	});
 }
 
-// TODO: read all stylesheets (.css files) in the system stylesets dir
-var stylesheetName = 'simple-color';
-var cssFilename = path.join(__dirname, '../public/create/stylesets/' + stylesheetName + '.css');
-console.log(cssFilename);
-
-var css = fs.readFileSync(cssFilename, 'utf8');
-//console.log(css);
-
-var json = parser.parse(css);
-//console.log("JSON:\n " + JSON.stringify(json, null, '\t'));
-
 mongoose.connect(conf.db.uri);
 
-createStyleset(stylesheetName, json, function (err, styleset) {
-	if (err) {
+var systemStylesetsDir = path.join(__dirname, '../public/create/stylesets');
+
+filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /\.(css)$/ })
+	.on('file', function (stylesetFile) {
+		var stylesheetName = utils.getFilenameWithoutExtension(stylesetFile);
+		var cssFilename = path.join(__dirname, '../public/create/stylesets/' + stylesetFile);
+		//console.log('stylesheetName: ' + stylesheetName);
+		//console.log('cssFilename: ' + cssFilename);
+
+		var css = fs.readFileSync(cssFilename, 'utf8');
+		//console.log(css);
+
+		var json = parser.parse(css);
+		//console.log("JSON:\n " + JSON.stringify(json, null, '\t'));
+
+		createStyleset(stylesheetName, json, function (err, styleset) {
+			if (err) {
+				console.log(err);
+				process.exit(1);
+			}
+
+			console.log('Created and saved styleset ' + styleset);
+			process.exit(0);
+		});
+	})
+	.on('error', function (err) {
 		console.log(err);
 		process.exit(1);
-	}
+	})
+	.on('done', function () {
+		//process.exit(0);
+	})
+	.walk();
 
-	console.log('Created and saved styleset ' + styleset);
-	process.exit(0);
-});
+process.on('exit', function() {
+	console.log('Created and saved all stylesets in ' + systemStylesetsDir + ' (check log messages for errors)');
+})
