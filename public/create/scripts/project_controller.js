@@ -302,7 +302,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		if ( combinedCSS != '' ) {
 			$rootScope.ck.document.appendStyleText( combinedCSS );
-			console.log('xxx');
 		}
 	}
 
