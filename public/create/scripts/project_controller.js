@@ -715,9 +715,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 								if ( eClass === sClass ) {
 									selectedStyle = styles[p];
 									isSet = true;
-									//break both loops
+									//break all loops
 									p = styles.length;
 									x = stylesets.length;
+									i = elements.length;
 								}
 							}
 
@@ -729,14 +730,17 @@ function projectController( $scope, $location, userService, projectsService, $ht
 								if ( tag === sTag ) {
 									selectedStyle = styles[y];
 									isSet = true;
-									//break both loops
+									//break all loops
 									y = styles.length;
 									x = stylesets.length;
+									i = elements.length;
 								}
 							}
 						}
 					}
 				}
+
+				console.log(elements);
 
 				//logic for copying styles when css has been changed
 				if ( elements.length > 0 ) {
