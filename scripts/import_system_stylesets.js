@@ -105,7 +105,7 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 							callback(err);
 						}
 
-						console.log('Created style: ' + JSON.stringify(style));
+						//console.log(stylesheetName + ': created style: ' + JSON.stringify(style));
 
 						styleset.styles.addToSet(style);
 						callback(null);
@@ -157,33 +157,46 @@ mongoose.connect(conf.db.uri);
 
 var systemStylesetsDir = path.join(__dirname, '../public/create/stylesets');
 
-filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /\.(css)$/ })
+var stylesetFiles = [];
+
+filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /[^non\-editable]\.(css)$/ })
 	.on('file', function (stylesetFile) {
-		var stylesheetName = utils.getFilenameWithoutExtension(stylesetFile);
-		var cssFilename = path.join(__dirname, '../public/create/stylesets/' + stylesetFile);
-		var css = fs.readFileSync(cssFilename, 'utf8');
-		var json = parser.parse(css);
-
-		createStyleset(stylesheetName, json, function (err, styleset) {
-			if (err) {
-				console.log(err);
-				process.exit(1);
-			}
-
-			console.log('Created and saved styleset ' + styleset);
-			process.exit(0);
-		});
+		stylesetFiles.push(stylesetFile);
 	})
 	.on('error', function (err) {
 		console.log(err);
 		process.exit(1);
 	})
 	.on('done', function () {
-		// Don't process.exit() here: done() is called before createStyleset() has a chance to finish so nothing will be imported. Instead, handle process.exit() as below.
-		// There is nothing about exiting in filewalker's documentation but in their examples, this is also how they do it.
+		async.each(stylesetFiles, function (stylesetFile, callback) {
+			var stylesheetName = utils.getFilenameWithoutExtension(stylesetFile);
+			var cssFilename = path.join(__dirname, '../public/create/stylesets/' + stylesetFile);
+			var css = fs.readFileSync(cssFilename, 'utf8');
+			var json = parser.parse(css);
+
+			createStyleset(stylesheetName, json, function (err, styleset) {
+				if (err) {
+					console.log(err);
+					process.exit(1);
+				}
+
+				//console.log('Created and saved styleset ' + styleset);
+				console.log('Imported ' + cssFilename);
+				callback(null);
+			});
+		}, function (err) {
+			if (err) {
+				console.log(err);
+				process.exit(1);
+			}
+
+			// Don't process.exit() here: done() is called before createStyleset() has a chance to finish so nothing will be imported. Instead, handle process.exit() as below.
+			// There is nothing about exiting in filewalker's documentation but in their examples, this is also how they do it.
+			process.exit(0);
+		});
 	})
 	.walk();
 
 process.on('exit', function() {
-	console.log('Created and saved all stylesets in ' + systemStylesetsDir + ' (check log messages for errors)');
+	console.log('Imported all system stylesets from ' + systemStylesetsDir + ' (but check log messages for errors)');
 })
