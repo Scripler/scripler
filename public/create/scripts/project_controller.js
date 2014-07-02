@@ -353,6 +353,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					editor.insertElement( element );
 					var range = editor.createRange();
 					range.moveToElementEditablePosition(element);
+					$scope.selectedStyle = style;
 					range.select();
 				} else {
 					if ( typeof style.tag != 'undefined' ) {
@@ -506,7 +507,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		newStyle.stylesetId = styleset._id;
 
 		if ( typeof newStyle.css == 'undefined' ) {
-			newStyle.css = { 'color' : '#ffff00' };
+			newStyle.css = getStyleCSS();
 		}
 
 		$http.post('/style', angular.toJson( newStyle ) )
@@ -709,18 +710,20 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 						if ( element.hasAttribute( 'class' ) ) {
 							var eClass = element.getAttribute( 'class' );
+						}
 
+						if ( typeof eClass != 'undefined' && eClass !== 'empty-paragraph' ) {
 							for ( var p = 0; p < styles.length; p++ ) {
 								var sClass = styles[p].class;
 								if ( eClass === sClass ) {
 									selectedStyle = styles[p];
 									isSet = true;
-									//break both loops
+									//break all loops
 									p = styles.length;
 									x = stylesets.length;
+									i = elements.length;
 								}
 							}
-
 						} else {
 							//check for tag
 							var tag = element.getName();
@@ -729,9 +732,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 								if ( tag === sTag ) {
 									selectedStyle = styles[y];
 									isSet = true;
-									//break both loops
+									//break all loops
 									y = styles.length;
 									x = stylesets.length;
+									i = elements.length;
 								}
 							}
 						}
