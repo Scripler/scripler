@@ -506,7 +506,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		newStyle.stylesetId = styleset._id;
 
 		if ( typeof newStyle.css == 'undefined' ) {
-			newStyle.css = { 'color' : '#ffff00' };
+			newStyle.css = getStyleCSS();
 		}
 
 		$http.post('/style', angular.toJson( newStyle ) )
