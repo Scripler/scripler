@@ -161,14 +161,8 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /\.(css)$/ })
 	.on('file', function (stylesetFile) {
 		var stylesheetName = utils.getFilenameWithoutExtension(stylesetFile);
 		var cssFilename = path.join(__dirname, '../public/create/stylesets/' + stylesetFile);
-		//console.log('stylesheetName: ' + stylesheetName);
-		//console.log('cssFilename: ' + cssFilename);
-
 		var css = fs.readFileSync(cssFilename, 'utf8');
-		//console.log(css);
-
 		var json = parser.parse(css);
-		//console.log("JSON:\n " + JSON.stringify(json, null, '\t'));
 
 		createStyleset(stylesheetName, json, function (err, styleset) {
 			if (err) {
@@ -185,7 +179,8 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /\.(css)$/ })
 		process.exit(1);
 	})
 	.on('done', function () {
-		//process.exit(0);
+		// Don't process.exit() here: done() is called before createStyleset() has a chance to finish so nothing will be imported. Instead, handle process.exit() as below.
+		// There is nothing about exiting in filewalker's documentation but in their examples, this is also how they do it.
 	})
 	.walk();
 
