@@ -151,7 +151,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.updateProjectDocument = function() {
-		var document = $scope.documentSelected;
+		//document gets copied because changing document text model will reload CK editor
+		var document = angular.copy( $scope.documentSelected );
+		document.text = $rootScope.CKEDITOR.instances.bodyeditor.getData();
 		lastSavedDocumentLength = document.text.length;
 
 		if ( $scope.user._id ) {
@@ -300,6 +302,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		if ( combinedCSS != '' ) {
 			$rootScope.ck.document.appendStyleText( combinedCSS );
+			console.log('xxx');
 		}
 	}
 
@@ -423,11 +426,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				}
 			}
 
-			//change document selected text because angular does not detect tag changes
-			$scope.documentSelected.text = $rootScope.CKEDITOR.instances.bodyeditor.getData();
-
 			$scope.applyStylesetsToEditor();
 
+			$scope.updateProjectDocument();
 		});
 	}
 
