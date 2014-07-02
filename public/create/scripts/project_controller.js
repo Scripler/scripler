@@ -742,8 +742,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					}
 				}
 
-				console.log(elements);
-
 				//logic for copying styles when css has been changed
 				if ( elements.length > 0 ) {
 					var element = elements[0];
