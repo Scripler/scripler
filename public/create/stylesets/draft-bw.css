@@ -112,7 +112,6 @@ blockquote {
 	line-height:1.42;
 	color:#000000;
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
-<<<<<<< HEAD
 	margin:1.5em 15% 1.5em 10%;
 	page-break-inside:avoid;
 }
@@ -147,11 +146,7 @@ a:active { color: #000000; text-decoration:underline; }
 	text-indent:0;
 	color:#ffffff;
 	background:#000000;
-<<<<<<< HEAD
-	margin:1.5em 40% 0 0;
-=======
 	margin:1.5em 15% 0em 0em;
->>>>>>> cc46bd0afd95664d333f2311b27e8063ec3201f6
 	padding:1em;
 }
 
