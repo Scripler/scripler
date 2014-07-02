@@ -353,6 +353,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					editor.insertElement( element );
 					var range = editor.createRange();
 					range.moveToElementEditablePosition(element);
+					$scope.selectedStyle = style;
 					range.select();
 				} else {
 					if ( typeof style.tag != 'undefined' ) {
@@ -709,7 +710,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 						if ( element.hasAttribute( 'class' ) ) {
 							var eClass = element.getAttribute( 'class' );
+						}
 
+						if ( typeof eClass != 'undefined' && eClass !== 'empty-paragraph' ) {
 							for ( var p = 0; p < styles.length; p++ ) {
 								var sClass = styles[p].class;
 								if ( eClass === sClass ) {
@@ -721,7 +724,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 									i = elements.length;
 								}
 							}
-
 						} else {
 							//check for tag
 							var tag = element.getName();
