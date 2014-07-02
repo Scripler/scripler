@@ -151,7 +151,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.updateProjectDocument = function() {
-		var document = $scope.documentSelected;
+		//document gets copied because changing document text model will reload CK editor
+		var document = angular.copy( $scope.documentSelected );
+		document.text = $rootScope.CKEDITOR.instances.bodyeditor.getData();
 		lastSavedDocumentLength = document.text.length;
 
 		if ( $scope.user._id ) {
@@ -299,7 +301,18 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 
 		if ( combinedCSS != '' ) {
-			$rootScope.ck.document.appendStyleText( combinedCSS );
+			if ( typeof $scope.cssStyling == 'undefined' ) {
+				var ckDocument = $rootScope.ck.document;
+				var style = new CKEDITOR.dom.element( 'style' );
+				$scope.cssText = new CKEDITOR.dom.text( combinedCSS );
+				style.append( $scope.cssText );
+				ckDocument.getHead().append( style );
+				$scope.cssStyling = style;
+			} else {
+				var newStyle = new CKEDITOR.dom.text( combinedCSS );
+				newStyle.replace( $scope.cssText );
+				$scope.cssText = newStyle;
+			}
 		}
 	}
 
@@ -423,11 +436,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				}
 			}
 
-			//change document selected text because angular does not detect tag changes
-			$scope.documentSelected.text = $rootScope.CKEDITOR.instances.bodyeditor.getData();
-
 			$scope.applyStylesetsToEditor();
 
+			$scope.updateProjectDocument();
 		});
 	}
 
