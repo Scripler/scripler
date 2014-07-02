@@ -167,10 +167,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 
 	$scope.archiveProjectDocument = function( projectDocument ) {
+		var index = $scope.projectDocuments.indexOf( projectDocument );
 		if ( $scope.user._id ) {
 			$http.put('/document/' + projectDocument._id + '/archive')
 				.success( function() {
 					projectDocument.archived = true;
+					$scope.openProjectDocument( $scope.projectDocuments[index+1] );
 				});
 		} else {
 			projectDocument.archived = true;
