@@ -190,8 +190,6 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /[^non\-editable
 				process.exit(1);
 			}
 
-			// Don't process.exit() here: done() is called before createStyleset() has a chance to finish so nothing will be imported. Instead, handle process.exit() as below.
-			// There is nothing about exiting in filewalker's documentation but in their examples, this is also how they do it.
 			process.exit(0);
 		});
 	})
