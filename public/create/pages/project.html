@@ -66,17 +66,17 @@
 								<div class="arrow"></div>
 							</a>
 
-							<p ng-style="styleset.css" ng-click="visible=!visible" ng-hide="editingStylesetName">{{styleset.name}}</p>
+							<p ng-style="styleset.css" ng-click="visible=!visible" ng-hide="styleset.rename">{{styleset.name}}</p>
 
-							<form ng-show="editingStylesetName">
+							<form ng-show="styleset.rename">
 								<p>
-									<textarea id="renameStyleset" rows="1" ng-model="styleset.name" focus-on="!!editingStylesetName" on-enter="editingStylesetName = false; renameStyleset(styleset);"></textarea>
+									<textarea id="renameStyleset" rows="1" ng-model="styleset.name" focus-on="!!styleset.rename" on-enter="toggleRename(styleset); renameStyleset(styleset);"></textarea>
 								</p>
 							</form>
 
 							<div class="styleset-options" ng-show="showStylesetOptions">
 								<div class="styleset-options-hide" ng-click="showStylesetOptions = false;" title="Close Options">x</div>
-								<div class="styleset-options-menupoint first" ng-click="editingStylesetName = true; showStylesetOptions = false;">rename</div>
+								<div class="styleset-options-menupoint first" ng-click="toggleRename(styleset); showStylesetOptions = false;">rename</div>
 								<div class="styleset-options-menupoint" ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>
 								<div class="styleset-options-menupoint" ng-click="applyStylesetToDocument(styleset); showStylesetOptions = false;">apply to document</div>
 								<div class="styleset-options-menupoint" ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to project</div>
@@ -91,8 +91,8 @@
 									{{style.tag === 'h1' && setStylesetStyling(styleset, style) || ''}}
 									<span class="style-isblock" ng-bind="isBlock(style)"></span>
 
-									<div class="style-height">
-										<span ng-style="style.css" ng-hide="editingStyleName" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
+									<div class="style-height" ng-hide="style.rename">
+										<span ng-style="style.css" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
 									</div>
 
 									<div class="style-copy-options" ng-show="copyCSS && selectedStyle._id === style._id">
@@ -103,13 +103,13 @@
 										</ul>
 									</div>
 
-									<form ng-show="editingStyleName">
-										<textarea id="renameStyle" rows="1" ng-model="style.name" focus-on="!!editingStyleName" on-enter="editingStyleName = false; updateStyle(style);"></textarea>
+									<form ng-show="style.rename">
+										<textarea id="renameStyle" rows="1" ng-model="style.name" focus-on="!!style.rename" on-enter="toggleRename(style); updateStyle(style);"></textarea>
 									</form>
 
 									<div class="style-options" ng-show="showStyleOptions">
 										<div class="style-options-hide" ng-click="showStyleOptions = false;" title="Close Options">x</div>
-										<div class="style-options-menupoint first" ng-click="editingStyleName = true; showStyleOptions = false;">rename</div>
+										<div class="style-options-menupoint first" ng-click="toggleRename(style); showStyleOptions = false;">rename</div>
 										<div class="style-options-menupoint" ng-click="archiveStyle(style); showStyleOptions = false;">archive</div>
 									</div>
 								</li>

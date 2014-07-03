@@ -218,6 +218,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		$http.post('/styleset', angular.toJson( styleset ) )
 			.success( function( data ) {
+				data.styleset.rename = true;
 				$scope.stylesets.push( data.styleset );
 			});
 	}
@@ -524,6 +525,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				} else {
 					styleset.styles.push( style );
 				}
+				style.rename = true;
 			});
 	}
 
@@ -602,6 +604,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		style.css = inlineCSS;
 
 		$scope.addNewStyle( styleset, style, index );
+	}
+
+	$scope.toggleRename = function( obj ) {
+		obj.rename = !obj.rename;
 	}
 
 	$scope.saveAsBlockStyle = function( styleset, style ) {
