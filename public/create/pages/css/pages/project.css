@@ -64,7 +64,7 @@
 	cursor: pointer;
 	height: calc(100% / 3);
 	min-height: 178px;
-	padding: 0; 
+	padding: 0;
 }
 .menu-left-tab {
 	padding-left: 12px;
@@ -192,6 +192,10 @@
 	border: 1px solid #ffff99;
 	box-shadow: 0px 5px 5px -5px #ccc;
 	cursor: pointer;
+}
+.projectDocument-link {
+	display: block;
+	height: 80px;
 }
 .projectDocument.new {
 	padding-top: 20px;
