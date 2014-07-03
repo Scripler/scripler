@@ -139,6 +139,11 @@
 .publication-archived {
 	opacity: 0.5;
 }
+.publication-link {
+	display: block;
+	padding-top: 60px;
+	height: 140px;
+}
 
 .filter-sort, .filter-search {
 	position: relative;
