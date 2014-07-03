@@ -54,7 +54,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				ngProgress.complete();
 				$scope.projectDocuments.push( data.document );
 				$scope.openProjectDocument( data.document );
-				$scope.applyDefaultStyleset();
+				$scope.applyStylesetsToEditor();
 				console.log(data);
 			});
 		}
@@ -124,7 +124,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 				if ( typeof $scope.ckReady == 'boolean' ) {
 					if ( $scope.ckReady ) {
-						$scope.applyDefaultStyleset();
+						$scope.applyStylesetsToEditor();
 					}
 				}
 			})
@@ -486,7 +486,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	}
 
-	$scope.addNewStyle = function( styleset, style ) {
+	$scope.addNewStyle = function( styleset, style, index ) {
 		var newStyle = {};
 
 		if ( typeof style !== 'undefined' ) {
@@ -519,7 +519,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				style.class = "style-" + style._id;
 				$scope.updateStyle( style );
 
-				styleset.styles.push( style );
+				if ( index > -1 ) {
+					styleset.styles.splice( index+1, 0, style );
+				} else {
+					styleset.styles.push( style );
+				}
 			});
 	}
 
@@ -567,10 +571,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return activeCSS;
 	}
 
-	$scope.saveAsCharStyle = function( styleset ) {
+	$scope.saveAsCharStyle = function( styleset, style ) {
 		var selection = $rootScope.ck.getSelection();
 		var element = selection.getStartElement();
 		var inlineCSS = {};
+		var index = styleset.styles.indexOf( style );
 
 		if ( element.hasAttribute( 'style' ) ) {
 			var styleAttributes = element.getAttribute( 'style' );
@@ -596,15 +601,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var style = {};
 		style.css = inlineCSS;
 
-		$scope.addNewStyle( styleset, style );
+		$scope.addNewStyle( styleset, style, index );
 	}
 
 	$scope.saveAsBlockStyle = function( styleset, style ) {
-		var activeCSS = getStyleCSS();
+		var index = styleset.styles.indexOf( style );
 		var newStyle = angular.copy( style );
-		newStyle.css = activeCSS;
+		newStyle.css = getStyleCSS();
 
-		$scope.addNewStyle( styleset, newStyle );
+		$scope.addNewStyle( styleset, newStyle, index );
 	}
 
 	$scope.overrideStyle = function( style ) {
