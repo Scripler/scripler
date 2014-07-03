@@ -333,6 +333,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 
 			var selection = $rootScope.ck.getSelection();
+			var selectedRanges = selection.getRanges();
 			var selectionLength = selection.getSelectedText().length;
 			var tag = selection.getStartElement().getName();
 
@@ -356,7 +357,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					editor.insertElement( element );
 					var range = editor.createRange();
 					range.moveToElementEditablePosition(element);
-					$scope.selectedStyle = style;
 					range.select();
 				} else {
 					if ( typeof style.tag != 'undefined' ) {
@@ -443,6 +443,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.applyStylesetsToEditor();
 
 			$scope.updateProjectDocument();
+
+			$scope.selectedStyle = style;
+
+			$rootScope.ck.focus();
+			selection.selectRanges( selectedRanges );
 		});
 	}
 
