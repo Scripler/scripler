@@ -241,11 +241,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 	}
 
-	$scope.applyStylesetToDocument = function( styleset, document ) {
+	$scope.applyStylesetToDocument = function( styleset ) {
 		var deferred = $q.defer();
 		var index = $scope.stylesets.indexOf( styleset );
 
-		$http.put('/styleset/' + styleset._id + '/document/' + document._id)
+		$http.put('/styleset/' + styleset._id + '/document/' + $scope.documentSelected._id)
 			.success( function( data ) {
 				if ( data.styleset ) {
 					$scope.stylesets[ index ] = data.styleset;
@@ -322,7 +322,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.applyStyle = function( styleset, style ) {
 		var styleIndex = styleset.styles.indexOf( style );
 
-		var promise = $scope.applyStylesetToDocument( styleset, $scope.documentSelected );
+		var promise = $scope.applyStylesetToDocument( styleset );
 		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
 
 		promise.then( function( styleset ) {
