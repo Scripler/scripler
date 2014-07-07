@@ -68,7 +68,8 @@ exports.copy = function (style, newStylesetId, next) {
 					members: style.members,
 					archived: style.archived,
 					isSystem: style.isSystem,
-					original: style._id
+					original: style._id,
+					hidden: style.hidden
 				});
 
 				result.save(function (err) {
