@@ -47,7 +47,8 @@ exports.create = function (req, res, next) {
 		css: req.body.css,
 		tag: req.body.tag,
 		stylesetId: styleset._id,
-		isSystem: req.body.isSystem
+		isSystem: req.body.isSystem,
+		hidden: req.body.hidden
 	});
 
 	if (!req.body.isSystem) {

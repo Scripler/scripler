@@ -9,6 +9,7 @@ var assert = require("assert")
 	, path = require('path')
 	, moment = require('moment')
 	, utils = require('../public/create/scripts/utils-shared')
+	, styleset_utils = require('../lib/styleset-utils')
 	, font_utils = require('../lib/font-utils')
 	, Font = require('../models/font.js').Font;
 
@@ -56,7 +57,7 @@ var styleCopiedId2;
 var imageId;
 var imageName;
 
-var cleanupEPUB = false;
+var cleanupEPUB = true;
 
 if (conf.db.uri.match(/_test$/) === null) {
 	console.log("You shouldn't be running this test on any database not being specifically meant for 'test'!");
@@ -128,6 +129,25 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.style.css.key1, "value1");
                     assert.equal(res.body.style.css.key2, "value2");
 					assert.equal(res.body.style.isSystem, true);
+					assert.equal(res.body.style.stylesetId, systemStylesetId);
+					styleId = res.body.style._id;
+					styleId && done();
+				});
+		}),
+		it('Creating a system style should return the new style', function (done) {
+			request(host)
+				.post('/style')
+				.set('cookie', cookie)
+				.send({stylesetId: systemStylesetId, name: "Scripler Style 2", class: "ScruplerZ999", css: {"key1": "value1", "key2": "value2"}, isSystem: true, hidden: true})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style.name, "Scripler Style 2");
+					assert.equal(res.body.style.class, "ScruplerZ999");
+					assert.equal(res.body.style.css.key1, "value1");
+					assert.equal(res.body.style.css.key2, "value2");
+					assert.equal(res.body.style.isSystem, true);
+					assert.equal(res.body.style.hidden, true);
 					assert.equal(res.body.style.stylesetId, systemStylesetId);
 					styleId = res.body.style._id;
 					styleId && done();
@@ -1314,6 +1334,8 @@ describe('Scripler RESTful API', function () {
 					assert.equal(utils.containsModel(res.body.stylesets, stylesetCopiedId), true);
 					assert.equal(utils.containsModel(res.body.stylesets, userStylesetId), true);
 					assert.equal(utils.containsModel(res.body.stylesets, stylesetId), true);
+					//console.log('stylesets[0]: ' + JSON.stringify(res.body.stylesets[0].styles));
+					assert.equal(styleset_utils.hasHiddenStyle(res.body.stylesets[0].styles, 'Scripler Style 2'), true);
 					done();
 				});
 		}),
