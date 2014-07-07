@@ -360,9 +360,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					range.select();
 				} else {
 					if ( typeof style.tag != 'undefined' ) {
-						$rootScope.ck.applyStyle( new CKEDITOR.style( {
-							element : style.tag
-						}));
+						if ( typeof style.class != 'undefined' ) {
+							$rootScope.ck.applyStyle( new CKEDITOR.style( {
+								element : style.tag,
+								attributes : { class : style.class }
+							}));
+						} else {
+							$rootScope.ck.applyStyle( new CKEDITOR.style( {
+								element : style.tag
+							}));
+						}
 					} else {
 						$rootScope.ck.applyStyle( new CKEDITOR.style( {
 							element : 'span',
