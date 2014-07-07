@@ -36,7 +36,7 @@
 h1 {
 	font-family: "Autour One", sans-serif;
 	font-style:normal;
-	font-weight:700;
+	font-weight:400;
 	text-align: right;
 	text-transform: uppercase;	
 	font-size:4em;
@@ -49,7 +49,7 @@ h1 {
 h2 {
 	font-family: "Autour One", sans-serif;
 	font-style:normal;
-	font-weight:700;
+	font-weight:400;
 	text-align: right;
 	text-transform: uppercase;
 	font-size:3.5em;
@@ -62,7 +62,7 @@ h2 {
 h3 {
 	font-family: "Autour One", sans-serif;
 	font-style:normal;
-	font-weight:700;
+	font-weight:400;
 	text-align: right;
 	text-transform: uppercase;
 	font-size:2.5em;
@@ -75,7 +75,7 @@ h3 {
 h4 {
 	font-family: "Autour One", sans-serif;
 	font-style:normal;
-	font-weight:700;
+	font-weight:400;
 	text-align: right;
 	text-transform: uppercase;
 	font-size:2em;
@@ -88,7 +88,7 @@ h4 {
 h5 {
 	font-family: "Autour One", sans-serif;
 	font-style:normal;
-	font-weight:700;
+	font-weight:400;
 	text-align: right;
 	text-transform: uppercase;
 	font-size:1.6em;
@@ -101,7 +101,7 @@ h5 {
 h6 {
 	font-family: "Autour One", sans-serif;
 	font-style:normal;
-	font-weight:700;
+	font-weight:400;
 	text-align: right;
 	text-transform: uppercase;
 	font-size:1.3em;

@@ -138,8 +138,92 @@ p.toc-item + p.toc-item {
 	text-align:right;
 }
 
-/*FONTS*/
+/*---------- F O N T S ----------*/
 
+/*font-family should always be named with the full name of the font, to avoid confusion. Weight is given like this:
+100 = thin
+200 = extra-light
+300 = light
+400 = normal, book
+500 = medium
+600 = demi-bold
+700 = bold
+800 = heavy
+900 = black*/
+
+/*ALEO*/
+
+@font-face {
+	font-family: "Aleo";
+	font-style:normal;
+	font-weight:300;
+	src : url("Fonts/aleolight.otf");
+}
+
+@font-face {
+	font-family: "Aleo";
+	font-style:italic;
+	font-weight:300;
+	src : url("Fonts/aleolightitalic.otf");
+}
+
+@font-face {
+	font-family: "Aleo";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/aleoregular.otf");
+}
+
+@font-face {
+	font-family: "Aleo";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/aleoitalic.otf");
+}
+
+@font-face {
+	font-family: "Aleo";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/aleobold.otf");
+}
+
+@font-face {
+	font-family: "Aleo";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/aleobolditalic.otf");
+}
+
+/*ARSENAL*/
+
+@font-face {
+	font-family:"Arsenal";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/arsenalregular.otf");
+}
+
+@font-face {
+	font-family: "Arsenal";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/arsenalitalic.otf");
+}
+
+@font-face {
+	font-family: "Arsenal";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/arsenalbold.otf");
+}
+
+@font-face {
+	font-family: "Arsenal";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/arsenalbolditalic.otf");
+}
 
 /*AUTOUR ONE*/
 
@@ -149,6 +233,36 @@ p.toc-item + p.toc-item {
 	font-weight:400;
 	src : url("Fonts/autouroneregular.ttf");
 }
+
+/*BOB*/
+
+@font-face {
+	font-family: "Bob";
+	font-style:normal;
+	font-weight:300;
+	src : url("Fonts/boblight.otf");
+}
+
+@font-face {
+	font-family: "Bob";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/bobbold.otf");
+}
+
+/*CHARIS*/
+
+/*CHUNK*/
+
+/*CMU SANS SERIF*/
+
+/*CMU SERIF*/
+
+/*CMU TYPEWRITER*/
+
+/*CMU CONCRETE*/
+
+/*CMU BRIGHT*/
 
 /*COURIER PRIME*/
 
@@ -180,7 +294,7 @@ p.toc-item + p.toc-item {
 	src : url("Fonts/courierprimebolditalic.ttf");
 }
 
-/*CRIMSON*/
+/*CRIMSON TEXT*/
 
 @font-face {
 	font-family:"Crimson";
@@ -224,7 +338,9 @@ p.toc-item + p.toc-item {
 	src : url("Fonts/crimsonbolditalic.ttf");
 }
 
-/*DEJA-VU SANS MONO*/
+/*DEJA-VU SANS*/
+
+/*DEJA-VU MONO*/
 
 @font-face {
 	font-family: "Deja Vu Mono";
@@ -253,6 +369,8 @@ p.toc-item + p.toc-item {
 	font-weight:700;
 	src : url("Fonts/dejavusansmonobolditalic.ttf");
 }
+
+/*DEJA-VU SERIF*/
 
 /*GABRIELA*/
 
@@ -292,6 +410,18 @@ p.toc-item + p.toc-item {
 	font-weight:700;
 	src : url("Fonts/junicodebolditalic.ttf");
 }
+
+/*KELSON*/
+
+/*KREON*/
+
+/*LEAGUE GOTHIC*/
+
+/*LINUX BIOLINUM*/
+
+/*MERRIWEATHER*/
+
+/*NOBILE*/
 
 /*OPEN SANS*/
 
@@ -365,6 +495,8 @@ p.toc-item + p.toc-item {
 	src : url("Fonts/opensansextrabolditalic.ttf");
 }
 
+/*PRIME*/
+
 /*QUICKSAND*/
 
 @font-face {
@@ -415,6 +547,8 @@ p.toc-item + p.toc-item {
 	font-weight:700;
 	src : url("Fonts/quicksandbolditalic.otf");
 }
+
+/*RALEWAY*/
 
 /*RAMBLA*/
 
@@ -531,6 +665,10 @@ p.toc-item + p.toc-item {
 	font-weight:900;
 	src : url("Fonts/robotoblackitalic.ttf");
 }
+
+/*ROBOTO CONDENSED*/
+
+/*SIGNIKA*/
 
 /*SOURCE CODE PRO*/
 
@@ -662,6 +800,8 @@ p.toc-item + p.toc-item {
 	src : url("Fonts/sourcesansproblackitalic.otf");
 }
 
+/*UBUNTU*/
+
 /*UBUNTU MONO*/
 
 @font-face {
@@ -691,3 +831,7 @@ p.toc-item + p.toc-item {
 	font-weight:700;
 	src : url("Fonts/ubuntumonobolditalic.ttf");
 }
+
+/*VIDALOKA*/
+
+/*VOLTAIRE*/
