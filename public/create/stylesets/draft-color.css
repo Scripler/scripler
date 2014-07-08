@@ -207,6 +207,7 @@ figcaption {
 /*Name: Colophon*/
 .colophon {
 	font-size:.9em;
+	line-height:1.59;
 	text-indent:0;
 	text-align:right;
 }
