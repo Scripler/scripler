@@ -164,7 +164,7 @@ a:hover { color: #000000; text-decoration:none; }
 a:active { color: #000000; text-decoration:none; }
 
 
-/*Name: Code*/
+/*Name: Code block*/
 .code {
 	font-family: "Source Code Pro", monospace;
 	font-style:normal;
@@ -174,7 +174,18 @@ a:active { color: #000000; text-decoration:none; }
 	color:#ffffff;
 	background:#000000;
 	margin:1.5em 0 0 40%;
-	padding:1em;
+	padding: 0 1em;
+}
+
+/*Name: Code*/
+code {
+	font-family: "Source Code Pro", monospace;
+	font-style:normal;
+	font-weight:400;
+	font-size:1em;
+	text-indent:0;
+	color:#ffffff;
+	background:#000000;
 }
 
 
