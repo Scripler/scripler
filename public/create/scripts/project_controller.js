@@ -251,8 +251,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			.success( function( data ) {
 				if ( data.styleset ) {
 					$scope.stylesets[ index ] = data.styleset;
+					$scope.documentSelected.defaultStyleset = data.styleset._id;
 					deferred.resolve( data.styleset );
-					//$scope.applyStylesetToEditor( data.styleset, false );
+					$scope.applyStylesetsToEditor();
 				} else {
 					deferred.resolve( styleset );
 				}
@@ -324,133 +325,129 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.applyStyle = function( styleset, style ) {
 		var styleIndex = styleset.styles.indexOf( style );
 
-		var promise = $scope.applyStylesetToDocument( styleset );
 		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
 
-		promise.then( function( styleset ) {
+		//when applying styleset to document, the styles get copied to new (document) styleset
+		if ( style._id != styleset.styles[styleIndex]._id ) {
+			style = styleset.styles[styleIndex];
+		}
 
-			//when applying styleset to document, the styles get copied to new (document) styleset
-			if ( style._id != styleset.styles[styleIndex]._id ) {
-				style = styleset.styles[styleIndex];
-			}
+		var selection = $rootScope.ck.getSelection();
+		var selectedRanges = selection.getRanges();
+		var selectionLength = selection.getSelectedText().length;
+		var tag = selection.getStartElement().getName();
 
-			var selection = $rootScope.ck.getSelection();
-			var selectedRanges = selection.getRanges();
-			var selectionLength = selection.getSelectedText().length;
-			var tag = selection.getStartElement().getName();
+		var lineHeight = style.css['line-height'];
+		var margin = style.css['margin'];
+		var padding = style.css['padding'];
 
-			var lineHeight = style.css['line-height'];
-			var margin = style.css['margin'];
-			var padding = style.css['padding'];
+		if ( typeof lineHeight == 'undefined' &&
+			typeof margin == 'undefined' &&
+			typeof padding == 'undefined' ) {
 
-			if ( typeof lineHeight == 'undefined' &&
-				 typeof margin == 'undefined' &&
-				 typeof padding == 'undefined' ) {
-
-				//apply character style
-				if ( selectionLength == 0 ) {
-					var insert;
-					if ( typeof style.tag != 'undefined' ) {
-						insert = '<' + style.tag + '></' + style.tag + '>';
-					} else {
-						insert = '<span class="' + style.class + '"></span>';
-					}
-					var element = $rootScope.CKEDITOR.dom.element.createFromHtml( insert );
-					editor.insertElement( element );
-					var range = editor.createRange();
-					range.moveToElementEditablePosition(element);
-					range.select();
+			//apply character style
+			if ( selectionLength == 0 ) {
+				var insert;
+				if ( typeof style.tag != 'undefined' ) {
+					insert = '<' + style.tag + '></' + style.tag + '>';
 				} else {
-					if ( typeof style.tag != 'undefined' ) {
-						$rootScope.ck.applyStyle( new CKEDITOR.style( {
-							element : style.tag
-						}));
-					} else {
-						$rootScope.ck.applyStyle( new CKEDITOR.style( {
-							element : 'span',
-							attributes : { class : style.class }
-						}));
-					}
+					insert = '<span class="' + style.class + '"></span>';
 				}
-
+				var element = $rootScope.CKEDITOR.dom.element.createFromHtml( insert );
+				editor.insertElement( element );
+				var range = editor.createRange();
+				range.moveToElementEditablePosition(element);
+				range.select();
 			} else {
-				var parents = selection.getStartElement().getParents();
-				var firstElement;
-
-				for ( var i = 0; i < parents.length; i++ ) {
-					if ( parents[i].getName() === 'body' ) {
-						firstElement = parents[i+1];
-						break;
-					}
-				}
-
-				//apply on block level
-				if ( typeof firstElement != 'undefined' ) {
-					if ( selectionLength == 0 ) {
-						//apply on single block
-						$scope.applyStyleToElement( firstElement, style );
-					} else {
-						//apply on selection or multiple blocks
-						var range = editor.getSelection().getRanges();
-						var walker = new CKEDITOR.dom.walker( range[0] ), node;
-						var isNotWhitespace = CKEDITOR.dom.walker.whitespaces( true );
-						var applyToParent = false;
-						var counter = 0;
-						var endNode = range[0].endContainer;
-
-						walker.guard = function( node, isMoveout )
-						{
-							if ( counter != 0 &&
-								node.$.nodeName === endNode.$.nodeName &&
-								node.$.nodeType === endNode.$.nodeType &&
-								node.$.nodeValue === endNode.$.nodeValue &&
-								node.$.parentNode === endNode.$.parentNode &&
-								node.$.length === endNode.$.length ) {
-
-								return false; //ends walker
-							}
-
-							return true;
-						};
-
-						while ( node = walker.next() ) {
-
-							//if first element in a selection is a text node
-							//apply style to parent node closest to the document body
-							//this happens if a user selects a span in a paragraph and applies block level style
-							if ( counter === 0 && node.type === 3 ) {
-								applyToParent = true;
-							}
-
-							//if a node is an element
-							if ( node.type === 1 && isNotWhitespace( node ) ) {
-								var computedStyle = node.getComputedStyle( 'display' );
-
-								if ( computedStyle === 'block' ) {
-									$scope.applyStyleToElement( node, style );
-								}
-							}
-
-							counter++;
-						}
-
-						//!!!this is done after the walker because it messes up the selection if done inside the walker
-						if ( applyToParent ) {
-							$scope.applyStyleToElement( firstElement, style );
-						}
-					}
+				if ( typeof style.tag != 'undefined' ) {
+					$rootScope.ck.applyStyle( new CKEDITOR.style( {
+						element : style.tag
+					}));
+				} else {
+					$rootScope.ck.applyStyle( new CKEDITOR.style( {
+						element : 'span',
+						attributes : { class : style.class }
+					}));
 				}
 			}
 
-			$scope.applyStylesetsToEditor();
+		} else {
+			var parents = selection.getStartElement().getParents();
+			var firstElement;
 
-			$scope.updateProjectDocument();
+			for ( var i = 0; i < parents.length; i++ ) {
+				if ( parents[i].getName() === 'body' ) {
+					firstElement = parents[i+1];
+					break;
+				}
+			}
 
-			$scope.selectedStyle = style;
+			//apply on block level
+			if ( typeof firstElement != 'undefined' ) {
+				if ( selectionLength == 0 ) {
+					//apply on single block
+					$scope.applyStyleToElement( firstElement, style );
+				} else {
+					//apply on selection or multiple blocks
+					var range = editor.getSelection().getRanges();
+					var walker = new CKEDITOR.dom.walker( range[0] ), node;
+					var isNotWhitespace = CKEDITOR.dom.walker.whitespaces( true );
+					var applyToParent = false;
+					var counter = 0;
+					var endNode = range[0].endContainer;
 
-			$rootScope.ck.focus();
-			selection.selectRanges( selectedRanges );
-		});
+					walker.guard = function( node, isMoveout )
+					{
+						if ( counter != 0 &&
+							node.$.nodeName === endNode.$.nodeName &&
+							node.$.nodeType === endNode.$.nodeType &&
+							node.$.nodeValue === endNode.$.nodeValue &&
+							node.$.parentNode === endNode.$.parentNode &&
+							node.$.length === endNode.$.length ) {
+
+							return false; //ends walker
+						}
+
+						return true;
+					};
+
+					while ( node = walker.next() ) {
+
+						//if first element in a selection is a text node
+						//apply style to parent node closest to the document body
+						//this happens if a user selects a span in a paragraph and applies block level style
+						if ( counter === 0 && node.type === 3 ) {
+							applyToParent = true;
+						}
+
+						//if a node is an element
+						if ( node.type === 1 && isNotWhitespace( node ) ) {
+							var computedStyle = node.getComputedStyle( 'display' );
+
+							if ( computedStyle === 'block' ) {
+								$scope.applyStyleToElement( node, style );
+							}
+						}
+
+						counter++;
+					}
+
+					//!!!this is done after the walker because it messes up the selection if done inside the walker
+					if ( applyToParent ) {
+						$scope.applyStyleToElement( firstElement, style );
+					}
+				}
+			}
+		}
+
+		$scope.applyStylesetsToEditor();
+
+		$scope.updateProjectDocument();
+
+		$scope.selectedStyle = style;
+
+		$rootScope.ck.focus();
+		selection.selectRanges( selectedRanges );
 	}
 
 	$scope.isBlock = function( style ) {
