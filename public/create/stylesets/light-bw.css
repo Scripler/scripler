@@ -201,9 +201,10 @@ figcaption {
 .titlepageTitle {
 	font-family: "Quicksand", sans-serif;	
 	font-size:3em;
+	line-height: 1.5;
 	font-style:normal;
 	font-weight: 300;
-	line-height: 1.5;
+	
 	color:#000000;
 	text-align:center;
 	text-indent:0;

@@ -213,10 +213,11 @@ figcaption {
 .titlepageTitle {
 	font-family: "Autour One", sans-serif;
 	font-size:2.5em;
-	text-transform: uppercase;
+	line-height: 1.5;
 	font-style:normal;
 	font-weight: 400;
-	line-height: 1.5;
+	text-transform: uppercase;
+	
 	color:#000000;
 	text-align:center;
 	text-indent:0;

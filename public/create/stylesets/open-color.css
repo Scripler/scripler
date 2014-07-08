@@ -203,10 +203,11 @@ figcaption {
 /*Name: Title*/
 .titlepageTitle {
 	font-size:2.5em;
-	font-style:normal;
-	text-transform: uppercase;
-	font-weight: 700;
 	line-height: 1.5;
+	font-style:normal;
+	font-weight: 700;
+	text-transform: uppercase;
+	
 	color:#FF0600;
 	text-align:center;
 	text-indent:0;

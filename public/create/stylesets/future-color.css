@@ -203,11 +203,12 @@ figcaption {
 
 /*Name: Title*/
 .titlepageTitle {
-	font-size:2.5em;
 	font-family: "Source Code Pro", monospace;
+	font-size:2.5em;
+	line-height: 1.5;
 	font-style:normal;
 	font-weight: 900;
-	line-height: 1.5;
+	
 	color:#85BB65;
 	text-align:center;
 	text-indent:0;

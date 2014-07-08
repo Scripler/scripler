@@ -202,9 +202,10 @@ figcaption {
 .titlepageTitle {
 	font-family: "Gabriela", serif;
 	font-size:3em;
+	line-height: 1.5;
 	font-style:normal;
 	font-weight: 400;
-	line-height: 1.5;
+	
 	color:#1A0C96;
 	text-align:center;
 	text-indent:0;
