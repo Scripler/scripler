@@ -327,6 +327,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
 
+		var isDefault = styleset._id === $scope.documentSelected.defaultStyleset;
+
 		//when applying styleset to document, the styles get copied to new (document) styleset
 		if ( style._id != styleset.styles[styleIndex]._id ) {
 			style = styleset.styles[styleIndex];
@@ -349,7 +351,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			if ( selectionLength == 0 ) {
 				var insert;
 				if ( typeof style.tag != 'undefined' ) {
-					insert = '<' + style.tag + '></' + style.tag + '>';
+					if ( isDefault ) {
+						insert = '<' + style.tag + '></' + style.tag + '>';
+					} else {
+						insert = '<' + style.tag + 'class="style-' + style._id + '></' + style.tag + '>';
+					}
 				} else {
 					insert = '<span class="' + style.class + '"></span>';
 				}
@@ -360,9 +366,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				range.select();
 			} else {
 				if ( typeof style.tag != 'undefined' ) {
-					$rootScope.ck.applyStyle( new CKEDITOR.style( {
-						element : style.tag
-					}));
+					if ( isDefault ) {
+						$rootScope.ck.applyStyle( new CKEDITOR.style( {
+							element : style.tag
+						}));
+					} else {
+						$rootScope.ck.applyStyle( new CKEDITOR.style( {
+							element : style.tag,
+							attributes : { class : 'style-' + style._id }
+						}));
+					}
 				} else {
 					$rootScope.ck.applyStyle( new CKEDITOR.style( {
 						element : 'span',
@@ -372,6 +385,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 
 		} else {
+
 			var parents = selection.getStartElement().getParents();
 			var firstElement;
 
@@ -386,7 +400,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			if ( typeof firstElement != 'undefined' ) {
 				if ( selectionLength == 0 ) {
 					//apply on single block
-					$scope.applyStyleToElement( firstElement, style );
+					$scope.applyStyleToElement( firstElement, style, isDefault );
 				} else {
 					//apply on selection or multiple blocks
 					var range = editor.getSelection().getRanges();
@@ -425,7 +439,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 							var computedStyle = node.getComputedStyle( 'display' );
 
 							if ( computedStyle === 'block' ) {
-								$scope.applyStyleToElement( node, style );
+								$scope.applyStyleToElement( node, style, isDefault );
 							}
 						}
 
@@ -478,15 +492,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return false;
 	}
 
-	$scope.applyStyleToElement = function( element, style ) {
+	$scope.applyStyleToElement = function( element, style, isDefault ) {
 
 		if ( typeof style.tag != 'undefined' ) {
 			element.removeAttribute( 'class' );
 			element.renameNode( style.tag );
 		}
 
-		if ( typeof style.class != 'undefined' ) {
-			element.addClass( style.class );
+		if ( isDefault ) {
+			if ( typeof style.class != 'undefined' ) {
+				element.addClass( style.class );
+			}
+		} else {
+			element.addClass( 'style-' + style._id );
 		}
 
 	}
