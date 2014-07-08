@@ -118,7 +118,7 @@ p {
 
 /*Name: Quote*/
 blockquote {
-	quotes: "\00BB" "\00AB" "\203A" "\2039";
+	/*quotes: "\00BB" "\00AB" "\203A" "\2039";*/
 	font-family: "Source Sans Pro", sans-serif;
 	font-style: italic;
 	font-weight: 600;
@@ -136,7 +136,7 @@ blockquote {
 
 /*Name: Speech*/
 q { 
-	quotes: "\00BB" "\00AB" "\203A" "\2039";
+	/*quotes: "\00BB" "\00AB" "\203A" "\2039";*/
 	font-style:italic;
 }
 

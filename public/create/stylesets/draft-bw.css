@@ -103,7 +103,7 @@ p {
 
 /*Name: Quote*/
 blockquote {
-	quotes: "\203A" "\2039" "\2018" "\2019";
+	/*quotes: "\203A" "\2039" "\2018" "\2019";*/
 	font-family: "Courier Prime", Courier, monospace;
 	font-style: italic;
 	font-weight: 700;
@@ -118,7 +118,7 @@ blockquote {
 
 /*Name: Speech*/
 q { 
-	quotes: "\203A" "\2039" "\2018" "\2019";
+	/*quotes: "\203A" "\2039" "\2018" "\2019";*/
 	font-style:italic;
 }
 

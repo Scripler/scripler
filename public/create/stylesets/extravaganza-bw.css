@@ -127,7 +127,7 @@ p {
 
 /*Name: Quote*/
 blockquote {
-	quotes: "\201C" "\201D" "\2018" "\2019";
+	/*quotes: "\201C" "\201D" "\2018" "\2019";*/
 	font-family: "Autour One", sans-serif;
 	font-style: normal;
 	font-weight: 400;
@@ -144,7 +144,7 @@ blockquote {
 
 /*Name: Speech*/
 q { 
-	quotes: "\201C" "\201D" "\2018" "\2019";
+	/*quotes: "\201C" "\201D" "\2018" "\2019";*/
 	font-style:italic;
 }
 
