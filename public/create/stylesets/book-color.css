@@ -162,7 +162,7 @@ a:hover { color: #CD7400; text-decoration:underline; }
 a:active { color: #CD7400; text-decoration:underline; }
 
 
-/*Name: Code*/
+/*Name: Code block*/
 .code {
 	font-family: "Source Code Pro", monospace;
 	font-style:normal;
@@ -172,7 +172,18 @@ a:active { color: #CD7400; text-decoration:underline; }
 	color:#CD7400;
 	background:#000000;
 	margin:1.5em 20% 0 20%;
-	padding:1em;
+	padding:0 1em;
+}
+
+/*Name: Code*/
+code {
+	font-family: "Source Code Pro", monospace;
+	font-style:normal;
+	font-weight:400;
+	font-size:1em;
+	text-indent:0;
+	color:#CD7400;
+	background:#000000;
 }
 
 

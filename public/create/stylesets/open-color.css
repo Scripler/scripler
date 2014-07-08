@@ -155,7 +155,7 @@ a:hover { color: #FF0600; text-decoration:underline; }
 a:active { color: #FF0600; text-decoration:none; }
 
 
-/*Name: Code*/
+/*Name: Code block*/
 .code {
 	font-family: "Deja Vu Mono", monospace;
 	font-style:normal;
@@ -165,7 +165,18 @@ a:active { color: #FF0600; text-decoration:none; }
 	color:#ffffff;
 	background:#000000;
 	margin:1.5em 15% 0em 15%;
-	padding:1em;
+	padding:0 1em;
+}
+
+/*Name: Code*/
+code {
+	font-family: "Deja Vu Mono", monospace;
+	font-style:normal;
+	font-weight:400;
+	font-size:1em;
+	text-indent:0;
+	color:#ffffff;
+	background:#000000;
 }
 
 

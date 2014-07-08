@@ -154,7 +154,7 @@ a:hover { color: #1A0C96; text-decoration:underline; }
 a:active { color: #ffffff; text-decoration:none; }
 
 
-/*Name: Code*/
+/*Name: Code block*/
 .code {
 	font-family: "Ubuntu Mono", monospace;
 	font-style:normal;
@@ -164,7 +164,18 @@ a:active { color: #ffffff; text-decoration:none; }
 	color:#33CCFF;
 	background:#000000;
 	margin:1.5em 20% 0em 10%;
-	padding:1em;
+	padding:0 1em;
+}
+
+/*Name: Code*/
+code {
+	font-family: "Ubuntu Mono", monospace;
+	font-style:normal;
+	font-weight:700;
+	font-size:1em;
+	text-indent:0;
+	color:#33CCFF;
+	background:#000000;
 }
 
 /*Name: Caption*/
