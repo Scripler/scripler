@@ -18,7 +18,7 @@ h2 {
 	font-style:normal;
 	font-weight:900;
 	font-size:3em;
-	line-height:1.38;
+	line-height: 1.33;
 	color:#000000;
 	margin:1em 0 0 0;
 }
@@ -29,7 +29,7 @@ h3 {
 	font-style:normal;
 	font-weight:700;
 	font-size:2.4em;
-	line-height:1.44;
+	line-height: 1.35;
 	color:#000000;
 	margin:1em 0 0 0;
 }
@@ -169,7 +169,7 @@ figcaption {
 /*Name: Title*/
 .titlepageTitle {
 	font-size:3em;
-	line-height: 1.5;
+	line-height: 1.33;
 	font-style:normal;
 	font-weight: 900;
 	

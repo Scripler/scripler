@@ -66,7 +66,7 @@ h3 {
 	text-align: right;
 	text-transform: uppercase;
 	font-size:2.5em;
-	line-height:1.44;
+	line-height: 1.35;
 	color:#606060;
 	margin:1em 0 0 0;
 }
@@ -213,7 +213,7 @@ figcaption {
 .titlepageTitle {
 	font-family: "Autour One", sans-serif;
 	font-size:2.5em;
-	line-height: 1.5;
+	line-height: 1.35;
 	font-style:normal;
 	font-weight: 400;
 	text-transform: uppercase;

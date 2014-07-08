@@ -42,7 +42,7 @@ h1 {
 	font-style:normal;
 	font-weight:400;
 	font-size:3em;
-	line-height:1.35;
+	line-height: 1.33;
 	color:#1A0C96;
 	margin:1em 0 0 0;
 }
@@ -53,7 +53,7 @@ h2 {
 	font-style:normal;
 	font-weight:400;
 	font-size:2.3em;
-	line-height:1.38;
+	line-height: 1.35;
 	color:#1A0C96;
 	margin:1em 0 0 0;
 }
@@ -202,7 +202,7 @@ figcaption {
 .titlepageTitle {
 	font-family: "Gabriela", serif;
 	font-size:3em;
-	line-height: 1.5;
+	line-height: 1.33;
 	font-style:normal;
 	font-weight: 400;
 	
