@@ -19,6 +19,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.stylesets = [];
 
+	$scope.fonts = [];
+
 	if ( $scope.user === 'undefined' ) {
 		//demo mode
 	} else {
@@ -360,16 +362,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					range.select();
 				} else {
 					if ( typeof style.tag != 'undefined' ) {
-						if ( typeof style.class != 'undefined' ) {
-							$rootScope.ck.applyStyle( new CKEDITOR.style( {
-								element : style.tag,
-								attributes : { class : style.class }
-							}));
-						} else {
-							$rootScope.ck.applyStyle( new CKEDITOR.style( {
-								element : style.tag
-							}));
-						}
+						$rootScope.ck.applyStyle( new CKEDITOR.style( {
+							element : style.tag
+						}));
 					} else {
 						$rootScope.ck.applyStyle( new CKEDITOR.style( {
 							element : 'span',
@@ -643,9 +638,36 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var stylesetCSS = style.css;
 		stylesetCSS[ 'padding' ] = '15px 0 15px 10px';
 		stylesetCSS[ 'font-size' ] = '1.5em';
+		var family = stylesetCSS['font-family'];
+		var fontStyle = stylesetCSS['font-style'];
+		var weight = stylesetCSS['font-weight'];
 		delete stylesetCSS[ 'margin' ];
 		delete stylesetCSS[ 'line-height' ];
+
+		var font = family.split(",")[0];
+		font = font.replace(/"/g, "");
+		var fs = 'n';
+
+		if ( fontStyle === 'italic' ) {
+			fs = 'i';
+		}
+		if ( fontStyle === 'oblique' ) {
+			fs = 'o';
+		}
+
+		font = '"' + font + ':' + fs + weight/100 + '"';
+		$scope.fonts.push( font );
+
 		styleset.css = stylesetCSS;
+	}
+
+	$scope.loadFonts = function() {
+		WebFont.load({
+			custom: {
+				families: $scope.fonts,
+				urls: ['stylesets/non-editable.css']
+			}
+		});
 	}
 
 	$scope.insertOptionChoosen = function(insertoption) {
@@ -679,6 +701,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.$onRootScope('ckDocument:ready', function( event ) {
 		$scope.ckReady = true;
 		$scope.applyStylesetsToEditor();
+		$scope.loadFonts();
 	});
 
 	angular.element(document).ready(function () {
