@@ -62,7 +62,7 @@
 					</div>
 					<ul>
 						<li ng-repeat="styleset in stylesets" class="typo" ng-class="{ 'open' : visible == true }" ng-hide="styleset.archived || styleset.hidden">
-							<a class="styleset-options-show" ng-click="showStylesetOptions = true">
+							<a class="styleset-options-show" ng-click="visible = true; showStylesetOptions = true">
 								<div class="arrow"></div>
 							</a>
 
