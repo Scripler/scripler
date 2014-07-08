@@ -366,16 +366,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				range.select();
 			} else {
 				if ( typeof style.tag != 'undefined' ) {
-					if ( isDefault ) {
-						$rootScope.ck.applyStyle( new CKEDITOR.style( {
-							element : style.tag
-						}));
-					} else {
-						$rootScope.ck.applyStyle( new CKEDITOR.style( {
-							element : style.tag,
-							attributes : { class : 'style-' + style._id }
-						}));
-					}
+					$scope.applyCharStyleToElement( style, isDefault );
 				} else {
 					$rootScope.ck.applyStyle( new CKEDITOR.style( {
 						element : 'span',
@@ -402,49 +393,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					//apply on single block
 					$scope.applyStyleToElement( firstElement, style, isDefault );
 				} else {
-					//apply on selection or multiple blocks
-					var range = editor.getSelection().getRanges();
-					var walker = new CKEDITOR.dom.walker( range[0] ), node;
-					var isNotWhitespace = CKEDITOR.dom.walker.whitespaces( true );
 					var applyToParent = false;
-					var counter = 0;
-					var endNode = range[0].endContainer;
-
-					walker.guard = function( node, isMoveout )
-					{
-						if ( counter != 0 &&
-							node.$.nodeName === endNode.$.nodeName &&
-							node.$.nodeType === endNode.$.nodeType &&
-							node.$.nodeValue === endNode.$.nodeValue &&
-							node.$.parentNode === endNode.$.parentNode &&
-							node.$.length === endNode.$.length ) {
-
-							return false; //ends walker
-						}
-
-						return true;
-					};
-
-					while ( node = walker.next() ) {
-
-						//if first element in a selection is a text node
-						//apply style to parent node closest to the document body
-						//this happens if a user selects a span in a paragraph and applies block level style
-						if ( counter === 0 && node.type === 3 ) {
-							applyToParent = true;
-						}
-
-						//if a node is an element
-						if ( node.type === 1 && isNotWhitespace( node ) ) {
-							var computedStyle = node.getComputedStyle( 'display' );
-
-							if ( computedStyle === 'block' ) {
-								$scope.applyStyleToElement( node, style, isDefault );
-							}
-						}
-
-						counter++;
-					}
+					applyToParent = $scope.applyToSelectionWalker( editor );
 
 					//!!!this is done after the walker because it messes up the selection if done inside the walker
 					if ( applyToParent ) {
@@ -492,6 +442,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return false;
 	}
 
+	$scope.applyCharStyleToElement = function( style, isDefault ) {
+		if ( isDefault ) {
+			$rootScope.ck.applyStyle( new CKEDITOR.style( {
+				element : style.tag
+			}));
+		} else {
+			$rootScope.ck.applyStyle( new CKEDITOR.style( {
+				element : style.tag,
+				attributes : { class : 'style-' + style._id }
+			}));
+		}
+	}
+
 	$scope.applyStyleToElement = function( element, style, isDefault ) {
 
 		if ( typeof style.tag != 'undefined' ) {
@@ -507,6 +470,55 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			element.addClass( 'style-' + style._id );
 		}
 
+	}
+
+	$scope.applyToSelectionWalker = function( editor ) {
+
+		//apply on selection or multiple blocks
+		var range = editor.getSelection().getRanges();
+		var walker = new CKEDITOR.dom.walker( range[0] ), node;
+		var isNotWhitespace = CKEDITOR.dom.walker.whitespaces( true );
+		var applyToParent = false;
+		var counter = 0;
+		var endNode = range[0].endContainer;
+
+		walker.guard = function( node, isMoveout )
+		{
+			if ( counter != 0 &&
+				node.$.nodeName === endNode.$.nodeName &&
+				node.$.nodeType === endNode.$.nodeType &&
+				node.$.nodeValue === endNode.$.nodeValue &&
+				node.$.parentNode === endNode.$.parentNode &&
+				node.$.length === endNode.$.length ) {
+
+				return false; //ends walker
+			}
+
+			return true;
+		};
+
+		while ( node = walker.next() ) {
+
+			//if first element in a selection is a text node
+			//apply style to parent node closest to the document body
+			//this happens if a user selects a span in a paragraph and applies block level style
+			if ( counter === 0 && node.type === 3 ) {
+				applyToParent = true;
+			}
+
+			//if a node is an element
+			if ( node.type === 1 && isNotWhitespace( node ) ) {
+				var computedStyle = node.getComputedStyle( 'display' );
+
+				if ( computedStyle === 'block' ) {
+					$scope.applyStyleToElement( node, style, isDefault );
+				}
+			}
+
+			counter++;
+		}
+
+		return applyToParent;
 	}
 
 	$scope.addNewStyle = function( styleset, style, index ) {
