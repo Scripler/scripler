@@ -158,7 +158,7 @@ a:hover { color: #000000; text-decoration:underline; }
 a:active { color: #000000; text-decoration:none; }
 
 /*Name: Code block*/
-.code {
+p.code {
 	font-family: "Source Code Pro", monospace;
 	font-style:normal;
 	font-weight:400;

@@ -156,7 +156,7 @@ a:active { color: #FF0600; text-decoration:none; }
 
 
 /*Name: Code block*/
-.code {
+p.code {
 	font-family: "Deja Vu Mono", monospace;
 	font-style:normal;
 	font-weight:400;

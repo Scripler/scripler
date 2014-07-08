@@ -138,7 +138,7 @@ a:active { color: #2E2E8A; text-decoration:underline; }
 
 
 /*Name: Code block*/
-.code {
+p.code {
 	font-family: "Courier Prime", Courier, monospace;
 	font-style:normal;
 	font-weight:400;

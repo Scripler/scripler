@@ -158,7 +158,7 @@ a:active { color: #000000; text-decoration:underline; }
 
 
 /*Name: Code block*/
-.code {
+p.code {
 	font-family: "Source Code Pro", monospace;
 	font-style:normal;
 	font-weight:400;

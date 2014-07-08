@@ -155,7 +155,7 @@ a:active { color: #ffffff; text-decoration:none; }
 
 
 /*Name: Code block*/
-.code {
+p.code {
 	font-family: "Ubuntu Mono", monospace;
 	font-style:normal;
 	font-weight:700;
