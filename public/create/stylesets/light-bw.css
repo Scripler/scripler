@@ -212,10 +212,10 @@ figcaption {
 
 /*Name: Table of content*/
 .toc-item {
-	font-size: 1.1em;
+	font-size:1.1em;
+	line-height:1.42;
 	font-style:normal;
 	font-weight: 400;
-	line-height:1.42;
 	color:#000000;
 
 }
