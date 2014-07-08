@@ -38,7 +38,7 @@ h1 {
 	font-weight:700;
 	text-transform: uppercase;
 	font-size:3.5em;
-	line-height:1.35;
+	line-height: 1.33;
 	color:#000000;
 	margin:1em 0 0 0;
 }
@@ -50,7 +50,7 @@ h2 {
 	font-weight:700;
 	text-transform: uppercase;
 	font-size:2.6em;
-	line-height:1.38;
+	line-height: 1.34;
 	color:#FF0600;
 	margin:1em 0 0 0;
 }
@@ -62,7 +62,7 @@ h3 {
 	font-weight:700;
 	text-transform: uppercase;
 	font-size:2.2em;
-	line-height:1.44;
+	line-height: 1.36;
 	color:#FF0600;
 	margin:1em 0 0 0;
 }
@@ -74,7 +74,7 @@ h4 {
 	font-weight:700;
 	text-transform: uppercase;
 	font-size:1.8em;
-	line-height:1.45;
+	line-height: 1.38;
 	color:#FF0600;
 	margin:1em 0 0 0;
 }
@@ -86,7 +86,7 @@ h5 {
 	font-weight:700;
 	text-transform: uppercase;
 	font-size:1.6em;
-	line-height:1.53;
+	line-height: 1.40;
 	color:#FF0600;
 	margin:1em 0 0 0;
 }
@@ -98,7 +98,7 @@ h6 {
 	font-weight:700;
 	text-transform: uppercase;
 	font-size:1.3em;
-	line-height:1.56;
+	line-height: 1.45;
 	color:#FF0600;
 	margin:1em 0 0 0;
 }
@@ -110,7 +110,7 @@ p {
 	font-style:normal;
 	font-weight:400;
 	font-size:1em;
-	line-height: 1.56;
+	line-height: 1.54;
 	color:#000000;
 	margin: 1.5em 0 0 0;
 	hyphens: auto;
@@ -126,7 +126,7 @@ blockquote {
 	font-weight: 800;
 	text-align: left;
 	font-size:1.3em;
-	line-height:1.42;
+	line-height: 1.45;
 	color:#FF0600;
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
 /*Here margin-top is defined as 1.2em instead of 1.5em - it is an approximation of <p> 1em (or rem)*/
@@ -175,7 +175,7 @@ figcaption {
 	font-style:italic;
 	font-weight:400;
 	font-size:0.8em;
-	line-height:1.64;
+	line-height: 1.67;
 	color:#000000;
 	margin:1em 30% 0 0;
 }
@@ -192,7 +192,7 @@ figcaption {
 /*Name: Author*/
 .titlepageAuthor {
 	font-size:1em;
-	line-height: 1.3;
+	line-height: 1.54;
 	font-style:italic;
 	font-weight:400;
 	color:#FF0600;
@@ -216,7 +216,7 @@ figcaption {
 /*Name: Table of content*/
 .toc-item {
 	font-size:1.1em;
-	line-height:1.42;
+	line-height: 1.50;
 	font-style:normal;
 	font-weight: 700;
 	color:#FF0600;
@@ -225,7 +225,7 @@ figcaption {
 /*Name: Colophon*/
 .colophon {
 	font-size:0.8em;
-	line-height:1.59;
+	line-height: 1.67;
 	text-indent:0;
 	text-align:right;
 }
@@ -239,7 +239,7 @@ ol {
 	font-style:normal;
 	font-weight:400;
 	font-size:1em;
-	line-height: 1.56;
+	line-height: 1.54;
 	color:#000000;
 	margin: 1.5em 0 0 0;
 	hyphens: auto;
@@ -253,7 +253,7 @@ ul {
 	font-style:normal;
 	font-weight:400;
 	font-size:1em;
-	line-height: 1.56;
+	line-height: 1.54;
 	color:#000000;
 	margin: 1.5em 0 0 0;
 	hyphens: auto;
@@ -277,7 +277,7 @@ th {
 	font-style:normal;
 	font-weight:700;
 	font-size:1em;
-	line-height: 1.56;
+	line-height: 1.54;
 	color:#ffffff;
 	background-color: #FF0600;
 	border: 3px solid #FF0600;
@@ -290,7 +290,7 @@ td {
 	font-style:normal;
 	font-weight:400;
 	font-size:1em;
-	line-height: 1.56;
+	line-height: 1.54;
 	color:#000000;
 	background-color: #ffffff;
 	border: 3px solid #FF0600;

@@ -26,7 +26,7 @@ h1 {
 	font-weight:700;
 
 	font-size:3.5em;
-	line-height:1.35;
+	line-height: 1.33;
 	color:#2E2E8A;
 	margin:1.5em 0 0 0;
 }
@@ -59,7 +59,7 @@ h4 {
 	font-style:normal;
 	font-weight:700;
 	font-size:2em;
-	line-height:1.45;
+	line-height: 1.37;
 	color:#2E2E8A;
 	margin:1.5em 0 0 0;
 }
@@ -70,7 +70,7 @@ h5 {
 	font-style:normal;
 	font-weight:700;
 	font-size:1.6em;
-	line-height:1.53;
+	line-height: 1.40;
 	color:#2E2E8A;
 	margin:1.5em 0 0 0;
 }
@@ -81,7 +81,7 @@ h6 {
 	font-style:normal;
 	font-weight:700;
 	font-size:1.2em;
-	line-height:1.56;
+	line-height: 1.47;
 	color:#2E2E8A;
 	margin:1.5em 0 0 0;
 }
@@ -93,7 +93,7 @@ p {
 	font-style:normal;
 	font-weight:400;
 	font-size:1em;
-	line-height: 1.5;
+	line-height: 1.54;
 	color:#000000;
 	margin: 1.5em 0 0 0;
 	hyphens: auto;
@@ -109,7 +109,7 @@ blockquote {
 	font-weight: 700;
 	text-align: left;
 	font-size:1.4em;
-	line-height:1.42;
+	line-height: 1.43;
 	color:#2E2E8A;
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
 margin:1.5em 15% 1.5em 10%;
@@ -157,7 +157,7 @@ figcaption {
 	font-style:italic;
 	font-weight:400;
 	font-size:0.7em;
-	line-height:1.64;
+	line-height: 1.78;
 	color:#000000;
 	margin:1em 15% 0 0;
 }
@@ -174,7 +174,7 @@ figcaption {
 /*Name: Author*/
 .titlepageAuthor {
 	font-size:1em;
-	line-height: 1.3;
+	line-height: 1.54;
 	font-style:italic;
 	font-weight:400;
 	color:#2E2E8A;
@@ -197,7 +197,7 @@ figcaption {
 /*Name: Table of content*/
 .toc-item {
 	font-size:1.2em;
-	line-height:1.42;
+	line-height: 1.47;
 	font-style:normal;
 	font-weight: 700;
 	color:#000000;
@@ -223,7 +223,7 @@ ol {
 	font-style:normal;
 	font-weight:400;
 	font-size:1.1em;
-	line-height: 1.56;
+	line-height: 1.50;
 	color:#000000;
 	margin: 1.5em 0 0 0;
 	hyphens: auto;
@@ -236,7 +236,7 @@ ul {
 	font-style:normal;
 	font-weight:400;
 	font-size:1.1em;
-	line-height: 1.56;
+	line-height: 1.50;
 	color:#000000;
 	margin: 1.5em 0 0 0;
 	hyphens: auto;
@@ -260,7 +260,7 @@ th {
 	font-style:normal;
 	font-weight:700;
 	font-size:1.1em;
-	line-height: 1.56;
+	line-height: 1.50;
 	color:#ffffff;
 	background-color: #2E2E8A;
 	border: 3px solid #2E2E8A;
@@ -273,7 +273,7 @@ td {
 	font-style:normal;
 	font-weight:400;
 	font-size:1.1em;
-	line-height: 1.56;
+	line-height: 1.50;
 	color:#2E2E8A;
 	background-color: #ffffff;
 	border: 3px solid #2E2E8A;
