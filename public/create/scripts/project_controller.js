@@ -671,8 +671,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		delete stylesetCSS[ 'margin' ];
 		delete stylesetCSS[ 'line-height' ];
 
-		var font = family.split(",")[0];
-		font = font.replace(/"/g, "");
+		var font = family.split(',')[0];
+		font = font.replace(/"/g, '');
 		var fs = 'n';
 
 		if ( fontStyle === 'italic' ) {
@@ -790,7 +790,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						if ( typeof eClass != 'undefined' && eClass !== 'empty-paragraph' ) {
 							for ( var p = 0; p < styles.length; p++ ) {
 								var sClass = styles[p].class;
-								if ( eClass === sClass ) {
+								var nonDefaultClass = 'style-' + styles[p]._id;
+								if ( eClass === sClass || eClass === nonDefaultClass ) {
 									selectedStyle = styles[p];
 									isSet = true;
 									//break all loops
