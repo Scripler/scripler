@@ -728,7 +728,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.$onRootScope('ckDocument:ready', function( event ) {
 		$scope.ckReady = true;
 		$scope.applyStylesetsToEditor();
-		//$scope.loadFonts();
+		$scope.loadFonts();
 	});
 
 	angular.element(document).ready(function () {
