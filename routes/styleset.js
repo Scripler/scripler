@@ -3,6 +3,7 @@ var Styleset = require('../models/styleset.js').Styleset;
 var Style = require('../models/style.js').Style;
 var Project = require('../models/project.js').Project;
 var styleset_utils = require('../lib/styleset-utils.js');
+var async = require('async');
 
 //Load styleset by id
 exports.load = function (id) {
@@ -47,7 +48,8 @@ exports.loadPopulated = function (id) {
 exports.create = function (req, res, next) {
 	var styleset = new Styleset({
 		name: req.body.name,
-		isSystem: req.body.isSystem
+		isSystem: req.body.isSystem,
+		order: req.body.order
 	});
 
 	if (!req.body.isSystem) {
@@ -136,6 +138,8 @@ exports.update = function (req, res, next) {
 	var styleset = req.styleset;
 
 	styleset.name = req.body.name;
+	styleset.order = req.body.order;
+
 	// TODO: implement some sort of safety check ensuring that we only accept styles from the current styleset? See also TODO in models/Styleset.styles
 	styleset.styles = req.body.styles;
 
@@ -162,13 +166,31 @@ exports.update = function (req, res, next) {
 }
 
 exports.rearrange = function (req, res, next) {
-	var user = req.user;
-	user.stylesets = req.body.stylesets;
-	user.save(function (err, user) {
+	var orderedStylesets = [];
+
+	async.each(req.body.orderedStylesets, function (stylesetOrder, callback) {
+		Styleset.findOne({"_id": stylesetOrder.id}, function (err, styleset) {
+			if (err) {
+				callback(err);
+			}
+
+			styleset.order = stylesetOrder.order;
+			styleset.save(function (err) {
+				if (err) {
+					callback(err);
+				}
+
+				orderedStylesets.push({ id: styleset._id, order: styleset.order });
+				callback();
+			});
+		});
+
+	}, function (err) {
 		if (err) {
 			return next(err);
 		}
-		res.send({user: user});
+
+		res.send({stylesets: orderedStylesets});
 	});
 }
 
@@ -209,7 +231,7 @@ exports.archived = function (req, res, next) {
 	});
 };
 
-exports.list = function (req, res, next) {
+exports.listSystemStylesets = function (req, res, next) {
 	Styleset.find({"isSystem": true}, function (err, stylesets) {
 		if (err) {
 			return next(err);

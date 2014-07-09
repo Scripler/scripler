@@ -65,7 +65,7 @@ module.exports = function (app, auth) {
 	app.delete('/folder/:projectId/:parentFolderId?/:folderId', auth.isLoggedIn(), folder.delete);
 
 	/* API Typography: Styleset and Style */
-	app.get('/styleset/list', auth.isLoggedIn(), styleset.list);
+	app.get('/styleset/systemlist', auth.isLoggedIn(), styleset.listSystemStylesets); // Currently not used
 	app.post('/styleset', auth.isLoggedIn(), styleset.create);
 	app.get('/styleset/archived', auth.isLoggedIn(), styleset.archived); // This path must come before paths with variables
 	app.get('/style/archived', auth.isLoggedIn(), style.archived); // This path must come before paths with variables

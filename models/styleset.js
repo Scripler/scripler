@@ -18,7 +18,8 @@ var StylesetSchema = new Schema({
 	archived: { type: Boolean, default: false },
 	deleted: { type: Boolean, default: false },
 	isSystem: { type: Boolean, default: false },
-	original: { type: Schema.Types.ObjectId, ref: 'Styleset' }
+	original: { type: Schema.Types.ObjectId, ref: 'Styleset' },
+	order: { type: Number }
 });
 
 var InternalStyleset = mongoose.model('Styleset', StylesetSchema);
@@ -33,7 +34,7 @@ exports.Styleset = InternalStyleset;
  * @returns {boolean}
  */
 var isPopulatedPrivate = function (styleset) {
-	// System stylesets do not have members so do not check these
+	// System stylesets do not have "members" so do not check these
 	return styleset
 		&& styleset._id != undefined
 		&& styleset.name != undefined
@@ -53,6 +54,7 @@ exports.copy = function (styleset, next) {
 			 console.log("Styleset.copy - archived: " + styleset.archived);
 			 console.log("Styleset.copy - isSystem: " + styleset.isSystem);
 			 console.log("Styleset.copy - original: " + styleset._id);
+			 console.log("Styleset.copy - order: " + styleset.order);
 			 */
 
 			if (isPopulatedPrivate(styleset)) {
@@ -61,7 +63,8 @@ exports.copy = function (styleset, next) {
 					members: styleset.members,
 					archived: styleset.archived,
 					isSystem: styleset.isSystem,
-					original: styleset._id
+					original: styleset._id,
+					order: styleset.order
 				});
 
 				result.save(function(err) {

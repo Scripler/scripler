@@ -168,7 +168,7 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /[^non\-editable
 		process.exit(1);
 	})
 	.on('done', function () {
-		async.each(stylesetFiles, function (stylesetFile, callback) {
+		async.eachSeries(stylesetFiles, function (stylesetFile, callback) {
 			var stylesheetName = utils.getFilenameWithoutExtension(stylesetFile);
 			var cssFilename = path.join(__dirname, '../public/create/stylesets/' + stylesetFile);
 			var css = fs.readFileSync(cssFilename, 'utf8');
