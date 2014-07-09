@@ -544,6 +544,71 @@ code.block + code.block {
 
 /*DEJA-VU SANS*/
 
+@font-face {
+	font-family: "Deja Vu Sans";
+	font-style:normal;
+	font-weight:200;
+	src : url("Fonts/dejavusansextralight.ttf");
+}
+
+@font-face {
+	font-family: "Deja Vu Sans";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/dejavusansregular.ttf");
+}
+
+@font-face {
+	font-family: "Deja Vu Sans";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/dejavusansitalic.ttf");
+}
+
+@font-face {
+	font-family: "Deja Vu Sans";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/dejavusansbold.ttf");
+}
+
+@font-face {
+	font-family: "Deja Vu Sans";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/dejavusansbolditalic.ttf");
+}
+
+/*DEJA-VU SANS CONDENSED*/
+
+@font-face {
+	font-family: "Deja Vu Sans Condensed";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/dejavusanscondensed.ttf");
+}
+
+@font-face {
+	font-family: "Deja Vu Sans Condensed";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/dejavusanscondenseditalic.ttf");
+}
+
+@font-face {
+	font-family: "Deja Vu Sans Condensed";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/dejavusanscondensedbold.ttf");
+}
+
+@font-face {
+	font-family: "Deja Vu Sans Condensed";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/dejavusanscondensedbolditalic.ttf");
+}
+
 /*DEJA-VU MONO*/
 
 @font-face {
@@ -575,6 +640,64 @@ code.block + code.block {
 }
 
 /*DEJA-VU SERIF*/
+
+@font-face {
+	font-family: "Deja Vu Serif";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/dejavuserifregular.ttf");
+}
+
+@font-face {
+	font-family: "Deja Vu Serif";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/dejavuserifitalic.ttf");
+}
+
+@font-face {
+	font-family: "Deja Vu Serif";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/dejavuserifbold.ttf");
+}
+
+@font-face {
+	font-family: "Deja Vu Serif";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/dejavuserifbolditalic.ttf");
+}
+
+/*DEJA-VU SERIF CONDENSED*/
+
+@font-face {
+	font-family: "Deja Vu Serif Condensed";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/dejavuserifcondensed.ttf");
+}
+
+@font-face {
+	font-family: "Deja Vu Serif Condensed";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/dejavuserifcondenseditalic.ttf");
+}
+
+@font-face {
+	font-family: "Deja Vu Serif Condensed";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/dejavuserifcondensedbold.ttf");
+}
+
+@font-face {
+	font-family: "Deja Vu Serif Condensed";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/dejavuserifcondensedbolditalic.ttf");
+}
 
 /*GABRIELA*/
 
@@ -617,15 +740,148 @@ code.block + code.block {
 
 /*KELSON*/
 
+@font-face {
+	font-family:"Kelson";
+	font-style:normal;
+	font-weight:300;
+	src : url("Fonts/kelsonsanslight.otf");
+}
+
+@font-face {
+	font-family: "Kelson";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/kelsonsansregular.otf");
+}
+
+@font-face {
+	font-family: "Kelson";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/kelsonsansbold.otf");
+}
+
 /*KREON*/
+
+@font-face {
+	font-family:"Kreon";
+	font-style:normal;
+	font-weight:300;
+	src : url("Fonts/kreonlight.ttf");
+}
+
+@font-face {
+	font-family: "Kreon";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/kreonregular.ttf");
+}
+
+@font-face {
+	font-family: "Kreon";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/kreonbold.ttf");
+}
 
 /*LEAGUE GOTHIC*/
 
+@font-face {
+	font-family:"League Gothic";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/leaguegothicregular.otf");
+}
+
+@font-face {
+	font-family: "League Gothic";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/leaguegothicitalic.otf");
+}
+
 /*LINUX BIOLINUM*/
+
+@font-face {
+	font-family:"Linux Biolinum";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/linbiolinumr.otf");
+}
+
+@font-face {
+	font-family: "Linux Biolinum";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/linbiolinumri.otf");
+}
+
+@font-face {
+	font-family: "Linux Biolinum";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/linbiolinumrb.otf");
+}
 
 /*MERRIWEATHER*/
 
+@font-face {
+	font-family:"Merriweather";
+	font-style:normal;
+	font-weight:300;
+	src : url("Fonts/merriweathersanslight.otf");
+}
+
+@font-face {
+	font-family: "Merriweather";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/merriweathersansregular.otf");
+}
+
+@font-face {
+	font-family: "Merriweather";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/merriweathersansbold.otf");
+}
+
+@font-face {
+	font-family: "Merriweather";
+	font-style:normal;
+	font-weight:800;
+	src : url("Fonts/merriweathersansextrabold.otf");
+}
+
 /*NOBILE*/
+
+@font-face {
+	font-family:"Nobile";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/nobile.ttf");
+}
+
+@font-face {
+	font-family: "Nobile";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/nobileitalic.ttf");
+}
+
+@font-face {
+	font-family: "Nobile";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/nobilebold.ttf");
+}
+
+@font-face {
+	font-family: "Nobile";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/nobilebolditalic.ttf");
+}
 
 /*OPEN SANS*/
 
@@ -701,6 +957,20 @@ code.block + code.block {
 
 /*PRIME*/
 
+@font-face {
+	font-family:"Prime";
+	font-style:normal;
+	font-weight:300;
+	src : url("Fonts/primelight.otf");
+}
+
+@font-face {
+	font-family:"Prime";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/primeregular.otf");
+}
+
 /*QUICKSAND*/
 
 @font-face {
@@ -753,6 +1023,13 @@ code.block + code.block {
 }
 
 /*RALEWAY*/
+
+@font-face {
+	font-family: "Raleway";
+	font-style:normal;
+	font-weight:100;
+	src : url("Fonts/ralewaythin.otf");
+}
 
 /*RAMBLA*/
 
@@ -872,7 +1149,63 @@ code.block + code.block {
 
 /*ROBOTO CONDENSED*/
 
+@font-face {
+	font-family: "Roboto Condensed";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/robotocondensed.ttf");
+}
+
+@font-face {
+	font-family: "Roboto Condensed";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/robotocondenseditalic.ttf");
+}
+
+@font-face {
+	font-family: "Roboto Condensed";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/robotoboldcondensed.ttf");
+}
+
+@font-face {
+	font-family: "Roboto Condensed";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/robotoboldcondenseditalic.ttf");
+}
+
 /*SIGNIKA*/
+
+@font-face {
+	font-family:"Signika";
+	font-style:normal;
+	font-weight:300;
+	src : url("Fonts/signikalight.ttf");
+}
+
+@font-face {
+	font-family:"Signika";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/signikaregular.ttf");
+}
+
+@font-face {
+	font-family:"Signika";
+	font-style:normal;
+	font-weight:600;
+	src : url("Fonts/signikasemibold.ttf");
+}
+
+@font-face {
+	font-family:"Signika";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/signikabold.ttf");
+}
 
 /*SOURCE CODE PRO*/
 
@@ -1006,6 +1339,62 @@ code.block + code.block {
 
 /*UBUNTU*/
 
+@font-face {
+	font-family:"Ubuntu";
+	font-style:normal;
+	font-weight:300;
+	src : url("Fonts/ubuntulight.ttf");
+}
+
+@font-face {
+	font-family:"Ubuntu";
+	font-style:italic;
+	font-weight:300;
+	src : url("Fonts/ubuntulightitalic.ttf");
+}
+
+@font-face {
+	font-family:"Ubuntu";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/ubunturegular.ttf");
+}
+
+@font-face {
+	font-family:"Ubuntu";
+	font-style:italic;
+	font-weight:400;
+	src : url("Fonts/ubunturegularitalic.ttf");
+}
+
+@font-face {
+	font-family:"Ubuntu";
+	font-style:normal;
+	font-weight:600;
+	src : url("Fonts/ubuntumedium.ttf");
+}
+
+@font-face {
+	font-family:"Ubuntu";
+	font-style:italic;
+	font-weight:600;
+	src : url("Fonts/ubuntumediumitalic.ttf");
+}
+
+@font-face {
+	font-family:"Ubuntu";
+	font-style:normal;
+	font-weight:700;
+	src : url("Fonts/ubuntubold.ttf");
+}
+
+@font-face {
+	font-family:"Ubuntu";
+	font-style:italic;
+	font-weight:700;
+	src : url("Fonts/ubuntubolditalic.ttf");
+}
+
 /*UBUNTU MONO*/
 
 @font-face {
@@ -1038,4 +1427,18 @@ code.block + code.block {
 
 /*VIDALOKA*/
 
+@font-face {
+	font-family:"Vidaloka";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/vidalokaregular.ttf");
+}
+
 /*VOLTAIRE*/
+
+@font-face {
+	font-family:"Voltaire";
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/voltaireregular.ttf");
+}
