@@ -457,11 +457,12 @@ describe('Scripler RESTful API', function () {
 			request(host)
 				.post('/styleset')
 				.set('cookie', cookie)
-				.send({name: "My Best Styleset", isSystem: false})
+				.send({name: "My Best Styleset", isSystem: false, order: 10})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset.name, "My Best Styleset");
+					assert.equal(res.body.styleset.order, 10);
 					stylesetId = res.body.styleset._id;
 					stylesetId && done();
 				});
@@ -1322,6 +1323,28 @@ describe('Scripler RESTful API', function () {
 					stylesetDocumentId && done();
 				});
 		}),
+		it('Rearranging stylesets (user and document) should return the stylesets in the new order', function (done) {
+			var userStylesetIdOrder = { id: userStylesetId, order: 3};
+			var stylesetIdOrder = { id: stylesetId, order: 9};
+			var stylesetCopiedIdOrder = { id: stylesetCopiedId, order: 26};
+
+			request(host)
+				.put('/styleset/rearrange')
+				.set('cookie', cookie)
+				.send({orderedStylesets: [userStylesetIdOrder, stylesetIdOrder, stylesetCopiedIdOrder]})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					console.log('stylesets: ' + JSON.stringify(res.body.stylesets));
+					assert.equal(res.body.stylesets[0].id, userStylesetId);
+					assert.equal(res.body.stylesets[0].order, 3);
+					assert.equal(res.body.stylesets[1].id, stylesetId);
+					assert.equal(res.body.stylesets[1].order, 9);
+					assert.equal(res.body.stylesets[2].id, stylesetCopiedId);
+					assert.equal(res.body.stylesets[2].order, 26);
+					done();
+				});
+		}),
 		it('Listing stylesets for a document should return the union of the document\'s stylesets (including the default) and all user stylesets not already copied to the document', function (done) {
 			request(host)
 				.get('/document/' + stylesetDocumentId + '/stylesets')
@@ -1334,7 +1357,6 @@ describe('Scripler RESTful API', function () {
 					assert.equal(utils.containsModel(res.body.stylesets, stylesetCopiedId), true);
 					assert.equal(utils.containsModel(res.body.stylesets, userStylesetId), true);
 					assert.equal(utils.containsModel(res.body.stylesets, stylesetId), true);
-					//console.log('stylesets[0]: ' + JSON.stringify(res.body.stylesets[0].styles));
 					assert.equal(styleset_utils.hasHiddenStyle(res.body.stylesets[0].styles, 'Scripler Style 2'), true);
 					done();
 				});
@@ -1433,10 +1455,11 @@ describe('Scripler RESTful API', function () {
 			request(host)
 				.put('/styleset/' + stylesetCopiedId + '/update')
 				.set('cookie', cookie)
-				.send({name: "OK, Maybe not the BEST, but...", styles: styles})
+				.send({name: "OK, Maybe not the BEST, but...", styles: styles, order: 19})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.styleset.order, 19);
 					assert.equal(res.body.styleset._id, stylesetCopiedId);
 					assert.equal(res.body.styleset.styles.length, 2);
 					assert.equal(res.body.styleset.styles[0], styleId3);
@@ -1624,20 +1647,6 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.styleset.name, "My New Cool Styleset");
 					stylesetId3 = res.body.styleset._id;
 					stylesetId3 && done();
-				});
-		}),
-		it('Rearranging stylesets should return the project with the stylesets in the new order ', function (done) {
-			request(host)
-				.put('/styleset/rearrange')
-				.set('cookie', cookie)
-				.send({stylesets: [stylesetId3, stylesetId]})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.user.stylesets.length, 2);
-					assert.equal(res.body.user.stylesets[0], stylesetId3);
-					assert.equal(res.body.user.stylesets[1], stylesetId);
-					done();
 				});
 		}),
 		it('Archiving a styleset should return the archived styleset', function (done) {
