@@ -26,7 +26,7 @@ h1 {
 	font-weight:700;
 	text-transform: uppercase;
 	font-size:3.5em;
-	line-height:1.35;
+	line-height: 1.33;
 	color:#000000;
 	margin:1.5em 0 0 0;
 }
@@ -37,7 +37,7 @@ h2 {
 	font-style:normal;
 	font-weight:700;
 	font-size:3em;
-	line-height:1.38;
+	line-height: 1.33;
 	color:#000000;
 	margin:1.5em 0 0 0;
 }
@@ -48,7 +48,7 @@ h3 {
 	font-style:normal;
 	font-weight:700;
 	font-size:2.4em;
-	line-height:1.44;
+	line-height: 1.35;
 	color:#000000;
 	margin:1.5em 0 0 0;
 }
@@ -59,7 +59,7 @@ h4 {
 	font-style:normal;
 	font-weight:700;
 	font-size:2em;
-	line-height:1.45;
+	line-height: 1.37;
 	color:#000000;
 	margin:1.5em 0 0 0;
 }
@@ -70,7 +70,7 @@ h5 {
 	font-style:normal;
 	font-weight:700;
 	font-size:1.6em;
-	line-height:1.53;
+	line-height: 1.40;
 	color:#000000;
 	margin:1.5em 0 0 0;
 }
@@ -81,7 +81,7 @@ h6 {
 	font-style:normal;
 	font-weight:700;
 	font-size:1.2em;
-	line-height:1.56;
+	line-height: 1.47;
 	color:#000000;
 	margin:1.5em 0 0 0;
 }
@@ -93,7 +93,7 @@ p {
 	font-style:normal;
 	font-weight:400;
 	font-size:1em;
-	line-height: 1.5;
+	line-height: 1.54;
 	color:#000000;
 	margin: 1.5em 0 0 0;
 	hyphens: auto;
@@ -103,13 +103,13 @@ p {
 
 /*Name: Quote*/
 blockquote {
-	quotes: "\203A" "\2039" "\2018" "\2019";
+	/*quotes: "\203A" "\2039" "\2018" "\2019";*/
 	font-family: "Courier Prime", Courier, monospace;
 	font-style: italic;
 	font-weight: 700;
 	text-align: left;
 	font-size:1.4em;
-	line-height:1.42;
+	line-height: 1.43;
 	color:#000000;
 /*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
 	margin:1.5em 15% 1.5em 10%;
@@ -118,7 +118,7 @@ blockquote {
 
 /*Name: Speech*/
 q { 
-	quotes: "\203A" "\2039" "\2018" "\2019";
+	/*quotes: "\203A" "\2039" "\2018" "\2019";*/
 	font-style:italic;
 }
 
@@ -137,8 +137,8 @@ a:hover { color: #000000; text-decoration:underline; }
 a:active { color: #000000; text-decoration:underline; }
 
 
-/*Name: Code*/
-.code {
+/*Name: Code block*/
+p.code {
 	font-family: "Courier Prime", Courier, monospace;
 	font-style:normal;
 	font-weight:400;
@@ -147,7 +147,18 @@ a:active { color: #000000; text-decoration:underline; }
 	color:#ffffff;
 	background:#000000;
 	margin:1.5em 15% 0em 0em;
-	padding:1em;
+	padding:0 1em;
+}
+
+/*Name: Code*/
+code {
+	font-family: "Courier Prime", Courier, monospace;
+	font-style:normal;
+	font-weight:400;
+	font-size:1em;
+	text-indent:0;
+	color:#ffffff;
+	background:#000000;
 }
 
 
@@ -157,7 +168,7 @@ figcaption {
 	font-style:italic;
 	font-weight:400;
 	font-size:0.7em;
-	line-height:1.64;
+	line-height: 1.78;
 	color:#000000;
 	margin:1em 15% 0 0;
 }
@@ -174,9 +185,9 @@ figcaption {
 /*Name: Author*/
 .titlepageAuthor {
 	font-size:1em;
+	line-height: 1.54;
 	font-style:italic;
 	font-weight:400;
-	line-height: 1.3;
 	color:#000000;
 	text-align:center;
 	text-indent:0;
@@ -185,9 +196,10 @@ figcaption {
 /*Name: Title*/
 .titlepageTitle {
 	font-size:3em;
+	line-height: 1.33;
 	font-style:normal;
 	font-weight: 700;
-	line-height: 1.5;
+	
 	color:#000000;
 	text-align:center;
 	text-indent:0;
@@ -195,10 +207,10 @@ figcaption {
 
 /*Name: Table of content*/
 .toc-item {
-	font-size: 1.2em;
+	font-size:1.2em;
+	line-height: 1.47;
 	font-style:normal;
 	font-weight: 700;
-	line-height:1.42;
 	color:#000000;
 
 }
@@ -206,6 +218,7 @@ figcaption {
 /*Name: Colophon*/
 .colophon {
 	font-size:.9em;
+	line-height:1.59;
 	text-indent:0;
 	text-align:right;
 }
@@ -221,7 +234,7 @@ ol {
 	font-style:normal;
 	font-weight:400;
 	font-size:1.1em;
-	line-height: 1.56;
+	line-height: 1.50;
 	color:#000000;
 	margin: 1.5em 0 0 0;
 	hyphens: auto;
@@ -234,7 +247,7 @@ ul {
 	font-style:normal;
 	font-weight:400;
 	font-size:1.1em;
-	line-height: 1.56;
+	line-height: 1.50;
 	color:#000000;
 	margin: 1.5em 0 0 0;
 	hyphens: auto;
@@ -258,7 +271,7 @@ th {
 	font-style:normal;
 	font-weight:700;
 	font-size:1.1em;
-	line-height: 1.56;
+	line-height: 1.50;
 	color:#ffffff;
 	background-color: #000000;
 	border: 3px solid #000000;
@@ -271,7 +284,7 @@ td {
 	font-style:normal;
 	font-weight:400;
 	font-size:1.1em;
-	line-height: 1.56;
+	line-height: 1.50;
 	color:#000000;
 	background-color: #ffffff;
 	border: 3px solid #000000;

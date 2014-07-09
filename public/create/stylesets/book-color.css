@@ -46,7 +46,7 @@ h1 {
 	font-weight:700;
 	text-transform: uppercase;
 	font-size:3em;
-	line-height:1.35;
+	line-height: 1.33;
 	color:#CD7400;
 	margin:1em 0 0 0;
 }
@@ -57,7 +57,7 @@ h2 {
 	font-style:normal;
 	font-weight:700;
 	font-size:2.4em;
-	line-height:1.38;
+	line-height: 1.35;
 	color:#CD7400;
 	margin:1em 0 0 0;
 }
@@ -68,7 +68,7 @@ h3 {
 	font-style:normal;
 	font-weight:700;
 	font-size:2em;
-	line-height:1.44;
+	line-height: 1.37;
 	color:#CD7400;
 	margin:1em 0 0 0;
 }
@@ -79,7 +79,7 @@ h4 {
 	font-style:normal;
 	font-weight:700;
 	font-size:1.7em;
-	line-height:1.45;
+	line-height: 1.39;
 	color:#CD7400;
 	margin:1em 0 0 0;
 }
@@ -90,7 +90,7 @@ h5 {
 	font-style:normal;
 	font-weight:700;
 	font-size:1.5em;
-	line-height:1.53;
+	line-height: 1.41;
 	color:#CD7400;
 	margin:1em 0 0 0;
 }
@@ -101,7 +101,7 @@ h6 {
 	font-style:normal;
 	font-weight:700;
 	font-size:1.3em;
-	line-height:1.56;
+	line-height: 1.45;
 	color:#CD7400;
 	margin:1em 0 0 0;
 }
@@ -113,7 +113,7 @@ p {
 	font-style:normal;
 	font-weight:400;
 	font-size:1.1em;
-	line-height: 1.56;
+	line-height: 1.50;
 	color:#000000;
 	margin: 1.5em 0 0 0;
 	hyphens: auto;
@@ -123,13 +123,13 @@ p {
 
 /*Name: Quote*/
 blockquote {
-	quotes: "\00BB" "\00AB" "\203A" "\2039";
+	/*quotes: "\00BB" "\00AB" "\203A" "\2039";*/
 	font-family: "Junicode", serif;
 	font-style: italic;
 	font-weight: 700;
 	text-align: left;
 	font-size:1.4em;
-	line-height:1.42;
+	line-height: 1.43;
 	color:#CD7400;
 
 	
@@ -142,7 +142,7 @@ blockquote {
 
 /*Name: Speech*/
 q { 
-	quotes: "\00BB" "\00AB" "\203A" "\2039";
+	/*quotes: "\00BB" "\00AB" "\203A" "\2039";*/
 	font-style:italic;
 }
 
@@ -162,8 +162,8 @@ a:hover { color: #CD7400; text-decoration:underline; }
 a:active { color: #CD7400; text-decoration:underline; }
 
 
-/*Name: Code*/
-.code {
+/*Name: Code block*/
+p.code {
 	font-family: "Source Code Pro", monospace;
 	font-style:normal;
 	font-weight:400;
@@ -172,7 +172,18 @@ a:active { color: #CD7400; text-decoration:underline; }
 	color:#CD7400;
 	background:#000000;
 	margin:1.5em 20% 0 20%;
-	padding:1em;
+	padding:0 1em;
+}
+
+/*Name: Code*/
+code {
+	font-family: "Source Code Pro", monospace;
+	font-style:normal;
+	font-weight:400;
+	font-size:1em;
+	text-indent:0;
+	color:#CD7400;
+	background:#000000;
 }
 
 
@@ -182,7 +193,7 @@ figcaption {
 	font-style:italic;
 	font-weight:400;
 	font-size:0.9em;
-	line-height:1.64;
+	line-height: 1.59;
 	color:#000000;
 	margin:1em 10% 0 10%;
 }
@@ -199,9 +210,9 @@ figcaption {
 /*Name: Author*/
 .titlepageAuthor {
 	font-size:1em;
+	line-height: 1.54;
 	font-style:italic;
 	font-weight:400;
-	line-height: 1.3;
 	color:#000000;
 	text-align:center;
 	text-indent:0;
@@ -210,9 +221,10 @@ figcaption {
 /*Name: Title*/
 .titlepageTitle {
 	font-size:3em;
+	line-height: 1.33;
 	font-style:normal;
 	font-weight: 900;
-	line-height: 1.5;
+	
 	color:#CD7400;
 	text-align:center;
 	text-indent:0;
@@ -220,10 +232,10 @@ figcaption {
 
 /*Name: Table of content*/
 .toc-item {
-	font-size: 1.2em;
+	font-size:1.2em;
+	line-height: 1.47;
 	font-style:normal;
 	font-weight: 700;
-	line-height:1.42;
 	color:#000000;
 
 }
@@ -231,6 +243,7 @@ figcaption {
 /*Name: Colophon*/
 .colophon {
 	font-size:.9em;
+	line-height:1.59;
 	text-indent:0;
 	text-align:right;
 }
@@ -246,7 +259,7 @@ ol {
 	font-style:normal;
 	font-weight:400;
 	font-size:1.1em;
-	line-height: 1.56;
+	line-height: 1.50;
 	color:#000000;
 	margin: 1.5em 0 0 0;
 	hyphens: auto;
@@ -259,7 +272,7 @@ ul {
 	font-style:normal;
 	font-weight:400;
 	font-size:1.1em;
-	line-height: 1.56;
+	line-height: 1.50;
 	color:#000000;
 	margin: 1.5em 0 0 0;
 	hyphens: auto;
@@ -281,7 +294,7 @@ th {
 	font-style:normal;
 	font-weight:700;
 	font-size:1.1em;
-	line-height: 1.56;
+	line-height: 1.50;
 	color:#ffffff;
 	background-color: #CD7400;
 	border: 3px solid #CD7400;
@@ -294,7 +307,7 @@ td {
 	font-style:normal;
 	font-weight:400;
 	font-size:1.1em;
-	line-height: 1.56;
+	line-height: 1.50;
 	color:#000000;
 	background-color: #ffffff;
 	border: 3px solid #CD7400;
