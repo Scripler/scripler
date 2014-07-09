@@ -386,6 +386,7 @@ textarea#renameProjectDocument, textarea#renameStyleset, textarea#renameStyle {
 	margin: 10px;
 	cursor: pointer;
 	position: relative;
+	overflow-x: hidden;
 }
 .typo.new {
 	border: 2px dashed #c6c6c6;
