@@ -71,7 +71,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				documentIds.push( document._id );
 			})
 
-			data.documents = listIds;
+			data.documents = documentIds;
 
 			if ( $scope.user._id ) {
 				$http.put('/document/' + $scope.pid + '/rearrange', angular.toJson( data ) )

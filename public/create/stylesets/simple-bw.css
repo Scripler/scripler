@@ -156,7 +156,7 @@ a:active { color: #000000; text-decoration:none; }
 
 
 /*Name: Code block*/
-p.code {
+code.block {
 	font-family: "Source Code Pro", monospace;
 	font-style:normal;
 	font-weight:700;
@@ -166,6 +166,7 @@ p.code {
 	background:#000000;
 	margin:1.5em 10% 0em 10%;
 	padding:0 1em;
+	display:block;
 }
 
 /*Name: Code*/

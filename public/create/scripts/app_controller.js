@@ -220,7 +220,7 @@ app.directive('onEnter', function() {
 	};
 });
 
-app.directive('ckEditor', function( $window, $rootScope ) {
+app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 	return {
 		require: '?ngModel',
 		link: function(scope, elm, attr, ngModel) {
@@ -267,6 +267,14 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 				ck.setData(ngModel.$viewValue);
 			});
 
+			$rootScope.modelTimeout = null;
+			function timeOutModel() {
+				if ( $rootScope.modelTimeout ) {
+					$timeout.cancel( $rootScope.modelTimeout );
+				}
+				$rootScope.modelTimeout = $timeout( updateModel, 1000 );
+			}
+
 			function updateModel() {
 				if ( !scope.$$phase ) {
 					scope.$apply(function() {
@@ -275,8 +283,8 @@ app.directive('ckEditor', function( $window, $rootScope ) {
 				}
 			}
 
-			ck.on('change', updateModel);
-			ck.on('key', updateModel);
+			ck.on('pasteState', updateModel);
+			ck.on('key', timeOutModel);
 			ck.on('dataReady', updateModel);
 
 			ngModel.$render = function(value) {

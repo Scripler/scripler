@@ -131,7 +131,7 @@ p.toc-item + p.toc-item {
 }
 
 /*/*This removes margin-top from code-paragraphs that comes after code-paragraphs*/
-p.code + p.code {
+code.block + code.block {
 	margin-top:0;
 }
 
