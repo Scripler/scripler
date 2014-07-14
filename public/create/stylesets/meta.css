@@ -4,9 +4,9 @@
 
 /*Name: Heading 1*/
 h1 {
-	font-family: "CMU Concrete", serif;
+	font-family: "CMU Sans Serif", serif;
 	font-style:normal;
-	font-weight:400;
+	font-weight:700;
 	font-size:3em;
 	line-height: 1.33;
 	color:#000;
@@ -15,9 +15,9 @@ h1 {
 
 /*Name: Heading 2*/
 h2 {
-	font-family: "CMU Concrete", serif;
+	font-family: "CMU Sans Serif", serif;
 	font-style:normal;
-	font-weight:400;
+	font-weight:700;
 	font-size:2.3em;
 	line-height: 1.35;
 	color:#000;
@@ -26,9 +26,9 @@ h2 {
 
 /*Name: Heading 3*/
 h3 {
-	font-family: "CMU Concrete", serif;
+	font-family: "CMU Sans Serif", serif;
 	font-style:normal;
-	font-weight:400;
+	font-weight:700;
 	font-size:2em;
 	line-height: 1.37;
 	color:#000;
@@ -37,9 +37,9 @@ h3 {
 
 /*Name: Heading 4*/
 h4 {
-	font-family: "CMU Concrete", serif;
+	font-family: "CMU Sans Serif", serif;
 	font-style:normal;
-	font-weight:400;
+	font-weight:700;
 	font-size:1.6em;
 	line-height: 1.40;
 	color:#000;
@@ -48,9 +48,9 @@ h4 {
 
 /*Name: Heading 5*/
 h5 {
-	font-family: "CMU Concrete", serif;
+	font-family: "CMU Sans Serif", serif;
 	font-style:normal;
-	font-weight:400;
+	font-weight:700;
 	font-size:1.4em;
 	line-height: 1.43;
 	color:#000;
@@ -59,9 +59,9 @@ h5 {
 
 /*Name: Heading 6*/
 h6 {
-	font-family: "CMU Concrete", serif;
+	font-family: "CMU Sans Serif", serif;
 	font-style:normal;
-	font-weight:400;
+	font-weight:700;
 	font-size:1.2em;
 	line-height: 1.47;
 	color:#000;
@@ -86,9 +86,9 @@ p {
 /*Name: Quote*/
 blockquote {
 	/*quotes: "\00BB" "\00AB" "\203A" "\2039";*/
-	font-family: "CMU Concrete", serif;
+	font-family: "CMU Sans Serif", serif;
 	font-style: italic;
-	font-weight: 400;
+	font-weight: 700;
 	text-align: left;
 	font-size:1.3em;
 	line-height: 1.45;
@@ -180,11 +180,11 @@ figcaption {
 
 /*Name: Title*/
 .titlepageTitle {
-	font-family: "CMU Concrete", serif;
+	font-family: "CMU Sans Serif", serif;
 	font-size:3em;
 	line-height: 1.33;
 	font-style:normal;
-	font-weight: 400;
+	font-weight: 700;
 	
 	color:#000;
 	text-align:center;
