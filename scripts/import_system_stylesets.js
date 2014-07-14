@@ -68,8 +68,8 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 					var tagAndClassRegex = /(\w+)\.(\w+)/;
 					var tagAndClass = tagAndClassRegex.exec(selector);
 					if (tagAndClass && tagAndClass.length > 1) {
-						clazz = tagAndClass[1];
-						tag = tagAndClass[2];
+						tag = tagAndClass[1];
+						clazz = tagAndClass[2];
 
 						if (cssNames[tag]) {
 							name = cssNames[tag].name;
