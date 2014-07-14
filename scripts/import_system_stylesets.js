@@ -64,28 +64,43 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 					callback(null);
 				} else if (type == 'style') {
 					var selector = jsonStyle['selector'];
-					var isClass = selector.indexOf('.') == 0;
 
-					if (isClass) {
-						clazz = selector.slice(1);
-						// "Insert system styles" do not need a human-readable name
-						if (cssNames[clazz]) {
-							name = cssNames[clazz].name;
-						} else {
-							name = clazz;
-							hidden = true;
-						}
-						//console.log('isClazz name: ' + clazz + ', name: ' + name);
-					} else {
-						tag = selector;
-						// "Insert system styles" do not need a human-readable name
+					var tagAndClassRegex = /(\w+)\.(\w+)/;
+					var tagAndClass = tagAndClassRegex.exec(selector);
+					if (tagAndClass && tagAndClass.length > 1) {
+						clazz = tagAndClass[1];
+						tag = tagAndClass[2];
+
 						if (cssNames[tag]) {
 							name = cssNames[tag].name;
 						} else {
 							name = tag;
 							hidden = true;
 						}
-						//console.log('tag name: ' + tag + ', name: ' + name);
+					} else {
+						var isClass = selector.indexOf('.') == 0;
+
+						if (isClass) {
+							clazz = selector.slice(1);
+							// "Insert system styles" do not need a human-readable name
+							if (cssNames[clazz]) {
+								name = cssNames[clazz].name;
+							} else {
+								name = clazz;
+								hidden = true;
+							}
+							//console.log('isClazz name: ' + clazz + ', name: ' + name);
+						} else {
+							tag = selector;
+							// "Insert system styles" do not need a human-readable name
+							if (cssNames[tag]) {
+								name = cssNames[tag].name;
+							} else {
+								name = tag;
+								hidden = true;
+							}
+							//console.log('tag name: ' + tag + ', name: ' + name);
+						}
 					}
 
 					var declarations = jsonStyle['declarations'];
