@@ -644,6 +644,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		obj.rename = !obj.rename;
 	}
 
+	$scope.isDefaultStyleset = function( styleset ) {
+		return styleset._id === $scope.documentSelected.defaultStyleset;
+	}
+
 	$scope.saveAsBlockStyle = function( styleset, style ) {
 		var index = styleset.styles.indexOf( style );
 		var newStyle = angular.copy( style );
