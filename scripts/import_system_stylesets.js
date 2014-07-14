@@ -11,6 +11,12 @@ var cssNames = require(path.join(__dirname, '../lib/css-names.json'));
 var filewalker = require('filewalker');
 var utils = require('../lib/utils');
 
+function debug(text) {
+	if (process.env.NODE_ENV != 'test') {
+		console.log(text);
+	}
+}
+
 function getCssKey ( cssNames, name ) {
 	for (var key in cssNames) {
 		if (cssNames.hasOwnProperty(key)) {
@@ -60,7 +66,7 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 				var hidden;
 
 				if (type == 'fontface') {
-					console.log('Skipping "fontface" style...(should be added as non-editable CSS (that is only included if used))');
+					debug('Skipping "fontface" style...(should be added as non-editable CSS (that is only included if used))');
 					callback(null);
 				} else if (type == 'style') {
 					var selector = jsonStyle['selector'];
@@ -75,7 +81,7 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 							name = clazz;
 							hidden = true;
 						}
-						//console.log('isClazz name: ' + clazz + ', name: ' + name);
+						//debug('isClazz name: ' + clazz + ', name: ' + name);
 					} else {
 						tag = selector;
 						// "Insert system styles" do not need a human-readable name
@@ -85,7 +91,7 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 							name = tag;
 							hidden = true;
 						}
-						//console.log('tag name: ' + tag + ', name: ' + name);
+						//debug('tag name: ' + tag + ', name: ' + name);
 					}
 
 					var declarations = jsonStyle['declarations'];
@@ -105,7 +111,7 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 							callback(err);
 						}
 
-						//console.log(stylesheetName + ': created style: ' + JSON.stringify(style));
+						//debug(stylesheetName + ': created style: ' + JSON.stringify(style));
 
 						styleset.styles.addToSet(style);
 						callback(null);
@@ -131,13 +137,13 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 						return next(err);
 					}
 
-					//console.log('BEFORE');
-					//console.log(JSON.stringify(populatedStyleset.styles));
+					//debug('BEFORE');
+					//debug(JSON.stringify(populatedStyleset.styles));
 
 					populatedStyleset.styles.sort(systemStyleOrder);
 
-					//console.log('AFTER');
-					//console.log(JSON.stringify(populatedStyleset.styles));
+					//debug('AFTER');
+					//debug(JSON.stringify(populatedStyleset.styles));
 
 					// The styles we just created were also added to the styleset so we must save the styleset again
 					populatedStyleset.save(function (err, savedStyleset) {
@@ -196,5 +202,5 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /[^non\-editable
 	.walk();
 
 process.on('exit', function() {
-	console.log('Imported all system stylesets from ' + systemStylesetsDir + ' (but check log messages for errors)');
+	debug('Imported all system stylesets from ' + systemStylesetsDir + ' (but check log messages for errors)');
 })

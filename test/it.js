@@ -1335,7 +1335,6 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					console.log('stylesets: ' + JSON.stringify(res.body.stylesets));
 					assert.equal(res.body.stylesets[0].id, userStylesetId);
 					assert.equal(res.body.stylesets[0].order, 3);
 					assert.equal(res.body.stylesets[1].id, stylesetId);
