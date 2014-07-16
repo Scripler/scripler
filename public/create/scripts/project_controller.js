@@ -394,11 +394,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					$scope.applyStyleToElement( firstElement, style, isDefault );
 				} else {
 					var applyToParent = false;
-					applyToParent = $scope.applyToSelectionWalker( editor );
+					applyToParent = $scope.applyToSelectionWalker( editor, style, isDefault );
 
 					//!!!this is done after the walker because it messes up the selection if done inside the walker
 					if ( applyToParent ) {
-						$scope.applyStyleToElement( firstElement, style );
+						$scope.applyStyleToElement( firstElement, style, isDefault );
 					}
 				}
 			}
@@ -472,7 +472,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	}
 
-	$scope.applyToSelectionWalker = function( editor ) {
+	$scope.applyToSelectionWalker = function( editor, style, isDefault ) {
 
 		//apply on selection or multiple blocks
 		var range = editor.getSelection().getRanges();
