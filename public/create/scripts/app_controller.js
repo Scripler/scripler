@@ -294,7 +294,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				CKEDITOR.tools.enableHtml5Elements( document );
 			}
 
-			ck.on('instanceReady', function(e) {
+			ck.on('instanceReady', function() {
 				ck.setData(ngModel.$viewValue);
 				$rootScope.$emit('ckDocument:ready');
 			});
