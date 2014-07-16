@@ -263,10 +263,6 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 
 			if (!ngModel) return;
 
-			ck.on('instanceReady', function() {
-				ck.setData(ngModel.$viewValue);
-			});
-
 			$rootScope.modelTimeout = null;
 			function timeOutModel() {
 				if ( $rootScope.modelTimeout ) {

@@ -82,7 +82,7 @@
 								<div class="styleset-options-menupoint" ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to project</div>
 							</div>
 
-							<ul ng-show="typoChildrenVisible" class="typo-children">
+							<ul ng-show="typoChildrenVisible || isDefaultStyleset(styleset)" class="typo-children">
 								<li ng-repeat="style in styleset.styles" id="{{style._id}}" ng-hide="style.archived || style.hidden" ng-selected="selectedStyle._id === style._id">
 									<a class="style-options-show" ng-click="showStyleOptions = true">
 										<div class="arrow"></div>
