@@ -282,9 +282,6 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 			ck.on('pasteState', updateModel);
 			ck.on('key', timeOutModel);
 			ck.on('dataReady', updateModel);
-			ck.on('paste', function(e) {
-				e.data.dataValue = e.data.dataValue.replace(/\s*style="[^"]*"/g, '');
-			});
 
 			ngModel.$render = function(value) {
 				ck.setData(ngModel.$viewValue);
