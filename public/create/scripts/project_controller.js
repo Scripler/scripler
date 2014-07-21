@@ -701,6 +701,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	}
 
+	$scope.generateToc = function() {
+		$http.get('/project/' + $scope.project._id + '/toc')
+			.success( function( data ) {
+				console.log(data);
+			});
+	}
+
 	$scope.insertOptionChoosen = function(insertoption) {
 		if ($scope.activeInsertOption === insertoption) {
 			$scope.activeInsertOption = null;
