@@ -809,7 +809,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 							var tag = element.getName();
 							for ( var y = 0; y < styles.length; y++ ) {
 								var sTag = styles[y].tag;
-								if ( tag === sTag ) {
+								if ( tag === sTag && stylesets[x]._id === $scope.documentSelected.defaultStyleset ) {
 									selectedStyle = styles[y];
 									isSet = true;
 									//break all loops
