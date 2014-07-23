@@ -274,7 +274,6 @@
 						<!--<li class="insertOption"><img src="pages/images/insert_cover_button.png" width="80" height="80"></li>-->
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
 							<div class="left-menu-options">
-								<a ng-click="generateToc()">Generate TOC</a>
 								<span class="left-menu-box inputfield">
 									<input type="text" placeholder="Anchor name">
 								</span>
@@ -283,9 +282,7 @@
 								</span>
 
 								<span class="left-menu-box left-menu-parameter-margin">
-									<span class="option"><a ng-click="insertAnchorOption('chooseAnchor');">Anchor in document</a></span>
-									<span class="option"><a ng-click="insertAnchorOption('chooseAnchor');">Anchor in document</a></span>
-									<span class="option"><a ng-click="insertAnchorOption('chooseAnchor');">Anchor in document</a></span>
+									<span class="option" ng-repeat="tocs in toc"><a ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
 								</span>
 							</div>
 							<div class="left-menu-divider"></div>

@@ -285,6 +285,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 
 			ngModel.$render = function(value) {
 				ck.setData(ngModel.$viewValue);
+				$rootScope.$emit('ckDocument:renderFinished');
 			};
 
 			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 ) {

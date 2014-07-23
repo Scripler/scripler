@@ -460,6 +460,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if ( typeof style.tag != 'undefined' ) {
 			element.removeAttribute( 'class' );
 			element.renameNode( style.tag );
+
+			if ( [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ].indexOf( style.tag ) > -1 ) {
+				if ( element.getId() === null ) {
+					element.$.id = Date.now();
+				}
+			}
 		}
 
 		if ( isDefault ) {
@@ -702,7 +708,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.generateToc = function() {
 		$http.get('/project/' + $scope.project._id + '/toc')
 			.success( function( data ) {
-				console.log(data);
+				$scope.toc = data.toc;
 			});
 	}
 
@@ -712,6 +718,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 		else {
 			$scope.activeInsertOption = insertoption;
+		}
+
+		if ( insertoption === 'showInsertAnchorOptions' ) {
+			$scope.generateToc();
 		}
 	}
 
@@ -723,6 +733,31 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.activeImageOption = imageoption;
 		}
 	}
+
+	$scope.scrollToToc = function( tocEntry ) {
+		var elm = $rootScope.ck.document.$.getElementById( tocEntry.id );
+		if ( elm ) {
+			elm.scrollIntoView();
+		}
+	}
+
+	$scope.anchorScrollTo = function( tocEntry ) {
+		var re = /\_(.*?)\./;
+		var documentId = tocEntry.target.match(re)[1];
+
+		if ( documentId !== $scope.documentSelected._id ) {
+			angular.forEach($scope.projectDocuments, function( document ) {
+				if ( document._id === documentId ) {
+					$scope.openProjectDocument( document );
+				}
+			});
+		}
+
+		if ( tocEntry.type !== 'document' ) {
+			$scope.scrollToToc( tocEntry );
+			$scope.lastTocEntry = tocEntry;
+		}
+	};
 
     function initiateEditor(scope) {
     	$scope.ckContent = 'test';
@@ -738,6 +773,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.ckReady = true;
 		$scope.applyStylesetsToEditor();
 		$scope.loadFonts();
+	});
+
+	$scope.$onRootScope('ckDocument:renderFinished', function ( event ) {
+		$scope.scrollToToc( $scope.lastTocEntry );
 	});
 
 	angular.element(document).ready(function () {
