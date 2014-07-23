@@ -90,7 +90,7 @@
 					<div class="publication-options-menupoint" ng-click="editingPublicationTitle = true; showPublicationOptions = false;">rename</div>
 					<div class="publication-options-menupoint" ng-click="copyPublication(publication); showPublicationOptions = false;">copy</div>
 					<div class="publication-options-menupoint" ng-click="archivePublication(publication); showPublicationOptions = false;">archive</div>
-                    <div class="publication-options-menupoint" ng-click="unarchivePublication(publication); showPublicationOptions = false;">unarchive</div>
+					<div class="publication-options-menupoint" ng-click="unarchivePublication(publication); showPublicationOptions = false;">unarchive</div>
 					<div class="publication-options-dates" ng-show="publication.created && publication.changed">
 						<div>Created Date: </div><div class="dates">{{publication.created | date:'yyyy-MM-dd HH:mm'}}</div>
 						<div>Last Changed: </div><div class="dates">{{publication.modified | date:'yyyy-MM-dd HH:mm'}}</div>
