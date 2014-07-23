@@ -1,7 +1,7 @@
 'use strict'
 
 function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress,
-							$timeout, $rootScope, stylesetUtilsService, $q, user ) {
+							$timeout, $rootScope, utilsService, $q, user ) {
 
 	var timeout = null;
 
@@ -33,7 +33,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			if ( $scope.projectDocuments.length == 0 ) {
 				$scope.addProjectDocument();
 			} else {
-				$scope.openProjectDocument( $scope.projectDocuments[0] );
+				var index = getIndexForDocumentToDisplay($scope.projectDocuments, 0);
+				$scope.openProjectDocument( $scope.projectDocuments[index] );
 			}
 		});
 	}
@@ -200,23 +201,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 
 	$scope.archiveProjectDocument = function( projectDocument ) {
-		var unarchivedProjectDocuments = $scope.projectDocuments.filter(function (projectDocument) {
-			if (!!projectDocument.archived == false) {
-				return projectDocument;
-			};
-		});
-
-		if (unarchivedProjectDocuments.length > 0) {
+		if ($scope.projectDocuments.length > 0) {
 			var index = $scope.projectDocuments.indexOf( projectDocument );
 			if ( $scope.user._id ) {
 				$http.put('/document/' + projectDocument._id + '/archive')
 					.success( function() {
 						projectDocument.archived = true;
-						var newIndex = getIndexForDocumentToDisplay($scope.projectDocuments, index);
-						if (newIndex >= 0) {
-							$scope.openProjectDocument($scope.projectDocuments[newIndex]);
-						} else {
-							// TODO: handle error how?
+						if (utilsService.mongooseEquals(projectDocument, $scope.documentSelected)) {
+							var newIndex = getIndexForDocumentToDisplay($scope.projectDocuments, index);
+							if (newIndex >= 0) {
+								$scope.openProjectDocument($scope.projectDocuments[newIndex]);
+							} else {
+								// TODO: handle error how?
+							}
 						}
 					});
 			} else {
@@ -336,7 +333,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.applyStylesetToEditor = function( styleset, isDefault ) {
 
-		$scope.currentStylesetCSS = stylesetUtilsService.getStylesetContents( styleset, isDefault );
+		$scope.currentStylesetCSS = utilsService.getStylesetContents( styleset, isDefault );
 
 		if ( $scope.ckReady ) {
 			$rootScope.ck.document.appendStyleText( $scope.currentStylesetCSS );
@@ -359,9 +356,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var combinedCSS = '';
 		for ( var i = 0; i < $scope.stylesets.length; i++ ) {
 			if ( $scope.documentSelected.defaultStyleset == $scope.stylesets[i]._id ) {
-				combinedCSS += stylesetUtilsService.getStylesetContents( $scope.stylesets[i], true );
+				combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], true );
 			} else {
-				combinedCSS += stylesetUtilsService.getStylesetContents( $scope.stylesets[i], false );
+				combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], false );
 			}
 		}
 

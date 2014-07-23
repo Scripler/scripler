@@ -1,7 +1,7 @@
 'use strict';
 
 var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload',
-										 	'ngProgress', 'stylesetUtilsSharedModule'] );
+										 	'ngProgress', 'utilsSharedModule'] );
 
 app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStorageService', '$rootScope', '$timeout',
 	function( $http, $scope, userService, localStorageService, $rootScope, $timeout ) {
@@ -125,15 +125,6 @@ app.service('projectsService', function( $http, $q ) {
 					angular.forEach(data.projects, function( project ) {
 						projects.push( project );
 					})
-
-					if ( user.showArchived ) {
-						$http.get('/project/archived')
-							.success( function( data ) {
-								angular.forEach(data.projects, function( project ) {
-									projects.push( project );
-								})
-							});
-					}
 				});
 
 			return projects;

@@ -3,8 +3,8 @@
 	if (typeof module !== 'undefined' && module.exports) {
 		module.exports = service;
 	} else if (angular) {
-		angular.module('stylesetUtilsSharedModule', []).factory(
-				'stylesetUtilsService', function() {
+		angular.module('utilsSharedModule', []).factory(
+				'utilsService', function() {
 					return service;
 				});
 	}

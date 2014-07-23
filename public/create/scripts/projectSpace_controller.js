@@ -113,6 +113,18 @@ function projectSpaceController( $scope, $http, localStorageService, projectsSer
 		}
 	};
 
+	$scope.unarchivePublication = function( publication ) {
+		if ( $scope.user ) {
+			$http.put('/project/' + publication._id + '/unarchive')
+				.success( function() {
+					publication.archived = false;
+				});
+		} else {
+			publication.archived = false;
+			// TODO: how to handle demo mode?
+		}
+	};
+
 	$scope.renamePublication = function( publication ) {
 		if ( $scope.user ) {
 			$http.put('/project/' + publication._id + '/rename', angular.toJson( publication ) )
