@@ -620,10 +620,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 			for ( var x = 0; x < matches.length; x++ ) {
 				if ( x % 3 !== 0 ) {
-					if ( matches[x] !== 'margin' && matches[x] !== 'padding' && matches[x] !== 'line-height' &&
-						 matches[x] !== 'margin-top' && matches[x] !== 'margin-bottom' && matches[x] !== 'margin-right' &&
-						 matches[x] !== 'margin-left' && matches[x] !== 'padding-top' && matches[x] !== 'padding-bottom' &&
-						 matches[x] !== 'padding-right' && matches[x] !== 'padding-left' ) {
+					if ( [ 'margin', 'padding', 'line-height', 'margin-top', 'margin-bottom', 'margin-right',
+							'margin-left', 'padding-top', 'padding-bottom', 'padding-right', 'padding-left' ].indexOf( matches[x] ) < -1 ) {
 						inlineCSS[matches[x]] = matches[x+1];
 						x++; //skip next one because it has been assigned
 					}
