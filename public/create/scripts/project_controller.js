@@ -168,16 +168,119 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
+	/*
+	function getDocumentIndexForArchived(documents, archivedDocument, oldIndex) {
+		var result;
+
+		var unarchivedDocuments = documents.filter(function (document) {
+			if (!!document.archived == false) {
+				return document;
+			};
+		});
+
+		//var lastDocumentIndex = documents.length - 1;
+		//var numberOfUnarchivedDocuments = unarchivedDocuments.length;
+		//var lastUnarchivedDocumentIndex = stylesetUtilsService.getIndex(unarchivedDocuments, archivedDocument);
+
+		if (documents && documents.length > 0) {
+			if (unarchivedDocuments.length == 1) {
+				result = 0;
+				// If the document being archived is the last document, go backwards, and find the first unarchived document
+			} else if (oldIndex == documents.length - 1) {
+				//if (stylesetUtilsService.mongooseEquals(archivedDocument._id, documents[lastDocumentIndex]._id)) {
+				for (var i=documents.length - 1; i>=0; i--) {
+					var document = documents[i];
+					if (i < oldIndex && !!document.archived == false) {
+						result = i;
+						break;
+					}
+				}
+				// Otherwise, find the first unarchived document with an index higher than the document we just archived
+			} else {
+				for (var i=oldIndex + 1; i<=documents.length; i++) {
+					var document = documents[i];
+					if (i > oldIndex && !!document.archived == false) {
+						result = i;
+						break;
+					}
+				}
+			}
+		} else {
+			console.log("ERROR: it is not possible to archive the last document");
+		}
+		return result;
+	};
+	*/
+
+	function getIndexForDocumentToDisplay(documents, oldIndex) {
+		var result;
+
+		if (documents && documents.length > 0) {
+			for (var i=0; i<documents.length; i++) {
+				var document = documents[i];
+
+				var currentNext = i + oldIndex;
+				if (currentNext < documents.length) {
+					var nextDocument = documents[currentNext];
+					if (nextDocument.archived == false) {
+						result = currentNext;
+						break;
+					}
+				}
+
+				var currentPrevious = oldIndex - i;
+				if (currentPrevious >= 0) {
+					var previousDocument = documents[currentPrevious];
+					if (previousDocument.archived == false) {
+						result = currentPrevious;
+						break;
+					}
+				}
+			}
+		} else {
+			console.log("ERROR: it is not possible to archive the last document");
+		}
+		return result;
+	};
+
 	$scope.archiveProjectDocument = function( projectDocument ) {
-		var index = $scope.projectDocuments.indexOf( projectDocument );
+		var unarchivedProjectDocuments = $scope.projectDocuments.filter(function (projectDocument) {
+			if (!!projectDocument.archived == false) {
+				return projectDocument;
+			};
+		});
+
+		if (unarchivedProjectDocuments.length > 0) {
+			var index = $scope.projectDocuments.indexOf( projectDocument );
+			if ( $scope.user._id ) {
+				$http.put('/document/' + projectDocument._id + '/archive')
+					.success( function() {
+						projectDocument.archived = true;
+						var newIndex = getIndexForDocumentToDisplay($scope.projectDocuments, index);
+						if (newIndex >= 0) {
+							$scope.openProjectDocument($scope.projectDocuments[newIndex]);
+						} else {
+							// TODO: handle error how?
+						}
+					});
+			} else {
+				projectDocument.archived = true;
+			}
+		} else {
+			// TODO: this message should be shown to the user
+			console.log("ERROR: it is not possible to archive the last document");
+		}
+	};
+
+	$scope.unarchiveProjectDocument = function( projectDocument ) {
 		if ( $scope.user._id ) {
-			$http.put('/document/' + projectDocument._id + '/archive')
+			$http.put('/document/' + projectDocument._id + '/unarchive')
 				.success( function() {
-					projectDocument.archived = true;
-					$scope.openProjectDocument( $scope.projectDocuments[index+1] );
+					projectDocument.archived = false;
+					$scope.openProjectDocument(projectDocument);
 				});
 		} else {
-			projectDocument.archived = true;
+			projectDocument.archived = false;
 		}
 	};
 

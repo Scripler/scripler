@@ -95,7 +95,7 @@
 
 	/**
 	 *
-	 * Check if a Mongoose model object id exists in the array of objects.
+	 * Check if a Mongoose model object/id exists in the array of objects.
 	 *
 	 * @param objects
 	 * @param objectId
@@ -118,6 +118,30 @@
 	}
 
 	/**
+	 * Get the index of a Mongoose model object/id in the array of objects.
+	 *
+	 * @param objects
+	 * @param objectId
+	 * @returns {*}
+	 */
+	function getIndex(objects, objectId) {
+		var index;
+		if (objects) {
+			for (var i=0; i<objects.length; i++) {
+				var object = objects[i];
+				if (object) {
+					if (mongooseEquals(object, objectId)) {
+						index = i;
+						break;
+					}
+				}
+			}
+		}
+		return index;
+	}
+
+
+		/**
 	 * Check if one of the documents exist in the specified folder.
 	 *
 	 * @param documents
