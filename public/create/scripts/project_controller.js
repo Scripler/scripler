@@ -1,7 +1,7 @@
 'use strict'
 
 function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress,
-							$timeout, $rootScope, stylesetUtilsService, $q, user ) {
+							$timeout, $rootScope, utilsService, $q, user ) {
 
 	var timeout = null;
 
@@ -33,7 +33,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			if ( $scope.projectDocuments.length == 0 ) {
 				$scope.addProjectDocument();
 			} else {
-				$scope.openProjectDocument( $scope.projectDocuments[0] );
+				var index = getIndexForDocumentToDisplay($scope.projectDocuments, 0);
+				$scope.openProjectDocument( $scope.projectDocuments[index] );
 			}
 		});
 	}
@@ -168,16 +169,71 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
+	function getIndexForDocumentToDisplay(documents, oldIndex) {
+		var result;
+
+		if (documents && documents.length > 0) {
+			for (var i=0; i<documents.length; i++) {
+				var document = documents[i];
+
+				var currentNext = i + oldIndex;
+				if (currentNext < documents.length) {
+					var nextDocument = documents[currentNext];
+					if (nextDocument.archived == false) {
+						result = currentNext;
+						break;
+					}
+				}
+
+				var currentPrevious = oldIndex - i;
+				if (currentPrevious >= 0) {
+					var previousDocument = documents[currentPrevious];
+					if (previousDocument.archived == false) {
+						result = currentPrevious;
+						break;
+					}
+				}
+			}
+		} else {
+			console.log("ERROR: it is not possible to archive the last document");
+		}
+		return result;
+	};
+
 	$scope.archiveProjectDocument = function( projectDocument ) {
-		var index = $scope.projectDocuments.indexOf( projectDocument );
+		if ($scope.projectDocuments.length > 0) {
+			var index = $scope.projectDocuments.indexOf( projectDocument );
+			if ( $scope.user._id ) {
+				$http.put('/document/' + projectDocument._id + '/archive')
+					.success( function() {
+						projectDocument.archived = true;
+						if (utilsService.mongooseEquals(projectDocument, $scope.documentSelected)) {
+							var newIndex = getIndexForDocumentToDisplay($scope.projectDocuments, index);
+							if (newIndex >= 0) {
+								$scope.openProjectDocument($scope.projectDocuments[newIndex]);
+							} else {
+								// TODO: handle error how?
+							}
+						}
+					});
+			} else {
+				projectDocument.archived = true;
+			}
+		} else {
+			// TODO: this message should be shown to the user
+			console.log("ERROR: it is not possible to archive the last document");
+		}
+	};
+
+	$scope.unarchiveProjectDocument = function( projectDocument ) {
 		if ( $scope.user._id ) {
-			$http.put('/document/' + projectDocument._id + '/archive')
+			$http.put('/document/' + projectDocument._id + '/unarchive')
 				.success( function() {
-					projectDocument.archived = true;
-					$scope.openProjectDocument( $scope.projectDocuments[index+1] );
+					projectDocument.archived = false;
+					$scope.openProjectDocument(projectDocument);
 				});
 		} else {
-			projectDocument.archived = true;
+			projectDocument.archived = false;
 		}
 	};
 
@@ -277,7 +333,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.applyStylesetToEditor = function( styleset, isDefault ) {
 
-		$scope.currentStylesetCSS = stylesetUtilsService.getStylesetContents( styleset, isDefault );
+		$scope.currentStylesetCSS = utilsService.getStylesetContents( styleset, isDefault );
 
 		if ( $scope.ckReady ) {
 			$rootScope.ck.document.appendStyleText( $scope.currentStylesetCSS );
@@ -300,9 +356,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var combinedCSS = '';
 		for ( var i = 0; i < $scope.stylesets.length; i++ ) {
 			if ( $scope.documentSelected.defaultStyleset == $scope.stylesets[i]._id ) {
-				combinedCSS += stylesetUtilsService.getStylesetContents( $scope.stylesets[i], true );
+				combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], true );
 			} else {
-				combinedCSS += stylesetUtilsService.getStylesetContents( $scope.stylesets[i], false );
+				combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], false );
 			}
 		}
 

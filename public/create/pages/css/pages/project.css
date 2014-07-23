@@ -587,3 +587,10 @@ li.typo p {
 	-ms-user-select: none;
 	user-select: none;
 }
+
+.archived {
+    background-color: #CFCFCF;
+}
+.archived a {
+    color: #6B6B6B;
+}

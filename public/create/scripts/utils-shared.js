@@ -3,8 +3,8 @@
 	if (typeof module !== 'undefined' && module.exports) {
 		module.exports = service;
 	} else if (angular) {
-		angular.module('stylesetUtilsSharedModule', []).factory(
-				'stylesetUtilsService', function() {
+		angular.module('utilsSharedModule', []).factory(
+				'utilsService', function() {
 					return service;
 				});
 	}
@@ -95,7 +95,7 @@
 
 	/**
 	 *
-	 * Check if a Mongoose model object id exists in the array of objects.
+	 * Check if a Mongoose model object/id exists in the array of objects.
 	 *
 	 * @param objects
 	 * @param objectId
