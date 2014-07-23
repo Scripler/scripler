@@ -168,50 +168,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
-	/*
-	function getDocumentIndexForArchived(documents, archivedDocument, oldIndex) {
-		var result;
-
-		var unarchivedDocuments = documents.filter(function (document) {
-			if (!!document.archived == false) {
-				return document;
-			};
-		});
-
-		//var lastDocumentIndex = documents.length - 1;
-		//var numberOfUnarchivedDocuments = unarchivedDocuments.length;
-		//var lastUnarchivedDocumentIndex = stylesetUtilsService.getIndex(unarchivedDocuments, archivedDocument);
-
-		if (documents && documents.length > 0) {
-			if (unarchivedDocuments.length == 1) {
-				result = 0;
-				// If the document being archived is the last document, go backwards, and find the first unarchived document
-			} else if (oldIndex == documents.length - 1) {
-				//if (stylesetUtilsService.mongooseEquals(archivedDocument._id, documents[lastDocumentIndex]._id)) {
-				for (var i=documents.length - 1; i>=0; i--) {
-					var document = documents[i];
-					if (i < oldIndex && !!document.archived == false) {
-						result = i;
-						break;
-					}
-				}
-				// Otherwise, find the first unarchived document with an index higher than the document we just archived
-			} else {
-				for (var i=oldIndex + 1; i<=documents.length; i++) {
-					var document = documents[i];
-					if (i > oldIndex && !!document.archived == false) {
-						result = i;
-						break;
-					}
-				}
-			}
-		} else {
-			console.log("ERROR: it is not possible to archive the last document");
-		}
-		return result;
-	};
-	*/
-
 	function getIndexForDocumentToDisplay(documents, oldIndex) {
 		var result;
 
