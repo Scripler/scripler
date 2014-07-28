@@ -774,7 +774,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 
 	$scope.insertNewAnchor = function() {
-		var insert = '<a id="' + Date.now() + '" name="' + $scope.anchorName + '"></a>';
+		var id = Date.now();
+		var insert = '<a id="' + id + '" name="' + id + '" title="' + $scope.anchorName + '"></a>';
 		editorInsert( insert );
 		$scope.updateProjectDocument();
 		$scope.generateToc();
