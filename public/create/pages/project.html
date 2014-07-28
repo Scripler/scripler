@@ -275,10 +275,10 @@
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
 							<div class="left-menu-options">
 								<span class="left-menu-box inputfield">
-									<input type="text" placeholder="Anchor name">
+									<input type="text" ng-model="anchorName" placeholder="Anchor name">
 								</span>
 								<span class="left-menu-button">
-									<a ng-click="insertAnchorOption('addNewAnchor');">+</a>
+									<a ng-click="insertNewAnchor();">+</a>
 								</span>
 
 								<span class="left-menu-box left-menu-parameter-margin">

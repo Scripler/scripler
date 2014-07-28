@@ -759,6 +759,21 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
+	$scope.insertNewAnchor = function() {
+		var insert = '<a id="' + Date.now() + '" title="' + $scope.anchorName + '"> </a>';
+		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
+
+		var element = $rootScope.CKEDITOR.dom.element.createFromHtml( insert );
+		editor.insertElement( element );
+		var range = editor.createRange();
+		range.moveToElementEditablePosition(element);
+		$scope.updateProjectDocument();
+		$scope.generateToc();
+		$rootScope.ck.focus();
+		range.select();
+		$scope.anchorName = '';
+	}
+
     function initiateEditor(scope) {
     	$scope.ckContent = 'test';
 
@@ -776,7 +791,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	});
 
 	$scope.$onRootScope('ckDocument:renderFinished', function ( event ) {
-		$scope.scrollToToc( $scope.lastTocEntry );
+		if ( typeof $scope.lastTocEntry !== 'undefined' ) {
+			$scope.scrollToToc( $scope.lastTocEntry );
+		}
 	});
 
 	angular.element(document).ready(function () {
