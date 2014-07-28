@@ -153,15 +153,13 @@
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
 							<div class="left-menu-options">
 								<span class="left-menu-box inputfield full-size">
-									<input type="text" placeholder="Address">
+									<input type="text" ng-model="linkAddress" placeholder="Address">
 								</span>
 								<span class="left-menu-box inputfield full-size left-menu-parameter-margin">
-									<input type="text" placeholder="Text">
+									<input type="text" ng-model="linkText" placeholder="Text">
 								</span>
-								<span class="left-menu-box left-menu-parameter-margin">
-									<span class="option"><a ng-click="linkAnchorOption('chooseAnchor');">Anchor in document</a></span>
-									<span class="option"><a ng-click="linkAnchorOption('chooseAnchor');">Anchor in document</a></span>
-									<span class="option"><a ng-click="linkAnchorOption('chooseAnchor');">Anchor in document</a></span>
+								<span class="left-menu-button full-size left-menu-parameter-margin">
+									<a ng-click="insertNewLink();">+</a>
 								</span>
 							</div>
 
