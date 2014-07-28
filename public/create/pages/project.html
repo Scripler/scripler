@@ -172,11 +172,12 @@
 						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
 							<div class="left-menu-options">
-								<span class="left-menu-box inputfield">
-									<input type="file" ng-file-select="onImageSelect($files)" accept="image/*">
+								<span class="left-menu-box">
+									<input type="file" id="imagesInput" ng-file-select="onImageSelect($files)" accept="image/*" ng-hide="true">
+									<label for="imagesInput">Click to insert an image</label>
 								</span>
 							</div>
-							<div class="left-menu-options left-menu-parameter-margin">
+							<!--<div class="left-menu-options left-menu-parameter-margin">
 								<span class="left-menu-button">
 									<a ng-click="alignImageLeft(); insertImageOption('')">
 										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Left" />
@@ -227,7 +228,7 @@
 										<span class="extra-info">%</span>
 									</span>
 								</div>
-							</div>
+							</div>-->
 							<div class="left-menu-divider"></div>
 							<div class="left-menu-icons">
 								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChoosen('showInsertImageOptions');">
