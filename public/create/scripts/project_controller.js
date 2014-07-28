@@ -51,13 +51,27 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				file: file
 			}).progress(function(evt) {
 				ngProgress.set(parseInt(100.0 * evt.loaded / evt.total) - 25);
-				console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
 				$scope.projectDocuments.push( data.document );
 				$scope.openProjectDocument( data.document );
 				$scope.applyStylesetsToEditor();
-				console.log(data);
+			});
+		}
+	};
+
+	$scope.onImageSelect = function($files) {
+		for (var i = 0; i < $files.length; i++) {
+			var file = $files[i];
+			ngProgress.start();
+			$scope.upload = $upload.upload({
+				url: '/image/' + $scope.pid + '/upload',
+				file: file
+			}).progress(function(evt) {
+				ngProgress.set(parseInt(100.0 * evt.loaded / evt.total) - 25);
+			}).success(function(data, status, headers, config) {
+				ngProgress.complete();
+				$scope.insertNewImage( data.images );
 			});
 		}
 	};
@@ -773,6 +787,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.updateProjectDocument();
 		$scope.linkAddress = '';
 		$scope.linkText = '';
+	}
+
+	$scope.insertNewImage = function( images ) {
+		//since only one image always take the first
+		var image = images[0];
+		var imageInsert = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		editorInsert( imageInsert );
 	}
 
 	function editorInsert( insert ) {

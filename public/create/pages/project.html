@@ -173,10 +173,7 @@
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
 							<div class="left-menu-options">
 								<span class="left-menu-box inputfield">
-									<input type="text" placeholder="Choose image">
-								</span>
-								<span class="left-menu-button">
-									<a ng-click="insertImageOption('addNewImage');">+</a>
+									<input type="file" ng-file-select="onImageSelect($files)" accept="image/*">
 								</span>
 							</div>
 							<div class="left-menu-options left-menu-parameter-margin">
