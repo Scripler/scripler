@@ -686,7 +686,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.setStylesetStyling = function( styleset, style ) {
-		var stylesetCSS = style.css;
+		var stylesetCSS = angular.copy( style.css );
 		stylesetCSS[ 'padding' ] = '15px 0 15px 10px';
 		stylesetCSS[ 'font-size' ] = '1.5em';
 		var family = stylesetCSS['font-family'];
