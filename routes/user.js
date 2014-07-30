@@ -151,7 +151,10 @@ exports.register = function (req, res, next) {
 								}
 
 								user.stylesets.addToSet(copy);
-								user.defaultStyleset = copy; // TODO: which styleset should be the default?
+
+								if (copy.name === conf.user.defaultStylesetName) {
+									user.defaultStyleset = copy;
+								}
 
 								numberOfStylesetsToBeCopied--;
 
@@ -159,6 +162,11 @@ exports.register = function (req, res, next) {
 									user.save(function (err) {
 										if (err) {
 											return next(err);
+										}
+
+										if (utils.isEmpty(user.defaultStyleset)) {
+											// TODO: should this error be shown to the user?
+											logger.error("No default styleset set for user " + user.firstname + " " + user.lastname + "(id = " + user._id + ").");
 										}
 
 										return createDirectories(next);

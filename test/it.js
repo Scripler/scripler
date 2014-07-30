@@ -106,11 +106,11 @@ describe('Scripler RESTful API', function () {
 			request(host)
 				.post('/styleset')
 				.set('cookie', cookie)
-				.send({name: "Scripler Styleset 1", isSystem: true})
+				.send({name: conf.user.defaultStylesetName, isSystem: true})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset.name, "Scripler Styleset 1");
+					assert.equal(res.body.styleset.name, conf.user.defaultStylesetName);
 					assert.equal(res.body.styleset.isSystem, true);
 					systemStylesetId = res.body.styleset._id;
 					systemStylesetId && done();
@@ -202,6 +202,7 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.user.firstname, "John");
 					assert.equal(res.body.user.lastname, "Doe");
+					assert.equal(!res.body.user.defaultStyleset, false);
 					done();
 				});
 		}),
@@ -1335,7 +1336,7 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					console.log('stylesets: ' + JSON.stringify(res.body.stylesets));
+					//console.log('stylesets: ' + JSON.stringify(res.body.stylesets));
 					assert.equal(res.body.stylesets[0].id, userStylesetId);
 					assert.equal(res.body.stylesets[0].order, 3);
 					assert.equal(res.body.stylesets[1].id, stylesetId);
