@@ -25,37 +25,31 @@ exports.create = function (req, res, next) {
 		style: req.body.style,
 		weight: req.body.weight,
 		src: req.body.src,
-		isSystem: req.body.isSystem
+		isSystem: false
 	});
 
-	if (!req.body.isSystem) {
-		font.members = [
-			{userId: req.user._id, access: ["admin"]}
-		];
-	}
+	font.members = [
+		{userId: req.user._id, access: ["admin"]}
+	];
 
 	font.save(function(err) {
 		if (err) {
 			return next(err);
 		}
 
-		if (!req.body.isSystem) {
-			// TODO: add to user.fonts when "user fonts" becomes a feature
-			/*
-			req.user.fonts.addToSet(font);
-			req.user.save(function(err) {
-				if (err) {
-					return next(err);
-				}
-
-				res.send({font: font});
-			});
-			*/
+		// TODO: add to user.fonts when "user fonts" becomes a feature
+		/*
+		req.user.fonts.addToSet(font);
+		req.user.save(function(err) {
+			if (err) {
+				return next(err);
+			}
 
 			res.send({font: font});
-		} else {
-			res.send({font: font});
-		}
+		});
+		*/
+
+		res.send({font: font});
 	});
 
 }
