@@ -52,13 +52,27 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				file: file
 			}).progress(function(evt) {
 				ngProgress.set(parseInt(100.0 * evt.loaded / evt.total) - 25);
-				console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
 				$scope.projectDocuments.push( data.document );
 				$scope.openProjectDocument( data.document );
 				$scope.applyStylesetsToEditor();
-				console.log(data);
+			});
+		}
+	};
+
+	$scope.onImageSelect = function($files) {
+		for (var i = 0; i < $files.length; i++) {
+			var file = $files[i];
+			ngProgress.start();
+			$scope.upload = $upload.upload({
+				url: '/image/' + $scope.pid + '/upload',
+				file: file
+			}).progress(function(evt) {
+				ngProgress.set(parseInt(100.0 * evt.loaded / evt.total) - 25);
+			}).success(function(data, status, headers, config) {
+				ngProgress.complete();
+				$scope.insertNewImage( data.images );
 			});
 		}
 	};
@@ -516,6 +530,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if ( typeof style.tag != 'undefined' ) {
 			element.removeAttribute( 'class' );
 			element.renameNode( style.tag );
+
+			if ( [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ].indexOf( style.tag ) > -1 ) {
+				if ( element.getId() === null ) {
+					element.$.id = Date.now();
+				}
+			}
 		}
 
 		if ( isDefault ) {
@@ -676,10 +696,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 			for ( var x = 0; x < matches.length; x++ ) {
 				if ( x % 3 !== 0 ) {
-					if ( matches[x] !== 'margin' && matches[x] !== 'padding' && matches[x] !== 'line-height' &&
-						 matches[x] !== 'margin-top' && matches[x] !== 'margin-bottom' && matches[x] !== 'margin-right' &&
-						 matches[x] !== 'margin-left' && matches[x] !== 'padding-top' && matches[x] !== 'padding-bottom' &&
-						 matches[x] !== 'padding-right' && matches[x] !== 'padding-left' ) {
+					if ( [ 'margin', 'padding', 'line-height', 'margin-top', 'margin-bottom', 'margin-right',
+							'margin-left', 'padding-top', 'padding-bottom', 'padding-right', 'padding-left' ].indexOf( matches[x] ) < -1 ) {
 						inlineCSS[matches[x]] = matches[x+1];
 						x++; //skip next one because it has been assigned
 					}
@@ -757,12 +775,23 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	}
 
+	$scope.generateToc = function() {
+		$http.get('/project/' + $scope.project._id + '/toc')
+			.success( function( data ) {
+				$scope.toc = data.toc;
+			});
+	}
+
 	$scope.insertOptionChoosen = function(insertoption) {
 		if ($scope.activeInsertOption === insertoption) {
 			$scope.activeInsertOption = null;
 		}
 		else {
 			$scope.activeInsertOption = insertoption;
+		}
+
+		if ( insertoption === 'showInsertAnchorOptions' ) {
+			$scope.generateToc();
 		}
 	}
 
@@ -773,6 +802,68 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		else {
 			$scope.activeImageOption = imageoption;
 		}
+	}
+
+	$scope.scrollToToc = function( tocEntry ) {
+		var elm = $rootScope.ck.document.$.getElementById( tocEntry.id );
+		if ( elm ) {
+			elm.scrollIntoView();
+		}
+	}
+
+	$scope.anchorScrollTo = function( tocEntry ) {
+		var re = /\_(.*?)\./;
+		var documentId = tocEntry.target.match(re)[1];
+
+		if ( documentId !== $scope.documentSelected._id ) {
+			angular.forEach($scope.projectDocuments, function( document ) {
+				if ( document._id === documentId ) {
+					$scope.openProjectDocument( document );
+				}
+			});
+		}
+
+		//if the document is not opened we expect scrollToToc fail here
+		//after document is opened CK will trigger renderFinished event
+		//and will trigger scrollToToc to lastTocEntry
+		if ( tocEntry.type !== 'document' ) {
+			$scope.scrollToToc( tocEntry );
+			$scope.lastTocEntry = tocEntry;
+		}
+	};
+
+	$scope.insertNewAnchor = function() {
+		var id = Date.now();
+		var insert = '<a id="' + id + '" name="' + id + '" title="' + $scope.anchorName + '"></a>';
+		editorInsert( insert );
+		$scope.updateProjectDocument();
+		$scope.generateToc();
+		$scope.anchorName = '';
+	}
+
+	$scope.insertNewLink = function() {
+		var link = '<a href="' + $scope.linkAddress + '">' + $scope.linkText + '</a>';
+		editorInsert( link );
+		$scope.updateProjectDocument();
+		$scope.linkAddress = '';
+		$scope.linkText = '';
+	}
+
+	$scope.insertNewImage = function( images ) {
+		//since only one image always take the first
+		var image = images[0];
+		var imageInsert = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		editorInsert( imageInsert );
+	}
+
+	function editorInsert( insert ) {
+		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
+		var element = $rootScope.CKEDITOR.dom.element.createFromHtml( insert );
+		editor.insertElement( element );
+		var range = editor.createRange();
+		range.moveToElementEditablePosition(element);
+		$rootScope.ck.focus();
+		range.select();
 	}
 
     function initiateEditor(scope) {
@@ -789,6 +880,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.ckReady = true;
 		$scope.applyStylesetsToEditor();
 		$scope.loadFonts();
+	});
+
+	$scope.$onRootScope('ckDocument:renderFinished', function ( event ) {
+		if ( typeof $scope.lastTocEntry !== 'undefined' ) {
+			$scope.scrollToToc( $scope.lastTocEntry );
+		}
 	});
 
 	angular.element(document).ready(function () {
@@ -865,7 +962,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 							var tag = element.getName();
 							for ( var y = 0; y < styles.length; y++ ) {
 								var sTag = styles[y].tag;
-								if ( tag === sTag ) {
+								if ( tag === sTag && stylesets[x]._id === $scope.documentSelected.defaultStyleset ) {
 									selectedStyle = styles[y];
 									isSet = true;
 									//break all loops
