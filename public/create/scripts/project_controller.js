@@ -408,6 +408,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var selectedRanges = selection.getRanges();
 		var selectionLength = selection.getSelectedText().length;
 		var tag = selection.getStartElement().getName();
+		var bookmarks = selectedRanges.createBookmarks( true );
 
 		var lineHeight = style.css['line-height'];
 		var margin = style.css['margin'];
@@ -481,6 +482,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.selectedStyle = style;
 
 		$rootScope.ck.focus();
+		selectedRanges.moveToBookmarks( bookmarks );
 		selection.selectRanges( selectedRanges );
 	}
 
@@ -740,7 +742,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.setStylesetStyling = function( styleset, style ) {
-		var stylesetCSS = style.css;
+		var stylesetCSS = angular.copy( style.css );
 		stylesetCSS[ 'padding' ] = '15px 0 15px 10px';
 		stylesetCSS[ 'font-size' ] = '1.5em';
 		var family = stylesetCSS['font-family'];
