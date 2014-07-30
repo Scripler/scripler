@@ -250,7 +250,6 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				enterMode: CKEDITOR.ENTER_P,
 				height: $window.innerHeight - 30,
 				width: 800,
-				font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
 				//Change to standard font we want to start all projects with :)
 				contentsCss: ['ckeditor/contents.css', 'stylesets/non-editable.css'],
 				//Load css sheet via angualr here
