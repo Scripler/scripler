@@ -767,6 +767,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 		}
 
+		//if the document is not opened we expect scrollToToc fail here
+		//after document is opened CK will trigger renderFinished event
+		//and will trigger scrollToToc to lastTocEntry
 		if ( tocEntry.type !== 'document' ) {
 			$scope.scrollToToc( tocEntry );
 			$scope.lastTocEntry = tocEntry;
