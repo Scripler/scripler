@@ -408,7 +408,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var selectedRanges = selection.getRanges();
 		var selectionLength = selection.getSelectedText().length;
 		var tag = selection.getStartElement().getName();
-		var bookmarks = selectedRanges.createBookmarks( true );
+		var bookmarks = selectedRanges.createBookmarks2( false );
 
 		var lineHeight = style.css['line-height'];
 		var margin = style.css['margin'];
