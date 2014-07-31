@@ -46,35 +46,24 @@ exports.loadPopulated = function (id) {
 }
 
 exports.create = function (req, res, next) {
-	var styleset = new Styleset({
-		name: req.body.name,
-		isSystem: req.body.isSystem,
-		order: req.body.order
-	});
-
-	if (!req.body.isSystem) {
-		styleset.members = [
-			{userId: req.user._id, access: ["admin"]}
-		];
-	}
+	var styleset = styleset_utils.createStyleset(req.body.name, false, req.body.order);
+	styleset.members = [
+		{userId: req.user._id, access: ["admin"]}
+	];
 
 	styleset.save(function(err) {
 		if (err) {
 			return next(err);
 		}
 
-		if (!req.body.isSystem) {
-			req.user.stylesets.addToSet(styleset);
-			req.user.save(function(err) {
-				if (err) {
-					return next(err);
-				}
+		req.user.stylesets.addToSet(styleset);
+		req.user.save(function(err) {
+			if (err) {
+				return next(err);
+			}
 
-				res.send({styleset: styleset});
-			});
-		} else {
 			res.send({styleset: styleset});
-		}
+		});
 	});
 
 }
