@@ -241,9 +241,8 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				enterMode: CKEDITOR.ENTER_P,
 				height: $window.innerHeight - 30,
 				width: 800,
-				font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
 				//Change to standard font we want to start all projects with :)
-				contentsCss: ['stylesets/non-editable.css'],
+				contentsCss: ['ckeditor/contents.css', 'stylesets/non-editable.css'],
 				//Load css sheet via angualr here
 				toolbar: [
 					//['Source'], ['Undo'], ['Redo'], ['Paste'], ['PasteFromWord'], ['Styles'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['Image'], ['Link'], ['TextColor'], ['BGColor']
@@ -273,12 +272,10 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 			ck.on('pasteState', updateModel);
 			ck.on('key', timeOutModel);
 			ck.on('dataReady', updateModel);
-			ck.on('paste', function(e) {
-				e.data.dataValue = e.data.dataValue.replace(/\s*style="[^"]*"/g, '');
-			});
 
 			ngModel.$render = function(value) {
 				ck.setData(ngModel.$viewValue);
+				$rootScope.$emit('ckDocument:renderFinished');
 			};
 
 			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 ) {

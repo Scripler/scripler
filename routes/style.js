@@ -41,21 +41,10 @@ exports.loadPopulated = function (id) {
 exports.create = function (req, res, next) {
 	var styleset = req.styleset;
 
-	var style = new Style({
-		name: req.body.name,
-		class: req.body.class,
-		css: req.body.css,
-		tag: req.body.tag,
-		stylesetId: styleset._id,
-		isSystem: req.body.isSystem,
-		hidden: req.body.hidden
-	});
-
-	if (!req.body.isSystem) {
-		style.members = [
-			{userId: req.user._id, access: ["admin"]}
-		];
-	}
+	var style = styleset_utils.createStyle(req.body.name, req.body.class, req.body.css, req.body.tag, styleset._id, false, req.body.hidden);
+	style.members = [
+		{userId: req.user._id, access: ["admin"]}
+	];
 
     //TODO: Maybe we should immeditaly add this style to its styleset? Instead of expecting/hoping the frontend does a Styleset.update afterwards.
 	style.save(function(err) {
