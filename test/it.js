@@ -104,14 +104,14 @@ describe('Scripler RESTful API', function () {
 	}),
 	describe('Add system/Scripler stylesets and styles', function () {
 		it('Creating a system styleset should return the new styleset', function (done) {
-			systemStyleset = styleset_utils.createStyleset("Scripler Styleset 1", true, 1);
+			systemStyleset = styleset_utils.createStyleset(conf.user.defaultStylesetName, true, 1);
 			systemStyleset.save(function(err) {
-				if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-				assert.equal(systemStyleset.name, "Scripler Styleset 1");
-				assert.equal(systemStyleset.isSystem, true);
-				systemStylesetId = systemStyleset._id;
-				systemStylesetId && done();
-			});
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(systemStyleset.name, conf.user.defaultStylesetName);
+					assert.equal(systemStyleset.isSystem, true);
+					systemStylesetId = systemStyleset._id;
+					systemStylesetId && done();
+				});
 		}),
 		it('Creating a system style should return the new style', function (done) {
 			var systemStyle1 = styleset_utils.createStyle("Scripler Style 1", "ScruplerZ", {"key1": "value1", "key2": "value2"}, null, systemStylesetId, true, false);
@@ -200,6 +200,7 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.user.firstname, "John");
 					assert.equal(res.body.user.lastname, "Doe");
+					assert.equal(!res.body.user.defaultStyleset, false);
 					done();
 				});
 		}),
@@ -1333,7 +1334,7 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					console.log('stylesets: ' + JSON.stringify(res.body.stylesets));
+					//console.log('stylesets: ' + JSON.stringify(res.body.stylesets));
 					assert.equal(res.body.stylesets[0].id, userStylesetId);
 					assert.equal(res.body.stylesets[0].order, 3);
 					assert.equal(res.body.stylesets[1].id, stylesetId);
