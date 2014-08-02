@@ -10,6 +10,7 @@ var path = require('path');
 var async = require('async');
 var conf = require('config');
 var logger = require('../lib/logger');
+var styleset_utils = require('../lib/styleset-utils');
 
 //Load a document by id
 exports.load = function (id) {
@@ -355,7 +356,16 @@ exports.listStylesets = function (req, res, next) {
 				return next(err);
 			}
 
-			res.send({"stylesets": stylesets});
+			async.each(stylesets, function (styleset, callback) {
+				styleset.styles.sort(styleset_utils.systemStyleOrder);
+				callback();
+			}, function (err) {
+				if (err) {
+					return next(err);
+				}
+
+				res.send({"stylesets": stylesets});
+			});
 		});
 	});
 
