@@ -25,8 +25,13 @@ exports.create = function (req, res, next) {
 		style: req.body.style,
 		weight: req.body.weight,
 		src: req.body.src,
-		isSystem: req.body.isSystem
+		isSystem: req.body.isSystem,
+		accessLevels: ["premium", "professional"]
 	});
+
+	if (req.user.level == "free") {
+		return next({message: "Free users are not allowed to create fonts", status: 403});
+	}
 
 	if (!req.body.isSystem) {
 		font.members = [

@@ -10,6 +10,7 @@ var assert = require("assert")
 	, moment = require('moment')
 	, utils = require('../public/create/scripts/utils-shared')
 	, styleset_utils = require('../lib/styleset-utils')
+	, user_utils = require('../lib/user-utils')
 	, font_utils = require('../lib/font-utils')
 	, Font = require('../models/font.js').Font;
 
@@ -84,6 +85,7 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.user.firstname, "Dummy");
 					assert.equal(res.body.user.lastname, "Doe");
+					user_utils.makePremium(res.body.user._id);
 					done();
 				});
 		}),
@@ -97,6 +99,7 @@ describe('Scripler RESTful API', function () {
 					cookie = res.headers['set-cookie'];
 					assert.equal(res.body.user.firstname, "Dummy");
 					assert.equal(res.body.user.lastname, "Doe");
+					assert.equal(res.body.user.level, "premium");
 					done();
 				});
 		})
@@ -176,6 +179,7 @@ describe('Scripler RESTful API', function () {
 					userStylesetId = res.body.user.stylesets[0];
 					assert.notEqual(userStylesetId, systemStylesetId); // Stylesets are copied
 					assert.notEqual(res.body.user.defaultStyleset, systemStylesetId);
+					user_utils.makePremium(res.body.user._id);
 					done();
 				});
 		}),

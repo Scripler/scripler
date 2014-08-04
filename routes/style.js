@@ -51,6 +51,10 @@ exports.create = function (req, res, next) {
 		hidden: req.body.hidden
 	});
 
+	if (req.user.level == "free") {
+		return next({message: "Free users are not allowed to create styles", status: 403});
+	}
+
 	if (!req.body.isSystem) {
 		style.members = [
 			{userId: req.user._id, access: ["admin"]}

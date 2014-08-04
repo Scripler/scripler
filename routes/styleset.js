@@ -49,8 +49,13 @@ exports.create = function (req, res, next) {
 	var styleset = new Styleset({
 		name: req.body.name,
 		isSystem: req.body.isSystem,
-		order: req.body.order
+		order: req.body.order,
+		accessLevels: ["premium", "professional"]
 	});
+
+	if (req.user.level == "free") {
+		return next({message: "Free users are not allowed to create stylesets", status: 403});
+	}
 
 	if (!req.body.isSystem) {
 		styleset.members = [
