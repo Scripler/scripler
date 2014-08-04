@@ -12,31 +12,6 @@
 800 = heavy
 900 = black*/
 
-/*SOURCE CODE PRO*/
-
-
-
-
-
-
-
-/*JUNICODE*/
-
-
-
-
-
-/*OPEN SANS*/
-
-
-
-
-
-
-
-
-
-
 
 /*STYLES*/
 /*Name: Heading 1*/
@@ -232,13 +207,58 @@ figcaption {
 }
 
 /*Name: Table of content*/
-.toc-item {
+.toc-item-h1 {
 	font-size:1.2em;
 	line-height: 1.47;
 	font-style:normal;
 	font-weight: 700;
-	color:#000000;
+	color:#CD7400;
+	text-transform: uppercase;
+}
 
+.toc-item-h2 {
+	font-size:1.2em;
+	line-height: 1.47;
+	font-style:normal;
+	font-weight: 700;
+	color:#CD7400;
+	text-indent: 1em;
+}
+
+.toc-item-h3 {
+	font-size:1.2em;
+	line-height: 1.47;
+	font-style:normal;
+	font-weight: 400;
+	color:#CD7400;
+	text-indent: 2em;
+}
+
+.toc-item-h4 {
+	font-size:1em;
+	line-height: 1.47;
+	font-style:normal;
+	font-weight: 400;
+	color:#CD7400;
+	text-indent: 4em;
+}
+
+.toc-item-h5 {
+	font-size:1em;
+	line-height: 1.47;
+	font-style:normal;
+	font-weight: 400;
+	color:#CD7400;
+	text-indent: 5em;
+}
+
+.toc-item-h6 {
+	font-size:1em;
+	line-height: 1.47;
+	font-style:normal;
+	font-weight: 400;
+	color:#CD7400;
+	text-indent: 6em;
 }
 
 /*Name: Colophon*/
