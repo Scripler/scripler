@@ -110,13 +110,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					}
 				}
 				$scope.updateProjectDocument();
-			}
-			if ( typeof $scope.timeout != 'undefined' ) {
-				if ( $scope.timeout ) {
-					$timeout.cancel( $scope.timeout )
+			} else {
+				if ( typeof $scope.timeout != 'undefined' ) {
+					if ( $scope.timeout ) {
+						$timeout.cancel( $scope.timeout )
+					}
 				}
+				$scope.timeout = $timeout( $scope.updateProjectDocument, secondsToWait * 1000 );
 			}
-			$scope.timeout = $timeout( $scope.updateProjectDocument, secondsToWait * 1000 );
 		}
 	};
 

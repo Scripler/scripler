@@ -254,11 +254,17 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 			if (!ngModel) return;
 
 			$rootScope.modelTimeout = null;
-			function timeOutModel() {
-				if ( $rootScope.modelTimeout ) {
-					$timeout.cancel( $rootScope.modelTimeout );
+			function timeOutModel( event ) {
+				if ( event ) {
+					if ( event.data ) {
+						if ( event.data.keyCode !== 13 ) {
+							if ( $rootScope.modelTimeout ) {
+								$timeout.cancel( $rootScope.modelTimeout );
+							}
+							$rootScope.modelTimeout = $timeout( updateModel, 1000 );
+						}
+					}
 				}
-				$rootScope.modelTimeout = $timeout( updateModel, 1000 );
 			}
 
 			function updateModel() {
@@ -269,9 +275,9 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				}
 			}
 
-			ck.on('pasteState', updateModel);
-			ck.on('key', timeOutModel);
-			ck.on('dataReady', updateModel);
+			ck.on('pasteState', function( event ) { timeOutModel( event ); });
+			ck.on('key', function( event ) { timeOutModel( event ); });
+			ck.on('dataReady', function( event ) { timeOutModel( event ); });
 
 			ngModel.$render = function(value) {
 				ck.setData(ngModel.$viewValue);
