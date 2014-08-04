@@ -1,7 +1,7 @@
 'use strict'
 
 function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress,
-							$timeout, $rootScope, stylesetUtilsService, $q, user ) {
+							$timeout, $rootScope, utilsService, $q, user ) {
 
 	var timeout = null;
 
@@ -33,7 +33,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			if ( $scope.projectDocuments.length == 0 ) {
 				$scope.addProjectDocument();
 			} else {
-				$scope.openProjectDocument( $scope.projectDocuments[0] );
+				var index = getIndexForDocumentToDisplay($scope.projectDocuments, 0);
+				$scope.openProjectDocument( $scope.projectDocuments[index] );
 			}
 		});
 	}
@@ -51,13 +52,27 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				file: file
 			}).progress(function(evt) {
 				ngProgress.set(parseInt(100.0 * evt.loaded / evt.total) - 25);
-				console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
 				$scope.projectDocuments.push( data.document );
 				$scope.openProjectDocument( data.document );
 				$scope.applyStylesetsToEditor();
-				console.log(data);
+			});
+		}
+	};
+
+	$scope.onImageSelect = function($files) {
+		for (var i = 0; i < $files.length; i++) {
+			var file = $files[i];
+			ngProgress.start();
+			$scope.upload = $upload.upload({
+				url: '/image/' + $scope.pid + '/upload',
+				file: file
+			}).progress(function(evt) {
+				ngProgress.set(parseInt(100.0 * evt.loaded / evt.total) - 25);
+			}).success(function(data, status, headers, config) {
+				ngProgress.complete();
+				$scope.insertNewImage( data.images );
 			});
 		}
 	};
@@ -168,16 +183,71 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
+	function getIndexForDocumentToDisplay(documents, oldIndex) {
+		var result;
+
+		if (documents && documents.length > 0) {
+			for (var i=0; i<documents.length; i++) {
+				var document = documents[i];
+
+				var currentNext = i + oldIndex;
+				if (currentNext < documents.length) {
+					var nextDocument = documents[currentNext];
+					if (nextDocument.archived == false) {
+						result = currentNext;
+						break;
+					}
+				}
+
+				var currentPrevious = oldIndex - i;
+				if (currentPrevious >= 0) {
+					var previousDocument = documents[currentPrevious];
+					if (previousDocument.archived == false) {
+						result = currentPrevious;
+						break;
+					}
+				}
+			}
+		} else {
+			console.log("ERROR: it is not possible to archive the last document");
+		}
+		return result;
+	};
+
 	$scope.archiveProjectDocument = function( projectDocument ) {
-		var index = $scope.projectDocuments.indexOf( projectDocument );
+		if ($scope.projectDocuments.length > 0) {
+			var index = $scope.projectDocuments.indexOf( projectDocument );
+			if ( $scope.user._id ) {
+				$http.put('/document/' + projectDocument._id + '/archive')
+					.success( function() {
+						projectDocument.archived = true;
+						if (utilsService.mongooseEquals(projectDocument, $scope.documentSelected)) {
+							var newIndex = getIndexForDocumentToDisplay($scope.projectDocuments, index);
+							if (newIndex >= 0) {
+								$scope.openProjectDocument($scope.projectDocuments[newIndex]);
+							} else {
+								// TODO: handle error how?
+							}
+						}
+					});
+			} else {
+				projectDocument.archived = true;
+			}
+		} else {
+			// TODO: this message should be shown to the user
+			console.log("ERROR: it is not possible to archive the last document");
+		}
+	};
+
+	$scope.unarchiveProjectDocument = function( projectDocument ) {
 		if ( $scope.user._id ) {
-			$http.put('/document/' + projectDocument._id + '/archive')
+			$http.put('/document/' + projectDocument._id + '/unarchive')
 				.success( function() {
-					projectDocument.archived = true;
-					$scope.openProjectDocument( $scope.projectDocuments[index+1] );
+					projectDocument.archived = false;
+					$scope.openProjectDocument(projectDocument);
 				});
 		} else {
-			projectDocument.archived = true;
+			projectDocument.archived = false;
 		}
 	};
 
@@ -277,7 +347,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.applyStylesetToEditor = function( styleset, isDefault ) {
 
-		$scope.currentStylesetCSS = stylesetUtilsService.getStylesetContents( styleset, isDefault );
+		$scope.currentStylesetCSS = utilsService.getStylesetContents( styleset, isDefault );
 
 		if ( $scope.ckReady ) {
 			$rootScope.ck.document.appendStyleText( $scope.currentStylesetCSS );
@@ -300,9 +370,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var combinedCSS = '';
 		for ( var i = 0; i < $scope.stylesets.length; i++ ) {
 			if ( $scope.documentSelected.defaultStyleset == $scope.stylesets[i]._id ) {
-				combinedCSS += stylesetUtilsService.getStylesetContents( $scope.stylesets[i], true );
+				combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], true );
 			} else {
-				combinedCSS += stylesetUtilsService.getStylesetContents( $scope.stylesets[i], false );
+				combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], false );
 			}
 		}
 
@@ -338,6 +408,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var selectedRanges = selection.getRanges();
 		var selectionLength = selection.getSelectedText().length;
 		var tag = selection.getStartElement().getName();
+		var bookmarks = selectedRanges.createBookmarks2( false );
 
 		var lineHeight = style.css['line-height'];
 		var margin = style.css['margin'];
@@ -394,11 +465,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					$scope.applyStyleToElement( firstElement, style, isDefault );
 				} else {
 					var applyToParent = false;
-					applyToParent = $scope.applyToSelectionWalker( editor );
+					applyToParent = $scope.applyToSelectionWalker( editor, style, isDefault );
 
 					//!!!this is done after the walker because it messes up the selection if done inside the walker
 					if ( applyToParent ) {
-						$scope.applyStyleToElement( firstElement, style );
+						$scope.applyStyleToElement( firstElement, style, isDefault );
 					}
 				}
 			}
@@ -411,6 +482,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.selectedStyle = style;
 
 		$rootScope.ck.focus();
+		selectedRanges.moveToBookmarks( bookmarks );
 		selection.selectRanges( selectedRanges );
 	}
 
@@ -460,6 +532,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if ( typeof style.tag != 'undefined' ) {
 			element.removeAttribute( 'class' );
 			element.renameNode( style.tag );
+
+			if ( [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ].indexOf( style.tag ) > -1 ) {
+				if ( element.getId() === null ) {
+					element.$.id = Date.now();
+				}
+			}
 		}
 
 		if ( isDefault ) {
@@ -472,7 +550,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	}
 
-	$scope.applyToSelectionWalker = function( editor ) {
+	$scope.applyToSelectionWalker = function( editor, style, isDefault ) {
 
 		//apply on selection or multiple blocks
 		var range = editor.getSelection().getRanges();
@@ -620,10 +698,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 			for ( var x = 0; x < matches.length; x++ ) {
 				if ( x % 3 !== 0 ) {
-					if ( matches[x] !== 'margin' && matches[x] !== 'padding' && matches[x] !== 'line-height' &&
-						 matches[x] !== 'margin-top' && matches[x] !== 'margin-bottom' && matches[x] !== 'margin-right' &&
-						 matches[x] !== 'margin-left' && matches[x] !== 'padding-top' && matches[x] !== 'padding-bottom' &&
-						 matches[x] !== 'padding-right' && matches[x] !== 'padding-left' ) {
+					if ( [ 'margin', 'padding', 'line-height', 'margin-top', 'margin-bottom', 'margin-right',
+							'margin-left', 'padding-top', 'padding-bottom', 'padding-right', 'padding-left' ].indexOf( matches[x] ) < -1 ) {
 						inlineCSS[matches[x]] = matches[x+1];
 						x++; //skip next one because it has been assigned
 					}
@@ -644,6 +720,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		obj.rename = !obj.rename;
 	}
 
+	$scope.isDefaultStyleset = function( styleset ) {
+		return styleset._id === $scope.documentSelected.defaultStyleset;
+	}
+
 	$scope.saveAsBlockStyle = function( styleset, style ) {
 		var index = styleset.styles.indexOf( style );
 		var newStyle = angular.copy( style );
@@ -662,7 +742,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.setStylesetStyling = function( styleset, style ) {
-		var stylesetCSS = style.css;
+		var stylesetCSS = angular.copy( style.css );
 		stylesetCSS[ 'padding' ] = '15px 0 15px 10px';
 		stylesetCSS[ 'font-size' ] = '1.5em';
 		var family = stylesetCSS['font-family'];
@@ -697,12 +777,23 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	}
 
+	$scope.generateToc = function() {
+		$http.get('/project/' + $scope.project._id + '/toc')
+			.success( function( data ) {
+				$scope.toc = data.toc;
+			});
+	}
+
 	$scope.insertOptionChoosen = function(insertoption) {
 		if ($scope.activeInsertOption === insertoption) {
 			$scope.activeInsertOption = null;
 		}
 		else {
 			$scope.activeInsertOption = insertoption;
+		}
+
+		if ( insertoption === 'showInsertAnchorOptions' ) {
+			$scope.generateToc();
 		}
 	}
 
@@ -713,6 +804,68 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		else {
 			$scope.activeImageOption = imageoption;
 		}
+	}
+
+	$scope.scrollToToc = function( tocEntry ) {
+		var elm = $rootScope.ck.document.$.getElementById( tocEntry.id );
+		if ( elm ) {
+			elm.scrollIntoView();
+		}
+	}
+
+	$scope.anchorScrollTo = function( tocEntry ) {
+		var re = /\_(.*?)\./;
+		var documentId = tocEntry.target.match(re)[1];
+
+		if ( documentId !== $scope.documentSelected._id ) {
+			angular.forEach($scope.projectDocuments, function( document ) {
+				if ( document._id === documentId ) {
+					$scope.openProjectDocument( document );
+				}
+			});
+		}
+
+		//if the document is not opened we expect scrollToToc fail here
+		//after document is opened CK will trigger renderFinished event
+		//and will trigger scrollToToc to lastTocEntry
+		if ( tocEntry.type !== 'document' ) {
+			$scope.scrollToToc( tocEntry );
+			$scope.lastTocEntry = tocEntry;
+		}
+	};
+
+	$scope.insertNewAnchor = function() {
+		var id = Date.now();
+		var insert = '<a id="' + id + '" name="' + id + '" title="' + $scope.anchorName + '"></a>';
+		editorInsert( insert );
+		$scope.updateProjectDocument();
+		$scope.generateToc();
+		$scope.anchorName = '';
+	}
+
+	$scope.insertNewLink = function() {
+		var link = '<a href="' + $scope.linkAddress + '">' + $scope.linkText + '</a>';
+		editorInsert( link );
+		$scope.updateProjectDocument();
+		$scope.linkAddress = '';
+		$scope.linkText = '';
+	}
+
+	$scope.insertNewImage = function( images ) {
+		//since only one image always take the first
+		var image = images[0];
+		var imageInsert = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		editorInsert( imageInsert );
+	}
+
+	function editorInsert( insert ) {
+		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
+		var element = $rootScope.CKEDITOR.dom.element.createFromHtml( insert );
+		editor.insertElement( element );
+		var range = editor.createRange();
+		range.moveToElementEditablePosition(element);
+		$rootScope.ck.focus();
+		range.select();
 	}
 
     function initiateEditor(scope) {
@@ -729,6 +882,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.ckReady = true;
 		$scope.applyStylesetsToEditor();
 		$scope.loadFonts();
+	});
+
+	$scope.$onRootScope('ckDocument:renderFinished', function ( event ) {
+		if ( typeof $scope.lastTocEntry !== 'undefined' ) {
+			$scope.scrollToToc( $scope.lastTocEntry );
+		}
 	});
 
 	angular.element(document).ready(function () {
@@ -805,7 +964,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 							var tag = element.getName();
 							for ( var y = 0; y < styles.length; y++ ) {
 								var sTag = styles[y].tag;
-								if ( tag === sTag ) {
+								if ( tag === sTag && stylesets[x]._id === $scope.documentSelected.defaultStyleset ) {
 									selectedStyle = styles[y];
 									isSet = true;
 									//break all loops

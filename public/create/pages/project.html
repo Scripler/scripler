@@ -31,7 +31,7 @@
 						<p>+</p>
 					</div>
 					<div html-sortable="sortable_option" ng-model="projectDocuments">
-						<div class="projectDocument" ng-repeat="projectDocument in projectDocuments track by projectDocument._id" ng-selected="documentSelected === projectDocument" ng-hide="projectDocument.archived && !user.showArchivedDocuments">
+						<div class="projectDocument" ng-repeat="projectDocument in projectDocuments track by projectDocument._id" ng-selected="documentSelected === projectDocument" ng-hide="projectDocument.archived && !user.showArchivedDocuments" ng-class="{ 'archived' : projectDocument.archived }">
 							<a class="projectDocument-options-show" ng-click="showProjectDocumentOptions = true">
 								<div class="arrow"></div>
 							</a>
@@ -49,7 +49,8 @@
 							<div class="projectDocument-options" ng-show="showProjectDocumentOptions">
 								<div class="projectDocument-options-hide" ng-click="showProjectDocumentOptions = false;" title="Close Options">x</div>
 								<div class="projectDocument-options-menupoint first" ng-click="editingProjectDocumentTitle = true; showProjectDocumentOptions = false;">rename</div>
-								<div class="projectDocument-options-menupoint" ng-click="archiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">archive</div>
+								<div class="projectDocument-options-menupoint" ng-hide="projectDocument.archived" ng-click="archiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">archive</div>
+								<div class="projectDocument-options-menupoint" ng-show="projectDocument.archived" ng-click="unarchiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">unarchive</div>
 							</div>
 						</div>
 					</div>
@@ -82,7 +83,7 @@
 								<div class="styleset-options-menupoint" ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to project</div>
 							</div>
 
-							<ul ng-show="typoChildrenVisible" class="typo-children">
+							<ul ng-show="typoChildrenVisible || isDefaultStyleset(styleset)" class="typo-children">
 								<li ng-repeat="style in styleset.styles" id="{{style._id}}" ng-hide="style.archived || style.hidden" ng-selected="selectedStyle._id === style._id">
 									<a class="style-options-show" ng-click="showStyleOptions = true">
 										<div class="arrow"></div>
@@ -153,15 +154,13 @@
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
 							<div class="left-menu-options">
 								<span class="left-menu-box inputfield full-size">
-									<input type="text" placeholder="Address">
+									<input type="text" ng-model="linkAddress" placeholder="Address">
 								</span>
 								<span class="left-menu-box inputfield full-size left-menu-parameter-margin">
-									<input type="text" placeholder="Text">
+									<input type="text" ng-model="linkText" placeholder="Text">
 								</span>
-								<span class="left-menu-box left-menu-parameter-margin">
-									<span class="option"><a ng-click="linkAnchorOption('chooseAnchor');">Anchor in document</a></span>
-									<span class="option"><a ng-click="linkAnchorOption('chooseAnchor');">Anchor in document</a></span>
-									<span class="option"><a ng-click="linkAnchorOption('chooseAnchor');">Anchor in document</a></span>
+								<span class="left-menu-button full-size left-menu-parameter-margin">
+									<a ng-click="insertNewLink();">+</a>
 								</span>
 							</div>
 
@@ -174,14 +173,12 @@
 						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
 							<div class="left-menu-options">
-								<span class="left-menu-box inputfield">
-									<input type="text" placeholder="Choose image">
-								</span>
-								<span class="left-menu-button">
-									<a ng-click="insertImageOption('addNewImage');">+</a>
+								<span class="left-menu-box">
+									<input type="file" id="imagesInput" ng-file-select="onImageSelect($files)" accept="image/*" ng-hide="true">
+									<label for="imagesInput">Click to insert an image</label>
 								</span>
 							</div>
-							<div class="left-menu-options left-menu-parameter-margin">
+							<!--<div class="left-menu-options left-menu-parameter-margin">
 								<span class="left-menu-button">
 									<a ng-click="alignImageLeft(); insertImageOption('')">
 										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Left" />
@@ -232,7 +229,7 @@
 										<span class="extra-info">%</span>
 									</span>
 								</div>
-							</div>
+							</div>-->
 							<div class="left-menu-divider"></div>
 							<div class="left-menu-icons">
 								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChoosen('showInsertImageOptions');">
@@ -275,16 +272,14 @@
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
 							<div class="left-menu-options">
 								<span class="left-menu-box inputfield">
-									<input type="text" placeholder="Anchor name">
+									<input type="text" ng-model="anchorName" placeholder="Anchor name">
 								</span>
 								<span class="left-menu-button">
-									<a ng-click="insertAnchorOption('addNewAnchor');">+</a>
+									<a ng-click="insertNewAnchor();">+</a>
 								</span>
 
 								<span class="left-menu-box left-menu-parameter-margin">
-									<span class="option"><a ng-click="insertAnchorOption('chooseAnchor');">Anchor in document</a></span>
-									<span class="option"><a ng-click="insertAnchorOption('chooseAnchor');">Anchor in document</a></span>
-									<span class="option"><a ng-click="insertAnchorOption('chooseAnchor');">Anchor in document</a></span>
+									<span class="option" ng-repeat="tocs in toc"><a ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
 								</span>
 							</div>
 							<div class="left-menu-divider"></div>

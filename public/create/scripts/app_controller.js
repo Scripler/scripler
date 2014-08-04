@@ -1,7 +1,7 @@
 'use strict';
 
 var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload',
-										 	'ngProgress', 'stylesetUtilsSharedModule'] );
+										 	'ngProgress', 'utilsSharedModule'] );
 
 app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStorageService', '$rootScope', '$timeout',
 	function( $http, $scope, userService, localStorageService, $rootScope, $timeout ) {
@@ -125,15 +125,6 @@ app.service('projectsService', function( $http, $q ) {
 					angular.forEach(data.projects, function( project ) {
 						projects.push( project );
 					})
-
-					if ( user.showArchived ) {
-						$http.get('/project/archived')
-							.success( function( data ) {
-								angular.forEach(data.projects, function( project ) {
-									projects.push( project );
-								})
-							});
-					}
 				});
 
 			return projects;
@@ -250,9 +241,8 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				enterMode: CKEDITOR.ENTER_P,
 				height: $window.innerHeight - 30,
 				width: 800,
-				font_names:'serif;sans serif;monospace;cursive;fantasy;Ribeye',
 				//Change to standard font we want to start all projects with :)
-				contentsCss: ['stylesets/non-editable.css'],
+				contentsCss: ['ckeditor/contents.css', 'stylesets/non-editable.css'],
 				//Load css sheet via angualr here
 				toolbar: [
 					//['Source'], ['Undo'], ['Redo'], ['Paste'], ['PasteFromWord'], ['Styles'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['Image'], ['Link'], ['TextColor'], ['BGColor']
@@ -262,10 +252,6 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 			});
 
 			if (!ngModel) return;
-
-			ck.on('instanceReady', function() {
-				ck.setData(ngModel.$viewValue);
-			});
 
 			$rootScope.modelTimeout = null;
 			function timeOutModel() {
@@ -289,6 +275,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 
 			ngModel.$render = function(value) {
 				ck.setData(ngModel.$viewValue);
+				$rootScope.$emit('ckDocument:renderFinished');
 			};
 
 			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 ) {

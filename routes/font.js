@@ -25,26 +25,24 @@ exports.create = function (req, res, next) {
 		style: req.body.style,
 		weight: req.body.weight,
 		src: req.body.src,
-		isSystem: req.body.isSystem,
+		isSystem: false,
 		accessLevels: ["premium", "professional"]
 	});
+
+	font.members = [
+		{userId: req.user._id, access: ["admin"]}
+	];
 
 	if (req.user.level == "free") {
 		return next({message: "Free users are not allowed to create fonts", status: 403});
 	}
 
-	if (!req.body.isSystem) {
-		font.members = [
-			{userId: req.user._id, access: ["admin"]}
-		];
-	}
 
 	font.save(function(err) {
 		if (err) {
 			return next(err);
 		}
 
-		if (!req.body.isSystem) {
 			// TODO: add to user.fonts when "user fonts" becomes a feature
 			/*
 			req.user.fonts.addToSet(font);
@@ -58,9 +56,6 @@ exports.create = function (req, res, next) {
 			*/
 
 			res.send({font: font});
-		} else {
-			res.send({font: font});
-		}
 	});
 
 }

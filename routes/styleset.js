@@ -46,29 +46,16 @@ exports.loadPopulated = function (id) {
 }
 
 exports.create = function (req, res, next) {
-	var styleset = new Styleset({
-		name: req.body.name,
-		isSystem: req.body.isSystem,
-		order: req.body.order,
-		accessLevels: ["premium", "professional"]
-	});
-
-	if (req.user.level == "free") {
-		return next({message: "Free users are not allowed to create stylesets", status: 403});
-	}
-
-	if (!req.body.isSystem) {
+	var styleset = styleset_utils.createStyleset(req.body.name, false, req.body.order, ["premium", "professional"]);
 		styleset.members = [
 			{userId: req.user._id, access: ["admin"]}
 		];
-	}
 
 	styleset.save(function(err) {
 		if (err) {
 			return next(err);
 		}
 
-		if (!req.body.isSystem) {
 			req.user.stylesets.addToSet(styleset);
 			req.user.save(function(err) {
 				if (err) {
@@ -77,9 +64,6 @@ exports.create = function (req, res, next) {
 
 				res.send({styleset: styleset});
 			});
-		} else {
-			res.send({styleset: styleset});
-		}
 	});
 
 }

@@ -10,43 +10,13 @@ var Style = require('../models/style.js').Style;
 var cssNames = require(path.join(__dirname, '../lib/css-names.json'));
 var filewalker = require('filewalker');
 var utils = require('../lib/utils');
-
-function debug(text) {
-	if (process.env.NODE_ENV != 'test') {
-		console.log(text);
-	}
-}
-
-function getCssKey ( cssNames, name ) {
-	for (var key in cssNames) {
-		if (cssNames.hasOwnProperty(key)) {
-			if(cssNames[key].name == name) {
-				return key;
-			}
-		}
-	}
-}
-
-/**
- * Sort the styles by "system style order", i.e. so they appear in the same order as in "CSS names".
- *
- * @param s1
- * @param s2
- * @returns {number}
- */
-function systemStyleOrder (s1, s2) {
-	var s1KeyName = getCssKey(cssNames, s1.name);
-	var s2KeyName = getCssKey(cssNames, s2.name);
-
-	var s1Order = cssNames[s1KeyName] ? cssNames[s1KeyName].order : 9999;
-	var s2Order = cssNames[s2KeyName] ? cssNames[s2KeyName].order : 9999;
-	return s1Order - s2Order;
-}
+var styleset_utils = require('../lib/styleset-utils');
 
 function createStyleset(stylesheetName, jsonStyleset, next) {
 	var styleset = new Styleset({
 		name: stylesheetName,
-		isSystem: true
+		isSystem: true,
+		accessLevels: ["free", "premium", "professional"]
 	});
 
 	styleset.save(function (err, styleset) {
@@ -70,6 +40,20 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 					callback(null);
 				} else if (type == 'style') {
 					var selector = jsonStyle['selector'];
+
+					var tagAndClassRegex = /(\w+)\.(\w+)/;
+					var tagAndClass = tagAndClassRegex.exec(selector);
+					if (tagAndClass && tagAndClass.length > 1) {
+						tag = tagAndClass[1];
+						clazz = tagAndClass[2];
+
+						if (cssNames[tag]) {
+							name = cssNames[tag].name;
+						} else {
+							name = tag;
+							hidden = true;
+						}
+					} else {
 					var isClass = selector.indexOf('.') == 0;
 
 					if (isClass) {
@@ -92,6 +76,7 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 							hidden = true;
 						}
 						//debug('tag name: ' + tag + ', name: ' + name);
+					}
 					}
 
 					var declarations = jsonStyle['declarations'];
@@ -140,7 +125,7 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 					//debug('BEFORE');
 					//debug(JSON.stringify(populatedStyleset.styles));
 
-					populatedStyleset.styles.sort(systemStyleOrder);
+					populatedStyleset.styles.sort(styleset_utils.systemStyleOrder);
 
 					//debug('AFTER');
 					//debug(JSON.stringify(populatedStyleset.styles));
