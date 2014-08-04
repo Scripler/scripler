@@ -12,10 +12,11 @@ var filewalker = require('filewalker');
 var utils = require('../lib/utils');
 var styleset_utils = require('../lib/styleset-utils');
 
-function createStyleset(stylesheetName, jsonStyleset, next) {
+function createStyleset(stylesheetName, jsonStyleset, order, next) {
 	var styleset = new Styleset({
 		name: stylesheetName,
-		isSystem: true
+		isSystem: true,
+		order: order
 	});
 
 	styleset.save(function (err, styleset) {
@@ -158,13 +159,15 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /[^non\-editable
 		process.exit(1);
 	})
 	.on('done', function () {
+		var order = 0;
+
 		async.eachSeries(stylesetFiles, function (stylesetFile, callback) {
 			var stylesheetName = utils.getFilenameWithoutExtension(stylesetFile);
 			var cssFilename = path.join(__dirname, '../public/create/stylesets/' + stylesetFile);
 			var css = fs.readFileSync(cssFilename, 'utf8');
 			var json = parser.parse(css);
 
-			createStyleset(stylesheetName, json, function (err, styleset) {
+			createStyleset(stylesheetName, json, order++, function (err, styleset) {
 				if (err) {
 					console.log(err);
 					process.exit(1);
