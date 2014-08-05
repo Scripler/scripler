@@ -51,12 +51,16 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 					var range = selectedRanges[0];
 
 					var elName = 'div';
-					var x = range.getBoundaryNodes()
-					if ( x.startNode.$.nodeValue === x.endNode.$.nodeValue ) {
+					var boundryNodes = range.getBoundaryNodes()
+					//if one line selected then add original tags of the value
+					if ( boundryNodes.startNode.$.nodeValue === boundryNodes.endNode.$.nodeValue ) {
 						elName = startElement.getName();
 					}
 					var el = editor.document.createElement( elName );
 					el.append( range.cloneContents() );
+					if ( startElement.hasAttribute( 'class' ) ) {
+						el.addClass( startElement.getAttribute( 'class' ) );
+					}
 
 					$scope.copiedElement = el;
 
