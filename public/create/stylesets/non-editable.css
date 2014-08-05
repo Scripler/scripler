@@ -126,9 +126,150 @@ p.empty-paragraph {
 	margin-top:0;
 }
 
-p.toc-item + p.toc-item {
+p.toc-item-h1 + p.toc-item-h1 {
 	text-indent:0;
 }
+
+p.toc-item-h1 + p.toc-item-h2 {
+	text-indent:1em;
+}
+
+p.toc-item-h1 + p.toc-item-h3 {
+	text-indent:2em;
+}
+
+p.toc-item-h1 + p.toc-item-h4 {
+	text-indent:4em;
+}
+
+p.toc-item-h1 + p.toc-item-h5 {
+	text-indent:5em;
+}
+
+p.toc-item-h1 + p.toc-item-h6 {
+	text-indent:6em;
+}
+
+p.toc-item-h2 + p.toc-item-h1 {
+	text-indent:0;
+}
+
+p.toc-item-h2 + p.toc-item-h2 {
+	text-indent:1em;
+}
+
+p.toc-item-h2 + p.toc-item-h3 {
+	text-indent:2em;
+}
+
+p.toc-item-h2 + p.toc-item-h4 {
+	text-indent:4em;
+}
+
+p.toc-item-h2 + p.toc-item-h5 {
+	text-indent:5em;
+}
+
+p.toc-item-h2 + p.toc-item-h6 {
+	text-indent:6em;
+}
+
+p.toc-item-h3 + p.toc-item-h1 {
+	text-indent:0;
+}
+
+p.toc-item-h3 + p.toc-item-h2 {
+	text-indent:1em;
+}
+
+p.toc-item-h3 + p.toc-item-h3 {
+	text-indent:2em;
+}
+
+p.toc-item-h3 + p.toc-item-h4 {
+	text-indent:4em;
+}
+
+p.toc-item-h3 + p.toc-item-h5 {
+	text-indent:5em;
+}
+
+p.toc-item-h3 + p.toc-item-h6 {
+	text-indent:6em;
+}
+
+p.toc-item-h4 + p.toc-item-h1 {
+	text-indent:0;
+}
+
+p.toc-item-h4 + p.toc-item-h2 {
+	text-indent:1em;
+}
+
+p.toc-item-h4 + p.toc-item-h3 {
+	text-indent:2em;
+}
+
+p.toc-item-h4 + p.toc-item-h4 {
+	text-indent:4em;
+}
+
+p.toc-item-h4 + p.toc-item-h5 {
+	text-indent:5em;
+}
+
+p.toc-item-h4 + p.toc-item-h6 {
+	text-indent:6em;
+}
+
+p.toc-item-h5 + p.toc-item-h1 {
+	text-indent:0;
+}
+
+p.toc-item-h5 + p.toc-item-h2 {
+	text-indent:1em;
+}
+
+p.toc-item-h5 + p.toc-item-h3 {
+	text-indent:2em;
+}
+
+p.toc-item-h5 + p.toc-item-h4 {
+	text-indent:4em;
+}
+
+p.toc-item-h5 + p.toc-item-h5 {
+	text-indent:5em;
+}
+
+p.toc-item-h5 + p.toc-item-h6 {
+	text-indent:6em;
+}
+
+p.toc-item-h6 + p.toc-item-h1 {
+	text-indent:0;
+}
+
+p.toc-item-h6 + p.toc-item-h2 {
+	text-indent:1em;
+}
+
+p.toc-item-h6 + p.toc-item-h3 {
+	text-indent:2em;
+}
+
+p.toc-item-h6 + p.toc-item-h4 {
+	text-indent:4em;
+}
+
+p.toc-item-h6 + p.toc-item-h5 {
+	text-indent:5em;
+}
+
+p.toc-item-h6 + p.toc-item-h6 {
+	text-indent:6em;
+}
+
 
 /*/*This removes margin-top from code-paragraphs that comes after code-paragraphs*/
 code.block + code.block {

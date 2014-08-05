@@ -12,25 +12,6 @@
 800 = heavy
 900 = black*/
 
-/*SOURCE CODE PRO*/
-
-
-
-
-
-
-
-/*CRIMSON*/
-
-
-
-
-
-
-
-/*AUTOUR ONE*/
-
-
 /*STYLES*/
 /*Name: Heading 1*/
 h1 {
@@ -237,13 +218,69 @@ figcaption {
 }
 
 /*Name: Table of content*/
-.toc-item {
+.toc-item-h1 {
+	font-family: "Autour One", sans-serif;
 	font-size:1.2em;
 	line-height: 1.47;
-	text-align: right;
 	font-style:normal;
-	font-weight: 600;
-	color:#000000;
+	font-weight: 400;
+	color:#606060;
+	text-transform: uppercase;
+}
+
+.toc-item-h2 {
+	font-family: "Autour One", sans-serif;
+	font-size:1.2em;
+	line-height: 1.47;
+	font-style:normal;
+	font-weight: 400;
+	color:#606060;
+	text-indent: 1em;
+	text-transform: uppercase;
+}
+
+.toc-item-h3 {
+	font-family: "Autour One", sans-serif;
+	font-size:1.2em;
+	line-height: 1.47;
+	font-style:normal;
+	font-weight: 400;
+	color:#606060;
+	text-indent: 2em;
+	text-transform: uppercase;
+}
+
+.toc-item-h4 {
+	font-family: "Autour One", sans-serif;
+	font-size:1em;
+	line-height: 1.47;
+	font-style:normal;
+	font-weight: 400;
+	color:#606060;
+	text-indent: 4em;
+	text-transform: uppercase;
+}
+
+.toc-item-h5 {
+	font-family: "Autour One", sans-serif;
+	font-size:1em;
+	line-height: 1.47;
+	font-style:normal;
+	font-weight: 400;
+	color:#606060;
+	text-indent: 5em;
+	text-transform: uppercase;
+}
+
+.toc-item-h6 {
+	font-family: "Autour One", sans-serif;
+	font-size:1em;
+	line-height: 1.47;
+	font-style:normal;
+	font-weight: 400;
+	color:#606060;
+	text-indent: 6em;
+	text-transform: uppercase;
 }
 
 /*Name: Colophon*/

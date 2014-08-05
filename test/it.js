@@ -20,6 +20,7 @@ var host = '127.0.0.1:' + conf.app.port;
 var cookie;
 
 var text;
+var systemStyleset;
 var systemStylesetId;
 var userStylesetId;
 
@@ -103,55 +104,52 @@ describe('Scripler RESTful API', function () {
 	}),
 	describe('Add system/Scripler stylesets and styles', function () {
 		it('Creating a system styleset should return the new styleset', function (done) {
-			request(host)
-				.post('/styleset')
-				.set('cookie', cookie)
-				.send({name: "Scripler Styleset 1", isSystem: true})
-				.expect(200)
-				.end(function (err, res) {
+			systemStyleset = styleset_utils.createStyleset(conf.user.defaultStylesetName, true, 1);
+			systemStyleset.save(function(err) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset.name, "Scripler Styleset 1");
-					assert.equal(res.body.styleset.isSystem, true);
-					systemStylesetId = res.body.styleset._id;
+					assert.equal(systemStyleset.name, conf.user.defaultStylesetName);
+					assert.equal(systemStyleset.isSystem, true);
+					systemStylesetId = systemStyleset._id;
 					systemStylesetId && done();
 				});
 		}),
 		it('Creating a system style should return the new style', function (done) {
-			request(host)
-				.post('/style')
-				.set('cookie', cookie)
-				.send({stylesetId: systemStylesetId, name: "Scripler Style 1", class: "ScruplerZ", css: {"key1": "value1", "key2": "value2"}, isSystem: true})
-				.expect(200)
-				.end(function (err, res) {
+			var systemStyle1 = styleset_utils.createStyle("Scripler Style 1", "ScruplerZ", {"key1": "value1", "key2": "value2"}, null, systemStylesetId, true, false);
+			systemStyle1.save(function(err) {
+				if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+				assert.equal(systemStyle1.name, "Scripler Style 1");
+				assert.equal(systemStyle1.class, "ScruplerZ");
+				assert.equal(systemStyle1.css.key1, "value1");
+				assert.equal(systemStyle1.css.key2, "value2");
+				assert.equal(systemStyle1.isSystem, true);
+				assert.equal(systemStyle1.stylesetId, systemStylesetId);
+
+				systemStyleset.styles.addToSet(systemStyle1);
+				systemStyleset.save(function (err) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.style.name, "Scripler Style 1");
-					assert.equal(res.body.style.class, "ScruplerZ");
-					assert.equal(res.body.style.css.key1, "value1");
-                    assert.equal(res.body.style.css.key2, "value2");
-					assert.equal(res.body.style.isSystem, true);
-					assert.equal(res.body.style.stylesetId, systemStylesetId);
-					styleId = res.body.style._id;
+					styleId = systemStyle1._id;
 					styleId && done();
 				});
+			});
 		}),
-		it('Creating a system style should return the new style', function (done) {
-			request(host)
-				.post('/style')
-				.set('cookie', cookie)
-				.send({stylesetId: systemStylesetId, name: "Scripler Style 2", class: "ScruplerZ999", css: {"key1": "value1", "key2": "value2"}, isSystem: true, hidden: true})
-				.expect(200)
-				.end(function (err, res) {
+		it('Creating a hidden system style should return the new style', function (done) {
+			var systemStyle2 = styleset_utils.createStyle("Scripler Style 2", "ScruplerZ999", {"key1": "value1", "key2": "value2"}, null, systemStylesetId, true, true);
+			systemStyle2.save(function(err) {
+				if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+				assert.equal(systemStyle2.name, "Scripler Style 2");
+				assert.equal(systemStyle2.class, "ScruplerZ999");
+				assert.equal(systemStyle2.css.key1, "value1");
+				assert.equal(systemStyle2.css.key2, "value2");
+				assert.equal(systemStyle2.isSystem, true);
+				assert.equal(systemStyle2.stylesetId, systemStylesetId);
+
+				systemStyleset.styles.addToSet(systemStyle2);
+				systemStyleset.save(function (err) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.style.name, "Scripler Style 2");
-					assert.equal(res.body.style.class, "ScruplerZ999");
-					assert.equal(res.body.style.css.key1, "value1");
-					assert.equal(res.body.style.css.key2, "value2");
-					assert.equal(res.body.style.isSystem, true);
-					assert.equal(res.body.style.hidden, true);
-					assert.equal(res.body.style.stylesetId, systemStylesetId);
-					styleId = res.body.style._id;
+					styleId = systemStyle2._id;
 					styleId && done();
 				});
+			});
 		}),
 		it('Create all system fonts such that they are available for the EPUB generation (GET /project/compile)', function (done) {
 			font_utils.import_system_fonts(true, false, function (err) {
@@ -202,6 +200,7 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.user.firstname, "John");
 					assert.equal(res.body.user.lastname, "Doe");
+					assert.equal(!res.body.user.defaultStyleset, false);
 					done();
 				});
 		}),
@@ -1335,7 +1334,7 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					console.log('stylesets: ' + JSON.stringify(res.body.stylesets));
+					//console.log('stylesets: ' + JSON.stringify(res.body.stylesets));
 					assert.equal(res.body.stylesets[0].id, userStylesetId);
 					assert.equal(res.body.stylesets[0].order, 3);
 					assert.equal(res.body.stylesets[1].id, stylesetId);

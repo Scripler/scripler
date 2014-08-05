@@ -10,37 +10,13 @@ var Style = require('../models/style.js').Style;
 var cssNames = require(path.join(__dirname, '../lib/css-names.json'));
 var filewalker = require('filewalker');
 var utils = require('../lib/utils');
+var styleset_utils = require('../lib/styleset-utils');
 
-function getCssKey ( cssNames, name ) {
-	for (var key in cssNames) {
-		if (cssNames.hasOwnProperty(key)) {
-			if(cssNames[key].name == name) {
-				return key;
-			}
-		}
-	}
-}
-
-/**
- * Sort the styles by "system style order", i.e. so they appear in the same order as in "CSS names".
- *
- * @param s1
- * @param s2
- * @returns {number}
- */
-function systemStyleOrder (s1, s2) {
-	var s1KeyName = getCssKey(cssNames, s1.name);
-	var s2KeyName = getCssKey(cssNames, s2.name);
-
-	var s1Order = cssNames[s1KeyName] ? cssNames[s1KeyName].order : 9999;
-	var s2Order = cssNames[s2KeyName] ? cssNames[s2KeyName].order : 9999;
-	return s1Order - s2Order;
-}
-
-function createStyleset(stylesheetName, jsonStyleset, next) {
+function createStyleset(stylesheetName, jsonStyleset, order, next) {
 	var styleset = new Styleset({
 		name: stylesheetName,
-		isSystem: true
+		isSystem: true,
+		order: order
 	});
 
 	styleset.save(function (err, styleset) {
@@ -149,7 +125,7 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 					//console.log('BEFORE');
 					//console.log(JSON.stringify(populatedStyleset.styles));
 
-					populatedStyleset.styles.sort(systemStyleOrder);
+					populatedStyleset.styles.sort(styleset_utils.systemStyleOrder);
 
 					//console.log('AFTER');
 					//console.log(JSON.stringify(populatedStyleset.styles));
@@ -183,13 +159,15 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /[^non\-editable
 		process.exit(1);
 	})
 	.on('done', function () {
+		var order = 0;
+
 		async.eachSeries(stylesetFiles, function (stylesetFile, callback) {
 			var stylesheetName = utils.getFilenameWithoutExtension(stylesetFile);
 			var cssFilename = path.join(__dirname, '../public/create/stylesets/' + stylesetFile);
 			var css = fs.readFileSync(cssFilename, 'utf8');
 			var json = parser.parse(css);
 
-			createStyleset(stylesheetName, json, function (err, styleset) {
+			createStyleset(stylesheetName, json, order++, function (err, styleset) {
 				if (err) {
 					console.log(err);
 					process.exit(1);
