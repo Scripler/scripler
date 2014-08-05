@@ -36,6 +36,37 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 				}
 		});
 
+		$scope.$onRootScope('ckDocument:dataReady', function( event ) {
+			var editableBody = document.getElementById('cke_bodyeditor');
+			var iframe = editableBody.getElementsByTagName('iframe')[0];
+			var iDoc = iframe.contentWindow || iframe.contentDocument;
+			if ( iDoc.document ) {
+				iDoc = iDoc.document;
+				iDoc.addEventListener('copy', function( e ){
+					var editor = $rootScope.ck;
+					var selection = editor.getSelection();
+					var selectedRanges = selection.getRanges();
+					var bookmarks = selectedRanges.createBookmarks2( false );
+					var startElement = selection.getStartElement();
+					var range = selectedRanges[0];
+
+					var elName = 'div';
+					var x = range.getBoundaryNodes()
+					if ( x.startNode.$.nodeValue === x.endNode.$.nodeValue ) {
+						elName = startElement.getName();
+					}
+					var el = editor.document.createElement( elName );
+					el.append( range.cloneContents() );
+
+					$scope.copiedElement = el;
+
+					$rootScope.ck.focus();
+					selectedRanges.moveToBookmarks( bookmarks );
+					selection.selectRanges( selectedRanges );
+				});
+			};
+		});
+
 		$scope.submitRegistration = function() {
 			$scope.registrationSubmitted = true;
 			$scope.registerForm.$pristine = false;
@@ -255,6 +286,9 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 
 			$rootScope.modelTimeout = null;
 			function timeOutModel( event ) {
+				if ( event.name === 'dataReady' ) {
+					$rootScope.$emit('ckDocument:dataReady');
+				}
 				if ( event ) {
 					if ( event.data ) {
 						if ( event.data.keyCode !== 13 ) {
@@ -275,7 +309,12 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				}
 			}
 
-			ck.on('pasteState', function( event ) { timeOutModel( event ); });
+			ck.on('paste', function( event ) {
+				if ( scope.copiedElement ) {
+					event.stop();
+					ck.insertElement( scope.copiedElement );
+				}
+			});
 			ck.on('key', function( event ) { timeOutModel( event ); });
 			ck.on('dataReady', function( event ) { timeOutModel( event ); });
 
