@@ -58,9 +58,9 @@ function createStyleset(stylesheetName, jsonStyleset, order, next) {
 
 						if (isClass) {
 							clazz = selector.slice(1);
-							// "Insert system styles" do not need a human-readable name
 							if (cssNames[clazz]) {
 								name = cssNames[clazz].name;
+							// "Insert system styles" do not need a human-readable name
 							} else {
 								name = clazz;
 								hidden = true;
@@ -68,9 +68,9 @@ function createStyleset(stylesheetName, jsonStyleset, order, next) {
 							//console.log('isClazz name: ' + clazz + ', name: ' + name);
 						} else {
 							tag = selector;
-							// "Insert system styles" do not need a human-readable name
 							if (cssNames[tag]) {
 								name = cssNames[tag].name;
+							// "Insert system styles" do not need a human-readable name
 							} else {
 								name = tag;
 								hidden = true;
