@@ -42,34 +42,43 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 			var iDoc = iframe.contentWindow || iframe.contentDocument;
 			if ( iDoc.document ) {
 				iDoc = iDoc.document;
-				iDoc.addEventListener('copy', function( e ){
-					var editor = $rootScope.ck;
-					var selection = editor.getSelection();
-					var selectedRanges = selection.getRanges();
-					var bookmarks = selectedRanges.createBookmarks2( false );
-					var startElement = selection.getStartElement();
-					var range = selectedRanges[0];
-
-					var elName = 'div';
-					var boundryNodes = range.getBoundaryNodes()
-					//if one line selected then add original tags of the value
-					if ( boundryNodes.startNode.$.nodeValue === boundryNodes.endNode.$.nodeValue ) {
-						elName = startElement.getName();
-					}
-					var el = editor.document.createElement( elName );
-					el.append( range.cloneContents() );
-					if ( startElement.hasAttribute( 'class' ) ) {
-						el.addClass( startElement.getAttribute( 'class' ) );
-					}
-
-					$scope.copiedElement = el;
-
-					$rootScope.ck.focus();
-					selectedRanges.moveToBookmarks( bookmarks );
-					selection.selectRanges( selectedRanges );
-				});
+				iDoc.addEventListener('copy', $scope.copySelection);
+				iDoc.addEventListener('cut', $scope.copySelection);
 			};
 		});
+
+		$scope.copySelection = function() {
+			var editor = $rootScope.ck;
+			var selection = editor.getSelection();
+			var selectedRanges = selection.getRanges();
+			var bookmarks = selectedRanges.createBookmarks2( false );
+			var startElement = selection.getStartElement();
+			var range = selectedRanges[0];
+			var elName = 'div';
+			var isOneLine = false;
+			var boundryNodes = range.getBoundaryNodes();
+
+			//if one line selected then add original tags of the value
+			if ( boundryNodes.startNode.equals( boundryNodes.endNode ) ) {
+				elName = startElement.getName();
+				isOneLine = true;
+			}
+
+			var el = editor.document.createElement( elName );
+			el.append( range.cloneContents() );
+
+			if ( isOneLine ) {
+				if ( startElement.hasAttribute( 'class' ) ) {
+					el.addClass( startElement.getAttribute( 'class' ) );
+				}
+			}
+
+			$scope.copiedElement = el;
+
+			$rootScope.ck.focus();
+			selectedRanges.moveToBookmarks( bookmarks );
+			selection.selectRanges( selectedRanges );
+		}
 
 		$scope.submitRegistration = function() {
 			$scope.registrationSubmitted = true;
@@ -316,7 +325,43 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 			ck.on('paste', function( event ) {
 				if ( scope.copiedElement ) {
 					event.stop();
-					ck.insertElement( scope.copiedElement );
+
+					var el = scope.copiedElement.clone( true );
+					var headingsArray = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ];
+
+					if ( headingsArray.indexOf( el.getName() ) > -1 ) {
+						el.$.id = Date.now();
+					}
+
+					if ( el.$.children.length > 0 ) {
+						for ( var i = 0; i < el.$.children.length; i++ ) {
+							var child = el.$.children[i];
+
+							if ( child.tagName === 'A' ) {
+								if ( child.hasAttribute( 'name' ) && child.hasAttribute( 'title' ) ) {
+									child.remove();
+								}
+							}
+
+							if ( child.tagName === 'IMG' ) {
+								if ( child.hasAttribute( 'class' ) ) {
+									if ( child.getAttribute( 'class' ) === 'cke_anchor' ) {
+										child.remove();
+									}
+								}
+							}
+
+							try {
+								if ( headingsArray.indexOf( child.nodeName.toLowerCase() ) > -1 ) {
+									child.id = Date.now();
+								}
+							} catch ( e ) {
+								//anchor does not have getName method
+							}
+						}
+					}
+
+					ck.insertElement( el );
 				}
 			});
 			ck.on('key', function( event ) { timeOutModel( event ); });
