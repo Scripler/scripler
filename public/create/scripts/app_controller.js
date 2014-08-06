@@ -1,7 +1,7 @@
 'use strict';
 
 var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload',
-										 	'ngProgress', 'utilsSharedModule'] );
+										 	'ngProgress', 'utilsSharedModule' ] );
 
 app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStorageService', '$rootScope', '$timeout',
 	function( $http, $scope, userService, localStorageService, $rootScope, $timeout ) {
@@ -35,6 +35,50 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 					localStorageService.add( lsName, publications );
 				}
 		});
+
+		$scope.$onRootScope('ckDocument:dataReady', function( event ) {
+			var editableBody = document.getElementById('cke_bodyeditor');
+			var iframe = editableBody.getElementsByTagName('iframe')[0];
+			var iDoc = iframe.contentWindow || iframe.contentDocument;
+			if ( iDoc.document ) {
+				iDoc = iDoc.document;
+				iDoc.addEventListener('copy', $scope.copySelection);
+				iDoc.addEventListener('cut', $scope.copySelection);
+			};
+		});
+
+		$scope.copySelection = function() {
+			var editor = $rootScope.ck;
+			var selection = editor.getSelection();
+			var selectedRanges = selection.getRanges();
+			var bookmarks = selectedRanges.createBookmarks2( false );
+			var startElement = selection.getStartElement();
+			var range = selectedRanges[0];
+			var elName = 'div';
+			var isOneLine = false;
+			var boundryNodes = range.getBoundaryNodes();
+
+			//if one line selected then add original tags of the value
+			if ( boundryNodes.startNode.equals( boundryNodes.endNode ) ) {
+				elName = startElement.getName();
+				isOneLine = true;
+			}
+
+			var el = editor.document.createElement( elName );
+			el.append( range.cloneContents() );
+
+			if ( isOneLine ) {
+				if ( startElement.hasAttribute( 'class' ) ) {
+					el.addClass( startElement.getAttribute( 'class' ) );
+				}
+			}
+
+			$scope.copiedElement = el;
+
+			$rootScope.ck.focus();
+			selectedRanges.moveToBookmarks( bookmarks );
+			selection.selectRanges( selectedRanges );
+		}
 
 		$scope.submitRegistration = function() {
 			$scope.registrationSubmitted = true;
@@ -254,11 +298,20 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 			if (!ngModel) return;
 
 			$rootScope.modelTimeout = null;
-			function timeOutModel() {
-				if ( $rootScope.modelTimeout ) {
-					$timeout.cancel( $rootScope.modelTimeout );
+			function timeOutModel( event ) {
+				if ( event.name === 'dataReady' ) {
+					$rootScope.$emit('ckDocument:dataReady');
 				}
-				$rootScope.modelTimeout = $timeout( updateModel, 1000 );
+				if ( event ) {
+					if ( event.data ) {
+						if ( event.data.keyCode !== 13 ) {
+							if ( $rootScope.modelTimeout ) {
+								$timeout.cancel( $rootScope.modelTimeout );
+							}
+							$rootScope.modelTimeout = $timeout( updateModel, 1000 );
+						}
+					}
+				}
 			}
 
 			function updateModel() {
@@ -269,9 +322,50 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				}
 			}
 
-			ck.on('pasteState', updateModel);
-			ck.on('key', timeOutModel);
-			ck.on('dataReady', updateModel);
+			ck.on('paste', function( event ) {
+				if ( scope.copiedElement ) {
+					event.stop();
+
+					var el = scope.copiedElement.clone( true );
+					var headingsArray = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ];
+
+					if ( headingsArray.indexOf( el.getName() ) > -1 ) {
+						el.$.id = Date.now();
+					}
+
+					if ( el.$.children.length > 0 ) {
+						for ( var i = 0; i < el.$.children.length; i++ ) {
+							var child = el.$.children[i];
+
+							if ( child.tagName === 'A' ) {
+								if ( child.hasAttribute( 'name' ) && child.hasAttribute( 'title' ) ) {
+									child.remove();
+								}
+							}
+
+							if ( child.tagName === 'IMG' ) {
+								if ( child.hasAttribute( 'class' ) ) {
+									if ( child.getAttribute( 'class' ) === 'cke_anchor' ) {
+										child.remove();
+									}
+								}
+							}
+
+							try {
+								if ( headingsArray.indexOf( child.nodeName.toLowerCase() ) > -1 ) {
+									child.id = Date.now() + i;
+								}
+							} catch ( e ) {
+								//anchor does not have getName method
+							}
+						}
+					}
+
+					ck.insertElement( el );
+				}
+			});
+			ck.on('key', function( event ) { timeOutModel( event ); });
+			ck.on('dataReady', function( event ) { timeOutModel( event ); });
 
 			ngModel.$render = function(value) {
 				ck.setData(ngModel.$viewValue);
