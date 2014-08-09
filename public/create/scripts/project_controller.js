@@ -110,13 +110,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					}
 				}
 				$scope.updateProjectDocument();
-			}
-			if ( typeof $scope.timeout != 'undefined' ) {
-				if ( $scope.timeout ) {
-					$timeout.cancel( $scope.timeout )
+			} else {
+				if ( typeof $scope.timeout != 'undefined' ) {
+					if ( $scope.timeout ) {
+						$timeout.cancel( $scope.timeout )
+					}
 				}
+				$scope.timeout = $timeout( $scope.updateProjectDocument, secondsToWait * 1000 );
 			}
-			$scope.timeout = $timeout( $scope.updateProjectDocument, secondsToWait * 1000 );
 		}
 	};
 
@@ -791,10 +792,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		else {
 			$scope.activeInsertOption = insertoption;
 		}
-
-		if ( insertoption === 'showInsertAnchorOptions' ) {
-			$scope.generateToc();
-		}
 	}
 
 	$scope.insertImageOption = function(imageoption) {
@@ -849,6 +846,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.updateProjectDocument();
 		$scope.linkAddress = '';
 		$scope.linkText = '';
+		$scope.linkAnchor = '';
 	}
 
 	$scope.insertNewImage = function( images ) {
@@ -867,6 +865,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$rootScope.ck.focus();
 		range.select();
 	}
+
+	$scope.$watch('showInsert', function( newValue ) {
+		if ( newValue === true ) {
+			$scope.generateToc();
+		}
+	});
+
+	$scope.$watch('linkAnchor', function( newValue, oldValue ) {
+		if ( newValue !== oldValue ) {
+			$scope.linkAddress = newValue.target;
+			$scope.linkText = newValue.text;
+		}
+	});
 
     function initiateEditor(scope) {
     	$scope.ckContent = 'test';

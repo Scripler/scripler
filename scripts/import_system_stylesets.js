@@ -12,11 +12,12 @@ var filewalker = require('filewalker');
 var utils = require('../lib/utils');
 var styleset_utils = require('../lib/styleset-utils');
 
-function createStyleset(stylesheetName, jsonStyleset, next) {
+function createStyleset(stylesheetName, jsonStyleset, order, next) {
 	var styleset = new Styleset({
 		name: stylesheetName,
 		isSystem: true,
-		accessLevels: ["free", "premium", "professional"]
+		accessLevels: ["free", "premium", "professional"],
+		order: order
 	});
 
 	styleset.save(function (err, styleset) {
@@ -58,9 +59,9 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 
 					if (isClass) {
 						clazz = selector.slice(1);
-						// "Insert system styles" do not need a human-readable name
 						if (cssNames[clazz]) {
 							name = cssNames[clazz].name;
+							// "Insert system styles" do not need a human-readable name
 						} else {
 							name = clazz;
 							hidden = true;
@@ -68,9 +69,9 @@ function createStyleset(stylesheetName, jsonStyleset, next) {
 						//debug('isClazz name: ' + clazz + ', name: ' + name);
 					} else {
 						tag = selector;
-						// "Insert system styles" do not need a human-readable name
 						if (cssNames[tag]) {
 							name = cssNames[tag].name;
+							// "Insert system styles" do not need a human-readable name
 						} else {
 							name = tag;
 							hidden = true;
@@ -159,13 +160,15 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /[^non\-editable
 		process.exit(1);
 	})
 	.on('done', function () {
+		var order = 0;
+
 		async.eachSeries(stylesetFiles, function (stylesetFile, callback) {
 			var stylesheetName = utils.getFilenameWithoutExtension(stylesetFile);
 			var cssFilename = path.join(__dirname, '../public/create/stylesets/' + stylesetFile);
 			var css = fs.readFileSync(cssFilename, 'utf8');
 			var json = parser.parse(css);
 
-			createStyleset(stylesheetName, json, function (err, styleset) {
+			createStyleset(stylesheetName, json, order++, function (err, styleset) {
 				if (err) {
 					console.log(err);
 					process.exit(1);

@@ -131,23 +131,23 @@ p.toc-item-h1 + p.toc-item-h1 {
 }
 
 p.toc-item-h1 + p.toc-item-h2 {
-	text-indent:1em;
+	text-indent:0.5em;
 }
 
 p.toc-item-h1 + p.toc-item-h3 {
-	text-indent:2em;
+	text-indent:1em;
 }
 
 p.toc-item-h1 + p.toc-item-h4 {
-	text-indent:4em;
+	text-indent:2em;
 }
 
 p.toc-item-h1 + p.toc-item-h5 {
-	text-indent:5em;
+	text-indent:3em;
 }
 
 p.toc-item-h1 + p.toc-item-h6 {
-	text-indent:6em;
+	text-indent:4em;
 }
 
 p.toc-item-h2 + p.toc-item-h1 {
@@ -155,23 +155,23 @@ p.toc-item-h2 + p.toc-item-h1 {
 }
 
 p.toc-item-h2 + p.toc-item-h2 {
-	text-indent:1em;
+	text-indent:0.5em;
 }
 
 p.toc-item-h2 + p.toc-item-h3 {
-	text-indent:2em;
+	text-indent:1em;
 }
 
 p.toc-item-h2 + p.toc-item-h4 {
-	text-indent:4em;
+	text-indent:2em;
 }
 
 p.toc-item-h2 + p.toc-item-h5 {
-	text-indent:5em;
+	text-indent:3em;
 }
 
 p.toc-item-h2 + p.toc-item-h6 {
-	text-indent:6em;
+	text-indent:4em;
 }
 
 p.toc-item-h3 + p.toc-item-h1 {
@@ -179,23 +179,23 @@ p.toc-item-h3 + p.toc-item-h1 {
 }
 
 p.toc-item-h3 + p.toc-item-h2 {
-	text-indent:1em;
+	text-indent:0.5em;
 }
 
 p.toc-item-h3 + p.toc-item-h3 {
-	text-indent:2em;
+	text-indent:1em;
 }
 
 p.toc-item-h3 + p.toc-item-h4 {
-	text-indent:4em;
+	text-indent:2em;
 }
 
 p.toc-item-h3 + p.toc-item-h5 {
-	text-indent:5em;
+	text-indent:3em;
 }
 
 p.toc-item-h3 + p.toc-item-h6 {
-	text-indent:6em;
+	text-indent:4em;
 }
 
 p.toc-item-h4 + p.toc-item-h1 {
@@ -203,23 +203,23 @@ p.toc-item-h4 + p.toc-item-h1 {
 }
 
 p.toc-item-h4 + p.toc-item-h2 {
-	text-indent:1em;
+	text-indent:0.5em;
 }
 
 p.toc-item-h4 + p.toc-item-h3 {
-	text-indent:2em;
+	text-indent:1em;
 }
 
 p.toc-item-h4 + p.toc-item-h4 {
-	text-indent:4em;
+	text-indent:2em;
 }
 
 p.toc-item-h4 + p.toc-item-h5 {
-	text-indent:5em;
+	text-indent:3em;
 }
 
 p.toc-item-h4 + p.toc-item-h6 {
-	text-indent:6em;
+	text-indent:4em;
 }
 
 p.toc-item-h5 + p.toc-item-h1 {
@@ -227,23 +227,23 @@ p.toc-item-h5 + p.toc-item-h1 {
 }
 
 p.toc-item-h5 + p.toc-item-h2 {
-	text-indent:1em;
+	text-indent:0.5em;
 }
 
 p.toc-item-h5 + p.toc-item-h3 {
-	text-indent:2em;
+	text-indent:1em;
 }
 
 p.toc-item-h5 + p.toc-item-h4 {
-	text-indent:4em;
+	text-indent:2em;
 }
 
 p.toc-item-h5 + p.toc-item-h5 {
-	text-indent:5em;
+	text-indent:3em;
 }
 
 p.toc-item-h5 + p.toc-item-h6 {
-	text-indent:6em;
+	text-indent:4em;
 }
 
 p.toc-item-h6 + p.toc-item-h1 {
@@ -251,23 +251,23 @@ p.toc-item-h6 + p.toc-item-h1 {
 }
 
 p.toc-item-h6 + p.toc-item-h2 {
-	text-indent:1em;
+	text-indent:0.5em;
 }
 
 p.toc-item-h6 + p.toc-item-h3 {
-	text-indent:2em;
+	text-indent:1em;
 }
 
 p.toc-item-h6 + p.toc-item-h4 {
-	text-indent:4em;
+	text-indent:2em;
 }
 
 p.toc-item-h6 + p.toc-item-h5 {
-	text-indent:5em;
+	text-indent:3em;
 }
 
 p.toc-item-h6 + p.toc-item-h6 {
-	text-indent:6em;
+	text-indent:4em;
 }
 
 
