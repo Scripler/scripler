@@ -46,6 +46,10 @@ exports.loadPopulated = function (id) {
 }
 
 exports.create = function (req, res, next) {
+	if (req.user.level == "free") {
+		return next({message: "Free users are not allowed to create stylesets", status: 402});
+	}
+
 	var styleset = styleset_utils.createStyleset(req.body.name, false, req.body.order, ["premium", "professional"]);
 		styleset.members = [
 			{userId: req.user._id, access: ["admin"]}
@@ -128,6 +132,10 @@ exports.update = function (req, res, next) {
 
 	styleset.name = req.body.name;
 	styleset.order = req.body.order;
+
+	if (req.user.level == "free") {
+		return next({message: "Free users are not allowed to update stylesets", status: 402});
+	}
 
 	// TODO: implement some sort of safety check ensuring that we only accept styles from the current styleset? See also TODO in models/Styleset.styles
 	styleset.styles = req.body.styles;

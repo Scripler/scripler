@@ -16,7 +16,8 @@ var StyleSchema = new Schema({
 	deleted: { type: Boolean, default: false },
 	isSystem: { type: Boolean, default: false },
 	original: { type: Schema.Types.ObjectId, ref: 'Style' },
-	hidden: { type: Boolean, default: false }
+	hidden: { type: Boolean, default: false },
+	accessLevels: [String]
 });
 
 var InternalStyle = mongoose.model('Style', StyleSchema);

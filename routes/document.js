@@ -169,6 +169,10 @@ exports.archive = function (req, res, next) {
 	var document = req.document;
 	document.archived = true;
 
+	if (req.user.level == "free" && document.type == "madewithscripler") {
+		return next({message: "Free users are not allowed to archive the \"made with scripler\" document", status: 402});
+	}
+
 	// TODO: also archive the document's stylesets and styles since these were copied?
 
 	document.save(function (err) {
@@ -196,6 +200,10 @@ exports.unarchive = function (req, res, next) {
 exports.delete = function (req, res, next) {
 	var document = req.document;
 	var project = req.project;
+
+	if (req.user.level == "free" && document.type == "madewithscripler") {
+		return next({message: "Free users are not allowed to delete the \"made with scripler\" document", status: 402});
+	}
 
 	project.documents.pull(document._id);
 	project.deletedDocuments.addToSet(document);
@@ -228,7 +236,7 @@ exports.rearrange = function (req, res, next) {
 
 	if (rearrangedDocumentIds && rearrangedDocumentIds.length == existingDocumentIds.length) {
 		async.each(rearrangedDocumentIds, function (rearrangedDocumentId, callback) {
-			var containsRearrangedDocumentId = rearrangedDocumentIds.indexOf(rearrangedDocumentId) > -1;
+			var containsRearrangedDocumentId = existingDocumentIds.indexOf(rearrangedDocumentId) > -1;
 			if (!containsRearrangedDocumentId) {
 				return callback({message: errorMessage, status: 400});
 			}
@@ -292,6 +300,9 @@ exports.applyStyleset = function (req, res, next) {
 	var documentStylesetIds = req.document.stylesets;
 	var defaultStylesetId = req.document.defaultStyleset;
 
+	if (req.user.level == "free") {
+		return next({message: "Free users are not allowed to apply styles", status: 402});
+	}
 	/*
 	 Only copy the styleset if it is not already applied to the document, i.e. if:
 	 - The styleset to apply is not the same as the default styleset

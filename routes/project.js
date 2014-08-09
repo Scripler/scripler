@@ -293,7 +293,7 @@ exports.rearrange = function (req, res, next) {
 	if (rearrangedProjectIds && rearrangedProjectIds.length == existingProjectIds.length) {
 		for (var i=0; i<rearrangedProjectIds.length; i++) {
 			var rearrangedProjectId = rearrangedProjectIds[i];
-			var containsRearrangedProjectId = rearrangedProjectIds.indexOf(rearrangedProjectId) > -1;
+			var containsRearrangedProjectId = existingProjectIds.indexOf(rearrangedProjectId) > -1;
 			if (!containsRearrangedProjectId) {
 				return next({message: errorMessage, status: 400});
 			}

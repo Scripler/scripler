@@ -34,28 +34,29 @@ exports.create = function (req, res, next) {
 	];
 
 	if (req.user.level == "free") {
-		return next({message: "Free users are not allowed to create fonts", status: 403});
+		return next({message: "Free users are not allowed to create fonts", status: 402});
 	}
 
 
-	font.save(function(err) {
+	font.save(function (err) {
 		if (err) {
 			return next(err);
 		}
 
-			// TODO: add to user.fonts when "user fonts" becomes a feature
-			/*
-			req.user.fonts.addToSet(font);
-			req.user.save(function(err) {
-				if (err) {
-					return next(err);
-				}
+		// TODO: add to user.fonts when "user fonts" becomes a feature
+		// TODO: Handle user storage limit when "user fonts" becomes a feature
+		/*
+		 req.user.fonts.addToSet(font);
+		 req.user.save(function(err) {
+		 if (err) {
+		 return next(err);
+		 }
 
-				res.send({font: font});
-			});
-			*/
+		 res.send({font: font});
+		 });
+		 */
 
-			res.send({font: font});
+		res.send({font: font});
 	});
 
 }

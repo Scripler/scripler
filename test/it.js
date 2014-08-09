@@ -86,8 +86,11 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.user.firstname, "Dummy");
 					assert.equal(res.body.user.lastname, "Doe");
-					user_utils.makePremium(res.body.user._id);
-					done();
+					assert.equal(res.body.user.level, "free");
+					user_utils.changeLevel(res.body.user._id, "premium", function (err) {
+						if (err) throw new Error(err);
+						done();
+					});
 				});
 		}),
 		it('Login the dummy user to be able to create system stylesets and styles.', function (done) {
@@ -119,7 +122,7 @@ describe('Scripler RESTful API', function () {
 		it('Creating a system style should return the new style', function (done) {
 			var systemStyle1 = styleset_utils.createStyle("Scripler Style 1", "ScruplerZ", {"key1": "value1", "key2": "value2"}, null, systemStylesetId, true, false);
 			systemStyle1.save(function(err) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 				assert.equal(systemStyle1.name, "Scripler Style 1");
 				assert.equal(systemStyle1.class, "ScruplerZ");
 				assert.equal(systemStyle1.css.key1, "value1");
@@ -138,7 +141,7 @@ describe('Scripler RESTful API', function () {
 		it('Creating a hidden system style should return the new style', function (done) {
 			var systemStyle2 = styleset_utils.createStyle("Scripler Style 2", "ScruplerZ999", {"key1": "value1", "key2": "value2"}, null, systemStylesetId, true, true);
 			systemStyle2.save(function(err) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+				if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 				assert.equal(systemStyle2.name, "Scripler Style 2");
 				assert.equal(systemStyle2.class, "ScruplerZ999");
 				assert.equal(systemStyle2.css.key1, "value1");
@@ -177,8 +180,7 @@ describe('Scripler RESTful API', function () {
 					userStylesetId = res.body.user.stylesets[0];
 					assert.notEqual(userStylesetId, systemStylesetId); // Stylesets are copied
 					assert.notEqual(res.body.user.defaultStyleset, systemStylesetId);
-					user_utils.makePremium(res.body.user._id);
-					done();
+                    done();
 				});
 		}),
 		it('Login should return current user', function (done) {
@@ -445,17 +447,34 @@ describe('Scripler RESTful API', function () {
 	}),
 	describe('Initialize Typography (Project.applyStyleset() (such that EPUB will contain styles))', function () {
 		var css = {
-                'content': 'attr(data-info)',
-                'color': '#47a3da',
-                'position': 'absolute',
-                'width': '600%',
-                'top': '120%',
-                'text-align': 'right',
-                'right': '0',
-                'opacity': '0',
-                'pointer-events': 'none'
-			};
+			'content': 'attr(data-info)',
+			'color': '#47a3da',
+			'position': 'absolute',
+			'width': '600%',
+			'top': '120%',
+			'text-align': 'right',
+			'right': '0',
+			'opacity': '0',
+			'pointer-events': 'none'
+		};
 
+		it('Creating a styleset is not allowed for free users', function (done) {
+			request(host)
+				.post('/styleset')
+				.set('cookie', cookie)
+				.send({name: "My Best Styleset", isSystem: false, order: 10})
+				.expect(402)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    done();
+				});
+		}),
+		it('Change user level: premium', function (done) {
+			user_utils.changeLevel(userId, "premium", function (err) {
+				if (err) throw new Error(err);
+				done();
+			});
+		}),
 		it('Creating a styleset should return the new styleset', function (done) {
 			request(host)
 				.post('/styleset')
@@ -469,6 +488,29 @@ describe('Scripler RESTful API', function () {
 					stylesetId = res.body.styleset._id;
 					stylesetId && done();
 				});
+		}),
+		it('Change user level: free', function (done) {
+			user_utils.changeLevel(userId, "free", function (err) {
+				if (err) throw new Error(err);
+				done();
+			});
+		}),
+		it('Creating a style is not allowed for free users', function (done) {
+			request(host)
+				.post('/style')
+				.set('cookie', cookie)
+				.send({stylesetId: stylesetId, name: "Coolio", class: "CoolioClass", css: css, isSystem: false})
+				.expect(402)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
+		}),
+		it('Change user level: premium', function (done) {
+			user_utils.changeLevel(userId, "premium", function (err) {
+				if (err) throw new Error(err);
+				done();
+			});
 		}),
 		it('Creating a style should return the new style', function (done) {
 			request(host)
@@ -1229,31 +1271,29 @@ describe('Scripler RESTful API', function () {
 			})
 	}),
 	describe('Typography (Styleset & Style)', function () {
-        var css2 = {
-            'content': 'attr(data-info)',
-            'color': '#27a3da',
-            'position': 'absolute',
-            'width': '500%',
-            'top': '110%',
-            'text-align': 'left',
-            'right': '5',
-            'opacity': '10',
-            'pointer-events': 'none'
-        };
-
-
+		var css2 = {
+			'content':        'attr(data-info)',
+			'color':          '#27a3da',
+			'position':       'absolute',
+			'width':          '500%',
+			'top':            '110%',
+			'text-align':     'left',
+			'right':          '5',
+			'opacity':        '10',
+			'pointer-events': 'none'
+		};
 		it('Creating a styleset should return the new styleset, a user styleset', function (done) {
-			request(host)
-				.post('/styleset')
-				.set('cookie', cookie)
-				.send({name: "My Best Styleset 2"})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset.name, "My Best Styleset 2");
-					stylesetId2 = res.body.styleset._id;
-					stylesetId2 && done();
-				});
+		request(host)
+			.post('/styleset')
+			.set('cookie', cookie)
+			.send({name: "My Best Styleset 2"})
+			.expect(200)
+			.end(function (err, res) {
+				if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+				assert.equal(res.body.styleset.name, "My Best Styleset 2");
+				stylesetId2 = res.body.styleset._id;
+				stylesetId2 && done();
+			});
 		}),
 		it('Creating a style should return the new style, a user style', function (done) {
 			request(host)
@@ -1436,23 +1476,23 @@ describe('Scripler RESTful API', function () {
 					styleId3 && done();
 				});
 		}),
-        it('Creating an extra new style for for the same styleset', function (done) {
-            request(host)
-                .post('/style')
-                .set('cookie', cookie)
-                .send({stylesetId: stylesetCopiedId, name: "Vuf - 2", class: "xxx123", css: {some: "stuff"}, tag: "h3"})
-                .expect(200)
-                .end(function (err, res) {
-                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    assert.equal(res.body.style.name, "Vuf - 2");
-                    assert.equal(res.body.style.class, "xxx123");
-                    assert.equal(res.body.style.css.some, "stuff");
-                    assert.equal(res.body.style.tag, "h3");
-                    assert.equal(res.body.style.stylesetId, stylesetCopiedId);
-                    styleId4 = res.body.style._id;
-                    styleId4 && done();
-                });
-        }),
+		it('Creating an extra new style for for the same styleset', function (done) {
+			request(host)
+				.post('/style')
+				.set('cookie', cookie)
+				.send({stylesetId: stylesetCopiedId, name: "Vuf - 2", class: "xxx123", css: {some: "stuff"}, tag: "h3"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.style.name, "Vuf - 2");
+					assert.equal(res.body.style.class, "xxx123");
+					assert.equal(res.body.style.css.some, "stuff");
+					assert.equal(res.body.style.tag, "h3");
+					assert.equal(res.body.style.stylesetId, stylesetCopiedId);
+					styleId4 = res.body.style._id;
+					styleId4 && done();
+				});
+		}),
 		it('Updating a copied (document) styleset by adding two new styles to it and removing an existing style from it, should return the updated styleset.', function (done) {
 			var styles = [styleId3, styleId4];
 			request(host)
@@ -1466,7 +1506,7 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.styleset._id, stylesetCopiedId);
 					assert.equal(res.body.styleset.styles.length, 2);
 					assert.equal(res.body.styleset.styles[0], styleId3);
-                    assert.equal(res.body.styleset.styles[1], styleId4);
+					assert.equal(res.body.styleset.styles[1], styleId4);
 					assert.notEqual(res.body.styleset.styles[0], styleCopiedId);
 					assert.equal(res.body.styleset.name, "OK, Maybe not the BEST, but...");
 					done();
@@ -1586,14 +1626,14 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.style.name, "DonkeyKong");
 					assert.equal(res.body.style.class, "jytte");
-                    assert.equal(res.body.style.css["another-key"], "yet another value");
-                    assert.deepEqual(res.body.style.css, css2);
+					assert.equal(res.body.style.css["another-key"], "yet another value");
+					assert.deepEqual(res.body.style.css, css2);
 					done();
 				});
 		}),
 		it('Updating a copied (document) style to test if the values are copied back to the original style, when the STYLESET is updated.', function (done) {
-            css2.fancy = 'ew ew ew';
-            request(host)
+			css2.fancy = 'ew ew ew';
+			request(host)
 				.put('/style/' + styleId3 + '/update')
 				.set('cookie', cookie)
 				.send({name: "FancyPantsy", class: "pantsy", css: css2})
@@ -1618,9 +1658,9 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset._id, stylesetCopiedId);
 					assert.equal(res.body.styleset.name, "Robotnix");
-                    assert.equal(res.body.styleset.styles.length, 2);
+					assert.equal(res.body.styleset.styles.length, 2);
 					assert.equal(res.body.styleset.styles[0], styleId3);
-                    assert.equal(res.body.styleset.styles[1], styleId4);
+					assert.equal(res.body.styleset.styles[1], styleId4);
 					done();
 				});
 		}),
@@ -1635,7 +1675,7 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.style._id, styleCopiedId2);
 					assert.equal(res.body.style.name, "FancyPantsy");
 					assert.equal(res.body.style.class, "pantsy");
-                    assert.deepEqual(res.body.style.css, css2);
+					assert.deepEqual(res.body.style.css, css2);
 					done();
 				});
 		}),
@@ -1890,6 +1930,33 @@ describe('Scripler RESTful API', function () {
 				done();
 			});
 		}),
+		it('Change user level: free', function(done) {
+			user_utils.changeLevel(userId, "free", function (err) {
+				if (err) throw new Error(err);
+				done();
+			});
+		}),
+		it('Uploading an image larger than the free limit should not be allowed by a free user', function (done) {
+			imageName = 'Scripler_logo.jpg';
+			var srcImagesDir = path.join('test', 'resources', 'images');
+			var srcImage = path.join(srcImagesDir, imageName);
+
+			request(host)
+				.post('/image/' + projectId + '/upload')
+				.set('cookie', cookie)
+				.attach('file', srcImage)
+				.expect(402)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
+		}),
+		it('Change user level: premium', function(done) {
+			user_utils.changeLevel(userId, "premium", function (err) {
+				if (err) throw new Error(err);
+				done();
+			});
+		}),
 		it('Uploading an image to a project should return the Mongoose model object representing the uploaded image', function (done) {
 			imageName = 'Scripler_logo.jpg';
 			var srcImagesDir = path.join('test', 'resources', 'images');
@@ -1911,6 +1978,21 @@ describe('Scripler RESTful API', function () {
 					assert.equal(image.mediaType, "image/jpeg");
 					assert.equal(image.members[0].userId, userId);
 					assert.equal(image.members[0].access[0], "admin");
+					done();
+				});
+		}),
+		it('Uploading an additional image to a project should return should not be allowed (storage restriction for premium user)', function (done) {
+			imageName = 'Scripler_logo.jpg';
+			var srcImagesDir = path.join('test', 'resources', 'images');
+			var srcImage = path.join(srcImagesDir, imageName);
+
+			request(host)
+				.post('/image/' + projectId + '/upload')
+				.set('cookie', cookie)
+				.attach('file', srcImage)
+				.expect(402)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					done();
 				});
 		}),
