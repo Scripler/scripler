@@ -109,6 +109,12 @@ exports.register = function (req, res, next) {
 			password: req.body.password
 		});
 
+		if ('test' != env) {
+			// Currently we just force user to become premium member immediately (for free)
+			// TODO: When launching this should be removed!
+			user.level = "premium"
+		}
+
 		// Copy all system/Scripler stylesets (and styles) to the user
 		Styleset.find({isSystem: true}, function (err, stylesets) {
 			if (err) {
