@@ -7,6 +7,7 @@ var async = require('async');
 var path = require('path');
 var mkdirp = require('mkdirp');
 var fs = require('fs');
+var logger = require('../lib/logger');
 
 exports.create = function (req, res, next) {
 	var project = req.project;
@@ -85,7 +86,11 @@ exports.create = function (req, res, next) {
 			// Image(s) was correctly uploaded and stored on project.
 			// As a background task update the users stoageUsed value.
 			// Don't wait for it - customer will just be happy if it fails.
-			User.update({_id: req.user._id}, {$inc: {storageUsed: totalBytes}}).exec();
+			User.update({_id: req.user._id}, {$inc: {storageUsed: totalBytes}}, function (err, numAffected) {
+				if (err) {
+					logger.error("Could not update users storageUsed value: " + err, req.user);
+				}
+			});
 
 			res.send({images: images});
 		})
