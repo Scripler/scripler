@@ -11,14 +11,20 @@ var cssNames = require(path.join(__dirname, '../lib/css-names.json'));
 var filewalker = require('filewalker');
 var utils = require('../lib/utils');
 var styleset_utils = require('../lib/styleset-utils');
+var logger = require('../lib/logger');
 
 function createStyleset(stylesheetName, jsonStyleset, order, next) {
 	var styleset = new Styleset({
 		name: stylesheetName,
 		isSystem: true,
-		accessLevels: ["free", "premium", "professional"],
+		accessLevels: ["premium", "professional"],
 		order: order
 	});
+
+	// Define the freemium stylesets
+	if (["book-bw", "book-color", "future-bw", "future-color", "light-bw", "light-color", "simple-bw", "simple-color"].indexOf(stylesheetName) >= 0) {
+		styleset.accessLevels = ["free", "premium", "professional"];
+	}
 
 	styleset.save(function (err, styleset) {
 		if (err) {
@@ -37,7 +43,7 @@ function createStyleset(stylesheetName, jsonStyleset, order, next) {
 				var hidden;
 
 				if (type == 'fontface') {
-					debug('Skipping "fontface" style...(should be added as non-editable CSS (that is only included if used))');
+					logger.info('Skipping "fontface" style...(should be added as non-editable CSS (that is only included if used))');
 					callback(null);
 				} else if (type == 'style') {
 					var selector = jsonStyle['selector'];
@@ -168,6 +174,8 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /[^non\-editable
 			var css = fs.readFileSync(cssFilename, 'utf8');
 			var json = parser.parse(css);
 
+			logger.info('Importing ' + cssFilename);
+
 			createStyleset(stylesheetName, json, order++, function (err, styleset) {
 				if (err) {
 					console.log(err);
@@ -175,7 +183,7 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /[^non\-editable
 				}
 
 				//console.log('Created and saved styleset ' + styleset);
-				console.log('Imported ' + cssFilename);
+				logger.info('Imported ' + stylesheetName);
 				callback(null);
 			});
 		}, function (err) {
@@ -190,5 +198,5 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /[^non\-editable
 	.walk();
 
 process.on('exit', function() {
-	debug('Imported all system stylesets from ' + systemStylesetsDir + ' (but check log messages for errors)');
+	logger.info('Imported all system stylesets from ' + systemStylesetsDir + ' (but check log messages for errors)');
 })
