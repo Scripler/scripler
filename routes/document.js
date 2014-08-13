@@ -317,6 +317,8 @@ exports.applyStyleset = function (req, res, next) {
 						return next(err);
 					}
 
+					populatedCopy.styles.sort(styleset_utils.systemStyleOrder);
+
 					res.send({styleset: populatedCopy});
 				});
 			});
