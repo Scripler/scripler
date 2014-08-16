@@ -177,7 +177,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if ( $scope.user._id ) {
 			$http.put(/document/ + document._id + '/update', angular.toJson( document ))
 				.success( function() {
-					//TODO inform user that document is saved
+					// TODO: what is the standard/easiest way of formatting dates in JavaScript? Use moment.js?
+					var now = new Date();
+					var hours = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();
+					var minutes = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
+					var seconds = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds();
+					$scope.lastSaved = 'Last saved: ' + now.getDate() + '/' + now.getMonth() + '/' + now.getFullYear() + ' ' + hours + ':' + minutes + ':' + seconds;
 				});
 		} else {
 			//TODO save to localstorage

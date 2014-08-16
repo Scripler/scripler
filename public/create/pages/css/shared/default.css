@@ -47,6 +47,25 @@ a {
 	text-decoration: none;
 }
 
+a.breadcrumb {
+	color: #666;
+	text-decoration: none;
+	border-bottom: 1px solid #666;
+}
+
+p.breadcrumb {
+	margin-top: 10px;
+	margin-bottom: 0.5em;
+	float: left;
+}
+
+p.savedstamp {
+	margin-top: 10px;
+	margin-bottom: 0.5em;
+	float: right;
+	text-align: right;
+}
+
 a:hover {
 	color: #666;
 }
