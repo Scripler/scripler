@@ -13,7 +13,7 @@ var utils = require('../lib/utils');
 var styleset_utils = require('../lib/styleset-utils');
 var logger = require('../lib/logger');
 
-function createStyleset(stylesheetName, jsonStyleset, order, next) {
+function createStyleset(stylesheetName, order, next) {
 	var styleset = new Styleset({
 		name: stylesheetName,
 		isSystem: true,
@@ -31,6 +31,14 @@ function createStyleset(stylesheetName, jsonStyleset, order, next) {
 			return next(err);
 		}
 
+		//logger.info('Created and saved styleset ' + stylesheetName);
+
+		return next(null, styleset);
+	});
+
+}
+
+function updateStyles(styleset, jsonStyleset, next) {
 		// TODO: will the styles always be inside a 'rulelist'?
 		var jsonStyles = jsonStyleset['rulelist'];
 
@@ -88,6 +96,16 @@ function createStyleset(stylesheetName, jsonStyleset, order, next) {
 
 					var declarations = jsonStyle['declarations'];
 
+				// Notice that the style must exist in the same styleset to be considered a duplicate
+				Style.findOne({"name": name, "class": clazz, "tag": tag, "stylesetId": styleset._id, "isSystem": true, "hidden": hidden}, function (err, style) {
+					if (err) {
+						callback(err);
+					}
+
+					if (style) {
+						//logger.info(name + ' already exists, updating its CSS...');
+						style.css = declarations;
+					} else {
 					var style = new Style({
 						name: name,
 						class: clazz,
@@ -97,17 +115,18 @@ function createStyleset(stylesheetName, jsonStyleset, order, next) {
 						isSystem: true,
 						hidden: hidden
 					});
+					}
 
 					style.save(function (err, style) {
 						if (err) {
 							callback(err);
 						}
 
-						//debug(stylesheetName + ': created style: ' + JSON.stringify(style));
-
+						//logger.info(stylesheetName + ': created/updated style: ' + JSON.stringify(style));
 						styleset.styles.addToSet(style);
 						callback(null);
 					});
+				});
 				}
 			} else {
 				callback('"type" empty');
@@ -148,7 +167,6 @@ function createStyleset(stylesheetName, jsonStyleset, order, next) {
 				});
 			});
 		});
-	});
 }
 
 mongoose.connect(conf.db.uri);
@@ -162,7 +180,7 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /[^non\-editable
 		stylesetFiles.push(stylesetFile);
 	})
 	.on('error', function (err) {
-		console.log(err);
+		logger.error(err);
 		process.exit(1);
 	})
 	.on('done', function () {
@@ -173,22 +191,47 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /[^non\-editable
 			var cssFilename = path.join(__dirname, '../public/create/stylesets/' + stylesetFile);
 			var css = fs.readFileSync(cssFilename, 'utf8');
 			var json = parser.parse(css);
-
 			logger.info('Importing ' + cssFilename);
 
-			createStyleset(stylesheetName, json, order++, function (err, styleset) {
+			Styleset.findOne({"name": stylesheetName, "isSystem": true}, function (err, styleset) {
 				if (err) {
-					console.log(err);
+					callback(err);
+				}
+
+				if (!styleset) {
+					logger.info(stylesheetName + ' does not exist, creating it...');
+					createStyleset(stylesheetName, order++, function (err, styleset) {
+						if (err) {
+					logger.error(err);
 					process.exit(1);
 				}
 
-				//console.log('Created and saved styleset ' + styleset);
-				logger.info('Imported ' + stylesheetName);
+						updateStyles(styleset, json, function (err, styleset) {
+							if (err) {
+								logger.error(err);
+								process.exit(1);
+							}
+
+							logger.info('Created ' + cssFilename);
 				callback(null);
+			});
+					});
+				} else {
+					logger.info(stylesheetName + ' already exists, updating its styles...');
+					updateStyles(styleset, json, function (err, styleset) {
+						if (err) {
+							logger.error(err);
+							process.exit(1);
+						}
+
+						logger.info('Updated ' + cssFilename);
+						callback(null);
+					});
+				}
 			});
 		}, function (err) {
 			if (err) {
-				console.log(err);
+				logger.error(err);
 				process.exit(1);
 			}
 

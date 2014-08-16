@@ -116,7 +116,7 @@ exports.update = function (req, res, next) {
 				return next(err);
 			}
 
-			//console.log('document.fonts: ' + document.fonts);
+			//logger.info('document.fonts: ' + document.fonts);
 
 			res.send({document: document});
 		});
@@ -126,7 +126,7 @@ exports.update = function (req, res, next) {
 		// TODO: can this be optimized by looking up ALL ids in one query (using $in)?
 		async.each(req.body.fonts, function (font, callback) {
 			// Frontend does not know the Mongo ids of fonts so we must translate (family, style, weight) to an id for it
-			//console.log('font: ' + JSON.stringify(font));
+			//logger.info('font: ' + JSON.stringify(font));
 			Font.findOne({"family": font.family, "style": font.style, "weight": font.weight}, function (err, font) {
 				if (err) {
 					callback(err);
@@ -328,6 +328,8 @@ exports.applyStyleset = function (req, res, next) {
 						return next(err);
 					}
 
+					populatedCopy.styles.sort(styleset_utils.systemStyleOrder);
+
 					res.send({styleset: populatedCopy});
 				});
 			});
@@ -342,8 +344,8 @@ exports.listStylesets = function (req, res, next) {
 	var userStylesetIds = req.user.stylesets;
 	var resultStylesets = documentStylesets.slice(0);
 
-	//console.log('resultStylesets: ' + resultStylesets);
-	//console.log('documentStylesets: ' + documentStylesets);
+	//logger.info('resultStylesets: ' + resultStylesets);
+	//logger.info('documentStylesets: ' + documentStylesets);
 
 	// Get user stylesets
 	Styleset.find({"_id": {$in: userStylesetIds}}).exec(function (err, userStylesets) {
@@ -351,12 +353,12 @@ exports.listStylesets = function (req, res, next) {
 			return next(err);
 		}
 
-		//console.log('userStylesets: ' + userStylesets);
+		//logger.info('userStylesets: ' + userStylesets);
 
 		for (var i=0; i<userStylesets.length; i++) {
 			var userStyleset = userStylesets[i];
 			if (!utils.containsOriginal(documentStylesets, userStyleset)) {
-				//console.log('Adding user styleset...' + userStyleset);
+				//logger.info('Adding user styleset...' + userStyleset);
 				resultStylesets.push(userStyleset._id);
 			}
 		}
