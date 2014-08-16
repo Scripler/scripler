@@ -17,7 +17,7 @@ var DocumentSchema = new Schema({
 	members: [MemberSchema],
 	archived: { type: Boolean, default: false},
 	deleted: { type: Boolean, default: false},
-	type: { type: String, enum: ["cover", "titlepage", "toc", "colophon"] },
+	type: { type: String, enum: ["cover", "titlepage", "toc", "colophon", "madewithscripler"] },
 	modified: { type: Date, default: Date.now },
 	stylesets: [
 		{ type: Schema.Types.ObjectId, ref: 'Styleset' }

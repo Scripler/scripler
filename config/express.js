@@ -3,8 +3,8 @@ var express = require('express')
 	, MongoStore = require('connect-mongo')(express)
 	, path = require('path')
 	, logger = require('../lib/logger')
-    , conf = require('config')
-    , mkdirp = require('mkdirp');
+	, conf = require('config')
+	, mkdirp = require('mkdirp');
 
 
 var allowCrossDomain = function (req, res, next) {
@@ -25,7 +25,7 @@ if (conf.import.uploadDir == "") {
 }
 // Ensure that uploadDir exists
 mkdirp(conf.import.uploadDir, function (err) {
-    if (err) console.error(err);
+	if (err) console.error(err);
 });
 
 module.exports = function (app, conf, mongoose) {

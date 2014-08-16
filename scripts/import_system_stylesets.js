@@ -11,20 +11,27 @@ var cssNames = require(path.join(__dirname, '../lib/css-names.json'));
 var filewalker = require('filewalker');
 var utils = require('../lib/utils');
 var styleset_utils = require('../lib/styleset-utils');
+var logger = require('../lib/logger');
 
 function createStyleset(stylesheetName, order, next) {
 	var styleset = new Styleset({
 		name: stylesheetName,
 		isSystem: true,
+		accessLevels: ["premium", "professional"],
 		order: order
 	});
+
+	// Define the freemium stylesets
+	if (["book-bw", "book-color", "future-bw", "future-color", "light-bw", "light-color", "simple-bw", "simple-color"].indexOf(stylesheetName) >= 0) {
+		styleset.accessLevels = ["free", "premium", "professional"];
+	}
 
 	styleset.save(function (err, styleset) {
 		if (err) {
 			return next(err);
 		}
 
-		//console.log('Created and saved styleset ' + stylesheetName);
+		//logger.info('Created and saved styleset ' + stylesheetName);
 
 		return next(null, styleset);
 	});
@@ -32,36 +39,36 @@ function createStyleset(stylesheetName, order, next) {
 }
 
 function updateStyles(styleset, jsonStyleset, next) {
-	// TODO: will the styles always be inside a 'rulelist'?
-	var jsonStyles = jsonStyleset['rulelist'];
+		// TODO: will the styles always be inside a 'rulelist'?
+		var jsonStyles = jsonStyleset['rulelist'];
 
-	async.each(jsonStyles, function (jsonStyle, callback) {
-		var type = jsonStyle['type'];
-		if (type) {
-			var name;
-			var clazz;
-			var tag;
-			var hidden;
+		async.each(jsonStyles, function (jsonStyle, callback) {
+			var type = jsonStyle['type'];
+			if (type) {
+				var name;
+				var clazz;
+				var tag;
+				var hidden;
 
-			if (type == 'fontface') {
-				console.log('Skipping "fontface" style...(should be added as non-editable CSS (that is only included if used))');
-				callback(null);
-			} else if (type == 'style') {
-				var selector = jsonStyle['selector'];
+				if (type == 'fontface') {
+					logger.info('Skipping "fontface" style...(should be added as non-editable CSS (that is only included if used))');
+					callback(null);
+				} else if (type == 'style') {
+					var selector = jsonStyle['selector'];
 
-				var tagAndClassRegex = /(\w+)\.(\w+)/;
-				var tagAndClass = tagAndClassRegex.exec(selector);
-				if (tagAndClass && tagAndClass.length > 1) {
-					tag = tagAndClass[1];
-					clazz = tagAndClass[2];
+					var tagAndClassRegex = /(\w+)\.(\w+)/;
+					var tagAndClass = tagAndClassRegex.exec(selector);
+					if (tagAndClass && tagAndClass.length > 1) {
+						tag = tagAndClass[1];
+						clazz = tagAndClass[2];
 
-					if (cssNames[tag]) {
-						name = cssNames[tag].name;
+						if (cssNames[tag]) {
+							name = cssNames[tag].name;
+						} else {
+							name = tag;
+							hidden = true;
+						}
 					} else {
-						name = tag;
-						hidden = true;
-					}
-				} else {
 					var isClass = selector.indexOf('.') == 0;
 
 					if (isClass) {
@@ -73,7 +80,7 @@ function updateStyles(styleset, jsonStyleset, next) {
 							name = clazz;
 							hidden = true;
 						}
-						//console.log('isClazz name: ' + clazz + ', name: ' + name);
+						//debug('isClazz name: ' + clazz + ', name: ' + name);
 					} else {
 						tag = selector;
 						if (cssNames[tag]) {
@@ -83,11 +90,11 @@ function updateStyles(styleset, jsonStyleset, next) {
 							name = tag;
 							hidden = true;
 						}
-						//console.log('tag name: ' + tag + ', name: ' + name);
+						//debug('tag name: ' + tag + ', name: ' + name);
 					}
-				}
+					}
 
-				var declarations = jsonStyle['declarations'];
+					var declarations = jsonStyle['declarations'];
 
 				// Notice that the style must exist in the same styleset to be considered a duplicate
 				Style.findOne({"name": name, "class": clazz, "tag": tag, "stylesetId": styleset._id, "isSystem": true, "hidden": hidden}, function (err, style) {
@@ -96,18 +103,18 @@ function updateStyles(styleset, jsonStyleset, next) {
 					}
 
 					if (style) {
-						//console.log(name + ' already exists, updating its CSS...');
+						//logger.info(name + ' already exists, updating its CSS...');
 						style.css = declarations;
 					} else {
-						var style = new Style({
-							name: name,
-							class: clazz,
-							css: declarations,
-							tag: tag,
-							stylesetId: styleset._id,
-							isSystem: true,
-							hidden: hidden
-						});
+					var style = new Style({
+						name: name,
+						class: clazz,
+						css: declarations,
+						tag: tag,
+						stylesetId: styleset._id,
+						isSystem: true,
+						hidden: hidden
+					});
 					}
 
 					style.save(function (err, style) {
@@ -115,52 +122,51 @@ function updateStyles(styleset, jsonStyleset, next) {
 							callback(err);
 						}
 
-						//console.log(stylesheetName + ': created/updated style: ' + JSON.stringify(style));
-
+						//logger.info(stylesheetName + ': created/updated style: ' + JSON.stringify(style));
 						styleset.styles.addToSet(style);
 						callback(null);
 					});
 				});
+				}
+			} else {
+				callback('"type" empty');
 			}
-		} else {
-			callback('"type" empty');
-		}
-	}, function (err) {
-		if (err) {
-			return next(err);
-		}
-
-		// Save styleset such that the styles added above can be populated, c.f. comment below
-		styleset.save(function (err, savedStyleset) {
+		}, function (err) {
 			if (err) {
 				return next(err);
 			}
 
-			// Styles must be populated for sorting to work, see below
-			Styleset.findOne({"_id": savedStyleset._id}).populate('styles').exec(function (err, populatedStyleset) {
+			// Save styleset such that the styles added above can be populated, c.f. comment below
+			styleset.save(function (err, savedStyleset) {
 				if (err) {
 					return next(err);
 				}
 
-				//console.log('BEFORE');
-				//console.log(JSON.stringify(populatedStyleset.styles));
-
-				populatedStyleset.styles.sort(styleset_utils.systemStyleOrder);
-
-				//console.log('AFTER');
-				//console.log(JSON.stringify(populatedStyleset.styles));
-
-				// The styles we just created were also added to the styleset so we must save the styleset again
-				populatedStyleset.save(function (err, savedStyleset) {
+				// Styles must be populated for sorting to work, see below
+				Styleset.findOne({"_id": savedStyleset._id}).populate('styles').exec(function (err, populatedStyleset) {
 					if (err) {
 						return next(err);
 					}
 
-					return next(null, savedStyleset);
+					//debug('BEFORE');
+					//debug(JSON.stringify(populatedStyleset.styles));
+
+					populatedStyleset.styles.sort(styleset_utils.systemStyleOrder);
+
+					//debug('AFTER');
+					//debug(JSON.stringify(populatedStyleset.styles));
+
+					// The styles we just created were also added to the styleset so we must save the styleset again
+					populatedStyleset.save(function (err, savedStyleset) {
+						if (err) {
+							return next(err);
+						}
+
+						return next(null, savedStyleset);
+					});
 				});
 			});
 		});
-	});
 }
 
 mongoose.connect(conf.db.uri);
@@ -174,7 +180,7 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /[^non\-editable
 		stylesetFiles.push(stylesetFile);
 	})
 	.on('error', function (err) {
-		console.log(err);
+		logger.error(err);
 		process.exit(1);
 	})
 	.on('done', function () {
@@ -185,6 +191,7 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /[^non\-editable
 			var cssFilename = path.join(__dirname, '../public/create/stylesets/' + stylesetFile);
 			var css = fs.readFileSync(cssFilename, 'utf8');
 			var json = parser.parse(css);
+			logger.info('Importing ' + cssFilename);
 
 			Styleset.findOne({"name": stylesheetName, "isSystem": true}, function (err, styleset) {
 				if (err) {
@@ -192,39 +199,39 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /[^non\-editable
 				}
 
 				if (!styleset) {
-					console.log(stylesheetName + ' does not exist, creating it...');
+					logger.info(stylesheetName + ' does not exist, creating it...');
 					createStyleset(stylesheetName, order++, function (err, styleset) {
 						if (err) {
-							console.log(err);
-							process.exit(1);
-						}
+					logger.error(err);
+					process.exit(1);
+				}
 
 						updateStyles(styleset, json, function (err, styleset) {
 							if (err) {
-								console.log(err);
+								logger.error(err);
 								process.exit(1);
 							}
 
-							console.log('Created ' + cssFilename);
-							callback(null);
-						});
+							logger.info('Created ' + cssFilename);
+				callback(null);
+			});
 					});
 				} else {
-					console.log(stylesheetName + ' already exists, updating its styles...');
+					logger.info(stylesheetName + ' already exists, updating its styles...');
 					updateStyles(styleset, json, function (err, styleset) {
 						if (err) {
-							console.log(err);
+							logger.error(err);
 							process.exit(1);
 						}
 
-						console.log('Updated ' + cssFilename);
+						logger.info('Updated ' + cssFilename);
 						callback(null);
 					});
 				}
 			});
 		}, function (err) {
 			if (err) {
-				console.log(err);
+				logger.error(err);
 				process.exit(1);
 			}
 
@@ -234,5 +241,5 @@ filewalker(systemStylesetsDir, { recursive: false, matchRegExp: /[^non\-editable
 	.walk();
 
 process.on('exit', function() {
-	console.log('Imported all system stylesets from ' + systemStylesetsDir + ' (but check log messages for errors)');
+	logger.info('Imported all system stylesets from ' + systemStylesetsDir + ' (but check log messages for errors)');
 })

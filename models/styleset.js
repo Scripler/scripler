@@ -18,6 +18,7 @@ var StylesetSchema = new Schema({
 	archived: { type: Boolean, default: false },
 	deleted: { type: Boolean, default: false },
 	isSystem: { type: Boolean, default: false },
+	accessLevels: [String],
 	original: { type: Schema.Types.ObjectId, ref: 'Styleset' },
 	order: { type: Number }
 });

@@ -38,7 +38,8 @@
     "mkdirp": "~0.3.5",
     "cssparser": "~0.2.2",
     "cheerio": "~0.16.0",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "strftime": "^0.8.2"
   },
   "readmeFilename": "README.md",
   "main": "app.js",

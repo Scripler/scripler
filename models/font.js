@@ -16,7 +16,8 @@ var FontSchema = new Schema({
 	members: [MemberSchema], // Currently not used but will be used when user's can upload their own fonts
 	archived: { type: Boolean, default: false},
 	deleted: { type: Boolean, default: false},
-	isSystem: { type: Boolean, default: false }
+	isSystem: { type: Boolean, default: false },
+	accessLevels: [String]
 });
 
 exports.Font = mongoose.model('Font', FontSchema);

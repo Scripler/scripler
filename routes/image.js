@@ -1,11 +1,13 @@
 var conf = require('config');
 var Image = require('../models/image.js').Image;
 var Project = require('../models/project.js').Project;
+var User = require('../models/user.js').User;
 var utils = require('../lib/utils');
 var async = require('async');
 var path = require('path');
 var mkdirp = require('mkdirp');
 var fs = require('fs');
+var logger = require('../lib/logger');
 
 exports.create = function (req, res, next) {
 	var project = req.project;
@@ -16,7 +18,20 @@ exports.create = function (req, res, next) {
 		files = [files];
 	}
 
+	var totalBytes = 0;
 	var images = [];
+	var storageLimitBytes = 0;
+	if (conf.subscriptions[req.user.level] && conf.subscriptions[req.user.level].storage) {
+		storageLimitBytes = conf.subscriptions[req.user.level].storage;
+	}
+
+	for (var i = 0; i < files.length; i++) {
+		totalBytes += files[i].size;
+	}
+
+	if (req.user.storageUsed + totalBytes > storageLimitBytes) {
+		return next({message: "User storage quota exceeded (" + (req.user.storageUsed + totalBytes) + " > " + storageLimitBytes + " bytes)", status: 402});
+	}
 
 	async.each(files, function (file, callback) {
 		var name = file.originalFilename;
@@ -30,7 +45,7 @@ exports.create = function (req, res, next) {
 				{userId: req.user._id, access: ["admin"]}
 			],
 			fileExtension: fileExtension,
-			mediaType: mediaType,
+			mediaType: mediaType
 		});
 
 		image.save(function (err) {
@@ -40,8 +55,6 @@ exports.create = function (req, res, next) {
 
 			project.images.addToSet(image);
 			images.push(image);
-
-			// TODO: check that the user has enough free space
 
 			// Move uploaded image from uploadDir to project dir
 			var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
@@ -58,6 +71,7 @@ exports.create = function (req, res, next) {
 			dstImageWriteStream.on('finish', function () {
 				return callback(null);
 			});
+            // TODO: On multiple file upload - Do proper cleanup of successfully copied files, if some error happens.
 		});
 	}, function (err) {
 		if (err) {
@@ -68,6 +82,15 @@ exports.create = function (req, res, next) {
 			if (err) {
 				return next(err);
 			}
+
+			// Image(s) was correctly uploaded and stored on project.
+			// As a background task update the users stoageUsed value.
+			// Don't wait for it - customer will just be happy if it fails.
+			User.update({_id: req.user._id}, {$inc: {storageUsed: totalBytes}}, function (err, numAffected) {
+				if (err) {
+					logger.error("Could not update users storageUsed value: " + err, req.user);
+				}
+			});
 
 			res.send({images: images});
 		})
