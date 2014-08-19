@@ -102,6 +102,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 
 	$scope.rearrange = function( list ) {
+		var deferred = $q.defer();
 		var data = {};
 		var documentIds = [];
 
@@ -113,10 +114,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		if ( $scope.user._id ) {
 			$http.put('/document/' + $scope.pid + '/rearrange', angular.toJson( data ) )
-			.success( function() {});
+			.success( function() {
+				deferred.resolve();
+			});
 		} else {
 			//save to localstorage
 		}
+
+		return deferred.promise;
 	}
 
 	$scope.saveProjectDocumentUpdates = function( newVal, oldVal ) {
@@ -890,11 +895,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		promise.then( function() {
 			var index = $scope.projectDocuments.indexOf( $scope.openProjectDocument );
 			$scope.projectDocuments.move(index, 0);
-			$scope.rearrange( $scope.projectDocuments );
-			//since only one image always take the first
-			var image = images[0];
-			var imageInsert = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
-			editorInsert( imageInsert );
+			var rearrangePromise = $scope.rearrange( $scope.projectDocuments );
+
+			rearrangePromise.then( function() {
+				//since only one image always take the first
+				var image = images[0];
+				var cover = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+				editorInsert( cover );
+			});
 		});
 	}
 
@@ -903,7 +911,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var element = $rootScope.CKEDITOR.dom.element.createFromHtml( insert );
 		editor.insertElement( element );
 		var range = editor.createRange();
-		range.moveToElementEditablePosition(element);
+		range.moveToElementEditablePosition( element );
 		$rootScope.ck.focus();
 		range.select();
 	}
