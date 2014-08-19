@@ -116,7 +116,7 @@ exports.update = function (req, res, next) {
 				return next(err);
 			}
 
-			//console.log('document.fonts: ' + document.fonts);
+			//logger.info('document.fonts: ' + document.fonts);
 
 			res.send({document: document});
 		});
@@ -126,7 +126,7 @@ exports.update = function (req, res, next) {
 		// TODO: can this be optimized by looking up ALL ids in one query (using $in)?
 		async.each(req.body.fonts, function (font, callback) {
 			// Frontend does not know the Mongo ids of fonts so we must translate (family, style, weight) to an id for it
-			//console.log('font: ' + JSON.stringify(font));
+			//logger.info('font: ' + JSON.stringify(font));
 			Font.findOne({"family": font.family, "style": font.style, "weight": font.weight}, function (err, font) {
 				if (err) {
 					callback(err);
@@ -169,6 +169,10 @@ exports.archive = function (req, res, next) {
 	var document = req.document;
 	document.archived = true;
 
+	if (req.user.level == "free" && document.type == "madewithscripler") {
+		return next({message: "Free users are not allowed to archive the \"made with scripler\" document", status: 402});
+	}
+
 	// TODO: also archive the document's stylesets and styles since these were copied?
 
 	document.save(function (err) {
@@ -196,6 +200,10 @@ exports.unarchive = function (req, res, next) {
 exports.delete = function (req, res, next) {
 	var document = req.document;
 	var project = req.project;
+
+	if (req.user.level == "free" && document.type == "madewithscripler") {
+		return next({message: "Free users are not allowed to delete the \"made with scripler\" document", status: 402});
+	}
 
 	project.documents.pull(document._id);
 	project.deletedDocuments.addToSet(document);
@@ -228,7 +236,7 @@ exports.rearrange = function (req, res, next) {
 
 	if (rearrangedDocumentIds && rearrangedDocumentIds.length == existingDocumentIds.length) {
 		async.each(rearrangedDocumentIds, function (rearrangedDocumentId, callback) {
-			var containsRearrangedDocumentId = rearrangedDocumentIds.indexOf(rearrangedDocumentId) > -1;
+			var containsRearrangedDocumentId = existingDocumentIds.indexOf(rearrangedDocumentId) > -1;
 			if (!containsRearrangedDocumentId) {
 				return callback({message: errorMessage, status: 400});
 			}
@@ -292,6 +300,9 @@ exports.applyStyleset = function (req, res, next) {
 	var documentStylesetIds = req.document.stylesets;
 	var defaultStylesetId = req.document.defaultStyleset;
 
+	if (req.user.level == "free") {
+		return next({message: "Free users are not allowed to apply styles", status: 402});
+	}
 	/*
 	 Only copy the styleset if it is not already applied to the document, i.e. if:
 	 - The styleset to apply is not the same as the default styleset
@@ -333,8 +344,8 @@ exports.listStylesets = function (req, res, next) {
 	var userStylesetIds = req.user.stylesets;
 	var resultStylesets = documentStylesets.slice(0);
 
-	//console.log('resultStylesets: ' + resultStylesets);
-	//console.log('documentStylesets: ' + documentStylesets);
+	//logger.info('resultStylesets: ' + resultStylesets);
+	//logger.info('documentStylesets: ' + documentStylesets);
 
 	// Get user stylesets
 	Styleset.find({"_id": {$in: userStylesetIds}}).exec(function (err, userStylesets) {
@@ -342,12 +353,12 @@ exports.listStylesets = function (req, res, next) {
 			return next(err);
 		}
 
-		//console.log('userStylesets: ' + userStylesets);
+		//logger.info('userStylesets: ' + userStylesets);
 
 		for (var i=0; i<userStylesets.length; i++) {
 			var userStyleset = userStylesets[i];
 			if (!utils.containsOriginal(documentStylesets, userStyleset)) {
-				//console.log('Adding user styleset...' + userStyleset);
+				//logger.info('Adding user styleset...' + userStyleset);
 				resultStylesets.push(userStyleset._id);
 			}
 		}

@@ -41,10 +41,14 @@ exports.loadPopulated = function (id) {
 exports.create = function (req, res, next) {
 	var styleset = req.styleset;
 
-	var style = styleset_utils.createStyle(req.body.name, req.body.class, req.body.css, req.body.tag, styleset._id, false, req.body.hidden);
-	style.members = [
-		{userId: req.user._id, access: ["admin"]}
-	];
+	if (req.user.level == "free") {
+		return next({message: "Free users are not allowed to create styles", status: 402});
+	}
+
+	var style = styleset_utils.createStyle(req.body.name, req.body.class, req.body.css, req.body.tag, styleset._id, false, req.body.hidden, ["premium", "professional"]);
+		style.members = [
+			{userId: req.user._id, access: ["admin"]}
+		];
 
     //TODO: Maybe we should immeditaly add this style to its styleset? Instead of expecting/hoping the frontend does a Styleset.update afterwards.
 	style.save(function(err) {
@@ -95,6 +99,10 @@ exports.open = function (req, res) {
  */
 exports.update = function (req, res, next) {
 	var style = req.style;
+
+	if (req.user.level == "free") {
+		return next({message: "Free users are not allowed to update styles", status: 402});
+	}
 
 	var updateOriginalStyle = function(newStyle, next) {
 		// Populate the original style (was not loaded)

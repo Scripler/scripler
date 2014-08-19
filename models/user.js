@@ -32,7 +32,9 @@ var UserSchema = new Schema({
 	modified: { type: Date, default: Date.now },
 	showArchived: { type: Boolean, default: false },
 	showArchivedDocuments: { type: Boolean, default: false },
-	newsletter: { type: Boolean, default: true }
+	newsletter: { type: Boolean, default: true },
+	level: { type: String, default: "free" },
+	storageUsed: { type: Number, default: 0}
 });
 
 /** Handle bcrypt password-hashing.

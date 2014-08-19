@@ -43,6 +43,17 @@
 		"projectsUrl": "http://scripler.com:3000/public/resources/projects",
 		"usersUrl": "http://scripler.com:3000/public/resources/users"
 	},
+	"subscriptions": {
+		"free": {
+			"storage": 20000//bytes
+		},
+		"premium": {
+			"storage": 200000//bytes
+		},
+		"professional": {
+			"storage": 2000000//bytes
+		}
+	},
 	"epub": {
 		"userDirPrefix": "user",
 		"fontsDir": "Fonts",
