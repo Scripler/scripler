@@ -378,7 +378,10 @@
 						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertCoverOptions' }">
 							<div class="right-menu-options">
-								&nbsp;
+								<span class="right-menu-box">
+									<input type="file" id="coverInput" ng-file-select="onCoverSelect($files)" accept="image/*" ng-hide="true">
+									<label for="coverInput">Create a cover</label>
+								</span>
 							</div>
 							<div class="right-menu-divider"></div>
 							<div class="right-menu-icons">

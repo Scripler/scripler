@@ -61,7 +61,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
-	$scope.onImageSelect = function($files) {
+	$scope.uploadImages = function( $files ) {
+		var deferred = $q.defer();
+
 		for (var i = 0; i < $files.length; i++) {
 			var file = $files[i];
 			ngProgress.start();
@@ -72,30 +74,50 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				ngProgress.set(parseInt(100.0 * evt.loaded / evt.total) - 25);
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
-				$scope.insertNewImage( data.images );
+				deferred.resolve( data );
 			});
 		}
+
+		return deferred.promise;
 	};
+
+	$scope.onCoverSelect = function( $files ) {
+		var dataPromise = $scope.uploadImages( $files );
+		dataPromise.then( function( data ) {
+			$scope.createCover( data.images );
+		});
+	}
+
+	$scope.onImageSelect = function( $files ) {
+		var dataPromise = $scope.uploadImages( $files );
+		dataPromise.then( function( data ) {
+			$scope.insertNewImage( data.images );
+		});
+	}
 
 	$scope.sortable_option = {
 		stop : function( list, drop_item ) {
-			var data = {};
-			var documentIds = [];
-
-			angular.forEach(list, function( document ) {
-				documentIds.push( document._id );
-			})
-
-			data.documents = documentIds;
-
-			if ( $scope.user._id ) {
-				$http.put('/document/' + $scope.pid + '/rearrange', angular.toJson( data ) )
-					.success( function() {});
-			} else {
-				//save to localstorage
-			}
+			$scope.rearrange( list );
 		}
 	};
+
+	$scope.rearrange = function( list ) {
+		var data = {};
+		var documentIds = [];
+
+		angular.forEach(list, function( document ) {
+			documentIds.push( document._id );
+		})
+
+		data.documents = documentIds;
+
+		if ( $scope.user._id ) {
+			$http.put('/document/' + $scope.pid + '/rearrange', angular.toJson( data ) )
+			.success( function() {});
+		} else {
+			//save to localstorage
+		}
+	}
 
 	$scope.saveProjectDocumentUpdates = function( newVal, oldVal ) {
 		if ( newVal != oldVal ) {
@@ -149,6 +171,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.addProjectDocument = function() {
+		var deferred = $q.defer();
+
 		var order = $scope.projectDocuments.length + 1;
 		var name = "Document " + order;
 		var document = {};
@@ -161,11 +185,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				.success( function( data ) {
 					$scope.projectDocuments.push( data.document );
 					$scope.openProjectDocument( data.document );
+					deferred.resolve();
 				})
 		} else {
 			document._id = Date.now();
 			$scope.projectDocuments.push( document );
+			deferred.resolve();
 		}
+
+		return deferred.promise;
 	}
 
 	$scope.updateProjectDocument = function() {
@@ -854,6 +882,20 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var image = images[0];
 		var imageInsert = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
 		editorInsert( imageInsert );
+	}
+
+	$scope.createCover = function( images ) {
+		var promise = $scope.addProjectDocument();
+
+		promise.then( function() {
+			var index = $scope.projectDocuments.indexOf( $scope.openProjectDocument );
+			$scope.projectDocuments.move(index, 0);
+			$scope.rearrange( $scope.projectDocuments );
+			//since only one image always take the first
+			var image = images[0];
+			var imageInsert = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+			editorInsert( imageInsert );
+		});
 	}
 
 	function editorInsert( insert ) {
