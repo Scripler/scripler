@@ -72,6 +72,10 @@
 .menu-right-tab {
 	padding-left: 14px
 }
+.menu-right-tab.output {
+	/*visual fix because of output p*/
+	padding-left: 10px;
+}
 
 .menu-item-left.documents, .menu-item-left.inserts, .menu-item-right.inserts, .menu-item-right.output {
 	padding: 10px 0 0 10px;
