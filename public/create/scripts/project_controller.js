@@ -61,9 +61,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
-	$scope.uploadImages = function( $files ) {
-		var deferred = $q.defer();
-
+	$scope.uploadImages = function( $files, type ) {
 		for (var i = 0; i < $files.length; i++) {
 			var file = $files[i];
 			ngProgress.start();
@@ -74,25 +72,24 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				ngProgress.set(parseInt(100.0 * evt.loaded / evt.total) - 25);
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
-				deferred.resolve( data );
+				if ( typeof type !== 'undefined' ) {
+					if ( type === 'cover' ) {
+						$scope.createCover( data.images );
+					}
+					if ( type === 'image' ) {
+						$scope.insertNewImage( data.images );
+					}
+				}
 			});
 		}
-
-		return deferred.promise;
 	};
 
 	$scope.onCoverSelect = function( $files ) {
-		var dataPromise = $scope.uploadImages( $files );
-		dataPromise.then( function( data ) {
-			$scope.createCover( data.images );
-		});
+		$scope.uploadImages( $files, 'cover' );
 	}
 
 	$scope.onImageSelect = function( $files ) {
-		var dataPromise = $scope.uploadImages( $files );
-		dataPromise.then( function( data ) {
-			$scope.insertNewImage( data.images );
-		});
+		$scope.uploadImages( $files, 'image' );
 	}
 
 	$scope.sortable_option = {
@@ -102,7 +99,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 
 	$scope.rearrange = function( list ) {
-		var deferred = $q.defer();
 		var data = {};
 		var documentIds = [];
 
@@ -114,14 +110,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		if ( $scope.user._id ) {
 			$http.put('/document/' + $scope.pid + '/rearrange', angular.toJson( data ) )
-			.success( function() {
-				deferred.resolve();
-			});
+			.success( function() {});
 		} else {
 			//save to localstorage
 		}
-
-		return deferred.promise;
 	}
 
 	$scope.saveProjectDocumentUpdates = function( newVal, oldVal ) {
@@ -175,7 +167,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			})
 	}
 
-	$scope.addProjectDocument = function() {
+	$scope.addProjectDocument = function( type ) {
 		var deferred = $q.defer();
 
 		var order = $scope.projectDocuments.length + 1;
@@ -184,11 +176,21 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		document.name = name;
 		document.text = '';
 
+		if ( typeof type !== 'undefined' ) {
+			document.type = type;
+		}
+
 		if ( $scope.user._id ) {
 			document.projectId = $scope.pid;
 			$http.post('/document', angular.toJson( document ) )
 				.success( function( data ) {
-					$scope.projectDocuments.push( data.document );
+
+					if ( typeof data.document.type !== 'undefined' ) {
+						$scope.projectDocuments.unshift( data.document );
+					} else {
+						$scope.projectDocuments.push( data.document );
+					}
+
 					$scope.openProjectDocument( data.document );
 					deferred.resolve();
 				})
@@ -884,26 +886,45 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.insertNewImage = function( images ) {
 		//since only one image always take the first
-		var image = images[0];
-		var imageInsert = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		insertImage( images[0] );
+	}
+
+	function constructImageTag( image ) {
+		var imageTag = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		return imageTag;
+	}
+
+	function insertImage( image ) {
+		var imageInsert = constructImageTag( image );
 		editorInsert( imageInsert );
 	}
 
 	$scope.createCover = function( images ) {
-		var promise = $scope.addProjectDocument();
+		var isNewCover = true;
 
-		promise.then( function() {
-			var index = $scope.projectDocuments.indexOf( $scope.openProjectDocument );
-			$scope.projectDocuments.move(index, 0);
-			var rearrangePromise = $scope.rearrange( $scope.projectDocuments );
+		for ( var i = 0; i < $scope.projectDocuments.length; i++ ) {
+			var document = $scope.projectDocuments[i];
+			if ( typeof document.type !== 'undefined' ) {
+				if ( document.type === 'cover' ) {
+					if ( $scope.documentSelected._id !== document._id ) {
+						$scope.openProjectDocument( document );
+					}
 
-			rearrangePromise.then( function() {
-				//since only one image always take the first
-				var image = images[0];
-				var cover = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
-				editorInsert( cover );
+					$scope.documentSelected.text = constructImageTag( images[0] );
+					isNewCover = false;
+					break;
+				}
+			}
+		}
+
+		if ( isNewCover ) {
+			var promise = $scope.addProjectDocument( 'cover' );
+
+			promise.then( function() {
+				$scope.rearrange( $scope.projectDocuments );
+				insertImage( images[0] );
 			});
-		});
+		}
 	}
 
 	function editorInsert( insert ) {
