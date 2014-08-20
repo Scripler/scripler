@@ -332,6 +332,17 @@
 	</div>
 
 	<div class="editor">
+		<p class="breadcrumb">
+			<a class="breadcrumb" href="#">Projects</a> / <span ng-bind="project.name"></span> / <span ng-bind="documentSelected.name"></span>
+		</p>
+		<p class="savedstamp">
+			<span ng-bind="lastSaved"></span>
+		</p>
+		<!-- TODO: do this in a nicer way! In CSS? -->
+		<div style="clear: both;"></div>
+	</div>
+
+	<div class="editor">
 		<div id="toolbar-area" class="toolbar-area"></div>
 		<textarea ck-editor="" ng-model="documentSelected.text" class="form-control" id="bodyeditor"></textarea>
 	</div>
