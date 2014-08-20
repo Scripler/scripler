@@ -10,14 +10,11 @@ var frontpage = require('./frontpage')
 	, utils = require('../lib/utils');
 
 module.exports = function (app, auth) {
-	// Dummy GUI URLs
-	app.get('/', frontpage.index);
-	app.get('/account', frontpage.account);
-	app.get('/login', frontpage.login);
-	app.post('/login', frontpage.loginPost);
-	app.get('/logout', frontpage.logout);
-	app.get('/new-user', frontpage.newUser);
-	app.post('/new-user', frontpage.newUserPost);
+
+	// End-User URLs
+	// These resoutes inteact directly with the user (the URLs are seen by the user).
+	app.get('/user/sso', user.sso);
+	app.get('/user/:id/verify/:hash', user.verify);
 
 	// API URIs
 	// The routes below are the URLs used by the API (not the URLs seen by the user).
@@ -29,7 +26,6 @@ module.exports = function (app, auth) {
 	app.post('/user/login', user.login);
 	app.post('/user/logout', user.logout);
 	app.post('/user/register', user.register);
-	app.get('/user/:id/verify/:hash', user.verify);
 
 	/* API Project Space: Project */
 	app.get('/project/list', auth.isLoggedIn(), project.list);

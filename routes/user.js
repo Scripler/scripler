@@ -12,7 +12,8 @@ var User = require('../models/user.js').User
 	, utils = require('../lib/utils')
     , mkdirp = require('mkdirp')
 	, Styleset = require('../models/styleset.js').Styleset,
-	  copyStyleset = require('../models/styleset.js').copy
+	copyStyleset = require('../models/styleset.js').copy,
+	discourse_sso = require('discourse-sso')
 ;
 
 var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
@@ -286,3 +287,31 @@ exports.edit = function (req, res, next) {
 		res.send({"user": req.user});
 	});
 };
+
+exports.sso = function (req, res, next) {
+	if (!req.isAuthenticated || !req.isAuthenticated()) {
+		// User is not logged in.
+		// Scripler account is required to use discrouse. Ask user to create au ser.
+		res.redirect(conf.app.url_prefix + "?err=Create a Scripler user to access our forum");
+	} else {
+		// User is already loggedin
+		// Return user loggedin to discourse.
+		var sso = new discourse_sso(conf.discourse.ssoSecret);
+		var payload = req.query.sso;
+		var sig = req.query.sig;
+		if (sso.validate(payload, sig)) {
+			var nonce = sso.getNonce(payload);
+			var userparams = {
+				// Required, will throw exception otherwise
+				"nonce":       nonce,
+				"external_id": req.user._id,
+				"email":       req.user.email,
+				// Optional
+				//"username": req.user.username,
+				"name":        req.user.firstname + " " + req.user.lastname
+			};
+			var q = sso.buildLoginString(userparams);
+			res.redirect(conf.discourse.url + "session/sso_login?" + q);
+		}
+	}
+}

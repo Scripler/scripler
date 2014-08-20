@@ -55,7 +55,7 @@ module.exports = function (app, conf, mongoose) {
 	app.use(passport.initialize());
 	app.use(passport.session());
 	app.use(app.router);
-	app.use(express.static(path.join(__dirname, 'public')));
+	app.use(express.static(path.join(__dirname, '../public')));
 
 	//Catch-all error handler
 	app.use(function (err, req, res, next) {

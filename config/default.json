@@ -9,6 +9,10 @@
 	"db": {
 		"uri": "mongodb://localhost/scripler"
 	},
+	"discourse": {
+		"url": "http://discuss.scripler.com/",
+		"ssoSecret": "xxx"
+	},
 	"mailchimp": {
 		"apiKey": "xxxx",
 		"memberListId": "xxxx",
