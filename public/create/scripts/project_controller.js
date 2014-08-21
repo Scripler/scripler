@@ -818,7 +818,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	}
 
-	$scope.generateToc = function() {
+	$scope.getToc = function() {
 		$http.get('/project/' + $scope.project._id + '/toc')
 			.success( function( data ) {
 				$scope.toc = data.toc;
@@ -884,7 +884,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var insert = '<a id="' + id + '" name="' + id + '" title="' + $scope.anchorName + '"></a>';
 		editorInsert( insert );
 		$scope.updateProjectDocument();
-		$scope.generateToc();
+		$scope.getToc();
 		$scope.anchorName = '';
 	}
 
@@ -920,6 +920,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			if ( typeof document.type !== 'undefined' ) {
 				if ( document.type === 'cover' ) {
 					if ( $scope.documentSelected._id !== document._id ) {
+						//TODO wait for document to open
 						$scope.openProjectDocument( document );
 					}
 
@@ -940,6 +941,24 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
+	$scope.generateToc = function() {
+		var promise = $scope.addProjectDocument( 'toc' );
+
+		promise.then( function() {
+			var editor = $rootScope.CKEDITOR.instances.bodyeditor;
+			var heading = '<h2>Contents</h2>';
+			var element = $rootScope.CKEDITOR.dom.element.createFromHtml( heading );
+			editor.insertElement( element );
+
+			for ( var i = 0; i < $scope.toc.length; i++ ) {
+				var level = $scope.toc[i].level + 1;
+				var lineHtml = '<p class="toc-item-h' + level + '"><a href="' + $scope.toc[i].target +'">' + $scope.toc[i].text +'</a><br /></p>';
+				var line = $rootScope.CKEDITOR.dom.element.createFromHtml( lineHtml );
+				editor.insertElement( line );
+			}
+		});
+	}
+
 	function editorInsert( insert ) {
 		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
 		var element = $rootScope.CKEDITOR.dom.element.createFromHtml( insert );
@@ -952,7 +971,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.$watch('showInsert', function( newValue ) {
 		if ( newValue === true ) {
-			$scope.generateToc();
+			$scope.getToc();
 		}
 	});
 
