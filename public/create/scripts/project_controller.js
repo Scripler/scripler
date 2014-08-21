@@ -843,6 +843,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
+	$scope.finalizeOptionChoosen = function( finalizeOption ) {
+		if ( $scope.activeFinalizeOption === finalizeOption ) {
+			$scope.activeFinalizeOption = null;
+		} else {
+			$scope.activeFinalizeOption = finalizeOption;
+		}
+	}
+
 	$scope.scrollToToc = function( tocEntry ) {
 		var elm = $rootScope.ck.document.$.getElementById( tocEntry.id );
 		if ( elm ) {

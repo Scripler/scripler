@@ -494,9 +494,9 @@ li.typo p {
 }
 .left-menu-button, .right-menu-button {
 	display: inline-block;
-	width: 30px;
+	min-width: 30px;
 	height: 30px;
-	padding: 5px 0;
+	padding: 5px;
 	border: 1px solid #fff56c;
 	cursor: default;
 	text-align: center;

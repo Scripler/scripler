@@ -348,46 +348,46 @@
 	</div>
 
 	<div id="menu-right-tabs" class="menu-right-tabs" ondragstart="return false;" ondrop="return false;">
-		<div class="menu-right-tab" ng-class="{ 'selectedTab' : showInsertOptions }" ng-click="showInsertOptions = !showInsertOptions; showOutput = false;">
+		<div class="menu-right-tab" ng-class="{ 'selectedTab' : showFinalizeOptions }" ng-click="showFinalizeOptions = !showFinalizeOptions; showOutput = false;">
 			<div class="center"></div>
 			<img src="pages/images/finalize.svg" width="20">
 		</div>
-		<div class="menu-right-tab output" ng-class="{ 'selectedTab' : showOutput }" ng-click="showOutput = !showOutput; showInsertOptions = false;">
+		<div class="menu-right-tab output" ng-class="{ 'selectedTab' : showOutput }" ng-click="showOutput = !showOutput; showFinalizeOptions = false;">
 			<div class="center"></div>
 			<img src="pages/images/output.svg" width="20">
 		</div>
 	</div>
-	<div id="menu-right" class="menu-right" ng-class="{ 'open' : showInsertOptions || showOutput }">
+	<div id="menu-right" class="menu-right" ng-class="{ 'open' : showFinalizeOptions || showOutput }">
 		<div class="top">
-			<span ng-show="showInsertOptions">Insert</span>
+			<span ng-show="showFinalizeOptions">Finalize</span>
 			<span ng-show="showOutput">Output</span>
 		</div>
 		<div id="menu-right-content" class="content">
-			<div class="menu-item-right inserts" ng-show="showInsertOptions">
+			<div class="menu-item-right inserts" ng-show="showFinalizeOptions">
 				<div class="menu-content">
 					<ul>
-						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertColophonOptions' }">
-							<a ng-click="insertOptionChoosen('showInsertColophonOptions');">
+						<li class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
+							<a ng-click="finalizeOptionChoosen('showFinalizeColophonOptions');">
 								colophon
 							</a>
 						</li>
-						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertCoverOptions' }">
-							<a ng-click="insertOptionChoosen('showInsertCoverOptions');">
+						<li class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
+							<a ng-click="finalizeOptionChoosen('showFinalizeCoverOptions');">
 								<img src="pages/images/insert_cover_button.png" width="80" height="80" />
 							</a>
 						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertColophonOptions' }">
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
 							<div class="right-menu-options">
 								&nbsp;
 							</div>
 							<div class="right-menu-divider"></div>
 							<div class="right-menu-icons">
-								<span class="right-menu-button right-menu-close-item" ng-click="insertOptionChoosen('showInsertColophonOptions');">
+								<span class="right-menu-button right-menu-close-item" ng-click="finalizeOptionChoosen('showFinalizeColophonOptions');">
 									X
 								</span>
 							</div>
 						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertCoverOptions' }">
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
 							<div class="right-menu-options">
 								<span class="right-menu-box">
 									<input type="file" id="coverInput" ng-file-select="onCoverSelect($files)" accept="image/*" ng-hide="true">
@@ -396,40 +396,42 @@
 							</div>
 							<div class="right-menu-divider"></div>
 							<div class="right-menu-icons">
-								<span class="right-menu-button right-menu-close-item" ng-click="insertOptionChoosen('showInsertCoverOptions');">
+								<span class="right-menu-button right-menu-close-item" ng-click="finalizeOptionChoosen('showFinalizeCoverOptions');">
 									X
 								</span>
 							</div>
 						</li>
 
-						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertTocOptions' }">
-							<a ng-click="insertOptionChoosen('showInsertTocOptions');">
+						<li class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
+							<a ng-click="finalizeOptionChoosen('showFinalizeTocOptions');">
 								toc
 							</a>
 						</li>
-						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertTitlepageOptions' }">
-							<a ng-click="insertOptionChoosen('showInsertTitlepageOptions');">
+						<li class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
+							<a ng-click="finalizeOptionChoosen('showFinalizeTitlepageOptions');">
 								title page
 							</a>
 						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertTocOptions' }">
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
 							<div class="right-menu-options">
-								&nbsp;
+								<span class="right-menu-button full-size right-menu-parameter-margin">
+									<a ng-click="generateToc();">Generate TOC</a>
+								</span>
 							</div>
 							<div class="right-menu-divider"></div>
 							<div class="right-menu-icons">
-								<span class="right-menu-button right-menu-close-item" ng-click="insertOptionChoosen('showInsertTocOptions');">
+								<span class="right-menu-button right-menu-close-item" ng-click="finalizeOptionChoosen('showFinalizeTocOptions');">
 									X
 								</span>
 							</div>
 						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertTitlepageOptions' }">
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
 							<div class="right-menu-options">
 								&nbsp;
 							</div>
 							<div class="right-menu-divider"></div>
 							<div class="right-menu-icons">
-								<span class="right-menu-button right-menu-close-item" ng-click="insertOptionChoosen('showInsertTitlepageOptions');">
+								<span class="right-menu-button right-menu-close-item" ng-click="finalizeOptionChoosen('showFinalizeTitlepageOptions');">
 									X
 								</span>
 							</div>
