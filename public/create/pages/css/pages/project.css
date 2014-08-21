@@ -168,6 +168,7 @@
 	padding-bottom: 20px;
 	padding-left: 20px;
 	padding-right: 20px;
+	background-color: #fff;
 }
 
 .editor {
@@ -217,11 +218,11 @@
 	overflow: hidden;
 }
 [selected] {
-	background-color: #000 !important;
+	background-color: #d3d3d3 !important;
 }
 [selected] a, [selected] span, [selected] ul, [selected] .style-copy-options li {
-	background-color: #000 !important;
-	color: #fff265 !important;
+	background-color: #d3d3d3 !important;
+	/* color: #fff265 !important; */
 }
 
 
@@ -381,10 +382,9 @@ textarea#renameProjectDocument, textarea#renameStyleset, textarea#renameStyle {
 	font-size: 90%;
 }
 .selectedTab {
-	background-color: #F2F3F4;
+	background-color: #f3f3f3;
 }
 .typo {
-	border: 2px solid #c6c6c6;
 	background-color: #fff;
 	margin: 10px;
 	cursor: pointer;
@@ -396,7 +396,7 @@ textarea#renameProjectDocument, textarea#renameStyleset, textarea#renameStyle {
 	text-align: center;
 }
 .typo.open {
-	border: 2px solid #fff265;
+	background-color: #f3f3f3;
 }
 ul, li {
 	list-style-type: none;
@@ -409,14 +409,14 @@ li.typo p {
 	margin: 0;
 	padding-top: 15px;
 	padding-bottom: 15px;
+	border: 2px solid #000;
 }
-.typo-children li:first-child, .typo-children li:last-child {
-	border-top: 2px solid #fff265;
-	border-bottom: none;
+li.typo p:first-child {
+	border: none;
 }
 .typo-children li {
-	background-color: #D6D6D6;
-	border-top: 2px solid #fff265;
+	background-color: #fff;
+	border: 1px solid #c6c6c6;
 	padding: 10px 0 10px 10px;
 }
 
