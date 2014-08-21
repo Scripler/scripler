@@ -992,7 +992,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	initiateEditor();
 
-	$scope.$onRootScope('ckDocument:ready', function( event ) {
+	$scope.$onRootScope('ckDocument:dataReady', function( event ) {
 		$scope.ckReady = true;
 		$scope.applyStylesetsToEditor();
 		$scope.loadFonts();
