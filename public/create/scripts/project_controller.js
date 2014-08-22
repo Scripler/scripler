@@ -74,10 +74,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				ngProgress.complete();
 				if ( typeof type !== 'undefined' ) {
 					if ( type === 'cover' ) {
-						$scope.createCover( data.images );
+						$scope.createCover( data.images[0] );
 					}
 					if ( type === 'image' ) {
-						$scope.insertNewImage( data.images );
+						$scope.insertNewImage( data.images[0] );
 					}
 				}
 			});
@@ -897,9 +897,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.linkAnchor = '';
 	}
 
-	$scope.insertNewImage = function( images ) {
+	$scope.insertNewImage = function( image ) {
 		//since only one image always take the first
-		insertImage( images[0] );
+		insertImage( image );
 	}
 
 	function constructImageTag( image ) {
