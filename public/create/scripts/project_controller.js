@@ -825,7 +825,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 	}
 
-	$scope.insertOptionChoosen = function(insertoption) {
+	$scope.insertOptionChosen = function(insertoption) {
 		if ($scope.activeInsertOption === insertoption) {
 			$scope.activeInsertOption = null;
 		}
@@ -843,7 +843,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
-	$scope.finalizeOptionChoosen = function( finalizeOption ) {
+	$scope.finalizeOptionChosen = function( finalizeOption ) {
 		if ( $scope.activeFinalizeOption === finalizeOption ) {
 			$scope.activeFinalizeOption = null;
 		} else {
