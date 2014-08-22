@@ -367,11 +367,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 			ck.on('key', function( event ) { timeOutModel( event ); });
 			ck.on('dataReady', function( event ) { timeOutModel( event ); });
 			ck.on('save', function() {
-				if ( !scope.$$phase ) {
-					scope.$apply(function() {
-						ngModel.$setViewValue(ck.getData());
-					});
-				}
+				updateModel();
 			});
 
 			ngModel.$render = function(value) {
