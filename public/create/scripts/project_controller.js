@@ -212,9 +212,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.updateProjectDocument = function() {
-		//document gets copied because changing document text model will reload CK editor
-		var document = angular.copy( $scope.documentSelected );
-		document.text = $rootScope.CKEDITOR.instances.bodyeditor.getData();
+		$scope.ck.fire('save');
+		var document = $scope.documentSelected;
 		lastSavedDocumentLength = document.text.length;
 
 		if ( $scope.user._id ) {
@@ -906,7 +905,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.insertNewImage = function( image ) {
-		//since only one image always take the first
 		insertImage( image );
 	}
 
@@ -920,50 +918,76 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		editorInsert( imageInsert );
 	}
 
-	$scope.createCover = function( images ) {
-		var isNewCover = true;
-
+	function overrideExistingDocument( type, isNew, image ) {
 		for ( var i = 0; i < $scope.projectDocuments.length; i++ ) {
 			var document = $scope.projectDocuments[i];
 			if ( typeof document.type !== 'undefined' ) {
-				if ( document.type === 'cover' ) {
+				if ( document.type === type ) {
+
 					if ( $scope.documentSelected._id !== document._id ) {
-						//TODO wait for document to open
-						$scope.openProjectDocument( document );
+						var waitPromise = $scope.openProjectDocument( document );
+						waitPromise.then( function() {
+							renewDocumentText( type, image );
+						});
+					} else {
+						renewDocumentText( type, image );
 					}
 
-					$scope.documentSelected.text = constructImageTag( images[0] );
-					isNewCover = false;
+					isNew = false;
 					break;
 				}
 			}
 		}
 
+		return isNew;
+	}
+
+	function renewDocumentText( type, image ) {
+		if ( type === 'cover' ) {
+			$scope.documentSelected.text = constructImageTag( image );
+		}
+		if ( type === 'toc' ) {
+			$scope.documentSelected.text = generateTocHtml();
+		}
+	}
+
+	$scope.createCover = function( image ) {
+		var isNewCover = true;
+
+		isNewCover = overrideExistingDocument( 'cover', isNewCover, image );
+
 		if ( isNewCover ) {
 			var promise = $scope.addProjectDocument( 'cover' );
 
 			promise.then( function() {
-				insertImage( images[0] );
+				insertImage( image );
 			});
 		}
 	}
 
+	function generateTocHtml() {
+		var tocHtml = '<h2>Contents</h2>';
+
+		for ( var i = 0; i < $scope.toc.length; i++ ) {
+			var level = $scope.toc[i].level + 1;
+			var tocHtml = tocHtml + '<p class="toc-item-h' + level + '"><a href="' + $scope.toc[i].target +'">' + $scope.toc[i].text +'</a><br /></p>';
+		}
+
+		return tocHtml;
+	}
+
 	$scope.generateToc = function() {
-		var promise = $scope.addProjectDocument( 'toc' );
+		var isNewToc = true;
 
-		promise.then( function() {
-			var editor = $rootScope.CKEDITOR.instances.bodyeditor;
-			var heading = '<h2>Contents</h2>';
-			var element = $rootScope.CKEDITOR.dom.element.createFromHtml( heading );
-			editor.insertElement( element );
+		isNewToc = overrideExistingDocument( 'toc', isNewToc );
 
-			for ( var i = 0; i < $scope.toc.length; i++ ) {
-				var level = $scope.toc[i].level + 1;
-				var lineHtml = '<p class="toc-item-h' + level + '"><a href="' + $scope.toc[i].target +'">' + $scope.toc[i].text +'</a><br /></p>';
-				var line = $rootScope.CKEDITOR.dom.element.createFromHtml( lineHtml );
-				editor.insertElement( line );
-			}
-		});
+		if ( isNewToc ) {
+			var promise = $scope.addProjectDocument( 'toc' );
+
+			promise.then( function() {
+				$scope.documentSelected.text = generateTocHtml();
+			});
+		}
 	}
 
 	function editorInsert( insert ) {
