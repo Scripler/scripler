@@ -187,6 +187,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 					if ( typeof data.document.type !== 'undefined' ) {
 						$scope.projectDocuments.unshift( data.document );
+						$scope.rearrange( $scope.projectDocuments );
 					} else {
 						$scope.projectDocuments.push( data.document );
 					}
@@ -935,7 +936,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			var promise = $scope.addProjectDocument( 'cover' );
 
 			promise.then( function() {
-				$scope.rearrange( $scope.projectDocuments );
 				insertImage( images[0] );
 			});
 		}
