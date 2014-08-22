@@ -988,6 +988,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$scope.documentSelected.text = generateTocHtml();
 			});
 		}
+
+		$scope.setToc();
+	}
+
+	$scope.setToc = function() {
+		$http.put('/project/' + $scope.pid + '/toc', angular.toJson( $scope.toc ));
 	}
 
 	function editorInsert( insert ) {
@@ -1001,6 +1007,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.$watch('showInsert', function( newValue ) {
+		if ( newValue === true ) {
+			$scope.getToc();
+		}
+	});
+
+	$scope.$watch('showFinalizeOptions', function( newValue ) {
 		if ( newValue === true ) {
 			$scope.getToc();
 		}

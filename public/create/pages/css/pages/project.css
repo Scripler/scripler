@@ -478,7 +478,7 @@ li.typo p {
 	margin-bottom: 8px;
 	padding-top: 8px;
 }
-.left-menu-options {
+.left-menu-options, .right-menu-options {
 	display: block;
 	text-align: center;
 }
@@ -498,7 +498,6 @@ li.typo p {
 	height: 30px;
 	padding: 5px;
 	border: 1px solid #fff56c;
-	cursor: default;
 	text-align: center;
 	cursor: pointer;
 }
@@ -507,11 +506,10 @@ li.typo p {
 	width: 100%;
 	padding: 5px 10px;
 	border: 1px solid #efefef;
-	cursor: default;
 	text-align: left;
 	cursor: pointer;
 }
-.left-menu-parameter-margin {
+.left-menu-parameter-margin, .right-menu-parameter-margin {
 	margin-top: 10px;
 }
 .left-menu-box.inputfield {
@@ -543,7 +541,7 @@ li.typo p {
 .left-menu-box.inputfield input:focus {
 	outline:none;
 }
-.left-menu-box .option {
+.left-menu-box .option, .right-menu-box .option {
 	display: block;
 }
 
