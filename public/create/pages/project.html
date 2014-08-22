@@ -37,7 +37,9 @@
 							</a>
 
 							<p ng-hide="editingProjectDocumentTitle">
-								<a class="projectDocument-link" ng-click="projectDocumentChosen(projectDocument)">{{projectDocument.name}}</a>
+								<a class="projectDocument-link" ng-click="projectDocumentChosen(projectDocument)">
+									{{projectDocument.type && projectDocument.type || projectDocument.name}}
+								</a>
 							</p>
 
 							<form ng-show="editingProjectDocumentTitle">
