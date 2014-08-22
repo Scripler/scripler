@@ -141,6 +141,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 
 	$scope.openProjectDocument = function( projectDocument ) {
+		var deferred = $q.defer();
 
 		if ( typeof $scope.documentSelected == 'object' ) {
 			$scope.updateProjectDocument();
@@ -164,7 +165,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						$scope.applyStylesetsToEditor();
 					}
 				}
+
+				deferred.resolve();
 			})
+
+		return deferred.promise;
 	}
 
 	$scope.addProjectDocument = function( type ) {
@@ -192,8 +197,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						$scope.projectDocuments.push( data.document );
 					}
 
-					$scope.openProjectDocument( data.document );
-					deferred.resolve();
+					var promise = $scope.openProjectDocument( data.document );
+					promise.then( function() {
+						deferred.resolve();
+					});
 				})
 		} else {
 			document._id = Date.now();
@@ -992,7 +999,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	initiateEditor();
 
-	$scope.$onRootScope('ckDocument:dataReady', function( event ) {
+	$scope.$onRootScope('ckDocument:ready', function( event ) {
 		$scope.ckReady = true;
 		$scope.applyStylesetsToEditor();
 		$scope.loadFonts();
