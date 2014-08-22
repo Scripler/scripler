@@ -416,11 +416,11 @@
 						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
 							<div class="right-menu-options">
-								<span class="right-menu-button full-size right-menu-parameter-margin">
-									<a ng-click="generateToc();">Generate TOC</a>
-								</span>
 								<span class="right-menu-box right-menu-parameter-margin">
 									<span class="option" ng-repeat="tocs in toc"><a ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
+								</span>
+								<span class="right-menu-button full-size right-menu-parameter-margin">
+									<a ng-click="generateToc();">Generate TOC</a>
 								</span>
 							</div>
 							<div class="right-menu-divider"></div>
