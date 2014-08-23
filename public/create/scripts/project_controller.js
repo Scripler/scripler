@@ -3,22 +3,15 @@
 function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress,
 							$timeout, $rootScope, utilsService, $q, user ) {
 
-	var timeout = null;
-
-	var lastSavedDocumentLength = 0;
-
-	var documentWatch = false;
-
-	var secondsToWait = 5;
+	var timeout = null,
+		lastSavedDocumentLength = 0,
+		documentWatch = false,
+		secondsToWait = 5;
 
 	$scope.pid = ($location.search()).pid;
-
 	$scope.user = user;
-
 	$scope.projectDocuments = [];
-
 	$scope.stylesets = [];
-
 	$scope.fonts = [];
 
 	if ( $scope.user === 'undefined' ) {
@@ -261,6 +254,41 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if ( $scope.user._id ) {
 			$http.put('/document/' + projectDocument._id + '/rename', angular.toJson( projectDocument ) )
 				.success( function() {});
+		} else {
+			//TODO save to localstorage
+		}
+	};
+
+	$scope.addMetaData = function( status ) {
+		if ( $scope.user._id ) {
+
+			$http.put('/project/' + $scope.project._id + '/metadata', {
+				'title': $scope.project.metadata.title,
+				'authors': $scope.project.metadata.authors,
+				'language': $scope.project.metadata.language,
+				'description': $scope.project.metadata.description,
+				'isbn': $scope.project.metadata.isbn
+			}).success( function() {
+				switch(status) {
+				    case 'metaTitle':
+						$scope.metaTitleSaved = true;
+				        break;
+				    case 'metaAuthors':
+						$scope.metaAuthorsSaved = true;
+				        break;
+				    case 'metaLanguage':
+						$scope.metaLanguageSaved = true;
+				        break;
+				    case 'metaDescription':
+						$scope.metaDescriptionSaved = true;
+				        break;
+				    case 'metaIsbn':
+						$scope.metaIsbnSaved = true;
+				        break;
+				    default:
+				        break;
+				}
+			});
 		} else {
 			//TODO save to localstorage
 		}
