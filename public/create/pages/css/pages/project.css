@@ -522,11 +522,41 @@ li.typo p:first-child {
 	position: relative;
 	width: calc(100% - 36px);
 	padding: 0;
+	transition: all 1s;
+	-moz-transition: all 1s;
+	-ms-transition: all 1s;
+	-webkit-transition: all 1s;
+	-o-transition: all 1s;
 }
 .left-menu-box.inputfield.full-size {
 	position: relative;
 	width: 100%;
 	padding: 0;
+}
+.left-menu-box.inputfield.text-saved {
+	border-color: yellow;
+}
+.left-menu-box.inputfield.text-saved input {
+	width: calc(100% - 30px);
+}
+.left-menu-box .statusfield {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 28px;
+	height: 100%;
+	opacity: 0;
+	color: black;
+	padding: 8px 0 0 8px;
+	transition: all 1s;
+	-moz-transition: all 1s;
+	-ms-transition: all 1s;
+	-webkit-transition: all 1s;
+	-o-transition: all 1s;
+}
+.left-menu-box .statusfield.text-saved {
+	background: none yellow;
+	opacity: 1;
 }
 .left-menu-box.inputfield input, .left-menu-box.inputfield select {
 	background: none white;
