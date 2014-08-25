@@ -13,13 +13,11 @@
 	width: 260px;
 }
 .menu-left {
-	left: 0;
-	margin: 0 0 0 -260px;
+	left: -260px;
 	border-right: 1px solid #000;
 }
 .menu-right {
-	right: 0;
-	margin: 0 -260px 0 0;
+	right: -260px;
 	border-left: 1px solid #000;
 }
 
@@ -32,10 +30,10 @@
 	line-height: 23px;
 }
 .menu-left.open {
-	margin-left: 50px !important;
+	left: 50px;
 }
 .menu-right.open {
-	margin-right: 50px !important;
+	right: 50px;
 }
 
 .menu-left-tabs, .menu-right-tabs {
