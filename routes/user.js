@@ -193,20 +193,20 @@ exports.register = function (req, res, next) {
  */
 exports.verify = function (req, res) {
 	User.findOne({"_id": req.params.id}, function (err, user) {
-		var redirectUrl = conf.app.url_prefix + '?err=';
+		var redirectUrl = conf.app.url_prefix + '?code=';
 		if (err) {
-			res.redirect(redirectUrl + "Database problem");
+			res.redirect(redirectUrl + "104");//Database problem
 		} else if (!user) {
-			res.redirect(redirectUrl + "User not found");
+			res.redirect(redirectUrl + "101");//User not found
 		} else if (req.params.hash != hashEmail(user.email)) {
-			res.redirect(redirectUrl + "User not validated");
+			res.redirect(redirectUrl + "102");//User not validated
 		} else {
 			user.emailValidated = true;
 			user.save(function (err) {
 				if (err) {
-					res.redirect(redirectUrl + "Database problem");
+					res.redirect(redirectUrl + "104");//Database problem
 				} else {
-					res.redirect(redirectUrl);
+					res.redirect(redirectUrl + "100");//Email verified
 				}
 			});
 
@@ -292,7 +292,7 @@ exports.sso = function (req, res, next) {
 	if (!req.isAuthenticated || !req.isAuthenticated()) {
 		// User is not logged in.
 		// Scripler account is required to use discrouse. Ask user to create au ser.
-		res.redirect(conf.app.url_prefix + "?err=Create a Scripler user to access our forum");
+		res.redirect(conf.app.url_prefix + "?code=510");
 	} else {
 		// User is already loggedin
 		// Return user loggedin to discourse.
