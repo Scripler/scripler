@@ -1003,7 +1003,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var title = '<p class="titlepageTitle">' + $scope.project.name + '</p>';
 		var author = '<p class="titlepageAuthor">by ' + $scope.user.firstname + ' ' + $scope.user.lastname + '</p>'
 		var pageBreak = '<p class="empty-paragraph">&nbsp;<br /></p>';
-		var link = '<a href="http://www.scripler.com"><img class="logo" src="stylesets/Images/builtwithscripler.svg" /></a>';
+		var link = '<p contenteditable="false"><a href="http://www.scripler.com"><img class="logo" src="stylesets/Images/builtwithscripler.svg" /></a></p>';
 		return title + author + pageBreak + pageBreak + pageBreak + link;
 	}
 
