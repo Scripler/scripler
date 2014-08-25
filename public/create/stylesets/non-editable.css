@@ -105,6 +105,7 @@ figure {
 	height:auto;
 	page-break-inside: avoid;
 	margin: 0 37% 0 37%;
+	outline: none;
 }
 
 /*PARAGRAPH RULES*/
