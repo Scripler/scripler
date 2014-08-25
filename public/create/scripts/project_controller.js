@@ -949,6 +949,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if ( type === 'toc' ) {
 			$scope.documentSelected.text = generateTocHtml();
 		}
+		if ( type === 'titlepage' ) {
+			$scope.documentSelected.text = generateTitlePageHtml();
+		}
 	}
 
 	$scope.createCover = function( image ) {
@@ -994,6 +997,28 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.setToc = function() {
 		$http.put('/project/' + $scope.pid + '/toc', angular.toJson( $scope.toc ));
+	}
+
+	function generateTitlePageHtml() {
+		var title = '<p class="titlepageTitle">' + $scope.project.name + '</p>';
+		var author = '<p class="titlepageAuthor">by ' + $scope.user.firstname + ' ' + $scope.user.lastname + '</p>'
+		var pageBreak = '<p class="empty-paragraph">&nbsp;<br /></p>';
+		var link = '<a href="http://www.scripler.com"><img class="logo" src="stylesets/Images/builtwithscripler.svg" /></a>';
+		return title + author + pageBreak + pageBreak + pageBreak + link;
+	}
+
+	$scope.generateTitlePage = function() {
+		var isNewTitlePage = true;
+
+		isNewTitlePage = overrideExistingDocument( 'titlepage', isNewTitlePage );
+
+		if ( isNewTitlePage ) {
+			var promise = $scope.addProjectDocument( 'titlepage' );
+
+			promise.then( function() {
+				$scope.documentSelected.text = generateTitlePageHtml();
+			});
+		}
 	}
 
 	function editorInsert( insert ) {
