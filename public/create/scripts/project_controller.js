@@ -927,10 +927,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					if ( $scope.documentSelected._id !== document._id ) {
 						var waitPromise = $scope.openProjectDocument( document );
 						waitPromise.then( function() {
-							renewDocumentText( type, image );
+							updateDocumentText( type, image );
 						});
 					} else {
-						renewDocumentText( type, image );
+						updateDocumentText( type, image );
 					}
 
 					isNew = false;
@@ -942,7 +942,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return isNew;
 	}
 
-	function renewDocumentText( type, image ) {
+	function updateDocumentText( type, image ) {
 		if ( type === 'cover' ) {
 			$scope.documentSelected.text = constructImageTag( image );
 		}
