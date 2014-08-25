@@ -291,11 +291,11 @@ exports.edit = function (req, res, next) {
 exports.sso = function (req, res, next) {
 	if (!req.isAuthenticated || !req.isAuthenticated()) {
 		// User is not logged in.
-		// Scripler account is required to use discrouse. Ask user to create au ser.
+		// Scripler account is required to use Discourse. Ask user to create an account.
 		res.redirect(conf.app.url_prefix + "?code=510");
 	} else {
 		// User is already loggedin
-		// Return user loggedin to discourse.
+		// Return user loggedin to Discourse.
 		var sso = new discourse_sso(conf.discourse.ssoSecret);
 		var payload = req.query.sso;
 		var sig = req.query.sig;
