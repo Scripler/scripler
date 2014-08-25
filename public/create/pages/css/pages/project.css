@@ -14,11 +14,9 @@
 }
 .menu-left {
 	left: -260px;
-	border-right: 1px solid #000;
 }
 .menu-right {
 	right: -260px;
-	border-left: 1px solid #000;
 }
 
 .menu-left .top, .menu-right .top {
