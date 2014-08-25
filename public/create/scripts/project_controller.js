@@ -425,18 +425,18 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 
 		if ( combinedCSS != '' ) {
-			if ( typeof $scope.cssStyling == 'undefined' ) {
-				var ckDocument = $rootScope.ck.document;
-				var style = new CKEDITOR.dom.element( 'style' );
-				$scope.cssText = new CKEDITOR.dom.text( combinedCSS );
-				style.append( $scope.cssText );
-				ckDocument.getHead().append( style );
-				$scope.cssStyling = style;
-			} else {
+			//if ( typeof $scope.cssStyling == 'undefined' ) {
+			var ckDocument = $rootScope.ck.document;
+			var style = new CKEDITOR.dom.element( 'style' );
+			$scope.cssText = new CKEDITOR.dom.text( combinedCSS );
+			style.append( $scope.cssText );
+			ckDocument.getHead().append( style );
+			$scope.cssStyling = style;
+			/*} else {
 				var newStyle = new CKEDITOR.dom.text( combinedCSS );
 				newStyle.replace( $scope.cssText );
 				$scope.cssText = newStyle;
-			}
+			}*/
 		}
 	}
 
@@ -1069,6 +1069,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.$onRootScope('ckDocument:renderFinished', function ( event ) {
 		if ( typeof $scope.lastTocEntry !== 'undefined' ) {
 			$scope.scrollToToc( $scope.lastTocEntry );
+		}
+		if ( typeof $scope.ckReady !== 'undefined' ) {
+			if ( $scope.ckReady ) {
+				$scope.applyStylesetsToEditor();
+			}
 		}
 	});
 
