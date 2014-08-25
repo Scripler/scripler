@@ -283,7 +283,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				indentUnit: 'em',
 				indentOffset: 2,
 				enterMode: CKEDITOR.ENTER_P,
-				height: $window.innerHeight - 30,
+				height: $window.innerHeight - 90,
 				width: 800,
 				//Change to standard font we want to start all projects with :)
 				contentsCss: ['ckeditor/contents.css', 'stylesets/non-editable.css'],
@@ -366,6 +366,9 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 			});
 			ck.on('key', function( event ) { timeOutModel( event ); });
 			ck.on('dataReady', function( event ) { timeOutModel( event ); });
+			ck.on('save', function() {
+				updateModel();
+			});
 
 			ngModel.$render = function(value) {
 				ck.setData(ngModel.$viewValue);

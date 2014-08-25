@@ -61,7 +61,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
-	$scope.onImageSelect = function($files) {
+	$scope.uploadImages = function( $files, type ) {
 		for (var i = 0; i < $files.length; i++) {
 			var file = $files[i];
 			ngProgress.start();
@@ -72,30 +72,49 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				ngProgress.set(parseInt(100.0 * evt.loaded / evt.total) - 25);
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
-				$scope.insertNewImage( data.images );
+				if ( typeof type !== 'undefined' ) {
+					if ( type === 'cover' ) {
+						$scope.createCover( data.images[0] );
+					}
+					if ( type === 'image' ) {
+						$scope.insertNewImage( data.images[0] );
+					}
+				}
 			});
 		}
 	};
 
+	$scope.onCoverSelect = function( $files ) {
+		$scope.uploadImages( $files, 'cover' );
+	}
+
+	$scope.onImageSelect = function( $files ) {
+		$scope.uploadImages( $files, 'image' );
+	}
+
 	$scope.sortable_option = {
 		stop : function( list, drop_item ) {
-			var data = {};
-			var documentIds = [];
-
-			angular.forEach(list, function( document ) {
-				documentIds.push( document._id );
-			})
-
-			data.documents = documentIds;
-
-			if ( $scope.user._id ) {
-				$http.put('/document/' + $scope.pid + '/rearrange', angular.toJson( data ) )
-					.success( function() {});
-			} else {
-				//save to localstorage
-			}
+			$scope.rearrange( list );
 		}
 	};
+
+	$scope.rearrange = function( list ) {
+		var data = {};
+		var documentIds = [];
+
+		angular.forEach(list, function( document ) {
+			documentIds.push( document._id );
+		})
+
+		data.documents = documentIds;
+
+		if ( $scope.user._id ) {
+			$http.put('/document/' + $scope.pid + '/rearrange', angular.toJson( data ) )
+			.success( function() {});
+		} else {
+			//save to localstorage
+		}
+	}
 
 	$scope.saveProjectDocumentUpdates = function( newVal, oldVal ) {
 		if ( newVal != oldVal ) {
@@ -122,6 +141,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 
 	$scope.openProjectDocument = function( projectDocument ) {
+		var deferred = $q.defer();
 
 		if ( typeof $scope.documentSelected == 'object' ) {
 			$scope.updateProjectDocument();
@@ -145,33 +165,55 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						$scope.applyStylesetsToEditor();
 					}
 				}
+
+				deferred.resolve();
 			})
+
+		return deferred.promise;
 	}
 
-	$scope.addProjectDocument = function() {
+	$scope.addProjectDocument = function( type ) {
+		var deferred = $q.defer();
+
 		var order = $scope.projectDocuments.length + 1;
 		var name = "Document " + order;
 		var document = {};
 		document.name = name;
 		document.text = '';
 
+		if ( typeof type !== 'undefined' ) {
+			document.type = type;
+		}
+
 		if ( $scope.user._id ) {
 			document.projectId = $scope.pid;
 			$http.post('/document', angular.toJson( document ) )
 				.success( function( data ) {
-					$scope.projectDocuments.push( data.document );
-					$scope.openProjectDocument( data.document );
+
+					if ( typeof data.document.type !== 'undefined' ) {
+						$scope.projectDocuments.unshift( data.document );
+						$scope.rearrange( $scope.projectDocuments );
+					} else {
+						$scope.projectDocuments.push( data.document );
+					}
+
+					var promise = $scope.openProjectDocument( data.document );
+					promise.then( function() {
+						deferred.resolve();
+					});
 				})
 		} else {
 			document._id = Date.now();
 			$scope.projectDocuments.push( document );
+			deferred.resolve();
 		}
+
+		return deferred.promise;
 	}
 
 	$scope.updateProjectDocument = function() {
-		//document gets copied because changing document text model will reload CK editor
-		var document = angular.copy( $scope.documentSelected );
-		document.text = $rootScope.CKEDITOR.instances.bodyeditor.getData();
+		$scope.ck.fire('save');
+		var document = $scope.documentSelected;
 		lastSavedDocumentLength = document.text.length;
 
 		if ( $scope.user._id ) {
@@ -783,14 +825,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	}
 
-	$scope.generateToc = function() {
+	$scope.getToc = function() {
 		$http.get('/project/' + $scope.project._id + '/toc')
 			.success( function( data ) {
 				$scope.toc = data.toc;
 			});
 	}
 
-	$scope.insertOptionChoosen = function(insertoption) {
+	$scope.insertOptionChosen = function(insertoption) {
 		if ($scope.activeInsertOption === insertoption) {
 			$scope.activeInsertOption = null;
 		}
@@ -805,6 +847,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 		else {
 			$scope.activeImageOption = imageoption;
+		}
+	}
+
+	$scope.finalizeOptionChosen = function( finalizeOption ) {
+		if ( $scope.activeFinalizeOption === finalizeOption ) {
+			$scope.activeFinalizeOption = null;
+		} else {
+			$scope.activeFinalizeOption = finalizeOption;
 		}
 	}
 
@@ -841,7 +891,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var insert = '<a id="' + id + '" name="' + id + '" title="' + $scope.anchorName + '"></a>';
 		editorInsert( insert );
 		$scope.updateProjectDocument();
-		$scope.generateToc();
+		$scope.getToc();
 		$scope.anchorName = '';
 	}
 
@@ -854,11 +904,121 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.linkAnchor = '';
 	}
 
-	$scope.insertNewImage = function( images ) {
-		//since only one image always take the first
-		var image = images[0];
-		var imageInsert = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+	$scope.insertNewImage = function( image ) {
+		insertImage( image );
+	}
+
+	function constructImageTag( image ) {
+		var imageTag = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		return imageTag;
+	}
+
+	function insertImage( image ) {
+		var imageInsert = constructImageTag( image );
 		editorInsert( imageInsert );
+	}
+
+	function overrideExistingDocument( type, isNew, image ) {
+		for ( var i = 0; i < $scope.projectDocuments.length; i++ ) {
+			var document = $scope.projectDocuments[i];
+			if ( typeof document.type !== 'undefined' ) {
+				if ( document.type === type ) {
+
+					if ( $scope.documentSelected._id !== document._id ) {
+						var waitPromise = $scope.openProjectDocument( document );
+						waitPromise.then( function() {
+							updateDocumentText( type, image );
+						});
+					} else {
+						updateDocumentText( type, image );
+					}
+
+					isNew = false;
+					break;
+				}
+			}
+		}
+
+		return isNew;
+	}
+
+	function updateDocumentText( type, image ) {
+		if ( type === 'cover' ) {
+			$scope.documentSelected.text = constructImageTag( image );
+		}
+		if ( type === 'toc' ) {
+			$scope.documentSelected.text = generateTocHtml();
+		}
+		if ( type === 'titlepage' ) {
+			$scope.documentSelected.text = generateTitlePageHtml();
+		}
+	}
+
+	$scope.createCover = function( image ) {
+		var isNewCover = true;
+
+		isNewCover = overrideExistingDocument( 'cover', isNewCover, image );
+
+		if ( isNewCover ) {
+			var promise = $scope.addProjectDocument( 'cover' );
+
+			promise.then( function() {
+				insertImage( image );
+			});
+		}
+	}
+
+	function generateTocHtml() {
+		var tocHtml = '<h2>Contents</h2>';
+
+		for ( var i = 0; i < $scope.toc.length; i++ ) {
+			var level = $scope.toc[i].level + 1;
+			var tocHtml = tocHtml + '<p class="toc-item-h' + level + '"><a href="' + $scope.toc[i].target +'">' + $scope.toc[i].text +'</a><br /></p>';
+		}
+
+		return tocHtml;
+	}
+
+	$scope.generateToc = function() {
+		var isNewToc = true;
+
+		isNewToc = overrideExistingDocument( 'toc', isNewToc );
+
+		if ( isNewToc ) {
+			var promise = $scope.addProjectDocument( 'toc' );
+
+			promise.then( function() {
+				$scope.documentSelected.text = generateTocHtml();
+			});
+		}
+
+		$scope.setToc();
+	}
+
+	$scope.setToc = function() {
+		$http.put('/project/' + $scope.pid + '/toc', angular.toJson( $scope.toc ));
+	}
+
+	function generateTitlePageHtml() {
+		var title = '<p class="titlepageTitle">' + $scope.project.name + '</p>';
+		var author = '<p class="titlepageAuthor">by ' + $scope.user.firstname + ' ' + $scope.user.lastname + '</p>'
+		var pageBreak = '<p class="empty-paragraph">&nbsp;<br /></p>';
+		var link = '<p contenteditable="false"><a href="http://www.scripler.com"><img class="logo" src="stylesets/Images/builtwithscripler.svg" /></a></p>';
+		return title + author + pageBreak + pageBreak + pageBreak + link;
+	}
+
+	$scope.generateTitlePage = function() {
+		var isNewTitlePage = true;
+
+		isNewTitlePage = overrideExistingDocument( 'titlepage', isNewTitlePage );
+
+		if ( isNewTitlePage ) {
+			var promise = $scope.addProjectDocument( 'titlepage' );
+
+			promise.then( function() {
+				$scope.documentSelected.text = generateTitlePageHtml();
+			});
+		}
 	}
 
 	function editorInsert( insert ) {
@@ -866,14 +1026,20 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var element = $rootScope.CKEDITOR.dom.element.createFromHtml( insert );
 		editor.insertElement( element );
 		var range = editor.createRange();
-		range.moveToElementEditablePosition(element);
+		range.moveToElementEditablePosition( element );
 		$rootScope.ck.focus();
 		range.select();
 	}
 
 	$scope.$watch('showInsert', function( newValue ) {
 		if ( newValue === true ) {
-			$scope.generateToc();
+			$scope.getToc();
+		}
+	});
+
+	$scope.$watch('showFinalizeOptions', function( newValue ) {
+		if ( newValue === true ) {
+			$scope.getToc();
 		}
 	});
 
