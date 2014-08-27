@@ -55,8 +55,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
 				$scope.projectDocuments.push( data.document );
-				$scope.openProjectDocument( data.document );
-				$scope.applyStylesetsToEditor();
+				var promise = $scope.openProjectDocument( data.document );
+				promise.then( function() {
+					$scope.applyStylesetsToEditor();
+				});
 			});
 		}
 	};
@@ -212,9 +214,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.updateProjectDocument = function() {
-		$scope.ck.fire('save');
-		var document = $scope.documentSelected;
+		var document = angular.copy( $scope.documentSelected );
 		lastSavedDocumentLength = document.text.length;
+		document.text = $scope.ck.getData();
 
 		if ( $scope.user._id ) {
 			$http.put(/document/ + document._id + '/update', angular.toJson( document ))
@@ -414,8 +416,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
-	var applyStylesets = function() {
+	var getCombinedCss = function() {
 		var combinedCSS = '';
+
 		for ( var i = 0; i < $scope.stylesets.length; i++ ) {
 			if ( $scope.documentSelected.defaultStyleset == $scope.stylesets[i]._id ) {
 				combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], true );
@@ -424,20 +427,34 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 		}
 
-		if ( combinedCSS != '' ) {
-			//if ( typeof $scope.cssStyling == 'undefined' ) {
-			var ckDocument = $rootScope.ck.document;
-			var style = new CKEDITOR.dom.element( 'style' );
-			style.$.id = 'custom-scripler-css';
-			$scope.cssText = new CKEDITOR.dom.text( combinedCSS );
-			style.append( $scope.cssText );
-			ckDocument.getHead().append( style );
-			$scope.cssStyling = style;
-			/*} else {
-				var newStyle = new CKEDITOR.dom.text( combinedCSS );
-				newStyle.replace( $scope.cssText );
-				$scope.cssText = newStyle;
-			}*/
+		return combinedCSS;
+	}
+
+	var createStyleTag = function() {
+		var style = new CKEDITOR.dom.element( 'style' );
+		style.$.id = 'custom-scripler-css';
+		var cssText = new CKEDITOR.dom.text( $scope.combinedCSS );
+		style.append( cssText );
+		return style;
+	}
+
+	var applyStylesets = function() {
+		if ( typeof $scope.combinedCSS === 'undefined' ) {
+			$scope.combinedCSS = getCombinedCss();
+		}
+
+		var ckDocument = $rootScope.ck.document;
+		var element = ckDocument.getById('custom-scripler-css');
+
+		if ( $scope.combinedCSS != '' ) {
+			if ( element === null) {
+				var style = createStyleTag();
+				ckDocument.getHead().append( style );
+			} else {
+				element.remove();
+				var style = createStyleTag();
+				ckDocument.getHead().append( style );
+			}
 		}
 	}
 
@@ -1093,7 +1110,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.$onRootScope('ckDocument:ready', function( event ) {
 		$scope.ckReady = true;
-		$scope.applyStylesetsToEditor();
 		$scope.loadFonts();
 	});
 
@@ -1101,6 +1117,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if ( typeof $scope.lastTocEntry !== 'undefined' ) {
 			$scope.scrollToToc( $scope.lastTocEntry );
 		}
+	});
+
+	$scope.$onRootScope('ckDocument:dataReady', function ( event ) {
+		console.log('apply data ready');
 		if ( typeof $scope.ckReady !== 'undefined' ) {
 			if ( $scope.ckReady ) {
 				$scope.applyStylesetsToEditor();
