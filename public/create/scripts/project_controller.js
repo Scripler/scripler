@@ -798,7 +798,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.addNewStyle( styleset, newStyle, index );
 	}
 
-	$scope.overrideStyle = function( style ) {
+	$scope.overwriteStyle = function( style ) {
 		var activeCSS = getStyleCSS();
 
 		var newStyle = angular.copy( style );
@@ -936,7 +936,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		editorInsert( imageInsert );
 	}
 
-	function overrideExistingDocument( type, isNew, image ) {
+	function overwriteExistingDocument( type, isNew, image ) {
 		for ( var i = 0; i < $scope.projectDocuments.length; i++ ) {
 			var document = $scope.projectDocuments[i];
 			if ( typeof document.type !== 'undefined' ) {
@@ -978,7 +978,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.createCover = function( image ) {
 		var isNewCover = true;
 
-		isNewCover = overrideExistingDocument( 'cover', isNewCover, image );
+		isNewCover = overwriteExistingDocument( 'cover', isNewCover, image );
 
 		if ( isNewCover ) {
 			var promise = $scope.addProjectDocument( 'cover' );
@@ -1007,7 +1007,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.generateToc = function() {
 		var isNewToc = true;
 
-		isNewToc = overrideExistingDocument( 'toc', isNewToc );
+		isNewToc = overwriteExistingDocument( 'toc', isNewToc );
 
 		if ( isNewToc ) {
 			var promise = $scope.addProjectDocument( 'toc' );
@@ -1035,7 +1035,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.generateTitlePage = function() {
 		var isNewTitlePage = true;
 
-		isNewTitlePage = overrideExistingDocument( 'titlepage', isNewTitlePage );
+		isNewTitlePage = overwriteExistingDocument( 'titlepage', isNewTitlePage );
 
 		if ( isNewTitlePage ) {
 			var promise = $scope.addProjectDocument( 'titlepage' );
@@ -1058,7 +1058,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.generateColophon = function() {
 		var isNewColophon = true;
 
-		isNewColophon = overrideExistingDocument( 'colophon', isNewColophon );
+		isNewColophon = overwriteExistingDocument( 'colophon', isNewColophon );
 
 		if ( isNewColophon ) {
 			var promise = $scope.addProjectDocument( 'colophon' );
