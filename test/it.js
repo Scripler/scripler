@@ -1841,7 +1841,6 @@ describe('Scripler RESTful API', function () {
 						}
 					],
 					publisher: "Det Gamle Forlag",
-					cover: "images/frontpage.jpg",
 					coverage: "Asia",
 					relation: "Part 2",
 					source: "Det Gode Bibliotek"
@@ -1870,10 +1869,25 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.project.metadata.contributors[1].role, "pte");
 					assert.equal(res.body.project.metadata.contributors[1].name, "Jytte Ustantinious");
 					assert.equal(res.body.project.metadata.publisher, "Det Gamle Forlag");
-					assert.equal(res.body.project.metadata.cover, "images/frontpage.jpg");
 					assert.equal(res.body.project.metadata.coverage, "Asia");
 					assert.equal(res.body.project.metadata.relation, "Part 2");
 					assert.equal(res.body.project.metadata.source, "Det Gode Bibliotek");
+					done();
+				});
+		}),
+		it('Set metadata cover - should return updated project', function (done) { // TODO: Refactor when using PATCH, c.f. #323
+			var now = new Date;
+
+			request(host)
+				.put('/project/' + projectId + '/metadata/cover')
+				.set('cookie', cookie)
+				.send({
+					cover: "images/frontpage.jpg"
+				})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.project.metadata.cover, "images/frontpage.jpg");
 					done();
 				});
 		}),
