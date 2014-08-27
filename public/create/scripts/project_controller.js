@@ -428,6 +428,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			//if ( typeof $scope.cssStyling == 'undefined' ) {
 			var ckDocument = $rootScope.ck.document;
 			var style = new CKEDITOR.dom.element( 'style' );
+			style.$.id = 'custom-scripler-css';
 			$scope.cssText = new CKEDITOR.dom.text( combinedCSS );
 			style.append( $scope.cssText );
 			ckDocument.getHead().append( style );
@@ -966,6 +967,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				insertImage( image );
 			});
 		}
+
+		var json = {};
+		json.cover = 'images/' + image.name;
+		$http.put('/project/' + $scope.pid + '/metadata/cover', angular.toJson( json ));
 	}
 
 	function generateTocHtml() {
