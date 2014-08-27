@@ -428,6 +428,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			//if ( typeof $scope.cssStyling == 'undefined' ) {
 			var ckDocument = $rootScope.ck.document;
 			var style = new CKEDITOR.dom.element( 'style' );
+			style.$.id = 'custom-scripler-css';
 			$scope.cssText = new CKEDITOR.dom.text( combinedCSS );
 			style.append( $scope.cssText );
 			ckDocument.getHead().append( style );
@@ -952,6 +953,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if ( type === 'titlepage' ) {
 			$scope.documentSelected.text = generateTitlePageHtml();
 		}
+		if ( type === 'colophon' ) {
+			$scope.documentSelected.text = generateColophonHtml();
+		}
 	}
 
 	$scope.createCover = function( image ) {
@@ -966,6 +970,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				insertImage( image );
 			});
 		}
+
+		var json = {};
+		json.cover = 'images/' + image.name;
+		$http.put('/project/' + $scope.pid + '/metadata/cover', angular.toJson( json ));
 	}
 
 	function generateTocHtml() {
@@ -1017,6 +1025,29 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 			promise.then( function() {
 				$scope.documentSelected.text = generateTitlePageHtml();
+			});
+		}
+	}
+
+	function generateColophonHtml() {
+		var title = '<h4 class="right">' + $scope.project.name + '</h4>';
+		var author = '<p class="colophon">' + $scope.user.firstname + ' ' + $scope.user.lastname + '</p>'
+		var pageBreak = '<p class="empty-paragraph">&nbsp;<br /></p>';
+		var isbn = '<p class="colophon">ISBN: [ISBN-nr.]</p>';
+		var link = '<p class="colophon" contenteditable="false">Built with <a class="link" href="http://www.scripler.com">Scripler</a></p>';
+		return title + pageBreak + author + pageBreak + isbn + pageBreak + link;
+	}
+
+	$scope.generateColophon = function() {
+		var isNewColophon = true;
+
+		isNewColophon = overrideExistingDocument( 'colophon', isNewColophon );
+
+		if ( isNewColophon ) {
+			var promise = $scope.addProjectDocument( 'colophon' );
+
+			promise.then( function() {
+				$scope.documentSelected.text = generateColophonHtml();
 			});
 		}
 	}
