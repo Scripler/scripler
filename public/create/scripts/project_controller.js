@@ -1030,7 +1030,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	function generateColophonHtml() {
-		var title = '<h4 class="right">' + $scope.project.title + '</h4>';
+		var title = '<h4 class="right">' + $scope.project.name + '</h4>';
 		var author = '<p class="colophon">' + $scope.user.firstname + ' ' + $scope.user.lastname + '</p>'
 		var pageBreak = '<p class="empty-paragraph">&nbsp;<br /></p>';
 		var isbn = '<p class="colophon">ISBN: [ISBN-nr.]</p>';
@@ -1038,12 +1038,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return title + pageBreak + author + pageBreak + isbn + pageBreak + link;
 	}
 
-	$scope.generateColophonPage = function() {
-		var isNewColophonPage = true;
+	$scope.generateColophon = function() {
+		var isNewColophon = true;
 
-		isNewColophonPage = overrideExistingDocument( 'colophon', isNewColophonPage );
+		isNewColophon = overrideExistingDocument( 'colophon', isNewColophon );
 
-		if ( isNewColophonPage ) {
+		if ( isNewColophon ) {
 			var promise = $scope.addProjectDocument( 'colophon' );
 
 			promise.then( function() {
