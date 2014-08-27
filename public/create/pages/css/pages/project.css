@@ -527,23 +527,36 @@ li.typo p:first-child {
 .left-menu-box.inputfield.full-size {
 	position: relative;
 	width: 100%;
+	height: 30px;
+	padding: 0;
+}
+.left-menu-box.inputfield.full-size-text {
+	position: relative;
+	width: 100%;
+	height: 64px;
 	padding: 0;
 }
 .left-menu-box.inputfield.text-saved {
 	border-color: yellow;
+	height: 56px;
 }
-.left-menu-box.inputfield.text-saved input {
-	width: calc(100% - 30px);
+.left-menu-box.inputfield.full-size-text.text-saved {
+	position: relative;
+	width: 100%;
+	height: 92px;
+	padding: 0;
 }
 .left-menu-box .statusfield {
 	position: absolute;
 	top: 0;
+	left: 0;
 	right: 0;
-	width: 28px;
-	height: 100%;
-	opacity: 0;
+	margin: 0 auto;
+	z-index: 1;
+	width: auto;
+	height: 28px;
 	color: black;
-	padding: 8px 0 0 8px;
+	padding: 5px;
 	transition: all 1s;
 	-moz-transition: all 1s;
 	-ms-transition: all 1s;
@@ -552,15 +565,29 @@ li.typo p:first-child {
 }
 .left-menu-box .statusfield.text-saved {
 	background: none yellow;
-	opacity: 1;
+	top: 28px;
+}
+.left-menu-box.inputfield.full-size-text .statusfield {
+	top: 34px;
+}
+.left-menu-box.inputfield.full-size-text .statusfield.text-saved  {
+	top: 62px;
 }
 .left-menu-box.inputfield input, .left-menu-box.inputfield select {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2;
 	background: none white;
 	width: 100%;
 	height: 28px;
 	padding: 5px 10px;
 }
 .left-menu-box.inputfield textarea {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2;
 	background: none white;
 	width: 100%;
 	height: 60px;
@@ -577,7 +604,7 @@ li.typo p:first-child {
 	color: #ccc;
 }
 .left-menu-box.inputfield input:focus, .left-menu-box.inputfield textarea:focus {
-	outline:none;
+	outline: none;
 }
 .left-menu-box .option {
 	display: block;

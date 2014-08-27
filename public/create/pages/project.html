@@ -19,11 +19,6 @@
 		</div>
 	</div>
 	<div id="menu-left" class="menu-left" ng-class="{ 'open' : showDocuments || showTypo || showInsert }">
-		<div class="top">
-			<span ng-show="showDocuments" ng-bind="project.name"></span>
-			<span ng-show="showTypo">Stylesets</span>
-			<span ng-show="showInsert">Insert</span>
-		</div>
 		<div id="menu-left-content" class="content">
 			<div class="menu-item-left documents" ng-show="showDocuments">
 				<div  class="menu-content">
@@ -358,10 +353,6 @@
 		</div>
 	</div>
 	<div id="menu-right" class="menu-right" ng-class="{ 'open' : showInsertOptions || showOutput }">
-		<div class="top">
-			<span ng-show="showInsertOptions">Insert</span>
-			<span ng-show="showOutput">Output</span>
-		</div>
 		<div id="menu-right-content" class="content">
 			<div class="menu-item-right inserts" ng-show="showInsertOptions">
 				<div class="menu-content">
