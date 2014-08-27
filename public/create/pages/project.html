@@ -431,28 +431,29 @@
 					<li class="outputOptionProperties">
 						<span class="left-menu-box label">Title</span>
 						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaTitleSaved }">
-							<input type="text" name="output_title" id="output_title" value="{{project.metadata.title}}" ng-model="project.metadata.title" ng-change="addMetaData('metaTitle');" />
-							<span class="statusfield" ng-class="{ 'text-saved': metaTitleSaved }">&#10004;</span>
+							<input type="text" name="output_title" id="output_title" value="{{project.metadata.title}}" ng-model="project.metadata.title"  />
+							<span class="statusfield" ng-class="{ 'text-saved': metaTitleSaved }">Saved</span>
+							<span ng-bind="{{project.metadata.title}}">{{project.metadata.title}}</span>
 						</span>
 						<span class="left-menu-box label left-menu-parameter-margin">Author</span>
 						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaAuthorsSaved }">
-							<input type="text" name="output_author" id="output_author" value="{{project.metadata.authors}}" ng-model="project.metadata.authors" ng-change="addMetaData('metaAuthors');" />
-							<span class="statusfield" ng-class="{ 'text-saved': metaAuthorsSaved }">&#10004;</span>
+							<input type="text" name="output_author" id="output_author" value="{{project.metadata.authors}}" ng-model="project.metadata.authors"  />
+							<span class="statusfield" ng-class="{ 'text-saved': metaAuthorsSaved }">Saved</span>
 						</span>
 						<span class="left-menu-box label left-menu-parameter-margin">Language</span>
 						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaLanguageSaved }">
-							<input type="text" name="output_language" id="output_language" value="{{project.metadata.language}}" ng-model="project.metadata.language" ng-change="addMetaData('metaLanguage');" />
-							<span class="statusfield" ng-class="{ 'text-saved': metaLanguageSaved }">&#10004;</span>
+							<input type="text" name="output_language" id="output_language" value="{{project.metadata.language}}" ng-model="project.metadata.language" />
+							<span class="statusfield" ng-class="{ 'text-saved': metaLanguageSaved }">Saved</span>
 						</span>
 						<span class="left-menu-box label left-menu-parameter-margin">Description</span>
-						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaDescriptionSaved }">
-							<textarea name="output_description" id="output_description" ng-model="project.metadata.description" ng-change="addMetaData('metaDescription');" />{{project.metadata.description}}</textarea>
-							<span class="statusfield" ng-class="{ 'text-saved': metaDescriptionSaved }">&#10004;</span>
+						<span class="left-menu-box inputfield full-size-text" ng-class="{ 'text-saved': metaDescriptionSaved }">
+							<textarea name="output_description" id="output_description" ng-model="project.metadata.description" />{{project.metadata.description}}</textarea>
+							<span class="statusfield" ng-class="{ 'text-saved': metaDescriptionSaved }">Saved</span>
 						</span>
 						<span class="left-menu-box label left-menu-parameter-margin">Unique identifier / ISBN</span>
 						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaIsbnSaved }">
-							<input type="text" name="output_unique" id="output_unique" value="{{project.metadata.isbn}}" ng-model="project.metadata.isbn" ng-change="addMetaData('metaIsbn');" />
-							<span class="statusfield" ng-class="{ 'text-saved': metaIsbnSaved }">&#10004;</span>
+							<input type="text" name="output_unique" id="output_unique" value="{{project.metadata.isbn}}" ng-model="project.metadata.isbn" />
+							<span class="statusfield" ng-class="{ 'text-saved': metaIsbnSaved }">Saved</span>
 						</span>
 						<span class="left-menu-box label left-menu-parameter-margin">Download options</span>
 						<span>Epub, PDF, Mobi</span>

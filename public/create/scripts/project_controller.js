@@ -259,40 +259,68 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
-	$scope.addMetaData = function( status ) {
-		if ( $scope.user._id ) {
+	var timeout = null;
+	$scope.debounceSaveUpdates = function(newValue, oldValue) {
+		var newTitle  = newValue[0];
+		var newAuthors = newValue[1];
+		var newLanguage = newValue[2];
+		var newDescription = newValue[3];
+		var newIsbn = newValue[4];
 
-			$http.put('/project/' + $scope.project._id + '/metadata', {
-				'title': $scope.project.metadata.title,
-				'authors': $scope.project.metadata.authors,
-				'language': $scope.project.metadata.language,
-				'description': $scope.project.metadata.description,
-				'isbn': $scope.project.metadata.isbn
-			}).success( function() {
-				switch(status) {
-				    case 'metaTitle':
+		var oldTitle  = oldValue[0];
+		var oldAuthors = oldValue[1];
+		var oldLanguage = oldValue[2];
+		var oldDescription = oldValue[3];
+		var oldIsbn = oldValue[4];
+
+		if (newTitle != oldTitle || newAuthors != oldAuthors || newLanguage != oldLanguage || newDescription != oldDescription || newIsbn != oldIsbn && $scope.user._id) {
+			if (timeout) {
+				$timeout.cancel(timeout)
+			}
+			timeout = $timeout(function() {
+				$http.put('/project/' + $scope.project._id + '/metadata', {
+					'title': $scope.project.metadata.title,
+					'authors': $scope.project.metadata.authors,
+					'language': $scope.project.metadata.language,
+					'description': $scope.project.metadata.description,
+					'isbn': $scope.project.metadata.isbn
+				}).success( function() {
+					if (newTitle != oldTitle) {
 						$scope.metaTitleSaved = true;
-				        break;
-				    case 'metaAuthors':
+						$timeout(function() {
+						    $scope.metaTitleSaved = false;
+						}, 2000);
+					}
+					if (newAuthors != oldAuthors) {
 						$scope.metaAuthorsSaved = true;
-				        break;
-				    case 'metaLanguage':
+						$timeout(function() {
+						    $scope.metaAuthorsSaved = false;
+						}, 2000);
+					}
+					if (newLanguage != oldLanguage) {
 						$scope.metaLanguageSaved = true;
-				        break;
-				    case 'metaDescription':
+						$timeout(function() {
+						    $scope.metaLanguageSaved = false;
+						}, 2000);
+					}
+					if (newDescription != oldDescription) {
 						$scope.metaDescriptionSaved = true;
-				        break;
-				    case 'metaIsbn':
+						$timeout(function() {
+						    $scope.metaDescriptionSaved = false;
+						}, 2000);
+					}
+					if (newIsbn != oldIsbn) {
 						$scope.metaIsbnSaved = true;
-				        break;
-				    default:
-				        break;
-				}
-			});
-		} else {
-			//TODO save to localstorage
+						$timeout(function() {
+						    $scope.metaIsbnSaved = false;
+						}, 2000);
+					}
+				});
+			}, 1000);
 		}
 	};
+
+	$scope.$watch('[project.metadata.title, project.metadata.authors, project.metadata.language, project.metadata.description, project.metadata.isbn]', $scope.debounceSaveUpdates, true);
 
 	$scope.openStylesets = function( projectDocument ) {
 		var deferred = $q.defer();
