@@ -12,7 +12,7 @@ var frontpage = require('./frontpage')
 module.exports = function (app, auth) {
 
 	// End-User URLs
-	// These resoutes inteact directly with the user (the URLs are seen by the user).
+	// These routes interact directly with the user (the URLs are seen by the user).
 	app.get('/user/sso', user.sso);
 	app.get('/user/:id/verify/:hash', user.verify);
 

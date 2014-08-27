@@ -10,7 +10,7 @@ var User = require('../models/user.js').User
 	, path = require('path')
 	, fs = require('fs')
 	, utils = require('../lib/utils')
-    , mkdirp = require('mkdirp')
+	, mkdirp = require('mkdirp')
 	, Styleset = require('../models/styleset.js').Styleset,
 	copyStyleset = require('../models/styleset.js').copy,
 	discourse_sso = require('discourse-sso')
@@ -199,7 +199,7 @@ exports.verify = function (req, res) {
 		} else if (!user) {
 			res.redirect(redirectUrl + "101");//User not found
 		} else if (req.params.hash != hashEmail(user.email)) {
-			res.redirect(redirectUrl + "102");//User not validated
+			res.redirect(redirectUrl + "102");//Email not verified
 		} else {
 			user.emailValidated = true;
 			user.save(function (err) {
@@ -289,7 +289,7 @@ exports.edit = function (req, res, next) {
 };
 
 exports.sso = function (req, res, next) {
-	if (!req.isAuthenticated || !req.isAuthenticated()) {
+	if (!req.isAuthenticated()) {
 		// User is not logged in.
 		// Scripler account is required to use Discourse. Ask user to create an account.
 		res.redirect(conf.app.url_prefix + "?code=510");
