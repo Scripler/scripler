@@ -323,10 +323,21 @@ exports.metadata = function (req, res, next) {
 	project.metadata.rights = req.body.rights;
 	project.metadata.contributors = req.body.contributors;
 	project.metadata.publisher = req.body.publisher;
-	project.metadata.cover = req.body.cover;
 	project.metadata.coverage = req.body.coverage;
 	project.metadata.relation = req.body.relation;
 	project.metadata.source = req.body.source;
+
+	project.save(function (err) {
+		if (err) {
+			return next(err);
+		}
+		res.send({project: project});
+	});
+}
+
+exports.metadata_cover = function (req, res, next) {
+	var project = req.project;
+	project.metadata.cover = req.body.cover;
 
 	project.save(function (err) {
 		if (err) {
