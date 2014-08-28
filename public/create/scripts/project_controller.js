@@ -48,10 +48,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
 				$scope.projectDocuments.push( data.document );
-				var promise = $scope.openProjectDocument( data.document );
-				promise.then( function() {
-					$scope.applyStylesetsToEditor();
-				});
+				$scope.openProjectDocument( data.document );
 			});
 		}
 	};
@@ -153,12 +150,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				if ( !$scope.documentWatch ) {
 					$scope.$watch('documentSelected', $scope.saveProjectDocumentUpdates, true);
 					$scope.documentWatch = true;
-				}
-
-				if ( typeof $scope.ckReady == 'boolean' ) {
-					if ( $scope.ckReady ) {
-						$scope.applyStylesetsToEditor();
-					}
 				}
 
 				deferred.resolve();
@@ -429,7 +420,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					$scope.stylesets[ index ] = data.styleset;
 					$scope.documentSelected.defaultStyleset = data.styleset._id;
 					deferred.resolve( data.styleset );
-					$scope.applyStylesetsToEditor();
+					$scope.applyStylesetsToEditor( true );
 				} else {
 					deferred.resolve( styleset );
 				}
@@ -460,15 +451,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
-	$scope.applyStylesetsToEditor = function() {
+	$scope.applyStylesetsToEditor = function( regenerateCSS ) {
 		if ( typeof $scope.stylesets == 'undefined' ) {
 			var promise = $scope.openStylesets( $scope.documentSelected );
 
 			promise.then( function() {
-				applyStylesets();
+				applyStylesets( regenerateCSS );
 			});
 		} else {
-			applyStylesets();
+			applyStylesets( regenerateCSS );
 		}
 	}
 
@@ -496,8 +487,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return style;
 	}
 
-	var applyStylesets = function() {
-		if ( typeof $scope.combinedCSS === 'undefined' || $scope.combinedCSS === '' ) {
+	var applyStylesets = function( regenerateCSS ) {
+		if ( typeof $scope.combinedCSS === 'undefined' || $scope.combinedCSS === '' || regenerateCSS ) {
 			$scope.combinedCSS = getCombinedCss();
 		}
 
@@ -599,7 +590,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 		}
 
-		$scope.applyStylesetsToEditor();
+		$scope.applyStylesetsToEditor( true );
 
 		$scope.updateProjectDocument();
 
@@ -838,6 +829,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		style.css = inlineCSS;
 
 		$scope.addNewStyle( styleset, style, index );
+
+		$scope.copyCSS = false;
 	}
 
 	$scope.toggleRename = function( obj ) {
@@ -854,6 +847,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		newStyle.css = getStyleCSS();
 
 		$scope.addNewStyle( styleset, newStyle, index );
+
+		$scope.copyCSS = false;
 	}
 
 	$scope.overwriteStyle = function( style ) {
@@ -863,6 +858,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		newStyle.css = activeCSS;
 
 		$scope.updateStyle( newStyle );
+
+		$scope.copyCSS = false;
 	}
 
 	$scope.setStylesetStyling = function( styleset, style ) {
@@ -1178,7 +1175,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	});
 
 	$scope.$onRootScope('ckDocument:dataReady', function ( event ) {
-		console.log('apply data ready');
 		if ( typeof $scope.ckReady !== 'undefined' ) {
 			if ( $scope.ckReady ) {
 				$scope.applyStylesetsToEditor();
