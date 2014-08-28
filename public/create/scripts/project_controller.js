@@ -476,13 +476,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var combinedCSS = '';
 
 		for ( var i = 0; i < $scope.stylesets.length; i++ ) {
-			if ( $scope.documentSelected.stylesets.indexOf( $scope.stylesets[i]._id ) > -1 ) {
+			//if ( $scope.documentSelected.stylesets.indexOf( $scope.stylesets[i]._id ) > -1 ) {
 				if ( $scope.documentSelected.defaultStyleset == $scope.stylesets[i]._id ) {
 					combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], true );
 				} else {
 					combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], false );
 				}
-			}
+			//}
 		}
 
 		return combinedCSS;
