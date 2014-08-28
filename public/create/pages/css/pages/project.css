@@ -612,10 +612,6 @@ li.typo p:first-child {
 	display: block;
 }
 
-.left-menu-close-item, .right-menu-close-item {
-	color: #cc0000;
-}
-
 .insertOption {
 	position: relative;
 	margin: 0 10px 10px 0;

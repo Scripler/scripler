@@ -141,12 +141,6 @@
 							padding settings
 							<div class="left-menu-divider"></div>
 							margin settings
-							<div class="left-menu-divider"></div>
-							<div class="left-menu-icons">
-								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChosen('showInsertBoxOptions');">
-									X
-								</span>
-							</div>
 						</li>-->
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
 							<div class="left-menu-options">
@@ -163,13 +157,6 @@
 								</span>
 								<span class="left-menu-button full-size left-menu-parameter-margin">
 									<a ng-click="insertNewLink();">+</a>
-								</span>
-							</div>
-
-							<div class="left-menu-divider"></div>
-							<div class="left-menu-icons">
-								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChosen('showInsertHyperlinkOptions');">
-									X
 								</span>
 							</div>
 						</li>
@@ -232,12 +219,6 @@
 									</span>
 								</div>
 							</div>-->
-							<div class="left-menu-divider"></div>
-							<div class="left-menu-icons">
-								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChosen('showInsertImageOptions');">
-									X
-								</span>
-							</div>
 						</li>
 
 						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
@@ -263,12 +244,6 @@
 									</a>
 								</span>
 							</div>
-							<div class="left-menu-divider"></div>
-							<div class="left-menu-icons">
-								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChosen('showInsertPagebreakOptions');">
-									X
-								</span>
-							</div>
 						</li>
 						<!--<li class="insertOption"><img src="pages/images/insert_cover_button.png" width="80" height="80"></li>-->
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
@@ -282,12 +257,6 @@
 
 								<span class="left-menu-box left-menu-parameter-margin">
 									<span class="option" ng-repeat="tocs in toc"><a ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
-								</span>
-							</div>
-							<div class="left-menu-divider"></div>
-							<div class="left-menu-icons">
-								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChosen('showInsertAnchorOptions');">
-									X
 								</span>
 							</div>
 						</li>
@@ -373,24 +342,12 @@
 							<span class="right-menu-button full-size right-menu-parameter-margin">
 									<a ng-click="generateColophon();">Generate Colophon</a>
 							</span>
-							<div class="right-menu-divider"></div>
-							<div class="right-menu-icons">
-								<span class="right-menu-button right-menu-close-item" ng-click="finalizeOptionChosen('showFinalizeColophonOptions');">
-									X
-								</span>
-							</div>
 						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
 							<div class="right-menu-options">
 								<span class="right-menu-box">
 									<input type="file" id="coverInput" ng-file-select="onCoverSelect($files)" accept="image/*" ng-hide="true">
 									<label for="coverInput">Create a cover</label>
-								</span>
-							</div>
-							<div class="right-menu-divider"></div>
-							<div class="right-menu-icons">
-								<span class="right-menu-button right-menu-close-item" ng-click="finalizeOptionChosen('showFinalizeCoverOptions');">
-									X
 								</span>
 							</div>
 						</li>
@@ -414,23 +371,11 @@
 									<a ng-click="generateToc();">Generate TOC</a>
 								</span>
 							</div>
-							<div class="right-menu-divider"></div>
-							<div class="right-menu-icons">
-								<span class="right-menu-button right-menu-close-item" ng-click="finalizeOptionChosen('showFinalizeTocOptions');">
-									X
-								</span>
-							</div>
 						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
 							<div class="right-menu-options">
 								<span class="right-menu-button full-size right-menu-parameter-margin">
 									<a ng-click="generateTitlePage();">Generate Title Page</a>
-								</span>
-							</div>
-							<div class="right-menu-divider"></div>
-							<div class="right-menu-icons">
-								<span class="right-menu-button right-menu-close-item" ng-click="finalizeOptionChosen('showFinalizeTitlepageOptions');">
-									X
 								</span>
 							</div>
 						</li>
