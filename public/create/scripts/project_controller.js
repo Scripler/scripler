@@ -1165,6 +1165,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.$onRootScope('ckDocument:ready', function( event ) {
 		$scope.ckReady = true;
+		//this is for the initial load
+		$scope.applyStylesetsToEditor();
 		$scope.loadFonts();
 	});
 
