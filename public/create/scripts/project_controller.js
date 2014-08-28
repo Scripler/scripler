@@ -303,7 +303,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
-	var timeout = null;
+	var timeoutMetadata = null;
 	$scope.debounceSaveUpdates = function(newValue, oldValue) {
 		var newTitle  = newValue[0];
 		var newAuthors = newValue[1];
@@ -318,10 +318,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var oldIsbn = oldValue[4];
 
 		if (newTitle != oldTitle || newAuthors != oldAuthors || newLanguage != oldLanguage || newDescription != oldDescription || newIsbn != oldIsbn && $scope.user._id) {
-			if (timeout) {
-				$timeout.cancel(timeout)
+			if (timeoutMetadata) {
+				$timeout.cancel(timeoutMetadata)
 			}
-			timeout = $timeout(function() {
+			timeoutMetadata = $timeout(function() {
 				$http.put('/project/' + $scope.project._id + '/metadata', {
 					'title': $scope.project.metadata.title,
 					'authors': $scope.project.metadata.authors,
