@@ -138,8 +138,8 @@
 
 	return {
 		getStylesetContents : getStylesetContents,
-        mongooseEquals : mongooseEquals,
-        getMongooseId : getMongooseId,
+		mongooseEquals : mongooseEquals,
+		getMongooseId : getMongooseId,
 		containsModel : containsModel,
 		containsDocWithFolderId: containsDocWithFolderId
 	}
