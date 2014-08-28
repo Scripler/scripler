@@ -476,10 +476,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var combinedCSS = '';
 
 		for ( var i = 0; i < $scope.stylesets.length; i++ ) {
-			if ( $scope.documentSelected.defaultStyleset == $scope.stylesets[i]._id ) {
-				combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], true );
-			} else {
-				combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], false );
+			if ( $scope.documentSelected.stylesets.indexOf( $scope.stylesets[i]._id ) > -1 ) {
+				if ( $scope.documentSelected.defaultStyleset == $scope.stylesets[i]._id ) {
+					combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], true );
+				} else {
+					combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], false );
+				}
 			}
 		}
 
@@ -495,14 +497,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	var applyStylesets = function() {
-		if ( typeof $scope.combinedCSS === 'undefined' ) {
+		if ( typeof $scope.combinedCSS === 'undefined' || $scope.combinedCSS === '' ) {
 			$scope.combinedCSS = getCombinedCss();
 		}
 
 		var ckDocument = $rootScope.ck.document;
 		var element = ckDocument.getById('custom-scripler-css');
 
-		if ( $scope.combinedCSS != '' ) {
+		if ( $scope.combinedCSS !== '' ) {
 			if ( element === null) {
 				var style = createStyleTag();
 				ckDocument.getHead().append( style );
