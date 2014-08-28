@@ -19,11 +19,6 @@
 		</div>
 	</div>
 	<div id="menu-left" class="menu-left" ng-class="{ 'open' : showDocuments || showTypo || showInsert }">
-		<div class="top">
-			<span ng-show="showDocuments" ng-bind="project.name"></span>
-			<span ng-show="showTypo">Stylesets</span>
-			<span ng-show="showInsert">Insert</span>
-		</div>
 		<div id="menu-left-content" class="content">
 			<div class="menu-item-left documents" ng-show="showDocuments">
 				<div  class="menu-content">
@@ -360,10 +355,6 @@
 		</div>
 	</div>
 	<div id="menu-right" class="menu-right" ng-class="{ 'open' : showFinalizeOptions || showOutput }">
-		<div class="top">
-			<span ng-show="showFinalizeOptions">Finalize</span>
-			<span ng-show="showOutput">Output</span>
-		</div>
 		<div id="menu-right-content" class="content">
 			<div class="menu-item-right inserts" ng-show="showFinalizeOptions">
 				<div class="menu-content">
@@ -448,7 +439,38 @@
 			</div>
 			<div class="menu-item-right output" ng-show="showOutput">
 				<div class="menu-content">
-					Output
+					<ul>
+					<li class="outputOptionProperties">
+						<span class="left-menu-box label">Title</span>
+						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaTitleSaved }">
+							<input type="text" name="output_title" id="output_title" value="{{project.metadata.title}}" ng-model="project.metadata.title"  />
+							<span class="statusfield" ng-class="{ 'text-saved': metaTitleSaved }">Saved</span>
+							<span ng-bind="{{project.metadata.title}}">{{project.metadata.title}}</span>
+						</span>
+						<span class="left-menu-box label left-menu-parameter-margin">Author</span>
+						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaAuthorsSaved }">
+							<input type="text" name="output_author" id="output_author" value="{{project.metadata.authors}}" ng-model="project.metadata.authors"  />
+							<span class="statusfield" ng-class="{ 'text-saved': metaAuthorsSaved }">Saved</span>
+						</span>
+						<span class="left-menu-box label left-menu-parameter-margin">Language</span>
+						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaLanguageSaved }">
+							<input type="text" name="output_language" id="output_language" value="{{project.metadata.language}}" ng-model="project.metadata.language" />
+							<span class="statusfield" ng-class="{ 'text-saved': metaLanguageSaved }">Saved</span>
+						</span>
+						<span class="left-menu-box label left-menu-parameter-margin">Description</span>
+						<span class="left-menu-box inputfield full-size-text" ng-class="{ 'text-saved': metaDescriptionSaved }">
+							<textarea name="output_description" id="output_description" ng-model="project.metadata.description" />{{project.metadata.description}}</textarea>
+							<span class="statusfield" ng-class="{ 'text-saved': metaDescriptionSaved }">Saved</span>
+						</span>
+						<span class="left-menu-box label left-menu-parameter-margin">Unique identifier / ISBN</span>
+						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaIsbnSaved }">
+							<input type="text" name="output_unique" id="output_unique" value="{{project.metadata.isbn}}" ng-model="project.metadata.isbn" />
+							<span class="statusfield" ng-class="{ 'text-saved': metaIsbnSaved }">Saved</span>
+						</span>
+						<span class="left-menu-box label left-menu-parameter-margin">Download options</span>
+						<span>Epub, PDF, Mobi</span>
+					</li>
+					</ul>
 				</div>
 			</div>
 		</div>

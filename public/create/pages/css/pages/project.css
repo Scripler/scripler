@@ -13,14 +13,10 @@
 	width: 260px;
 }
 .menu-left {
-	left: 0;
-	margin: 0 0 0 -260px;
-	border-right: 1px solid #000;
+	left: -260px;
 }
 .menu-right {
-	right: 0;
-	margin: 0 -260px 0 0;
-	border-left: 1px solid #000;
+	right: -260px;
 }
 
 .menu-left .top, .menu-right .top {
@@ -32,10 +28,10 @@
 	line-height: 23px;
 }
 .menu-left.open {
-	margin-left: 50px !important;
+	left: 50px;
 }
 .menu-right.open {
-	margin-right: 50px !important;
+	right: 50px;
 }
 
 .menu-left-tabs, .menu-right-tabs {
@@ -512,20 +508,91 @@ li.typo p:first-child {
 .left-menu-parameter-margin, .right-menu-parameter-margin {
 	margin-top: 10px;
 }
+
+.left-menu-box.label {
+	position: relative;
+	display: block;
+	border: 0;
+	padding: 5px 0;
+}
+
 .left-menu-box.inputfield {
 	position: relative;
 	width: calc(100% - 36px);
 	padding: 0;
+	transition: all 1s;
+	-moz-transition: all 1s;
+	-ms-transition: all 1s;
+	-webkit-transition: all 1s;
+	-o-transition: all 1s;
 }
 .left-menu-box.inputfield.full-size {
 	position: relative;
 	width: 100%;
+	height: 30px;
 	padding: 0;
 }
+.left-menu-box.inputfield.full-size-text {
+	position: relative;
+	width: 100%;
+	height: 64px;
+	padding: 0;
+}
+.left-menu-box.inputfield.text-saved {
+	border-color: yellow;
+	height: 56px;
+}
+.left-menu-box.inputfield.full-size-text.text-saved {
+	position: relative;
+	width: 100%;
+	height: 92px;
+	padding: 0;
+}
+.left-menu-box .statusfield {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	z-index: 1;
+	width: auto;
+	height: 28px;
+	color: black;
+	padding: 5px;
+	transition: all 1s;
+	-moz-transition: all 1s;
+	-ms-transition: all 1s;
+	-webkit-transition: all 1s;
+	-o-transition: all 1s;
+}
+.left-menu-box .statusfield.text-saved {
+	background: none yellow;
+	top: 28px;
+}
+.left-menu-box.inputfield.full-size-text .statusfield {
+	top: 34px;
+}
+.left-menu-box.inputfield.full-size-text .statusfield.text-saved  {
+	top: 62px;
+}
 .left-menu-box.inputfield input, .left-menu-box.inputfield select {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2;
 	background: none white;
 	width: 100%;
 	height: 28px;
+	padding: 5px 10px;
+}
+.left-menu-box.inputfield textarea {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2;
+	background: none white;
+	width: 100%;
+	height: 60px;
 	padding: 5px 10px;
 }
 .left-menu-box.inputfield input.show-info {
@@ -538,8 +605,8 @@ li.typo p:first-child {
 	right: 10px;
 	color: #ccc;
 }
-.left-menu-box.inputfield input:focus {
-	outline:none;
+.left-menu-box.inputfield input:focus, .left-menu-box.inputfield textarea:focus {
+	outline: none;
 }
 .left-menu-box .option, .right-menu-box .option {
 	display: block;
@@ -576,6 +643,18 @@ li.typo p:first-child {
 	display: block;
 	position: relative;
 	margin: -1px 10px 10px 0;
+	padding: 16px;
+	width: 238px;
+	height: auto;
+	background: none #fefefe;
+	float: left;
+	border: 1px solid #ffff99;
+	box-shadow: 0px 5px 5px -5px #ccc;
+}
+.outputOptionProperties {
+	display: block;
+	position: relative;
+	margin: 0px 10px 10px 0;
 	padding: 16px;
 	width: 238px;
 	height: auto;
