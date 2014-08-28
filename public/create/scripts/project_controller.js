@@ -838,6 +838,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		style.css = inlineCSS;
 
 		$scope.addNewStyle( styleset, style, index );
+
+		$scope.copyCSS = false;
 	}
 
 	$scope.toggleRename = function( obj ) {
@@ -854,6 +856,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		newStyle.css = getStyleCSS();
 
 		$scope.addNewStyle( styleset, newStyle, index );
+
+		$scope.copyCSS = false;
 	}
 
 	$scope.overwriteStyle = function( style ) {
@@ -863,6 +867,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		newStyle.css = activeCSS;
 
 		$scope.updateStyle( newStyle );
+
+		$scope.copyCSS = false;
 	}
 
 	$scope.setStylesetStyling = function( styleset, style ) {
