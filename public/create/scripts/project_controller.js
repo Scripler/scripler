@@ -452,7 +452,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.applyStylesetsToEditor = function( regenerateCSS ) {
-		if ( typeof $scope.stylesets == 'undefined' ) {
+		var loadStylesets = false;
+
+		if ( $scope.stylesets ) {
+			if ( $scope.stylesets.length == 0) {
+				loadStylesets = true;
+			}
+		}
+
+		if ( typeof $scope.stylesets == 'undefined' || loadStylesets ) {
 			var promise = $scope.openStylesets( $scope.documentSelected );
 
 			promise.then( function() {
@@ -488,7 +496,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	var applyStylesets = function( regenerateCSS ) {
-		if ( typeof $scope.combinedCSS === 'undefined' || $scope.combinedCSS === '' || regenerateCSS ) {
+		if ( typeof $scope.combinedCSS === 'undefined' || regenerateCSS ) {
 			$scope.combinedCSS = getCombinedCss();
 		}
 
@@ -1166,7 +1174,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.$onRootScope('ckDocument:ready', function( event ) {
 		$scope.ckReady = true;
 		//this is for the initial load
-		$scope.applyStylesetsToEditor();
+		//$scope.applyStylesetsToEditor();
 		$scope.loadFonts();
 	});
 
