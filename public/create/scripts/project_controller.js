@@ -429,7 +429,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					$scope.stylesets[ index ] = data.styleset;
 					$scope.documentSelected.defaultStyleset = data.styleset._id;
 					deferred.resolve( data.styleset );
-					$scope.applyStylesetsToEditor();
+					$scope.applyStylesetsToEditor( true );
 				} else {
 					deferred.resolve( styleset );
 				}
@@ -460,15 +460,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
-	$scope.applyStylesetsToEditor = function() {
+	$scope.applyStylesetsToEditor = function( regenerateCSS ) {
 		if ( typeof $scope.stylesets == 'undefined' ) {
 			var promise = $scope.openStylesets( $scope.documentSelected );
 
 			promise.then( function() {
-				applyStylesets();
+				applyStylesets( regenerateCSS );
 			});
 		} else {
-			applyStylesets();
+			applyStylesets( regenerateCSS );
 		}
 	}
 
@@ -476,13 +476,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var combinedCSS = '';
 
 		for ( var i = 0; i < $scope.stylesets.length; i++ ) {
-			if ( $scope.documentSelected.stylesets.indexOf( $scope.stylesets[i]._id ) > -1 ) {
+			//if ( $scope.documentSelected.stylesets.indexOf( $scope.stylesets[i]._id ) > -1 ) {
 				if ( $scope.documentSelected.defaultStyleset == $scope.stylesets[i]._id ) {
 					combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], true );
 				} else {
 					combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], false );
 				}
-			}
+			//}
 		}
 
 		return combinedCSS;
@@ -496,8 +496,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return style;
 	}
 
-	var applyStylesets = function() {
-		if ( typeof $scope.combinedCSS === 'undefined' || $scope.combinedCSS === '' ) {
+	var applyStylesets = function( regenerateCSS ) {
+		if ( typeof $scope.combinedCSS === 'undefined' || $scope.combinedCSS === '' || regenerateCSS ) {
 			$scope.combinedCSS = getCombinedCss();
 		}
 
@@ -599,7 +599,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 		}
 
-		$scope.applyStylesetsToEditor();
+		$scope.applyStylesetsToEditor( true );
 
 		$scope.updateProjectDocument();
 
