@@ -2107,6 +2107,7 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.document.archived, false);
 					assert.equal(res.body.document.members[0].userId, userId);
 					assert.equal(res.body.document.members[0].access[0], "admin");
+					assert.equal(res.body.document.stylesets.indexOf(res.body.document.defaultStyleset) > -1, true);
 					childDocumentId = res.body.document._id;
 					childDocumentId && done();
 				});
