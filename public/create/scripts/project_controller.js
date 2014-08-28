@@ -48,10 +48,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
 				$scope.projectDocuments.push( data.document );
-				var promise = $scope.openProjectDocument( data.document );
-				promise.then( function() {
-					$scope.applyStylesetsToEditor();
-				});
+				$scope.openProjectDocument( data.document );
 			});
 		}
 	};
@@ -153,12 +150,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				if ( !$scope.documentWatch ) {
 					$scope.$watch('documentSelected', $scope.saveProjectDocumentUpdates, true);
 					$scope.documentWatch = true;
-				}
-
-				if ( typeof $scope.ckReady == 'boolean' ) {
-					if ( $scope.ckReady ) {
-						$scope.applyStylesetsToEditor();
-					}
 				}
 
 				deferred.resolve();
@@ -1184,7 +1175,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	});
 
 	$scope.$onRootScope('ckDocument:dataReady', function ( event ) {
-		console.log('apply data ready');
 		if ( typeof $scope.ckReady !== 'undefined' ) {
 			if ( $scope.ckReady ) {
 				$scope.applyStylesetsToEditor();
