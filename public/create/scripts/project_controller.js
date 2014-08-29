@@ -420,7 +420,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					$scope.stylesets[ index ] = data.styleset;
 					$scope.documentSelected.defaultStyleset = data.styleset._id;
 					deferred.resolve( data.styleset );
-					$scope.applyStylesetsToEditor( true );
+					$scope.applyStylesetsToEditor();
 				} else {
 					deferred.resolve( styleset );
 				}
@@ -452,7 +452,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.applyStylesetsToEditor = function() {
-			var promise = $scope.openStylesets( $scope.documentSelected );
+			if ( $scope.documentSelected._id ) {
+				var promise = $scope.openStylesets( $scope.documentSelected );
+			}
 
 			promise.then( function() {
 				applyStylesets();
@@ -584,7 +586,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 		}
 
-		$scope.applyStylesetsToEditor( true );
+		$scope.applyStylesetsToEditor();
 
 		$scope.updateProjectDocument();
 
@@ -1159,8 +1161,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.$onRootScope('ckDocument:ready', function( event ) {
 		$scope.ckReady = true;
-		//this is for the initial load
-		//$scope.applyStylesetsToEditor();
 		$scope.loadFonts();
 	});
 
