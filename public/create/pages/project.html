@@ -90,7 +90,7 @@
 									<span class="style-isblock" ng-bind="isBlock(style)"></span>
 
 									<div class="style-height" ng-hide="style.rename">
-										<span class="not-selectable" ng-style="style.css" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
+										<span class="not-selectable" ng-style="getStyleStyling(style)" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
 									</div>
 
 									<div class="style-copy-options" ng-show="copyCSS && selectedStyle._id === style._id">
@@ -257,11 +257,11 @@
 										<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Insert the pagebreak" />
 									</a>
 								</span>
-								<span class="left-menu-button">
+								<!--<span class="left-menu-button">
 									<a ng-click="insertPageBreakAvoid()">
 										<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Avoid pagebreak" />
 									</a>
-								</span>
+								</span>-->
 							</div>
 							<div class="left-menu-divider"></div>
 							<div class="left-menu-icons">

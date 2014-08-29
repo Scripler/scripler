@@ -858,6 +858,31 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.copyCSS = false;
 	}
 
+	$scope.getStyleStyling = function( style ) {
+		var styleCSS = angular.copy( style.css );
+
+		if ( style.tag === 'h1' ) {
+			styleCSS['font-size'] = '2.5em';
+		}
+		if ( style.tag === 'h2' ) {
+			styleCSS['font-size'] = '2em';
+		}
+		if ( style.tag === 'h3' ) {
+			styleCSS['font-size'] = '1.8em';
+		}
+		if ( style.tag === 'h4' ) {
+			styleCSS['font-size'] = '1.6em';
+		}
+		if ( style.tag === 'h5' ) {
+			styleCSS['font-size'] = '1.4em';
+		}
+		if ( style.tag === 'h6' ) {
+			styleCSS['font-size'] = '1.2em';
+		}
+
+		return styleCSS;
+	}
+
 	$scope.setStylesetStyling = function( styleset, style ) {
 		var stylesetCSS = angular.copy( style.css );
 		stylesetCSS[ 'padding' ] = '15px 0 15px 10px';
