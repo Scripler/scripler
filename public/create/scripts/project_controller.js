@@ -451,37 +451,25 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
-	$scope.applyStylesetsToEditor = function( regenerateCSS ) {
-		var loadStylesets = false;
-
-		if ( $scope.stylesets ) {
-			if ( $scope.stylesets.length == 0) {
-				loadStylesets = true;
-			}
-		}
-
-		if ( typeof $scope.stylesets == 'undefined' || loadStylesets ) {
+	$scope.applyStylesetsToEditor = function() {
 			var promise = $scope.openStylesets( $scope.documentSelected );
 
 			promise.then( function() {
-				applyStylesets( regenerateCSS );
+				applyStylesets();
 			});
-		} else {
-			applyStylesets( regenerateCSS );
-		}
 	}
 
 	var getCombinedCss = function() {
 		var combinedCSS = '';
 
 		for ( var i = 0; i < $scope.stylesets.length; i++ ) {
-			//if ( $scope.documentSelected.stylesets.indexOf( $scope.stylesets[i]._id ) > -1 ) {
+			if ( $scope.documentSelected.stylesets.indexOf( $scope.stylesets[i]._id ) > -1 ) {
 				if ( $scope.documentSelected.defaultStyleset == $scope.stylesets[i]._id ) {
 					combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], true );
 				} else {
 					combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], false );
 				}
-			//}
+			}
 		}
 
 		return combinedCSS;
@@ -495,10 +483,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return style;
 	}
 
-	var applyStylesets = function( regenerateCSS ) {
-		if ( typeof $scope.combinedCSS === 'undefined' || regenerateCSS ) {
-			$scope.combinedCSS = getCombinedCss();
-		}
+	var applyStylesets = function() {
+		$scope.combinedCSS = getCombinedCss();
 
 		var ckDocument = $rootScope.ck.document;
 		var element = ckDocument.getById('custom-scripler-css');
