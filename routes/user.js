@@ -10,9 +10,10 @@ var User = require('../models/user.js').User
 	, path = require('path')
 	, fs = require('fs')
 	, utils = require('../lib/utils')
-    , mkdirp = require('mkdirp')
+	, mkdirp = require('mkdirp')
 	, Styleset = require('../models/styleset.js').Styleset,
-	  copyStyleset = require('../models/styleset.js').copy
+	copyStyleset = require('../models/styleset.js').copy,
+	discourse_sso = require('discourse-sso')
 ;
 
 var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
@@ -192,20 +193,20 @@ exports.register = function (req, res, next) {
  */
 exports.verify = function (req, res) {
 	User.findOne({"_id": req.params.id}, function (err, user) {
-		var redirectUrl = conf.app.url_prefix + '?err=';
+		var redirectUrl = conf.app.url_prefix + '?code=';
 		if (err) {
-			res.redirect(redirectUrl + "Database problem");
+			res.redirect(redirectUrl + "104");//Database problem
 		} else if (!user) {
-			res.redirect(redirectUrl + "User not found");
+			res.redirect(redirectUrl + "101");//User not found
 		} else if (req.params.hash != hashEmail(user.email)) {
-			res.redirect(redirectUrl + "User not validated");
+			res.redirect(redirectUrl + "102");//Email not verified
 		} else {
 			user.emailValidated = true;
 			user.save(function (err) {
 				if (err) {
-					res.redirect(redirectUrl + "Database problem");
+					res.redirect(redirectUrl + "104");//Database problem
 				} else {
-					res.redirect(redirectUrl);
+					res.redirect(redirectUrl + "100");//Email verified
 				}
 			});
 
@@ -286,3 +287,31 @@ exports.edit = function (req, res, next) {
 		res.send({"user": req.user});
 	});
 };
+
+exports.sso = function (req, res, next) {
+	if (!req.isAuthenticated()) {
+		// User is not logged in.
+		// Scripler account is required to use Discourse. Ask user to create an account.
+		res.redirect(conf.app.url_prefix + "?code=510");
+	} else {
+		// User is already loggedin
+		// Return user loggedin to Discourse.
+		var sso = new discourse_sso(conf.discourse.ssoSecret);
+		var payload = req.query.sso;
+		var sig = req.query.sig;
+		if (sso.validate(payload, sig)) {
+			var nonce = sso.getNonce(payload);
+			var userparams = {
+				// Required, will throw exception otherwise
+				"nonce":       nonce,
+				"external_id": req.user._id,
+				"email":       req.user.email,
+				// Optional
+				//"username": req.user.username,
+				"name":        req.user.firstname + " " + req.user.lastname
+			};
+			var q = sso.buildLoginString(userparams);
+			res.redirect(conf.discourse.url + "session/sso_login?" + q);
+		}
+	}
+}
