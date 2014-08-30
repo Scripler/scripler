@@ -312,6 +312,8 @@ exports.sso = function (req, res, next) {
 			};
 			var q = sso.buildLoginString(userparams);
 			res.redirect(conf.discourse.url + "session/sso_login?" + q);
+		} else {
+			res.redirect(conf.app.url_prefix + "?code=505"); //Invalid Discourse SSO request
 		}
 	}
 }
