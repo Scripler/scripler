@@ -105,6 +105,15 @@ figure {
 	height:auto;
 	page-break-inside: avoid;
 	margin: 0 37% 0 37%;
+	outline: none;
+}
+
+/*Cover image css*/
+.cover {
+	width: 100%;
+	margin:0;
+	height: auto;
+	page-break-inside:avoid;
 }
 
 /*PARAGRAPH RULES*/

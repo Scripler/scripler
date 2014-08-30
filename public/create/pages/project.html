@@ -19,11 +19,6 @@
 		</div>
 	</div>
 	<div id="menu-left" class="menu-left" ng-class="{ 'open' : showDocuments || showTypo || showInsert }">
-		<div class="top">
-			<span ng-show="showDocuments" ng-bind="project.name"></span>
-			<span ng-show="showTypo">Stylesets</span>
-			<span ng-show="showInsert">Insert</span>
-		</div>
 		<div id="menu-left-content" class="content">
 			<div class="menu-item-left documents" ng-show="showDocuments">
 				<div  class="menu-content">
@@ -37,7 +32,9 @@
 							</a>
 
 							<p ng-hide="editingProjectDocumentTitle">
-								<a class="projectDocument-link" ng-click="projectDocumentChosen(projectDocument)">{{projectDocument.name}}</a>
+								<a class="projectDocument-link" ng-click="projectDocumentChosen(projectDocument)">
+									{{projectDocument.type || projectDocument.name}}
+								</a>
 							</p>
 
 							<form ng-show="editingProjectDocumentTitle">
@@ -100,7 +97,7 @@
 										<ul>
 											<li><a ng-click="saveAsCharStyle(styleset, style)">save as character style</a></li>
 											<li><a ng-click="saveAsBlockStyle(styleset, style)">save as block style</a></li>
-											<li><a ng-click="overrideStyle(style)">override style</a></li>
+											<li><a ng-click="overwriteStyle(style)">overwrite style</a></li>
 										</ul>
 									</div>
 
@@ -124,17 +121,17 @@
 				<div class="menu-content">
 					<ul>
 						<!--<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
-							<a ng-click="insertOptionChoosen('showInsertBoxOptions');">
+							<a ng-click="insertOptionChosen('showInsertBoxOptions');">
 								<img src="pages/images/insert_box_button.png" width="80" height="80" />
 							</a>
 						</li>-->
 						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
-							<a ng-click="insertOptionChoosen('showInsertHyperlinkOptions');">
+							<a ng-click="insertOptionChosen('showInsertHyperlinkOptions');">
 								<img src="pages/images/insert_hyperlink_button.png" width="80" height="80" />
 							</a>
 						</li>
 						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
-							<a ng-click="insertOptionChoosen('showInsertImageOptions');">
+							<a ng-click="insertOptionChosen('showInsertImageOptions');">
 								<img src="pages/images/insert_image_button.png" width="80" height="80" />
 							</a>
 						</li>
@@ -146,7 +143,7 @@
 							margin settings
 							<div class="left-menu-divider"></div>
 							<div class="left-menu-icons">
-								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChoosen('showInsertBoxOptions');">
+								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChosen('showInsertBoxOptions');">
 									X
 								</span>
 							</div>
@@ -171,7 +168,7 @@
 
 							<div class="left-menu-divider"></div>
 							<div class="left-menu-icons">
-								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChoosen('showInsertHyperlinkOptions');">
+								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChosen('showInsertHyperlinkOptions');">
 									X
 								</span>
 							</div>
@@ -237,19 +234,19 @@
 							</div>-->
 							<div class="left-menu-divider"></div>
 							<div class="left-menu-icons">
-								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChoosen('showInsertImageOptions');">
+								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChosen('showInsertImageOptions');">
 									X
 								</span>
 							</div>
 						</li>
 
 						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
-							<a ng-click="insertOptionChoosen('showInsertPagebreakOptions');">
+							<a ng-click="insertOptionChosen('showInsertPagebreakOptions');">
 								<img src="pages/images/insert_pagebreak_button.png" width="80" height="80" />
 							</a>
 						</li>
 						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
-							<a ng-click="insertOptionChoosen('showInsertAnchorOptions');">
+							<a ng-click="insertOptionChosen('showInsertAnchorOptions');">
 								<img src="pages/images/insert_anchor_button.png" width="80" height="80" />
 							</a>
 						</li>
@@ -268,7 +265,7 @@
 							</div>
 							<div class="left-menu-divider"></div>
 							<div class="left-menu-icons">
-								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChoosen('showInsertPagebreakOptions');">
+								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChosen('showInsertPagebreakOptions');">
 									X
 								</span>
 							</div>
@@ -289,7 +286,7 @@
 							</div>
 							<div class="left-menu-divider"></div>
 							<div class="left-menu-icons">
-								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChoosen('showInsertAnchorOptions');">
+								<span class="left-menu-button left-menu-close-item" ng-click="insertOptionChosen('showInsertAnchorOptions');">
 									X
 								</span>
 							</div>
@@ -348,85 +345,91 @@
 	</div>
 
 	<div id="menu-right-tabs" class="menu-right-tabs" ondragstart="return false;" ondrop="return false;">
-		<div class="menu-right-tab" ng-class="{ 'selectedTab' : showInsertOptions }" ng-click="showInsertOptions = !showInsertOptions; showOutput = false;">
+		<div class="menu-right-tab" ng-class="{ 'selectedTab' : showFinalizeOptions }" ng-click="showFinalizeOptions = !showFinalizeOptions; showOutput = false;">
 			<div class="center"></div>
-			<img src="pages/images/insert180.svg" width="20">
+			<img src="pages/images/finalize.svg" width="20">
 		</div>
-		<div class="menu-right-tab" ng-class="{ 'selectedTab' : showOutput }" ng-click="showOutput = !showOutput; showInsertOptions = false;">
+		<div class="menu-right-tab output" ng-class="{ 'selectedTab' : showOutput }" ng-click="showOutput = !showOutput; showFinalizeOptions = false;">
 			<div class="center"></div>
 			<img src="pages/images/output.svg" width="20">
 		</div>
 	</div>
-	<div id="menu-right" class="menu-right" ng-class="{ 'open' : showInsertOptions || showOutput }">
-		<div class="top">
-			<span ng-show="showInsertOptions">Insert</span>
-			<span ng-show="showOutput">Output</span>
-		</div>
+	<div id="menu-right" class="menu-right" ng-class="{ 'open' : showFinalizeOptions || showOutput }">
 		<div id="menu-right-content" class="content">
-			<div class="menu-item-right inserts" ng-show="showInsertOptions">
+			<div class="menu-item-right inserts" ng-show="showFinalizeOptions">
 				<div class="menu-content">
 					<ul>
-						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertColophonOptions' }">
-							<a ng-click="insertOptionChoosen('showInsertColophonOptions');">
+						<li class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
+							<a ng-click="finalizeOptionChosen('showFinalizeColophonOptions');">
 								colophon
 							</a>
 						</li>
-						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertCoverOptions' }">
-							<a ng-click="insertOptionChoosen('showInsertCoverOptions');">
+						<li class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
+							<a ng-click="finalizeOptionChosen('showFinalizeCoverOptions');">
 								<img src="pages/images/insert_cover_button.png" width="80" height="80" />
 							</a>
 						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertColophonOptions' }">
-							<div class="right-menu-options">
-								&nbsp;
-							</div>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
+							<span class="right-menu-button full-size right-menu-parameter-margin">
+									<a ng-click="generateColophon();">Generate Colophon</a>
+							</span>
 							<div class="right-menu-divider"></div>
 							<div class="right-menu-icons">
-								<span class="right-menu-button right-menu-close-item" ng-click="insertOptionChoosen('showInsertColophonOptions');">
+								<span class="right-menu-button right-menu-close-item" ng-click="finalizeOptionChosen('showFinalizeColophonOptions');">
 									X
 								</span>
 							</div>
 						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertCoverOptions' }">
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
 							<div class="right-menu-options">
-								&nbsp;
+								<span class="right-menu-box">
+									<input type="file" id="coverInput" ng-file-select="onCoverSelect($files)" accept="image/*" ng-hide="true">
+									<label for="coverInput">Create a cover</label>
+								</span>
 							</div>
 							<div class="right-menu-divider"></div>
 							<div class="right-menu-icons">
-								<span class="right-menu-button right-menu-close-item" ng-click="insertOptionChoosen('showInsertCoverOptions');">
+								<span class="right-menu-button right-menu-close-item" ng-click="finalizeOptionChosen('showFinalizeCoverOptions');">
 									X
 								</span>
 							</div>
 						</li>
 
-						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertTocOptions' }">
-							<a ng-click="insertOptionChoosen('showInsertTocOptions');">
+						<li class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
+							<a ng-click="finalizeOptionChosen('showFinalizeTocOptions');">
 								toc
 							</a>
 						</li>
-						<li class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertTitlepageOptions' }">
-							<a ng-click="insertOptionChoosen('showInsertTitlepageOptions');">
+						<li class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
+							<a ng-click="finalizeOptionChosen('showFinalizeTitlepageOptions');">
 								title page
 							</a>
 						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertTocOptions' }">
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
 							<div class="right-menu-options">
-								&nbsp;
+								<span class="right-menu-box right-menu-parameter-margin">
+									<span class="option" ng-repeat="tocs in toc"><a ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
+								</span>
+								<span class="right-menu-button full-size right-menu-parameter-margin">
+									<a ng-click="generateToc();">Generate TOC</a>
+								</span>
 							</div>
 							<div class="right-menu-divider"></div>
 							<div class="right-menu-icons">
-								<span class="right-menu-button right-menu-close-item" ng-click="insertOptionChoosen('showInsertTocOptions');">
+								<span class="right-menu-button right-menu-close-item" ng-click="finalizeOptionChosen('showFinalizeTocOptions');">
 									X
 								</span>
 							</div>
 						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertTitlepageOptions' }">
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
 							<div class="right-menu-options">
-								&nbsp;
+								<span class="right-menu-button full-size right-menu-parameter-margin">
+									<a ng-click="generateTitlePage();">Generate Title Page</a>
+								</span>
 							</div>
 							<div class="right-menu-divider"></div>
 							<div class="right-menu-icons">
-								<span class="right-menu-button right-menu-close-item" ng-click="insertOptionChoosen('showInsertTitlepageOptions');">
+								<span class="right-menu-button right-menu-close-item" ng-click="finalizeOptionChosen('showFinalizeTitlepageOptions');">
 									X
 								</span>
 							</div>
@@ -436,7 +439,38 @@
 			</div>
 			<div class="menu-item-right output" ng-show="showOutput">
 				<div class="menu-content">
-					Output
+					<ul>
+					<li class="outputOptionProperties">
+						<span class="left-menu-box label">Title</span>
+						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaTitleSaved }">
+							<input type="text" name="output_title" id="output_title" value="{{project.metadata.title}}" ng-model="project.metadata.title"  />
+							<span class="statusfield" ng-class="{ 'text-saved': metaTitleSaved }">Saved</span>
+							<span ng-bind="{{project.metadata.title}}">{{project.metadata.title}}</span>
+						</span>
+						<span class="left-menu-box label left-menu-parameter-margin">Author</span>
+						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaAuthorsSaved }">
+							<input type="text" name="output_author" id="output_author" value="{{project.metadata.authors}}" ng-model="project.metadata.authors"  />
+							<span class="statusfield" ng-class="{ 'text-saved': metaAuthorsSaved }">Saved</span>
+						</span>
+						<span class="left-menu-box label left-menu-parameter-margin">Language</span>
+						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaLanguageSaved }">
+							<input type="text" name="output_language" id="output_language" value="{{project.metadata.language}}" ng-model="project.metadata.language" />
+							<span class="statusfield" ng-class="{ 'text-saved': metaLanguageSaved }">Saved</span>
+						</span>
+						<span class="left-menu-box label left-menu-parameter-margin">Description</span>
+						<span class="left-menu-box inputfield full-size-text" ng-class="{ 'text-saved': metaDescriptionSaved }">
+							<textarea name="output_description" id="output_description" ng-model="project.metadata.description" />{{project.metadata.description}}</textarea>
+							<span class="statusfield" ng-class="{ 'text-saved': metaDescriptionSaved }">Saved</span>
+						</span>
+						<span class="left-menu-box label left-menu-parameter-margin">Unique identifier / ISBN</span>
+						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaIsbnSaved }">
+							<input type="text" name="output_unique" id="output_unique" value="{{project.metadata.isbn}}" ng-model="project.metadata.isbn" />
+							<span class="statusfield" ng-class="{ 'text-saved': metaIsbnSaved }">Saved</span>
+						</span>
+						<span class="left-menu-box label left-menu-parameter-margin">Download options</span>
+						<span>Epub, PDF, Mobi</span>
+					</li>
+					</ul>
 				</div>
 			</div>
 		</div>

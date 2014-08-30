@@ -3,22 +3,15 @@
 function projectController( $scope, $location, userService, projectsService, $http, $upload, ngProgress,
 							$timeout, $rootScope, utilsService, $q, user ) {
 
-	var timeout = null;
-
-	var lastSavedDocumentLength = 0;
-
-	var documentWatch = false;
-
-	var secondsToWait = 5;
+	var timeout = null,
+		lastSavedDocumentLength = 0,
+		documentWatch = false,
+		secondsToWait = 5;
 
 	$scope.pid = ($location.search()).pid;
-
 	$scope.user = user;
-
 	$scope.projectDocuments = [];
-
 	$scope.stylesets = [];
-
 	$scope.fonts = [];
 
 	if ( $scope.user === 'undefined' ) {
@@ -56,12 +49,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				ngProgress.complete();
 				$scope.projectDocuments.push( data.document );
 				$scope.openProjectDocument( data.document );
-				$scope.applyStylesetsToEditor();
 			});
 		}
 	};
 
-	$scope.onImageSelect = function($files) {
+	$scope.uploadImages = function( $files, type ) {
 		for (var i = 0; i < $files.length; i++) {
 			var file = $files[i];
 			ngProgress.start();
@@ -72,30 +64,49 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				ngProgress.set(parseInt(100.0 * evt.loaded / evt.total) - 25);
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
-				$scope.insertNewImage( data.images );
+				if ( typeof type !== 'undefined' ) {
+					if ( type === 'cover' ) {
+						$scope.createCover( data.images[0] );
+					}
+					if ( type === 'image' ) {
+						$scope.insertNewImage( data.images[0] );
+					}
+				}
 			});
 		}
 	};
 
+	$scope.onCoverSelect = function( $files ) {
+		$scope.uploadImages( $files, 'cover' );
+	}
+
+	$scope.onImageSelect = function( $files ) {
+		$scope.uploadImages( $files, 'image' );
+	}
+
 	$scope.sortable_option = {
 		stop : function( list, drop_item ) {
-			var data = {};
-			var documentIds = [];
-
-			angular.forEach(list, function( document ) {
-				documentIds.push( document._id );
-			})
-
-			data.documents = documentIds;
-
-			if ( $scope.user._id ) {
-				$http.put('/document/' + $scope.pid + '/rearrange', angular.toJson( data ) )
-					.success( function() {});
-			} else {
-				//save to localstorage
-			}
+			$scope.rearrange( list );
 		}
 	};
+
+	$scope.rearrange = function( list ) {
+		var data = {};
+		var documentIds = [];
+
+		angular.forEach(list, function( document ) {
+			documentIds.push( document._id );
+		})
+
+		data.documents = documentIds;
+
+		if ( $scope.user._id ) {
+			$http.put('/document/' + $scope.pid + '/rearrange', angular.toJson( data ) )
+			.success( function() {});
+		} else {
+			//save to localstorage
+		}
+	}
 
 	$scope.saveProjectDocumentUpdates = function( newVal, oldVal ) {
 		if ( newVal != oldVal ) {
@@ -122,6 +133,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 
 	$scope.openProjectDocument = function( projectDocument ) {
+		var deferred = $q.defer();
 
 		if ( typeof $scope.documentSelected == 'object' ) {
 			$scope.updateProjectDocument();
@@ -140,39 +152,55 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					$scope.documentWatch = true;
 				}
 
-				if ( typeof $scope.ckReady == 'boolean' ) {
-					if ( $scope.ckReady ) {
-						$scope.applyStylesetsToEditor();
-					}
-				}
+				deferred.resolve();
 			})
+
+		return deferred.promise;
 	}
 
-	$scope.addProjectDocument = function() {
+	$scope.addProjectDocument = function( type ) {
+		var deferred = $q.defer();
+
 		var order = $scope.projectDocuments.length + 1;
 		var name = "Document " + order;
 		var document = {};
 		document.name = name;
 		document.text = '';
 
+		if ( typeof type !== 'undefined' ) {
+			document.type = type;
+		}
+
 		if ( $scope.user._id ) {
 			document.projectId = $scope.pid;
 			$http.post('/document', angular.toJson( document ) )
 				.success( function( data ) {
-					$scope.projectDocuments.push( data.document );
-					$scope.openProjectDocument( data.document );
+
+					if ( typeof data.document.type !== 'undefined' ) {
+						$scope.projectDocuments.unshift( data.document );
+						$scope.rearrange( $scope.projectDocuments );
+					} else {
+						$scope.projectDocuments.push( data.document );
+					}
+
+					var promise = $scope.openProjectDocument( data.document );
+					promise.then( function() {
+						deferred.resolve();
+					});
 				})
 		} else {
 			document._id = Date.now();
 			$scope.projectDocuments.push( document );
+			deferred.resolve();
 		}
+
+		return deferred.promise;
 	}
 
 	$scope.updateProjectDocument = function() {
-		//document gets copied because changing document text model will reload CK editor
 		var document = angular.copy( $scope.documentSelected );
-		document.text = $rootScope.CKEDITOR.instances.bodyeditor.getData();
 		lastSavedDocumentLength = document.text.length;
+		document.text = $scope.ck.getData();
 
 		if ( $scope.user._id ) {
 			$http.put(/document/ + document._id + '/update', angular.toJson( document ))
@@ -266,6 +294,69 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
+	var timeoutMetadata = null;
+	$scope.debounceSaveUpdates = function(newValue, oldValue) {
+		var newTitle  = newValue[0];
+		var newAuthors = newValue[1];
+		var newLanguage = newValue[2];
+		var newDescription = newValue[3];
+		var newIsbn = newValue[4];
+
+		var oldTitle  = oldValue[0];
+		var oldAuthors = oldValue[1];
+		var oldLanguage = oldValue[2];
+		var oldDescription = oldValue[3];
+		var oldIsbn = oldValue[4];
+
+		if (newTitle != oldTitle || newAuthors != oldAuthors || newLanguage != oldLanguage || newDescription != oldDescription || newIsbn != oldIsbn && $scope.user._id) {
+			if (timeoutMetadata) {
+				$timeout.cancel(timeoutMetadata)
+			}
+			timeoutMetadata = $timeout(function() {
+				$http.put('/project/' + $scope.project._id + '/metadata', {
+					'title': $scope.project.metadata.title,
+					'authors': $scope.project.metadata.authors,
+					'language': $scope.project.metadata.language,
+					'description': $scope.project.metadata.description,
+					'isbn': $scope.project.metadata.isbn
+				}).success( function() {
+					if (newTitle != oldTitle) {
+						$scope.metaTitleSaved = true;
+						$timeout(function() {
+						    $scope.metaTitleSaved = false;
+						}, 2000);
+					}
+					if (newAuthors != oldAuthors) {
+						$scope.metaAuthorsSaved = true;
+						$timeout(function() {
+						    $scope.metaAuthorsSaved = false;
+						}, 2000);
+					}
+					if (newLanguage != oldLanguage) {
+						$scope.metaLanguageSaved = true;
+						$timeout(function() {
+						    $scope.metaLanguageSaved = false;
+						}, 2000);
+					}
+					if (newDescription != oldDescription) {
+						$scope.metaDescriptionSaved = true;
+						$timeout(function() {
+						    $scope.metaDescriptionSaved = false;
+						}, 2000);
+					}
+					if (newIsbn != oldIsbn) {
+						$scope.metaIsbnSaved = true;
+						$timeout(function() {
+						    $scope.metaIsbnSaved = false;
+						}, 2000);
+					}
+				});
+			}, 1000);
+		}
+	};
+
+	$scope.$watch('[project.metadata.title, project.metadata.authors, project.metadata.language, project.metadata.description, project.metadata.isbn]', $scope.debounceSaveUpdates, true);
+
 	$scope.openStylesets = function( projectDocument ) {
 		var deferred = $q.defer();
 
@@ -329,7 +420,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					$scope.stylesets[ index ] = data.styleset;
 					$scope.documentSelected.defaultStyleset = data.styleset._id;
 					deferred.resolve( data.styleset );
-					$scope.applyStylesetsToEditor();
+					$scope.applyStylesetsToEditor( true );
 				} else {
 					deferred.resolve( styleset );
 				}
@@ -360,40 +451,66 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
-	$scope.applyStylesetsToEditor = function() {
-		if ( typeof $scope.stylesets == 'undefined' ) {
-			var promise = $scope.openStylesets( $scope.documentSelected );
+	$scope.applyStylesetsToEditor = function( regenerateCSS ) {
+		var loadStylesets = false;
 
-			promise.then( function() {
-				applyStylesets();
-			});
-		} else {
-			applyStylesets();
-		}
-	}
-
-	var applyStylesets = function() {
-		var combinedCSS = '';
-		for ( var i = 0; i < $scope.stylesets.length; i++ ) {
-			if ( $scope.documentSelected.defaultStyleset == $scope.stylesets[i]._id ) {
-				combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], true );
-			} else {
-				combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], false );
+		if ( $scope.stylesets ) {
+			if ( $scope.stylesets.length == 0) {
+				loadStylesets = true;
 			}
 		}
 
-		if ( combinedCSS != '' ) {
-			if ( typeof $scope.cssStyling == 'undefined' ) {
-				var ckDocument = $rootScope.ck.document;
-				var style = new CKEDITOR.dom.element( 'style' );
-				$scope.cssText = new CKEDITOR.dom.text( combinedCSS );
-				style.append( $scope.cssText );
+		if ( typeof $scope.stylesets == 'undefined' || loadStylesets ) {
+			var promise = $scope.openStylesets( $scope.documentSelected );
+
+			promise.then( function() {
+				applyStylesets( regenerateCSS );
+			});
+		} else {
+			applyStylesets( regenerateCSS );
+		}
+	}
+
+	var getCombinedCss = function() {
+		var combinedCSS = '';
+
+		for ( var i = 0; i < $scope.stylesets.length; i++ ) {
+			//if ( $scope.documentSelected.stylesets.indexOf( $scope.stylesets[i]._id ) > -1 ) {
+				if ( $scope.documentSelected.defaultStyleset == $scope.stylesets[i]._id ) {
+					combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], true );
+				} else {
+					combinedCSS += utilsService.getStylesetContents( $scope.stylesets[i], false );
+				}
+			//}
+		}
+
+		return combinedCSS;
+	}
+
+	var createStyleTag = function() {
+		var style = new CKEDITOR.dom.element( 'style' );
+		style.$.id = 'custom-scripler-css';
+		var cssText = new CKEDITOR.dom.text( $scope.combinedCSS );
+		style.append( cssText );
+		return style;
+	}
+
+	var applyStylesets = function( regenerateCSS ) {
+		if ( typeof $scope.combinedCSS === 'undefined' || regenerateCSS ) {
+			$scope.combinedCSS = getCombinedCss();
+		}
+
+		var ckDocument = $rootScope.ck.document;
+		var element = ckDocument.getById('custom-scripler-css');
+
+		if ( $scope.combinedCSS !== '' ) {
+			if ( element === null) {
+				var style = createStyleTag();
 				ckDocument.getHead().append( style );
-				$scope.cssStyling = style;
 			} else {
-				var newStyle = new CKEDITOR.dom.text( combinedCSS );
-				newStyle.replace( $scope.cssText );
-				$scope.cssText = newStyle;
+				element.remove();
+				var style = createStyleTag();
+				ckDocument.getHead().append( style );
 			}
 		}
 	}
@@ -481,7 +598,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 		}
 
-		$scope.applyStylesetsToEditor();
+		$scope.applyStylesetsToEditor( true );
 
 		$scope.updateProjectDocument();
 
@@ -720,6 +837,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		style.css = inlineCSS;
 
 		$scope.addNewStyle( styleset, style, index );
+
+		$scope.copyCSS = false;
 	}
 
 	$scope.toggleRename = function( obj ) {
@@ -736,15 +855,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		newStyle.css = getStyleCSS();
 
 		$scope.addNewStyle( styleset, newStyle, index );
+
+		$scope.copyCSS = false;
 	}
 
-	$scope.overrideStyle = function( style ) {
+	$scope.overwriteStyle = function( style ) {
 		var activeCSS = getStyleCSS();
 
 		var newStyle = angular.copy( style );
 		newStyle.css = activeCSS;
 
 		$scope.updateStyle( newStyle );
+
+		$scope.copyCSS = false;
 	}
 
 	$scope.setStylesetStyling = function( styleset, style ) {
@@ -783,14 +906,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	}
 
-	$scope.generateToc = function() {
+	$scope.getToc = function() {
 		$http.get('/project/' + $scope.project._id + '/toc')
 			.success( function( data ) {
 				$scope.toc = data.toc;
 			});
 	}
 
-	$scope.insertOptionChoosen = function(insertoption) {
+	$scope.insertOptionChosen = function(insertoption) {
 		if ($scope.activeInsertOption === insertoption) {
 			$scope.activeInsertOption = null;
 		}
@@ -805,6 +928,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 		else {
 			$scope.activeImageOption = imageoption;
+		}
+	}
+
+	$scope.finalizeOptionChosen = function( finalizeOption ) {
+		if ( $scope.activeFinalizeOption === finalizeOption ) {
+			$scope.activeFinalizeOption = null;
+		} else {
+			$scope.activeFinalizeOption = finalizeOption;
 		}
 	}
 
@@ -841,7 +972,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var insert = '<a id="' + id + '" name="' + id + '" title="' + $scope.anchorName + '"></a>';
 		editorInsert( insert );
 		$scope.updateProjectDocument();
-		$scope.generateToc();
+		$scope.getToc();
 		$scope.anchorName = '';
 	}
 
@@ -854,11 +985,151 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.linkAnchor = '';
 	}
 
-	$scope.insertNewImage = function( images ) {
-		//since only one image always take the first
-		var image = images[0];
-		var imageInsert = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+	$scope.insertNewImage = function( image ) {
+		insertImage( image );
+	}
+
+	function constructImageTag( image ) {
+		var imageTag = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		return imageTag;
+	}
+
+	function insertImage( image ) {
+		var imageInsert = constructImageTag( image );
 		editorInsert( imageInsert );
+	}
+
+	function overwriteExistingDocument( type, isNew, image ) {
+		for ( var i = 0; i < $scope.projectDocuments.length; i++ ) {
+			var document = $scope.projectDocuments[i];
+			if ( typeof document.type !== 'undefined' ) {
+				if ( document.type === type ) {
+
+					if ( $scope.documentSelected._id !== document._id ) {
+						var waitPromise = $scope.openProjectDocument( document );
+						waitPromise.then( function() {
+							updateDocumentText( type, image );
+						});
+					} else {
+						updateDocumentText( type, image );
+					}
+
+					isNew = false;
+					break;
+				}
+			}
+		}
+
+		return isNew;
+	}
+
+	function updateDocumentText( type, image ) {
+		if ( type === 'cover' ) {
+			$scope.documentSelected.text = constructImageTag( image );
+		}
+		if ( type === 'toc' ) {
+			$scope.documentSelected.text = generateTocHtml();
+		}
+		if ( type === 'titlepage' ) {
+			$scope.documentSelected.text = generateTitlePageHtml();
+		}
+		if ( type === 'colophon' ) {
+			$scope.documentSelected.text = generateColophonHtml();
+		}
+	}
+
+	$scope.createCover = function( image ) {
+		var isNewCover = true;
+
+		isNewCover = overwriteExistingDocument( 'cover', isNewCover, image );
+
+		if ( isNewCover ) {
+			var promise = $scope.addProjectDocument( 'cover' );
+
+			promise.then( function() {
+				insertImage( image );
+			});
+		}
+
+		var json = {};
+		json.cover = 'images/' + image.name;
+		$http.put('/project/' + $scope.pid + '/metadata/cover', angular.toJson( json ));
+	}
+
+	function generateTocHtml() {
+		var tocHtml = '<h2>Contents</h2>';
+
+		for ( var i = 0; i < $scope.toc.length; i++ ) {
+			var level = $scope.toc[i].level + 1;
+			var tocHtml = tocHtml + '<p class="toc-item-h' + level + '"><a href="' + $scope.toc[i].target +'">' + $scope.toc[i].text +'</a><br /></p>';
+		}
+
+		return tocHtml;
+	}
+
+	$scope.generateToc = function() {
+		var isNewToc = true;
+
+		isNewToc = overwriteExistingDocument( 'toc', isNewToc );
+
+		if ( isNewToc ) {
+			var promise = $scope.addProjectDocument( 'toc' );
+
+			promise.then( function() {
+				$scope.documentSelected.text = generateTocHtml();
+			});
+		}
+
+		$scope.setToc();
+	}
+
+	$scope.setToc = function() {
+		$http.put('/project/' + $scope.pid + '/toc', angular.toJson( $scope.toc ));
+	}
+
+	function generateTitlePageHtml() {
+		var title = '<p class="titlepageTitle">' + $scope.project.name + '</p>';
+		var author = '<p class="titlepageAuthor">by ' + $scope.user.firstname + ' ' + $scope.user.lastname + '</p>'
+		var pageBreak = '<p class="empty-paragraph">&nbsp;<br /></p>';
+		var link = '<p contenteditable="false"><a href="http://www.scripler.com"><img class="logo" src="stylesets/Images/builtwithscripler.svg" /></a></p>';
+		return title + author + pageBreak + pageBreak + pageBreak + link;
+	}
+
+	$scope.generateTitlePage = function() {
+		var isNewTitlePage = true;
+
+		isNewTitlePage = overwriteExistingDocument( 'titlepage', isNewTitlePage );
+
+		if ( isNewTitlePage ) {
+			var promise = $scope.addProjectDocument( 'titlepage' );
+
+			promise.then( function() {
+				$scope.documentSelected.text = generateTitlePageHtml();
+			});
+		}
+	}
+
+	function generateColophonHtml() {
+		var title = '<h4 class="right">' + $scope.project.name + '</h4>';
+		var author = '<p class="colophon">' + $scope.user.firstname + ' ' + $scope.user.lastname + '</p>'
+		var pageBreak = '<p class="empty-paragraph">&nbsp;<br /></p>';
+		var isbn = '<p class="colophon">ISBN: [ISBN-nr.]</p>';
+		var link = '<p class="colophon" contenteditable="false">Built with <a class="link" href="http://www.scripler.com">Scripler</a></p>';
+		return title + pageBreak + author + pageBreak + isbn + pageBreak + link;
+	}
+
+	$scope.generateColophon = function() {
+		var isNewColophon = true;
+
+		isNewColophon = overwriteExistingDocument( 'colophon', isNewColophon );
+
+		if ( isNewColophon ) {
+			var promise = $scope.addProjectDocument( 'colophon' );
+
+			promise.then( function() {
+				$scope.documentSelected.text = generateColophonHtml();
+			});
+		}
 	}
 
 	function editorInsert( insert ) {
@@ -866,14 +1137,20 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var element = $rootScope.CKEDITOR.dom.element.createFromHtml( insert );
 		editor.insertElement( element );
 		var range = editor.createRange();
-		range.moveToElementEditablePosition(element);
+		range.moveToElementEditablePosition( element );
 		$rootScope.ck.focus();
 		range.select();
 	}
 
 	$scope.$watch('showInsert', function( newValue ) {
 		if ( newValue === true ) {
-			$scope.generateToc();
+			$scope.getToc();
+		}
+	});
+
+	$scope.$watch('showFinalizeOptions', function( newValue ) {
+		if ( newValue === true ) {
+			$scope.getToc();
 		}
 	});
 
@@ -896,13 +1173,22 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.$onRootScope('ckDocument:ready', function( event ) {
 		$scope.ckReady = true;
-		$scope.applyStylesetsToEditor();
+		//this is for the initial load
+		//$scope.applyStylesetsToEditor();
 		$scope.loadFonts();
 	});
 
 	$scope.$onRootScope('ckDocument:renderFinished', function ( event ) {
 		if ( typeof $scope.lastTocEntry !== 'undefined' ) {
 			$scope.scrollToToc( $scope.lastTocEntry );
+		}
+	});
+
+	$scope.$onRootScope('ckDocument:dataReady', function ( event ) {
+		if ( typeof $scope.ckReady !== 'undefined' ) {
+			if ( $scope.ckReady ) {
+				$scope.applyStylesetsToEditor();
+			}
 		}
 	});
 

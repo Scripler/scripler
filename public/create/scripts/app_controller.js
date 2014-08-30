@@ -283,14 +283,14 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				indentUnit: 'em',
 				indentOffset: 2,
 				enterMode: CKEDITOR.ENTER_P,
-				height: $window.innerHeight - 30,
+				height: $window.innerHeight - 90,
 				width: 800,
 				//Change to standard font we want to start all projects with :)
 				contentsCss: ['ckeditor/contents.css', 'stylesets/non-editable.css'],
 				//Load css sheet via angualr here
 				toolbar: [
 					//['Source'], ['Undo'], ['Redo'], ['Paste'], ['PasteFromWord'], ['Styles'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['Image'], ['Link'], ['TextColor'], ['BGColor']
-					['Undo'], ['Redo'], ['Styles'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['Image'], ['Link'], ['TextColor'], ['BGColor'], ['Source'] // TODO: Remove "Source" button before "real" launch (ALPHA? BETA?)
+					['Undo'], ['Redo'], ['Styles'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['Image'], ['Link'], ['Source'] // TODO: Remove "Source" button before "real" launch (ALPHA? BETA?)
 				],
 				removeButtons: 'language,CreateDiv,Flash,Iframe'
 			});
@@ -366,6 +366,9 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 			});
 			ck.on('key', function( event ) { timeOutModel( event ); });
 			ck.on('dataReady', function( event ) { timeOutModel( event ); });
+			/*ck.on('save', function() {
+				ngModel.$setViewValue(ck.getData());
+			});*/
 
 			ngModel.$render = function(value) {
 				ck.setData(ngModel.$viewValue);

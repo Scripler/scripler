@@ -36,6 +36,7 @@ module.exports = function (app, auth) {
 	app.put('/project/:projectId/archive', auth.isLoggedIn(), project.archive);
 	app.put('/project/:projectId/unarchive', auth.isLoggedIn(), project.unarchive);
 	app.put('/project/:projectId/metadata', auth.isLoggedIn(), project.metadata);
+	app.put('/project/:projectId/metadata/cover', auth.isLoggedIn(), project.metadata_cover); // TODO: Refactor when using PATCH, c.f. #323
 	app.put('/project/:projectId/toc', auth.isLoggedIn(), project.set_toc);
 	app.get('/project/:projectIdPopulatedFull/toc', auth.isLoggedIn(), project.get_toc);
 	app.delete('/project/:projectId', auth.isLoggedIn(), project.delete);
