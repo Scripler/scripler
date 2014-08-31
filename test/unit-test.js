@@ -25,8 +25,8 @@ describe('utils', function () {
         assert.notEqual(utils.getMongooseId(str1), utils.getMongooseId(str2));
         assert.equal(utils.getMongooseId(str1), utils.getMongooseId(new String(str1)));
         assert.notEqual(utils.getMongooseId(str1), utils.getMongooseId(new String(str2)));
-        assert.equal(utils.getMongooseId(str1), utils.getMongooseId(ObjectId.fromString(str1)));
-        assert.notEqual(utils.getMongooseId(str1), utils.getMongooseId(ObjectId.fromString(str2)));
+        assert.equal(utils.getMongooseId(str1), utils.getMongooseId(ObjectId(str1)));
+        assert.notEqual(utils.getMongooseId(str1), utils.getMongooseId(ObjectId(str2)));
         assert.equal(utils.getMongooseId(document1._id), utils.getMongooseId(document1));
         assert.notEqual(utils.getMongooseId(document1._id), utils.getMongooseId(document2));
     }),
@@ -37,8 +37,8 @@ describe('utils', function () {
         assert.equal(utils.mongooseEquals(str1, str2), false);
         assert.equal(utils.mongooseEquals(str1, new String(str1)), true);
         assert.equal(utils.mongooseEquals(str1, new String(str2)), false);
-        assert.equal(utils.mongooseEquals(str1, ObjectId.fromString(str1)), true);
-        assert.equal(utils.mongooseEquals(str1, ObjectId.fromString(str2)), false);
+        assert.equal(utils.mongooseEquals(str1, ObjectId(str1)), true);
+        assert.equal(utils.mongooseEquals(str1, ObjectId(str2)), false);
         assert.equal(utils.mongooseEquals(document1._id, document1), true);
         assert.equal(utils.mongooseEquals(document1._id, document2), false);
     })

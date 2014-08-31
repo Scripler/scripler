@@ -8,13 +8,17 @@ var express = require('express')
 
 var app = express();
 
-// db connect
-mongoose.connect(conf.db.uri);
+// Database connect
+mongoose.connect(conf.db.uri, function(e) {
 
-require('./config/express')(app, conf, mongoose);
-require('./routes')(app, auth);
-auth.initPaths(app);
+	// Since database is now running, we can initialize the app
+	require('./config/express')(app, conf, mongoose);
+	require('./routes')(app, auth);
+	auth.initPaths(app);
 
-http.createServer(app).listen(app.get('port'), function () {
-    logger.info('Express server listening on port ' + app.get('port') + ('development' == app.get('env') ? ' - in development mode!' : ''));
+	http.createServer(app).listen(app.get('port'), function () {
+		logger.info('Express server listening on port ' + app.get('port') + ('development' == app.get('env') ? ' - in development mode!' : ''));
+	});
+
 });
+

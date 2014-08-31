@@ -4,7 +4,11 @@ var express = require('express')
 	, path = require('path')
 	, logger = require('../lib/logger')
 	, conf = require('config')
-	, mkdirp = require('mkdirp');
+	, mkdirp = require('mkdirp')
+	, methodOverride = require('method-override')
+	, cookieParser = require('cookie-parser')
+	, bodyParser = require('body-parser')
+	, multipart = require('connect-multiparty');
 
 
 var allowCrossDomain = function (req, res, next) {
@@ -40,16 +44,19 @@ module.exports = function (app, conf, mongoose) {
 	app.use(express.logger({format: 'short', stream: {write: function (msg) {
 		logger.info(msg.trim());
 	}}}));
-	app.use(express.bodyParser({
+	app.use(bodyParser.json());
+	app.use(multipart({
 		uploadDir: conf.import.uploadDir,
 		keepExtensions: true,
 		maxFieldsSize: '15728640'//15mb
 	}));
-	app.use(express.methodOverride());
-	app.use(express.cookieParser(conf.app.cookie_secret));
+	app.use(methodOverride());
+	app.use(cookieParser(conf.app.cookie_secret));
 	app.use(express.session({
 		secret: conf.app.session_secret,
-		maxAge: new Date(Date.now() + 3600000),
+		cookie: {
+			maxAge: 30 * 24 * 3600000 // 30 days.
+		},
 		store: new MongoStore({db: mongoose.connection.db})
 	}));
 	app.use(passport.initialize());
