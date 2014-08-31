@@ -218,11 +218,10 @@
 	overflow: hidden;
 }
 [selected] {
-	background-color: #d3d3d3 !important;
+	background-color: #eee !important;
 }
 [selected] a, [selected] span, [selected] ul, [selected] .style-copy-options li {
-	background-color: #d3d3d3 !important;
-	/* color: #fff265 !important; */
+	background-color: #eee !important;
 }
 
 
@@ -610,10 +609,6 @@ li.typo p:first-child {
 }
 .left-menu-box .option, .right-menu-box .option {
 	display: block;
-}
-
-.left-menu-close-item, .right-menu-close-item {
-	color: #cc0000;
 }
 
 .insertOption {
