@@ -1003,7 +1003,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	function constructImageTag( image ) {
-		var imageTag = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		var imageTag = '<img class="cover" src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
 		return imageTag;
 	}
 
@@ -1038,6 +1038,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	function updateDocumentText( type, image ) {
 		if ( type === 'cover' ) {
+			$scope.ck.document.$.body.className += ' cover';
 			$scope.documentSelected.text = constructImageTag( image );
 		}
 		if ( type === 'toc' ) {
