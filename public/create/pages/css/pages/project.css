@@ -613,7 +613,7 @@ li.typo p:first-child {
 
 .insertOption {
 	position: relative;
-	margin: 0 10px 10px 0;
+	margin: 0 8px 8px 0;
 	padding: 16px 0 0 16px;
 	width: 114px;
 	height: 114px;
@@ -637,9 +637,9 @@ li.typo p:first-child {
 .insertOptionProperties.expanded {
 	display: block;
 	position: relative;
-	margin: -1px 10px 10px 0;
+	margin: -1px 8px 8px 0;
 	padding: 16px;
-	width: 238px;
+	width: 236px;
 	height: auto;
 	background: none #fefefe;
 	float: left;
