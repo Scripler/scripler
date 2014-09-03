@@ -357,6 +357,17 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.$watch('[project.metadata.title, project.metadata.authors, project.metadata.language, project.metadata.description, project.metadata.isbn]', $scope.debounceSaveUpdates, true);
 
+	$scope.exportEpub = function() {
+
+		$http.get('/project/' + $scope.pid + '/compile')
+			.success( function(data, status) {
+				window.location.href = "/project/" + $scope.pid + "/compile";
+			})
+			.error( function(status) {
+				console.log("error downloading, status: " + status);
+			});
+	}
+
 	$scope.openStylesets = function( projectDocument ) {
 		var deferred = $q.defer();
 
@@ -536,7 +547,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var lineHeight = style.css['line-height'];
 		var margin = style.css['margin'];
 		var padding = style.css['padding'];
-		var isSelected = false;
 
 		if ( typeof lineHeight == 'undefined' &&
 			typeof margin == 'undefined' &&
@@ -559,7 +569,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				var range = editor.createRange();
 				range.moveToElementEditablePosition(element);
 				range.select();
-				isSelected = true;
 			} else {
 				if ( typeof style.tag != 'undefined' ) {
 					$scope.applyCharStyleToElement( style, isDefault );
@@ -606,11 +615,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		$scope.selectedStyle = style;
 
-		if ( !isSelected ) {
-			$rootScope.ck.focus();
-			selectedRanges.moveToBookmarks( bookmarks );
-			selection.selectRanges( selectedRanges );
-		}
+		$rootScope.ck.focus();
+		selectedRanges.moveToBookmarks( bookmarks );
+		selection.selectRanges( selectedRanges );
 	}
 
 	$scope.isBlock = function( style ) {
