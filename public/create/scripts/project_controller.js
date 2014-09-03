@@ -423,7 +423,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					}
 
 					$scope.applyStylesetsToEditor();
-					deferred.resolve();
+					deferred.resolve( data.styleset );
 				}
 			});
 
@@ -569,15 +569,42 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 		}
 
+		$scope.selectedStyle = style;
+
 		if ( $scope.documentSelected.stylesets.indexOf( styleset._id ) === -1 ) {
-			$scope.applyStylesetToDocument( styleset, false );
+			var promise = $scope.applyStylesetToDocument( styleset, false );
+			promise.then( function( styleset ) {
+				//replace class only if style is not from default styleset
+				if ( !isDefault ) {
+					for ( var i = 0; i < styleset.styles.length; i++ ) {
+						var newStyle = styleset.styles[i];
+						if ( newStyle.name === style.name &&
+							 newStyle.class === style.class &&
+							 newStyle.tag === style.tag ) {
+
+							$scope.selectedStyle = newStyle;
+							break;
+						}
+					}
+
+					var editableBody = document.getElementById('cke_bodyeditor');
+					var iframe = editableBody.getElementsByTagName('iframe')[0];
+					var iDoc = iframe.contentDocument;
+					var elements = iDoc.getElementsByClassName( 'style-' + style._id );
+
+					//replace class only if style has no class
+					if ( typeof $scope.selectedStyle.class === 'undefined' ) {
+						for ( var i = 0; i < elements.length; i++ ) {
+							elements[i].className = 'style-' + $scope.selectedStyle._id;
+						}
+					}
+				}
+			});
 		} else {
 			$scope.applyStylesetsToEditor();
 		}
 
 		$scope.updateProjectDocument();
-
-		$scope.selectedStyle = style;
 
 		$rootScope.ck.focus();
 		selectedRanges.moveToBookmarks( bookmarks );
