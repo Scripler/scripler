@@ -326,25 +326,25 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						    $scope.metaTitleSaved = false;
 						}, 2000);
 					}
-					if (newAuthors != oldAuthors) {
+					else if (newAuthors != oldAuthors) {
 						$scope.metaAuthorsSaved = true;
 						$timeout(function() {
 						    $scope.metaAuthorsSaved = false;
 						}, 2000);
 					}
-					if (newLanguage != oldLanguage) {
+					else if (newLanguage != oldLanguage) {
 						$scope.metaLanguageSaved = true;
 						$timeout(function() {
 						    $scope.metaLanguageSaved = false;
 						}, 2000);
 					}
-					if (newDescription != oldDescription) {
+					else if (newDescription != oldDescription) {
 						$scope.metaDescriptionSaved = true;
 						$timeout(function() {
 						    $scope.metaDescriptionSaved = false;
 						}, 2000);
 					}
-					if (newIsbn != oldIsbn) {
+					else if (newIsbn != oldIsbn) {
 						$scope.metaIsbnSaved = true;
 						$timeout(function() {
 						    $scope.metaIsbnSaved = false;
