@@ -59,7 +59,7 @@ var styleCopiedId2;
 var imageId;
 var imageName;
 
-var cleanupEPUB = true;
+var cleanupEPUB = false;
 
 if (conf.db.uri.match(/_test$/) === null) {
 	console.log("You shouldn't be running this test on any database not being specifically meant for 'test'!");

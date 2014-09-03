@@ -405,13 +405,18 @@ exports.get_toc = function (req, res, next) {
 	});
 }
 
-exports.compile = function (req, res) {
-	var epub = epub3.create(req.user._id, req.project);
-	var filename = req.project.metadata.title || req.project.name;
-	var saneTitle = sanitize(filename);
-	res.setHeader('Content-disposition', 'attachment; filename=' + saneTitle);
-	res.setHeader('Content-type', 'application/epub+zip');
-	epub.pipe(res);
+exports.compile = function (req, res, next) {
+	epub3.create(req.user._id, req.project, function (err, epub) {
+		if (err) {
+			return next(err);
+		}
+
+		var filename = req.project.metadata.title || req.project.name;
+		var saneTitle = sanitize(filename);
+		res.setHeader('Content-disposition', 'attachment; filename=' + saneTitle);
+		res.setHeader('Content-type', 'application/epub+zip');
+		epub.pipe(res);
+	});
 }
 
 exports.applyStyleset = function (req, res, next) {
