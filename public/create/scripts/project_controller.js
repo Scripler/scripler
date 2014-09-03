@@ -441,18 +441,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return deferred.promise;
 	}
 
-	$scope.applyStylesetsToEditor = function( skip ) {
-		if ( $scope.documentSelected._id && !skip ) {
+	$scope.applyStylesetsToEditor = function() {
+		if ( typeof $scope.documentSelected._id !== 'undefined' ) {
 			var promise = $scope.openStylesets( $scope.documentSelected );
 		}
 
 		promise.then( function() {
 			applyStylesets();
 		});
-
-		if ( skip ) {
-			applyStylesets();
-		}
 	}
 
 	var getCombinedCss = function() {
@@ -582,7 +578,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		$scope.selectedStyle = style;
 
-		if ( $scope.documentSelected.stylesets.indexOf( styleset._id ) === -1 ) {
+		if ( $scope.documentSelected.stylesets.indexOf( styleset._id ) < 0 ) {
 			var promise = $scope.applyStylesetToDocument( styleset, false );
 			promise.then( function( styleset ) {
 				//replace class only if style is not from default styleset
@@ -603,11 +599,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					var iDoc = iframe.contentDocument;
 					var elements = iDoc.getElementsByClassName( 'style-' + style._id );
 
-					//replace class only if style has no class
-					if ( typeof $scope.selectedStyle.class === 'undefined' ) {
-						for ( var i = 0; i < elements.length; i++ ) {
-							elements[i].className = 'style-' + $scope.selectedStyle._id;
-						}
+					for ( var i = 0; i < elements.length; i++ ) {
+						elements[i].className = 'style-' + $scope.selectedStyle._id;
 					}
 				}
 			});
@@ -835,7 +828,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			for ( var x = 0; x < matches.length; x++ ) {
 				if ( x % 3 !== 0 ) {
 					if ( [ 'margin', 'padding', 'line-height', 'margin-top', 'margin-bottom', 'margin-right',
-							'margin-left', 'padding-top', 'padding-bottom', 'padding-right', 'padding-left' ].indexOf( matches[x] ) < -1 ) {
+							'margin-left', 'padding-top', 'padding-bottom', 'padding-right', 'padding-left' ].indexOf( matches[x] ) < 0 ) {
 						inlineCSS[matches[x]] = matches[x+1];
 						x++; //skip next one because it has been assigned
 					}
