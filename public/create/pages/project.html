@@ -9,7 +9,7 @@
 			<div class="center"></div>
 			<img src="pages/images/documents.svg" width="20">
 		</div>
-		<div class="menu-left-tab" ng-class="{ 'selectedTab' : showTypo }" ng-click="showTypo = !showTypo; hideStyleEditor(); showDocuments = false; showInsert = false;">
+		<div class="menu-left-tab" ng-class="{ 'selectedTab' : showTypo }" ng-click="showTypo = !showTypo; hideStyleEditor(); showDocuments = false; showInsert = false; focusEditor();">
 			<div class="center"></div>
 			<img src="pages/images/typography.svg" width="20">
 		</div>
@@ -64,7 +64,7 @@
 								<div class="arrow"></div>
 							</a>
 
-							<p class="not-selectable" ng-style="styleset.css" ng-click="typoChildrenVisible=!typoChildrenVisible" ng-hide="styleset.rename">{{styleset.name}}</p>
+							<p class="not-selectable" ng-style="styleset.css" ng-click="typoChildrenVisible=!typoChildrenVisible; focusEditor();" ng-hide="styleset.rename">{{styleset.name}}</p>
 
 							<form ng-show="styleset.rename">
 								<p>

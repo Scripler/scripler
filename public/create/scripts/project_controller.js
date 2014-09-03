@@ -1218,6 +1218,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if ( typeof $scope.ckReady !== 'undefined' ) {
 			if ( $scope.ckReady ) {
 				$scope.applyStylesetsToEditor();
+				//focus editor when data is ready
+				$rootScope.ck.focus();
 			}
 		}
 	});
@@ -1232,11 +1234,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$scope.styleEditorVisible = true;
 			}
 		}
+
 		$scope.hideStyleEditor = function() {
 			if ( $scope.styleEditorVisible ) {
 				$rootScope.ck.commands.hideFloatingTools.exec();
 				$scope.styleEditorVisible = false;
 			}
+		}
+
+		$scope.focusEditor = function() {
+			$rootScope.ck.focus();
 		}
 
 		$scope.$watch('showTypo', function() {
