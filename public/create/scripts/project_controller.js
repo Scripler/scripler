@@ -356,6 +356,17 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.$watch('[project.metadata.title, project.metadata.authors, project.metadata.language, project.metadata.description, project.metadata.isbn]', $scope.debounceSaveUpdates, true);
 
+	$scope.exportEpub = function() {
+
+		$http.get('/project/' + $scope.pid + '/compile')
+			.success( function(data, status) {
+				window.location.href = "/project/" + $scope.pid + "/compile";
+			})
+			.error( function(status) {
+				console.log("error downloading, status: " + status);
+			});
+	}
+
 	$scope.openStylesets = function( projectDocument ) {
 		var deferred = $q.defer();
 

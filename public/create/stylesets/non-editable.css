@@ -108,6 +108,18 @@ figure {
 	outline: none;
 }
 
+/*Cover image css*/
+.cover {
+	width: 100%;
+	margin:0;
+	height: auto;
+	page-break-inside:avoid;
+}
+
+body.cover {
+	margin:0;
+}
+
 /*PARAGRAPH RULES*/
 
 /*This makes first line indents on paragraphs that follows paragraphs. And removes the margin-top.*/
