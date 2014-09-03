@@ -4,6 +4,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 							$timeout, $rootScope, utilsService, $q, user ) {
 
 	var timeout = null,
+		timeoutMetadata = null,
 		lastSavedDocumentLength = 0,
 		documentWatch = false,
 		secondsToWait = 5;
@@ -294,7 +295,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
-	var timeoutMetadata = null;
 	$scope.debounceSaveUpdates = function(newValue, oldValue) {
 		var newTitle  = newValue[0];
 		var newAuthors = newValue[1];
