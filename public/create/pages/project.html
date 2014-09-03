@@ -59,7 +59,7 @@
 						<p>+</p>
 					</div>
 					<ul>
-						<li ng-repeat="styleset in stylesets" class="typo" ng-class="{ 'open' : typoChildrenVisible == true }" ng-hide="styleset.archived || styleset.hidden">
+						<li ng-repeat="styleset in stylesets track by $index" class="typo" ng-class="{ 'open' : typoChildrenVisible == true }" ng-hide="styleset.archived || styleset.hidden">
 							<a class="styleset-options-show" ng-click="typoChildrenVisible = true; showStylesetOptions = true">
 								<div class="arrow"></div>
 							</a>
@@ -76,12 +76,12 @@
 								<div class="styleset-options-hide" ng-click="showStylesetOptions = false;" title="Close Options">x</div>
 								<div class="styleset-options-menupoint first" ng-click="toggleRename(styleset); showStylesetOptions = false;">rename</div>
 								<div class="styleset-options-menupoint" ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>
-								<div class="styleset-options-menupoint" ng-click="applyStylesetToDocument(styleset); showStylesetOptions = false;">apply to document</div>
+								<div class="styleset-options-menupoint" ng-click="applyStylesetToDocument(styleset,true); showStylesetOptions = false;">apply to document</div>
 								<div class="styleset-options-menupoint" ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to project</div>
 							</div>
 
 							<ul ng-show="typoChildrenVisible || isDefaultStyleset(styleset)" class="typo-children">
-								<li ng-repeat="style in styleset.styles" id="{{style._id}}" ng-hide="style.archived || style.hidden" ng-selected="selectedStyle._id === style._id">
+								<li ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" ng-hide="style.archived || style.hidden" ng-selected="selectedStyle._id === style._id">
 									<a class="style-options-show" ng-click="showStyleOptions = true">
 										<div class="arrow"></div>
 									</a>
@@ -90,7 +90,7 @@
 									<span class="style-isblock" ng-bind="isBlock(style)"></span>
 
 									<div class="style-height" ng-hide="style.rename">
-										<span class="not-selectable" ng-style="style.css" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
+										<span class="not-selectable" ng-style="getStyleStyling(style)" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
 									</div>
 
 									<div class="style-copy-options" ng-show="copyCSS && selectedStyle._id === style._id">
@@ -228,11 +228,11 @@
 										<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Insert the pagebreak" />
 									</a>
 								</span>
-								<span class="left-menu-button">
+								<!--<span class="left-menu-button">
 									<a ng-click="insertPageBreakAvoid()">
 										<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Avoid pagebreak" />
 									</a>
-								</span>
+								</span>-->
 							</div>
 						</li>
 						<!--<li class="insertOption"><img src="pages/images/insert_cover_button.png" width="80" height="80"></li>-->
