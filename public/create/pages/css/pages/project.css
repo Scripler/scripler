@@ -610,6 +610,15 @@ li.typo p:first-child {
 .left-menu-box .option, .right-menu-box .option {
 	display: block;
 }
+.left-menu-box.left-menu-download {
+	text-align: center;
+}
+.left-menu-box.left-menu-download .download-icon {
+	width: 50px;
+	height: auto;
+	margin: 0 5px;
+	cursor: pointer;
+}
 
 .insertOption {
 	position: relative;
