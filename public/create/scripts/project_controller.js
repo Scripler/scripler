@@ -515,7 +515,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var margin = style.css['margin'];
 		var padding = style.css['padding'];
 
-		if ( typeof lineHeight == 'undefined' &&
+		/*if ( typeof lineHeight == 'undefined' &&
 			typeof margin == 'undefined' &&
 			typeof padding == 'undefined' ) {
 
@@ -547,31 +547,30 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				}
 			}
 
-		} else {
+		} else {*/
 
-			var parents = selection.getStartElement().getParents();
-			var firstElement;
+		var parents = selection.getStartElement().getParents();
+		var firstElement;
 
-			for ( var i = 0; i < parents.length; i++ ) {
-				if ( parents[i].getName() === 'body' ) {
-					firstElement = parents[i+1];
-					break;
-				}
+		for ( var i = 0; i < parents.length; i++ ) {
+			if ( parents[i].getName() === 'body' ) {
+				firstElement = parents[i+1];
+				break;
 			}
+		}
 
-			//apply on block level
-			if ( typeof firstElement != 'undefined' ) {
-				if ( selectionLength == 0 ) {
-					//apply on single block
+		//apply on block level
+		if ( typeof firstElement != 'undefined' ) {
+			if ( selectionLength == 0 ) {
+				//apply on single block
+				$scope.applyStyleToElement( firstElement, style, isDefault );
+			} else {
+				var applyToParent = false;
+				applyToParent = $scope.applyToSelectionWalker( editor, style, isDefault );
+
+				//!!!this is done after the walker because it messes up the selection if done inside the walker
+				if ( applyToParent ) {
 					$scope.applyStyleToElement( firstElement, style, isDefault );
-				} else {
-					var applyToParent = false;
-					applyToParent = $scope.applyToSelectionWalker( editor, style, isDefault );
-
-					//!!!this is done after the walker because it messes up the selection if done inside the walker
-					if ( applyToParent ) {
-						$scope.applyStyleToElement( firstElement, style, isDefault );
-					}
 				}
 			}
 		}
