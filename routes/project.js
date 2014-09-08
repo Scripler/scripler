@@ -416,7 +416,6 @@ exports.compile = function (req, res, next) {
 		res.setHeader('Content-disposition', 'attachment; filename=' + saneTitle);
 		res.setHeader('Content-type', 'application/epub+zip');
 		epub.pipe(res);
-		//res.end();
 	});
 
 }
