@@ -394,7 +394,9 @@
 							<input type="text" name="output_unique" id="output_unique" value="{{project.metadata.isbn}}" ng-model="project.metadata.isbn" />
 							<span class="statusfield" ng-class="{ 'text-saved': metaIsbnSaved }">Saved</span>
 						</span>
-						<span class="left-menu-box label left-menu-parameter-margin">Download options</span>
+					</li>
+					<li class="outputOptionProperties outputOptionDownload">
+						<span class="left-menu-box label">Download options</span>
 						<span class="left-menu-box label left-menu-parameter-margin left-menu-download">
 							<img class="download-icon" src="pages/images/compile_epub.png" ng-click="exportEpub()">
 						</span>
