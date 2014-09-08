@@ -318,16 +318,11 @@
 			<div class="menu-item-right inserts" ng-show="showFinalizeOptions">
 				<div class="menu-content">
 					<ul>
-						<li ng-click="finalizeOptionChosen('showFinalizeColophonOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
-							colophon
-						</li>
 						<li ng-click="finalizeOptionChosen('showFinalizeCoverOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
 							<img src="pages/images/insert_cover_button.png" width="80" height="80" />
 						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
-							<span class="right-menu-button full-size right-menu-parameter-margin">
-									<a ng-click="generateColophon();">Generate Colophon</a>
-							</span>
+						<li ng-click="finalizeOptionChosen('showFinalizeTitlepageOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
+							title page
 						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
 							<div class="right-menu-options">
@@ -337,12 +332,19 @@
 								</span>
 							</div>
 						</li>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
+							<div class="right-menu-options">
+								<span class="right-menu-button full-size right-menu-parameter-margin">
+									<a ng-click="generateTitlePage();">Generate Title Page</a>
+								</span>
+							</div>
+						</li>
 
 						<li ng-click="finalizeOptionChosen('showFinalizeTocOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
 							toc
 						</li>
-						<li ng-click="finalizeOptionChosen('showFinalizeTitlepageOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
-							title page
+						<li ng-click="finalizeOptionChosen('showFinalizeColophonOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
+							colophon
 						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
 							<div class="right-menu-options">
@@ -354,12 +356,10 @@
 								</span>
 							</div>
 						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
-							<div class="right-menu-options">
-								<span class="right-menu-button full-size right-menu-parameter-margin">
-									<a ng-click="generateTitlePage();">Generate Title Page</a>
-								</span>
-							</div>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
+							<span class="right-menu-button full-size right-menu-parameter-margin">
+									<a ng-click="generateColophon();">Generate Colophon</a>
+							</span>
 						</li>
 					</ul>
 				</div>
