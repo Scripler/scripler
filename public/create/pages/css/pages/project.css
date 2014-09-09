@@ -666,6 +666,9 @@ li.typo p:first-child {
 	border: 1px solid #ffff99;
 	box-shadow: 0px 5px 5px -5px #ccc;
 }
+.outputOptionDownload {
+	margin: 10px 0 0;
+}
 .not-selectable {
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;

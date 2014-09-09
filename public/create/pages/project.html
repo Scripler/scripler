@@ -318,16 +318,11 @@
 			<div class="menu-item-right inserts" ng-show="showFinalizeOptions">
 				<div class="menu-content">
 					<ul>
-						<li ng-click="finalizeOptionChosen('showFinalizeColophonOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
-							<img src="pages/images/insert_colophon.png" />
-						</li>
 						<li ng-click="finalizeOptionChosen('showFinalizeCoverOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
 							<img src="pages/images/insert_cover.png" />
 						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
-							<span class="right-menu-button full-size right-menu-parameter-margin">
-									<a ng-click="generateColophon();">Generate Colophon</a>
-							</span>
+						<li ng-click="finalizeOptionChosen('showFinalizeTitlepageOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
+							<img src="pages/images/insert_titlepage.png" />
 						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
 							<div class="right-menu-options">
@@ -337,12 +332,19 @@
 								</span>
 							</div>
 						</li>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
+							<div class="right-menu-options">
+								<span class="right-menu-button full-size right-menu-parameter-margin">
+									<a ng-click="generateTitlePage();">Generate Title Page</a>
+								</span>
+							</div>
+						</li>
 
 						<li ng-click="finalizeOptionChosen('showFinalizeTocOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
 							<img src="pages/images/insert_toc.png" />
 						</li>
-						<li ng-click="finalizeOptionChosen('showFinalizeTitlepageOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
-							<img src="pages/images/insert_titlepage.png" />
+						<li ng-click="finalizeOptionChosen('showFinalizeColophonOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
+							<img src="pages/images/insert_colophon.png" />
 						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
 							<div class="right-menu-options">
@@ -354,12 +356,10 @@
 								</span>
 							</div>
 						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
-							<div class="right-menu-options">
-								<span class="right-menu-button full-size right-menu-parameter-margin">
-									<a ng-click="generateTitlePage();">Generate Title Page</a>
-								</span>
-							</div>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
+							<span class="right-menu-button full-size right-menu-parameter-margin">
+									<a ng-click="generateColophon();">Generate Colophon</a>
+							</span>
 						</li>
 					</ul>
 				</div>
@@ -394,7 +394,9 @@
 							<input type="text" name="output_unique" id="output_unique" value="{{project.metadata.isbn}}" ng-model="project.metadata.isbn" />
 							<span class="statusfield" ng-class="{ 'text-saved': metaIsbnSaved }">Saved</span>
 						</span>
-						<span class="left-menu-box label left-menu-parameter-margin">Download options</span>
+					</li>
+					<li class="outputOptionProperties outputOptionDownload">
+						<span class="left-menu-box label">Download options</span>
 						<span class="left-menu-box label left-menu-parameter-margin left-menu-download">
 							<img class="download-icon" src="pages/images/compile_epub.png" ng-click="exportEpub()">
 						</span>
