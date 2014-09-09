@@ -789,11 +789,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return y;
 	}
 
+	//discrepancy between text-decoration and the computed text-decoration
+	//computed has extra values that breaks CSS "underline solid rgb(0,0,0)"
+	//because of that only take first word from text-decoration
 	function getStyles( element, styles, activeCSS ) {
 		styles.forEach(function( style ) {
 			var cssStyle = getStyle(element.$, style);
 			if ( cssStyle !== "" && cssStyle !== null ) {
-				activeCSS[style] = cssStyle;
+				if ( style === 'text-decoration' ) {
+					var firstWord = cssStyle.match( /^[A-Za-z_]+/ );
+					activeCSS[style] = firstWord[0];
+				} else {
+					activeCSS[style] = cssStyle;
+				}
 			}
 		});
 
@@ -895,6 +903,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 		if ( style.tag === 'h6' ) {
 			styleCSS['font-size'] = '1.1em';
+		}
+
+		if ( typeof styleCSS[ 'line-height' ] !== 'undefined' ) {
+			delete styleCSS[ 'line-height' ];
 		}
 
 		return styleCSS;
