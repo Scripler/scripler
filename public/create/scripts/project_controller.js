@@ -879,22 +879,22 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var styleCSS = angular.copy( style.css );
 
 		if ( style.tag === 'h1' ) {
-			styleCSS['font-size'] = '2.5em';
-		}
-		if ( style.tag === 'h2' ) {
 			styleCSS['font-size'] = '2em';
 		}
+		if ( style.tag === 'h2' ) {
+			styleCSS['font-size'] = '1.7em';
+		}
 		if ( style.tag === 'h3' ) {
-			styleCSS['font-size'] = '1.8em';
+			styleCSS['font-size'] = '1.5em';
 		}
 		if ( style.tag === 'h4' ) {
-			styleCSS['font-size'] = '1.6em';
+			styleCSS['font-size'] = '1.3em';
 		}
 		if ( style.tag === 'h5' ) {
-			styleCSS['font-size'] = '1.4em';
+			styleCSS['font-size'] = '1.2em';
 		}
 		if ( style.tag === 'h6' ) {
-			styleCSS['font-size'] = '1.2em';
+			styleCSS['font-size'] = '1.1em';
 		}
 
 		return styleCSS;
