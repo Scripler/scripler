@@ -240,7 +240,7 @@ describe('epub', function () {
 			'<navLabel>' +
 			'<text>' + tocEntry1.text + '</text>' +
 			'</navLabel>' +
-			'<content src="' + tocEntry1.target + '"/>' +
+			'<content src="HTML/' + tocEntry1.target + '"/>' +
 			'</navPoint>');
 
 		var tocEntry2 = new TOCEntry;
@@ -254,12 +254,12 @@ describe('epub', function () {
 			'<navLabel>' +
 			'<text>' + tocEntry1.text + '</text>' +
 			'</navLabel>' +
-			'<content src="' + tocEntry1.target + '"/>' +
+			'<content src="HTML/' + tocEntry1.target + '"/>' +
 			'<navPoint id="navpoint-2" playOrder="2">' +
 			'<navLabel>' +
 			'<text>' + tocEntry2.text + '</text>' +
 			'</navLabel>' +
-			'<content src="' + tocEntry2.target + '"/>' +
+			'<content src="HTML/' + tocEntry2.target + '"/>' +
 			'</navPoint>' +
 			'</navPoint>');
 
@@ -274,19 +274,19 @@ describe('epub', function () {
 			'<navLabel>' +
 			'<text>' + tocEntry1.text + '</text>' +
 			'</navLabel>' +
-			'<content src="' + tocEntry1.target + '"/>' +
+			'<content src="HTML/' + tocEntry1.target + '"/>' +
 			'<navPoint id="navpoint-2" playOrder="2">' +
 			'<navLabel>' +
 			'<text>' + tocEntry2.text + '</text>' +
 			'</navLabel>' +
-			'<content src="' + tocEntry2.target + '"/>' +
+			'<content src="HTML/' + tocEntry2.target + '"/>' +
 			'</navPoint>' +
 			'</navPoint>' +
 			'<navPoint id="navpoint-3" playOrder="3">' +
 			'<navLabel>' +
 			'<text>' + tocEntry3.text + '</text>' +
 			'</navLabel>' +
-			'<content src="' + tocEntry3.target + '"/>' +
+			'<content src="HTML/' + tocEntry3.target + '"/>' +
 			'</navPoint>');
 	}),
 	it('getManifestHtmlFilesString', function () {
@@ -483,7 +483,7 @@ describe('epub3', function () {
 
 		tocEntries = [tocEntry1];
 		result = epub3.getTocString(tocEntries);
-		assert.equal(result, '<li><a href="Kapitel Einz.html">Kapitel Einz</a></li>');
+		assert.equal(result, '<li><a href="HTML/Kapitel Einz.html">Kapitel Einz</a></li>');
 
 		var tocEntry2 = new TOCEntry;
 		tocEntry2.text = 'Kapitel Zwei';
@@ -492,7 +492,7 @@ describe('epub3', function () {
 
 		tocEntries = [tocEntry1, tocEntry2];
 		result = epub3.getTocString(tocEntries);
-		assert.equal(result, '<li><a href="Kapitel Einz.html">Kapitel Einz</a></li><li><a href="Kapitel Zwei.html">Kapitel Zwei</a></li>');
+		assert.equal(result, '<li><a href="HTML/Kapitel Einz.html">Kapitel Einz</a></li><li><a href="HTML/Kapitel Zwei.html">Kapitel Zwei</a></li>');
 
 	}),
 	it('getLandmarkString', function () {

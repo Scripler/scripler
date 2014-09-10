@@ -375,7 +375,7 @@ exports.get_toc = function (req, res, next) {
 				documentFilename = conf.epub.documentPrefix + documentId + ".html";
 			}
 
-			var target = conf.epub.htmlDir + '/' + documentFilename;
+			var target = documentFilename;
 
 			var tocEntry = new TOCEntry({
 				id: documentId,
