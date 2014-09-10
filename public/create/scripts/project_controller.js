@@ -442,13 +442,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.applyStylesetsToEditor = function() {
+		//when switching documents documentSelected can be undefined
+		//because of that promise is only created when document is defined
 		if ( typeof $scope.documentSelected._id !== 'undefined' ) {
 			var promise = $scope.openStylesets( $scope.documentSelected );
-		}
 
-		promise.then( function() {
-			applyStylesets();
-		});
+			promise.then( function() {
+				applyStylesets();
+			});
+		}
 	}
 
 	var getCombinedCss = function() {
@@ -515,6 +517,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var margin = style.css['margin'];
 		var padding = style.css['padding'];
 
+		//character style code commented out for now
 		/*if ( typeof lineHeight == 'undefined' &&
 			typeof margin == 'undefined' &&
 			typeof padding == 'undefined' ) {
