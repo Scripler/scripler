@@ -413,7 +413,7 @@ exports.compile = function (req, res, next) {
 
 		var filename = req.project.metadata.title || req.project.name;
 		var saneTitle = sanitize(filename);
-		res.setHeader('Content-disposition', 'attachment; filename=' + saneTitle);
+		res.setHeader('Content-disposition', 'attachment; filename=' + saneTitle + ".epub");
 		res.setHeader('Content-type', 'application/epub+zip');
 		epub.pipe(res);
 	});
