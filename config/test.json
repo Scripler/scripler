@@ -10,8 +10,8 @@
 		"uri": "mongodb://localhost/scripler_test"
 	},
 	"resources": {
-		"projectsDir": "/tmp",
-		"usersDir": "/tmp",
+		"projectsDir": "/tmp/scripler/test/projects",
+		"usersDir": "/tmp/scripler/test/users",
 		"projectsUrl": "http://localhost:3000/public/resources/projects",
 		"usersUrl": "http://localhost:3000/public/resources/users"
 	},
@@ -33,6 +33,9 @@
 	},
 	"epub3": {
 		"epubDir": "EPUB"
+	},
+	"import": {
+		"uploadDir": "/tmp/scripler/test/uploads/"
 	},
 	"user": {
 		"defaultStylesetName": "simple-bw"

@@ -20,7 +20,8 @@ var allowCrossDomain = function (req, res, next) {
 };
 
 // If uploadDir hasn't been specified in configuration folder, default to subfolder in current dir
-if (conf.import.uploadDir == "") {
+// TODO: when running "mocha", it seems that the value from config/default.json is used, even though "conf.import.uploadDir" is specified in config/test.json used by test/it.js - why?
+if (!conf.import.uploadDir || conf.import.uploadDir == "") {
     conf.import.uploadDir = __dirname + '/../tmp/uploads';
 }
 // Ensure that uploadDir exists

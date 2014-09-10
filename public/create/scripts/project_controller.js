@@ -4,6 +4,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 							$timeout, $rootScope, utilsService, $q, user ) {
 
 	var timeout = null,
+		timeoutMetadata = null,
 		lastSavedDocumentLength = 0,
 		documentWatch = false,
 		secondsToWait = 5;
@@ -293,7 +294,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
-	var timeoutMetadata = null;
 	$scope.debounceSaveUpdates = function(newValue, oldValue) {
 		var newTitle  = newValue[0];
 		var newAuthors = newValue[1];
@@ -325,25 +325,25 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						    $scope.metaTitleSaved = false;
 						}, 2000);
 					}
-					if (newAuthors != oldAuthors) {
+					else if (newAuthors != oldAuthors) {
 						$scope.metaAuthorsSaved = true;
 						$timeout(function() {
 						    $scope.metaAuthorsSaved = false;
 						}, 2000);
 					}
-					if (newLanguage != oldLanguage) {
+					else if (newLanguage != oldLanguage) {
 						$scope.metaLanguageSaved = true;
 						$timeout(function() {
 						    $scope.metaLanguageSaved = false;
 						}, 2000);
 					}
-					if (newDescription != oldDescription) {
+					else if (newDescription != oldDescription) {
 						$scope.metaDescriptionSaved = true;
 						$timeout(function() {
 						    $scope.metaDescriptionSaved = false;
 						}, 2000);
 					}
-					if (newIsbn != oldIsbn) {
+					else if (newIsbn != oldIsbn) {
 						$scope.metaIsbnSaved = true;
 						$timeout(function() {
 						    $scope.metaIsbnSaved = false;
@@ -442,13 +442,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.applyStylesetsToEditor = function() {
+		//when switching documents documentSelected can be undefined
+		//because of that promise is only created when document is defined
 		if ( typeof $scope.documentSelected._id !== 'undefined' ) {
 			var promise = $scope.openStylesets( $scope.documentSelected );
-		}
 
-		promise.then( function() {
-			applyStylesets();
-		});
+			promise.then( function() {
+				applyStylesets();
+			});
+		}
 	}
 
 	var getCombinedCss = function() {
@@ -515,6 +517,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var margin = style.css['margin'];
 		var padding = style.css['padding'];
 
+		//character style code commented out for now
 		/*if ( typeof lineHeight == 'undefined' &&
 			typeof margin == 'undefined' &&
 			typeof padding == 'undefined' ) {

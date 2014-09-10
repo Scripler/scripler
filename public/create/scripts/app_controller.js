@@ -324,6 +324,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 			}
 
 			ck.on('paste', function( event ) {
+				//TODO check for pasted value vs copiedElement
 				if ( scope.copiedElement ) {
 					event.stop();
 
