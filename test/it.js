@@ -59,7 +59,7 @@ var styleCopiedId2;
 var imageId;
 var imageName;
 
-var cleanupEPUB = true;
+var cleanupEPUB = false;
 
 if (conf.db.uri.match(/_test$/) === null) {
 	console.log("You shouldn't be running this test on any database not being specifically meant for 'test'!");
@@ -608,12 +608,7 @@ describe('Scripler RESTful API', function () {
 					});
 			}),
 			it('Creating a document in a folder (the root folder) should return the document with that folder id - 1', function (done) {
-				var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
-					'<!DOCTYPE html>' +
-					'<html xmlns="http://www.w3.org/1999/xhtml">' +
-					'<head><title>MyFirstDocument</title></head>' +
-					'<body><p>It is my best document ever!</p></body>' +
-					'</html>';
+				var text = '<p>It is my best document ever!</p>';
 
 				request(host)
 					.post('/document')
@@ -640,12 +635,7 @@ describe('Scripler RESTful API', function () {
 					});
 			}),
 			it('Creating a document in a folder (the child folder) should return the document with that folder id - 2', function (done) {
-				var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
-					'<!DOCTYPE html>' +
-					'<html xmlns="http://www.w3.org/1999/xhtml">' +
-					'<head><title>MySecondDocument</title></head>' +
-					'<body><p>It is almost my best document!</p></body>' +
-					'</html>';
+				var text = '<p>It is almost my best document!</p>';
 
 				request(host)
 					.post('/document')
@@ -667,12 +657,7 @@ describe('Scripler RESTful API', function () {
 					});
 			}),
 			it('Creating a cover document should return the document with type = "cover"', function (done) {
-				var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
-					'<!DOCTYPE html>' +
-					'<html xmlns="http://www.w3.org/1999/xhtml">' +
-					'<head><title>Cover</title></head>' +
-					'<body><p>Cool Cover</p></body>' +
-					'</html>';
+				var text = '<p>Cool Cover</p>';
 
 				request(host)
 					.post('/document')
@@ -701,12 +686,7 @@ describe('Scripler RESTful API', function () {
 					});
 			}),
 			it('Creating a title page document should return the document with type = "titlepage"', function (done) {
-				var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
-					'<!DOCTYPE html>' +
-					'<html xmlns="http://www.w3.org/1999/xhtml">' +
-					'<head><title>TitlePage</title></head>' +
-					'<body><p>Cool TitlePage</p></body>' +
-					'</html>';
+				var text = '<p>Cool TitlePage</p>';
 
 				request(host)
 					.post('/document')
@@ -735,12 +715,7 @@ describe('Scripler RESTful API', function () {
 					});
 			}),
 			it('Creating a table of contents document should return the document with type = "toc"', function (done) {
-				var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
-					'<!DOCTYPE html>' +
-					'<html xmlns="http://www.w3.org/1999/xhtml">' +
-					'<head><title>ToC</title></head>' +
-					'<body><p>Cool ToC</p></body>' +
-					'</html>';
+				var text = '<p>Cool ToC</p>';
 
 				request(host)
 					.post('/document')
@@ -769,12 +744,7 @@ describe('Scripler RESTful API', function () {
 					});
 			}),
 			it('Creating a colophon document should return the document with type = "colophon"', function (done) {
-				var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
-					'<!DOCTYPE html>' +
-					'<html xmlns="http://www.w3.org/1999/xhtml">' +
-					'<head><title>Colophon</title></head>' +
-					'<body><p>Cool Colophon</p></body>' +
-					'</html>';
+				var text = '<p>Cool Colophon</p>';
 
 				request(host)
 					.post('/document')
@@ -1222,15 +1192,8 @@ describe('Scripler RESTful API', function () {
 					});
 			}),
 			it('Creating a document in a child folder, should return the document with that folder id', function (done) {
-				var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
-					'<!DOCTYPE html>' +
-					'<html xmlns="http://www.w3.org/1999/xhtml">' +
-					'<head><title>Sikke et dokument</title></head>' +
-					'<body>' +
-					'<h1 id="id_1">Introduction</h1>' +
-					'<p>It is another one of my worst documents ever!</p>' +
-					'</body>' +
-					'</html>';
+				var text = '<h1 id="id_1">Introduction</h1>' +
+					'<p>It is another one of my worst documents ever!</p>';
 
 				request(host)
 					.post('/document')
@@ -1326,18 +1289,11 @@ describe('Scripler RESTful API', function () {
 				});
 		}),
 		it('Creating a document to which a styleset can be applied (document must be created AFTER Project.applyStyleset() is called so the document will get a default styleset)', function (done) {
-			var text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
-				'<!DOCTYPE html>' +
-				'<html xmlns="http://www.w3.org/1999/xhtml">' +
-				'<head><title>Jimbo</title></head>' +
-				'<body>' +
-				'<h1 id="id_97">Partey</h1>' +
+			var text = '<h1 id="id_97">Partey</h1>' +
 				'<p>Dagnabbit</p>' +
 				'<h6 id="id_453">Not important</h6>' +
 				'<p><a id="id_24" title="NoGo" href="http://www.scripler.com">This is not an anchor and should not be included in the ToC</a></p>' +
-				'<p><a id="id_25" title="LinkyDinky">This IS an anchor and should be included in the ToC</a></p>' +
-				'</body>' +
-				'</html>';
+				'<p><a id="id_25" title="LinkyDinky">This IS an anchor and should be included in the ToC</a></p>';
 
 			request(host)
 				.post('/document')
@@ -2076,6 +2032,10 @@ describe('Scripler RESTful API', function () {
 
 					child = exec('java -jar test/epubcheck-3.0b5.jar ' + epub,
 						function (error, stdout, stderr) {
+							console.log('stdout: ' + stdout);
+							console.log('stderr: ' + stderr);
+							console.log('error: ' + error);
+
 							if (error !== null) {
 								console.log('exec error: ' + error);
 								throw error;
