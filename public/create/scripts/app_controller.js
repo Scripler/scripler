@@ -263,10 +263,12 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				allowedContent: true,
 				skin: 'scripler',
 				resize_enabled: false,
-				extraPlugins: 'scripler,floating-tools,lineHeight,texttransform,indent-right,indentations,scripler_pagebreak',
+				extraPlugins: 'scripler,floating-tools,lineHeight,texttransform,indent-right,indentations,scripler_pagebreak,imageScripler,linkScripler',
 				floatingtools: 'Basic',
 				floatingtools_Basic: [
 					{ name: 'styles', items: [ 'Font' ] },
+					'/',
+					{ name: 'format', items: [ 'Format' ] },
 					'/',
 					{ name: 'fontstyles', items: [ 'FontSize', 'LineHeight' ] },
 					'/',
@@ -289,8 +291,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				contentsCss: ['ckeditor/contents.css', 'stylesets/non-editable.css'],
 				//Load css sheet via angualr here
 				toolbar: [
-					//['Source'], ['Undo'], ['Redo'], ['Paste'], ['PasteFromWord'], ['Styles'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['Image'], ['Link'], ['TextColor'], ['BGColor']
-					['Undo'], ['Redo'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['Image'], ['Link'], ['Source'] // TODO: Remove "Source" button before "real" launch (ALPHA? BETA?)
+					['Undo'], ['Redo'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['imageScripler'], ['linkScripler'], ['Source'] // TODO: Remove "Source" button before "real" launch (ALPHA? BETA?)
 				],
 				removeButtons: 'language,CreateDiv,Flash,Iframe'
 			});

@@ -9,7 +9,7 @@
 			<div class="center"></div>
 			<img src="pages/images/documents.svg" width="20">
 		</div>
-		<div class="menu-left-tab" ng-class="{ 'selectedTab' : showTypo }" ng-click="showTypo = !showTypo; hideStyleEditor(); showDocuments = false; showInsert = false;">
+		<div class="menu-left-tab" ng-class="{ 'selectedTab' : showTypo }" ng-click="showTypo = !showTypo; hideStyleEditor(); showDocuments = false; showInsert = false; focusEditor();">
 			<div class="center"></div>
 			<img src="pages/images/typography.svg" width="20">
 		</div>
@@ -59,12 +59,12 @@
 						<p>+</p>
 					</div>
 					<ul>
-						<li ng-repeat="styleset in stylesets" class="typo" ng-class="{ 'open' : typoChildrenVisible == true }" ng-hide="styleset.archived || styleset.hidden">
+						<li ng-repeat="styleset in stylesets track by $index" class="typo" ng-class="{ 'open' : typoChildrenVisible == true }" ng-hide="styleset.archived || styleset.hidden">
 							<a class="styleset-options-show" ng-click="typoChildrenVisible = true; showStylesetOptions = true">
 								<div class="arrow"></div>
 							</a>
 
-							<p class="not-selectable" ng-style="styleset.css" ng-click="typoChildrenVisible=!typoChildrenVisible" ng-hide="styleset.rename">{{styleset.name}}</p>
+							<p class="not-selectable" ng-style="styleset.css" ng-click="typoChildrenVisible=!typoChildrenVisible; focusEditor();" ng-hide="styleset.rename">{{styleset.name}}</p>
 
 							<form ng-show="styleset.rename">
 								<p>
@@ -76,28 +76,28 @@
 								<div class="styleset-options-hide" ng-click="showStylesetOptions = false;" title="Close Options">x</div>
 								<div class="styleset-options-menupoint first" ng-click="toggleRename(styleset); showStylesetOptions = false;">rename</div>
 								<div class="styleset-options-menupoint" ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>
-								<div class="styleset-options-menupoint" ng-click="applyStylesetToDocument(styleset); showStylesetOptions = false;">apply to document</div>
+								<div class="styleset-options-menupoint" ng-click="applyStylesetToDocument(styleset,true); showStylesetOptions = false;">apply to document</div>
 								<div class="styleset-options-menupoint" ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to project</div>
 							</div>
 
 							<ul ng-show="typoChildrenVisible || isDefaultStyleset(styleset)" class="typo-children">
-								<li ng-repeat="style in styleset.styles" id="{{style._id}}" ng-hide="style.archived || style.hidden" ng-selected="selectedStyle._id === style._id">
+								<li ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" ng-hide="style.archived || style.hidden" ng-selected="selectedStyle._id === style._id">
 									<a class="style-options-show" ng-click="showStyleOptions = true">
 										<div class="arrow"></div>
 									</a>
 
 									{{style.tag === 'h1' && setStylesetStyling(styleset, style) || ''}}
-									<span class="style-isblock" ng-bind="isBlock(style)"></span>
+									<!--<span class="style-isblock" ng-bind="isBlock(style)"></span>-->
 
 									<div class="style-height" ng-hide="style.rename">
-										<span class="not-selectable" ng-style="style.css" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
+										<span class="not-selectable" ng-style="getStyleStyling(style)" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
 									</div>
 
 									<div class="style-copy-options" ng-show="copyCSS && selectedStyle._id === style._id">
 										<ul>
-											<li><a ng-click="saveAsCharStyle(styleset, style)">save as character style</a></li>
-											<li><a ng-click="saveAsBlockStyle(styleset, style)">save as block style</a></li>
-											<li><a ng-click="overwriteStyle(style)">overwrite style</a></li>
+											<!--<li><a ng-click="saveAsCharStyle(styleset, style)">save as character style</a></li>-->
+											<li><a ng-click="saveAsBlockStyle(styleset, style)">save as new</a></li>
+											<li><a ng-click="overwriteStyle(style)">overwrite</a></li>
 										</ul>
 									</div>
 
@@ -228,11 +228,11 @@
 										<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Insert the pagebreak" />
 									</a>
 								</span>
-								<span class="left-menu-button">
+								<!--<span class="left-menu-button">
 									<a ng-click="insertPageBreakAvoid()">
 										<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Avoid pagebreak" />
 									</a>
-								</span>
+								</span>-->
 							</div>
 						</li>
 						<!--<li class="insertOption"><img src="pages/images/insert_cover_button.png" width="80" height="80"></li>-->
@@ -318,16 +318,11 @@
 			<div class="menu-item-right inserts" ng-show="showFinalizeOptions">
 				<div class="menu-content">
 					<ul>
-						<li ng-click="finalizeOptionChosen('showFinalizeColophonOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
-							colophon
-						</li>
 						<li ng-click="finalizeOptionChosen('showFinalizeCoverOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
-							<img src="pages/images/insert_cover_button.png" width="80" height="80" />
+							<img src="pages/images/insert_cover.png" />
 						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
-							<span class="right-menu-button full-size right-menu-parameter-margin">
-									<a ng-click="generateColophon();">Generate Colophon</a>
-							</span>
+						<li ng-click="finalizeOptionChosen('showFinalizeTitlepageOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
+							<img src="pages/images/insert_titlepage.png" />
 						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
 							<div class="right-menu-options">
@@ -337,12 +332,19 @@
 								</span>
 							</div>
 						</li>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
+							<div class="right-menu-options">
+								<span class="right-menu-button full-size right-menu-parameter-margin">
+									<a ng-click="generateTitlePage();">Generate Title Page</a>
+								</span>
+							</div>
+						</li>
 
 						<li ng-click="finalizeOptionChosen('showFinalizeTocOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
-							toc
+							<img src="pages/images/insert_toc.png" />
 						</li>
-						<li ng-click="finalizeOptionChosen('showFinalizeTitlepageOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
-							title page
+						<li ng-click="finalizeOptionChosen('showFinalizeColophonOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
+							<img src="pages/images/insert_colophon.png" />
 						</li>
 						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
 							<div class="right-menu-options">
@@ -354,12 +356,10 @@
 								</span>
 							</div>
 						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
-							<div class="right-menu-options">
-								<span class="right-menu-button full-size right-menu-parameter-margin">
-									<a ng-click="generateTitlePage();">Generate Title Page</a>
-								</span>
-							</div>
+						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
+							<span class="right-menu-button full-size right-menu-parameter-margin">
+									<a ng-click="generateColophon();">Generate Colophon</a>
+							</span>
 						</li>
 					</ul>
 				</div>
@@ -394,7 +394,9 @@
 							<input type="text" name="output_unique" id="output_unique" value="{{project.metadata.isbn}}" ng-model="project.metadata.isbn" />
 							<span class="statusfield" ng-class="{ 'text-saved': metaIsbnSaved }">Saved</span>
 						</span>
-						<span class="left-menu-box label left-menu-parameter-margin">Download options</span>
+					</li>
+					<li class="outputOptionProperties outputOptionDownload">
+						<span class="left-menu-box label">Download options</span>
 						<span class="left-menu-box label left-menu-parameter-margin left-menu-download">
 							<img class="download-icon" src="pages/images/compile_epub.png" ng-click="exportEpub()">
 						</span>

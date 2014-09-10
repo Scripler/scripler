@@ -1,10 +1,12 @@
 'use strict'
 
-function projectSpaceController( $scope, $http, localStorageService, projectsService, userService, $q, user ) {
+function projectSpaceController( $scope, $http, localStorageService, projectsService, userService, $q, user, $location ) {
 
 	$scope.user = user;
 
 	$scope.showPublicationOptions = false;
+
+	$scope.frontpage = $location.host();
 
 	var lsName = 'demo-scripler-publications';
 
