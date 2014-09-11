@@ -18,244 +18,236 @@
 			<img src="pages/images/insert.svg" width="20">
 		</div>
 	</div>
-	<div id="menu-left" class="menu-left" ng-class="{ 'open' : showDocuments || showTypo || showInsert }">
-		<div id="menu-left-content" class="content">
-			<div class="menu-item-left documents" ng-show="showDocuments">
-				<div  class="menu-content">
-					<div class="projectDocument new" ng-click="addProjectDocument()">
-						<p>+</p>
+	<div id="menu-left" class="menu-left" ng-class="{ 'open' : showDocuments || showTypo || showInsert, 'bottom-menu-space' : showDocuments || showTypo }">
+		<div class="menu-item-left documents" ng-show="showDocuments">
+			<div class="projectDocument new" ng-click="addProjectDocument()">
+				<p>+</p>
+			</div>
+			<div html-sortable="sortable_option" ng-model="projectDocuments">
+				<div class="projectDocument" ng-repeat="projectDocument in projectDocuments track by projectDocument._id" ng-selected="documentSelected === projectDocument" ng-hide="projectDocument.archived && !user.showArchivedDocuments" ng-class="{ 'archived' : projectDocument.archived }">
+					<a class="projectDocument-options-show" ng-click="showProjectDocumentOptions = true">
+						<div class="arrow"></div>
+					</a>
+
+					<p ng-hide="editingProjectDocumentTitle">
+						<a class="projectDocument-link" ng-click="projectDocumentChosen(projectDocument)">
+							{{projectDocument.type || projectDocument.name}}
+						</a>
+					</p>
+
+					<form ng-show="editingProjectDocumentTitle">
+						<p>
+							<textarea id="renameProjectDocument" rows="4" ng-model="projectDocument.name" focus-on="!!editingProjectDocumentTitle" on-enter="editingProjectDocumentTitle = false; renameProjectDocument(projectDocument);"></textarea>
+						</p>
+					</form>
+
+					<div class="projectDocument-options" ng-show="showProjectDocumentOptions">
+						<div class="projectDocument-options-hide" ng-click="showProjectDocumentOptions = false;" title="Close Options">x</div>
+						<div class="projectDocument-options-menupoint first" ng-click="editingProjectDocumentTitle = true; showProjectDocumentOptions = false;">rename</div>
+						<div class="projectDocument-options-menupoint" ng-hide="projectDocument.archived" ng-click="archiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">archive</div>
+						<div class="projectDocument-options-menupoint" ng-show="projectDocument.archived" ng-click="unarchiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">unarchive</div>
 					</div>
-					<div html-sortable="sortable_option" ng-model="projectDocuments">
-						<div class="projectDocument" ng-repeat="projectDocument in projectDocuments track by projectDocument._id" ng-selected="documentSelected === projectDocument" ng-hide="projectDocument.archived && !user.showArchivedDocuments" ng-class="{ 'archived' : projectDocument.archived }">
-							<a class="projectDocument-options-show" ng-click="showProjectDocumentOptions = true">
+				</div>
+			</div>
+		</div>
+		<div class="menu-item-left" ng-show="showTypo">
+			<div class="typo new" ng-click="addNewStyleset()">
+				<p>+</p>
+			</div>
+			<ul>
+				<li ng-repeat="styleset in stylesets track by $index" class="typo" ng-class="{ 'open' : typoChildrenVisible == true }" ng-hide="styleset.archived || styleset.hidden">
+					<a class="styleset-options-show" ng-click="typoChildrenVisible = true; showStylesetOptions = true">
+						<div class="arrow"></div>
+					</a>
+
+					<p class="not-selectable" ng-style="styleset.css" ng-click="typoChildrenVisible=!typoChildrenVisible; focusEditor();" ng-hide="styleset.rename">{{styleset.name}}</p>
+
+					<form ng-show="styleset.rename">
+						<p>
+							<textarea id="renameStyleset" rows="1" ng-model="styleset.name" focus-on="!!styleset.rename" on-enter="toggleRename(styleset); renameStyleset(styleset);"></textarea>
+						</p>
+					</form>
+
+					<div class="styleset-options" ng-show="showStylesetOptions">
+						<div class="styleset-options-hide" ng-click="showStylesetOptions = false;" title="Close Options">x</div>
+						<div class="styleset-options-menupoint first" ng-click="toggleRename(styleset); showStylesetOptions = false;">rename</div>
+						<div class="styleset-options-menupoint" ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>
+						<div class="styleset-options-menupoint" ng-click="applyStylesetToDocument(styleset,true); showStylesetOptions = false;">apply to document</div>
+						<div class="styleset-options-menupoint" ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to project</div>
+					</div>
+
+					<ul ng-show="typoChildrenVisible || isDefaultStyleset(styleset)" class="typo-children">
+						<li ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" ng-hide="style.archived || style.hidden" ng-selected="selectedStyle._id === style._id">
+							<a class="style-options-show" ng-click="showStyleOptions = true">
 								<div class="arrow"></div>
 							</a>
 
-							<p ng-hide="editingProjectDocumentTitle">
-								<a class="projectDocument-link" ng-click="projectDocumentChosen(projectDocument)">
-									{{projectDocument.type || projectDocument.name}}
-								</a>
-							</p>
+							{{style.tag === 'h1' && setStylesetStyling(styleset, style) || ''}}
+							<!--<span class="style-isblock" ng-bind="isBlock(style)"></span>-->
 
-							<form ng-show="editingProjectDocumentTitle">
-								<p>
-									<textarea id="renameProjectDocument" rows="4" ng-model="projectDocument.name" focus-on="!!editingProjectDocumentTitle" on-enter="editingProjectDocumentTitle = false; renameProjectDocument(projectDocument);"></textarea>
-								</p>
+							<div class="style-height" ng-hide="style.rename">
+								<span class="not-selectable" ng-style="getStyleStyling(style)" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
+							</div>
+
+							<div class="style-copy-options" ng-show="copyCSS && selectedStyle._id === style._id">
+								<ul>
+									<!--<li><a ng-click="saveAsCharStyle(styleset, style)">save as character style</a></li>-->
+									<li><a ng-click="saveAsBlockStyle(styleset, style)">save as new</a></li>
+									<li><a ng-click="overwriteStyle(style)">overwrite</a></li>
+								</ul>
+							</div>
+
+							<form ng-show="style.rename">
+								<textarea id="renameStyle" rows="1" ng-model="style.name" focus-on="!!style.rename" on-enter="toggleRename(style); updateStyle(style);"></textarea>
 							</form>
 
-							<div class="projectDocument-options" ng-show="showProjectDocumentOptions">
-								<div class="projectDocument-options-hide" ng-click="showProjectDocumentOptions = false;" title="Close Options">x</div>
-								<div class="projectDocument-options-menupoint first" ng-click="editingProjectDocumentTitle = true; showProjectDocumentOptions = false;">rename</div>
-								<div class="projectDocument-options-menupoint" ng-hide="projectDocument.archived" ng-click="archiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">archive</div>
-								<div class="projectDocument-options-menupoint" ng-show="projectDocument.archived" ng-click="unarchiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">unarchive</div>
+							<div class="style-options" ng-show="showStyleOptions">
+								<div class="style-options-hide" ng-click="showStyleOptions = false;" title="Close Options">x</div>
+								<div class="style-options-menupoint first" ng-click="toggleRename(style); showStyleOptions = false;">rename</div>
+								<div class="style-options-menupoint" ng-click="archiveStyle(style); showStyleOptions = false;">archive</div>
 							</div>
+						</li>
+						<li class="new style" ng-click="addNewStyle( styleset )"><p>+</p></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="menu-item-left inserts" ng-show="showInsert">
+			<ul>
+				<!--<li ng-click="insertOptionChosen('showInsertBoxOptions');" class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
+					<img src="pages/images/insert_box_button.png" width="80" height="80" />
+				</li>-->
+				<li ng-click="insertOptionChosen('showInsertHyperlinkOptions');" class="insertOption first" ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
+					<img src="pages/images/insert_hyperlink_button.png" width="80" height="80" />
+				</li>
+				<li ng-click="insertOptionChosen('showInsertImageOptions');" class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
+					<img src="pages/images/insert_image_button.png" width="80" height="80" />
+				</li>
+				<!--<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
+					line properties
+					<div class="left-menu-divider"></div>
+					padding settings
+					<div class="left-menu-divider"></div>
+					margin settings
+				</li>-->
+				<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
+					<div class="left-menu-options">
+						<span class="left-menu-box inputfield full-size">
+							<input type="text" ng-model="linkAddress" placeholder="Target">
+						</span>
+						<span class="left-menu-box inputfield full-size left-menu-parameter-margin">
+							<input type="text" ng-model="linkText" placeholder="Text">
+						</span>
+						<span class="left-menu-box inputfield full-size left-menu-parameter-margin">
+							<select ng-model="linkAnchor" ng-options="anchor.text for anchor in toc">
+								<option value="">Choose internal target</option>
+							</select>
+						</span>
+						<span class="left-menu-button full-size left-menu-parameter-margin">
+							<a ng-click="insertNewLink();">+</a>
+						</span>
+					</div>
+				</li>
+				<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
+					<div class="left-menu-options">
+						<span class="left-menu-box">
+							<input type="file" id="imagesInput" ng-file-select="onImageSelect($files)" accept="image/*" ng-hide="true">
+							<label for="imagesInput">Click to insert an image</label>
+						</span>
+					</div>
+					<!--<div class="left-menu-options left-menu-parameter-margin">
+						<span class="left-menu-button">
+							<a ng-click="alignImageLeft(); insertImageOption('')">
+								<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Left" />
+							</a>
+						</span>
+						<span class="left-menu-button">
+							<a ng-click="alignImageCenter(); insertImageOption('')">
+								<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Center" />
+							</a>
+						</span>
+						<span class="left-menu-button">
+							<a ng-click="alignImageRight(); insertImageOption('')">
+								<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Right" />
+							</a>
+						</span>
+						<span class="left-menu-button">
+							<a ng-click="insertImageOption('turnImage')">
+								<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Turn Image" />
+							</a>
+						</span>
+						<span class="left-menu-button">
+							<a ng-click="duplicateImage(); insertImageOption('')">
+								<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Duplicate Image" />
+							</a>
+						</span>
+						<span class="left-menu-button">
+							<a ng-click="insertImageOption('resizeImage')">
+								<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Resize Image" />
+							</a>
+						</span>
+					</div>
+					<div class="left-menu-options-parameters left-menu-parameter-margin">
+						<div ng-class="{ 'expanded' : activeImageOption === 'turnImage' }">
+							<span class="left-menu-button">
+								<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Resize Image Set Procentages" />
+							</span>
+							<span class="left-menu-box inputfield">
+								<input type="text" value="45" class="show-info">
+								<span class="extra-info">&deg;</span>
+							</span>
 						</div>
-					</div>
-				</div>
-			</div>
-			<div class="menu-item-left" ng-show="showTypo">
-				<div class="menu-content">
-					<div class="typo new" ng-click="addNewStyleset()">
-						<p>+</p>
-					</div>
-					<ul>
-						<li ng-repeat="styleset in stylesets track by $index" class="typo" ng-class="{ 'open' : typoChildrenVisible == true }" ng-hide="styleset.archived || styleset.hidden">
-							<a class="styleset-options-show" ng-click="typoChildrenVisible = true; showStylesetOptions = true">
-								<div class="arrow"></div>
+						<div ng-class="{ 'expanded' : activeImageOption === 'resizeImage' }">
+							<span class="left-menu-button">
+								<img src="/create/ckeditor/skins/scripler/icons/maximize.png" title="Resize Image Set Procentages" />
+							</span>
+							<span class="left-menu-box inputfield">
+								<input type="text" value="100" class="show-info">
+								<span class="extra-info">%</span>
+							</span>
+						</div>
+					</div>-->
+				</li>
+
+				<li ng-click="insertOptionChosen('showInsertPagebreakOptions');" class="insertOption first" ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
+					<img src="pages/images/insert_pagebreak_button.png" width="80" height="80" />
+				</li>
+				<li ng-click="insertOptionChosen('showInsertAnchorOptions');" class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
+					<img src="pages/images/insert_anchor_button.png" width="80" height="80" />
+				</li>
+				<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
+					<div>
+						<span class="left-menu-button">
+							<a ng-click="insertPageBreak()">
+								<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Insert the pagebreak" />
 							</a>
+						</span>
+						<!--<span class="left-menu-button">
+							<a ng-click="insertPageBreakAvoid()">
+								<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Avoid pagebreak" />
+							</a>
+						</span>-->
+					</div>
+				</li>
+				<!--<li class="insertOption"><img src="pages/images/insert_cover_button.png" width="80" height="80"></li>-->
+				<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
+					<div class="left-menu-options">
+						<span class="left-menu-box inputfield">
+							<input type="text" ng-model="anchorName" placeholder="Anchor name">
+						</span>
+						<span class="left-menu-button">
+							<a ng-click="insertNewAnchor();">+</a>
+						</span>
 
-							<p class="not-selectable" ng-style="styleset.css" ng-click="typoChildrenVisible=!typoChildrenVisible; focusEditor();" ng-hide="styleset.rename">{{styleset.name}}</p>
-
-							<form ng-show="styleset.rename">
-								<p>
-									<textarea id="renameStyleset" rows="1" ng-model="styleset.name" focus-on="!!styleset.rename" on-enter="toggleRename(styleset); renameStyleset(styleset);"></textarea>
-								</p>
-							</form>
-
-							<div class="styleset-options" ng-show="showStylesetOptions">
-								<div class="styleset-options-hide" ng-click="showStylesetOptions = false;" title="Close Options">x</div>
-								<div class="styleset-options-menupoint first" ng-click="toggleRename(styleset); showStylesetOptions = false;">rename</div>
-								<div class="styleset-options-menupoint" ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>
-								<div class="styleset-options-menupoint" ng-click="applyStylesetToDocument(styleset,true); showStylesetOptions = false;">apply to document</div>
-								<div class="styleset-options-menupoint" ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to project</div>
-							</div>
-
-							<ul ng-show="typoChildrenVisible || isDefaultStyleset(styleset)" class="typo-children">
-								<li ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" ng-hide="style.archived || style.hidden" ng-selected="selectedStyle._id === style._id">
-									<a class="style-options-show" ng-click="showStyleOptions = true">
-										<div class="arrow"></div>
-									</a>
-
-									{{style.tag === 'h1' && setStylesetStyling(styleset, style) || ''}}
-									<!--<span class="style-isblock" ng-bind="isBlock(style)"></span>-->
-
-									<div class="style-height" ng-hide="style.rename">
-										<span class="not-selectable" ng-style="getStyleStyling(style)" ng-click="applyStyle(styleset, style)">{{style.name}}</span>
-									</div>
-
-									<div class="style-copy-options" ng-show="copyCSS && selectedStyle._id === style._id">
-										<ul>
-											<!--<li><a ng-click="saveAsCharStyle(styleset, style)">save as character style</a></li>-->
-											<li><a ng-click="saveAsBlockStyle(styleset, style)">save as new</a></li>
-											<li><a ng-click="overwriteStyle(style)">overwrite</a></li>
-										</ul>
-									</div>
-
-									<form ng-show="style.rename">
-										<textarea id="renameStyle" rows="1" ng-model="style.name" focus-on="!!style.rename" on-enter="toggleRename(style); updateStyle(style);"></textarea>
-									</form>
-
-									<div class="style-options" ng-show="showStyleOptions">
-										<div class="style-options-hide" ng-click="showStyleOptions = false;" title="Close Options">x</div>
-										<div class="style-options-menupoint first" ng-click="toggleRename(style); showStyleOptions = false;">rename</div>
-										<div class="style-options-menupoint" ng-click="archiveStyle(style); showStyleOptions = false;">archive</div>
-									</div>
-								</li>
-								<li class="new style" ng-click="addNewStyle( styleset )"><p>+</p></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div class="menu-item-left inserts" ng-show="showInsert">
-				<div class="menu-content">
-					<ul>
-						<!--<li ng-click="insertOptionChosen('showInsertBoxOptions');" class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
-							<img src="pages/images/insert_box_button.png" width="80" height="80" />
-						</li>-->
-						<li ng-click="insertOptionChosen('showInsertHyperlinkOptions');" class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
-							<img src="pages/images/insert_hyperlink_button.png" width="80" height="80" />
-						</li>
-						<li ng-click="insertOptionChosen('showInsertImageOptions');" class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
-							<img src="pages/images/insert_image_button.png" width="80" height="80" />
-						</li>
-						<!--<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
-							line properties
-							<div class="left-menu-divider"></div>
-							padding settings
-							<div class="left-menu-divider"></div>
-							margin settings
-						</li>-->
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
-							<div class="left-menu-options">
-								<span class="left-menu-box inputfield full-size">
-									<input type="text" ng-model="linkAddress" placeholder="Target">
-								</span>
-								<span class="left-menu-box inputfield full-size left-menu-parameter-margin">
-									<input type="text" ng-model="linkText" placeholder="Text">
-								</span>
-								<span class="left-menu-box inputfield full-size left-menu-parameter-margin">
-									<select ng-model="linkAnchor" ng-options="anchor.text for anchor in toc">
-										<option value="">Choose internal target</option>
-									</select>
-								</span>
-								<span class="left-menu-button full-size left-menu-parameter-margin">
-									<a ng-click="insertNewLink();">+</a>
-								</span>
-							</div>
-						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
-							<div class="left-menu-options">
-								<span class="left-menu-box">
-									<input type="file" id="imagesInput" ng-file-select="onImageSelect($files)" accept="image/*" ng-hide="true">
-									<label for="imagesInput">Click to insert an image</label>
-								</span>
-							</div>
-							<!--<div class="left-menu-options left-menu-parameter-margin">
-								<span class="left-menu-button">
-									<a ng-click="alignImageLeft(); insertImageOption('')">
-										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Left" />
-									</a>
-								</span>
-								<span class="left-menu-button">
-									<a ng-click="alignImageCenter(); insertImageOption('')">
-										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Center" />
-									</a>
-								</span>
-								<span class="left-menu-button">
-									<a ng-click="alignImageRight(); insertImageOption('')">
-										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Right" />
-									</a>
-								</span>
-								<span class="left-menu-button">
-									<a ng-click="insertImageOption('turnImage')">
-										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Turn Image" />
-									</a>
-								</span>
-								<span class="left-menu-button">
-									<a ng-click="duplicateImage(); insertImageOption('')">
-										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Duplicate Image" />
-									</a>
-								</span>
-								<span class="left-menu-button">
-									<a ng-click="insertImageOption('resizeImage')">
-										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Resize Image" />
-									</a>
-								</span>
-							</div>
-							<div class="left-menu-options-parameters left-menu-parameter-margin">
-								<div ng-class="{ 'expanded' : activeImageOption === 'turnImage' }">
-									<span class="left-menu-button">
-										<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Resize Image Set Procentages" />
-									</span>
-									<span class="left-menu-box inputfield">
-										<input type="text" value="45" class="show-info">
-										<span class="extra-info">&deg;</span>
-									</span>
-								</div>
-								<div ng-class="{ 'expanded' : activeImageOption === 'resizeImage' }">
-									<span class="left-menu-button">
-										<img src="/create/ckeditor/skins/scripler/icons/maximize.png" title="Resize Image Set Procentages" />
-									</span>
-									<span class="left-menu-box inputfield">
-										<input type="text" value="100" class="show-info">
-										<span class="extra-info">%</span>
-									</span>
-								</div>
-							</div>-->
-						</li>
-
-						<li ng-click="insertOptionChosen('showInsertPagebreakOptions');" class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
-							<img src="pages/images/insert_pagebreak_button.png" width="80" height="80" />
-						</li>
-						<li ng-click="insertOptionChosen('showInsertAnchorOptions');" class="insertOption" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
-							<img src="pages/images/insert_anchor_button.png" width="80" height="80" />
-						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
-							<div>
-								<span class="left-menu-button">
-									<a ng-click="insertPageBreak()">
-										<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Insert the pagebreak" />
-									</a>
-								</span>
-								<!--<span class="left-menu-button">
-									<a ng-click="insertPageBreakAvoid()">
-										<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Avoid pagebreak" />
-									</a>
-								</span>-->
-							</div>
-						</li>
-						<!--<li class="insertOption"><img src="pages/images/insert_cover_button.png" width="80" height="80"></li>-->
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
-							<div class="left-menu-options">
-								<span class="left-menu-box inputfield">
-									<input type="text" ng-model="anchorName" placeholder="Anchor name">
-								</span>
-								<span class="left-menu-button">
-									<a ng-click="insertNewAnchor();">+</a>
-								</span>
-
-								<span class="left-menu-box left-menu-parameter-margin">
-									<span class="option" ng-repeat="tocs in toc"><a ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
-								</span>
-							</div>
-						</li>
-						<!--<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions'showInsertHyperlinkOptions }">
-							this is the options for insert hyperlink
-						</li>-->
-					</ul>
-				</div>
-			</div>
+						<span class="left-menu-box left-menu-parameter-margin">
+							<span class="option" ng-repeat="tocs in toc"><a ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
+						</span>
+					</div>
+				</li>
+				<!--<li class="insertOptionProperties" ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions'showInsertHyperlinkOptions }">
+					this is the options for insert hyperlink
+				</li>-->
+			</ul>
 		</div>
 		<div class="documents-options-bottom-buttons" ng-show="showDocuments">
 			<a ng-class="{ 'open' : showNewOptions }" ng-click="showNewOptions = !showNewOptions; showImportOptions = false; showBottomOptions = false;">new</a>
@@ -271,7 +263,6 @@
 			<div class="options-bottom-box">
 				<div ng-show="showNewOptions">
 					<a ng-click="addProjectDocument()">New Document</a><br>
-					<!--<a ng-click="">New Folder</a>-->
 				</div>
 				<div ng-show="showImportOptions">
 					<div class="upload-box" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="dragover"
@@ -281,7 +272,6 @@
 				</div>
 				<div ng-show="showBottomOptions">
 					<input type="checkbox" ng-model="user.showArchivedDocuments" ng-change="updateUser();">Show Archived Documents<br>
-					<!--<a ng-click="">Compile</a>-->
 				</div>
 			</div>
 		</div>
@@ -314,96 +304,90 @@
 		</div>
 	</div>
 	<div id="menu-right" class="menu-right" ng-class="{ 'open' : showFinalizeOptions || showOutput }">
-		<div id="menu-right-content" class="content">
-			<div class="menu-item-right inserts" ng-show="showFinalizeOptions">
-				<div class="menu-content">
-					<ul>
-						<li ng-click="finalizeOptionChosen('showFinalizeCoverOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
-							<img src="pages/images/insert_cover.png" />
-						</li>
-						<li ng-click="finalizeOptionChosen('showFinalizeTitlepageOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
-							<img src="pages/images/insert_titlepage.png" />
-						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
-							<div class="right-menu-options">
-								<span class="right-menu-box">
-									<input type="file" id="coverInput" ng-file-select="onCoverSelect($files)" accept="image/*" ng-hide="true">
-									<label for="coverInput">Create a cover</label>
-								</span>
-							</div>
-						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
-							<div class="right-menu-options">
-								<span class="right-menu-button full-size right-menu-parameter-margin">
-									<a ng-click="generateTitlePage();">Generate Title Page</a>
-								</span>
-							</div>
-						</li>
+		<div class="menu-item-right inserts" ng-show="showFinalizeOptions">
+			<ul>
+				<li ng-click="finalizeOptionChosen('showFinalizeCoverOptions');" class="insertOption first" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
+					<img src="pages/images/insert_cover.png" />
+				</li>
+				<li ng-click="finalizeOptionChosen('showFinalizeTitlepageOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
+					<img src="pages/images/insert_titlepage.png" />
+				</li>
+				<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
+					<div class="right-menu-options">
+						<span class="right-menu-box">
+							<input type="file" id="coverInput" ng-file-select="onCoverSelect($files)" accept="image/*" ng-hide="true">
+							<label for="coverInput">Create a cover</label>
+						</span>
+					</div>
+				</li>
+				<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
+					<div class="right-menu-options">
+						<span class="right-menu-button full-size right-menu-parameter-margin">
+							<a ng-click="generateTitlePage();">Generate Title Page</a>
+						</span>
+					</div>
+				</li>
 
-						<li ng-click="finalizeOptionChosen('showFinalizeTocOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
-							<img src="pages/images/insert_toc.png" />
-						</li>
-						<li ng-click="finalizeOptionChosen('showFinalizeColophonOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
-							<img src="pages/images/insert_colophon.png" />
-						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
-							<div class="right-menu-options">
-								<span class="right-menu-box right-menu-parameter-margin">
-									<span class="option" ng-repeat="tocs in toc"><a ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
-								</span>
-								<span class="right-menu-button full-size right-menu-parameter-margin">
-									<a ng-click="generateToc();">Generate TOC</a>
-								</span>
-							</div>
-						</li>
-						<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
-							<span class="right-menu-button full-size right-menu-parameter-margin">
-									<a ng-click="generateColophon();">Generate Colophon</a>
-							</span>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div class="menu-item-right output" ng-show="showOutput">
-				<div class="menu-content">
-					<ul>
-					<li class="outputOptionProperties">
-						<span class="left-menu-box label">Title</span>
-						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaTitleSaved }">
-							<input type="text" name="output_title" id="output_title" value="{{project.metadata.title}}" ng-model="project.metadata.title"  />
-							<span class="statusfield" ng-class="{ 'text-saved': metaTitleSaved }">Saved</span>
+				<li ng-click="finalizeOptionChosen('showFinalizeTocOptions');" class="insertOption first" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
+					<img src="pages/images/insert_toc.png" />
+				</li>
+				<li ng-click="finalizeOptionChosen('showFinalizeColophonOptions');" class="insertOption" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
+					<img src="pages/images/insert_colophon.png" />
+				</li>
+				<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
+					<div class="right-menu-options">
+						<span class="right-menu-box right-menu-parameter-margin">
+							<span class="option" ng-repeat="tocs in toc"><a ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
 						</span>
-						<span class="left-menu-box label left-menu-parameter-margin">Author</span>
-						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaAuthorsSaved }">
-							<input type="text" name="output_author" id="output_author" value="{{project.metadata.authors}}" ng-model="project.metadata.authors"  />
-							<span class="statusfield" ng-class="{ 'text-saved': metaAuthorsSaved }">Saved</span>
+						<span class="right-menu-button full-size right-menu-parameter-margin">
+							<a ng-click="generateToc();">Generate TOC</a>
 						</span>
-						<span class="left-menu-box label left-menu-parameter-margin">Language</span>
-						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaLanguageSaved }">
-							<input type="text" name="output_language" id="output_language" value="{{project.metadata.language}}" ng-model="project.metadata.language" />
-							<span class="statusfield" ng-class="{ 'text-saved': metaLanguageSaved }">Saved</span>
-						</span>
-						<span class="left-menu-box label left-menu-parameter-margin">Description</span>
-						<span class="left-menu-box inputfield full-size-text" ng-class="{ 'text-saved': metaDescriptionSaved }">
-							<textarea name="output_description" id="output_description" ng-model="project.metadata.description" />{{project.metadata.description}}</textarea>
-							<span class="statusfield" ng-class="{ 'text-saved': metaDescriptionSaved }">Saved</span>
-						</span>
-						<span class="left-menu-box label left-menu-parameter-margin">Unique identifier / ISBN</span>
-						<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaIsbnSaved }">
-							<input type="text" name="output_unique" id="output_unique" value="{{project.metadata.isbn}}" ng-model="project.metadata.isbn" />
-							<span class="statusfield" ng-class="{ 'text-saved': metaIsbnSaved }">Saved</span>
-						</span>
-					</li>
-					<li class="outputOptionProperties outputOptionDownload">
-						<span class="left-menu-box label">Download options</span>
-						<span class="left-menu-box label left-menu-parameter-margin left-menu-download">
-							<img class="download-icon" src="pages/images/compile_epub.png" ng-click="exportEpub()">
-						</span>
-					</li>
-					</ul>
-				</div>
-			</div>
+					</div>
+				</li>
+				<li class="insertOptionProperties" ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
+					<span class="right-menu-button full-size right-menu-parameter-margin">
+							<a ng-click="generateColophon();">Generate Colophon</a>
+					</span>
+				</li>
+			</ul>
+		</div>
+		<div class="menu-item-right output" ng-show="showOutput">
+			<ul>
+			<li class="outputOptionProperties">
+				<span class="left-menu-box label">Title</span>
+				<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaTitleSaved }">
+					<input type="text" name="output_title" id="output_title" value="{{project.metadata.title}}" ng-model="project.metadata.title"  />
+					<span class="statusfield" ng-class="{ 'text-saved': metaTitleSaved }">Saved</span>
+					<span ng-bind="{{project.metadata.title}}">{{project.metadata.title}}</span>
+				</span>
+				<span class="left-menu-box label left-menu-parameter-margin">Author</span>
+				<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaAuthorsSaved }">
+					<input type="text" name="output_author" id="output_author" value="{{project.metadata.authors}}" ng-model="project.metadata.authors"  />
+					<span class="statusfield" ng-class="{ 'text-saved': metaAuthorsSaved }">Saved</span>
+				</span>
+				<span class="left-menu-box label left-menu-parameter-margin">Language</span>
+				<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaLanguageSaved }">
+					<input type="text" name="output_language" id="output_language" value="{{project.metadata.language}}" ng-model="project.metadata.language" />
+					<span class="statusfield" ng-class="{ 'text-saved': metaLanguageSaved }">Saved</span>
+				</span>
+				<span class="left-menu-box label left-menu-parameter-margin">Description</span>
+				<span class="left-menu-box inputfield full-size-text" ng-class="{ 'text-saved': metaDescriptionSaved }">
+					<textarea name="output_description" id="output_description" ng-model="project.metadata.description" />{{project.metadata.description}}</textarea>
+					<span class="statusfield" ng-class="{ 'text-saved': metaDescriptionSaved }">Saved</span>
+				</span>
+				<span class="left-menu-box label left-menu-parameter-margin">Unique identifier / ISBN</span>
+				<span class="left-menu-box inputfield full-size" ng-class="{ 'text-saved': metaIsbnSaved }">
+					<input type="text" name="output_unique" id="output_unique" value="{{project.metadata.isbn}}" ng-model="project.metadata.isbn" />
+					<span class="statusfield" ng-class="{ 'text-saved': metaIsbnSaved }">Saved</span>
+				</span>
+			</li>
+			<li class="outputOptionProperties outputOptionDownload">
+				<span class="left-menu-box label">Download options</span>
+				<span class="left-menu-box label left-menu-parameter-margin left-menu-download">
+					<img class="download-icon" src="pages/images/compile_epub.png" ng-click="exportEpub()">
+				</span>
+			</li>
+			</ul>
 		</div>
 	</div>
-
 </div>

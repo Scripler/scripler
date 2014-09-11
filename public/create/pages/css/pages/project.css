@@ -1,16 +1,22 @@
 .menu-left, .menu-right {
-	z-index: 1;
 	position: fixed;
 	top: 0;
+	z-index: 1;
+	background-color: #F2F3F4;
+	width: 260px;
+	height: 100%;
+	min-height: 100%;
+	border: 10px solid #F2F3F4;
+	overflow: hidden;
+	overflow-y: auto;
 	transition: all 1s;
 	-moz-transition: all 1s;
 	-ms-transition: all 1s;
 	-webkit-transition: all 1s;
 	-o-transition: all 1s;
-	background-color: #F2F3F4;
-	height: 100%;
-	min-height: 100%;
-	width: 260px;
+}
+.menu-left.bottom-menu-space {
+	border-bottom: 35px solid #F2F3F4;
 }
 .menu-left {
 	left: -260px;
@@ -73,9 +79,6 @@
 	padding-left: 10px;
 }
 
-.menu-item-left.documents, .menu-item-left.inserts, .menu-item-right.inserts, .menu-item-right.output {
-	padding: 10px 0 0 10px;
-}
 .menu-item-left, .menu-item-right {
 	opacity:1;
 }
@@ -114,8 +117,9 @@
 	padding: 10px;
 	background-color: #fff;
 	height: auto;
-	width: 100%;
-	position: absolute;
+	width: 260px;
+	position: fixed;
+	left: 50px;
 	bottom: 0;
 	z-index: 1;
 	margin-bottom: -150px;
@@ -130,10 +134,11 @@
 }
 
 .documents-options-bottom-buttons, .stylesets-options-bottom-buttons {
-	width: 100%;
-	position: absolute;
+	width: 260px;
+	position: fixed;
 	z-index: 2;
 	bottom: 0;
+	left: 50px;
 }
 .documents-options-bottom-buttons a, .stylesets-options-bottom-buttons a {
 	float: left;
@@ -188,14 +193,18 @@
 }
 .projectDocument {
 	position: relative;
-	margin: 0 10px 10px 0;
-	width: 72px;
+	margin: 0 9px 9px 0;
+	width: 66px;
+	width: calc(33% - 6px);
 	height: 95px;
 	background: none #fefefe;
 	float: left;
 	border: 1px solid #ffff99;
 	box-shadow: 0px 5px 5px -5px #ccc;
 	cursor: pointer;
+}
+.projectDocument:nth-child(3n+2) {
+	margin-right: 0;
 }
 .projectDocument-link {
 	display: block;
@@ -385,7 +394,7 @@ textarea#renameProjectDocument, textarea#renameStyleset, textarea#renameStyle {
 }
 .typo {
 	background-color: #fff;
-	margin: 10px;
+	margin: 0 0 10px 0;
 	cursor: pointer;
 	position: relative;
 	overflow-x: hidden;
@@ -622,17 +631,21 @@ li.typo p:first-child {
 
 .insertOption {
 	position: relative;
-	margin: 0 10px 10px 0;
-	width: 114px;
-	height: 114px;
+	margin: 0 0 10px 0;
+	padding: 16px 0 16px 16px;
+	width: 110px;
+	width: calc(50% - 5px);
 	background: none #fefefe;
 	float: left;
 	border: 1px solid #ffff99;
 	box-shadow: 0px 5px 5px -5px #ccc;
 	cursor: pointer;
 }
+.insertOption.first {
+	margin: 0 10px 10px 0;
+}
 .insertOption.expanded {
-	height: 124px;
+	height: 128px;
 	margin-bottom: 0;
 	border-bottom: 0px;
 	box-shadow: none;
@@ -645,9 +658,10 @@ li.typo p:first-child {
 .insertOptionProperties.expanded {
 	display: block;
 	position: relative;
-	margin: -1px 10px 10px 0;
+	margin: -1px 0 10px 0;
 	padding: 16px;
-	width: 238px;
+	width: 230px;
+	width: calc(100%);
 	height: auto;
 	background: none #fefefe;
 	float: left;
@@ -657,12 +671,8 @@ li.typo p:first-child {
 .outputOptionProperties {
 	display: block;
 	position: relative;
-	margin: 0px 10px 10px 0;
 	padding: 16px;
-	width: 238px;
-	height: auto;
 	background: none #fefefe;
-	float: left;
 	border: 1px solid #ffff99;
 	box-shadow: 0px 5px 5px -5px #ccc;
 }
