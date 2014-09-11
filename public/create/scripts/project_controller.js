@@ -357,14 +357,20 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.$watch('[project.metadata.title, project.metadata.authors, project.metadata.language, project.metadata.description, project.metadata.isbn]', $scope.debounceSaveUpdates, true);
 
 	$scope.exportEpub = function() {
-
-		$http.get('/project/' + $scope.pid + '/compile')
-			.success( function(data, status) {
-				window.location.href = "/project/" + $scope.pid + "/compile";
-			})
-			.error( function(status) {
-				console.log("error downloading, status: " + status);
+		var getTocPromise = $scope.getToc();
+		getTocPromise.then(function () {
+			var setTocPromise = $scope.setToc();
+			setTocPromise.then(function () {
+				$http.get('/project/' + $scope.pid + '/compile')
+					.success( function(data, status) {
+						window.location.href = "/project/" + $scope.pid + "/compile";
+					})
+					.error( function(status) {
+						console.log("error downloading, status: " + status);
+					});
 			});
+		});
+
 	}
 
 	$scope.openStylesets = function( projectDocument ) {
@@ -940,10 +946,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.getToc = function() {
+		var deferred = $q.defer();
 		$http.get('/project/' + $scope.project._id + '/toc')
 			.success( function( data ) {
 				$scope.toc = data.toc;
+				deferred.resolve();
 			});
+
+		return deferred.promise;
 	}
 
 	$scope.insertOptionChosen = function(insertoption) {
@@ -1118,7 +1128,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.setToc = function() {
-		$http.put('/project/' + $scope.pid + '/toc', angular.toJson( $scope.toc ));
+		var deferred = $q.defer();
+		var data = {};
+		data.entries = $scope.toc;
+		$http.put('/project/' + $scope.pid + '/toc', angular.toJson( data ))
+			.success( function( data ) {
+				deferred.resolve();
+			});
+
+		return deferred.promise;
 	}
 
 	function generateTitlePageHtml() {
