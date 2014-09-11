@@ -1753,17 +1753,17 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.toc[0].id, coverDocumentId);
 					assert.equal(res.body.toc[0].type, 'document');
 					assert.equal(res.body.toc[0].level, 0);
-					assert.equal(res.body.toc[0].target, conf.epub.htmlDir + '/Cover.html');
+					assert.equal(res.body.toc[0].target, 'Cover.html');
 					assert.equal(res.body.toc[0].text, 'Cover');
 					assert.equal(res.body.toc[4].id, childDocumentId);
 					assert.equal(res.body.toc[4].type, 'document');
 					assert.equal(res.body.toc[4].level, 0);
-					assert.equal(res.body.toc[4].target, conf.epub.htmlDir + '/' + conf.epub.documentPrefix + childDocumentId + ".html");
+					assert.equal(res.body.toc[4].target, conf.epub.documentPrefix + childDocumentId + ".html");
 					assert.equal(res.body.toc[4].text, 'Sikke et dokument');
 					assert.equal(res.body.toc[9].id, "id_25");
 					assert.equal(res.body.toc[9].type, 'a');
 					assert.equal(res.body.toc[9].level, 3);
-					assert.equal(res.body.toc[9].target, conf.epub.htmlDir + '/' + conf.epub.documentPrefix + stylesetDocumentId + ".html#id_25");
+					assert.equal(res.body.toc[9].target, conf.epub.documentPrefix + stylesetDocumentId + ".html#id_25");
 					assert.equal(res.body.toc[9].text, 'LinkyDinky');
 					done();
 				});
@@ -1852,15 +1852,15 @@ describe('Scripler RESTful API', function () {
 				.put('/project/' + projectId + '/toc')
 				.set('cookie', cookie)
 				.send({entries: [
-					{text: "Cover", target: "HTML/Cover.html", "level": "0"},
-					{text: "Title Page", target: "HTML/TitlePage.html", "level": "0"},
-					{text: "Table of Contents", target: "HTML/ToC.html", "level": "0"},
-					{text: "Colophon", target: "HTML/Colophon.html", "level": "0"},
-					{text: "Document 1", target: "HTML/" + conf.epub.documentPrefix + childDocumentId + ".html", "level": "0"},
-					{text: "Document 2", target: "HTML/" + conf.epub.documentPrefix + stylesetDocumentId + ".html", "level": "0"},
-					{text: "Introduction", target: "HTML/" + conf.epub.documentPrefix + childDocumentId + ".html#" + conf.epub.anchorIdPrefix + "1", "level": "1"},
-					{text: "Partey", target: "HTML/" + conf.epub.documentPrefix + stylesetDocumentId + ".html#" + conf.epub.anchorIdPrefix + "453", "level": "2"},
-					{text: "LinkyDinky", target: "HTML/" + conf.epub.documentPrefix + stylesetDocumentId + ".html#" + conf.epub.anchorIdPrefix + "25", "level": "3"}
+					{text: "Cover", target: "Cover.html", "level": "0"},
+					{text: "Title Page", target: "TitlePage.html", "level": "0"},
+					{text: "Table of Contents", target: "ToC.html", "level": "0"},
+					{text: "Colophon", target: "Colophon.html", "level": "0"},
+					{text: "Document 1", target: conf.epub.documentPrefix + childDocumentId + ".html", "level": "0"},
+					{text: "Document 2", target: conf.epub.documentPrefix + stylesetDocumentId + ".html", "level": "0"},
+					{text: "Introduction", target: conf.epub.documentPrefix + childDocumentId + ".html#" + conf.epub.anchorIdPrefix + "1", "level": "1"},
+					{text: "Partey", target: conf.epub.documentPrefix + stylesetDocumentId + ".html#" + conf.epub.anchorIdPrefix + "453", "level": "2"},
+					{text: "LinkyDinky", target: conf.epub.documentPrefix + stylesetDocumentId + ".html#" + conf.epub.anchorIdPrefix + "25", "level": "3"}
 				]})
 				.expect(200)
 				.end(function (err, res) {
