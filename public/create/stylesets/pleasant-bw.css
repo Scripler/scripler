@@ -146,6 +146,7 @@ code.block {
 }
 
 /*Name: Code*/
+/*
 code {
 	font-family: "Ubuntu Mono", monospace;
 	font-style:normal;
@@ -156,6 +157,7 @@ code {
 	background:#000000;
 }
 
+*/
 /*Name: Caption*/
 figcaption {
 	font-family: "Source Sans Pro", sans-serif;
