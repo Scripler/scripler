@@ -122,7 +122,7 @@ function updateStyles(styleset, jsonStyleset, next) {
 							callback(err);
 						}
 
-						//logger.info(stylesheetName + ': created/updated style: ' + JSON.stringify(style));
+						//logger.info(styleset.name + ': created/updated style: ' + JSON.stringify(style));
 						styleset.styles.addToSet(style);
 						callback(null);
 					});
