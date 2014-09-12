@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="scriplerApp">
+<html data-ng-app="scriplerApp">
 <head>
 	<title>Scripler</title>
 
@@ -20,22 +20,22 @@
 	<script type="text/javascript" src="scripts/project_controller.js"></script>
 	<script type="text/javascript" src="ckeditor/ckeditor.js"></script>
 </head>
-<body ng-controller="appController" ng-cloak>
+<body data-ng-controller="appController" data-ng-cloak>
 
-	<div ng-view></div>
+	<div data-ng-view></div>
 
-	<div class="registration" ng-hide="user.emailValidated || closeStatus" ng-class="{ 'green' : user._id }" ng-cloak>
-		<div class="registration-close-button" ng-click="closeStatus = !closeStatus" ng-show="user._id">x</div>
-		<div class="error-boxes" ng-show="registerForm.$invalid && !registerForm.$pristine && registrationSubmitted && !user._id">
-			<div class="arrow-box" ng-show="registerForm.name.$invalid && !registerForm.name.$pristine" ng-bind="errors.name"></div>
-			<div class="arrow-box second" ng-show="registerForm.email.$invalid && !registerForm.email.$pristine" ng-bind="errors.email"></div>
-			<div class="arrow-box third" ng-show="registerForm.password.$invalid && !registerForm.password.$pristine" ng-bind="errors.password"></div>
+	<div class="registration" data-ng-hide="user.emailValidated || closeStatus" data-ng-class="{ 'green' : user._id }" data-ng-cloak>
+		<div class="registration-close-button" data-ng-click="closeStatus = !closeStatus" data-ng-show="user._id">x</div>
+		<div class="error-boxes" data-ng-show="registerForm.$invalid && !registerForm.$pristine && registrationSubmitted && !user._id">
+			<div class="arrow-box" data-ng-show="registerForm.name.$invalid && !registerForm.name.$pristine" data-ng-bind="errors.name"></div>
+			<div class="arrow-box second" data-ng-show="registerForm.email.$invalid && !registerForm.email.$pristine" data-ng-bind="errors.email"></div>
+			<div class="arrow-box third" data-ng-show="registerForm.password.$invalid && !registerForm.password.$pristine" data-ng-bind="errors.password"></div>
 		</div>
-		<div class="registration-text" ng-bind="registrationText" ng-class="{ 'validate' : user._id }"></div>
-		<form name="registerForm" class="registration-form" ng-submit="submitRegistration()" ng-hide="user._id" novalidate>
-			<input on-click-change-text type="text" id="reg-name" name="name" ng-model="user.name" ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First name and Last name" required>
-			<input on-click-change-text type="email" id="reg-email" name="email" ng-model="user.email" ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email Address" ng-pattern="EMAIL_REGEXP" required>
-			<input on-click-change-text type="password" id="reg-password" name="password" ng-model="user.password" ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" ng-minlength="6" required>
+		<div class="registration-text" data-ng-bind="registrationText" data-ng-class="{ 'validate' : user._id }"></div>
+		<form name="registerForm" class="registration-form" data-ng-submit="submitRegistration()" data-ng-hide="user._id" novalidate>
+			<input on-click-change-text type="text" id="reg-name" name="name" data-ng-model="user.name" data-ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First name and Last name" required>
+			<input on-click-change-text type="email" id="reg-email" name="email" data-ng-model="user.email" data-ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email Address" data-ng-pattern="EMAIL_REGEXP" required>
+			<input on-click-change-text type="password" id="reg-password" name="password" data-ng-model="user.password" data-ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" data-ng-minlength="6" required>
 			<button type="submit" class="button registration-button">Register</button>
 		</form>
 	</div>
