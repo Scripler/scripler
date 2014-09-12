@@ -663,7 +663,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 			if ( [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ].indexOf( style.tag ) > -1 ) {
 				if ( element.getId() === null ) {
-					element.$.id = Date.now();
+					element.$.id = 'id_' + Date.now();
 				}
 			}
 		}
@@ -1010,7 +1010,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 
 	$scope.insertNewAnchor = function() {
-		var id = Date.now();
+		var id = 'id_' + Date.now();
 		var insert = '<a id="' + id + '" name="' + id + '" title="' + $scope.anchorName + '"></a>';
 		editorInsert( insert );
 		$scope.updateProjectDocument();

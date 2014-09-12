@@ -334,7 +334,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 					var headingsArray = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ];
 
 					if ( headingsArray.indexOf( el.getName() ) > -1 ) {
-						el.$.id = Date.now();
+						el.$.id = 'id_' + Date.now();
 					}
 
 					if ( el.$.children.length > 0 ) {
