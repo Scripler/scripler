@@ -164,7 +164,23 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var order = $scope.projectDocuments.length + 1;
 		var name = "Document " + order;
 		var document = {};
-		document.name = name;
+
+		if (type == 'cover') {
+			document.name = 'Cover';
+		}
+		else if (type == 'colophon') {
+			document.name = 'Colophon';
+		}
+		else if (type == 'toc') {
+			document.name = 'Table of Contents';
+		}
+		else if (type == 'titlepage') {
+			document.name = 'Titlepage';
+		}
+		else {
+			document.name = name;
+		}
+
 		document.text = '';
 
 		if ( typeof type !== 'undefined' ) {
