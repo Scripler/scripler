@@ -1,3 +1,24 @@
+html, body {
+	width: 100%;
+	height: 100%;
+}
+
+.text-align-left {
+	text-align: left;
+}
+.text-align-center {
+	text-align: center;
+}
+.text-align-right {
+	text-align: right;
+}
+.text-decoration-bold {
+	font-weight: bold;
+}
+.text-decoration-italic {
+	font-style: italic;
+}
+
 .menu-left, .menu-right {
 	position: fixed;
 	top: 0;
@@ -25,14 +46,6 @@
 	right: -260px;
 }
 
-.menu-left .top, .menu-right .top {
-	height: 25px;
-	background-color: #000;
-	color: #fff;
-	text-align: center;
-	width: 100%;
-	line-height: 23px;
-}
 .menu-left.open {
 	left: 50px;
 }
@@ -40,7 +53,7 @@
 	right: 50px;
 }
 
-.menu-left-tabs, .menu-right-tabs {
+.menu-tabs {
 	z-index: 2;
 	position: fixed;
 	top: 0;
@@ -54,29 +67,29 @@
 	-webkit-user-select: none;
 	user-select: none;
 }
-.menu-left-tabs {
+.menu-tabs.left {
 	left: 0;
 }
-.menu-right-tabs {
+.menu-tabs.right {
 	right: 0;
 }
 
-.menu-left-tab, .menu-right-tab {
-	font-size: 130%;
+.menu-tab {
 	cursor: pointer;
 	height: calc(100% / 3);
-	min-height: 178px;
+	min-height: 190px;
 	padding: 0;
+	text-align: center;
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	transform-style: preserve-3d;
 }
-.menu-left-tab {
-	padding-left: 12px;
-}
-.menu-right-tab {
-	padding-left: 14px
-}
-.menu-right-tab.output {
-	/*visual fix because of output p*/
-	padding-left: 10px;
+.menu-tab img {
+	position: relative;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
 }
 
 .menu-item-left, .menu-item-right {
@@ -91,10 +104,7 @@
 	display:block!important;
 }
 
-.menu-content {
-	overflow: hidden;
-}
-.menu-left .content, .menu-right .content {
+/*.menu-left .content, .menu-right .content {
 	overflow-y: auto;
 	float: left;
 }
@@ -112,8 +122,9 @@
 	font-size: 20px;
 	float: left;
 	cursor: pointer;
-}
-.menu-left-options, .menu-right-options {
+}*/
+
+.menu-options {
 	padding: 10px;
 	background-color: #fff;
 	height: auto;
@@ -129,7 +140,7 @@
 	-webkit-transition: all 0.5s;
 	-o-transition: all 0.5s;
 }
-.menu-left-options.open, .menu-right-options.open {
+.menu-options.open {
 	margin-bottom: 28px !important;
 }
 
@@ -482,7 +493,7 @@ li.typo p:first-child {
 	margin-bottom: 8px;
 	padding-top: 8px;
 }
-.left-menu-options, .right-menu-options {
+.menu-options {
 	display: block;
 	text-align: center;
 }
@@ -505,26 +516,25 @@ li.typo p:first-child {
 	text-align: center;
 	cursor: pointer;
 }
-.left-menu-box, .right-menu-box {
+.menu-box {
 	display: inline-block;
 	width: 100%;
 	padding: 5px 10px;
 	border: 1px solid #efefef;
-	text-align: left;
 	cursor: pointer;
 }
 .left-menu-parameter-margin, .right-menu-parameter-margin {
 	margin-top: 10px;
 }
 
-.left-menu-box.label {
+.menu-box.label {
 	position: relative;
 	display: block;
 	border: 0;
 	padding: 5px 0;
 }
 
-.left-menu-box.inputfield {
+.menu-box.inputfield {
 	position: relative;
 	width: calc(100% - 36px);
 	padding: 0;
@@ -534,29 +544,30 @@ li.typo p:first-child {
 	-webkit-transition: all 1s;
 	-o-transition: all 1s;
 }
-.left-menu-box.inputfield.full-size {
+/*left*/
+.menu-box.inputfield.full-size {
 	position: relative;
 	width: 100%;
 	height: 32px;
 	padding: 0;
 }
-.left-menu-box.inputfield.full-size-text {
+.menu-box.inputfield.full-size-text {
 	position: relative;
 	width: 100%;
 	height: 64px;
 	padding: 0;
 }
-.left-menu-box.inputfield.text-saved {
+.menu-box.inputfield.text-saved {
 	border-color: yellow;
 	height: 56px;
 }
-.left-menu-box.inputfield.full-size-text.text-saved {
+.menu-box.inputfield.full-size-text.text-saved {
 	position: relative;
 	width: 100%;
 	height: 92px;
 	padding: 0;
 }
-.left-menu-box .statusfield {
+.menu-box .statusfield {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -573,17 +584,17 @@ li.typo p:first-child {
 	-webkit-transition: all 1s;
 	-o-transition: all 1s;
 }
-.left-menu-box .statusfield.text-saved {
+.menu-box .statusfield.text-saved {
 	background: none yellow;
 	top: 28px;
 }
-.left-menu-box.inputfield.full-size-text .statusfield {
+.menu-box.inputfield.full-size-text .statusfield {
 	top: 34px;
 }
-.left-menu-box.inputfield.full-size-text .statusfield.text-saved  {
+.menu-box.inputfield.full-size-text .statusfield.text-saved  {
 	top: 62px;
 }
-.left-menu-box.inputfield input, .left-menu-box.inputfield select {
+.menu-box.inputfield input, .menu-box.inputfield select {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -593,7 +604,7 @@ li.typo p:first-child {
 	height: 28px;
 	padding: 5px 10px;
 }
-.left-menu-box.inputfield textarea {
+.menu-box.inputfield textarea {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -603,26 +614,26 @@ li.typo p:first-child {
 	height: 60px;
 	padding: 5px 10px;
 }
-.left-menu-box.inputfield input.show-info {
+.menu-box.inputfield input.show-info {
 	padding-right: 30px;
 	text-align: right;
 }
-.left-menu-box.inputfield .extra-info {
+.menu-box.inputfield .extra-info {
 	position: absolute;
 	top: 5px;
 	right: 10px;
 	color: #ccc;
 }
-.left-menu-box.inputfield input:focus, .left-menu-box.inputfield textarea:focus {
+.menu-box.inputfield input:focus, .menu-box.inputfield textarea:focus {
 	outline: none;
 }
-.left-menu-box .option, .right-menu-box .option {
+.menu-box .option {
 	display: block;
 }
-.left-menu-box.left-menu-download {
+.menu-box.left-menu-download {
 	text-align: center;
 }
-.left-menu-box.left-menu-download .download-icon {
+.menu-box.left-menu-download .download-icon {
 	width: 50px;
 	height: auto;
 	margin: 0 5px;
