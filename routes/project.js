@@ -17,6 +17,7 @@ var mkdirp = require('mkdirp');
 var async = require('async');
 var project_utils = require('../lib/project-utils');
 var TOCEntry = require('../models/project.js').TOCEntry;
+var archiver = require('archiver');
 
 //Load project by id
 exports.load = function (id) {
@@ -40,7 +41,7 @@ exports.load = function (id) {
 exports.loadPopulated = function (id) {
 	return function (req, res, next) {
 		var idCopy = id || req.body.projectId;
-		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', select: 'name folderId modified archived styleset members type'}).exec(function (err, project) {
+		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', select: 'name folderId modified archived stylesets members type'}).exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
@@ -57,7 +58,7 @@ exports.loadPopulated = function (id) {
 exports.loadPopulatedFull = function (id) {
 	return function (req, res, next) {
 		var idCopy = id || req.body.projectId;
-		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', match: {archived: false}, select: 'name folderId modified archived styleset members type text'}).exec(function (err, project) {
+		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', match: {archived: false}, select: 'name folderId modified archived stylesets members type text'}).exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
@@ -406,6 +407,22 @@ exports.get_toc = function (req, res, next) {
 }
 
 exports.compile = function (req, res, next) {
+	/*
+	var archive = archiver('zip', {zlib: {level: 9}});
+
+	var filename = req.project.metadata.title || req.project.name;
+	var saneTitle = sanitize(filename);
+	res.setHeader('Content-disposition', 'attachment; filename=' + saneTitle + ".epub");
+	res.setHeader('Content-type', 'application/epub+zip');
+	//res.send({data: archive});
+	archive.append('string', { name:'string.txt' });
+	archive.finalize();
+	archive.on('finish', function() {
+		console.log('finish');
+		archive.pipe(res);
+	});
+	*/
+
 	epub3.create(req.user._id, req.project, function (err, epub) {
 		if (err) {
 			return next(err);
@@ -416,6 +433,8 @@ exports.compile = function (req, res, next) {
 		res.setHeader('Content-disposition', 'attachment; filename=' + saneTitle + ".epub");
 		res.setHeader('Content-type', 'application/epub+zip');
 		epub.pipe(res);
+		//res.pipe(epub);
+		//res.send({data: epub});
 	});
 
 }
