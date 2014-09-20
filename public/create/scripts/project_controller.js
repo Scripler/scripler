@@ -380,7 +380,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			setTocPromise.then(function () {
 				$http.get('/project/' + $scope.pid + '/compile')
 					.success( function(data, status) {
-						//console.log("great success: " + JSON.stringify(data));
 						window.location.href = "/project/" + $scope.pid + "/compile";
 					})
 					.error( function(status) {
