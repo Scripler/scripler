@@ -7,7 +7,7 @@
 		"salt": "tyu:$"
 	},
 	"db": {
-		"uri": "mongodb://localhost/scripler_test"
+		"uri": "mongodb://localhost/scripler_test?connectTimeoutMS=10000"
 	},
 	"resources": {
 		"projectsDir": "/tmp",
