@@ -376,6 +376,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.exportEpub = function() {
 		var getTocPromise = $scope.getToc();
+
 		getTocPromise.then(function () {
 			var setTocPromise = $scope.setToc();
 			setTocPromise.then(function () {
@@ -981,6 +982,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			.success( function( data ) {
 				$scope.toc = data.toc;
 				deferred.resolve();
+			})
+			.error( function(status) {
+				console.log("error getting toc, status: " + status);
 			});
 
 		return deferred.promise;
@@ -1164,6 +1168,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$http.put('/project/' + $scope.pid + '/toc', angular.toJson( data ))
 			.success( function( data ) {
 				deferred.resolve();
+			})
+			.error( function(status) {
+				console.log("error setting toc, status: " + status);
 			});
 
 		return deferred.promise;
