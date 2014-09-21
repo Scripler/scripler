@@ -52,10 +52,10 @@
 			"storage": 20000//bytes
 		},
 		"premium": {
-			"storage": 200000//bytes
+			"storage": 20000000//bytes
 		},
 		"professional": {
-			"storage": 2000000//bytes
+			"storage": 200000000//bytes
 		}
 	},
 	"epub": {
