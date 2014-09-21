@@ -3,7 +3,7 @@ div.half {
 	float: left;
 }
 
-#scripler, #explore, #features, #pricing, #learn, #about, #contact, #login {
+#scripler, #explore, #features, #pricing, #learn, #about, #contact, #login, #password-reset {
 	position: relative;
 	margin: 0 auto;
 	padding: 30px 20px 20px 20px;
@@ -92,7 +92,7 @@ div.half {
 }
 #login article {
 	position: relative;
-	width: 960px;
+	width: 900px;
 	margin: 0 auto;
 	padding: 0;
 	padding-top: 5px;
@@ -137,6 +137,23 @@ div.half {
 }
 .create_logo {
 	padding: 50px 0 30px;
+}
+
+#login-extras {
+	font-size: 70%;
+	float: left;
+}
+
+#login-extras > div {
+	width: 135px;
+}
+
+#login-extras > div:first-child {
+    margin-left: 5px;
+}
+#login-extras label {
+	position: relative;
+	top: -3px;
 }
 
 .socialicons {
@@ -195,13 +212,19 @@ div.half {
 .login-wrap {
 	text-align: center;
 }
+
 .mc-field-group {
 	margin: 20px 0 0;
 	text-align: center;
 }
 
-.login-group input {
+.login-group {
+	height: 35px;
+}
+
+.login-group > input {
 	width: 250px;
+	float: left;
 }
 
 .email, .password {
@@ -270,4 +293,22 @@ div.half {
 	width: 600px;
 	left: 50%;
 	text-align: right;
+}
+
+/* Password Reset */
+#password-reset-form {
+    padding: 0;
+    margin: 0;
+    display: none;
+}
+#password-reset-button {
+    width: 180px;
+    font-weight: 0;
+    font-size: 15px;
+}
+
+#welcome-user {
+	position:absolute;
+	z-index: 100;
+	padding-left: 10px;
 }

@@ -56,9 +56,17 @@ exports.login = function (req, res, next) {
 		if (!user) {
 			return next({message: info.message, status: 401});
 		}
+		if (!user.password) {
+			return next({message: "User does not have password associated. Use OAuth: " + user.providers, status: 400});
+		}
 		req.logIn(user, function (err) {
 			if (err) {
 				return next(err);
+			}
+			// As default our session is saved as a cookie for 30 days.
+			// If user chooses not to be remembered across sessions,  disable this.
+			if (!req.body.remember) {
+				req.session.cookie.expires = false;
 			}
 			res.send({"user": user});
 		});
@@ -72,6 +80,56 @@ exports.logout = function (req, res) {
 	req.logout();
 	res.send({});
 };
+
+/**
+ * PUT password reset (send email).
+ */
+exports.passwordReset = function (req, res, next) {
+	crypto.randomBytes(32, function(err, buf) {
+		if (err) {
+			return next(err);
+		}
+		var token = buf.toString('hex');
+		User.findOneAndUpdate({"email": req.body.email}, { passwordResetToken: token }, {}, function (err, user) {
+			if (err) {
+				return next(err);
+			} else if (!user) {
+				return next( {message: "User not found", status: 404} );
+			}
+			if ('test' != env) {
+				emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + '#password-reset/' + user._id + '/' + token + '/' + hashEmail(user.email)}, 'Reset your password', 'password-reset');
+			}
+			return res.send({});
+		});
+	});
+};
+
+/**
+ * PUT password change (for password reset).
+ */
+exports.passwordChange = function (req, res, next) {
+	User.findOne({"_id": req.params.id}, function (err, user) {
+		if (err) {
+			return next(err);
+		} else if (!user) {
+			return next( {message: "User not found", status: 404} );
+		} else if (utils.isEmpty(user.passwordResetToken) || req.body.token != user.passwordResetToken) {
+			return next( {message: "Invalid hash", status: 400} );
+		} else if (utils.isEmpty(req.body.password)) {
+			return next( {message: "Password is empty", status: 400} );
+		}
+		user.passwordResetToken = null;
+		user.password = req.body.password;
+		user.save(function (err) {
+			if (err) {
+				return next(err);
+			}
+			return res.send({});
+		});
+	});
+};
+
+
 
 /**
  * POST user registration.

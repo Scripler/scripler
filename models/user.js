@@ -25,7 +25,7 @@ var UserSchema = new Schema({
 	deletedStylesets: [
 		{ type: Schema.Types.ObjectId, ref: 'Styleset' }
 	],
-	password: { type: String, required: true },
+	password: { type: String },
 	providers: [
 		{}
 	],
@@ -34,7 +34,8 @@ var UserSchema = new Schema({
 	showArchivedDocuments: { type: Boolean, default: false },
 	newsletter: { type: Boolean, default: true },
 	level: { type: String, default: "free" },
-	storageUsed: { type: Number, default: 0}
+	storageUsed: { type: Number, default: 0},
+	passwordResetToken: {type: String}
 });
 
 /** Handle bcrypt password-hashing.

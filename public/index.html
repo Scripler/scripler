@@ -15,6 +15,10 @@
 </head>
 <body>
 
+	<div id="welcome-user" style="display:none;">
+		<p>Hello <span id="welcome-user-name"></span>. <a href="/logout">Logout</a>.</p>
+	</div>
+
 	<nav class="menu-top">
 		<ul>
 			<!-- //ADD/FIX: Make a fallback if you haven't got Javascript -->
@@ -39,15 +43,26 @@
 			<div class="login-wrap">
 				<form id="login-form">
 					<div class="login-group">
-						<input type="email" value="" name="login-email" class="required email" id="login-email" placeholder="Email Address">
-						<input type="password" value="" name="login-password" class="required password" id="login-password" placeholder="Password">
-						<input name="Login" type="submit" value="Login" class="button login">
+						<input type="email" value="" name="login-email" class="required email" id="login-email" placeholder="Email Address" />
+						<input type="password" value="" name="login-password" class="required password" id="login-password" placeholder="Password" />
+						<input name="Login" type="submit" value="Login" class="button login" id="login-button" />
+						<div id="login-extras">
+							<div><a id="forgot-password" href="#">Forgot password?</a></div>
+							<div class="clearfix" id="remember-me-box"><input type="checkbox" name="remember" id="remember" /><label for="remember">Remember login?</label></div>
+						</div>
 					</div>
 				</form>
+                <form id="password-reset-form">
+                    <div class="login-group">
+                        <input type="password" value="" name="password1" class="required password" id="password1" placeholder="New password" />
+                        <input type="password" value="" name="password2" class="required password" id="password2" placeholder="Repeat password" />
+                        <input name="passsword-reset" type="submit" value="Change password" class="button" id="password-reset-button" />
+                    </div>
+                </form>
 				<div class="socialicons clearfix">
-					<div class="socialicon"><a href="api/auth/facebook" target="_blank"><span class="icon-facebook"></span></a></div>
-					<div class="socialicon"><a href="api/auth/google" target="_blank"><span class="icon-linkedin"></span></a></div>
-					<div class="socialicon"><a href="api/auth/google" target="_blank"><span class="icon-google-plus"></span></a></div>
+					<div class="socialicon"><a href="auth/facebook"><span class="icon-facebook"></span></a></div>
+					<div class="socialicon"><a href="auth/linkedin"><span class="icon-linkedin"></span></a></div>
+					<div class="socialicon"><a href="auth/google"><span class="icon-google-plus"></span></a></div>
 				</div>
 			 </div>
 		</article>
