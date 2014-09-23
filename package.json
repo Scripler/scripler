@@ -40,7 +40,8 @@
     "cheerio": "~0.16.0",
     "underscore": "~1.6.0",
     "strftime": "^0.8.2",
-    "discourse-sso": "^1.0.1"
+    "discourse-sso": "^1.0.1",
+	"chai": "^1.9.1"
   },
   "readmeFilename": "README.md",
   "main": "app.js",

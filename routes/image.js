@@ -8,6 +8,7 @@ var path = require('path');
 var mkdirp = require('mkdirp');
 var fs = require('fs');
 var logger = require('../lib/logger');
+var mongoose = require('mongoose')
 
 exports.create = function (req, res, next) {
 	var project = req.project;
@@ -34,12 +35,16 @@ exports.create = function (req, res, next) {
 	}
 
 	async.each(files, function (file, callback) {
-		var name = file.originalFilename;
-		var fileExtension = utils.getFileExtension(file.originalFilename);
+		var originalFilename = file.originalFilename;
+		var imageNameWithoutExtension = utils.getFilenameWithoutExtension(originalFilename);
+		var fileExtension = utils.getFileExtension(originalFilename);
+		var id = mongoose.Types.ObjectId(); // Avoid saving twice (where Mongoose would generate an object id on the first save() and we would save the id as part of "name" on the second save()).
+		var finalName = imageNameWithoutExtension + '-' + id + '.'  + fileExtension;
 		var mediaType = utils.getMediaType(fileExtension);
 
 		var image = new Image({
-			name: name,
+			_id: id,
+			name: finalName,
 			projectId: project._id,
 			members: [
 				{userId: req.user._id, access: ["admin"]}
@@ -59,7 +64,7 @@ exports.create = function (req, res, next) {
 			// Move uploaded image from uploadDir to project dir
 			var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
 			var dstImagesDir = path.join(projectDir, conf.epub.imagesDir);
-			var dstImage = path.join(dstImagesDir, name);
+			var dstImage = path.join(dstImagesDir, finalName);
 
 			var dstImageWriteStream = fs.createWriteStream(dstImage);
 			fs.createReadStream(file.path).pipe(dstImageWriteStream);
