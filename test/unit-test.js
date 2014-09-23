@@ -15,17 +15,20 @@ var epub = require('../lib/epub')
   , _ = require("underscore");
 
 describe('utils', function () {
-	it('replaceArray', function () {
-		var string = 'Doomsday devices, eh!? Now the ball\'s in Farnsworth\'s court!';
-		var find = ['Doomsday', 'devices', 'ball\'s in', 'Farnsworth'];
-		var replace = ['Disco', 'balls', 'balls are in', 'Disco Stu'];
-		string = utils.replaceArray(string, find, replace);
+	it('replaceMap', function () {
+		var string = 'Doomsday devices, eh!? Now the ball is in Farnsworth\'s court!';
+		var replaceMap = {
+			Doomsday: 'Disco',
+			devices: 'balls',
+			'ball is in': 'balls are in',
+			Farnsworth: 'Disco Stu'
+		};
+		string = utils.replaceMap(string, replaceMap);
 		assert.equal('Disco balls, eh!? Now the balls are in Disco Stu\'s court!', string);
 
 		string = 'Lots of disco balls: disco balls balls balls balls all over!';
-		find = ['balls'];
-		replace = ['shoes'];
-		string = utils.replaceArray(string, find, replace);
+		replaceMap = { balls: 'shoes' };
+		string = utils.replaceMap(string, replaceMap);
 		assert.equal('Lots of disco shoes: disco shoes shoes shoes shoes all over!', string);
 	})
 }),
