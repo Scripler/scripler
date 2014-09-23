@@ -36,15 +36,10 @@ exports.create = function (req, res, next) {
 
 	async.each(files, function (file, callback) {
 		var originalFilename = file.originalFilename;
-		var imageNameWithoutExtension = utils.getFilenameWithoutExtension(originalFilename);
 		var fileExtension = utils.getFileExtension(originalFilename);
-		var id = mongoose.Types.ObjectId(); // Avoid saving twice (where Mongoose would generate an object id on the first save() and we would save the id as part of "name" on the second save()).
-		var finalName = imageNameWithoutExtension + '-' + id + '.'  + fileExtension;
 		var mediaType = utils.getMediaType(fileExtension);
 
 		var image = new Image({
-			_id: id,
-			name: finalName,
 			projectId: project._id,
 			members: [
 				{userId: req.user._id, access: ["admin"]}
@@ -52,6 +47,10 @@ exports.create = function (req, res, next) {
 			fileExtension: fileExtension,
 			mediaType: mediaType
 		});
+
+		var imageNameWithoutExtension = utils.getFilenameWithoutExtension(originalFilename);
+		var finalName = imageNameWithoutExtension + '-' + image._id + '.'  + fileExtension;
+		image.name = finalName;
 
 		image.save(function (err) {
 			if (err) {
