@@ -3,7 +3,8 @@ process.env.NODE_ENV = 'test';
 var epub = require('../lib/epub')
   , epub3 = require('../lib/epub/epub3')
   , assert = require("assert")
-  , utils = require('../public/create/scripts/utils-shared')
+  , shared_utils = require('../public/create/scripts/utils-shared')
+  , utils = require('../lib/utils')
   , styleset_utils = require('../public/create/scripts/utils-shared')
   , project_utils = require('../lib/project-utils')
   , ObjectId = require('mongoose').Types.ObjectId
@@ -14,33 +15,48 @@ var epub = require('../lib/epub')
   , _ = require("underscore");
 
 describe('utils', function () {
+	it('replaceArray', function () {
+		var string = 'Doomsday devices, eh!? Now the ball\'s in Farnsworth\'s court!';
+		var find = ['Doomsday', 'devices', 'ball\'s in', 'Farnsworth'];
+		var replace = ['Disco', 'balls', 'balls are in', 'Disco Stu'];
+		string = utils.replaceArray(string, find, replace);
+		assert.equal('Disco balls, eh!? Now the balls are in Disco Stu\'s court!', string);
+
+		string = 'Lots of disco balls: disco balls balls balls balls all over!';
+		find = ['balls'];
+		replace = ['shoes'];
+		string = utils.replaceArray(string, find, replace);
+		assert.equal('Lots of disco shoes: disco shoes shoes shoes shoes all over!', string);
+	})
+}),
+describe('shared_utils', function () {
     var str1 = "4eed2d88c3dedf0d0300001a";
     var str2 = "4eed2d88c3dedf0d0300001b";
     var document1 = new Document({});
     var document2 = new Document({});
     it('getMongooseId', function () {
-        assert.equal(utils.getMongooseId(null), utils.getMongooseId(null));
-        assert.notEqual(utils.getMongooseId(null), utils.getMongooseId(str1));
-        assert.equal(utils.getMongooseId(str1), utils.getMongooseId(str1));
-        assert.notEqual(utils.getMongooseId(str1), utils.getMongooseId(str2));
-        assert.equal(utils.getMongooseId(str1), utils.getMongooseId(new String(str1)));
-        assert.notEqual(utils.getMongooseId(str1), utils.getMongooseId(new String(str2)));
-        assert.equal(utils.getMongooseId(str1), utils.getMongooseId(ObjectId.fromString(str1)));
-        assert.notEqual(utils.getMongooseId(str1), utils.getMongooseId(ObjectId.fromString(str2)));
-        assert.equal(utils.getMongooseId(document1._id), utils.getMongooseId(document1));
-        assert.notEqual(utils.getMongooseId(document1._id), utils.getMongooseId(document2));
+        assert.equal(shared_utils.getMongooseId(null), shared_utils.getMongooseId(null));
+        assert.notEqual(shared_utils.getMongooseId(null), shared_utils.getMongooseId(str1));
+        assert.equal(shared_utils.getMongooseId(str1), shared_utils.getMongooseId(str1));
+        assert.notEqual(shared_utils.getMongooseId(str1), shared_utils.getMongooseId(str2));
+        assert.equal(shared_utils.getMongooseId(str1), shared_utils.getMongooseId(new String(str1)));
+        assert.notEqual(shared_utils.getMongooseId(str1), shared_utils.getMongooseId(new String(str2)));
+        assert.equal(shared_utils.getMongooseId(str1), shared_utils.getMongooseId(ObjectId.fromString(str1)));
+        assert.notEqual(shared_utils.getMongooseId(str1), shared_utils.getMongooseId(ObjectId.fromString(str2)));
+        assert.equal(shared_utils.getMongooseId(document1._id), shared_utils.getMongooseId(document1));
+        assert.notEqual(shared_utils.getMongooseId(document1._id), shared_utils.getMongooseId(document2));
     }),
     it('mongooseEquals', function () {
-        assert.equal(utils.mongooseEquals(null, null), true);
-        assert.equal(utils.mongooseEquals(null, str1), false);
-        assert.equal(utils.mongooseEquals(str1, str1), true);
-        assert.equal(utils.mongooseEquals(str1, str2), false);
-        assert.equal(utils.mongooseEquals(str1, new String(str1)), true);
-        assert.equal(utils.mongooseEquals(str1, new String(str2)), false);
-        assert.equal(utils.mongooseEquals(str1, ObjectId.fromString(str1)), true);
-        assert.equal(utils.mongooseEquals(str1, ObjectId.fromString(str2)), false);
-        assert.equal(utils.mongooseEquals(document1._id, document1), true);
-        assert.equal(utils.mongooseEquals(document1._id, document2), false);
+        assert.equal(shared_utils.mongooseEquals(null, null), true);
+        assert.equal(shared_utils.mongooseEquals(null, str1), false);
+        assert.equal(shared_utils.mongooseEquals(str1, str1), true);
+        assert.equal(shared_utils.mongooseEquals(str1, str2), false);
+        assert.equal(shared_utils.mongooseEquals(str1, new String(str1)), true);
+        assert.equal(shared_utils.mongooseEquals(str1, new String(str2)), false);
+        assert.equal(shared_utils.mongooseEquals(str1, ObjectId.fromString(str1)), true);
+        assert.equal(shared_utils.mongooseEquals(str1, ObjectId.fromString(str2)), false);
+        assert.equal(shared_utils.mongooseEquals(document1._id, document1), true);
+        assert.equal(shared_utils.mongooseEquals(document1._id, document2), false);
     })
 }),
 describe('project-utils', function () {
@@ -206,22 +222,29 @@ describe('project-utils', function () {
 }),
 describe('epub', function () {
 	it('getCloseNavPointsString', function () {
-		var result = epub.getCloseNavPointsString(0, 0);
-		assert.equal(result, '</navPoint>');
+		var result = epub.getCloseNavPointsString(0, 0, 4);
+		assert.equal(result, 	'    </navPoint>\r\n');
 
-		result = epub.getCloseNavPointsString(0, 1);
-		assert.equal(result, '</navPoint></navPoint>');
+		result = epub.getCloseNavPointsString(0, 1, 4);
+		assert.equal(result, 	'        </navPoint>\r\n' +
+								'    </navPoint>\r\n');
 
-		result = epub.getCloseNavPointsString(0, 2);
-		assert.equal(result, '</navPoint></navPoint></navPoint>');
+		result = epub.getCloseNavPointsString(0, 2, 4);
+		assert.equal(result, 	'            </navPoint>\r\n' +
+								'        </navPoint>\r\n' +
+								'    </navPoint>\r\n');
 
-		result = epub.getCloseNavPointsString(0, 3);
-		assert.equal(result, '</navPoint></navPoint></navPoint></navPoint>');
+		result = epub.getCloseNavPointsString(0, 3, 4);
+		assert.equal(result, 	'                </navPoint>\r\n' +
+								'            </navPoint>\r\n' +
+								'        </navPoint>\r\n' +
+								'    </navPoint>\r\n');
 
-		result = epub.getCloseNavPointsString(1, 2);
-		assert.equal(result, '</navPoint></navPoint>');
+		result = epub.getCloseNavPointsString(1, 2, 4);
+		assert.equal(result, 	'        </navPoint>\r\n' +
+								'    </navPoint>\r\n');
 
-		result = epub.getCloseNavPointsString(1, 0);
+		result = epub.getCloseNavPointsString(1, 0, 4);
 		assert.equal(result, '');
 	}),
 	it('getNavPointsString', function () {
@@ -236,12 +259,7 @@ describe('epub', function () {
 
 		tocEntries = [tocEntry1];
 		result = epub.getNavPointsString(tocEntries);
-		assert.equal(result, '<navPoint id="navpoint-1" playOrder="1">' +
-			'<navLabel>' +
-			'<text>' + tocEntry1.text + '</text>' +
-			'</navLabel>' +
-			'<content src="HTML/' + tocEntry1.target + '"/>' +
-			'</navPoint>');
+		assert.equal(result, '\r\n    <navPoint id="navpoint-1" playOrder="1"><navLabel><text>' + tocEntry1.text + '</text></navLabel><content src="HTML/' + tocEntry1.target + '"/>\r\n    </navPoint>\r\n');
 
 		var tocEntry2 = new TOCEntry;
 		tocEntry2.text = 'Kapitel Zwei';
@@ -250,18 +268,11 @@ describe('epub', function () {
 
 		tocEntries = [tocEntry1, tocEntry2];
 		result = epub.getNavPointsString(tocEntries);
-		assert.equal(result, '<navPoint id="navpoint-1" playOrder="1">' +
-			'<navLabel>' +
-			'<text>' + tocEntry1.text + '</text>' +
-			'</navLabel>' +
-			'<content src="HTML/' + tocEntry1.target + '"/>' +
-			'<navPoint id="navpoint-2" playOrder="2">' +
-			'<navLabel>' +
-			'<text>' + tocEntry2.text + '</text>' +
-			'</navLabel>' +
-			'<content src="HTML/' + tocEntry2.target + '"/>' +
-			'</navPoint>' +
-			'</navPoint>');
+		assert.equal(result, 	'\r\n' +
+								'    <navPoint id="navpoint-1" playOrder="1"><navLabel><text>' + tocEntry1.text + '</text></navLabel><content src="HTML/' + tocEntry1.target + '"/>\r\n' +
+								'        <navPoint id="navpoint-2" playOrder="2"><navLabel><text>' + tocEntry2.text + '</text></navLabel><content src="HTML/' + tocEntry2.target + '"/>\r\n' +
+								'        </navPoint>\r\n' +
+								'    </navPoint>\r\n');
 
 		var tocEntry3 = new TOCEntry;
 		tocEntry3.text = 'Kapitel Drei';
@@ -270,24 +281,14 @@ describe('epub', function () {
 
 		tocEntries = [tocEntry1, tocEntry2, tocEntry3];
 		result = epub.getNavPointsString(tocEntries);
-		assert.equal(result, '<navPoint id="navpoint-1" playOrder="1">' +
-			'<navLabel>' +
-			'<text>' + tocEntry1.text + '</text>' +
-			'</navLabel>' +
-			'<content src="HTML/' + tocEntry1.target + '"/>' +
-			'<navPoint id="navpoint-2" playOrder="2">' +
-			'<navLabel>' +
-			'<text>' + tocEntry2.text + '</text>' +
-			'</navLabel>' +
-			'<content src="HTML/' + tocEntry2.target + '"/>' +
-			'</navPoint>' +
-			'</navPoint>' +
-			'<navPoint id="navpoint-3" playOrder="3">' +
-			'<navLabel>' +
-			'<text>' + tocEntry3.text + '</text>' +
-			'</navLabel>' +
-			'<content src="HTML/' + tocEntry3.target + '"/>' +
-			'</navPoint>');
+		assert.equal(result, 	'\r\n' +
+								'    <navPoint id="navpoint-1" playOrder="1"><navLabel><text>' + tocEntry1.text + '</text></navLabel><content src="HTML/' + tocEntry1.target + '"/>\r\n' +
+								'        <navPoint id="navpoint-2" playOrder="2"><navLabel><text>' + tocEntry2.text + '</text></navLabel><content src="HTML/' + tocEntry2.target + '"/>\r\n' +
+								'        </navPoint>\r\n' +
+								'    </navPoint>\r\n' +
+								'\r\n' +
+								'    <navPoint id="navpoint-3" playOrder="3"><navLabel><text>' + tocEntry3.text + '</text></navLabel><content src="HTML/' + tocEntry3.target + '"/>\r\n' +
+								'    </navPoint>\r\n');
 	}),
 	it('getManifestHtmlFilesString', function () {
 		var folderName = 'HTML';
@@ -304,7 +305,7 @@ describe('epub', function () {
 
 		htmlFiles = [document1];
 		result = epub.getManifestFilesString(prefix, folderName, htmlFiles);
-		assert.equal(result, '<item id="' + prefix + document1.id + '.html" href="HTML/' + prefix + document1.id + '.html" media-type="application/xhtml+xml" />');
+		assert.equal(result, '    <item id="' + prefix + document1.id + '.html" href="HTML/' + prefix + document1.id + '.html" media-type="application/xhtml+xml" />\r\n');
 
 		var document2 = new Document;
 		document2.fileExtension = 'html';
@@ -313,8 +314,8 @@ describe('epub', function () {
 
 		htmlFiles = [document1, document2];
 		result = epub.getManifestFilesString(prefix, folderName, htmlFiles, 'html', 'application/xhtml+xml');
-		assert.equal(result, '<item id="' + prefix + document1.id + '.html" href="HTML/' + prefix + document1.id + '.html" media-type="application/xhtml+xml" />' +
-			'<item id="' + prefix + document2.id + '.html" href="HTML/' + prefix + document2.id + '.html" media-type="application/xhtml+xml" />');
+		assert.equal(result, '    <item id="' + prefix + document1.id + '.html" href="HTML/' + prefix + document1.id + '.html" media-type="application/xhtml+xml" />\r\n' +
+			'    <item id="' + prefix + document2.id + '.html" href="HTML/' + prefix + document2.id + '.html" media-type="application/xhtml+xml" />\r\n');
 	}),
 	it('getManifestImageFilesString', function () {
 		var folderName = 'Images';
@@ -333,7 +334,7 @@ describe('epub', function () {
 		images = [image1];
 
 		var result = epub.getManifestFilesString(prefix, folderName, images);
-		assert.equal(result, '<item id="img_frontpage.jpg" href="Images/img_frontpage.jpg" media-type="image/jpeg" />');
+		assert.equal(result, '    <item id="img_frontpage.jpg" href="Images/img_frontpage.jpg" media-type="image/jpeg" />\r\n');
 
 		var image2 = new Image({
 			name: "fun_image.png",
@@ -343,8 +344,8 @@ describe('epub', function () {
 
 		images = [image1, image2];
 		var result = epub.getManifestFilesString(prefix, folderName, images);
-		assert.equal(result, '<item id="img_frontpage.jpg" href="Images/img_frontpage.jpg" media-type="image/jpeg" />' +
-			'<item id="img_fun_image.png" href="Images/img_fun_image.png" media-type="image/png" />');
+		assert.equal(result, '    <item id="img_frontpage.jpg" href="Images/img_frontpage.jpg" media-type="image/jpeg" />\r\n' +
+			'    <item id="img_fun_image.png" href="Images/img_fun_image.png" media-type="image/png" />\r\n');
 	}),
 	it('getManifestFontFilesString', function () {
 		var folderName = 'Fonts';
@@ -362,7 +363,7 @@ describe('epub', function () {
 
 		fonts = [font1];
 		var result = epub.getManifestFilesString(prefix, folderName, fonts);
-		assert.equal(result, '<item id="font_Scripler1.ttf" href="Fonts/font_Scripler1.ttf" media-type="application/x-font-ttf" />');
+		assert.equal(result, '    <item id="font_Scripler1.ttf" href="Fonts/font_Scripler1.ttf" media-type="application/x-font-ttf" />\r\n');
 
 		var font2 = {
 			"id": "font_Scrupler33.ttf",
@@ -372,8 +373,8 @@ describe('epub', function () {
 
 		fonts = [font1, font2];
 		var result = epub.getManifestFilesString(prefix, folderName, fonts);
-		assert.equal(result, '<item id="font_Scripler1.ttf" href="Fonts/font_Scripler1.ttf" media-type="application/x-font-ttf" />' +
-			'<item id="font_Scrupler33.ttf" href="Fonts/font_Scrupler33.ttf" media-type="application/x-font-ttf" />');
+		assert.equal(result, '    <item id="font_Scripler1.ttf" href="Fonts/font_Scripler1.ttf" media-type="application/x-font-ttf" />\r\n' +
+			'    <item id="font_Scrupler33.ttf" href="Fonts/font_Scrupler33.ttf" media-type="application/x-font-ttf" />\r\n');
 	}),
 	it('getSpineDocumentsString', function () {
 		var htmlFiles = [];
@@ -386,15 +387,15 @@ describe('epub', function () {
 
 		htmlFiles = [htmlFile1];
 		var result = epub.getSpineDocumentsString(prefix, htmlFiles, 'html');
-		assert.equal(result, '<itemref idref="' + prefix + htmlFile1.id + '.html" />');
+		assert.equal(result, '    <itemref idref="' + prefix + htmlFile1.id + '.html" />\r\n');
 
 		var htmlFile2 = new Document;
 		htmlFile2.type = 'titlepage';
 
 		htmlFiles = [htmlFile1, htmlFile2];
 		var result = epub.getSpineDocumentsString(prefix, htmlFiles, 'html');
-		assert.equal(result, '<itemref idref="' + prefix + htmlFile1.id + '.html" />' +
-			'<itemref idref="TitlePage.html" />');
+		assert.equal(result, '    <itemref idref="' + prefix + htmlFile1.id + '.html" />\r\n' +
+			'    <itemref idref="TitlePage.html" />\r\n');
 	}),
 	it('getGuideString', function () {
 		var documents = [];
@@ -483,7 +484,7 @@ describe('epub3', function () {
 
 		tocEntries = [tocEntry1];
 		result = epub3.getTocString(tocEntries);
-		assert.equal(result, '<li><a href="HTML/Kapitel Einz.html">Kapitel Einz</a></li>');
+		assert.equal(result, '        <li><a href="HTML/Kapitel Einz.html">Kapitel Einz</a></li>\r\n');
 
 		var tocEntry2 = new TOCEntry;
 		tocEntry2.text = 'Kapitel Zwei';
@@ -492,7 +493,8 @@ describe('epub3', function () {
 
 		tocEntries = [tocEntry1, tocEntry2];
 		result = epub3.getTocString(tocEntries);
-		assert.equal(result, '<li><a href="HTML/Kapitel Einz.html">Kapitel Einz</a></li><li><a href="HTML/Kapitel Zwei.html">Kapitel Zwei</a></li>');
+		assert.equal(result, '        <li><a href="HTML/Kapitel Einz.html">Kapitel Einz</a></li>\r\n' +
+			                 '        <li><a href="HTML/Kapitel Zwei.html">Kapitel Zwei</a></li>\r\n');
 
 	}),
 	it('getLandmarkString', function () {
@@ -536,12 +538,12 @@ describe('epub3', function () {
 		var result = epub.getStylesetLinks(document);
 		assert.equal(result, '<link href="../Styles/non-editable.css" rel="stylesheet" type="text/css"/>');
 
-		var stylesetId1 = utils.getMongooseId(ObjectId.fromString("4eec2d66c3dedf0d0300001a"));
+		var stylesetId1 = shared_utils.getMongooseId(ObjectId.fromString("4eec2d66c3dedf0d0300001a"));
 		document.stylesets.addToSet(ObjectId(stylesetId1));
 		result = epub.getStylesetLinks(document);
 		assert.equal(result, '<link href="../Styles/non-editable.css" rel="stylesheet" type="text/css"/><link href="../Styles/style_4eec2d66c3dedf0d0300001a.css" rel="stylesheet" type="text/css"/>');
 
-		var stylesetId2 = utils.getMongooseId(ObjectId.fromString("99ec2d66c3dedf0d0300002b"));
+		var stylesetId2 = shared_utils.getMongooseId(ObjectId.fromString("99ec2d66c3dedf0d0300002b"));
 		document.stylesets.addToSet(ObjectId(stylesetId2));
 		result = epub.getStylesetLinks(document);
 		assert.equal(result, '<link href="../Styles/non-editable.css" rel="stylesheet" type="text/css"/><link href="../Styles/style_4eec2d66c3dedf0d0300001a.css" rel="stylesheet" type="text/css"/><link href="../Styles/style_99ec2d66c3dedf0d0300002b.css" rel="stylesheet" type="text/css"/>');
