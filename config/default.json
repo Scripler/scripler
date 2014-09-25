@@ -43,8 +43,8 @@
 		}
 	},
 	"resources": {
-		"projectsDir": "C:\\Users\\mgf\\Dropbox\\Dokumenter\\Udvikling\\Kode\\Scripler\\Github\\Scripler\\scripler\\public\\resources\\projects",
-		"usersDir": "C:\\Users\\mgf\\Dropbox\\Dokumenter\\Udvikling\\Kode\\Scripler\\Github\\Scripler\\scripler\\public\\resources\\users",
+		"projectsDir": "/tmp/scripler/app/projects",
+		"usersDir": "/tmp/scripler/app/users",
 		"projectsUrl": "http://scripler.com:3000/public/resources/projects",
 		"usersUrl": "http://scripler.com:3000/public/resources/users"
 	},
@@ -53,10 +53,10 @@
 			"storage": 20000//bytes
 		},
 		"premium": {
-			"storage": 200000//bytes
+			"storage": 20000000//bytes
 		},
 		"professional": {
-			"storage": 2000000//bytes
+			"storage": 200000000//bytes
 		}
 	},
 	"epub": {
@@ -79,7 +79,7 @@
 		"epubDir": "EPUB"
 	},
     "import": {
-        "uploadDir": ""
+		"uploadDir": "/tmp/scripler/app/uploads/"
     },
 	"user": {
 		"defaultStylesetName": "simple-bw"

@@ -7,5 +7,5 @@
 	"h5": { "name": "Heading 5", "order": "6" },
 	"h6": { "name": "Heading 6", "order": "7" },
 	"blockquote": { "name": "Quote", "order": "8" },
-	"block": { "name": "Code block", "order": "10" }
+	"code": { "name": "Code", "order": "9" }
 }

@@ -146,6 +146,7 @@ code.block {
 }
 
 /*Name: Code*/
+/*
 code {
 	font-family: "Source Code Pro", monospace;
 	font-style:normal;
@@ -156,6 +157,7 @@ code {
 	background:#000000;
 }
 
+*/
 /*Name: Caption*/
 figcaption {
 	font-family: "Rambla", sans-serif;

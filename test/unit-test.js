@@ -240,7 +240,7 @@ describe('epub', function () {
 			'<navLabel>' +
 			'<text>' + tocEntry1.text + '</text>' +
 			'</navLabel>' +
-			'<content src="' + tocEntry1.target + '"/>' +
+			'<content src="HTML/' + tocEntry1.target + '"/>' +
 			'</navPoint>');
 
 		var tocEntry2 = new TOCEntry;
@@ -254,12 +254,12 @@ describe('epub', function () {
 			'<navLabel>' +
 			'<text>' + tocEntry1.text + '</text>' +
 			'</navLabel>' +
-			'<content src="' + tocEntry1.target + '"/>' +
+			'<content src="HTML/' + tocEntry1.target + '"/>' +
 			'<navPoint id="navpoint-2" playOrder="2">' +
 			'<navLabel>' +
 			'<text>' + tocEntry2.text + '</text>' +
 			'</navLabel>' +
-			'<content src="' + tocEntry2.target + '"/>' +
+			'<content src="HTML/' + tocEntry2.target + '"/>' +
 			'</navPoint>' +
 			'</navPoint>');
 
@@ -274,19 +274,19 @@ describe('epub', function () {
 			'<navLabel>' +
 			'<text>' + tocEntry1.text + '</text>' +
 			'</navLabel>' +
-			'<content src="' + tocEntry1.target + '"/>' +
+			'<content src="HTML/' + tocEntry1.target + '"/>' +
 			'<navPoint id="navpoint-2" playOrder="2">' +
 			'<navLabel>' +
 			'<text>' + tocEntry2.text + '</text>' +
 			'</navLabel>' +
-			'<content src="' + tocEntry2.target + '"/>' +
+			'<content src="HTML/' + tocEntry2.target + '"/>' +
 			'</navPoint>' +
 			'</navPoint>' +
 			'<navPoint id="navpoint-3" playOrder="3">' +
 			'<navLabel>' +
 			'<text>' + tocEntry3.text + '</text>' +
 			'</navLabel>' +
-			'<content src="' + tocEntry3.target + '"/>' +
+			'<content src="HTML/' + tocEntry3.target + '"/>' +
 			'</navPoint>');
 	}),
 	it('getManifestHtmlFilesString', function () {
@@ -483,7 +483,7 @@ describe('epub3', function () {
 
 		tocEntries = [tocEntry1];
 		result = epub3.getTocString(tocEntries);
-		assert.equal(result, '<li><a href="Kapitel Einz.html">Kapitel Einz</a></li>');
+		assert.equal(result, '<li><a href="HTML/Kapitel Einz.html">Kapitel Einz</a></li>');
 
 		var tocEntry2 = new TOCEntry;
 		tocEntry2.text = 'Kapitel Zwei';
@@ -492,7 +492,7 @@ describe('epub3', function () {
 
 		tocEntries = [tocEntry1, tocEntry2];
 		result = epub3.getTocString(tocEntries);
-		assert.equal(result, '<li><a href="Kapitel Einz.html">Kapitel Einz</a></li><li><a href="Kapitel Zwei.html">Kapitel Zwei</a></li>');
+		assert.equal(result, '<li><a href="HTML/Kapitel Einz.html">Kapitel Einz</a></li><li><a href="HTML/Kapitel Zwei.html">Kapitel Zwei</a></li>');
 
 	}),
 	it('getLandmarkString', function () {
@@ -529,5 +529,21 @@ describe('epub3', function () {
 
 		var result = epub3.getLandmarkString('colophon', documents);
 		assert.equal(result, '<li><a epub:type="colophon" href="HTML/Colophon.html">Colophon</a></li>');
+	}),
+	it('getStylesetLinks', function () {
+		var document = new Document;
+
+		var result = epub.getStylesetLinks(document);
+		assert.equal(result, '<link href="../Styles/non-editable.css" rel="stylesheet" type="text/css"/>');
+
+		var stylesetId1 = utils.getMongooseId(ObjectId.fromString("4eec2d66c3dedf0d0300001a"));
+		document.stylesets.addToSet(ObjectId(stylesetId1));
+		result = epub.getStylesetLinks(document);
+		assert.equal(result, '<link href="../Styles/non-editable.css" rel="stylesheet" type="text/css"/><link href="../Styles/style_4eec2d66c3dedf0d0300001a.css" rel="stylesheet" type="text/css"/>');
+
+		var stylesetId2 = utils.getMongooseId(ObjectId.fromString("99ec2d66c3dedf0d0300002b"));
+		document.stylesets.addToSet(ObjectId(stylesetId2));
+		result = epub.getStylesetLinks(document);
+		assert.equal(result, '<link href="../Styles/non-editable.css" rel="stylesheet" type="text/css"/><link href="../Styles/style_4eec2d66c3dedf0d0300001a.css" rel="stylesheet" type="text/css"/><link href="../Styles/style_99ec2d66c3dedf0d0300002b.css" rel="stylesheet" type="text/css"/>');
 	})
 });

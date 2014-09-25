@@ -263,10 +263,14 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				allowedContent: true,
 				skin: 'scripler',
 				resize_enabled: false,
-				extraPlugins: 'scripler,floating-tools,lineHeight,texttransform,indent-right,indentations,scripler_pagebreak',
+				extraPlugins: 'scripler,floating-tools,lineHeight,texttransform,indent-right,indentations,scripler_pagebreak,imageScripler,linkScripler,fontStyleWeightScripler',
 				floatingtools: 'Basic',
 				floatingtools_Basic: [
 					{ name: 'styles', items: [ 'Font' ] },
+					'/',
+					{ name: 'format', items: [ 'Format' ] },
+					'/',
+					{ name: 'customstyles', items: [ 'FontStyleWeight' ] },
 					'/',
 					{ name: 'fontstyles', items: [ 'FontSize', 'LineHeight' ] },
 					'/',
@@ -285,12 +289,12 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				enterMode: CKEDITOR.ENTER_P,
 				height: $window.innerHeight - 90,
 				width: 800,
+				language: 'en',
 				//Change to standard font we want to start all projects with :)
 				contentsCss: ['ckeditor/contents.css', 'stylesets/non-editable.css'],
 				//Load css sheet via angualr here
 				toolbar: [
-					//['Source'], ['Undo'], ['Redo'], ['Paste'], ['PasteFromWord'], ['Styles'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['Image'], ['Link'], ['TextColor'], ['BGColor']
-					['Undo'], ['Redo'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['Image'], ['Link'], ['Source'] // TODO: Remove "Source" button before "real" launch (ALPHA? BETA?)
+					['Undo'], ['Redo'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['imageScripler'], ['linkScripler'], ['Source'] // TODO: Remove "Source" button before "real" launch (ALPHA? BETA?)
 				],
 				removeButtons: 'language,CreateDiv,Flash,Iframe'
 			});
@@ -323,6 +327,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 			}
 
 			ck.on('paste', function( event ) {
+				//TODO check for pasted value vs copiedElement
 				if ( scope.copiedElement ) {
 					event.stop();
 
@@ -330,7 +335,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 					var headingsArray = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ];
 
 					if ( headingsArray.indexOf( el.getName() ) > -1 ) {
-						el.$.id = Date.now();
+						el.$.id = 'id_' + Date.now();
 					}
 
 					if ( el.$.children.length > 0 ) {

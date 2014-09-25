@@ -3,23 +3,23 @@
 <div class="container">
 	<div class="main">
 
-		<section class="section-unisquare" ng-class="{ 'white-bg' : showSettings}">
-			<div ng-hide="showSettings">
+		<section class="section-unisquare" data-ng-class="{ 'white-bg' : showSettings}">
+			<div data-ng-hide="showSettings">
 				<div class="links">
-					<a onclick="history.back(-1)" class="frontpage-link">
+					<a href="http://{{frontpage}}" target="_self" class="frontpage-link">
 						<span class="arrow-left"></span><p>Frontpage</p>
 					</a>
 				</div>
 				<div class="logo-box">
 					<img class="logo" src="/images/logo.png">
 				</div>
-				<div class="uni-bottom-box" ng-show="user._id">
+				<div class="uni-bottom-box" data-ng-show="user._id">
 					<div class="user-box">
 						<img class="user-image" src="pages/images/profilepicture.png" height="50" width="50">
 						<div class="user-text">
-							<div class="user-name" ng-bind-html="user.firstname + ' ' + user.lastname"></div>
+							<div class="user-name" data-ng-bind-html="user.firstname + ' ' + user.lastname"></div>
 							<div class="user-links">
-								<a ng-click="showSettings = !showSettings">Settings</a>
+								<a data-ng-click="showSettings = !showSettings">Settings</a>
 								<span>|</span>
 								<a href="/logout">Log out</a>
 							</div>
@@ -27,71 +27,71 @@
 					</div>
 				</div>
 			</div>
-			<div class="user-settings" ng-show="showSettings">
+			<div class="user-settings" data-ng-show="showSettings">
 				<div class="user-box">
 						<img class="user-image" src="pages/images/profilepicture.png" height="100" width="100">
 						<div class="settings-text">
-							<div class="user-name settings" ng-bind-html="user.firstname"></div>
-							<div class="user-name settings" ng-bind-html="user.lastname"></div>
+							<div class="user-name settings" data-ng-bind-html="user.firstname"></div>
+							<div class="user-name settings" data-ng-bind-html="user.lastname"></div>
 						</div>
 				</div>
 				<hr>
 				<div class="user-settings-options">
-					<div class="user-email" ng-show="!editPassword">
+					<div class="user-email" data-ng-show="!editPassword">
 						<form name="emailEditForm">
-							<input name="editEmailInput" ng-class="{ 'has-error' : emailEditForm.editEmailInput.$invalid && saveSubmitted}" type="email" ng-model="user.email" ng-pattern="EMAIL_REGEXP" ng-disabled="!editEmail" focus-on="editEmail">
-							<a ng-click="editEmail = !editEmail">Edit</a>
+							<input name="editEmailInput" data-ng-class="{ 'has-error' : emailEditForm.editEmailInput.$invalid && saveSubmitted}" type="email" data-ng-model="user.email" data-ng-pattern="EMAIL_REGEXP" data-ng-disabled="!editEmail" focus-on="editEmail">
+							<a data-ng-click="editEmail = !editEmail">Edit</a>
 						</form>
 					</div>
 					<div class="edit-password">
-						<a ng-click="editPassword = !editPassword" ng-show="!editPassword">Edit password</a>
-						<form name="editPasswordForm" ng-submit="changePassword()" ng-show="editPassword" novalidate>
-							<input type="password" id="current-password" name="currentPassword" ng-model="password" ng-class="{ 'has-error' : editPasswordForm.currentPassword.$invalid && passwordSubmitted }" placeholder="Current" ng-minlength="6" required>
-							<input type="password" id="new-password" name="newPassword" ng-model="newPassword" ng-class="{ 'has-error' : editPasswordForm.newPassword.$invalid && passwordSubmitted }" placeholder="New" ng-minlength="6" required>
-							<input type="password" id="new-retype-password" name="newPasswordRetype" ng-model="newPasswordRetype" ng-class="{ 'has-error' : editPasswordForm.newPasswordRetype.$invalid && passwordSubmitted }" placeholder="Retype New" ng-minlength="6" required>
+						<a data-ng-click="editPassword = !editPassword" data-ng-show="!editPassword">Edit password</a>
+						<form name="editPasswordForm" data-ng-submit="changePassword()" data-ng-show="editPassword" novalidate>
+							<input type="password" id="current-password" name="currentPassword" data-ng-model="password" data-ng-class="{ 'has-error' : editPasswordForm.currentPassword.$invalid && passwordSubmitted }" placeholder="Current" data-ng-minlength="6" required>
+							<input type="password" id="new-password" name="newPassword" data-ng-model="newPassword" data-ng-class="{ 'has-error' : editPasswordForm.newPassword.$invalid && passwordSubmitted }" placeholder="New" data-ng-minlength="6" required>
+							<input type="password" id="new-retype-password" name="newPasswordRetype" data-ng-model="newPasswordRetype" data-ng-class="{ 'has-error' : editPasswordForm.newPasswordRetype.$invalid && passwordSubmitted }" placeholder="Retype New" data-ng-minlength="6" required>
 							<button type="submit" class="button">Save Changes</button>
 						</form>
 					</div>
-					<div class="edit-newsletter" ng-show="!editPassword">
-						<input type="checkbox" ng-model="user.newsletter">Receive newsletter
+					<div class="edit-newsletter" data-ng-show="!editPassword">
+						<input type="checkbox" data-ng-model="user.newsletter">Receive newsletter
 					</div>
-					<div class="edit-archived" ng-show="!editPassword">
-						<input type="checkbox" ng-model="user.showArchived">Show Archived
+					<div class="edit-archived" data-ng-show="!editPassword">
+						<input type="checkbox" data-ng-model="user.showArchived">Show Archived
 					</div>
-					<button ng-click="updateUser()" class="button" ng-show="!editPassword">Save Changes</button>
+					<button data-ng-click="updateUser()" class="button" data-ng-show="!editPassword">Save Changes</button>
 				</div>
 			</div>
 		</section>
 
 		<section class="section-publications">
-			<div class="publication new" ng-click="addPublication(publication)">
+			<div class="publication new" data-ng-click="addPublication(publication)">
 				<p>+</p>
 			</div>
 
-			<div class="publication" ng-animate="'animate'" ng-class="{ 'archived' : publication.archived }" ng-hide="publication.archived && !user.showArchived" ng-repeat="publication in publications track by $index">
-				<a class="publication-options-show" ng-click="showPublicationOptions = true">
+			<div class="publication" data-ng-animate="'animate'" data-ng-class="{ 'archived' : publication.archived }" data-ng-hide="publication.archived && !user.showArchived" data-ng-repeat="publication in publications track by $index">
+				<a class="publication-options-show" data-ng-click="showPublicationOptions = true">
 					<div class="arrow"></div>
 				</a>
-				<!--<p ng-hide="editingPublicationTitle" ng-click="editingPublicationTitle = true;">-->
-				<p ng-hide="editingPublicationTitle">
+				<!--<p data-ng-hide="editingPublicationTitle" data-ng-click="editingPublicationTitle = true;">-->
+				<p data-ng-hide="editingPublicationTitle">
 					<a href="#/project?pid={{publication._id}}" class="publication-link">{{publication.name}}</a>
 				</p>
 
-				<form ng-show="editingPublicationTitle">
+				<form data-ng-show="editingPublicationTitle">
 				<p>
-					<!--<input type="text" ng-model="publication.name" placeholder="publication title" focus-on="!!editingPublicationTitle" />-->
-					<textarea id="rename" ng-model="publication.name" placeholder="publication title" focus-on="!!editingPublicationTitle" on-enter="editingPublicationTitle = false; renamePublication(publication);"></textarea>
+					<!--<input type="text" data-ng-model="publication.name" placeholder="publication title" focus-on="!!editingPublicationTitle" />-->
+					<textarea id="rename" data-ng-model="publication.name" placeholder="publication title" focus-on="!!editingPublicationTitle" on-enter="editingPublicationTitle = false; renamePublication(publication);"></textarea>
 				</p>
 				</form>
 
-				<div class="publication-options" ng-show="showPublicationOptions">
+				<div class="publication-options" data-ng-show="showPublicationOptions">
 					<div class="publication-options-header">Publication Options</div>
-					<div class="publication-options-hide" ng-click="showPublicationOptions = false;" title="Close Options">x</div>
-					<div class="publication-options-menupoint" ng-click="editingPublicationTitle = true; showPublicationOptions = false;">rename</div>
-					<div class="publication-options-menupoint" ng-click="copyPublication(publication); showPublicationOptions = false;">copy</div>
-					<div class="publication-options-menupoint" ng-click="archivePublication(publication); showPublicationOptions = false;">archive</div>
-					<div class="publication-options-menupoint" ng-click="unarchivePublication(publication); showPublicationOptions = false;">unarchive</div>
-					<div class="publication-options-dates" ng-show="publication.created && publication.changed">
+					<div class="publication-options-hide" data-ng-click="showPublicationOptions = false;" title="Close Options">x</div>
+					<div class="publication-options-menupoint" data-ng-click="editingPublicationTitle = true; showPublicationOptions = false;">rename</div>
+					<div class="publication-options-menupoint" data-ng-click="copyPublication(publication); showPublicationOptions = false;">copy</div>
+					<div class="publication-options-menupoint" data-ng-click="archivePublication(publication); showPublicationOptions = false;">archive</div>
+					<div class="publication-options-menupoint" data-ng-click="unarchivePublication(publication); showPublicationOptions = false;">unarchive</div>
+					<div class="publication-options-dates" data-ng-show="publication.created && publication.changed">
 						<div>Created Date: </div><div class="dates">{{publication.created | date:'yyyy-MM-dd HH:mm'}}</div>
 						<div>Last Changed: </div><div class="dates">{{publication.modified | date:'yyyy-MM-dd HH:mm'}}</div>
 					</div>
