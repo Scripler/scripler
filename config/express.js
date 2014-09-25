@@ -59,7 +59,7 @@ exports.beforeRoutes = function (app, conf, mongoose) {
 		secret: conf.app.session_secret,
 		resave: true,
 		saveUninitialized: true,
-			cookie: {
+		cookie: {
 			maxAge: 30 * 24 * 3600000 // 30 days.
 		},
 		store: new MongoStore({

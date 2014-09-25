@@ -262,7 +262,6 @@ div.half {
 }
 .button.login {
 	width: 120px;
-	font-weight: 0;
 	font-size: 15px;
 }
 .try-button {
@@ -299,16 +298,54 @@ div.half {
 #password-reset-form {
     padding: 0;
     margin: 0;
-    display: none;
 }
 #password-reset-button {
     width: 180px;
-    font-weight: 0;
     font-size: 15px;
 }
 
-#welcome-user {
-	position:absolute;
-	z-index: 100;
-	padding-left: 10px;
+#form-success {
+    margin: 0 0 0 100px;
+    line-height: 1em;
+    height: 33px;
+    width: 500px;
+    text-align: left;
+}
+
+.error-boxes {
+    position: fixed;
+    margin-left: 25px;
+    margin-top: 45px;
+}
+.arrow-box {
+    position: fixed;
+    background: #FF0500;
+    border: 2px solid #fff;
+    padding-top: 5px;
+    height: 32px;
+    width: 200px;
+    color: #fff;
+}
+
+.arrow-box:after, .arrow-box:before {
+    bottom: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+.arrow-box:after {
+    border-color: rgba(213, 0, 0, 0);
+    border-bottom-color: #FF0500;
+    border-width: 10px;
+    margin-left: -10px;
+}
+.arrow-box:before {
+    border-color: rgba(194, 225, 245, 0);
+    border-bottom-color: #fff;
+    border-width: 13px;
+    margin-left: -13px;
 }

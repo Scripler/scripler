@@ -58,41 +58,56 @@ $(document).ready(function() {
 
 	$("#login-form").submit(function (event) {
 		event.preventDefault();
+		invalidBoxHide();
+
+		var formOk = true;
 		var password = $("#login-password").val();
+		var email = $("#login-email").val();
+
 		if (forgotPassword) {
-			$.ajax({
-				url: '/user/password-reset',
-				type: 'POST',
-				data: {"email": $("#login-email").val()},
-				dataType: 'json',
-				success: function (data) {
-					// TODO: How to notify user of success?
-					document.location.href = "/";
-				},
-				error: function (xhr, textStatus, error) {
-					// TODO: Password reset failed
-					console.log("Password reset failed: ". error);
-				}
-			});
+			if (!isValidEmail(email)) {
+				invalidBox1(240, "Invalid email");
+				formOk = false;
+			}
+			if (formOk) {
+				$.ajax({
+					url: '/user/password-reset',
+					type: 'POST',
+					data: {"email": $("#login-email").val()},
+					dataType: 'json',
+					success: function (data) {
+						formSuccess("If your entered your correct email address, an email has been sent to you. By using the link in this email you can change your password.");
+					},
+					error: function (xhr, textStatus, error) {
+						invalidBox1(450, "Error");
+					}
+				});
+			}
 		} else {
-			if (isValidPassword(password)) {
-				console.log("Secind login request...");
+			if (!isValidEmail(email)) {
+				invalidBox1(0, "Invalid email");
+				formOk = false;
+			}
+			if (!isValidPassword(password)) {
+				invalidBox2(259, "Invalid password");
+				formOk = false;
+			}
+
+			if (formOk) {
+				console.log("Second login request...");
 				$.ajax({
 					url: '/user/login',
 					type: 'POST',
-					data: {"email": $("#login-email").val(), "password": password},
+					data: {"email": email, "password": password, "remember": $("#remember").val()},
 					dataType: 'json',
 					success: function (data) {
 						document.location.href = "/create/";
 					},
 					error: function (xhr, textStatus, error) {
-						// TODO: Login failed
-						console.log("Login failed: ". error);
+						console.log("Login failed: " + error);
+						invalidBox1(455, "Invalid login");
 					}
 				});
-			} else {
-				// TODO: Invalid password
-				console.log("Invalid password");
 			}
 		}
 	});
@@ -100,6 +115,7 @@ $(document).ready(function() {
 	var forgotPassword = false;
 	var passwordWidth = $("#login-password").outerWidth(true);
 	$("#forgot-password").on("click", function (event) {
+		invalidBoxHide();
 		var animationTime = 400;
 		var emailExtraWidth = 50;
 		if (!forgotPassword) {
@@ -114,23 +130,33 @@ $(document).ready(function() {
 				$("#forgot-password").text("Cancel");
 			}, animationTime);
 		} else {
-			$("#login-password").removeAttr("style");
-			$("#login-email").removeAttr("style");
-			$("#login-form").removeAttr("style");
-			$("#remember-me-box").removeAttr("style");
-			$("#login-button").removeAttr("style");
-			$("#login-button").prop("value", "Login");
-			$("#forgot-password").text("Forgot pssword?");
+			resetLoginForm();
 		}
 		forgotPassword = !forgotPassword;
 	});
 
+	function resetLoginForm() {
+		$("#login-password").removeAttr("style");
+		$("#login-email").removeAttr("style");
+		$("#login-form").removeAttr("style");
+		$("#remember-me-box").removeAttr("style");
+		$("#login-button").removeAttr("style");
+		$("#login-button").prop("value", "Login");
+		$("#forgot-password").text("Forgot password?");
+	}
+
 	$(".menu-login").one("click", function (event) {
 		$("#login").animate({ "paddingBottom": "20", "paddingTop": "70" }, 800);
+	});
 
-		// Ensure that it's the login and noy password-reset form that is shown.
+
+	$(".menu-login").on("click", function (event) {
+		// Ensure that it's the normal login form that is shown.
+		invalidBoxHide();
 		$("#login-form").css("display", "block");
 		$("#password-reset-form").css("display", "none");
+		$("#form-success").css("display", "none");
+		resetLoginForm();
 	});
 
 	// Handle the password reset entry page
@@ -147,8 +173,9 @@ $(document).ready(function() {
 
 		$("#password-reset-button").on("click", function (event) {
 			event.preventDefault();
+			invalidBoxHide();
 			var password = $("#password1").val();
-			if (password == $("#password2").val())
+			if (password == $("#password2").val()) {
 				if (isValidPassword(password)) {
 					$.ajax({
 						url: '/user/'+userId+'/password-change',
@@ -156,20 +183,18 @@ $(document).ready(function() {
 						data: {"password": password, "token": token},
 						dataType: 'json',
 						success: function (data) {
-							location.hash = "";
-							location.reload();
+							formSuccess("Your password has been changed.");
 						},
 						error: function (xhr, textStatus, error) {
-							// TODO: Failed password change
-							console.log("Failed password change: ". error);
+							console.log("Failed password change: " + error);
+							invalidBox1(480, "Error");
 						}
 					});
 				} else {
-					// TODO: Invalid password
-					console.log("Invalid password");
+					invalidBox1(0, "Invalid password");
+				}
 			} else {
-				// TODO: Password mismatch
-				console.log("Password mismatch");
+				invalidBox1(259, "Password mismatch");
 			}
 		});
 	}
@@ -183,13 +208,39 @@ $(document).ready(function() {
 		success: function (data) {
 			if (data && data.user && data.user.firstname) {
 				// User is already logged in.
-				$("#welcome-user-name").text(data.user.firstname);
-				$("#welcome-user").css("display", "block");
-				console.log("hello!");
+				$(".menu-loggedin").css("display", "inline");
+				$(".menu-loggedin").attr("title", "You are logged in as " + data.user.firstname);
+				$(".menu-login").css("display", "none");
 			}
 		}
 	});
 
+	function formSuccess(message) {
+		var p = $("#form-success");
+		p.text(message);
+		p.css("display", "block");
+		$("#login-form").css("display", "none");
+		$("#password-reset-form").css("display", "none");
+	}
+
+	function invalidBox1(left, message) {
+		var box = $("#invalid-box1");
+		box.css("display", "block");
+		box.css("margin-left", left + "px");
+		box.text(message);
+	}
+
+	function invalidBox2(left, message) {
+		var box = $("#invalid-box2");
+		box.css("display", "block");
+		box.css("margin-left", left + "px");
+		box.text(message);
+	}
+
+	function invalidBoxHide() {
+		$("#invalid-box1").css("display", "none");
+		$("#invalid-box2").css("display", "none");
+	}
 
 	$( ".menu-login" ).on("click", function( event ) {
 		$(":animated").promise().done( function() {
@@ -208,6 +259,11 @@ $(document).ready(function() {
 		return password !== 'undefined' && password.length > 4;
 	}
 
+	function isValidEmail(email) {
+		var atIdx = email.indexOf("@");
+		return email !== 'undefined' && email.length > 4 && atIdx > 0 && atIdx < email.length;
+	}
+
 	function GetURLParameter(sParam) {
 		//var sPageURL = window.location.search.substring(1);
 		var sPageURL = window.location.hash;
@@ -221,7 +277,7 @@ $(document).ready(function() {
 			}
 		}
 	}
-/*
+
 	var CenterLatlng = new google.maps.LatLng(55.66545,12.599407);
 	var ScriplerLatlng = new google.maps.LatLng(55.669104,12.611121);
 	var mapOptions = {
@@ -244,7 +300,7 @@ $(document).ready(function() {
 		position: ScriplerLatlng,
 		map: map,
 		title: 'Scripler'
-	});*/
+	});
 });
 
 /* Create HTML5 elements for IE */

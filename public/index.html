@@ -15,10 +15,6 @@
 </head>
 <body>
 
-	<div id="welcome-user" style="display:none;">
-		<p>Hello <span id="welcome-user-name"></span>. <a href="/logout">Logout</a>.</p>
-	</div>
-
 	<nav class="menu-top">
 		<ul>
 			<!-- //ADD/FIX: Make a fallback if you haven't got Javascript -->
@@ -33,6 +29,7 @@
 			<li class="navpoint menu-about" data="about"><a href="#about">About</li>
 			<li class="navpoint menu-contact" data="contact"><a href="#contact">Contact</a></li>
 			<li class="navpoint menu-login" data="login"><a href="#login">Login</a></li>
+            <li class="menu-loggedin" style="display:none;"><a href="logout">Logout</a></li>
 			<li class="navpoint menu-blog" data="blog"><a href="http://blog.scripler.com/" class="blog-link">Blog</a></li>
 			<!--<li class="navbutton" id="showMenu"></li>-->
 		</ul>
@@ -41,6 +38,10 @@
 	<section id="login" class="clearfix">
 		<article class="login-article">
 			<div class="login-wrap">
+                <div class="error-boxes">
+                    <div class="arrow-box first" id="invalid-box1" style="display:none;"></div>
+                    <div class="arrow-box second" id="invalid-box2" style="display:none;"></div>
+                </div>
 				<form id="login-form">
 					<div class="login-group">
 						<input type="email" value="" name="login-email" class="required email" id="login-email" placeholder="Email Address" />
@@ -52,13 +53,14 @@
 						</div>
 					</div>
 				</form>
-                <form id="password-reset-form">
+                <form id="password-reset-form" style="display:none;">
                     <div class="login-group">
                         <input type="password" value="" name="password1" class="required password" id="password1" placeholder="New password" />
                         <input type="password" value="" name="password2" class="required password" id="password2" placeholder="Repeat password" />
                         <input name="passsword-reset" type="submit" value="Change password" class="button" id="password-reset-button" />
                     </div>
                 </form>
+                <p id="form-success" style="display:none;"></p>
 				<div class="socialicons clearfix">
 					<div class="socialicon"><a href="auth/facebook"><span class="icon-facebook"></span></a></div>
 					<div class="socialicon"><a href="auth/linkedin"><span class="icon-linkedin"></span></a></div>

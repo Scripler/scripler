@@ -64,7 +64,7 @@ exports.login = function (req, res, next) {
 				return next(err);
 			}
 			// As default our session is saved as a cookie for 30 days.
-			// If user chooses not to be remembered across sessions,  disable this.
+			// If user chooses not to be remembered across sessions, disable this.
 			if (!req.body.remember) {
 				req.session.cookie.expires = false;
 			}
@@ -94,10 +94,13 @@ exports.passwordReset = function (req, res, next) {
 			if (err) {
 				return next(err);
 			} else if (!user) {
-				return next( {message: "User not found", status: 404} );
+				logger.info("Unknown email requested password reset: " + req.body.email);
+				return res.send({});
 			}
 			if ('test' != env) {
-				emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + '#password-reset/' + user._id + '/' + token + '/' + hashEmail(user.email)}, 'Reset your password', 'password-reset');
+				var url = conf.app.url_prefix + '#password-reset/' + user._id + '/' + token + '/' + hashEmail(user.email);
+				console.log("Password reset url: " + url);
+				emailer.sendEmail({email: user.email, name: user.firstname, url: url}, 'Reset your password', 'password-reset');
 			}
 			return res.send({});
 		});
