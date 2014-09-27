@@ -536,12 +536,12 @@ describe('epub3', function () {
 		var result = epub.getStylesetLinks(document);
 		assert.equal(result, '<link href="../Styles/non-editable.css" rel="stylesheet" type="text/css"/>');
 
-		var stylesetId1 = utils.getMongooseId(ObjectId.fromString("4eec2d66c3dedf0d0300001a"));
+		var stylesetId1 = utils.getMongooseId(ObjectId("4eec2d66c3dedf0d0300001a"));
 		document.stylesets.addToSet(ObjectId(stylesetId1));
 		result = epub.getStylesetLinks(document);
 		assert.equal(result, '<link href="../Styles/non-editable.css" rel="stylesheet" type="text/css"/><link href="../Styles/style_4eec2d66c3dedf0d0300001a.css" rel="stylesheet" type="text/css"/>');
 
-		var stylesetId2 = utils.getMongooseId(ObjectId.fromString("99ec2d66c3dedf0d0300002b"));
+		var stylesetId2 = utils.getMongooseId(ObjectId("99ec2d66c3dedf0d0300002b"));
 		document.stylesets.addToSet(ObjectId(stylesetId2));
 		result = epub.getStylesetLinks(document);
 		assert.equal(result, '<link href="../Styles/non-editable.css" rel="stylesheet" type="text/css"/><link href="../Styles/style_4eec2d66c3dedf0d0300001a.css" rel="stylesheet" type="text/css"/><link href="../Styles/style_99ec2d66c3dedf0d0300002b.css" rel="stylesheet" type="text/css"/>');

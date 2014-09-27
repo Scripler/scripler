@@ -52,7 +52,7 @@ exports.beforeRoutes = function (app, conf, mongoose) {
 	app.use(multipart({
 		uploadDir: conf.import.uploadDir,
 		keepExtensions: true,
-		maxFieldsSize: '15728640'//15mb
+		maxFieldsSize: conf.import.uploadLimit
 	}));
 	app.use(methodOverride());
 	app.use(cookieParser(conf.app.cookie_secret));
@@ -61,7 +61,7 @@ exports.beforeRoutes = function (app, conf, mongoose) {
 		resave: true,
 		saveUninitialized: true,
 		cookie: {
-			maxAge: 30 * 24 * 3600000 // 30 days.
+			maxAge: conf.app.cookie_expire
 		},
 		store: new MongoStore({
 			db: mongoose.connection.db
@@ -69,8 +69,6 @@ exports.beforeRoutes = function (app, conf, mongoose) {
 	}));
 	app.use(passport.initialize());
 	app.use(passport.session());
-	//app.use(app.router);
-
 }
 
 

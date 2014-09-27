@@ -99,7 +99,7 @@ exports.passwordReset = function (req, res, next) {
 			}
 			if ('test' != env) {
 				var url = conf.app.url_prefix + '#password-reset/' + user._id + '/' + token + '/' + hashEmail(user.email);
-				console.log("Password reset url: " + url);
+				logger.info("Password reset url for " + user.email + ": " + url);
 				emailer.sendEmail({email: user.email, name: user.firstname, url: url}, 'Reset your password', 'password-reset');
 			}
 			return res.send({});
@@ -117,7 +117,7 @@ exports.passwordChange = function (req, res, next) {
 		} else if (!user) {
 			return next( {message: "User not found", status: 404} );
 		} else if (utils.isEmpty(user.passwordResetToken) || req.body.token != user.passwordResetToken) {
-			return next( {message: "Invalid hash", status: 400} );
+			return next( {message: "Invalid token", status: 400} );
 		} else if (utils.isEmpty(req.body.password)) {
 			return next( {message: "Password is empty", status: 400} );
 		}
