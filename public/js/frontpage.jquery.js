@@ -56,8 +56,8 @@ $(document).ready(function() {
 		var email = $("#login-email").val();
 
 		if (forgotPassword) {
-			if (!isValidEmail(email)) {
-				invalidBox1(240, "Invalid email");
+			if (!utils.isValidEmail(email)) {
+				invalidBox1(240, "Invalid email address");
 				formOk = false;
 			}
 			if (formOk) {
@@ -75,12 +75,12 @@ $(document).ready(function() {
 				});
 			}
 		} else {
-			if (!isValidEmail(email)) {
-				invalidBox1(0, "Invalid email");
+			if (!utils.isValidEmail(email)) {
+				invalidBox1(0, "Invalid email address");
 				formOk = false;
 			}
 			if (!isValidPassword(password)) {
-				invalidBox2(259, "6 characters minimum");
+				invalidBox2(259, "Six characters minimum");
 				formOk = false;
 			}
 
@@ -185,7 +185,7 @@ $(document).ready(function() {
 					invalidBox1(0, "6 Characters minimum");
 				}
 			} else {
-				invalidBox1(259, "Password mismatch");
+				invalidBox1(259, "Passwords do not match");
 			}
 		});
 	}
@@ -248,11 +248,6 @@ $(document).ready(function() {
 
 	function isValidPassword(password) {
 		return password !== 'undefined' && password.length >= 6;
-	}
-
-	function isValidEmail(email) {
-		var atIdx = email.indexOf("@");
-		return email !== 'undefined' && email.length > 4 && atIdx > 0 && atIdx < email.length;
 	}
 
 	function GetURLParameter(sParam) {

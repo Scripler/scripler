@@ -10,6 +10,7 @@ var User = require('../models/user.js').User
 	, path = require('path')
 	, fs = require('fs')
 	, utils = require('../lib/utils')
+	, utils_shared = require('../public/create/scripts/utils-shared')
 	, mkdirp = require('mkdirp')
 	, Styleset = require('../models/styleset.js').Styleset,
 	copyStyleset = require('../models/styleset.js').copy,
@@ -17,10 +18,6 @@ var User = require('../models/user.js').User
 ;
 
 var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
-
-function isEmail(email) {
-	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
 
 function hashEmail(email) {
 	return crypto.createHash('md5').update(conf.app.salt + email).digest("hex");
@@ -143,8 +140,8 @@ exports.register = function (req, res, next) {
 	if (utils.isEmpty(req.body.name)) {
 		errors.push( {message: "Name is empty"} );
 	}
-	if (!isEmail(req.body.email)) {
-		errors.push( {message: "Invalid email"} );
+	if (!utils_shared.isValidEmail(req.body.email)) {
+		errors.push( {message: "Invalid email address"} );
 	}
 	if (utils.isEmpty(req.body.password)) {
 		errors.push( {message: "Password is empty"} )
@@ -313,7 +310,7 @@ exports.edit = function (req, res, next) {
 		req.user.lastname = lastname;
 	}
 	if (email) {
-		if (!isEmail(email)) {
+		if (!utils_shared.isValidEmail(email)) {
 			return next({message: "Invalid email address", status: 400});
 		} else {
 			req.user.email = email;
