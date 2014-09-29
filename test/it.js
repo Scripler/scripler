@@ -1292,7 +1292,7 @@ describe('Scripler RESTful API', function () {
 			var text = '<h1 id="id_97">Partey</h1>' +
 				'<p>Dagnabbit</p>' +
 				'<h6 id="id_453">Not important</h6>' +
-				'<p><a id="id_24" title="NoGo" href="http://www.scripler.com">This is not an anchor and should not be included in the ToC</a></p>' +
+				'<p><a id="id_24" title="NoGo" href="http://www.scripler.com">This is not an anchor and should not be included in the ToC</a>. And now for some Danish: På Ærø æder ålen Åge æg og drikker ØL!</p>' +
 				'<p><a id="id_25" title="LinkyDinky">This IS an anchor and should be included in the ToC</a></p>';
 
 			request(host)
