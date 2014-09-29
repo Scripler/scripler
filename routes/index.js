@@ -15,6 +15,7 @@ module.exports = function (app, auth) {
 	// These routes interact directly with the user (the URLs are seen by the user).
 	app.get('/user/sso', user.sso);
 	app.get('/user/:id/verify/:hash', user.verify);
+	app.get('/logout', frontpage.logout);
 
 	// API URIs
 	// The routes below are the URLs used by the API (not the URLs seen by the user).
@@ -26,6 +27,8 @@ module.exports = function (app, auth) {
 	app.post('/user/login', user.login);
 	app.post('/user/logout', user.logout);
 	app.post('/user/register', user.register);
+	app.post('/user/password-reset', user.passwordReset);
+	app.post('/user/:id/password-change', user.passwordChange);
 
 	/* API Project Space: Project */
 	app.get('/project/list', auth.isLoggedIn(), project.list);

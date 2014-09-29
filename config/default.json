@@ -3,11 +3,12 @@
 		"port": 3000,
 		"url_prefix": "http://localhost:3000/",
 		"cookie_secret": "xxx",
+		"cookie_expire": 2592000000,// 30 days.
 		"session_secret": "xxx",
 		"salt": "xxx"
 	},
 	"db": {
-		"uri": "mongodb://localhost/scripler"
+		"uri": "mongodb://localhost/scripler?connectTimeoutMS=10000"
 	},
 	"discourse": {
 		"url": "http://discuss.scripler.com/",
@@ -26,9 +27,10 @@
 			"consumerSecret": "xxx",
 			"callbackURL": "http://scripler.com:3000/auth/twitter/callback"
 		},
-		"google": {
-			"returnURL": "http://scripler.com:3000/auth/google/callback",
-			"realm": "http://scripler.com:3000/"
+		"google":   {
+			"clientID":     "xxx",
+			"clientSecret": "xxx",
+			"callbackURL": "http://scripler.com:3000/auth/google/callback"
 		},
 		"facebook": {
 			"clientID": "xxx",
@@ -78,7 +80,8 @@
 		"epubDir": "EPUB"
 	},
     "import": {
-		"uploadDir": "/tmp/scripler/app/uploads/"
+		"uploadDir": "/tmp/scripler/app/uploads/",
+		"uploadLimit": 104857600//100 MB (Nginx will have a lower limit)
     },
 	"user": {
 		"defaultStylesetName": "simple-bw"

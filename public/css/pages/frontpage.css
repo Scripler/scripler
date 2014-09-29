@@ -3,7 +3,7 @@ div.half {
 	float: left;
 }
 
-#scripler, #explore, #features, #pricing, #learn, #about, #contact, #login {
+#scripler, #explore, #features, #pricing, #learn, #about, #contact, #login, #password-reset {
 	position: relative;
 	margin: 0 auto;
 	padding: 30px 20px 20px 20px;
@@ -92,7 +92,7 @@ div.half {
 }
 #login article {
 	position: relative;
-	width: 960px;
+	width: 900px;
 	margin: 0 auto;
 	padding: 0;
 	padding-top: 5px;
@@ -137,6 +137,23 @@ div.half {
 }
 .create_logo {
 	padding: 50px 0 30px;
+}
+
+#login-extras {
+	font-size: 70%;
+	float: left;
+}
+
+#login-extras > div {
+	width: 135px;
+}
+
+#login-extras > div:first-child {
+    margin-left: 5px;
+}
+#login-extras label {
+	position: relative;
+	top: -3px;
 }
 
 .socialicons {
@@ -195,13 +212,19 @@ div.half {
 .login-wrap {
 	text-align: center;
 }
+
 .mc-field-group {
 	margin: 20px 0 0;
 	text-align: center;
 }
 
-.login-group input {
+.login-group {
+	height: 35px;
+}
+
+.login-group > input {
 	width: 250px;
+	float: left;
 }
 
 .email, .password {
@@ -239,7 +262,6 @@ div.half {
 }
 .button.login {
 	width: 120px;
-	font-weight: 0;
 	font-size: 15px;
 }
 .try-button {
@@ -270,4 +292,60 @@ div.half {
 	width: 600px;
 	left: 50%;
 	text-align: right;
+}
+
+/* Password Reset */
+#password-reset-form {
+    padding: 0;
+    margin: 0;
+}
+#password-reset-button {
+    width: 180px;
+    font-size: 15px;
+}
+
+#form-success {
+    margin: 0 0 0 100px;
+    line-height: 1em;
+    height: 33px;
+    width: 500px;
+    text-align: left;
+}
+
+.error-boxes {
+    position: fixed;
+    margin-left: 25px;
+    margin-top: 45px;
+}
+.arrow-box {
+    position: fixed;
+    background: #FF0500;
+    border: 2px solid #fff;
+    padding-top: 5px;
+    height: 32px;
+    width: 200px;
+    color: #fff;
+}
+
+.arrow-box:after, .arrow-box:before {
+    bottom: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+.arrow-box:after {
+    border-color: rgba(213, 0, 0, 0);
+    border-bottom-color: #FF0500;
+    border-width: 10px;
+    margin-left: -10px;
+}
+.arrow-box:before {
+    border-color: rgba(194, 225, 245, 0);
+    border-bottom-color: #fff;
+    border-width: 13px;
+    margin-left: -13px;
 }
