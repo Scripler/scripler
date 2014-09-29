@@ -29,6 +29,7 @@
 			<li class="navpoint menu-about" data="about"><a href="#about">About</li>
 			<li class="navpoint menu-contact" data="contact"><a href="#contact">Contact</a></li>
 			<li class="navpoint menu-login" data="login"><a href="#login">Login</a></li>
+            <li class="menu-loggedin" style="display:none;"><a href="logout">Logout</a></li>
 			<li class="navpoint menu-blog" data="blog"><a href="http://blog.scripler.com/" class="blog-link">Blog</a></li>
 			<!--<li class="navbutton" id="showMenu"></li>-->
 		</ul>
@@ -37,17 +38,33 @@
 	<section id="login" class="clearfix">
 		<article class="login-article">
 			<div class="login-wrap">
+                <div class="error-boxes">
+                    <div class="arrow-box first" id="invalid-box1" style="display:none;"></div>
+                    <div class="arrow-box second" id="invalid-box2" style="display:none;"></div>
+                </div>
 				<form id="login-form">
 					<div class="login-group">
-						<input type="email" value="" name="login-email" class="required email" id="login-email" placeholder="Email Address">
-						<input type="password" value="" name="login-password" class="required password" id="login-password" placeholder="Password">
-						<input name="Login" type="submit" value="Login" class="button login">
+						<input type="email" value="" name="login-email" class="required email" id="login-email" placeholder="Email Address" />
+						<input type="password" value="" name="login-password" class="required password" id="login-password" placeholder="Password" />
+						<input name="Login" type="submit" value="Login" class="button login" id="login-button" />
+						<div id="login-extras">
+							<div><a id="forgot-password" href="#">Forgot password?</a></div>
+							<div class="clearfix" id="remember-me-box"><input type="checkbox" name="remember" id="remember" /><label for="remember">Keep me logged in?</label></div>
+						</div>
 					</div>
 				</form>
+                <form id="password-reset-form" style="display:none;">
+                    <div class="login-group">
+                        <input type="password" value="" name="password1" class="required password" id="password1" placeholder="New password" />
+                        <input type="password" value="" name="password2" class="required password" id="password2" placeholder="Repeat password" />
+                        <input name="passsword-reset" type="submit" value="Change password" class="button" id="password-reset-button" />
+                    </div>
+                </form>
+                <p id="form-success" style="display:none;"></p>
 				<div class="socialicons clearfix">
-					<div class="socialicon"><a href="api/auth/facebook" target="_blank"><span class="icon-facebook"></span></a></div>
-					<div class="socialicon"><a href="api/auth/google" target="_blank"><span class="icon-linkedin"></span></a></div>
-					<div class="socialicon"><a href="api/auth/google" target="_blank"><span class="icon-google-plus"></span></a></div>
+					<div class="socialicon"><a href="auth/facebook"><span class="icon-facebook"></span></a></div>
+					<div class="socialicon"><a href="auth/linkedin"><span class="icon-linkedin"></span></a></div>
+					<div class="socialicon"><a href="auth/google"><span class="icon-google-plus"></span></a></div>
 				</div>
 			 </div>
 		</article>
@@ -224,6 +241,7 @@
 	<!--<![endif]-->
 
 	<script src="js/frontpage.jquery.js"></script>
+	<script src="create/scripts/utils-shared.js"></script>
 
 	<script>
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
