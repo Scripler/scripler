@@ -310,70 +310,73 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
-	$scope.debounceSaveUpdates = function(newValue, oldValue) {
-		var newTitle  = newValue[0];
-		var newAuthors = newValue[1];
-		var newLanguage = newValue[2];
-		var newDescription = newValue[3];
-		var newIsbn = newValue[4];
+	$scope.saveMetaData = function() {
+		$http.put('/project/' + $scope.project._id + '/metadata', {
+			'title': $scope.project.metadata.title,
+			'authors': $scope.project.metadata.authors,
+			'language': $scope.project.metadata.language,
+			'description': $scope.project.metadata.description,
+			'isbn': $scope.project.metadata.isbn
+		}).success( function() {
 
-		var oldTitle  = oldValue[0];
-		var oldAuthors = oldValue[1];
-		var oldLanguage = oldValue[2];
-		var oldDescription = oldValue[3];
-		var oldIsbn = oldValue[4];
-
-		if (newTitle != oldTitle || newAuthors != oldAuthors || newLanguage != oldLanguage || newDescription != oldDescription || newIsbn != oldIsbn && $scope.user._id) {
-			if (timeoutMetadata) {
-				$timeout.cancel(timeoutMetadata)
-			}
-			timeoutMetadata = $timeout(function() {
-				$http.put('/project/' + $scope.project._id + '/metadata', {
-					'title': $scope.project.metadata.title,
-					'authors': $scope.project.metadata.authors,
-					'language': $scope.project.metadata.language,
-					'description': $scope.project.metadata.description,
-					'isbn': $scope.project.metadata.isbn
-				}).success( function() {
-					if (newTitle != oldTitle) {
-						$scope.metaTitleSaved = true;
-						$timeout(function() {
-						    $scope.metaTitleSaved = false;
-						}, 2000);
-					}
-					else if (newAuthors != oldAuthors) {
-						$scope.metaAuthorsSaved = true;
-						$timeout(function() {
-						    $scope.metaAuthorsSaved = false;
-						}, 2000);
-					}
-					else if (newLanguage != oldLanguage) {
-						$scope.metaLanguageSaved = true;
-						$timeout(function() {
-						    $scope.metaLanguageSaved = false;
-						}, 2000);
-					}
-					else if (newDescription != oldDescription) {
-						$scope.metaDescriptionSaved = true;
-						$timeout(function() {
-						    $scope.metaDescriptionSaved = false;
-						}, 2000);
-					}
-					else if (newIsbn != oldIsbn) {
-						$scope.metaIsbnSaved = true;
-						$timeout(function() {
-						    $scope.metaIsbnSaved = false;
-						}, 2000);
-					}
-				});
-			}, 1000);
-		}
+		});
 	};
 
-	$scope.$watch('[project.metadata.title, project.metadata.authors, project.metadata.language, project.metadata.description, project.metadata.isbn]', $scope.debounceSaveUpdates, true);
+    $scope.$watch('project.metadata.title', function(newValue, oldValue){
+		if (newValue === '') {
+			$scope.project.metadata.title = $scope.project.name;
+		}
+		if (newValue != '' && newValue != oldValue) {
+			$scope.saveMetaData();
+			$scope.metaTitleSaved = true;
+			$timeout(function() {
+			    $scope.metaTitleSaved = false;
+			}, 2000);
+		}
+	});
+    $scope.$watch('project.metadata.authors', function(newValue, oldValue){
+		if (newValue === '') {
+			$scope.project.metadata.authors = $scope.user.firstname + ' ' + $scope.user.lastname;
+		}
+		if (newValue != '' && newValue != oldValue) {
+			$scope.saveMetaData();
+			$scope.metaAuthorsSaved = true;
+			$timeout(function() {
+			    $scope.metaAuthorsSaved = false;
+			}, 2000);
+		}
+	});
+	$scope.$watch('project.metadata.language', function(newValue, oldValue){
+		if (newValue != '' && newValue != oldValue) {
+			$scope.saveMetaData();
+			$scope.metaLanguageSaved = true;
+			$timeout(function() {
+			    $scope.metaLanguageSaved = false;
+			}, 2000);
+		}
+	});
+	$scope.$watch('project.metadata.description', function(newValue, oldValue){
+		if (newValue != '' && newValue != oldValue) {
+			$scope.saveMetaData();
+			$scope.metaDescriptionSaved = true;
+			$timeout(function() {
+			    $scope.metaDescriptionSaved = false;
+			}, 2000);
+		}
+	});
+	$scope.$watch('project.metadata.isbn', function(newValue, oldValue){
+		if (newValue != '' && newValue != oldValue) {
+			$scope.saveMetaData();
+			$scope.metaIsbnSaved = true;
+			$timeout(function() {
+			    $scope.metaIsbnSaved = false;
+			}, 2000);
+		}
+	});
 
 	$scope.exportEpub = function() {
 		var getTocPromise = $scope.getToc();
+
 		getTocPromise.then(function () {
 			var setTocPromise = $scope.setToc();
 			setTocPromise.then(function () {
@@ -979,6 +982,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			.success( function( data ) {
 				$scope.toc = data.toc;
 				deferred.resolve();
+			})
+			.error( function(status) {
+				console.log("error getting toc, status: " + status);
 			});
 
 		return deferred.promise;
@@ -1162,6 +1168,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$http.put('/project/' + $scope.pid + '/toc', angular.toJson( data ))
 			.success( function( data ) {
 				deferred.resolve();
+			})
+			.error( function(status) {
+				console.log("error setting toc, status: " + status);
 			});
 
 		return deferred.promise;

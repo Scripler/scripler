@@ -2,11 +2,13 @@
 
 	if (typeof module !== 'undefined' && module.exports) {
 		module.exports = service;
-	} else if (angular) {
+	} else if (typeof angular !== 'undefined' && angular) {
 		angular.module('utilsSharedModule', []).factory(
 				'utilsService', function() {
 					return service;
 				});
+	} else {
+		this.utils = service;
 	}
 
 }(function() {
@@ -135,13 +137,18 @@
 		return result;
 	}
 
+	function isValidEmail(email) {
+		var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
+		return re.test(email);
+	}
 
 	return {
 		getStylesetContents : getStylesetContents,
 		mongooseEquals : mongooseEquals,
 		getMongooseId : getMongooseId,
 		containsModel : containsModel,
-		containsDocWithFolderId: containsDocWithFolderId
+		containsDocWithFolderId: containsDocWithFolderId,
+		isValidEmail: isValidEmail
 	}
 
 }()))

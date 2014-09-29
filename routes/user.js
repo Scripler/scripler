@@ -10,6 +10,7 @@ var User = require('../models/user.js').User
 	, path = require('path')
 	, fs = require('fs')
 	, utils = require('../lib/utils')
+	, utils_shared = require('../public/create/scripts/utils-shared')
 	, mkdirp = require('mkdirp')
 	, Styleset = require('../models/styleset.js').Styleset,
 	copyStyleset = require('../models/styleset.js').copy,
@@ -17,10 +18,6 @@ var User = require('../models/user.js').User
 ;
 
 var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
-
-function isEmail(email) {
-	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
 
 function hashEmail(email) {
 	return crypto.createHash('md5').update(conf.app.salt + email).digest("hex");
@@ -56,9 +53,17 @@ exports.login = function (req, res, next) {
 		if (!user) {
 			return next({message: info.message, status: 401});
 		}
+		if (!user.password) {
+			return next({message: "User does not have password associated. Use OAuth: " + user.providers, status: 400});
+		}
 		req.logIn(user, function (err) {
 			if (err) {
 				return next(err);
+			}
+			// As default our session is saved as a cookie for 30 days.
+			// If user chooses not to be remembered across sessions, disable this.
+			if (!req.body.remember) {
+				req.session.cookie.expires = false;
 			}
 			res.send({"user": user});
 		});
@@ -74,6 +79,59 @@ exports.logout = function (req, res) {
 };
 
 /**
+ * PUT password reset (send email).
+ */
+exports.passwordReset = function (req, res, next) {
+	crypto.randomBytes(32, function(err, buf) {
+		if (err) {
+			return next(err);
+		}
+		var token = buf.toString('hex');
+		User.findOneAndUpdate({"email": req.body.email}, { passwordResetToken: token }, {}, function (err, user) {
+			if (err) {
+				return next(err);
+			} else if (!user) {
+				logger.info("Unknown email requested password reset: " + req.body.email);
+				return res.send({});
+			}
+			if ('test' != env) {
+				var url = conf.app.url_prefix + '#password-reset/' + user._id + '/' + token + '/' + hashEmail(user.email);
+				logger.info("Password reset url for " + user.email + ": " + url);
+				emailer.sendEmail({email: user.email, name: user.firstname, url: url}, 'Reset your password', 'password-reset');
+			}
+			return res.send({});
+		});
+	});
+};
+
+/**
+ * PUT password change (for password reset).
+ */
+exports.passwordChange = function (req, res, next) {
+	User.findOne({"_id": req.params.id}, function (err, user) {
+		if (err) {
+			return next(err);
+		} else if (!user) {
+			return next( {message: "User not found", status: 404} );
+		} else if (utils.isEmpty(user.passwordResetToken) || req.body.token != user.passwordResetToken) {
+			return next( {message: "Invalid token", status: 400} );
+		} else if (utils.isEmpty(req.body.password)) {
+			return next( {message: "Password is empty", status: 400} );
+		}
+		user.passwordResetToken = null;
+		user.password = req.body.password;
+		user.save(function (err) {
+			if (err) {
+				return next(err);
+			}
+			return res.send({});
+		});
+	});
+};
+
+
+
+/**
  * POST user registration.
  */
 exports.register = function (req, res, next) {
@@ -82,8 +140,8 @@ exports.register = function (req, res, next) {
 	if (utils.isEmpty(req.body.name)) {
 		errors.push( {message: "Name is empty"} );
 	}
-	if (!isEmail(req.body.email)) {
-		errors.push( {message: "Invalid email"} );
+	if (!utils_shared.isValidEmail(req.body.email)) {
+		errors.push( {message: "Invalid email address"} );
 	}
 	if (utils.isEmpty(req.body.password)) {
 		errors.push( {message: "Password is empty"} )
@@ -252,7 +310,7 @@ exports.edit = function (req, res, next) {
 		req.user.lastname = lastname;
 	}
 	if (email) {
-		if (!isEmail(email)) {
+		if (!utils_shared.isValidEmail(email)) {
 			return next({message: "Invalid email address", status: 400});
 		} else {
 			req.user.email = email;

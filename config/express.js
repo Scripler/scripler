@@ -1,10 +1,16 @@
 var express = require('express')
 	, passport = require('passport')
-	, MongoStore = require('connect-mongo')(express)
+	, session = require('express-session')
+	, MongoStore = require('connect-mongo')(session)
 	, path = require('path')
 	, logger = require('../lib/logger')
+	, expressLogger = require('morgan')
 	, conf = require('config')
-	, mkdirp = require('mkdirp');
+	, mkdirp = require('mkdirp')
+	, methodOverride = require('method-override')
+	, cookieParser = require('cookie-parser')
+	, bodyParser = require('body-parser')
+	, multipart = require('connect-multiparty');
 
 
 var allowCrossDomain = function (req, res, next) {
@@ -29,7 +35,7 @@ mkdirp(conf.import.uploadDir, function (err) {
 	if (err) console.error(err);
 });
 
-module.exports = function (app, conf, mongoose) {
+exports.beforeRoutes = function (app, conf, mongoose) {
 
 	// all environments
 	app.set('port', conf.app.port);
@@ -38,26 +44,36 @@ module.exports = function (app, conf, mongoose) {
 		// development only
 		app.use(allowCrossDomain);
 	//}
-	app.use(express.logger({format: 'short', stream: {write: function (msg) {
+	app.use(expressLogger('short', {stream: {write: function (msg) {
 		logger.info(msg.trim());
 	}}}));
-	app.use(express.bodyParser({
+	app.use(bodyParser.json());
+	app.use(bodyParser.urlencoded({ extended: false }));
+	app.use(multipart({
 		uploadDir: conf.import.uploadDir,
 		keepExtensions: true,
-		maxFieldsSize: '15728640'//15mb
+		maxFieldsSize: conf.import.uploadLimit
 	}));
-	app.use(express.methodOverride());
-	app.use(express.cookieParser(conf.app.cookie_secret));
-	app.use(express.session({
+	app.use(methodOverride());
+	app.use(cookieParser(conf.app.cookie_secret));
+	app.use(session({
 		secret: conf.app.session_secret,
-		maxAge: new Date(Date.now() + 3600000),
-		store: new MongoStore({db: mongoose.connection.db})
+		resave: true,
+		saveUninitialized: true,
+		cookie: {
+			maxAge: conf.app.cookie_expire
+		},
+		store: new MongoStore({
+			db: mongoose.connection.db
+		})
 	}));
 	app.use(passport.initialize());
 	app.use(passport.session());
-	app.use(app.router);
-	app.use(express.static(path.join(__dirname, '../public')));
+}
 
+
+exports.afterRoutes = function (app) {
+	app.use(express.static(path.join(__dirname, '../public')));
 	//Catch-all error handler
 	app.use(function (err, req, res, next) {
 		if (typeof err == "number") {

@@ -7,13 +7,24 @@
 		"salt": "tyu:$"
 	},
 	"db": {
-		"uri": "mongodb://localhost/scripler_test"
+		"uri": "mongodb://localhost/scripler_test?connectTimeoutMS=10000"
 	},
 	"resources": {
 		"projectsDir": "/tmp/scripler/test/projects",
 		"usersDir": "/tmp/scripler/test/users",
 		"projectsUrl": "http://localhost:3000/public/resources/projects",
 		"usersUrl": "http://localhost:3000/public/resources/users"
+	},
+	"subscriptions": {
+		"free": {
+			"storage": 20000//bytes
+		},
+		"premium": {
+			"storage": 200000//bytes
+		},
+		"professional": {
+			"storage": 2000000//bytes
+		}
 	},
 	"epub": {
 		"userDirPrefix": "user",

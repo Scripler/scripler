@@ -23,14 +23,16 @@
   <manifest>
 	<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
 	<item id="toc" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav" />
-	%manifest_font_files%
-	%manifest_html_files%
-	%manifest_image_files%
-	%manifest_style_files%
+
+%manifest_font_files%
+%manifest_html_files%
+%manifest_image_files%
+%manifest_style_files%
+
 	<item id="%manifest_font_license_name%" href="%manifest_font_license_name%" media-type="text/plain" />
   </manifest>
   <spine toc="ncx">
-	%spine_documents%
+%spine_documents%
   </spine>
   <guide>
 	%guide_cover%

@@ -12,7 +12,8 @@ var assert = require("assert")
 	, styleset_utils = require('../lib/styleset-utils')
 	, user_utils = require('../lib/user-utils')
 	, font_utils = require('../lib/font-utils')
-	, Font = require('../models/font.js').Font;
+	, Font = require('../models/font.js').Font
+	, chai_assert = require("chai").assert;
 
 var exec = require('child_process').exec,
 	child;
@@ -59,9 +60,9 @@ var styleCopiedId2;
 var imageId;
 var imageName;
 
-var cleanupEPUB = false;
+var cleanupEPUB = true;
 
-if (conf.db.uri.match(/_test$/) === null) {
+if (conf.db.uri.match(/_test(\?|$)/) === null) {
 	console.log("You shouldn't be running this test on any database not being specifically meant for 'test'!");
 	console.log("You tried with this database: " + conf.db.uri);
 	process.exit(1);
@@ -1292,7 +1293,7 @@ describe('Scripler RESTful API', function () {
 			var text = '<h1 id="id_97">Partey</h1>' +
 				'<p>Dagnabbit</p>' +
 				'<h6 id="id_453">Not important</h6>' +
-				'<p><a id="id_24" title="NoGo" href="http://www.scripler.com">This is not an anchor and should not be included in the ToC</a></p>' +
+				'<p><a id="id_24" title="NoGo" href="http://www.scripler.com">This is not an anchor and should not be included in the ToC</a>. And now for some Danish: På Ærø æder ålen Åge æg og drikker ØL!</p>' +
 				'<p><a id="id_25" title="LinkyDinky">This IS an anchor and should be included in the ToC</a></p>';
 
 			request(host)
@@ -1942,7 +1943,9 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.images.length, 1);
 					var image = res.body.images[0];
 					imageId = image._id;
-					assert.equal(image.name, imageName);
+					var imageRegex = new RegExp("Scripler_logo" + "-\\w+.jpg");
+					chai_assert.match(image.name, imageRegex);
+					imageName = image.name; // Save the new filename including the Mongoose id
 					assert.equal(image.projectId, projectId);
 					assert.equal(image.fileExtension, "jpg");
 					assert.equal(image.mediaType, "image/jpeg");
@@ -1952,9 +1955,9 @@ describe('Scripler RESTful API', function () {
 				});
 		}),
 		it('Uploading an additional image to a project should return should not be allowed (storage restriction for premium user)', function (done) {
-			imageName = 'Scripler_logo.jpg';
+			var originalImageName = 'Scripler_logo.jpg';
 			var srcImagesDir = path.join('test', 'resources', 'images');
-			var srcImage = path.join(srcImagesDir, imageName);
+			var srcImage = path.join(srcImagesDir, originalImageName);
 
 			request(host)
 				.post('/image/' + projectId + '/upload')
