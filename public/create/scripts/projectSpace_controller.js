@@ -94,7 +94,15 @@ function projectSpaceController( $scope, $http, localStorageService, projectsSer
 		if ( $scope.user ) {
 			$http.post('/project', angular.toJson( publication ) )
 				.success( function( data ) {
-					$scope.publications.push( data.project );
+					$http.put('/project/' + data.project._id + '/metadata', {
+						'title': name,
+						'authors': $scope.user.firstname + ' ' + $scope.user.lastname,
+						'language': null,
+						'description': null,
+						'isbn': null
+					}).success( function() {
+						$scope.publications.push( data.project );
+					});
 				});
 		} else {
 			publication._id = Date.now();
