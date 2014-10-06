@@ -181,7 +181,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			document.name = name;
 		}
 
-		document.text = '';
+		document.text = ' ';
 
 		if ( typeof type !== 'undefined' ) {
 			document.type = type;
