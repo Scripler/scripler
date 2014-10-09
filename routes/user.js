@@ -268,21 +268,27 @@ exports.verify = function (req, res) {
 		} else if (req.params.hash != hashEmail(user.email)) {
 			res.redirect(redirectUrl + "102");//Email not verified
 		} else {
-			user.emailValidated = true;
-			user.save(function (err) {
-				if (err) {
-					res.redirect(redirectUrl + "104");//Database problem
-				} else {
-					res.redirect(redirectUrl + "100");//Email verified
-				}
-			});
+			if (user.emailValidated) {
+				res.redirect(redirectUrl + "200");//Email already verified
+			} else {
+				user.emailValidated = true;
+				user.save(function (err) {
+					if (err) {
+						res.redirect(redirectUrl + "104");//Database problem
+					} else {
+						res.redirect(redirectUrl + "100");//Email verified
+					}
+				});
 
-			if (user.newsletter) {
-				emailer.newsletterSubscribe(user);
-			}
-			// If the user previously had another email address, unsubscribe that from the newsletter
-			if (user.oldEmail && user.email != user.oldEmail) {
-				emailer.newsletterUnsubscribe(user.oldEmail);
+				if (user.newsletter) {
+					emailer.newsletterSubscribe(user);
+				} else {
+					emailer.newsletterUnsubscribe(user.email);
+				}
+				// If the user previously had another email address, unsubscribe that from the newsletter
+				if (user.oldEmail && user.email != user.oldEmail) {
+					emailer.newsletterUnsubscribe(user.oldEmail);
+				}
 			}
 		}
 	});
@@ -312,7 +318,10 @@ exports.edit = function (req, res, next) {
 		if (!utils_shared.isValidEmail(email)) {
 			return next({message: "Invalid email address", status: 400});
 		} else {
-			user.oldEmail = user.email;
+			if (user.emailValidated) {
+				// Store users last verified email for later
+				user.oldEmail = user.email;
+			}
 			user.email = email;
 			if ('test' != env) {
 				emailer.sendUserEmail(
@@ -330,10 +339,14 @@ exports.edit = function (req, res, next) {
 		user.password = password;
 	}
 	if (typeof newsletter === "boolean") {
-		if (!newsletter && user.newsletter) {
-			emailer.newsletterUnsubscribe(user.email);
-		} else if (newsletter && !user.newsletter && user.emailValidated) {
-			emailer.newsletterSubscribe(user);
+		// If email address is verified, any newsletter subscription changes will be done immediately.
+		// If email address is not verified, any changes will be done after the verification.
+		if (user.emailValidated) {
+			if (!newsletter && user.newsletter) {
+				emailer.newsletterUnsubscribe(user.email);
+			} else if (newsletter && !user.newsletter) {
+				emailer.newsletterSubscribe(user);
+			}
 		}
 		user.newsletter = newsletter;
 	}
