@@ -277,7 +277,9 @@ exports.verify = function (req, res) {
 				}
 			});
 
-			emailer.newsletterSubscribe(user);
+			if (user.newsletter) {
+				emailer.newsletterSubscribe(user);
+			}
 			// If the user previously had another email address, unsubscribe that from the newsletter
 			if (user.oldEmail && user.email != user.oldEmail) {
 				emailer.newsletterUnsubscribe(user.oldEmail);
@@ -301,10 +303,10 @@ exports.edit = function (req, res, next) {
 	var defaultStyleset = req.body.defaultStyleset;
 
 	if (firstname) {
-		req.user.firstname = firstname;
+		user.firstname = firstname;
 	}
 	if (lastname) {
-		req.user.lastname = lastname;
+		user.lastname = lastname;
 	}
 	if (email && email != user.email) {
 		if (!utils_shared.isValidEmail(email)) {
@@ -325,26 +327,31 @@ exports.edit = function (req, res, next) {
 		}
 	}
 	if (password) {
-		req.user.password = password;
+		user.password = password;
 	}
 	if (typeof newsletter === "boolean") {
-		req.user.newsletter = newsletter;
+		if (!newsletter && user.newsletter) {
+			emailer.newsletterUnsubscribe(user.email);
+		} else if (newsletter && !user.newsletter && user.emailValidated) {
+			emailer.newsletterSubscribe(user);
+		}
+		user.newsletter = newsletter;
 	}
 	if (typeof showArchived === "boolean") {
-		req.user.showArchived = showArchived;
+		user.showArchived = showArchived;
 	}
 	if (typeof showArchivedDocuments === "boolean") {
-		req.user.showArchivedDocuments = showArchivedDocuments;
+		user.showArchivedDocuments = showArchivedDocuments;
 	}
 	if (defaultStyleset) {
-		req.user.defaultStyleset = defaultStyleset;
+		user.defaultStyleset = defaultStyleset;
 	}
 
-	req.user.save(function (err) {
+	user.save(function (err) {
 		if (err) {
 			return next(err);
 		}
-		res.send({"user": req.user});
+		res.send({"user": user});
 	});
 };
 
