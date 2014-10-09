@@ -3,7 +3,6 @@ var User = require('../models/user.js').User
 	, emailer = require('../lib/email/email.js')
 	, crypto = require('crypto')
 	, conf = require('config')
-	, mcapi = new require('mailchimp-api')
 	, logger = require('../lib/logger')
 	, conf = require('config')
 	, env = process.env.NODE_ENV
@@ -279,6 +278,10 @@ exports.verify = function (req, res) {
 			});
 
 			emailer.newsletterSubscribe(user);
+			// If the user previously had another email address, unsubscribe that from the newsletter
+			if (user.oldEmail && user.email != user.oldEmail) {
+				emailer.newsletterUnsubscribe(user.oldEmail);
+			}
 		}
 	});
 };
@@ -303,11 +306,12 @@ exports.edit = function (req, res, next) {
 	if (lastname) {
 		req.user.lastname = lastname;
 	}
-	if (email) {
+	if (email && email != user.email) {
 		if (!utils_shared.isValidEmail(email)) {
 			return next({message: "Invalid email address", status: 400});
 		} else {
-			req.user.email = email;
+			user.oldEmail = user.email;
+			user.email = email;
 			if ('test' != env) {
 				emailer.sendUserEmail(
 					user,
