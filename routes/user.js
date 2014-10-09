@@ -17,8 +17,6 @@ var User = require('../models/user.js').User
 	discourse_sso = require('discourse-sso')
 ;
 
-var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
-
 function hashEmail(email) {
 	return crypto.createHash('md5').update(conf.app.salt + email).digest("hex");
 }
@@ -97,7 +95,13 @@ exports.passwordReset = function (req, res, next) {
 			if ('test' != env) {
 				var url = conf.app.url_prefix + '#password-reset/' + user._id + '/' + token + '/' + hashEmail(user.email);
 				logger.info("Password reset url for " + user.email + ": " + url);
-				emailer.sendEmail({email: user.email, name: user.firstname, url: url}, 'Reset your password', 'password-reset');
+				emailer.sendUserEmail(
+					user,
+					[
+						{name: "URL", content: url}
+					],
+					'password-reset'
+				);
 			}
 			return res.send({});
 		});
@@ -189,7 +193,13 @@ exports.register = function (req, res, next) {
 					return next(err);
 				} else {
 					if ('test' != env) {
-						emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
+						emailer.sendUserEmail(
+							user,
+							[
+								{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}
+							],
+							'welcome'
+						);
 					}
 
 					var createDirectories = function (next) {
@@ -268,23 +278,7 @@ exports.verify = function (req, res) {
 				}
 			});
 
-			mc.lists.subscribe({
-				id: conf.mailchimp.memberListId,
-				double_optin: false,
-				update_existing: true,
-				email: {email: user.email},
-				merge_vars: {
-					groupings: [
-						{id: conf.mailchimp.memberGroupId, groups: [conf.mailchimp.memberGroupIdFree]}
-					],
-					FNAME: user.firstname,
-					LNAME: user.lastname
-				}
-			}, function (data) {
-				logger.info("MailChimp subscribe successful: " + user.email);
-			}, function (error) {
-				logger.error("MailChimp subscribe error: " + user.email + " - " + error.code + " - " + error.error);
-			});
+			emailer.newsletterSubscribe(user);
 		}
 	});
 };
@@ -315,11 +309,15 @@ exports.edit = function (req, res, next) {
 		} else {
 			req.user.email = email;
 			if ('test' != env) {
-				emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
+				emailer.sendUserEmail(
+					user,
+					[
+						{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}
+					],
+					'verify-email'
+				);
 			}
-			if ('production' != env) {
-				user.emailValidated = true;
-			}
+			user.emailValidated = false;
 		}
 	}
 	if (password) {
@@ -345,6 +343,17 @@ exports.edit = function (req, res, next) {
 		res.send({"user": req.user});
 	});
 };
+
+exports.resendVerifyEmail = function (req, res, nxt) {
+	emailer.sendUserEmail(
+		user,
+		[
+			{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}
+		],
+		'verify-email'
+	);
+	res.send({});
+}
 
 exports.sso = function (req, res, next) {
 	if (!req.isAuthenticated()) {
