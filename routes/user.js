@@ -340,7 +340,7 @@ exports.edit = function (req, res, next) {
 	}
 	if (typeof newsletter === "boolean") {
 		// If email address is verified, any newsletter subscription changes will be done immediately.
-		// If email address is not verified, any changes will be done after the verification.
+		// If email address is not verified, any newsletter subscription changes will be done when the verification is successfull.
 		if (user.emailValidated) {
 			if (!newsletter && user.newsletter) {
 				emailer.newsletterUnsubscribe(user.email);
