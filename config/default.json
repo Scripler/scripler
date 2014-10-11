@@ -21,6 +21,9 @@
 		"memberGroupIdFree": "Members - Free",
 		"memberGroupIdPaying": "Members - Paying"
 	},
+	"mandrill": {
+		"apiKey": "xxxx"
+	},
 	"passport": {
 		"twitter": {
 			"consumerKey": "xxx",

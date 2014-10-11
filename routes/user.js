@@ -3,7 +3,6 @@ var User = require('../models/user.js').User
 	, emailer = require('../lib/email/email.js')
 	, crypto = require('crypto')
 	, conf = require('config')
-	, mcapi = new require('mailchimp-api')
 	, logger = require('../lib/logger')
 	, conf = require('config')
 	, env = process.env.NODE_ENV
@@ -16,8 +15,6 @@ var User = require('../models/user.js').User
 	copyStyleset = require('../models/styleset.js').copy,
 	discourse_sso = require('discourse-sso')
 ;
-
-var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
 
 function hashEmail(email) {
 	return crypto.createHash('md5').update(conf.app.salt + email).digest("hex");
@@ -97,7 +94,13 @@ exports.passwordReset = function (req, res, next) {
 			if ('test' != env) {
 				var url = conf.app.url_prefix + '#password-reset/' + user._id + '/' + token + '/' + hashEmail(user.email);
 				logger.info("Password reset url for " + user.email + ": " + url);
-				emailer.sendEmail({email: user.email, name: user.firstname, url: url}, 'Reset your password', 'password-reset');
+				emailer.sendUserEmail(
+					user,
+					[
+						{name: "URL", content: url}
+					],
+					'password-reset'
+				);
 			}
 			return res.send({});
 		});
@@ -189,7 +192,13 @@ exports.register = function (req, res, next) {
 					return next(err);
 				} else {
 					if ('test' != env) {
-						emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
+						emailer.sendUserEmail(
+							user,
+							[
+								{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}
+							],
+							'welcome'
+						);
 					}
 
 					var createDirectories = function (next) {
@@ -259,32 +268,28 @@ exports.verify = function (req, res) {
 		} else if (req.params.hash != hashEmail(user.email)) {
 			res.redirect(redirectUrl + "102");//Email not verified
 		} else {
-			user.emailValidated = true;
-			user.save(function (err) {
-				if (err) {
-					res.redirect(redirectUrl + "104");//Database problem
-				} else {
-					res.redirect(redirectUrl + "100");//Email verified
-				}
-			});
+			if (user.emailValidated) {
+				res.redirect(redirectUrl + "200");//Email already verified
+			} else {
+				user.emailValidated = true;
+				user.save(function (err) {
+					if (err) {
+						res.redirect(redirectUrl + "104");//Database problem
+					} else {
+						res.redirect(redirectUrl + "100");//Email verified
+					}
+				});
 
-			mc.lists.subscribe({
-				id: conf.mailchimp.memberListId,
-				double_optin: false,
-				update_existing: true,
-				email: {email: user.email},
-				merge_vars: {
-					groupings: [
-						{id: conf.mailchimp.memberGroupId, groups: [conf.mailchimp.memberGroupIdFree]}
-					],
-					FNAME: user.firstname,
-					LNAME: user.lastname
+				if (user.newsletter) {
+					emailer.newsletterSubscribe(user);
+				} else {
+					emailer.newsletterUnsubscribe(user.email);
 				}
-			}, function (data) {
-				logger.info("MailChimp subscribe successful: " + user.email);
-			}, function (error) {
-				logger.error("MailChimp subscribe error: " + user.email + " - " + error.code + " - " + error.error);
-			});
+				// If the user previously had another email address, unsubscribe that from the newsletter
+				if (user.oldEmail && user.email != user.oldEmail) {
+					emailer.newsletterUnsubscribe(user.oldEmail);
+				}
+			}
 		}
 	});
 };
@@ -304,47 +309,75 @@ exports.edit = function (req, res, next) {
 	var defaultStyleset = req.body.defaultStyleset;
 
 	if (firstname) {
-		req.user.firstname = firstname;
+		user.firstname = firstname;
 	}
 	if (lastname) {
-		req.user.lastname = lastname;
+		user.lastname = lastname;
 	}
-	if (email) {
+	if (email && email != user.email) {
 		if (!utils_shared.isValidEmail(email)) {
 			return next({message: "Invalid email address", status: 400});
 		} else {
-			req.user.email = email;
+			if (user.emailValidated) {
+				// Store users last verified email for later
+				user.oldEmail = user.email;
+			}
+			user.email = email;
 			if ('test' != env) {
-				emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
+				emailer.sendUserEmail(
+					user,
+					[
+						{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}
+					],
+					'verify-email'
+				);
 			}
-			if ('production' != env) {
-				user.emailValidated = true;
-			}
+			user.emailValidated = false;
 		}
 	}
 	if (password) {
-		req.user.password = password;
+		user.password = password;
 	}
 	if (typeof newsletter === "boolean") {
-		req.user.newsletter = newsletter;
+		// If email address is verified, any newsletter subscription changes will be done immediately.
+		// If email address is not verified, any newsletter subscription changes will be done when the verification is successfull.
+		if (user.emailValidated) {
+			if (!newsletter && user.newsletter) {
+				emailer.newsletterUnsubscribe(user.email);
+			} else if (newsletter && !user.newsletter) {
+				emailer.newsletterSubscribe(user);
+			}
+		}
+		user.newsletter = newsletter;
 	}
 	if (typeof showArchived === "boolean") {
-		req.user.showArchived = showArchived;
+		user.showArchived = showArchived;
 	}
 	if (typeof showArchivedDocuments === "boolean") {
-		req.user.showArchivedDocuments = showArchivedDocuments;
+		user.showArchivedDocuments = showArchivedDocuments;
 	}
 	if (defaultStyleset) {
-		req.user.defaultStyleset = defaultStyleset;
+		user.defaultStyleset = defaultStyleset;
 	}
 
-	req.user.save(function (err) {
+	user.save(function (err) {
 		if (err) {
 			return next(err);
 		}
-		res.send({"user": req.user});
+		res.send({"user": user});
 	});
 };
+
+exports.resendVerifyEmail = function (req, res, nxt) {
+	emailer.sendUserEmail(
+		user,
+		[
+			{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}
+		],
+		'verify-email'
+	);
+	res.send({});
+}
 
 exports.sso = function (req, res, next) {
 	if (!req.isAuthenticated()) {

@@ -10,6 +10,7 @@ var UserSchema = new Schema({
 	firstname: { type: String, required: true},
 	lastname: { type: String},
 	email: { type: String, required: true, unique: true },
+	oldEmail: { type: String },
 	emailValidated: { type: Boolean, default: false },
 	projects: [
 		{ type: Schema.Types.ObjectId, ref: 'Project' }
