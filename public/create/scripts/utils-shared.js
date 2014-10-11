@@ -36,6 +36,10 @@
 			if (style.tag || style.class) {
 				styleContents += ", ";
 			}
+			if (style.tag) {
+				// If style has a tag, we need to prefix it because ".parent-class tag" has higher precende than ".target-class".
+				styleContents += style.tag;
+			}
 			styleContents += ".style-" + style._id + " {\n";
 			for ( var cssProperty in style.css) {
 				styleContents += cssProperty + ": "
