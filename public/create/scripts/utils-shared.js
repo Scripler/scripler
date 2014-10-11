@@ -34,11 +34,12 @@
 				styleContents += "." + style.class;
 			}
 			if (style.tag || style.class) {
-				styleContents += ", ";
-			}
-			if (style.tag) {
-				// If style has a tag, we need to prefix it because ".parent-class tag" has higher precende than ".target-class".
-				styleContents += style.tag;
+				// Style-classes should always overrule styleset-classes,
+				// so we force higher CSS specifity by including the body element in the style-class selector.
+				styleContents += ", body ";
+				if (style.tag) {
+					styleContents += style.tag;
+				}
 			}
 			styleContents += ".style-" + style._id + " {\n";
 			for ( var cssProperty in style.css) {
