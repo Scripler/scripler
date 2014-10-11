@@ -35,7 +35,7 @@
 			}
 			if (style.tag || style.class) {
 				// Style-classes should always overrule styleset-classes,
-				// so we force higher CSS specifity by including the body element in the style-class selector.
+				// so we force higher CSS specificity by including the body element in the style-class selector.
 				styleContents += ", body ";
 				if (style.tag) {
 					styleContents += style.tag;
