@@ -461,17 +461,17 @@ describe('epub', function () {
         var stylesetContents = styleset_utils.getStylesetContents(styleset, true);
         stylesetContents = stylesetContents.replace(/[\n\r]+/g, "|");
         assert.equal(stylesetContents, 
-        		'h1, .style-xxx123 {|font-weight: 11px;|color: red;|}|'+
-        		'.testclass, .style-yyy123 {|margin-left: 5px;|color: green;|}|'+
-        		'p.anotherclass, .style-zzz123 {|color: black;|}|');
+        		'h1, body h1.style-xxx123 {|font-weight: 11px;|color: red;|}|'+
+        		'.testclass, body .style-yyy123 {|margin-left: 5px;|color: green;|}|'+
+        		'p.anotherclass, body p.style-zzz123 {|color: black;|}|');
 
         //Generate non-default styleset CSS
         stylesetContents = styleset_utils.getStylesetContents(styleset, false);
         stylesetContents = stylesetContents.replace(/[\n\r]+/g, "|");
         assert.equal(stylesetContents, 
-        		'.styleset-abc123 h1, .style-xxx123 {|font-weight: 11px;|color: red;|}|'+
-        		'.testclass, .style-yyy123 {|margin-left: 5px;|color: green;|}|'+
-        		'.styleset-abc123 p.anotherclass, .style-zzz123 {|color: black;|}|');
+        		'.styleset-abc123 h1, body h1.style-xxx123 {|font-weight: 11px;|color: red;|}|'+
+        		'.testclass, body .style-yyy123 {|margin-left: 5px;|color: green;|}|'+
+        		'.styleset-abc123 p.anotherclass, body p.style-zzz123 {|color: black;|}|');
     })
 }),
 describe('epub3', function () {
