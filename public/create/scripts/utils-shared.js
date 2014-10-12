@@ -24,10 +24,10 @@
 	function getStyleContentsFromScriplerJSON(style, stylesetId, isDefault) {
 		var styleContents = "";
 		if (style._id && style.css) {
+			if (!isDefault) {
+				styleContents += ".styleset-" + stylesetId + " ";
+			}
 			if (style.tag) {
-				if (!isDefault) {
-					styleContents += ".styleset-" + stylesetId + " ";
-				}
 				styleContents += style.tag;
 			}
 			if (style.class) {
