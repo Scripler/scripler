@@ -324,10 +324,12 @@ exports.edit = function (req, res, next) {
 			}
 			user.email = email;
 			if ('test' != env) {
+				var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email);
+				logger.info("Password verify url for " + user.email + ": " + url);
 				emailer.sendUserEmail(
 					user,
 					[
-						{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}
+						{name: "URL", content: url}
 					],
 					'verify-email'
 				);
