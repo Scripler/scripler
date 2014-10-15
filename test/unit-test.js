@@ -470,7 +470,7 @@ describe('epub', function () {
         stylesetContents = stylesetContents.replace(/[\n\r]+/g, "|");
         assert.equal(stylesetContents, 
         		'.styleset-abc123 h1, body h1.style-xxx123 {|font-weight: 11px;|color: red;|}|'+
-        		'.testclass, body .style-yyy123 {|margin-left: 5px;|color: green;|}|'+
+        		'.styleset-abc123 .testclass, body .style-yyy123 {|margin-left: 5px;|color: green;|}|'+
         		'.styleset-abc123 p.anotherclass, body p.style-zzz123 {|color: black;|}|');
     })
 }),
