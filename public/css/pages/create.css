@@ -1,4 +1,4 @@
-.section-unisquare, .section-publications {
+.section-unisquare, .section-projects {
 	float: left;
 }
 .section-unisquare {
@@ -9,7 +9,7 @@
 	border: 1px solid #fff;
 	background: none #fefefe;
 }
-.section-publications {
+.section-projects {
 	margin: 0 0 0 10px !important;
 	min-height: 340px;
 	width: -webkit-calc(100% - 340px) !important;
@@ -18,7 +18,7 @@
 	width: calc(100% - 340px) !important;
 }
 
-.publication {
+.project {
 	position: relative;
 	margin: 0 15px 15px 0;
 	width: 95px;
@@ -29,18 +29,18 @@
 	display: table;
 	box-shadow: 3px 3px 5px 0px #999;
 }
-.publication.new {
+.project.new {
 	border: 1px dashed #eee;
 }
 
-.publication p {
+.project p {
 	display: table-cell; 
 	vertical-align: middle; 
 	text-align: center;
 	cursor: pointer;
 }
 
-.publication .publication-options-show {
+.project .project-options-show {
 	position: absolute;
 	top: 5px;
 	right: 5px;
@@ -53,7 +53,7 @@
 	-o-transition: all 0.5s ease-in-out;
 	transition: all 0.5s ease-in-out;
 }
-.publication:hover .publication-options-show, .publication .publication-options-show.active {
+.project:hover .project-options-show, .project .project-options-show.active {
 	background-color: #eee;
 	-webkit-transition: all 0.5s ease-in-out;
 	-moz-transition: all 0.5s ease-in-out;
@@ -61,7 +61,7 @@
 	transition: all 0.5s ease-in-out;
 }
 
-.publication .publication-options-show .arrow {
+.project .project-options-show .arrow {
 	width: 0;
 	height: 0;
 	border-left: 5px solid transparent;
@@ -69,11 +69,11 @@
 	border-top: 5px solid #fff;
 }
 
-.publication input {
+.project input {
 	margin-top: 30px !important;
 }
 
-.publication-options {
+.project-options {
 	position: absolute;
 	top: 20px;
 	right: 0;
@@ -84,36 +84,36 @@
 	border-radius: 5px;
 	border: 1px solid #eee;
 }
-.publication-options-header {
+.project-options-header {
 	border-bottom: 1px solid #eee;
 	text-align: center;
 	padding: 5px 0 10px;
 }
-.publication-options-hide {
+.project-options-hide {
 	position: absolute;
 	top: 5px;
 	right: 10px;
 	cursor: pointer;
 }
-.publication-options-menupoint {
+.project-options-menupoint {
 	cursor: pointer;
 	margin: 2px -10px;
 	padding: 5px 15px;
 	text-transform: capitalize;
 }
-.publication-options-menupoint:hover {
+.project-options-menupoint:hover {
 	background: none #ffffcc;
 }
-.publication-options-dates {
+.project-options-dates {
 	border-top: 1px solid #eee;
 	padding: 10px 0 5px;
 }
-.publication-options-dates div {
+.project-options-dates div {
 	font-size: 10px;
 	width: 40%;
 	float: left;
 }
-.publication-options-dates div.dates {
+.project-options-dates div.dates {
 	color: #ccc;
 	font-size: 10px;
 	width: 60%;

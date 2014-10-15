@@ -12,9 +12,9 @@ var User = require('../models/user.js').User
 	, utils = require('../lib/utils')
 	, utils_shared = require('../public/create/scripts/utils-shared')
 	, mkdirp = require('mkdirp')
-	, Styleset = require('../models/styleset.js').Styleset,
-	copyStyleset = require('../models/styleset.js').copy,
-	discourse_sso = require('discourse-sso')
+	, Styleset = require('../models/styleset.js').Styleset
+	, copyStyleset = require('../models/styleset.js').copy
+	, discourse_sso = require('discourse-sso')
 ;
 
 var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
@@ -152,25 +152,18 @@ exports.register = function (req, res, next) {
 	if (errors.length !== 0) {
 		return next( {errors: errors, status: 400} );
 	} else {
-		var names = req.body.name.split(" ");
-		var firstname = names[0];
-		var lastname = "";
-
-		for (var i=1; i < names.length; i++) {
-			lastname += names[i] + " ";
-		}
-		lastname = lastname.trim();
-
+		var nameParts = utils_shared.getNameParts(req.body.name);
 		var user = new User({
-			firstname: firstname,
-			lastname: lastname,
+			firstname: nameParts.firstname,
+			lastname: nameParts.lastname,
 			email: req.body.email,
-			password: req.body.password
+			password: req.body.password,
+			isDemo: req.body.isDemo
 		});
 
 		if ('test' != env) {
 			// Currently we just force user to become premium member immediately (for free)
-			// TODO: When launching this should be removed!
+			// TODO: When launching (currently Beta1) this should be removed!
 			user.level = "premium";
 		}
 
@@ -189,7 +182,9 @@ exports.register = function (req, res, next) {
 					return next(err);
 				} else {
 					if ('test' != env) {
-						emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
+						if (!user.isDemo) {
+							emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
+						}
 					}
 
 					var createDirectories = function (next) {
@@ -259,7 +254,7 @@ exports.verify = function (req, res) {
 		} else if (req.params.hash != hashEmail(user.email)) {
 			res.redirect(redirectUrl + "102");//Email not verified
 		} else {
-			user.emailValidated = true;
+			user.emailVerified = true;
 			user.save(function (err) {
 				if (err) {
 					res.redirect(redirectUrl + "104");//Database problem
@@ -302,23 +297,34 @@ exports.edit = function (req, res, next) {
 	var showArchived = req.body.showArchived;
 	var showArchivedDocuments = req.body.showArchivedDocuments;
 	var defaultStyleset = req.body.defaultStyleset;
+	var isDemo = req.body.isDemo;
 
-	if (firstname) {
-		req.user.firstname = firstname;
+	// Change from demo user's name to real name
+	if (req.body.name) {
+		var nameParts = utils_shared.getNameParts(req.body.name);
+		req.user.firstname = nameParts.firstname;
+		req.user.lastname = nameParts.lastname;
+	} else {
+		if (firstname) {
+			req.user.firstname = firstname;
+		}
+		if (lastname) {
+			req.user.lastname = lastname;
+		}
 	}
-	if (lastname) {
-		req.user.lastname = lastname;
-	}
+
 	if (email) {
 		if (!utils_shared.isValidEmail(email)) {
 			return next({message: "Invalid email address", status: 400});
 		} else {
 			req.user.email = email;
 			if ('test' != env) {
-				emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
+				if (!user.isDemo) {
+					emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email address', 'verify-email');
+				}
 			}
-			if ('production' != env) {
-				user.emailValidated = true;
+			if (env && 'production' != env) {
+				user.emailVerified = true;
 			}
 		}
 	}
@@ -337,9 +343,17 @@ exports.edit = function (req, res, next) {
 	if (defaultStyleset) {
 		req.user.defaultStyleset = defaultStyleset;
 	}
+	if (typeof isDemo === "boolean") {
+		req.user.isDemo = isDemo;
+	}
 
 	req.user.save(function (err) {
 		if (err) {
+			// Code is either 11000 or 11001, c.f.: http://nraj.tumblr.com/post/38706353543/handling-uniqueness-validation-in-mongo-mongoose
+			if (err.code && (err.code === 11000 || err.code === 11001)) {
+				return next({errors: "Email already registered", status: 400});
+			}
+
 			return next(err);
 		}
 		res.send({"user": req.user});

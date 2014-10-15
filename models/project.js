@@ -74,6 +74,16 @@ var ProjectSchema = new Schema({
 	images: [
 		{ type: Schema.Types.ObjectId, ref: 'Image' }
 	]
+});
+
+ProjectSchema.pre('save', function (next) {
+	var project = this;
+
+	// TODO: change this to id of project "owner" when collaboration is introduced
+	var userId = project.members[0].userId;
+
+	// TODO: can we avoid accessing the database EVERY single time a Document is saved, e.g. by caching the user and only updating "lastActionDate" if the difference between Date.now() and "lastActionDate" is greater than X?
+	User.update({ _id: userId }, { lastActionDate: Date.now() }, next);
 
 });
 

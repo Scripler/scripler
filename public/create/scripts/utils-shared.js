@@ -142,13 +142,43 @@
 		return re.test(email);
 	}
 
+
+	/**
+	 * Split up a name into parts: first and last name.
+	 *
+	 * @param name
+	 * @param next
+	 */
+	function getNameParts(name) {
+		if (!name) return;
+		var nameParts = {};
+		var names = name.split(" ");
+
+		// First name
+		if (names && names.length > 1) {
+			nameParts.firstname = names[0];
+
+			// Last name
+			var lastname = "";
+			for (var i=1; i < names.length; i++) {
+				lastname += names[i] + " ";
+			}
+			nameParts.lastname = lastname.trim();
+		} else {
+			nameParts.firstname = name;
+		}
+
+		return nameParts;
+	}
+
 	return {
 		getStylesetContents : getStylesetContents,
 		mongooseEquals : mongooseEquals,
 		getMongooseId : getMongooseId,
 		containsModel : containsModel,
 		containsDocWithFolderId: containsDocWithFolderId,
-		isValidEmail: isValidEmail
+		isValidEmail: isValidEmail,
+		getNameParts: getNameParts
 	}
 
 }()))

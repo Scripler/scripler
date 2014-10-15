@@ -1,19 +1,12 @@
 'use strict'
 
-function projectSpaceController( $scope, $http, localStorageService, projectsService, userService, $q, user, $location ) {
-
+function projectSpaceController($scope, $http, projectsService, userService, $q, user, $location, utilsService) {
 	$scope.user = user;
-
-	$scope.showPublicationOptions = false;
-
+	$scope.showProjectOptions = false;
 	$scope.frontpage = $location.host();
 
-	var lsName = 'demo-scripler-publications';
-
-	if ( $scope.user === undefined ) {
-		$scope.publications = localStorageService.get( lsName );
-	} else {
-		$scope.publications = projectsService.getList( $scope.user );
+	if ( $scope.user != undefined ) {
+		$scope.projects = projectsService.getList( $scope.user );
 	}
 
 	$scope.changePassword = function() {
@@ -56,25 +49,9 @@ function projectSpaceController( $scope, $http, localStorageService, projectsSer
 	$scope.$onRootScope('user:registered', function( event, user ) {
 		if ( user._id ) {
 			$scope.user = user;
-			uploadDemoPublications()
-				.then( function() {
-					localStorageService.remove( lsName );
-					userService.setUser( user );
-				});
+			userService.setUser(user);
 		}
 	});
-
-	var uploadDemoPublications = function() {
-		var deferred = $q.defer();
-		angular.forEach($scope.publications, function( publication, index ) {
-				$http.post('/project', angular.toJson( publication ) )
-					.success( function( data ) {
-						$scope.publications[index] = data.project;
-						deferred.resolve();
-				});
-		})
-		return deferred.promise;
-	};
 
 	$scope.toggleElement = function( element ) {
 		if ($scope.element != true && $scope.element != false) {
@@ -85,77 +62,89 @@ function projectSpaceController( $scope, $http, localStorageService, projectsSer
 
 	};
 
-	$scope.addPublication = function() {
-		var order = $scope.publications.length;
-		var name = "Title " + order;
-		var publication = {};
-		publication.name = name;
+	$scope.addProject = function() {
+		var order = null;
+		if ($scope.projects) {
+			order = $scope.projects.length + 1;
+		} else {
+			$scope.projects = [];
+			order = 1;
+		}
 
-		if ( $scope.user ) {
-			$http.post('/project', angular.toJson( publication ) )
+		var name = "Title " + order;
+		var project = {};
+		project.name = name;
+
+		if ( $scope.user || $scope.demoUser ) {
+			var firstname = null;
+			var lastname = null;
+			var user = $scope.user ? $scope.user : $scope.demoUser;
+			// Before registering name is stored in "user.name"
+			if (user.name) {
+				var nameParts = utilsService.getNameParts(user.name);
+				firstname = nameParts.firstname;
+				lastname = nameParts.lastname;
+			} else {
+				firstname = user.firstname;
+				lastname = user.lastname;
+			}
+
+			$http.post('/project', angular.toJson( project ) )
 				.success( function( data ) {
 					$http.put('/project/' + data.project._id + '/metadata', {
 						'title': name,
-						'authors': $scope.user.firstname + ' ' + $scope.user.lastname,
+						'authors': firstname + ' ' + lastname,
 						'language': null,
 						'description': null,
 						'isbn': null
 					}).success( function() {
-						$scope.publications.push( data.project );
+							$scope.projects.push( data.project );
 					});
 				});
 		} else {
-			publication._id = Date.now();
-			$scope.publications.push( publication );
-			localStorageService.add( lsName, $scope.publications );
+			console.log("ERROR adding project: this should not have happened: either a real user or a demo user should exist.");
 		}
 	};
 
-	$scope.archivePublication = function( publication ) {
-		if ( $scope.user ) {
-			$http.put('/project/' + publication._id + '/archive')
+	$scope.archiveProject = function( project ) {
+		if ( $scope.user || $scope.demoUser ) {
+			$http.put('/project/' + project._id + '/archive')
 				.success( function() {
-					publication.archived = true;
+					project.archived = true;
 				});
 		} else {
-			publication.archived = true;
-			localStorageService.add( lsName, $scope.publications );
+			console.log("ERROR archiving project: this should not have happened: either a real user or a demo user should exist.");
 		}
 	};
 
-	$scope.unarchivePublication = function( publication ) {
-		if ( $scope.user ) {
-			$http.put('/project/' + publication._id + '/unarchive')
+	$scope.unarchiveProject = function( project ) {
+		if ( $scope.user || $scope.demoUser ) {
+			$http.put('/project/' + project._id + '/unarchive')
 				.success( function() {
-					publication.archived = false;
+					project.archived = false;
 				});
 		} else {
-			publication.archived = false;
-			// TODO: how to handle demo mode?
+			console.log("ERROR unarchiving: this should not have happened: either a real user or a demo user should exist.");
 		}
 	};
 
-	$scope.renamePublication = function( publication ) {
-		if ( $scope.user ) {
-			$http.put('/project/' + publication._id + '/rename', angular.toJson( publication ) )
+	$scope.renameProject = function( project ) {
+		if ( $scope.user || $scope.demoUser ) {
+			$http.put('/project/' + project._id + '/rename', angular.toJson( project ) )
 				.success( function() {});
 		} else {
-			localStorageService.add( lsName, $scope.publications );
+			console.log("ERROR renaming project: this should not have happened: either a real user or a demo user should exist.");
 		}
 	};
 
-	$scope.copyPublication = function( publication ) {
-		if ( $scope.user ) {
-			$http.post('/project/' + publication._id + '/copy')
+	$scope.copyProject = function( project ) {
+		if ( $scope.user || $scope.demoUser ) {
+			$http.post('/project/' + project._id + '/copy')
 				.success( function( data ) {
-					$scope.publications.push( data.project );
+					$scope.projects.push( data.project );
 				});
 		} else {
-			var copyPublication = {};
-			copyPublication._id = Date.now();
-			copyPublication.name = publication.name + ' - Copy';
-			$scope.publications.push( copyPublication );
-			localStorageService.add( lsName, $scope.publications );
+			console.log("ERROR copying project: this should not have happened: either a real user or a demo user should exist.");
 		}
 	};
 

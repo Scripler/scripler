@@ -182,7 +182,7 @@ $(document).ready(function() {
 						}
 					});
 				} else {
-					invalidBox1(0, "6 Characters minimum");
+					invalidBox1(0, "Six characters minimum");
 				}
 			} else {
 				invalidBox1(259, "Passwords do not match");
@@ -197,11 +197,18 @@ $(document).ready(function() {
 		data: {},
 		dataType: 'json',
 		success: function (data) {
-			if (data && data.user && data.user.firstname) {
-				// User is already logged in.
-				$(".menu-loggedin").css("display", "inline");
-				$(".menu-loggedin").attr("title", "You are logged in as " + data.user.firstname);
-				$(".menu-login").css("display", "none");
+			if (data && data.user) {
+				var user = data.user;
+				// Non-demo user is already logged in.
+				// It must be possible for existing users who have not logged in, clicked "Go" and then gone back to the frontpage, to log in
+				// but we do not want to show "calculated" demo user names ("Scripler Demo <timestamp>").
+				if (!user.isDemo && user.firstname) {
+					$(".menu-loggedin").css("display", "inline");
+					$(".menu-loggedin").attr("title", "You are logged in as " + data.user.firstname);
+					$(".menu-login").css("display", "none");
+				} else if (user.isDemo) {
+					$(".menu-login").css("display", "inline");
+				}
 			}
 		}
 	});
