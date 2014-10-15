@@ -148,30 +148,13 @@ app.config( function( $routeProvider, $httpProvider, $provide ) {
 			var deferred = $q.defer();
 
 			$http.get( '/user' )
-				.success( function( data ) {
-					if ( data.user ) {
-
-						// TODO: as long as we use the "login:failed" event to "catch" that a user has not been registered, we must always register a new demo user...
-
-						// If a non-registered user goes to the frontpage (instead of going to the app) and COMES BACK to project space,
-						// use the demo user created on the user's first visit to project space ($scope.demoUser will be set).
-						// FIXME: NO! $scope.demoUser is empty on the user's return to project space!
-						/*
-						if (data.user.isDemo) {
-							$scope.demoUser = data.user;
-						} else {
-							$scope.user = data.user;
-						}
-						*/
-
-						//$scope.user = data.user;
-
-						//var user = data.user.isDemo ? $scope.demoUser : data.user;
-						userService.setUser( data.user );
-						deferred.resolve( data.user );
+				.success(function(data) {
+					if (data.user) {
+						userService.setUser(data.user);
+						deferred.resolve(data.user);
 					}
 				})
-				.error( function( data ) {
+				.error(function(data) {
 					/*
 					 Avoid displaying the demo user info in the input fields in the "Register" bar: Angular will
 					 automatically reflect the changed model in the view (synchronization is not always smart!) so use
