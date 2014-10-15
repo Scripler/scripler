@@ -27,6 +27,7 @@ module.exports = function (app, auth) {
 	app.post('/user/login', user.login);
 	app.post('/user/logout', user.logout);
 	app.post('/user/register', user.register);
+	app.post('/user/resend-verify-email', auth.isLoggedIn(), user.resendVerifyEmail);
 	app.post('/user/password-reset', user.passwordReset);
 	app.post('/user/:id/password-change', user.passwordChange);
 

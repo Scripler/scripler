@@ -3,7 +3,6 @@ var User = require('../models/user.js').User
 	, emailer = require('../lib/email/email.js')
 	, crypto = require('crypto')
 	, conf = require('config')
-	, mcapi = new require('mailchimp-api')
 	, logger = require('../lib/logger')
 	, conf = require('config')
 	, env = process.env.NODE_ENV
@@ -16,8 +15,6 @@ var User = require('../models/user.js').User
 	, copyStyleset = require('../models/styleset.js').copy
 	, discourse_sso = require('discourse-sso')
 ;
-
-var mc = new mcapi.Mailchimp(conf.mailchimp.apiKey);
 
 function hashEmail(email) {
 	return crypto.createHash('md5').update(conf.app.salt + email).digest("hex");
@@ -97,7 +94,13 @@ exports.passwordReset = function (req, res, next) {
 			if ('test' != env) {
 				var url = conf.app.url_prefix + '#password-reset/' + user._id + '/' + token + '/' + hashEmail(user.email);
 				logger.info("Password reset url for " + user.email + ": " + url);
-				emailer.sendEmail({email: user.email, name: user.firstname, url: url}, 'Reset your password', 'password-reset');
+				emailer.sendUserEmail(
+					user,
+					[
+						{name: "URL", content: url}
+					],
+					'password-reset'
+				);
 			}
 			return res.send({});
 		});
@@ -183,58 +186,64 @@ exports.register = function (req, res, next) {
 				} else {
 					if ('test' != env) {
 						if (!user.isDemo) {
-							emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email', 'verify-email');
+							emailer.sendUserEmail(
+								user,
+								[
+									{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}
+								],
+								'welcome'
+							);
 						}
 					}
+				}
 
-					var createDirectories = function (next) {
-						var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + user._id);
-						mkdirp(userDir, function (err) {
+				var createDirectories = function (next) {
+					var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + user._id);
+					mkdirp(userDir, function (err) {
+						if (err) {
+							return next(err);
+						} else {
+							res.send({"user": user});
+						}
+					});
+				};
+
+				var numberOfStylesetsToBeCopied = stylesets.length;
+				if (numberOfStylesetsToBeCopied == 0) {
+					return createDirectories(next);
+				} else {
+					stylesets.forEach(function (styleset) {
+						styleset.isSystem = false;
+						styleset.members = [{userId: user._id, access: ["admin"]}];
+						copyStyleset(styleset, function(err, copy) {
 							if (err) {
 								return next(err);
-							} else {
-								res.send({"user": user});
+							}
+
+							user.stylesets.addToSet(copy);
+
+							if (copy.name === conf.user.defaultStylesetName) {
+								user.defaultStyleset = copy;
+							}
+
+							numberOfStylesetsToBeCopied--;
+
+							if (numberOfStylesetsToBeCopied == 0) {
+								user.save(function (err) {
+									if (err) {
+										return next(err);
+									}
+
+									if (utils.isEmpty(user.defaultStyleset)) {
+										// TODO: should this error be shown to the user?
+										logger.error("No default styleset set for user " + user.firstname + " " + user.lastname + "(id = " + user._id + ").");
+									}
+
+									return createDirectories(next);
+								});
 							}
 						});
-					}
-
-					var numberOfStylesetsToBeCopied = stylesets.length;
-					if (numberOfStylesetsToBeCopied == 0) {
-						return createDirectories(next);
-					} else {
-						stylesets.forEach(function (styleset) {
-							styleset.isSystem = false;
-							styleset.members = [{userId: user._id, access: ["admin"]}];
-							copyStyleset(styleset, function(err, copy) {
-								if (err) {
-									return next(err);
-								}
-
-								user.stylesets.addToSet(copy);
-
-								if (copy.name === conf.user.defaultStylesetName) {
-									user.defaultStyleset = copy;
-								}
-
-								numberOfStylesetsToBeCopied--;
-
-								if (numberOfStylesetsToBeCopied == 0) {
-									user.save(function (err) {
-										if (err) {
-											return next(err);
-										}
-
-										if (utils.isEmpty(user.defaultStyleset)) {
-											// TODO: should this error be shown to the user?
-											logger.error("No default styleset set for user " + user.firstname + " " + user.lastname + "(id = " + user._id + ").");
-										}
-
-										return createDirectories(next);
-									});
-								}
-							});
-						});
-					}
+					});
 				}
 			});
 		});
@@ -254,7 +263,10 @@ exports.verify = function (req, res) {
 		} else if (req.params.hash != hashEmail(user.email)) {
 			res.redirect(redirectUrl + "102");//Email not verified
 		} else {
-			user.emailVerified = true;
+			if (user.emailVerified) {
+				res.redirect(redirectUrl + "200");//Email already verified
+			} else {
+				user.emailVerified = true;
 			user.save(function (err) {
 				if (err) {
 					res.redirect(redirectUrl + "104");//Database problem
@@ -263,23 +275,16 @@ exports.verify = function (req, res) {
 				}
 			});
 
-			mc.lists.subscribe({
-				id: conf.mailchimp.memberListId,
-				double_optin: false,
-				update_existing: true,
-				email: {email: user.email},
-				merge_vars: {
-					groupings: [
-						{id: conf.mailchimp.memberGroupId, groups: [conf.mailchimp.memberGroupIdFree]}
-					],
-					FNAME: user.firstname,
-					LNAME: user.lastname
+				if (user.newsletter) {
+					emailer.newsletterSubscribe(user);
+				} else {
+					emailer.newsletterUnsubscribe(user.email);
 				}
-			}, function (data) {
-				logger.info("MailChimp subscribe successful: " + user.email);
-			}, function (error) {
-				logger.error("MailChimp subscribe error: " + user.email + " - " + error.code + " - " + error.error);
-			});
+				// If the user previously had another email address, unsubscribe that from the newsletter
+				if (user.oldEmail && user.email != user.oldEmail) {
+					emailer.newsletterUnsubscribe(user.oldEmail);
+		}
+			}
 		}
 	});
 };
@@ -306,48 +311,68 @@ exports.edit = function (req, res, next) {
 		req.user.lastname = nameParts.lastname;
 	} else {
 		if (firstname) {
-			req.user.firstname = firstname;
+			user.firstname = firstname;
 		}
 		if (lastname) {
-			req.user.lastname = lastname;
+			user.lastname = lastname;
 		}
 	}
-
-	if (email) {
+	if (email && email != user.email) {
 		if (!utils_shared.isValidEmail(email)) {
 			return next({message: "Invalid email address", status: 400});
 		} else {
-			req.user.email = email;
+			if (user.emailVerified) {
+				// Store users last verified email for later
+				user.oldEmail = user.email;
+			}
+			user.email = email;
 			if ('test' != env) {
 				if (!user.isDemo) {
-					emailer.sendEmail({email: user.email, name: user.firstname, url: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}, 'Verify your email address', 'verify-email');
+					emailer.sendUserEmail(
+						user,
+						[
+							{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}
+						],
+						'verify-email'
+					);
 				}
 			}
+
 			if (env && 'production' != env) {
 				user.emailVerified = true;
 			}
 		}
 	}
 	if (password) {
-		req.user.password = password;
+		user.password = password;
 	}
 	if (typeof newsletter === "boolean") {
-		req.user.newsletter = newsletter;
+		// If email address is verified, any newsletter subscription changes will be done immediately.
+		// If email address is not verified, any newsletter subscription changes will be done when the verification is successfull.
+		if (user.emailVerified) {
+			if (!newsletter && user.newsletter) {
+				emailer.newsletterUnsubscribe(user.email);
+			} else if (newsletter && !user.newsletter) {
+				emailer.newsletterSubscribe(user);
+			}
+		}
+
+		user.newsletter = newsletter;
 	}
 	if (typeof showArchived === "boolean") {
-		req.user.showArchived = showArchived;
+		user.showArchived = showArchived;
 	}
 	if (typeof showArchivedDocuments === "boolean") {
-		req.user.showArchivedDocuments = showArchivedDocuments;
+		user.showArchivedDocuments = showArchivedDocuments;
 	}
 	if (defaultStyleset) {
-		req.user.defaultStyleset = defaultStyleset;
+		user.defaultStyleset = defaultStyleset;
 	}
 	if (typeof isDemo === "boolean") {
-		req.user.isDemo = isDemo;
+		user.isDemo = isDemo;
 	}
 
-	req.user.save(function (err) {
+	user.save(function (err) {
 		if (err) {
 			// Code is either 11000 or 11001, c.f.: http://nraj.tumblr.com/post/38706353543/handling-uniqueness-validation-in-mongo-mongoose
 			if (err.code && (err.code === 11000 || err.code === 11001)) {
@@ -356,9 +381,20 @@ exports.edit = function (req, res, next) {
 
 			return next(err);
 		}
-		res.send({"user": req.user});
+		res.send({"user": user});
 	});
 };
+
+exports.resendVerifyEmail = function (req, res, nxt) {
+	emailer.sendUserEmail(
+		user,
+		[
+			{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}
+		],
+		'verify-email'
+	);
+	res.send({});
+}
 
 exports.sso = function (req, res, next) {
 	if (!req.isAuthenticated()) {

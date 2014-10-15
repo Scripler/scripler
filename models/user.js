@@ -11,6 +11,7 @@ var UserSchema = new Schema({
 	lastname: { type: String},
 	email: { type: String, required: true, unique: true },
 	emailVerified: { type: Boolean, default: false },
+	oldEmail: { type: String },
 	projects: [
 		{ type: Schema.Types.ObjectId, ref: 'Project' }
 	],
