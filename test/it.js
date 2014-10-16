@@ -60,8 +60,6 @@ var styleCopiedId2;
 var imageId;
 var imageName;
 
-var lastActionDate;
-
 var cleanupEPUB = true;
 
 if (conf.db.uri.match(/_test(\?|$)/) === null) {
@@ -107,8 +105,6 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.user.firstname, "Dummy");
 					assert.equal(res.body.user.lastname, "Doe");
 					assert.equal(res.body.user.level, "premium");
-					lastActionDate = res.body.user.lastActionDate;
-					assert.notEqual(undefined, lastActionDate);
 					done();
 				});
 		})
@@ -338,21 +334,6 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.project.name, "A New Name");
-					done();
-				});
-		}),
-		it('Get new value of "lastActionDate" of current user to ensure the previous Project.rename() updated "lastActionDate" (in the app, it is used for cleaning up unused demo users)', function (done) {
-			request(host)
-				.get('/user')
-				.set('cookie', cookie)
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.user.firstname, "John");
-					assert.equal(res.body.user.lastname, "Doe, Jr.");
-					var newLastActionDate = res.body.user.lastActionDate;
-					assert.notEqual(undefined, newLastActionDate);
-					assert.equal(true, newLastActionDate > lastActionDate);
 					done();
 				});
 		}),
@@ -828,21 +809,6 @@ describe('Scripler RESTful API', function () {
 						assert.equal(res.body.document.text, text);
 						assert.equal(utils.containsModel(res.body.document.stylesets, userStylesetId), false);
 						assert.equal(utils.containsModel(res.body.document.stylesets, stylesetId), false);
-						done();
-					});
-			}),
-			it('Get new value of "lastActionDate" of current user to ensure the previous Document.update() updated "lastActionDate" (in the app, it is used for cleaning up unused demo users)', function (done) {
-				request(host)
-					.get('/user')
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.user.firstname, "John");
-						assert.equal(res.body.user.lastname, "Doe, Jr.");
-						var newLastActionDate = res.body.user.lastActionDate;
-						assert.notEqual(undefined, newLastActionDate);
-						assert.equal(true, newLastActionDate > lastActionDate);
 						done();
 					});
 			}),

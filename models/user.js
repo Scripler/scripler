@@ -30,15 +30,14 @@ var UserSchema = new Schema({
 	providers: [
 		{}
 	],
-	modified: { type: Date, default: Date.now }, // When was the user modified?
+	modified: { type: Date, default: Date.now },
 	showArchived: { type: Boolean, default: false },
 	showArchivedDocuments: { type: Boolean, default: false },
 	newsletter: { type: Boolean, default: true },
 	level: { type: String, default: "free" },
 	storageUsed: { type: Number, default: 0},
 	passwordResetToken: {type: String},
-	isDemo: { type: Boolean, default: false },
-	lastActionDate: { type: Date, default: Date.now } // When was the last "significant" action performed BY the user? Currently defined as actions on: Project and Document (c.f. "trigger" on models Project and Document).
+	isDemo: { type: Boolean, default: false }
 });
 
 /** Handle bcrypt password-hashing.
