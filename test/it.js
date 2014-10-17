@@ -2014,7 +2014,7 @@ describe('Scripler RESTful API', function () {
 					var epub = projectId + '.epub';
 					fs.writeFile(epub, res.body);
 
-					child = exec('java -jar test/epubcheck-3.0b5.jar ' + epub,
+					child = exec('java -jar test/epubcheck-3.0.1.jar ' + epub,
 						function (error, stdout, stderr) {
 							console.log('stdout: ' + stdout);
 							console.log('stderr: ' + stderr);
