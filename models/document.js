@@ -1,6 +1,7 @@
 var mongoose = require('mongoose')
 	, Schema = mongoose.Schema
-	, Project // Lazy-loaded, c.f. DocumentSchema.pre()
+	, User = require('./user').User
+	, Project // Lazy-loaded, c.f. DocumentSchema.pre('remove')
 	, Styleset = require('./styleset').Styleset
 	, MemberSchema = require('./member_schema').MemberSchema
 	, bcrypt = require('bcrypt')

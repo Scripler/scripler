@@ -147,13 +147,60 @@
 		return re.test(email);
 	}
 
+
+	/**
+	 * Split up a name into parts: first and last name.
+	 *
+	 * @param name
+	 * @param next
+	 */
+	function getNameParts(name) {
+		if (!name) return;
+		var nameParts = {};
+		var names = name.split(" ");
+
+		// First name
+		if (names && names.length > 1) {
+			nameParts.firstname = names[0];
+
+			// Last name
+			var lastname = "";
+			for (var i=1; i < names.length; i++) {
+				lastname += names[i] + " ";
+			}
+			nameParts.lastname = lastname.trim();
+		} else {
+			nameParts.firstname = name;
+		}
+
+		return nameParts;
+	}
+
+	/**
+	 * Copied from http://stackoverflow.com/questions/1349404/generate-a-string-of-5-random-characters-in-javascript
+	 *
+	 * @param length
+	 * @returns {string}
+	 */
+	function createRandomString (length) {
+		var text = "";
+		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+		for (var i=0; i<length; i++)
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+		return text;
+	}
+
 	return {
 		getStylesetContents : getStylesetContents,
 		mongooseEquals : mongooseEquals,
 		getMongooseId : getMongooseId,
 		containsModel : containsModel,
 		containsDocWithFolderId: containsDocWithFolderId,
-		isValidEmail: isValidEmail
+		isValidEmail: isValidEmail,
+		getNameParts: getNameParts,
+		createRandomString : createRandomString
 	}
 
 }()))

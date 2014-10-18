@@ -16,7 +16,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.fonts = [];
 
 	if ( $scope.user === 'undefined' ) {
-		//demo mode
+		// TODO: how to handle error? (awaiting "Show error messages to the user" task)
+		console.log("ERROR: user is undefined!");
 	} else {
 		var projectPromise = projectsService.getProject( $scope.pid );
 

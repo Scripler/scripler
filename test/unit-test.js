@@ -31,6 +31,17 @@ describe('utils', function () {
 		replaceMap = { balls: 'shoes' };
 		string = utils.replaceMap(string, replaceMap);
 		assert.equal('Lots of disco shoes: disco shoes shoes shoes shoes all over!', string);
+	}),
+	it('getNameParts', function () {
+		var name = 'Jytte Andersen-Henriksen';
+		var nameParts = shared_utils.getNameParts(name);
+		assert.equal('Jytte', nameParts.firstname);
+		assert.equal('Andersen-Henriksen', nameParts.lastname);
+
+		name = 'Kenny';
+		nameParts = shared_utils.getNameParts(name);
+		assert.equal('Kenny', nameParts.firstname);
+		assert.equal(undefined, nameParts.lastname);
 	})
 }),
 describe('shared_utils', function () {

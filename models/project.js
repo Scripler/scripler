@@ -74,7 +74,6 @@ var ProjectSchema = new Schema({
 	images: [
 		{ type: Schema.Types.ObjectId, ref: 'Image' }
 	]
-
 });
 
 ProjectSchema.pre('remove', function (next) {

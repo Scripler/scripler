@@ -11,9 +11,9 @@ var User = require('../models/user.js').User
 	, utils = require('../lib/utils')
 	, utils_shared = require('../public/create/scripts/utils-shared')
 	, mkdirp = require('mkdirp')
-	, Styleset = require('../models/styleset.js').Styleset,
-	copyStyleset = require('../models/styleset.js').copy,
-	discourse_sso = require('discourse-sso')
+	, Styleset = require('../models/styleset.js').Styleset
+	, copyStyleset = require('../models/styleset.js').copy
+	, discourse_sso = require('discourse-sso')
 ;
 
 function hashEmail(email) {
@@ -155,25 +155,18 @@ exports.register = function (req, res, next) {
 	if (errors.length !== 0) {
 		return next( {errors: errors, status: 400} );
 	} else {
-		var names = req.body.name.split(" ");
-		var firstname = names[0];
-		var lastname = "";
-
-		for (var i=1; i < names.length; i++) {
-			lastname += names[i] + " ";
-		}
-		lastname = lastname.trim();
-
+		var nameParts = utils_shared.getNameParts(req.body.name);
 		var user = new User({
-			firstname: firstname,
-			lastname: lastname,
+			firstname: nameParts.firstname,
+			lastname: nameParts.lastname,
 			email: req.body.email,
-			password: req.body.password
+			password: req.body.password,
+			isDemo: req.body.isDemo
 		});
 
 		if ('test' != env) {
 			// Currently we just force user to become premium member immediately (for free)
-			// TODO: When launching this should be removed!
+			// TODO: When launching (currently Beta1) this should be removed!
 			user.level = "premium";
 		}
 
@@ -192,63 +185,65 @@ exports.register = function (req, res, next) {
 					return next(err);
 				} else {
 					if ('test' != env) {
-						emailer.sendUserEmail(
-							user,
-							[
-								{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}
-							],
-							'welcome'
-						);
+						if (!user.isDemo) {
+							emailer.sendUserEmail(
+								user,
+								[
+									{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}
+								],
+								'welcome'
+							);
+						}
 					}
+				}
 
-					var createDirectories = function (next) {
-						var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + user._id);
-						mkdirp(userDir, function (err) {
+				var createDirectories = function (next) {
+					var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + user._id);
+					mkdirp(userDir, function (err) {
+						if (err) {
+							return next(err);
+						} else {
+							res.send({"user": user});
+						}
+					});
+				};
+
+				var numberOfStylesetsToBeCopied = stylesets.length;
+				if (numberOfStylesetsToBeCopied == 0) {
+					return createDirectories(next);
+				} else {
+					stylesets.forEach(function (styleset) {
+						styleset.isSystem = false;
+						styleset.members = [{userId: user._id, access: ["admin"]}];
+						copyStyleset(styleset, function(err, copy) {
 							if (err) {
 								return next(err);
-							} else {
-								res.send({"user": user});
+							}
+
+							user.stylesets.addToSet(copy);
+
+							if (copy.name === conf.user.defaultStylesetName) {
+								user.defaultStyleset = copy;
+							}
+
+							numberOfStylesetsToBeCopied--;
+
+							if (numberOfStylesetsToBeCopied == 0) {
+								user.save(function (err) {
+									if (err) {
+										return next(err);
+									}
+
+									if (utils.isEmpty(user.defaultStyleset)) {
+										// TODO: should this error be shown to the user?
+										logger.error("No default styleset set for user " + user.firstname + " " + user.lastname + "(id = " + user._id + ").");
+									}
+
+									return createDirectories(next);
+								});
 							}
 						});
-					}
-
-					var numberOfStylesetsToBeCopied = stylesets.length;
-					if (numberOfStylesetsToBeCopied == 0) {
-						return createDirectories(next);
-					} else {
-						stylesets.forEach(function (styleset) {
-							styleset.isSystem = false;
-							styleset.members = [{userId: user._id, access: ["admin"]}];
-							copyStyleset(styleset, function(err, copy) {
-								if (err) {
-									return next(err);
-								}
-
-								user.stylesets.addToSet(copy);
-
-								if (copy.name === conf.user.defaultStylesetName) {
-									user.defaultStyleset = copy;
-								}
-
-								numberOfStylesetsToBeCopied--;
-
-								if (numberOfStylesetsToBeCopied == 0) {
-									user.save(function (err) {
-										if (err) {
-											return next(err);
-										}
-
-										if (utils.isEmpty(user.defaultStyleset)) {
-											// TODO: should this error be shown to the user?
-											logger.error("No default styleset set for user " + user.firstname + " " + user.lastname + "(id = " + user._id + ").");
-										}
-
-										return createDirectories(next);
-									});
-								}
-							});
-						});
-					}
+					});
 				}
 			});
 		});
@@ -268,17 +263,17 @@ exports.verify = function (req, res) {
 		} else if (req.params.hash != hashEmail(user.email)) {
 			res.redirect(redirectUrl + "102");//Email not verified
 		} else {
-			if (user.emailValidated) {
+			if (user.emailVerified) {
 				res.redirect(redirectUrl + "200");//Email already verified
 			} else {
-				user.emailValidated = true;
-				user.save(function (err) {
-					if (err) {
-						res.redirect(redirectUrl + "104");//Database problem
-					} else {
-						res.redirect(redirectUrl + "100");//Email verified
-					}
-				});
+				user.emailVerified = true;
+			user.save(function (err) {
+				if (err) {
+					res.redirect(redirectUrl + "104");//Database problem
+				} else {
+					res.redirect(redirectUrl + "100");//Email verified
+				}
+			});
 
 				if (user.newsletter) {
 					emailer.newsletterSubscribe(user);
@@ -288,7 +283,7 @@ exports.verify = function (req, res) {
 				// If the user previously had another email address, unsubscribe that from the newsletter
 				if (user.oldEmail && user.email != user.oldEmail) {
 					emailer.newsletterUnsubscribe(user.oldEmail);
-				}
+		}
 			}
 		}
 	});
@@ -307,34 +302,43 @@ exports.edit = function (req, res, next) {
 	var showArchived = req.body.showArchived;
 	var showArchivedDocuments = req.body.showArchivedDocuments;
 	var defaultStyleset = req.body.defaultStyleset;
+	var isDemo = req.body.isDemo;
 
-	if (firstname) {
-		user.firstname = firstname;
-	}
-	if (lastname) {
-		user.lastname = lastname;
+	// Change from demo user's name to real name
+	if (req.body.name) {
+		var nameParts = utils_shared.getNameParts(req.body.name);
+		req.user.firstname = nameParts.firstname;
+		req.user.lastname = nameParts.lastname;
+	} else {
+		if (firstname) {
+			user.firstname = firstname;
+		}
+		if (lastname) {
+			user.lastname = lastname;
+		}
 	}
 	if (email && email != user.email) {
 		if (!utils_shared.isValidEmail(email)) {
 			return next({message: "Invalid email address", status: 400});
 		} else {
-			if (user.emailValidated) {
+			if (user.emailVerified) {
 				// Store users last verified email for later
 				user.oldEmail = user.email;
 			}
 			user.email = email;
 			if ('test' != env) {
-				var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email);
-				logger.info("Password verify url for " + user.email + ": " + url);
-				emailer.sendUserEmail(
-					user,
-					[
-						{name: "URL", content: url}
-					],
-					'verify-email'
-				);
+				if (!user.isDemo) {
+					var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email);
+					logger.info("Password verify url for " + user.email + ": " + url);
+					emailer.sendUserEmail(
+						user,
+						[
+							{name: "URL", content: url}
+						],
+						'verify-email'
+					);
+				}
 			}
-			user.emailValidated = false;
 		}
 	}
 	if (password) {
@@ -343,13 +347,14 @@ exports.edit = function (req, res, next) {
 	if (typeof newsletter === "boolean") {
 		// If email address is verified, any newsletter subscription changes will be done immediately.
 		// If email address is not verified, any newsletter subscription changes will be done when the verification is successfull.
-		if (user.emailValidated) {
+		if (user.emailVerified) {
 			if (!newsletter && user.newsletter) {
 				emailer.newsletterUnsubscribe(user.email);
 			} else if (newsletter && !user.newsletter) {
 				emailer.newsletterSubscribe(user);
 			}
 		}
+
 		user.newsletter = newsletter;
 	}
 	if (typeof showArchived === "boolean") {
@@ -361,11 +366,20 @@ exports.edit = function (req, res, next) {
 	if (defaultStyleset) {
 		user.defaultStyleset = defaultStyleset;
 	}
+	if (typeof isDemo === "boolean") {
+		user.isDemo = isDemo;
+	}
 
 	user.save(function (err) {
 		if (err) {
+			// Code is either 11000 or 11001, c.f.: http://nraj.tumblr.com/post/38706353543/handling-uniqueness-validation-in-mongo-mongoose
+			if (err.code && (err.code === 11000 || err.code === 11001)) {
+				return next({errors: "Email already registered", status: 400});
+			}
+
 			return next(err);
 		}
+
 		res.send({"user": user});
 	});
 };

@@ -13,7 +13,7 @@
 				<div class="logo-box">
 					<img class="logo" src="/images/logo.png">
 				</div>
-				<div class="uni-bottom-box" data-ng-show="user._id">
+				<div class="uni-bottom-box" data-ng-show="user._id && !user.isDemo">
 					<div class="user-box">
 						<img class="user-image" src="pages/images/profilepicture.png" height="50" width="50">
 						<div class="user-text">
@@ -27,7 +27,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="user-settings" data-ng-show="showSettings">
+			<div class="user-settings" data-ng-show="showSettings && !user.isDemo">
 				<div class="user-box">
 						<img class="user-image" src="pages/images/profilepicture.png" height="100" width="100">
 						<div class="settings-text">
@@ -63,37 +63,37 @@
 			</div>
 		</section>
 
-		<section class="section-publications">
-			<div class="publication new" data-ng-click="addPublication(publication)">
+		<section class="section-projects">
+			<div class="project new" data-ng-click="addProject(project)">
 				<p>+</p>
 			</div>
 
-			<div class="publication" data-ng-animate="'animate'" data-ng-class="{ 'archived' : publication.archived }" data-ng-hide="publication.archived && !user.showArchived" data-ng-repeat="publication in publications track by $index">
-				<a class="publication-options-show" data-ng-click="showPublicationOptions = true">
+			<div class="project" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index">
+				<a class="project-options-show" data-ng-click="showProjectOptions = true">
 					<div class="arrow"></div>
 				</a>
-				<!--<p data-ng-hide="editingPublicationTitle" data-ng-click="editingPublicationTitle = true;">-->
-				<p data-ng-hide="editingPublicationTitle">
-					<a href="#/project?pid={{publication._id}}" class="publication-link">{{publication.name}}</a>
+				<!--<p data-ng-hide="editingProjectTitle" data-ng-click="editingProjectTitle = true;">-->
+				<p data-ng-hide="editingProjectTitle">
+					<a href="#/project?pid={{project._id}}" class="project-link">{{project.name}}</a>
 				</p>
 
-				<form data-ng-show="editingPublicationTitle">
+				<form data-ng-show="editingProjectTitle">
 				<p>
-					<!--<input type="text" data-ng-model="publication.name" placeholder="publication title" focus-on="!!editingPublicationTitle" />-->
-					<textarea id="rename" data-ng-model="publication.name" placeholder="publication title" focus-on="!!editingPublicationTitle" on-enter="editingPublicationTitle = false; renamePublication(publication);"></textarea>
+					<!--<input type="text" data-ng-model="project.name" placeholder="project title" focus-on="!!editingProjectTitle" />-->
+					<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!editingProjectTitle" on-enter="editingProjectTitle = false; renameProject(project);"></textarea>
 				</p>
 				</form>
 
-				<div class="publication-options" data-ng-show="showPublicationOptions">
-					<div class="publication-options-header">Publication Options</div>
-					<div class="publication-options-hide" data-ng-click="showPublicationOptions = false;" title="Close Options">x</div>
-					<div class="publication-options-menupoint" data-ng-click="editingPublicationTitle = true; showPublicationOptions = false;">rename</div>
-					<div class="publication-options-menupoint" data-ng-click="copyPublication(publication); showPublicationOptions = false;">copy</div>
-					<div class="publication-options-menupoint" data-ng-click="archivePublication(publication); showPublicationOptions = false;">archive</div>
-					<div class="publication-options-menupoint" data-ng-click="unarchivePublication(publication); showPublicationOptions = false;">unarchive</div>
-					<div class="publication-options-dates" data-ng-show="publication.created && publication.changed">
-						<div>Created Date: </div><div class="dates">{{publication.created | date:'yyyy-MM-dd HH:mm'}}</div>
-						<div>Last Changed: </div><div class="dates">{{publication.modified | date:'yyyy-MM-dd HH:mm'}}</div>
+				<div class="project-options" data-ng-show="showProjectOptions">
+					<div class="project-options-header">Project Options</div>
+					<div class="project-options-hide" data-ng-click="showProjectOptions = false;" title="Close Options">x</div>
+					<div class="project-options-menupoint" data-ng-click="editingProjectTitle = true; showProjectOptions = false;">rename</div>
+					<div class="project-options-menupoint" data-ng-click="copyProject(project); showProjectOptions = false;">copy</div>
+					<div class="project-options-menupoint" data-ng-click="archiveProject(project); showProjectOptions = false;">archive</div>
+					<div class="project-options-menupoint" data-ng-click="unarchiveProject(project); showProjectOptions = false;">unarchive</div>
+					<div class="project-options-dates" data-ng-show="project.created && project.changed">
+						<div>Created Date: </div><div class="dates">{{project.created | date:'yyyy-MM-dd HH:mm'}}</div>
+						<div>Last Changed: </div><div class="dates">{{project.modified | date:'yyyy-MM-dd HH:mm'}}</div>
 					</div>
 				</div>
 			</div>

@@ -10,8 +10,8 @@ var UserSchema = new Schema({
 	firstname: { type: String, required: true},
 	lastname: { type: String},
 	email: { type: String, required: true, unique: true },
+	emailVerified: { type: Boolean, default: false },
 	oldEmail: { type: String },
-	emailValidated: { type: Boolean, default: false },
 	projects: [
 		{ type: Schema.Types.ObjectId, ref: 'Project' }
 	],
@@ -36,7 +36,8 @@ var UserSchema = new Schema({
 	newsletter: { type: Boolean, default: true },
 	level: { type: String, default: "free" },
 	storageUsed: { type: Number, default: 0},
-	passwordResetToken: {type: String}
+	passwordResetToken: {type: String},
+	isDemo: { type: Boolean, default: false }
 });
 
 /** Handle bcrypt password-hashing.
@@ -44,6 +45,8 @@ var UserSchema = new Schema({
  */
 UserSchema.pre('save', function (next) {
 	var user = this;
+
+	user.modified = Date.now();
 
 	// only hash the password if it has been modified (or is new)
 	if (!user.isModified('password')) return next();
