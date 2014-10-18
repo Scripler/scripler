@@ -46,6 +46,8 @@ var UserSchema = new Schema({
 UserSchema.pre('save', function (next) {
 	var user = this;
 
+	user.modified = Date.now();
+
 	// only hash the password if it has been modified (or is new)
 	if (!user.isModified('password')) return next();
 
@@ -62,7 +64,6 @@ UserSchema.pre('save', function (next) {
 
 			// override the cleartext password with the hashed one
 			user.password = hash;
-			user.modified = Date.now();
 			next();
 		});
 	});

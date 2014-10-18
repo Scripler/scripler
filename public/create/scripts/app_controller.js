@@ -3,8 +3,8 @@
 var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload',
 										 	'ngProgress', 'utilsSharedModule' ] );
 
-app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStorageService', '$rootScope', '$timeout', 'utilsService',
-	function( $http, $scope, userService, localStorageService, $rootScope) {
+app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope', 'utilsService',
+	function( $http, $scope, userService, $rootScope, utilsService) {
 		$scope.errors = {};
 		$scope.errors.name = 'Name is empty';
 		$scope.errors.email = 'Email is invalid';
@@ -29,10 +29,11 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 
 		$scope.$onRootScope('login:failed', function( event ) {
 				var demoId = Date.now();
+				var password = utilsService.createRandomString(10);
 				$scope.demoUser = {
 					name: "Scripler Demo " + demoId,
 					email: "demo-" + demoId + "@scripler.com",
-					password: "unimportant", // It is fine that the the demo user's password is publicly available because it only lasts this session
+					password: password,
 					isDemo: true
 				};
 

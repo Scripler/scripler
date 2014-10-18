@@ -171,6 +171,22 @@
 		return nameParts;
 	}
 
+	/**
+	 * Copied from http://stackoverflow.com/questions/1349404/generate-a-string-of-5-random-characters-in-javascript
+	 *
+	 * @param length
+	 * @returns {string}
+	 */
+	function createRandomString (length) {
+		var text = "";
+		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+		for (var i=0; i<length; i++)
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+		return text;
+	}
+
 	return {
 		getStylesetContents : getStylesetContents,
 		mongooseEquals : mongooseEquals,
@@ -178,7 +194,8 @@
 		containsModel : containsModel,
 		containsDocWithFolderId: containsDocWithFolderId,
 		isValidEmail: isValidEmail,
-		getNameParts: getNameParts
+		getNameParts: getNameParts,
+		createRandomString : createRandomString
 	}
 
 }()))
