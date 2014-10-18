@@ -563,7 +563,8 @@ describe('font_utils', function () {
 			{notused2: 'test', css: {'not-used2': 'blabla', 'font-family': '"Test Font 2"', 'font-weight': 300, 'font-style': 'normal'}},
 			{notused2: 'test', css: {'not-used1': 'blabla', 'font-family': '"Test Font 1",', 'font-weight': 300, 'font-style': 'italic'}},
 			{notused2: 'test', css: {'not-used1': 'blabla', 'font-family': '"Test Font 2", Test', 'font-weight': 'normal', 'font-style': 'italic'}},
-			{notused2: 'test', css: {'not-used1': 'blabla', 'font-family': '"Test Font 2", Test', 'font-weight': 'bold', 'font-style': 'italic'}}
+			{notused2: 'test', css: {'not-used1': 'blabla', 'font-family': '"Test Font 2", Test', 'font-weight': 'bold', 'font-style': 'italic'}},
+			{notused2: 'test', css: {'not-used1': 'blabla', 'font-family': '"Test Font 2", Test', 'font-weight': 'xxx', 'font-style': 'italic'}}
 		]};
 		var expected = [
 			{family: "Test Font 1", weight: 200, style: 'italic'},
