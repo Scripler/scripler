@@ -1213,25 +1213,6 @@ describe('Scripler RESTful API', function () {
 						childDocumentId = res.body.document._id;
 						childDocumentId && done();
 					});
-			}),
-			it('Updating a document\'s fonts the updated document', function (done) {
-				var font1 = {family: "Source Sans Pro", style: "normal", weight: 200};
-				var font2 = {family: "Source Sans Pro", style: "italic", weight: 200};
-				var fonts = [font1, font2];
-
-				request(host)
-					.put('/document/' + childDocumentId + '/update')
-					.set('cookie', cookie)
-					.send({fonts: fonts})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.document.fonts.length, 2);
-						//console.log('res.body.document.fonts: ' + res.body.document.fonts);
-						assert(res.body.document.fonts[0]);
-						assert(res.body.document.fonts[1]);
-						done();
-					});
 			})
 	}),
 	describe('Typography (Styleset & Style)', function () {
@@ -2033,7 +2014,7 @@ describe('Scripler RESTful API', function () {
 					var epub = projectId + '.epub';
 					fs.writeFile(epub, res.body);
 
-					child = exec('java -jar test/epubcheck-3.0b5.jar ' + epub,
+					child = exec('java -jar test/epubcheck-3.0.1.jar ' + epub,
 						function (error, stdout, stderr) {
 							console.log('stdout: ' + stdout);
 							console.log('stderr: ' + stderr);
