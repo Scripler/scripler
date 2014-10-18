@@ -7,6 +7,7 @@ var epub = require('../lib/epub')
   , utils = require('../lib/utils')
   , styleset_utils = require('../public/create/scripts/utils-shared')
   , project_utils = require('../lib/project-utils')
+  , font_utils = require('../lib/font-utils')
   , ObjectId = require('mongoose').Types.ObjectId
   , conf = require('config')
   , Document = require('../models/document.js').Document
@@ -472,17 +473,17 @@ describe('epub', function () {
         var stylesetContents = styleset_utils.getStylesetContents(styleset, true);
         stylesetContents = stylesetContents.replace(/[\n\r]+/g, "|");
         assert.equal(stylesetContents, 
-        		'h1, .style-xxx123 {|font-weight: 11px;|color: red;|}|'+
-        		'.testclass, .style-yyy123 {|margin-left: 5px;|color: green;|}|'+
-        		'p.anotherclass, .style-zzz123 {|color: black;|}|');
+        		'h1, body h1.style-xxx123 {|font-weight: 11px;|color: red;|}|'+
+        		'.testclass, body .style-yyy123 {|margin-left: 5px;|color: green;|}|'+
+        		'p.anotherclass, body p.style-zzz123 {|color: black;|}|');
 
         //Generate non-default styleset CSS
         stylesetContents = styleset_utils.getStylesetContents(styleset, false);
         stylesetContents = stylesetContents.replace(/[\n\r]+/g, "|");
         assert.equal(stylesetContents, 
-        		'.styleset-abc123 h1, .style-xxx123 {|font-weight: 11px;|color: red;|}|'+
-        		'.testclass, .style-yyy123 {|margin-left: 5px;|color: green;|}|'+
-        		'.styleset-abc123 p.anotherclass, .style-zzz123 {|color: black;|}|');
+        		'.styleset-abc123 h1, body h1.style-xxx123 {|font-weight: 11px;|color: red;|}|'+
+        		'.styleset-abc123 .testclass, body .style-yyy123 {|margin-left: 5px;|color: green;|}|'+
+        		'.styleset-abc123 p.anotherclass, body p.style-zzz123 {|color: black;|}|');
     })
 }),
 describe('epub3', function () {
@@ -561,5 +562,27 @@ describe('epub3', function () {
 		document.stylesets.addToSet(ObjectId(stylesetId2));
 		result = epub.getStylesetLinks(document);
 		assert.equal(result, '<link href="../Styles/non-editable.css" rel="stylesheet" type="text/css"/><link href="../Styles/style_4eec2d66c3dedf0d0300001a.css" rel="stylesheet" type="text/css"/><link href="../Styles/style_99ec2d66c3dedf0d0300002b.css" rel="stylesheet" type="text/css"/>');
+	})
+}),
+describe('font_utils', function () {
+
+	it('extractFontDefinitions', function () {
+		var styleset = {styles: [
+			{notused1: 'test', css: {'not-used1': 'blabla', 'font-family': '"Test Font 1", Other stuff', 'font-weight': 200, 'font-style': 'italic'}},
+			{notused1: 'test', css: {'not-used1': 'blabla', 'font-family': '"Test Font 2", jkgjkhg', 'font-weight': 200, 'font-style': 'italic'}},
+			{notused1: 'test', css: {'not-used2': 'blabla', 'font-family': '"Test Font 1", "Bla bla bla"', 'font-weight': 200, 'font-style': 'normal'}},
+			{notused2: 'test', css: {'not-used2': 'blabla', 'font-family': '"Test Font 2"', 'font-weight': 300, 'font-style': 'normal'}},
+			{notused2: 'test', css: {'not-used1': 'blabla', 'font-family': '"Test Font 1",', 'font-weight': 300, 'font-style': 'italic'}},
+			{notused2: 'test', css: {'not-used1': 'blabla', 'font-family': '"Test Font 2", Test', 'font-weight': 300, 'font-style': 'italic'}}
+		]};
+		var expected = [
+			{family: "Test Font 1", weight: 200, style: 'italic'},
+			{family: "Test Font 2", weight: 200, style: 'italic'},
+			{family: "Test Font 1", weight: 200, style: 'normal'},
+			{family: "Test Font 2", weight: 300, style: 'normal'},
+			{family: "Test Font 1", weight: 300, style: 'italic'},
+			{family: "Test Font 2", weight: 300, style: 'italic'}
+		];
+		assert.deepEqual(font_utils.extractFontDefinitions(styleset), expected);
 	})
 });

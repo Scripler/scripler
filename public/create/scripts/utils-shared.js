@@ -24,17 +24,22 @@
 	function getStyleContentsFromScriplerJSON(style, stylesetId, isDefault) {
 		var styleContents = "";
 		if (style._id && style.css) {
+			if (!isDefault) {
+				styleContents += ".styleset-" + stylesetId + " ";
+			}
 			if (style.tag) {
-				if (!isDefault) {
-					styleContents += ".styleset-" + stylesetId + " ";
-				}
 				styleContents += style.tag;
 			}
 			if (style.class) {
 				styleContents += "." + style.class;
 			}
 			if (style.tag || style.class) {
-				styleContents += ", ";
+				// Style-classes should always overrule styleset-classes,
+				// so we force higher CSS specificity by including the body element in the style-class selector.
+				styleContents += ", body ";
+				if (style.tag) {
+					styleContents += style.tag;
+				}
 			}
 			styleContents += ".style-" + style._id + " {\n";
 			for ( var cssProperty in style.css) {

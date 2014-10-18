@@ -26,9 +26,6 @@ var DocumentSchema = new Schema({
 	defaultStyleset: { type: Schema.Types.ObjectId, ref: 'Styleset' },
 	deletedStylesets: [
 		{ type: Schema.Types.ObjectId, ref: 'Styleset' }
-	],
-	fonts: [
-		{ type: Schema.Types.ObjectId, ref: 'Font' }
 	]
 });
 

@@ -1230,6 +1230,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		range.moveToElementEditablePosition( element );
 		$rootScope.ck.focus();
 		range.select();
+		$scope.updateProjectDocument();
 	}
 
 	$scope.$watch('showInsert', function( newValue ) {
