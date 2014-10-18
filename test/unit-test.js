@@ -573,7 +573,9 @@ describe('font_utils', function () {
 			{notused1: 'test', css: {'not-used2': 'blabla', 'font-family': '"Test Font 1", "Bla bla bla"', 'font-weight': 200, 'font-style': 'normal'}},
 			{notused2: 'test', css: {'not-used2': 'blabla', 'font-family': '"Test Font 2"', 'font-weight': 300, 'font-style': 'normal'}},
 			{notused2: 'test', css: {'not-used1': 'blabla', 'font-family': '"Test Font 1",', 'font-weight': 300, 'font-style': 'italic'}},
-			{notused2: 'test', css: {'not-used1': 'blabla', 'font-family': '"Test Font 2", Test', 'font-weight': 300, 'font-style': 'italic'}}
+			{notused2: 'test', css: {'not-used1': 'blabla', 'font-family': '"Test Font 2", Test', 'font-weight': 'normal', 'font-style': 'italic'}},
+			{notused2: 'test', css: {'not-used1': 'blabla', 'font-family': '"Test Font 2", Test', 'font-weight': 'bold', 'font-style': 'italic'}},
+			{notused2: 'test', css: {'not-used1': 'blabla', 'font-family': '"Test Font 2", Test', 'font-weight': 'xxx', 'font-style': 'italic'}}
 		]};
 		var expected = [
 			{family: "Test Font 1", weight: 200, style: 'italic'},
@@ -581,7 +583,8 @@ describe('font_utils', function () {
 			{family: "Test Font 1", weight: 200, style: 'normal'},
 			{family: "Test Font 2", weight: 300, style: 'normal'},
 			{family: "Test Font 1", weight: 300, style: 'italic'},
-			{family: "Test Font 2", weight: 300, style: 'italic'}
+			{family: "Test Font 2", weight: 400, style: 'italic'},
+			{family: "Test Font 2", weight: 700, style: 'italic'}
 		];
 		assert.deepEqual(font_utils.extractFontDefinitions(styleset), expected);
 	})
