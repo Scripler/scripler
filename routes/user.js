@@ -329,7 +329,7 @@ exports.edit = function (req, res, next) {
 			if ('test' != env) {
 				var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email);
 				logger.info("Password verify url for " + user.email + ": " + url);
-				var template = 'verify.email';
+				var template = 'verify-email';
 				if (user.isDemo) {
 					// If user was a demo-user before, sent welcome email instead of verify email.
 					template = 'welcome';
