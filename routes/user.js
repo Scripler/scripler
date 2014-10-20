@@ -327,17 +327,20 @@ exports.edit = function (req, res, next) {
 			}
 			user.email = email;
 			if ('test' != env) {
-				if (!user.isDemo) {
-					var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email);
-					logger.info("Password verify url for " + user.email + ": " + url);
-					emailer.sendUserEmail(
-						user,
-						[
-							{name: "URL", content: url}
-						],
-						'verify-email'
-					);
+				var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email);
+				logger.info("Password verify url for " + user.email + ": " + url);
+				var template = 'verify.email';
+				if (user.isDemo) {
+					// If user was a demo-user before, sent welcome email instead of verify email.
+					template = 'welcome';
 				}
+				emailer.sendUserEmail(
+					user,
+					[
+						{name: "URL", content: url}
+					],
+					template
+				);
 			}
 		}
 	}
