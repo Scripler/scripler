@@ -331,7 +331,7 @@ exports.edit = function (req, res, next) {
 				logger.info("Password verify url for " + user.email + ": " + url);
 				var template = 'verify-email';
 				if (user.isDemo) {
-					// If user was a demo-user before, sent welcome email instead of verify email.
+					// If user was a demo-user before, send welcome email instead of verify email.
 					template = 'welcome';
 				}
 				emailer.sendUserEmail(
