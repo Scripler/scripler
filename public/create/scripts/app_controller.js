@@ -95,19 +95,14 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		$scope.registerUser = function(user, next) {
 			$http.post( '/user/register', angular.toJson( user ) )
 				.success( function( data ) {
-					if ( data.user ) {
-						$http.post('/user/login/', angular.toJson( user ) )
-							.success( function( data ) {
-								if ( data.user ) {
-									next();
-								}
-							});
-					}
+					$http.post('/user/login/', angular.toJson( user ) )
+						.success( function( data ) {
+							$scope.user.password = null; // No need to store user password anymore.
+							next();
+						});
 				})
 				.error( function( data ) {
-					if ( data.errorDetails ) {
-						next(data.errorDetails);
-					}
+					next(data.errorDetails || 'Could not register user');
 				});
 		}
 
@@ -230,6 +225,7 @@ app.service('userService', function( $rootScope, $http ) {
 			var self = this;
 			$http.put( '/user', angular.toJson( user ) )
 				.success( function( data ) {
+					data.user.password = null; // No need to store user password anymore.
 					self.setUser( data.user );
 					if (next) {
 						next();
