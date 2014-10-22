@@ -134,6 +134,7 @@ $(document).ready(function() {
 		$("#login-button").removeAttr("style");
 		$("#login-button").prop("value", "Login");
 		$("#forgot-password").text("Forgot password?");
+		forgotPassword = false;
 	}
 
 	$(".menu-login").one("click", function (event) {
