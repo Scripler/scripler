@@ -298,11 +298,14 @@ exports.edit = function (req, res, next) {
 	var lastname = req.body.lastname;
 	var email = req.body.email;
 	var password = req.body.password;
+	var passwordOld = req.body.passwordOld;
 	var newsletter = req.body.newsletter;
 	var showArchived = req.body.showArchived;
 	var showArchivedDocuments = req.body.showArchivedDocuments;
 	var defaultStyleset = req.body.defaultStyleset;
 	var isDemo = req.body.isDemo;
+	var userWasDemo = user.isDemo;
+	var emailChanged = false;
 
 	// Change from demo user's name to real name
 	if (req.body.name) {
@@ -326,27 +329,12 @@ exports.edit = function (req, res, next) {
 				user.oldEmail = user.email;
 			}
 			user.email = email;
-			if ('test' != env) {
-				var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email);
-				logger.info("Password verify url for " + user.email + ": " + url);
-				var template = 'verify-email';
-				if (user.isDemo) {
-					// If user was a demo-user before, send welcome email instead of verify email.
-					template = 'welcome';
-				}
-				emailer.sendUserEmail(
-					user,
-					[
-						{name: "URL", content: url}
-					],
-					template
-				);
-			}
+			emailChanged = true;
+			// The email will be send later when we successfully persisted the user,
+			// so that we don't send out any emails for failed registrations
 		}
 	}
-	if (password) {
-		user.password = password;
-	}
+
 	if (typeof newsletter === "boolean") {
 		// If email address is verified, any newsletter subscription changes will be done immediately.
 		// If email address is not verified, any newsletter subscription changes will be done when the verification is successfull.
@@ -373,18 +361,63 @@ exports.edit = function (req, res, next) {
 		user.isDemo = isDemo;
 	}
 
-	user.save(function (err) {
-		if (err) {
-			// Code is either 11000 or 11001, c.f.: http://nraj.tumblr.com/post/38706353543/handling-uniqueness-validation-in-mongo-mongoose
-			if (err.code && (err.code === 11000 || err.code === 11001)) {
-				return next({errors: "Email already registered", status: 400});
+	var saveUser = function () {
+		user.save(function (err) {
+			if (err) {
+				// Code is either 11000 or 11001, c.f.: http://nraj.tumblr.com/post/38706353543/handling-uniqueness-validation-in-mongo-mongoose
+				if (err.code && (err.code === 11000 || err.code === 11001)) {
+					return next({errors: "Email already registered", status: 400});
+				}
+
+				if (emailChanged && 'test' != env) {
+					var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email);
+					logger.info("Password verify url for " + user.email + ": " + url);
+					var template = 'verify-email';
+					if (userWasDemo) {
+						// If user was a demo-user before, send welcome email instead of verify email.
+						template = 'welcome';
+					}
+					emailer.sendUserEmail(
+						user,
+						[
+							{name: "URL", content: url}
+						],
+						template
+					);
+				}
+
+				return next(err);
 			}
 
-			return next(err);
-		}
+			res.send({"user": user});
+		})
+	};
 
-		res.send({"user": user});
-	});
+	// When changing password, and this is not an initial registration, the correct old password must also be provided.
+	if (password) {
+		if (userWasDemo) {
+			user.password = password;
+			saveUser();
+		} else if (passwordOld) {
+			user.comparePassword(passwordOld, function (err, isMatch) {
+				if (err) {
+					return next(err);
+				} else if (isMatch) {
+					// Old password was correct - do the password change
+					user.password = password;
+					saveUser();
+				} else {
+					// invalid old password
+					return next({message: "Invalid old password", status: 401});
+				}
+			});
+		} else {
+			return next({message: "Invalid old password", status: 401});
+		}
+	} else {
+		saveUser();
+	}
+
 };
 
 exports.resendVerifyEmail = function (req, res, nxt) {

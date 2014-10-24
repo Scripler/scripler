@@ -21,15 +21,12 @@ function projectSpaceController($scope, $http, projectsService, userService, $q,
 		if ( $scope.editPasswordForm.$valid ) {
 			var user = {};
 			user.email = $scope.user.email;
-			user.password = $scope.password;
-
-			$http.post( '/user/login', angular.toJson( user ) )
+			user.password = $scope.newPassword;
+			user.passwordOld = $scope.password;
+			$http.put( '/user', angular.toJson( user ) )
 			.success( function( data ) {
-				user.password = $scope.newPassword;
-				$http.put( '/user', angular.toJson( user ) )
-				.success( function( data ) {
-					$scope.editPassword = !$scope.editPassword;
-				});
+				$scope.editPassword = !$scope.editPassword;
+				$scope.user.password = null; // No need to store user password anymore.
 			})
 			.error( function( data ) {
 				$scope.editPasswordForm.currentPassword.$invalid = true;
