@@ -97,7 +97,6 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				.success( function( data ) {
 					$http.post('/user/login/', angular.toJson( user ) )
 						.success( function( data ) {
-							$scope.user.password = null; // No need to store user password anymore.
 							next();
 						});
 				})
@@ -216,6 +215,9 @@ app.service('userService', function( $rootScope, $http ) {
 	return {
 		setUser: function( user ) {
 			this.user = user;
+			if (user.password) {
+				delete user.password; // No need to store user password hash.
+			}
 			$rootScope.$emit('user:updated', this.user);
 		},
 		getUser: function() {
@@ -225,7 +227,6 @@ app.service('userService', function( $rootScope, $http ) {
 			var self = this;
 			$http.put( '/user', angular.toJson( user ) )
 				.success( function( data ) {
-					data.user.password = null; // No need to store user password anymore.
 					self.setUser( data.user );
 					if (next) {
 						next();
