@@ -445,12 +445,9 @@ exports.sso = function (req, res, next) {
 		if (sso.validate(payload, sig)) {
 			var nonce = sso.getNonce(payload);
 			var userparams = {
-				// Required, will throw exception otherwise
 				"nonce":       nonce,
-				"external_id": req.user._id,
+				"external_id": req.user.id,
 				"email":       req.user.email,
-				// Optional
-				//"username": req.user.username,
 				"name":        req.user.firstname + " " + req.user.lastname
 			};
 			var q = sso.buildLoginString(userparams);
