@@ -311,6 +311,117 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
+	$scope.languages = [
+		{
+			"subtag": "arb",
+			"description": "Arabic"
+		},
+		{
+			"subtag": "bn",
+			"description": "Bengali"
+		},
+		{
+			"subtag": "es",
+			"description": "Castilian"
+		},
+		{
+			"subtag": "zh",
+			"description": "Chinese"
+		},
+		{
+			"subtag": "da",
+			"description": "Danish"
+		},
+		{
+			"subtag": "nl",
+			"description": "Dutch"
+		},
+		{
+			"subtag": "en",
+			"description": "English"
+		},
+		{
+			"subtag": "fo",
+			"description": "Faroese"
+		},
+		{
+			"subtag": "fi",
+			"description": "Finnish"
+		},
+		{
+			"subtag": "nl",
+			"description": "Flemish"
+		},
+		{
+			"subtag": "fr",
+			"description": "French"
+		},
+		{
+			"subtag": "de",
+			"description": "German"
+		},
+		{
+			"subtag": "kl",
+			"description": "Greenlandic"
+		},
+		{
+			"subtag": "hi",
+			"description": "Hindi"
+		},
+		{
+			"subtag": "is",
+			"description": "Icelandic"
+		},
+		{
+			"subtag": "ja",
+			"description": "Japanese"
+		},
+		{
+			"subtag": "kl",
+			"description": "Kalaallisut"
+		},
+		{
+			"subtag": "ko",
+			"description": "Korean"
+		},
+		{
+			"subtag": "cmn",
+			"description": "Mandarin Chinese"
+		},
+		{
+			"subtag": "nn",
+			"description": "Norwegian Nynorsk"
+		},
+		{
+			"subtag": "no",
+			"description": "Norwegian"
+		},
+		{
+			"subtag": "nb",
+			"description": "Norwegian Bokmål"
+		},
+		{
+			"subtag": "pt",
+			"description": "Portuguese"
+		},
+		{
+			"subtag": "ru",
+			"description": "Russian"
+		},
+		{
+			"subtag": "es",
+			"description": "Spanish"
+		},
+		{
+			"subtag": "sv",
+			"description": "Swedish"
+		},
+		{
+			"subtag": "th",
+			"description": "Thai"
+		},
+	];
+
 	$scope.saveMetaData = function() {
 		$http.put('/project/' + $scope.project._id + '/metadata', {
 			'title': $scope.project.metadata.title,
@@ -347,6 +458,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}, 2000);
 		}
 	});
+
 	$scope.$watch('project.metadata.language', function(newValue, oldValue){
 		if (newValue != '' && newValue != oldValue) {
 			$scope.saveMetaData();
