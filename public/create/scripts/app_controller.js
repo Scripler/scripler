@@ -95,19 +95,13 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		$scope.registerUser = function(user, next) {
 			$http.post( '/user/register', angular.toJson( user ) )
 				.success( function( data ) {
-					if ( data.user ) {
-						$http.post('/user/login/', angular.toJson( user ) )
-							.success( function( data ) {
-								if ( data.user ) {
-									next();
-								}
-							});
-					}
+					$http.post('/user/login/', angular.toJson( user ) )
+						.success( function( data ) {
+							next();
+						});
 				})
 				.error( function( data ) {
-					if ( data.errorDetails ) {
-						next(data.errorDetails);
-					}
+					next(data.errorDetails || 'Could not register user');
 				});
 		}
 
@@ -221,6 +215,9 @@ app.service('userService', function( $rootScope, $http ) {
 	return {
 		setUser: function( user ) {
 			this.user = user;
+			if (user.password) {
+				delete user.password; // No need to store user password hash.
+			}
 			$rootScope.$emit('user:updated', this.user);
 		},
 		getUser: function() {
