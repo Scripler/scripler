@@ -277,7 +277,7 @@ html, body {
 	height: 0;
 	border-left: 5px solid transparent;
 	border-right: 5px solid transparent;
-	border-top: 5px solid #fff;
+	border-top: 5px solid #000;
 }
 .styleset-options-show .arrow {
 	border-top: 5px solid #000;
@@ -306,10 +306,12 @@ html, body {
 	padding: 5px 0 10px;
 }
 .projectDocument-options-hide, .styleset-options-hide, .style-options-hide {
-	position: absolute;
-	top: 5px;
-	right: 10px;
-	cursor: pointer;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width:100%;
+	height:100%;
+	z-index:-1;
 }
 .projectDocument-options-menupoint, .styleset-options-menupoint, .style-options-menupoint {
 	cursor: pointer;
@@ -690,6 +692,7 @@ li.typo p:first-child {
 .outputOptionDownload {
 	margin: 10px 0 0;
 }
+
 .not-selectable {
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;

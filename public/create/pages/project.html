@@ -39,10 +39,10 @@
 					</form>
 
 					<div class="projectDocument-options" data-ng-show="showProjectDocumentOptions">
-						<div class="projectDocument-options-hide" data-ng-click="showProjectDocumentOptions = false;" title="Close Options">x</div>
 						<div class="projectDocument-options-menupoint first" data-ng-click="editingProjectDocumentTitle = true; showProjectDocumentOptions = false;">rename</div>
 						<div class="projectDocument-options-menupoint" data-ng-hide="projectDocument.archived" data-ng-click="archiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">archive</div>
 						<div class="projectDocument-options-menupoint" data-ng-show="projectDocument.archived" data-ng-click="unarchiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">unarchive</div>
+						<div class="projectDocument-options-hide" data-ng-click="showProjectDocumentOptions = false;" title="Close Options"></div>
 					</div>
 				</div>
 			</div>
@@ -296,6 +296,9 @@
 		</div>
 		<div class="menu-tab output" data-ng-class="{ 'selectedTab' : showOutput }" data-ng-click="showOutput = !showOutput; showFinalizeOptions = false;">
 			<img src="pages/images/output.svg" width="20">
+		</div>
+		<div class="menu-tab feedback" data-ng-class="" data-ng-click="">
+			<img src="pages/images/feedback.svg" width="20">
 		</div>
 	</div>
 	<div id="menu-right" class="menu-right" data-ng-class="{ 'open' : showFinalizeOptions || showOutput }">

@@ -2,7 +2,6 @@
 
 <div class="container">
 	<div class="main">
-
 		<section class="section-unisquare" data-ng-class="{ 'white-bg' : showSettings}">
 			<div data-ng-hide="showSettings">
 				<div class="links">
@@ -67,9 +66,8 @@
 			<div class="project new" data-ng-click="addProject(project)">
 				<p>+</p>
 			</div>
-
 			<div class="project" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index">
-				<a class="project-options-show" data-ng-click="showProjectOptions = true">
+				<a class="project-options-show" ng-click="showProjectOptions = !showProjectOptions">
 					<div class="arrow"></div>
 				</a>
 				<!--<p data-ng-hide="editingProjectTitle" data-ng-click="editingProjectTitle = true;">-->
@@ -86,7 +84,6 @@
 
 				<div class="project-options" data-ng-show="showProjectOptions">
 					<div class="project-options-header">Project Options</div>
-					<div class="project-options-hide" data-ng-click="showProjectOptions = false;" title="Close Options">x</div>
 					<div class="project-options-menupoint" data-ng-click="editingProjectTitle = true; showProjectOptions = false;">rename</div>
 					<div class="project-options-menupoint" data-ng-click="copyProject(project); showProjectOptions = false;">copy</div>
 					<div class="project-options-menupoint" data-ng-click="archiveProject(project); showProjectOptions = false;">archive</div>
@@ -95,9 +92,16 @@
 						<div>Created Date: </div><div class="dates">{{project.created | date:'yyyy-MM-dd HH:mm'}}</div>
 						<div>Last Changed: </div><div class="dates">{{project.modified | date:'yyyy-MM-dd HH:mm'}}</div>
 					</div>
+					<div class="project-options-hide" data-ng-click="showProjectOptions = false;" title="Close Options"></div>
 				</div>
 			</div>
-		</section>
 
+			<div class="feedback">
+				<img src="pages/images/feedback.svg" width="20">
+			</div>
+	</div>
+		</section>
 	</div>
 </div>
+
+
