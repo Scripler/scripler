@@ -28,18 +28,6 @@ exports.get = function (req, res) {
 };
 
 /**
- * GET users listing.
- */
-exports.list = function (req, res, next) {
-	User.find({}, function (err, docs) {
-		if (err) {
-			return next(err);
-		}
-		res.send({"users": docs});
-	});
-};
-
-/**
  * POST user login.
  */
 exports.login = function (req, res, next) {
@@ -62,7 +50,8 @@ exports.login = function (req, res, next) {
 			if (!req.body.remember) {
 				req.session.cookie.expires = false;
 			}
-			res.send({"user": user});
+
+			return res.send({"user": utils.cleanUserObject(user)});
 		});
 	})(req, res, next);
 };
@@ -203,7 +192,7 @@ exports.register = function (req, res, next) {
 						if (err) {
 							return next(err);
 						} else {
-							res.send({"user": user});
+							return res.send({"user": utils.cleanUserObject(user)});
 						}
 					});
 				};
@@ -267,13 +256,13 @@ exports.verify = function (req, res) {
 				res.redirect(redirectUrl + "200");//Email already verified
 			} else {
 				user.emailVerified = true;
-			user.save(function (err) {
-				if (err) {
-					res.redirect(redirectUrl + "104");//Database problem
-				} else {
-					res.redirect(redirectUrl + "100");//Email verified
-				}
-			});
+				user.save(function (err) {
+					if (err) {
+						res.redirect(redirectUrl + "104");//Database problem
+					} else {
+						res.redirect(redirectUrl + "100");//Email verified
+					}
+				});
 
 				if (user.newsletter) {
 					emailer.newsletterSubscribe(user);
@@ -389,7 +378,7 @@ exports.edit = function (req, res, next) {
 				return next(err);
 			}
 
-			res.send({"user": user});
+			return res.send({"user": utils.cleanUserObject(user)});
 		})
 	};
 

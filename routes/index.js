@@ -23,7 +23,6 @@ module.exports = function (app, auth) {
 	/* API Frontpage */
 	app.get('/user', auth.isLoggedIn(), user.get);
 	app.put('/user', auth.isLoggedIn(), user.edit);
-	app.get('/user/list', auth.isLoggedIn(), user.list);
 	app.post('/user/login', user.login);
 	app.post('/user/logout', user.logout);
 	app.post('/user/register', user.register);
