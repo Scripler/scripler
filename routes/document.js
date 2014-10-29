@@ -58,12 +58,12 @@ var create = exports.create = function (req, res, next) {
 		]
 	});
 
-	Styleset.findOne({"_id": project.styleset}, function (err, populatedStyleset) {
+	Styleset.findOne({"_id": project.styleset}, function (err, styleset) {
 		if (err) {
 			return next(err);
 		}
 
-		copyStyleset(populatedStyleset, function(err, copy) {
+		copyStyleset(styleset, function(err, copy) {
 			if (err) {
 				return next(err);
 			}
@@ -98,6 +98,8 @@ exports.update = function (req, res, next) {
 	if (req.body.text != undefined) {
 		document.text = req.body.text;
 	}
+
+	// TODO: implement via styleset-utils.getStylsetOrStyleType()?
 
 	// Is defaultstyleset to be changed?
 	if (req.body.defaultStyleset != undefined &&
@@ -261,9 +263,11 @@ exports.upload = function (req, res, next) {
 
 exports.applyStyleset = function (req, res, next) {
 	var stylesetToApply = req.styleset;
-	var stylesetToApplyId = stylesetToApply._id;
+	//var stylesetToApplyId = stylesetToApply._id;
 	var documentStylesetIds = req.document.stylesets;
 	var defaultStylesetId = req.document.defaultStyleset;
+
+	// TODO: implement via styleset-utils.getStylsetOrStyleType()?
 
 	if (req.user.level == "free") {
 		return next({message: "Free users are not allowed to apply styles", status: 402});

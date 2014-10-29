@@ -82,7 +82,10 @@ exports.afterRoutes = function (app) {
 			httpCodes[403] = "Access Denied";
 			httpCodes[404] = "Not Found";
 			err = {status: err, message: httpCodes[err] || httpCodes[0]};
+		} else if (typeof err == "string") {
+			err = {status: 500, message: err};
 		}
+
 		if (err.errors) {
 			err.err = err.errors;
 		}
@@ -91,6 +94,9 @@ exports.afterRoutes = function (app) {
 		} else {
 			logger.error(err);
 		}
+
+		//console.log(err);
+
 		res.status(err.status || 500).send({ "errorCode": err.code, "errorMessage": err.message, "errorDetails": err.err});
 	});
 }
