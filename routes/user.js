@@ -223,9 +223,6 @@ exports.register = function (req, res, next) {
 								return next(err);
 							}
 
-							//console.log('Adding copy to user.stylesets: ' + JSON.stringify(copy));
-
-							//user.stylesets.addToSet(copy);
 							stylesetCopies.push(copy);
 
 							if (copy.name === conf.user.defaultStylesetName) {
@@ -235,14 +232,10 @@ exports.register = function (req, res, next) {
 							numberOfStylesetsToBeCopied--;
 
 							if (numberOfStylesetsToBeCopied == 0) {
-								// Sort stylesets by name (currently only used for integration test)
+								// Sort stylesets by name (currently only used for integration test, i.e. not important for the app)
 								// After stylesets are added to user.stylesets, user.stylesets only contains ids, so to avoid re-reading the stylesets from the db, save them in a temporary array.
-								//console.log('BEFORE');
-								//console.log(JSON.stringify(stylesetCopies));
 								stylesetCopies.sort(styleset_utils.systemStylesetOrder);
 								user.stylesets = stylesetCopies;
-								//console.log('AFTER');
-								//console.log(JSON.stringify(user.stylesets));
 
 								user.save(function (err) {
 									if (err) {

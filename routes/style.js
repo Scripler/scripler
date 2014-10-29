@@ -1,7 +1,6 @@
 var utils = require('../lib/utils');
 var Style = require('../models/style.js').Style;
 var Styleset = require('../models/styleset.js').Styleset;
-var copyStyleset = require('../models/styleset.js').copy
 var styleset_utils = require('../lib/styleset-utils.js');
 var styleset_route = require('./styleset');
 
@@ -40,7 +39,6 @@ exports.loadPopulated = function (id) {
 
 
 exports.create = function (req, res, next) {
-	console.log("STYLE.CREATE");
 	var inputStyleset = req.styleset;
 
 	if (req.user.level == "free") {
@@ -67,7 +65,6 @@ exports.create = function (req, res, next) {
 				}
 
 				if (styleset.original && !styleset.isSystem) {
-					console.log("Style was created in a copied styleset: updating original styleset...");
 					styleset_route.populateAndUpdateOriginalStyleset(styleset, function (err) {
 						if (err) {
 							// TODO: checking the error status from populateAndUpdateOriginalStyleset() avoids having to read the original styleset from the database but can we make this check prettier?
@@ -77,58 +74,25 @@ exports.create = function (req, res, next) {
 								return next(err);
 							}
 						} else {
-							console.log("Original styleset was updated...");
 							// NB! This style does not contain the changes made by styleset_route.populateAndUpdateOriginalStyleset(), e.g. setting "original"
 							res.send({style: style});
 						}
 					});
 				} else {
-					console.log("Style was created in a non-copied styleset: no original to update, just return the style");
 					res.send({style: style});
 				}
 			});
 		});
 	};
 
-	console.log('inputStyleset: ' + JSON.stringify(inputStyleset));
-
-	/*
-	 What type is the input styleset:
-	   - System		=> "Error: it is not allowed to add styles to a system styleset"
-	   - User		=> Find copy, i.e. document styleset if it exists, otherwise make a copy of the input styleset + create style on document styleset
-	   - Document	=> Create style on that
-	 */
 	styleset_utils.getStylesetOrStyleType(inputStyleset, function (err, stylesetType) {
 		if (err) return next(err);
 
 		if ('system' == stylesetType) {
-			console.log("STYLESET TYPE: SYSTEM STYLESET");
 			return next("ERROR: input styleset is a system styleset: it is not allowed to add styles to a system styleset.");
 		} else if ('user' == stylesetType) {
-			console.log("STYLESET TYPE: USER STYLESET...");
-
 			return createStyle(inputStyleset);
-
-			// Attempt to find copy, i.e. document styleset
-			/*
-			Styleset.findOne({"original": inputStyleset._id}, function (err, stylesetCopy) {
-				if (err) return next(err);
-
-
-
-				if (!stylesetCopy) {
-					console.log("WITHOUT A DOCUMENT STYLESET...CHANGING THE USER STYLESET");
-					copyStyleset(inputStyleset, function(err, stylesetCopy) {
-						return createStyle(stylesetCopy);
-					});
-				} else {
-					console.log("WITH A DOCUMENT STYLESET...USING THAT ONE");
-					return createStyle(stylesetCopy);
-				}
-			});
-			*/
 		} else if ('document' == stylesetType) {
-			console.log("STYLESET TYPE: DOCUMENT STYLESET: " + JSON.stringify(inputStyleset));
 			return createStyle(inputStyleset);
 		} else {
 			return next("ERROR: unknown styleset type: " + stylesetType);

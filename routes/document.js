@@ -263,7 +263,6 @@ exports.upload = function (req, res, next) {
 
 exports.applyStyleset = function (req, res, next) {
 	var stylesetToApply = req.styleset;
-	//var stylesetToApplyId = stylesetToApply._id;
 	var documentStylesetIds = req.document.stylesets;
 	var defaultStylesetId = req.document.defaultStyleset;
 

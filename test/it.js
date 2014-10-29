@@ -124,56 +124,6 @@ describe('Scripler RESTful API', function () {
 		})
 	}),
 	describe('Add system/Scripler stylesets/styles and fonts', function () {
-		/*
-		it('Creating a system styleset should return the new styleset', function (done) {
-			systemStyleset1 = styleset_utils.createStyleset(conf.user.defaultStylesetName, true, 1);
-			systemStyleset1.save(function(err) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(systemStyleset1.name, conf.user.defaultStylesetName);
-					assert.equal(systemStyleset1.isSystem, true);
-					systemStylesetId1 = systemStyleset1._id;
-					systemStylesetId1 && done();
-				});
-		}),
-		it('Creating a system style should return the new style', function (done) {
-			var systemStyle1 = styleset_utils.createStyle("Scripler Style 1", "ScruplerZ", {"key1": "value1", "key2": "value2"}, null, systemStylesetId1, true, false);
-			systemStyle1.save(function(err) {
-                if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-				assert.equal(systemStyle1.name, "Scripler Style 1");
-				assert.equal(systemStyle1.class, "ScruplerZ");
-				assert.equal(systemStyle1.css.key1, "value1");
-				assert.equal(systemStyle1.css.key2, "value2");
-				assert.equal(systemStyle1.isSystem, true);
-				assert.equal(systemStyle1.stylesetId, systemStylesetId1);
-
-				systemStyleset1.styles.addToSet(systemStyle1);
-				systemStyleset1.save(function (err) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					systemStyleId1 = systemStyle1._id;
-					systemStyleId1 && done();
-				});
-			});
-		}),
-		it('Creating a hidden system style should return the new style', function (done) {
-			var systemStyle2 = styleset_utils.createStyle("Scripler Style 2", "ScruplerZ999", {"key1": "value1", "key2": "value2"}, null, systemStylesetId1, true, true);
-			systemStyle2.save(function(err) {
-				if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-				assert.equal(systemStyle2.name, "Scripler Style 2");
-				assert.equal(systemStyle2.class, "ScruplerZ999");
-				assert.equal(systemStyle2.css.key1, "value1");
-				assert.equal(systemStyle2.css.key2, "value2");
-				assert.equal(systemStyle2.isSystem, true);
-				assert.equal(systemStyle2.stylesetId, systemStylesetId1);
-
-				systemStyleset1.styles.addToSet(systemStyle2);
-				systemStyleset1.save(function (err) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					systemStyleId1 = systemStyle2._id;
-					systemStyleId1 && done();
-				});
-			});
-		}),
-		*/
 		it('Create all system stylesets such that they are available when the user registers', function (done) {
 			styleset_utils.import_system_stylesets(true, false, function (err) {
 				if (err) {
@@ -209,8 +159,6 @@ describe('Scripler RESTful API', function () {
 					userStylesetId3 = res.body.user.stylesets[2]; // draft-bw
 					userStylesetId4 = res.body.user.stylesets[3]; // draft-color
 					defaultUserStyleset = res.body.user.stylesets[15]; // simple-bw
-					//assert.notEqual(userStylesetId1, systemStylesetId1); // Stylesets are copied
-					//assert.notEqual(res.body.user.defaultStyleset, systemStylesetId1);
                     done();
 				});
 		}),
@@ -296,7 +244,6 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					//console.log('userStylesetId1: ' + JSON.stringify(res.body.styleset));
 					assert.equal(res.body.styleset._id, userStylesetId1);
 					assert.equal(res.body.styleset.name, "book-bw");
 					assert.equal(res.body.styleset.styles.length, numberOfStylesInSystemStyleset);
@@ -522,22 +469,6 @@ describe('Scripler RESTful API', function () {
 				done();
 			});
 		}),
-		/*
-		it('Creating a styleset should return the new styleset', function (done) {
-			request(host)
-				.post('/styleset')
-				.set('cookie', cookie)
-				.send({name: "My Best Styleset", isSystem: false, order: 10})
-				.expect(200)
-				.end(function (err, res) {
-					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset.name, "My Best Styleset");
-					assert.equal(res.body.styleset.order, 10);
-					userStylesetId2 = res.body.styleset._id;
-					userStylesetId2 && done();
-				});
-		}),
-		*/
 		it('Change user level: free', function (done) {
 			user_utils.changeLevel(userId, "free", function (err) {
 				if (err) throw new Error(err);
@@ -586,7 +517,7 @@ describe('Scripler RESTful API', function () {
 					copyCrappyDocumentId && done();
 				});
 		}),
-		it('Applying a styleset to a document should return a styleset. This styleset will be used below to add a style to because a style must be added to a non-system styleset with an original.', function (done) {
+		it('Applying a user styleset to a document should return a document styleset. This styleset will be used below to add a style to because a style must be added to a non-system styleset with an original.', function (done) {
 			request(host)
 				.put('/styleset/' + userStylesetId2 + "/document/" + copyCrappyDocumentId)
 				.set('cookie', cookie)
@@ -598,7 +529,7 @@ describe('Scripler RESTful API', function () {
 					documentStylesetId2 && done();
 				});
 		}),
-		it('Creating a style should return the new style', function (done) {
+		it('Creating a document style should return the new style in a document styleset (NB! The app will sometimes create styles in a user styleset)', function (done) {
 			request(host)
 				.post('/style')
 				.set('cookie', cookie)
@@ -614,7 +545,7 @@ describe('Scripler RESTful API', function () {
 					documentStyleId1 && done();
 				});
 		}),
-		it('Applying a styleset to a project should return the project with the styleset applied (set)', function (done) {
+		it('Applying a user styleset to a project should return the project with the styleset applied.', function (done) {
 			request(host)
 				.put('/styleset/' + userStylesetId1 + "/project/" + projectId)
 				.set('cookie', cookie)
@@ -643,662 +574,662 @@ describe('Scripler RESTful API', function () {
 					rootFolderId && done();
 				});
 		}),
-			it('Opening the root folder should return an empty folder', function (done) {
-				request(host)
-					.get('/folder/' + projectId + '/' + rootFolderId)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.result.folders.length, 0);
-						assert.equal(res.body.result.docs.length, 0);
-						done();
-					});
-			}),
-			it('Creating a folder with a parent folder should return the new folder as an empty child folder of the parent', function (done) {
-				request(host)
-					.post('/folder')
-					.set('cookie', cookie)
-					.send({projectId: projectId, name: 'Chapter 1 - images', parentFolderId: rootFolderId})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.folder.name, 'Chapter 1 - images');
-						assert.equal(res.body.folder.folders.length, 0);
-						childFolderId = res.body.folder._id;
-						childFolderId && done();
-					});
-			}),
-			it('Opening the child folder should return an empty folder', function (done) {
-				request(host)
-					.get('/folder/' + projectId + '/' + childFolderId)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.result.folders.length, 0);
-						assert.equal(res.body.result.docs.length, 0);
-						done();
-					});
-			}),
-			it('Renaming a folder should return the folder', function (done) {
-				request(host)
-					.put('/folder/' + rootFolderId + '/rename')
-					.set('cookie', cookie)
-					.send({projectId: projectId, name: "A New Fine Name"})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.folder.name, "A New Fine Name");
-						done();
-					});
-			}),
-			it('Creating a document in a folder (the root folder) should return the document with that folder id - 1', function (done) {
-				var text = '<p>It is my best document ever!</p>';
+		it('Opening the root folder should return an empty folder', function (done) {
+			request(host)
+				.get('/folder/' + projectId + '/' + rootFolderId)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.result.folders.length, 0);
+					assert.equal(res.body.result.docs.length, 0);
+					done();
+				});
+		}),
+		it('Creating a folder with a parent folder should return the new folder as an empty child folder of the parent', function (done) {
+			request(host)
+				.post('/folder')
+				.set('cookie', cookie)
+				.send({projectId: projectId, name: 'Chapter 1 - images', parentFolderId: rootFolderId})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.folder.name, 'Chapter 1 - images');
+					assert.equal(res.body.folder.folders.length, 0);
+					childFolderId = res.body.folder._id;
+					childFolderId && done();
+				});
+		}),
+		it('Opening the child folder should return an empty folder', function (done) {
+			request(host)
+				.get('/folder/' + projectId + '/' + childFolderId)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.result.folders.length, 0);
+					assert.equal(res.body.result.docs.length, 0);
+					done();
+				});
+		}),
+		it('Renaming a folder should return the folder', function (done) {
+			request(host)
+				.put('/folder/' + rootFolderId + '/rename')
+				.set('cookie', cookie)
+				.send({projectId: projectId, name: "A New Fine Name"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.folder.name, "A New Fine Name");
+					done();
+				});
+		}),
+		it('Creating a document in a folder (the root folder) should return the document with that folder id - 1', function (done) {
+			var text = '<p>It is my best document ever!</p>';
 
-				request(host)
-					.post('/document')
-					.set('cookie', cookie)
-					.send({
-						projectId: projectId,
-						folderId: rootFolderId,
-						name: 'MyFirstDocument',
-						text: text
-					})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.document.name, 'MyFirstDocument');
-						assert.equal(res.body.document.projectId, projectId);
-						assert.equal(res.body.document.folderId, rootFolderId);
-						assert.equal(res.body.document.text, text);
-						assert.equal(res.body.document.archived, false);
-						assert.equal(res.body.document.members[0].userId, userId);
-						assert.equal(res.body.document.members[0].access[0], "admin");
-						assert.notEqual(res.body.document.defaultStyleset, userStylesetId1);
-						documentStylesetId1 = res.body.document.defaultStyleset;
-						rootDocumentId = res.body.document._id;
-						rootDocumentId && done();
-					});
-			}),
-			it('Creating a document in a folder (the child folder) should return the document with that folder id - 2', function (done) {
-				var text = '<p>It is almost my best document!</p>';
+			request(host)
+				.post('/document')
+				.set('cookie', cookie)
+				.send({
+					projectId: projectId,
+					folderId: rootFolderId,
+					name: 'MyFirstDocument',
+					text: text
+				})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.document.name, 'MyFirstDocument');
+					assert.equal(res.body.document.projectId, projectId);
+					assert.equal(res.body.document.folderId, rootFolderId);
+					assert.equal(res.body.document.text, text);
+					assert.equal(res.body.document.archived, false);
+					assert.equal(res.body.document.members[0].userId, userId);
+					assert.equal(res.body.document.members[0].access[0], "admin");
+					assert.notEqual(res.body.document.defaultStyleset, userStylesetId1);
+					documentStylesetId1 = res.body.document.defaultStyleset;
+					rootDocumentId = res.body.document._id;
+					rootDocumentId && done();
+				});
+		}),
+		it('Creating a document in a folder (the child folder) should return the document with that folder id - 2', function (done) {
+			var text = '<p>It is almost my best document!</p>';
 
-				request(host)
-					.post('/document')
-					.set('cookie', cookie)
-					.send({projectId: projectId, folderId: childFolderId, name: 'MySecondDocument', text: text})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.document.name, 'MySecondDocument');
-						assert.equal(res.body.document.projectId, projectId);
-						assert.equal(res.body.document.folderId, childFolderId);
-						assert.equal(res.body.document.text, text);
-						assert.equal(res.body.document.archived, false);
-						assert.equal(res.body.document.members[0].userId, userId);
-						assert.equal(res.body.document.members[0].access[0], "admin");
-						assert.notEqual(res.body.document.defaultStyleset, userStylesetId1);
-						childDocumentId = res.body.document._id;
-						childDocumentId && done();
-					});
-			}),
-			it('Creating a cover document should return the document with type = "cover"', function (done) {
-				var text = '<p>Cool Cover</p>';
+			request(host)
+				.post('/document')
+				.set('cookie', cookie)
+				.send({projectId: projectId, folderId: childFolderId, name: 'MySecondDocument', text: text})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.document.name, 'MySecondDocument');
+					assert.equal(res.body.document.projectId, projectId);
+					assert.equal(res.body.document.folderId, childFolderId);
+					assert.equal(res.body.document.text, text);
+					assert.equal(res.body.document.archived, false);
+					assert.equal(res.body.document.members[0].userId, userId);
+					assert.equal(res.body.document.members[0].access[0], "admin");
+					assert.notEqual(res.body.document.defaultStyleset, userStylesetId1);
+					childDocumentId = res.body.document._id;
+					childDocumentId && done();
+				});
+		}),
+		it('Creating a cover document should return the document with type = "cover"', function (done) {
+			var text = '<p>Cool Cover</p>';
 
-				request(host)
-					.post('/document')
-					.set('cookie', cookie)
-					.send({
-						projectId: projectId,
-						folderId: rootFolderId,
-						name: 'Cover',
-						text: text,
-						type: 'cover'
-					})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.document.name, 'Cover');
-						assert.equal(res.body.document.projectId, projectId);
-						assert.equal(res.body.document.folderId, rootFolderId);
-						assert.equal(res.body.document.text, text);
-						assert.equal(res.body.document.archived, false);
-						assert.equal(res.body.document.members[0].userId, userId);
-						assert.equal(res.body.document.members[0].access[0], "admin");
-						assert.equal(res.body.document.type, 'cover');
-						assert.notEqual(res.body.document.defaultStyleset, userStylesetId1);
-						coverDocumentId = res.body.document._id;
-						coverDocumentId && done();
-					});
-			}),
-			it('Creating a title page document should return the document with type = "titlepage"', function (done) {
-				var text = '<p>Cool TitlePage</p>';
+			request(host)
+				.post('/document')
+				.set('cookie', cookie)
+				.send({
+					projectId: projectId,
+					folderId: rootFolderId,
+					name: 'Cover',
+					text: text,
+					type: 'cover'
+				})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.document.name, 'Cover');
+					assert.equal(res.body.document.projectId, projectId);
+					assert.equal(res.body.document.folderId, rootFolderId);
+					assert.equal(res.body.document.text, text);
+					assert.equal(res.body.document.archived, false);
+					assert.equal(res.body.document.members[0].userId, userId);
+					assert.equal(res.body.document.members[0].access[0], "admin");
+					assert.equal(res.body.document.type, 'cover');
+					assert.notEqual(res.body.document.defaultStyleset, userStylesetId1);
+					coverDocumentId = res.body.document._id;
+					coverDocumentId && done();
+				});
+		}),
+		it('Creating a title page document should return the document with type = "titlepage"', function (done) {
+			var text = '<p>Cool TitlePage</p>';
 
-				request(host)
-					.post('/document')
-					.set('cookie', cookie)
-					.send({
-						projectId: projectId,
-						folderId: rootFolderId,
-						name: 'TitlePage',
-						text: text,
-						type: 'titlepage'
-					})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.document.name, 'TitlePage');
-						assert.equal(res.body.document.projectId, projectId);
-						assert.equal(res.body.document.folderId, rootFolderId);
-						assert.equal(res.body.document.text, text);
-						assert.equal(res.body.document.archived, false);
-						assert.equal(res.body.document.members[0].userId, userId);
-						assert.equal(res.body.document.members[0].access[0], "admin");
-						assert.equal(res.body.document.type, 'titlepage');
-						assert.notEqual(res.body.document.defaultStyleset, userStylesetId1);
-						titlePageDocumentId = res.body.document._id;
-						titlePageDocumentId && done();
-					});
-			}),
-			it('Creating a table of contents document should return the document with type = "toc"', function (done) {
-				var text = '<p>Cool ToC</p>';
+			request(host)
+				.post('/document')
+				.set('cookie', cookie)
+				.send({
+					projectId: projectId,
+					folderId: rootFolderId,
+					name: 'TitlePage',
+					text: text,
+					type: 'titlepage'
+				})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.document.name, 'TitlePage');
+					assert.equal(res.body.document.projectId, projectId);
+					assert.equal(res.body.document.folderId, rootFolderId);
+					assert.equal(res.body.document.text, text);
+					assert.equal(res.body.document.archived, false);
+					assert.equal(res.body.document.members[0].userId, userId);
+					assert.equal(res.body.document.members[0].access[0], "admin");
+					assert.equal(res.body.document.type, 'titlepage');
+					assert.notEqual(res.body.document.defaultStyleset, userStylesetId1);
+					titlePageDocumentId = res.body.document._id;
+					titlePageDocumentId && done();
+				});
+		}),
+		it('Creating a table of contents document should return the document with type = "toc"', function (done) {
+			var text = '<p>Cool ToC</p>';
 
-				request(host)
-					.post('/document')
-					.set('cookie', cookie)
-					.send({
-						projectId: projectId,
-						folderId: rootFolderId,
-						name: 'ToC',
-						text: text,
-						type: 'toc'
-					})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.document.name, 'ToC');
-						assert.equal(res.body.document.projectId, projectId);
-						assert.equal(res.body.document.folderId, rootFolderId);
-						assert.equal(res.body.document.text, text);
-						assert.equal(res.body.document.archived, false);
-						assert.equal(res.body.document.members[0].userId, userId);
-						assert.equal(res.body.document.members[0].access[0], "admin");
-						assert.equal(res.body.document.type, 'toc');
-						assert.notEqual(res.body.document.defaultStyleset, userStylesetId1);
-						tocDocumentId = res.body.document._id;
-						tocDocumentId && done();
-					});
-			}),
-			it('Creating a colophon document should return the document with type = "colophon"', function (done) {
-				var text = '<p>Cool Colophon</p>';
+			request(host)
+				.post('/document')
+				.set('cookie', cookie)
+				.send({
+					projectId: projectId,
+					folderId: rootFolderId,
+					name: 'ToC',
+					text: text,
+					type: 'toc'
+				})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.document.name, 'ToC');
+					assert.equal(res.body.document.projectId, projectId);
+					assert.equal(res.body.document.folderId, rootFolderId);
+					assert.equal(res.body.document.text, text);
+					assert.equal(res.body.document.archived, false);
+					assert.equal(res.body.document.members[0].userId, userId);
+					assert.equal(res.body.document.members[0].access[0], "admin");
+					assert.equal(res.body.document.type, 'toc');
+					assert.notEqual(res.body.document.defaultStyleset, userStylesetId1);
+					tocDocumentId = res.body.document._id;
+					tocDocumentId && done();
+				});
+		}),
+		it('Creating a colophon document should return the document with type = "colophon"', function (done) {
+			var text = '<p>Cool Colophon</p>';
 
-				request(host)
-					.post('/document')
-					.set('cookie', cookie)
-					.send({
-						projectId: projectId,
-						folderId: rootFolderId,
-						name: 'Colophon',
-						text: text,
-						type: 'colophon'
-					})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.document.name, 'Colophon');
-						assert.equal(res.body.document.projectId, projectId);
-						assert.equal(res.body.document.folderId, rootFolderId);
-						assert.equal(res.body.document.text, text);
-						assert.equal(res.body.document.archived, false);
-						assert.equal(res.body.document.members[0].userId, userId);
-						assert.equal(res.body.document.members[0].access[0], "admin");
-						assert.equal(res.body.document.type, 'colophon');
-						assert.notEqual(res.body.document.defaultStyleset, userStylesetId1);
-						colophonDocumentId = res.body.document._id;
-						colophonDocumentId && done();
-					});
-			}),
-			it('Opening the project should now return the root and child documents and the Cover, TitlePage, ToC and Colophon documents.', function (done) {
-				request(host)
-					.get('/project/' + projectId)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.project.documents.length, 6);
-						assert.equal(res.body.project.documents[0]._id, rootDocumentId);
-						assert.equal(res.body.project.documents[1]._id, childDocumentId);
-						assert.equal(res.body.project.documents[2]._id, coverDocumentId);
-						assert.equal(res.body.project.documents[3]._id, titlePageDocumentId);
-						assert.equal(res.body.project.documents[4]._id, tocDocumentId);
-						assert.equal(res.body.project.documents[5]._id, colophonDocumentId);
-						done();
-					});
-			}),
-			it('Updating a document text should return the updated document', function (done) {
-				text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
-					'<!DOCTYPE html>' +
-					'<html xmlns="http://www.w3.org/1999/xhtml">' +
-					'<head><title>MyFirstDocument</title></head>' +
-					'<body><p>This is no longer a matter of if but when...and look here...</p></body>' +
-					'</html>';
+			request(host)
+				.post('/document')
+				.set('cookie', cookie)
+				.send({
+					projectId: projectId,
+					folderId: rootFolderId,
+					name: 'Colophon',
+					text: text,
+					type: 'colophon'
+				})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.document.name, 'Colophon');
+					assert.equal(res.body.document.projectId, projectId);
+					assert.equal(res.body.document.folderId, rootFolderId);
+					assert.equal(res.body.document.text, text);
+					assert.equal(res.body.document.archived, false);
+					assert.equal(res.body.document.members[0].userId, userId);
+					assert.equal(res.body.document.members[0].access[0], "admin");
+					assert.equal(res.body.document.type, 'colophon');
+					assert.notEqual(res.body.document.defaultStyleset, userStylesetId1);
+					colophonDocumentId = res.body.document._id;
+					colophonDocumentId && done();
+				});
+		}),
+		it('Opening the project should now return the root and child documents and the Cover, TitlePage, ToC and Colophon documents.', function (done) {
+			request(host)
+				.get('/project/' + projectId)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.project.documents.length, 6);
+					assert.equal(res.body.project.documents[0]._id, rootDocumentId);
+					assert.equal(res.body.project.documents[1]._id, childDocumentId);
+					assert.equal(res.body.project.documents[2]._id, coverDocumentId);
+					assert.equal(res.body.project.documents[3]._id, titlePageDocumentId);
+					assert.equal(res.body.project.documents[4]._id, tocDocumentId);
+					assert.equal(res.body.project.documents[5]._id, colophonDocumentId);
+					done();
+				});
+		}),
+		it('Updating a document text should return the updated document', function (done) {
+			text = '<?xml version="1.0" encoding="utf-8" standalone="no"?>' +
+				'<!DOCTYPE html>' +
+				'<html xmlns="http://www.w3.org/1999/xhtml">' +
+				'<head><title>MyFirstDocument</title></head>' +
+				'<body><p>This is no longer a matter of if but when...and look here...</p></body>' +
+				'</html>';
 
-				request(host)
-					.put('/document/' + rootDocumentId + '/update')
-					.set('cookie', cookie)
-					.send({text: text, defaultStyleset: userStylesetId1})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.document.defaultStyleset, userStylesetId1);
-						assert.equal(res.body.document.text, text);
-						assert.equal(utils.containsModel(res.body.document.stylesets, userStylesetId1), false);
-						done();
-					});
-			}),
-			it('Updating a documents defaultStyleset should return the updated document', function (done) {
-				request(host)
-					.put('/document/' + rootDocumentId + '/update')
-					.set('cookie', cookie)
-					.send({defaultStyleset: userStylesetId1})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.document.defaultStyleset, userStylesetId1);
-						assert.equal(res.body.document.text, text);
-						done();
-					});
-			}),
-			it('Trying to update a documents text to null should be ignored, and return the unchanged document', function (done) {
-				request(host)
-					.put('/document/' + rootDocumentId + '/update')
-					.set('cookie', cookie)
-					.send({text: null})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.document.defaultStyleset, userStylesetId1);
-						assert.equal(res.body.document.text, text);
-						done();
-					});
-			}),
-			it('Update a documents text to empty string should return the changed document', function (done) {
-				request(host)
-					.put('/document/' + rootDocumentId + '/update')
-					.set('cookie', cookie)
-					.send({text: ""})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.document.defaultStyleset, userStylesetId1);
-						assert.equal(res.body.document.text, "");
-						done();
-					});
-			}),
-			it('Opening a document (the root document) should return the document', function (done) {
-				request(host)
-					.get('/document/' + rootDocumentId)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.document.name, 'MyFirstDocument');
-						done();
-					});
-			}),
-			it('Renaming a document (the root document) should return the document', function (done) {
-				request(host)
-					.put('/document/' + rootDocumentId + '/rename')
-					.set('cookie', cookie)
-					.send({name: "A New Cool Name"})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.document.name, "A New Cool Name");
-						done();
-					});
-			}),
-			it('Opening the root folder should return the folder contents: the child folder, the root document and the "guide" documents (e.g. Cover)', function (done) {
-				request(host)
-					.get('/folder/' + projectId + '/' + rootFolderId)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.result.folders.length, 1);
-						assert.equal(res.body.result.folders[0]._id, childFolderId);
-						assert.equal(res.body.result.docs.length, 5);
-						assert.equal(utils.containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
-						assert.equal(utils.containsModel(res.body.result.docs, rootDocumentId), true);
-						assert.equal(utils.containsModel(res.body.result.docs, coverDocumentId), true);
-						done();
-					});
-			}),
-			it('Archiving a folder (the child folder) should return success', function (done) {
-				request(host)
-					.put('/folder/' + projectId + '/' + childFolderId + '/archive')
-					.set('cookie', cookie)
-					.send({})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						done();
-					});
-			}),
-			it('Opening the root folder should now only return the root document and the "guide" documents (e.g. Cover), since we just archived the child folder', function (done) {
-				request(host)
-					.get('/folder/' + projectId + '/' + rootFolderId)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.result.folders.length, 0);
-						assert.equal(res.body.result.docs.length, 5);
-						assert.equal(utils.containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
-						assert.equal(utils.containsModel(res.body.result.docs, rootDocumentId), true);
-						assert.equal(utils.containsModel(res.body.result.docs, coverDocumentId), true);
-						done();
-					});
-			}),
-			it('Opening the special "archive" (trash) folder should return the child folder and child document', function (done) {
-				request(host)
-					.get('/folder/' + projectId + '/' + rootFolderId + '/' + true)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.result.folders.length, 1);
-						assert.equal(res.body.result.docs.length, 1);
-						assert.equal(res.body.result.docs[0].folderId, childFolderId);
-						assert.equal(res.body.result.docs[0]._id, childDocumentId);
-						done();
-					});
-			}),
-			it('Unarchiving a folder (the child folder) should return the unarchived folder', function (done) {
-				request(host)
-					.put('/folder/' + projectId + '/' + childFolderId + '/unarchive')
-					.set('cookie', cookie)
-					.send({})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.folder.archived, false);
-						done();
-					});
-			}),
-			it('Opening the special "archive" (trash) folder should now return no folders or documents, since we just unarchived the child folder', function (done) {
-				request(host)
-					.get('/folder/' + projectId + '/' + rootFolderId + '/' + true)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.result.folders.length, 0);
-						assert.equal(res.body.result.docs.length, 0);
-						done();
-					});
-			}),
-			it('Opening the root folder should now again return the child folder, the root document and the "guide" documents (e.g. Cover)', function (done) {
-				request(host)
-					.get('/folder/' + projectId + '/' + rootFolderId)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.result.folders.length, 1);
-						assert.equal(utils.containsModel(res.body.result.folders, childFolderId), true);
+			request(host)
+				.put('/document/' + rootDocumentId + '/update')
+				.set('cookie', cookie)
+				.send({text: text, defaultStyleset: userStylesetId1})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.document.defaultStyleset, userStylesetId1);
+					assert.equal(res.body.document.text, text);
+					assert.equal(utils.containsModel(res.body.document.stylesets, userStylesetId1), false);
+					done();
+				});
+		}),
+		it('Updating a documents defaultStyleset should return the updated document', function (done) {
+			request(host)
+				.put('/document/' + rootDocumentId + '/update')
+				.set('cookie', cookie)
+				.send({defaultStyleset: userStylesetId1})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.document.defaultStyleset, userStylesetId1);
+					assert.equal(res.body.document.text, text);
+					done();
+				});
+		}),
+		it('Trying to update a documents text to null should be ignored, and return the unchanged document', function (done) {
+			request(host)
+				.put('/document/' + rootDocumentId + '/update')
+				.set('cookie', cookie)
+				.send({text: null})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.document.defaultStyleset, userStylesetId1);
+					assert.equal(res.body.document.text, text);
+					done();
+				});
+		}),
+		it('Update a documents text to empty string should return the changed document', function (done) {
+			request(host)
+				.put('/document/' + rootDocumentId + '/update')
+				.set('cookie', cookie)
+				.send({text: ""})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.document.defaultStyleset, userStylesetId1);
+					assert.equal(res.body.document.text, "");
+					done();
+				});
+		}),
+		it('Opening a document (the root document) should return the document', function (done) {
+			request(host)
+				.get('/document/' + rootDocumentId)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.document.name, 'MyFirstDocument');
+					done();
+				});
+		}),
+		it('Renaming a document (the root document) should return the document', function (done) {
+			request(host)
+				.put('/document/' + rootDocumentId + '/rename')
+				.set('cookie', cookie)
+				.send({name: "A New Cool Name"})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.document.name, "A New Cool Name");
+					done();
+				});
+		}),
+		it('Opening the root folder should return the folder contents: the child folder, the root document and the "guide" documents (e.g. Cover)', function (done) {
+			request(host)
+				.get('/folder/' + projectId + '/' + rootFolderId)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.result.folders.length, 1);
+					assert.equal(res.body.result.folders[0]._id, childFolderId);
+					assert.equal(res.body.result.docs.length, 5);
+					assert.equal(utils.containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
+					assert.equal(utils.containsModel(res.body.result.docs, rootDocumentId), true);
+					assert.equal(utils.containsModel(res.body.result.docs, coverDocumentId), true);
+					done();
+				});
+		}),
+		it('Archiving a folder (the child folder) should return success', function (done) {
+			request(host)
+				.put('/folder/' + projectId + '/' + childFolderId + '/archive')
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
+		}),
+		it('Opening the root folder should now only return the root document and the "guide" documents (e.g. Cover), since we just archived the child folder', function (done) {
+			request(host)
+				.get('/folder/' + projectId + '/' + rootFolderId)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.result.folders.length, 0);
+					assert.equal(res.body.result.docs.length, 5);
+					assert.equal(utils.containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
+					assert.equal(utils.containsModel(res.body.result.docs, rootDocumentId), true);
+					assert.equal(utils.containsModel(res.body.result.docs, coverDocumentId), true);
+					done();
+				});
+		}),
+		it('Opening the special "archive" (trash) folder should return the child folder and child document', function (done) {
+			request(host)
+				.get('/folder/' + projectId + '/' + rootFolderId + '/' + true)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.result.folders.length, 1);
+					assert.equal(res.body.result.docs.length, 1);
+					assert.equal(res.body.result.docs[0].folderId, childFolderId);
+					assert.equal(res.body.result.docs[0]._id, childDocumentId);
+					done();
+				});
+		}),
+		it('Unarchiving a folder (the child folder) should return the unarchived folder', function (done) {
+			request(host)
+				.put('/folder/' + projectId + '/' + childFolderId + '/unarchive')
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.folder.archived, false);
+					done();
+				});
+		}),
+		it('Opening the special "archive" (trash) folder should now return no folders or documents, since we just unarchived the child folder', function (done) {
+			request(host)
+				.get('/folder/' + projectId + '/' + rootFolderId + '/' + true)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.result.folders.length, 0);
+					assert.equal(res.body.result.docs.length, 0);
+					done();
+				});
+		}),
+		it('Opening the root folder should now again return the child folder, the root document and the "guide" documents (e.g. Cover)', function (done) {
+			request(host)
+				.get('/folder/' + projectId + '/' + rootFolderId)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.result.folders.length, 1);
+					assert.equal(utils.containsModel(res.body.result.folders, childFolderId), true);
 
-						assert.equal(res.body.result.docs.length, 5);
-						assert.equal(utils.containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
-						assert.equal(utils.containsModel(res.body.result.docs, rootDocumentId), true);
-						assert.equal(utils.containsModel(res.body.result.docs, coverDocumentId), true);
-						done();
-					});
-			}),
-			it('Archiving a document (the root document) should return success', function (done) {
-				request(host)
-					.put('/document/' + rootDocumentId + '/archive')
-					.set('cookie', cookie)
-					.send({})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						done();
-					});
-			}),
-			it('Opening the root folder should now only return the child folder and the "guide" documents (e.g. Cover), since we just archived the root document', function (done) {
-				request(host)
-					.get('/folder/' + projectId + '/' + rootFolderId)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.result.folders.length, 1);
-						assert.equal(res.body.result.folders[0]._id, childFolderId);
-						assert.equal(res.body.result.docs.length, 4);
-						assert.equal(res.body.result.docs[0]._id, coverDocumentId);
-						done();
-					});
-			}),
-			it('Unarchiving a document (the root document) should return the archived document', function (done) {
-				request(host)
-					.put('/document/' + rootDocumentId + '/unarchive')
-					.set('cookie', cookie)
-					.send({})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.document.archived, false);
-						done();
-					});
-			}),
-			it('Attempting to rearrange e.g. more documents than the project has should return an error', function (done) {
-				request(host)
-					.put('/document/' + projectId + '/rearrange')
-					.set('cookie', cookie)
-					.send({documents: [rootDocumentId, childDocumentId, rootDocumentId, coverDocumentId, titlePageDocumentId, tocDocumentId, colophonDocumentId]})
-					.expect(400)
-					.end(function (err, res) {
-						if (err) throw new Error(err);
-						assert.equal(res.body.errorMessage, "/document/rearrange can only rearrange existing documents (not e.g. add or delete documents)");
-						done();
-					});
-			}),
-			it('Rearranging documents should return the project with the documents in the new order ', function (done) {
-				request(host)
-					.put('/document/' + projectId + '/rearrange')
-					.set('cookie', cookie)
-					.send({documents: [childDocumentId, rootDocumentId, coverDocumentId, titlePageDocumentId, tocDocumentId, colophonDocumentId]})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.project.documents.length, 6);
-						assert.equal(res.body.project.documents[0], childDocumentId);
-						assert.equal(res.body.project.documents[1], rootDocumentId);
-						assert.equal(res.body.project.documents[2], coverDocumentId);
-						assert.equal(res.body.project.documents[3], titlePageDocumentId);
-						assert.equal(res.body.project.documents[4], tocDocumentId);
-						assert.equal(res.body.project.documents[5], colophonDocumentId);
-						done();
-					});
-			}),
-			it('Opening the project should return the six documents', function (done) {
-				request(host)
-					.get('/project/' + projectId)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.project.folders.length, 1);
-						assert.equal(res.body.project.folders[0]._id, rootFolderId);
-						assert.equal(res.body.project.folders[0].folders.length, 1);
-						assert.equal(res.body.project.folders[0].folders[0]._id, childFolderId);
-						assert.equal(res.body.project.documents.length, 6);
-						assert.equal(res.body.project.documents[0]._id, childDocumentId);
-						assert.equal(res.body.project.documents[1]._id, rootDocumentId);
-						assert.equal(res.body.project.documents[2]._id, coverDocumentId);
-						assert.equal(res.body.project.documents[3]._id, titlePageDocumentId);
-						assert.equal(res.body.project.documents[4]._id, tocDocumentId);
-						assert.equal(res.body.project.documents[5]._id, colophonDocumentId);
-						done();
-					});
-			}),
-			it('Copying the project should return the copied project with the COPIED folders and documents', function (done) {
-				request(host)
-					.post('/project/' + projectId + '/copy')
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						projectId4 = res.body.project._id;
-						assert.notEqual(projectId4, projectId);
-						assert.equal(res.body.project.folders.length, 1);
-						assert.equal(res.body.project.folders[0]._id, rootFolderId);
-						assert.equal(res.body.project.folders[0].folders.length, 1);
-						assert.equal(res.body.project.folders[0].folders[0]._id, childFolderId);
-						assert.equal(res.body.project.documents.length, 6);
-						assert.notEqual(res.body.project.documents[0], childDocumentId);
-						assert.notEqual(res.body.project.documents[1], rootDocumentId);
-						assert.notEqual(res.body.project.documents[2], coverDocumentId);
-						assert.notEqual(res.body.project.documents[3], titlePageDocumentId);
-						assert.notEqual(res.body.project.documents[4], tocDocumentId);
-						assert.notEqual(res.body.project.documents[5], colophonDocumentId);
-						done();
-					});
-			}),
-			it('Project list should return the three unarchived projects in order - the last must be the new copy', function (done) {
-				request(host)
-					.get('/project/list')
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.projects.length, 3);
-						assert.equal(res.body.projects[0].name, "A Nice Story");
-						assert.equal(res.body.projects[1].name, "The Wizard of Oz");
-						assert.equal(res.body.projects[2].name, "The Wizard of Oz - Copy");
-						assert.notEqual(res.body.projects[1].documents[0], res.body.projects[2].documents[0]);
-						assert.notEqual(res.body.projects[1].documents[1], res.body.projects[2].documents[1]);
-						done();
-					});
-			}),
-			it('Deleting a document (the root document) should return success', function (done) {
-				request(host)
-					.del('/document/' + projectId + '/' + rootDocumentId)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						done();
-					});
-			}),
-			it('Opening the project should now only return the root and child folders and five documents (not the document we just deleted)', function (done) {
-				request(host)
-					.get('/project/' + projectId)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.project.folders.length, 1);
-						assert.equal(res.body.project.folders[0]._id, rootFolderId);
-						assert.equal(res.body.project.folders[0].folders.length, 1);
-						assert.equal(res.body.project.folders[0].folders[0]._id, childFolderId);
+					assert.equal(res.body.result.docs.length, 5);
+					assert.equal(utils.containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
+					assert.equal(utils.containsModel(res.body.result.docs, rootDocumentId), true);
+					assert.equal(utils.containsModel(res.body.result.docs, coverDocumentId), true);
+					done();
+				});
+		}),
+		it('Archiving a document (the root document) should return success', function (done) {
+			request(host)
+				.put('/document/' + rootDocumentId + '/archive')
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
+		}),
+		it('Opening the root folder should now only return the child folder and the "guide" documents (e.g. Cover), since we just archived the root document', function (done) {
+			request(host)
+				.get('/folder/' + projectId + '/' + rootFolderId)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.result.folders.length, 1);
+					assert.equal(res.body.result.folders[0]._id, childFolderId);
+					assert.equal(res.body.result.docs.length, 4);
+					assert.equal(res.body.result.docs[0]._id, coverDocumentId);
+					done();
+				});
+		}),
+		it('Unarchiving a document (the root document) should return the archived document', function (done) {
+			request(host)
+				.put('/document/' + rootDocumentId + '/unarchive')
+				.set('cookie', cookie)
+				.send({})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.document.archived, false);
+					done();
+				});
+		}),
+		it('Attempting to rearrange e.g. more documents than the project has should return an error', function (done) {
+			request(host)
+				.put('/document/' + projectId + '/rearrange')
+				.set('cookie', cookie)
+				.send({documents: [rootDocumentId, childDocumentId, rootDocumentId, coverDocumentId, titlePageDocumentId, tocDocumentId, colophonDocumentId]})
+				.expect(400)
+				.end(function (err, res) {
+					if (err) throw new Error(err);
+					assert.equal(res.body.errorMessage, "/document/rearrange can only rearrange existing documents (not e.g. add or delete documents)");
+					done();
+				});
+		}),
+		it('Rearranging documents should return the project with the documents in the new order ', function (done) {
+			request(host)
+				.put('/document/' + projectId + '/rearrange')
+				.set('cookie', cookie)
+				.send({documents: [childDocumentId, rootDocumentId, coverDocumentId, titlePageDocumentId, tocDocumentId, colophonDocumentId]})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.project.documents.length, 6);
+					assert.equal(res.body.project.documents[0], childDocumentId);
+					assert.equal(res.body.project.documents[1], rootDocumentId);
+					assert.equal(res.body.project.documents[2], coverDocumentId);
+					assert.equal(res.body.project.documents[3], titlePageDocumentId);
+					assert.equal(res.body.project.documents[4], tocDocumentId);
+					assert.equal(res.body.project.documents[5], colophonDocumentId);
+					done();
+				});
+		}),
+		it('Opening the project should return the six documents', function (done) {
+			request(host)
+				.get('/project/' + projectId)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.project.folders.length, 1);
+					assert.equal(res.body.project.folders[0]._id, rootFolderId);
+					assert.equal(res.body.project.folders[0].folders.length, 1);
+					assert.equal(res.body.project.folders[0].folders[0]._id, childFolderId);
+					assert.equal(res.body.project.documents.length, 6);
+					assert.equal(res.body.project.documents[0]._id, childDocumentId);
+					assert.equal(res.body.project.documents[1]._id, rootDocumentId);
+					assert.equal(res.body.project.documents[2]._id, coverDocumentId);
+					assert.equal(res.body.project.documents[3]._id, titlePageDocumentId);
+					assert.equal(res.body.project.documents[4]._id, tocDocumentId);
+					assert.equal(res.body.project.documents[5]._id, colophonDocumentId);
+					done();
+				});
+		}),
+		it('Copying the project should return the copied project with the COPIED folders and documents', function (done) {
+			request(host)
+				.post('/project/' + projectId + '/copy')
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					projectId4 = res.body.project._id;
+					assert.notEqual(projectId4, projectId);
+					assert.equal(res.body.project.folders.length, 1);
+					assert.equal(res.body.project.folders[0]._id, rootFolderId);
+					assert.equal(res.body.project.folders[0].folders.length, 1);
+					assert.equal(res.body.project.folders[0].folders[0]._id, childFolderId);
+					assert.equal(res.body.project.documents.length, 6);
+					assert.notEqual(res.body.project.documents[0], childDocumentId);
+					assert.notEqual(res.body.project.documents[1], rootDocumentId);
+					assert.notEqual(res.body.project.documents[2], coverDocumentId);
+					assert.notEqual(res.body.project.documents[3], titlePageDocumentId);
+					assert.notEqual(res.body.project.documents[4], tocDocumentId);
+					assert.notEqual(res.body.project.documents[5], colophonDocumentId);
+					done();
+				});
+		}),
+		it('Project list should return the three unarchived projects in order - the last must be the new copy', function (done) {
+			request(host)
+				.get('/project/list')
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.projects.length, 3);
+					assert.equal(res.body.projects[0].name, "A Nice Story");
+					assert.equal(res.body.projects[1].name, "The Wizard of Oz");
+					assert.equal(res.body.projects[2].name, "The Wizard of Oz - Copy");
+					assert.notEqual(res.body.projects[1].documents[0], res.body.projects[2].documents[0]);
+					assert.notEqual(res.body.projects[1].documents[1], res.body.projects[2].documents[1]);
+					done();
+				});
+		}),
+		it('Deleting a document (the root document) should return success', function (done) {
+			request(host)
+				.del('/document/' + projectId + '/' + rootDocumentId)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
+		}),
+		it('Opening the project should now only return the root and child folders and five documents (not the document we just deleted)', function (done) {
+			request(host)
+				.get('/project/' + projectId)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.project.folders.length, 1);
+					assert.equal(res.body.project.folders[0]._id, rootFolderId);
+					assert.equal(res.body.project.folders[0].folders.length, 1);
+					assert.equal(res.body.project.folders[0].folders[0]._id, childFolderId);
 
-						assert.equal(res.body.project.documents.length, 5);
-						assert.equal(res.body.project.documents[0]._id, childDocumentId);
-						assert.equal(res.body.project.documents[0].name, "MySecondDocument");
-						assert.equal(res.body.project.documents[0].text, undefined);
+					assert.equal(res.body.project.documents.length, 5);
+					assert.equal(res.body.project.documents[0]._id, childDocumentId);
+					assert.equal(res.body.project.documents[0].name, "MySecondDocument");
+					assert.equal(res.body.project.documents[0].text, undefined);
 
-						assert.equal(res.body.project.documents[1]._id, coverDocumentId);
-						assert.equal(res.body.project.documents[1].name, "Cover");
-						assert.equal(res.body.project.documents[1].text, undefined);
-						assert.equal(res.body.project.documents[1].type, "cover");
+					assert.equal(res.body.project.documents[1]._id, coverDocumentId);
+					assert.equal(res.body.project.documents[1].name, "Cover");
+					assert.equal(res.body.project.documents[1].text, undefined);
+					assert.equal(res.body.project.documents[1].type, "cover");
 
-						assert.equal(res.body.project.documents[2]._id, titlePageDocumentId);
-						assert.equal(res.body.project.documents[2].name, "TitlePage");
-						assert.equal(res.body.project.documents[2].text, undefined);
-						assert.equal(res.body.project.documents[2].type, "titlepage");
+					assert.equal(res.body.project.documents[2]._id, titlePageDocumentId);
+					assert.equal(res.body.project.documents[2].name, "TitlePage");
+					assert.equal(res.body.project.documents[2].text, undefined);
+					assert.equal(res.body.project.documents[2].type, "titlepage");
 
-						assert.equal(res.body.project.documents[3]._id, tocDocumentId);
-						assert.equal(res.body.project.documents[3].name, "ToC");
-						assert.equal(res.body.project.documents[3].text, undefined);
-						assert.equal(res.body.project.documents[3].type, "toc");
+					assert.equal(res.body.project.documents[3]._id, tocDocumentId);
+					assert.equal(res.body.project.documents[3].name, "ToC");
+					assert.equal(res.body.project.documents[3].text, undefined);
+					assert.equal(res.body.project.documents[3].type, "toc");
 
-						assert.equal(res.body.project.documents[4]._id, colophonDocumentId);
-						assert.equal(res.body.project.documents[4].name, "Colophon");
-						assert.equal(res.body.project.documents[4].text, undefined);
-						assert.equal(res.body.project.documents[4].type, "colophon");
+					assert.equal(res.body.project.documents[4]._id, colophonDocumentId);
+					assert.equal(res.body.project.documents[4].name, "Colophon");
+					assert.equal(res.body.project.documents[4].text, undefined);
+					assert.equal(res.body.project.documents[4].type, "colophon");
 
-						done();
-					});
-			}),
-			it('Deleting a folder (the child folder) should return success', function (done) {
-				request(host)
-					.del('/folder/' + projectId + '/' + rootFolderId + '/' + childFolderId)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						done();
-					});
-			}),
-			it('Opening the root folder should now return no folders and the "guide" documents (e.g. Cover), since we just deleted the child folder', function (done) {
-				request(host)
-					.get('/folder/' + projectId + '/' + rootFolderId)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.result.folders.length, 0);
-						assert.equal(res.body.result.docs.length, 4);
-						assert.equal(res.body.result.docs[0]._id, coverDocumentId);
-						assert.equal(res.body.result.docs[1]._id, titlePageDocumentId);
-						assert.equal(res.body.result.docs[2]._id, tocDocumentId);
-						assert.equal(res.body.result.docs[3]._id, colophonDocumentId);
-						done();
-					});
-			}),
-			it('Opening the project should now only return the root folder and the "guide" documents (e.g. Cover)', function (done) {
-				request(host)
-					.get('/project/' + projectId)
-					.set('cookie', cookie)
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.project.folders.length, 1);
-						assert.equal(res.body.project.folders[0]._id, rootFolderId);
-						assert.equal(res.body.project.folders[0].folders.length, 0);
-						assert.equal(res.body.project.documents.length, 4);
-						assert.equal(res.body.project.documents[0]._id, coverDocumentId);
-						assert.equal(res.body.project.documents[1]._id, titlePageDocumentId);
-						assert.equal(res.body.project.documents[2]._id, tocDocumentId);
-						assert.equal(res.body.project.documents[3]._id, colophonDocumentId);
-						done();
-					});
-			}),
-			it('Creating a document in a child folder, should return the document with that folder id', function (done) {
-				var text = '<h1 id="id_1">Introduction</h1>' +
-					'<p>It is another one of my worst documents ever!</p>';
+					done();
+				});
+		}),
+		it('Deleting a folder (the child folder) should return success', function (done) {
+			request(host)
+				.del('/folder/' + projectId + '/' + rootFolderId + '/' + childFolderId)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					done();
+				});
+		}),
+		it('Opening the root folder should now return no folders and the "guide" documents (e.g. Cover), since we just deleted the child folder', function (done) {
+			request(host)
+				.get('/folder/' + projectId + '/' + rootFolderId)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.result.folders.length, 0);
+					assert.equal(res.body.result.docs.length, 4);
+					assert.equal(res.body.result.docs[0]._id, coverDocumentId);
+					assert.equal(res.body.result.docs[1]._id, titlePageDocumentId);
+					assert.equal(res.body.result.docs[2]._id, tocDocumentId);
+					assert.equal(res.body.result.docs[3]._id, colophonDocumentId);
+					done();
+				});
+		}),
+		it('Opening the project should now only return the root folder and the "guide" documents (e.g. Cover)', function (done) {
+			request(host)
+				.get('/project/' + projectId)
+				.set('cookie', cookie)
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.project.folders.length, 1);
+					assert.equal(res.body.project.folders[0]._id, rootFolderId);
+					assert.equal(res.body.project.folders[0].folders.length, 0);
+					assert.equal(res.body.project.documents.length, 4);
+					assert.equal(res.body.project.documents[0]._id, coverDocumentId);
+					assert.equal(res.body.project.documents[1]._id, titlePageDocumentId);
+					assert.equal(res.body.project.documents[2]._id, tocDocumentId);
+					assert.equal(res.body.project.documents[3]._id, colophonDocumentId);
+					done();
+				});
+		}),
+		it('Creating a document in a child folder, should return the document with that folder id', function (done) {
+			var text = '<h1 id="id_1">Introduction</h1>' +
+				'<p>It is another one of my worst documents ever!</p>';
 
-				request(host)
-					.post('/document')
-					.set('cookie', cookie)
-					.send({projectId: projectId, folderId: childFolderId, name: 'Sikke et dokument', text: text})
-					.expect(200)
-					.end(function (err, res) {
-						if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-						assert.equal(res.body.document.name, 'Sikke et dokument');
-						assert.equal(res.body.document.projectId, projectId);
-						assert.equal(res.body.document.folderId, childFolderId);
-						assert.equal(res.body.document.text, text);
-						assert.equal(res.body.document.archived, false);
-						assert.equal(res.body.document.members[0].userId, userId);
-						assert.equal(res.body.document.members[0].access[0], "admin");
-						childDocumentId = res.body.document._id;
-						childDocumentId && done();
-					});
-			})
+			request(host)
+				.post('/document')
+				.set('cookie', cookie)
+				.send({projectId: projectId, folderId: childFolderId, name: 'Sikke et dokument', text: text})
+				.expect(200)
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					assert.equal(res.body.document.name, 'Sikke et dokument');
+					assert.equal(res.body.document.projectId, projectId);
+					assert.equal(res.body.document.folderId, childFolderId);
+					assert.equal(res.body.document.text, text);
+					assert.equal(res.body.document.archived, false);
+					assert.equal(res.body.document.members[0].userId, userId);
+					assert.equal(res.body.document.members[0].access[0], "admin");
+					childDocumentId = res.body.document._id;
+					childDocumentId && done();
+				});
+		})
 	}),
 	describe('Typography (Styleset & Style)', function () {
 		var css2 = {
@@ -1313,21 +1244,6 @@ describe('Scripler RESTful API', function () {
 			'pointer-events': 'none'
 		};
 
-		/*
-		it('Creating a styleset should return the new styleset, a user styleset', function (done) {
-		request(host)
-			.post('/styleset')
-			.set('cookie', cookie)
-			.send({name: "My Best Styleset 2"})
-			.expect(200)
-			.end(function (err, res) {
-				if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-				assert.equal(res.body.styleset.name, "My Best Styleset 2");
-				userStylesetId3 = res.body.styleset._id;
-				userStylesetId3 && done();
-			});
-		}),
-		*/
 		it('Creating a user style should return the new style', function (done) {
 			request(host)
 				.post('/style')
@@ -1343,8 +1259,6 @@ describe('Scripler RESTful API', function () {
 					userStyleId4 = res.body.style._id;
 					assert.equal(res.body.style.stylesetId, userStylesetId3);
 					done();
-					//documentStylesetId17 = res.body.style.stylesetId;
-					//documentStylesetId17 && done();
 				});
 		}),
 		it('Applying a user styleset to a document should return a document styleset, a document styleset. This styleset will be used below to add a style to because a style must be added to document stylesets.', function (done) {
@@ -1360,7 +1274,7 @@ describe('Scripler RESTful API', function () {
 					documentStylesetId3 && done();
 				});
 		}),
-		it('Get the number of stylesets in the document styleset so we can compare it (next test case) with the number of styles in the original user styleset.', function (done) {
+		it('Get the number of styles in the document styleset so we can compare it (next test case) with the number of styles in the original user styleset.', function (done) {
 			request(host)
 				.get('/styleset/' + documentStylesetId3)
 				.set('cookie', cookie)
@@ -1375,7 +1289,7 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-		it('Check that the new style was added to the original user styleset, compare number of styles of user and document stylesets and save the style id of the user style (for later "original" comparison").', function (done) {
+		it('Check that the new document style was added to the original user styleset, compare number of styles of user and document stylesets and save the style id of the user style (for later "original" comparison").', function (done) {
 			request(host)
 				.get('/styleset/' + userStylesetId3)
 				.set('cookie', cookie)
@@ -1452,7 +1366,6 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					//console.log('stylesets: ' + JSON.stringify(res.body.stylesets));
 					assert.equal(res.body.stylesets[0].id, userStylesetId1);
 					assert.equal(res.body.stylesets[0].order, 3);
 					assert.equal(res.body.stylesets[1].id, userStylesetId2);
@@ -1521,11 +1434,9 @@ describe('Scripler RESTful API', function () {
 					documentStylesetId3Length = res.body.styleset.styles.length;
 					assert.equal(documentStylesetId3Length, documentStylesetId3OriginalLength + 1); // Rememeber, a new style was added to userStylesetId3 and thus also to documentStylesetId1
 					done();
-					//documentStyleId4 = res.body.styleset.styles[documentStylesetId3Length - 1]._id;
-					//documentStyleId4 && done();
 				});
 		}),
-		it('Creating a new style for testing updating a styleset by adding a style to it', function (done) {
+		it('Creating a new document style for testing updating a styleset by adding a style to it', function (done) {
             css2["vuf"] = "5px";
 			request(host)
 				.post('/style')
@@ -1593,7 +1504,7 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-		it('Opening a user styleset whose document copy was updated should return the updated contents on the user styleset', function (done) {
+		it('Opening a user styleset whose document copy was updated (above) should return the updated contents on the user styleset', function (done) {
 			request(host)
 				.get('/styleset/' + userStylesetId3)
 				.set('cookie', cookie)
@@ -1603,7 +1514,6 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset.name, "OK, Maybe not the BEST, but...");
 					assert.equal(res.body.styleset.styles.length, 2); // All the styles originally from the system styleset should now have been removed.
-					//userStyleId1 = res.body.styleset.styles[0]._id;
 					done();
 				});
 		}),
@@ -1621,7 +1531,7 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-		it('Opening a style that was ADDED, i.e. copied, to a styleset as part of updating the styleset, should return the style with an empty original', function (done) {
+		it('Opening a user style that was ADDED, i.e. copied, to a styleset as part of updating the styleset, should return the style with an empty original', function (done) {
 			request(host)
 				.get('/style/' + userStyleId2)
 				.set('cookie', cookie)
@@ -1651,7 +1561,7 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-		it('The first time a style is updated, the updated style should be returned.', function (done) {
+		it('The first time a style (user or document) is updated, the updated style should be returned.', function (done) {
             css2["another-key"] = 'another value';
 			request(host)
 				.put('/style/' + documentStyleId2 + '/update')
@@ -1667,7 +1577,7 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-		it('Opening a(n original) user style whose COPY was updated should return the updated contents on the style - 1', function (done) {
+		it('Opening a user style whose copy was updated should return the updated contents on the style - 1', function (done) {
 			request(host)
 				.get('/style/' + userStyleId2)
 				.set('cookie', cookie)
@@ -1681,7 +1591,7 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-		it('Consecutive times when that style is updated, the same style with updated values should be returned', function (done) {
+		it('Consecutive times when the copied document style is updated, the same style with updated values should be returned', function (done) {
             css2["another-key"] = 'yet another value';
 			request(host)
 				.put('/style/' + documentStyleId2 + '/update')
@@ -1690,7 +1600,6 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-                    //console.log(res.body);
 					assert.equal(res.body.style._id, documentStyleId2);
 					assert.equal(res.body.style.name, "DonkeyKong");
 					assert.equal(res.body.style.class, "jytte");
@@ -1699,7 +1608,7 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-		it('Opening a(n original) user style whose COPY was updated should return the updated contents on the style - 2', function (done) {
+		it('Opening a user style whose copy was updated should return the updated contents on the style - 2', function (done) {
 			request(host)
 				.get('/style/' + userStyleId3)
 				.set('cookie', cookie)
@@ -1714,7 +1623,7 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-		it('Updating a copied (document) style to test if the values are copied back to the original style, when the STYLESET is updated.', function (done) {
+		it('Updating a document style to test if the values are copied back to the original style, when the STYLESET is updated.', function (done) {
 			css2.fancy = 'ew ew ew';
 			request(host)
 				.put('/style/' + documentStyleId2 + '/update')
@@ -1747,7 +1656,7 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-		it('Verify that changes to the copied (document) style were copied back to the original style, c.f. description above', function (done) {
+		it('Verify that changes to the document style were copied back to the user style, c.f. description above', function (done) {
 			request(host)
 				.get('/style/' + userStyleId2)
 				.set('cookie', cookie)
@@ -1862,7 +1771,6 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					//console.log(res.body.toc);
 					assert.equal(res.body.toc.length, 10);
 					assert.equal(res.body.toc[0].id, coverDocumentId);
 					assert.equal(res.body.toc[0].type, 'document');

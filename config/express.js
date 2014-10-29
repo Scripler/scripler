@@ -95,8 +95,6 @@ exports.afterRoutes = function (app) {
 			logger.error(err);
 		}
 
-		//console.log(err);
-
 		res.status(err.status || 500).send({ "errorCode": err.code, "errorMessage": err.message, "errorDetails": err.err});
 	});
 }

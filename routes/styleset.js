@@ -101,10 +101,8 @@ var populateAndUpdateOriginalStyleset = exports.populateAndUpdateOriginalStylese
 			}
 
 			if (populatedOriginalStyleset.isSystem) {
-				console.log('populateAndUpdateOriginalStyleset isSystem true');
 				return next({status: 507, message: "ERROR: it is not allowed to update a system styleset!"});
 			} else {
-				console.log('populateAndUpdateOriginalStyleset isSystem false');
 				if (populatedOriginalStyleset.original) {
 					styleset_utils.updateOriginalStyleset(populatedOriginalStyleset, populatedNewStyleset, function (err) {
 						populatedOriginalStyleset.save(function (err, updatedOriginalStyleset) {
