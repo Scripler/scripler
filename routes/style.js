@@ -52,7 +52,6 @@ exports.create = function (req, res, next) {
 			{userId: req.user._id, access: ["admin"]}
 		];
 
-		//TODO: Maybe we should immeditaly add this style to its styleset? Instead of expecting/hoping the frontend does a Styleset.update afterwards.
 		style.save(function(err) {
 			if (err) {
 				return next(err);
