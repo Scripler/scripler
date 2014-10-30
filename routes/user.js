@@ -10,6 +10,7 @@ var User = require('../models/user.js').User
 	, fs = require('fs')
 	, utils = require('../lib/utils')
 	, utils_shared = require('../public/create/scripts/utils-shared')
+	, styleset_utils = require('../lib/styleset-utils')
 	, mkdirp = require('mkdirp')
 	, Styleset = require('../models/styleset.js').Styleset
 	, copyStyleset = require('../models/styleset.js').copy
@@ -168,6 +169,7 @@ exports.register = function (req, res, next) {
 			user.save(function (err) {
 				if (err) {
 					// return error
+					// TODO: add 11001 as in User.edit()?
 					if (err.code == 11000) {
 						return next({errors: "Email already registered", status: 400});
 					}
@@ -201,6 +203,7 @@ exports.register = function (req, res, next) {
 				if (numberOfStylesetsToBeCopied == 0) {
 					return createDirectories(next);
 				} else {
+					var stylesetCopies = [];
 					stylesets.forEach(function (styleset) {
 						styleset.isSystem = false;
 						styleset.members = [{userId: user._id, access: ["admin"]}];
@@ -209,7 +212,7 @@ exports.register = function (req, res, next) {
 								return next(err);
 							}
 
-							user.stylesets.addToSet(copy);
+							stylesetCopies.push(copy);
 
 							if (copy.name === conf.user.defaultStylesetName) {
 								user.defaultStyleset = copy;
@@ -218,6 +221,11 @@ exports.register = function (req, res, next) {
 							numberOfStylesetsToBeCopied--;
 
 							if (numberOfStylesetsToBeCopied == 0) {
+								// Sort stylesets by name (currently only used for integration test, i.e. not important for the app)
+								// After stylesets are added to user.stylesets, user.stylesets only contains ids, so to avoid re-reading the stylesets from the db, save them in a temporary array.
+								stylesetCopies.sort(styleset_utils.systemStylesetOrder);
+								user.stylesets = stylesetCopies;
+
 								user.save(function (err) {
 									if (err) {
 										return next(err);

@@ -39,46 +39,64 @@ exports.loadPopulated = function (id) {
 
 
 exports.create = function (req, res, next) {
-	var styleset = req.styleset;
+	var inputStyleset = req.styleset;
 
 	if (req.user.level == "free") {
 		return next({message: "Free users are not allowed to create styles", status: 402});
 	}
 
-	var style = styleset_utils.createStyle(req.body.name, req.body.class, req.body.css, req.body.tag, styleset._id, false, req.body.hidden, ["premium", "professional"]);
+	var createStyle = function (styleset) {
+		// Since we are creating a NEW style, there is no "original" to set
+		var style = styleset_utils.createStyle(req.body.name, req.body.class, req.body.css, req.body.tag, styleset._id, false, req.body.hidden, ["premium", "professional"]);
 		style.members = [
 			{userId: req.user._id, access: ["admin"]}
 		];
 
-    //TODO: Maybe we should immeditaly add this style to its styleset? Instead of expecting/hoping the frontend does a Styleset.update afterwards.
-	style.save(function(err) {
-		if (err) {
-			return next(err);
-		}
-
-		styleset.styles.addToSet(style);
-		styleset.save(function (err) {
+		style.save(function(err) {
 			if (err) {
 				return next(err);
 			}
 
-			if (styleset.original) {
-				//console.log("Style was created in a copied styleset: updating original styleset...");
-				styleset_route.populateAndUpdateOriginalStyleset(styleset, function (err) {
-					if (err) {
-						return next(err);
-					}
+			styleset.styles.addToSet(style);
+			styleset.save(function (err) {
+				if (err) {
+					return next(err);
+				}
 
-					//console.log("Original styleset was updated...");
+				if (styleset.original && !styleset.isSystem) {
+					styleset_route.populateAndUpdateOriginalStyleset(styleset, function (err) {
+						if (err) {
+							// TODO: checking the error status from populateAndUpdateOriginalStyleset() avoids having to read the original styleset from the database but can we make this check prettier?
+							if (err.status && err.status == 507) {
+								res.send({style: style});
+							} else {
+								return next(err);
+							}
+						} else {
+							// NB! This style does not contain the changes made by styleset_route.populateAndUpdateOriginalStyleset(), e.g. setting "original"
+							res.send({style: style});
+						}
+					});
+				} else {
 					res.send({style: style});
-				});
-			} else {
-				//console.log("Style was created in a non-copied styleset: no original to update, just return the style");
-				res.send({style: style});
-			}
+				}
+			});
 		});
-	});
+	};
 
+	styleset_utils.getStylesetOrStyleType(inputStyleset, function (err, stylesetType) {
+		if (err) return next(err);
+
+		if ('system' == stylesetType) {
+			return next("ERROR: input styleset is a system styleset: it is not allowed to add styles to a system styleset.");
+		} else if ('user' == stylesetType) {
+			return createStyle(inputStyleset);
+		} else if ('document' == stylesetType) {
+			return createStyle(inputStyleset);
+		} else {
+			return next("ERROR: unknown styleset type: " + stylesetType);
+		}
+	});
 }
 
 exports.open = function (req, res) {

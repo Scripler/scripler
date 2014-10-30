@@ -100,15 +100,23 @@ var populateAndUpdateOriginalStyleset = exports.populateAndUpdateOriginalStylese
 				populatedNewStyleset = populatedStylesets[1];
 			}
 
-			styleset_utils.updateOriginalStyleset(populatedOriginalStyleset, populatedNewStyleset, function (err) {
-				populatedOriginalStyleset.save(function (err, updatedOriginalStyleset) {
-					if (err) {
-						return next(err);
-					}
+			if (populatedOriginalStyleset.isSystem) {
+				return next({status: 507, message: "ERROR: it is not allowed to update a system styleset!"});
+			} else {
+				if (populatedOriginalStyleset.original) {
+					styleset_utils.updateOriginalStyleset(populatedOriginalStyleset, populatedNewStyleset, function (err) {
+						populatedOriginalStyleset.save(function (err, updatedOriginalStyleset) {
+							if (err) {
+								return next(err);
+							}
 
-					return next(null, updatedOriginalStyleset);
-				});
-			});
+							return next(null, updatedOriginalStyleset);
+						});
+					});
+				} else {
+					return next();
+				}
+			}
 		} else {
 			return next("ERROR: could not find both new and original styleset!");
 		}
@@ -165,13 +173,13 @@ exports.update = function (req, res, next) {
 exports.rearrange = function (req, res, next) {
 	var orderedStylesets = [];
 
-	async.each(req.body.orderedStylesets, function (stylesetOrder, callback) {
-		Styleset.findOne({"_id": stylesetOrder.id}, function (err, styleset) {
+	async.each(req.body.orderedStylesets, function (orderedStyleset, callback) {
+		Styleset.findOne({"_id": orderedStyleset.id}, function (err, styleset) {
 			if (err) {
 				callback(err);
 			}
 
-			styleset.order = stylesetOrder.order;
+			styleset.order = orderedStyleset.order;
 			styleset.save(function (err) {
 				if (err) {
 					callback(err);
