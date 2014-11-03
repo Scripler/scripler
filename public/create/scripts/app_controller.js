@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload', 'ngProgress', 'utilsSharedModule' ] );
+var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload', 'angucomplete-alt', 'ngProgress', 'utilsSharedModule' ] );
 
 app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope', 'utilsService',
 	function( $http, $scope, userService, $rootScope, utilsService) {
