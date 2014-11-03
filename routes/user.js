@@ -401,7 +401,10 @@ exports.edit = function (req, res, next) {
 				}
 			});
 		} else {
-			return next({message: "Invalid old password", status: 401});
+			// If frontend sends 'password' but not 'passwordOld', and the user was not a demo user,
+			// we justs ignore it - it's just the frontend sending the password from the model, without
+			// any intention to change it.
+			saveUser();
 		}
 	} else {
 		saveUser();
