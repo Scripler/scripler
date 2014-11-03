@@ -62,12 +62,13 @@
 			</div>
 		</section>
 
+		<!--<section class="section-projects" data-ng-click="editingProjectTitle = false;">-->
 		<section class="section-projects">
-			<div class="project new" data-ng-click="addProject(project)">
+			<div class="project new" data-ng-click="addProject();">
 				<p>+</p>
 			</div>
 			<div class="project" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index">
-				<a class="project-options-show" ng-click="showProjectOptions = !showProjectOptions">
+				<a class="project-options-show" data-ng-click="showProjectOptions = !showProjectOptions">
 					<div class="arrow"></div>
 				</a>
 				<!--<p data-ng-hide="editingProjectTitle" data-ng-click="editingProjectTitle = true;">-->

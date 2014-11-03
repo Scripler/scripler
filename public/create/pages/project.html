@@ -17,7 +17,7 @@
 	</div>
 	<div id="menu-left" class="menu-left" data-ng-class="{ 'open' : showDocuments || showTypo || showInsert, 'bottom-menu-space' : showDocuments || showTypo }">
 		<div class="menu-item-left documents" data-ng-show="showDocuments">
-			<div class="projectDocument new" data-ng-click="addProjectDocument()">
+			<div class="projectDocument new" data-ng-click="addProjectDocument(); editingProjectDocumentTitle = true;">
 				<p>+</p>
 			</div>
 			<div html-sortable="sortable_option" data-ng-model="projectDocuments">
@@ -297,7 +297,7 @@
 		<div class="menu-tab output" data-ng-class="{ 'selectedTab' : showOutput }" data-ng-click="showOutput = !showOutput; showFinalizeOptions = false;">
 			<img src="pages/images/output.svg" width="20">
 		</div>
-		<div class="menu-tab feedback" data-ng-class="" data-ng-click="">
+		<div class="menu-tab feedback">
 			<img src="pages/images/feedback.svg" width="20">
 		</div>
 	</div>
