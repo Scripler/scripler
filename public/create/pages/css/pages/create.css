@@ -61,21 +61,12 @@
 	position: absolute;
 	top: 5px;
 	right: 5px;
-	/*background-color: #000;*/
-	/*border-radius: 2px;*/
 	padding: 4px 2px;
 	cursor: pointer;
 	-webkit-transition: all 0.5s ease-in-out;
 	-moz-transition: all 0.5s ease-in-out;
 	-o-transition: all 0.5s ease-in-out;
 	transition: all 0.5s ease-in-out;
-}
-.project:hover .project-options-show, .project .project-options-show.active {
-	/*background-color: #eee;
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;*/
 }
 
 .project .project-options-show .arrow {
