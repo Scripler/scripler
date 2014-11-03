@@ -358,26 +358,26 @@ exports.edit = function (req, res, next) {
 					return next({errors: "Email already registered", status: 400});
 				}
 
-				if (emailChanged && 'test' != env) {
-					var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email);
-					logger.info("Password verify url for " + user.email + ": " + url);
-					var template = 'verify-email';
-					if (userWasDemo) {
-						// If user was a demo-user before, send welcome email instead of verify email.
-						template = 'welcome';
-					}
-					emailer.sendUserEmail(
-						user,
-						[
-							{name: "URL", content: url}
-						],
-						template
-					);
-				}
-
 				return next(err);
 			}
 
+			if (emailChanged && 'test' != env) {
+				var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email);
+				logger.info("Password verify url for " + user.email + ": " + url);
+				var template = 'verify-email';
+				if (userWasDemo) {
+					// If user was a demo-user before, send welcome email instead of verify email.
+					template = 'welcome';
+				}
+				emailer.sendUserEmail(
+					user,
+					[
+						{name: "URL", content: url}
+					],
+					template
+				);
+			}
+			
 			return res.send({"user": utils.cleanUserObject(user)});
 		})
 	};
