@@ -362,8 +362,8 @@
 				</span>
 				<span class="menu-box label left-menu-parameter-margin">Language</span>
 				<span class="menu-box inputfield full-size" data-ng-class="{ 'text-saved': metaLanguageSaved }">
-					<input type="text" name="output_language" id="output_language" data-ng-model="project.metadata.language" data-ng-model-options="{ debounce: 2000 }" />
-					<!--<autocomplete data-ng-model="project.metadata.language" data-attr-placeholder="Start Typing the Language of the Book" value="languages.description" data="languages" data-click-activation="true" data-on-select="updateLanguages"></autocomplete>-->
+					<div angucomplete-alt id="output_language" placeholder="Search Languages" pause="100" selected-object="selectedLanguage" local-data="languages" search-fields="description,subtag" title-field="description" minlength="1" match-class="angucomplete-highlight" initial-value="" field-required="true" field-required-class="angucomplete-selected-required">
+					</div>
 					<span class="statusfield" data-ng-class="{ 'text-saved': metaLanguageSaved }">Saved</span>
 				</span>
 				<span class="menu-box label left-menu-parameter-margin">Description</span>
