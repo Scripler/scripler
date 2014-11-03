@@ -458,16 +458,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}, 2000);
 		}
 	});
-
-	$scope.$watch('project.metadata.language', function(newValue, oldValue){
-		if (newValue != '' && newValue != oldValue) {
-			$scope.saveMetaData();
-			$scope.metaLanguageSaved = true;
-			$timeout(function() {
-			    $scope.metaLanguageSaved = false;
-			}, 2000);
-		}
-	});
 	$scope.$watch('project.metadata.description', function(newValue, oldValue){
 		if (newValue != '' && newValue != oldValue) {
 			$scope.saveMetaData();
@@ -486,6 +476,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}, 2000);
 		}
 	});
+	$scope.selectedLanguage = function(str) {
+		if (str) {
+			$scope.project.metadata.language = str.originalObject.subtag;
+			$scope.saveMetaData();
+			$scope.metaLanguageSaved = true;
+			$timeout(function() {
+			    $scope.metaLanguageSaved = false;
+			}, 2000);
+		}
+	};
 
 	$scope.exportEpub = function() {
 		var getTocPromise = $scope.getToc();
