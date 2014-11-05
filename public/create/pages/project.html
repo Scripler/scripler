@@ -17,7 +17,7 @@
 	</div>
 	<div id="menu-left" class="menu-left" data-ng-class="{ 'open' : showDocuments || showTypo || showInsert, 'bottom-menu-space' : showDocuments || showTypo }">
 		<div class="menu-item-left documents" data-ng-show="showDocuments">
-			<div class="projectDocument new" data-ng-click="addProjectDocument(); editingProjectDocumentTitle = true;">
+			<div class="projectDocument new" data-ng-click="addProjectDocument();">
 				<p>+</p>
 			</div>
 			<div html-sortable="sortable_option" data-ng-model="projectDocuments">
@@ -70,7 +70,7 @@
 						<div class="styleset-options-menupoint first" data-ng-click="toggleRename(styleset); showStylesetOptions = false;">rename</div>
 						<div class="styleset-options-menupoint" data-ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>
 						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToDocument(styleset,true); showStylesetOptions = false;">apply to document</div>
-						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to project</div>
+						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to ebook</div>
 					</div>
 
 					<ul data-ng-show="typoChildrenVisible || isDefaultStyleset(styleset)" class="typo-children">
@@ -259,7 +259,7 @@
 		<div id="menu-left-content-options" class="menu-options" data-ng-show="showDocuments" data-ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
 			<div class="options-bottom-box">
 				<div data-ng-show="showNewOptions">
-					<a data-ng-click="addProjectDocument()">New Document</a><br>
+					<a data-ng-click="addProjectDocument()">Untitled</a><br>
 				</div>
 				<div data-ng-show="showImportOptions">
 					<div class="upload-box" data-ng-file-drop="onFileSelect($files)" data-ng-file-drag-over-class="dragover"
@@ -268,7 +268,7 @@
 					<input type="file" data-ng-file-select="onFileSelect($files)">
 				</div>
 				<div data-ng-show="showBottomOptions">
-					<input type="checkbox" data-ng-model="user.showArchivedDocuments" data-ng-change="updateUser();">Show Archived Documents<br>
+					<input type="checkbox" data-ng-model="user.showArchivedDocuments" data-ng-change="updateUser();">Show Archived Content<br>
 				</div>
 			</div>
 		</div>
@@ -276,7 +276,7 @@
 
 	<div class="editor">
 		<p class="breadcrumb">
-			<a class="breadcrumb" href="#">Projects</a> / <span data-ng-bind="project.name"></span> / <span data-ng-bind="documentSelected.name"></span>
+			<a class="breadcrumb" href="#">Ebooks</a> / <span data-ng-bind="project.name"></span> / <span data-ng-bind="documentSelected.name"></span>
 		</p>
 		<p class="savedstamp">
 			<span data-ng-bind="lastSaved"></span>
@@ -379,9 +379,9 @@
 				</span>
 			</li>
 			<li class="outputOptionProperties outputOptionDownload">
-				<span class="menu-box label text-align-center">Download options</span>
+				<span class="menu-box label text-align-center">Download ebook</span>
 				<span class="menu-box label left-menu-parameter-margin left-menu-download">
-					<img class="download-icon" src="pages/images/compile_epub.png" data-ng-click="exportEpub()">
+					<img title="Download epub" class="download-icon" src="pages/images/compile_epub.png" data-ng-click="exportEpub()">
 				</span>
 			</li>
 			</ul>

@@ -163,7 +163,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var deferred = $q.defer();
 
 		var order = $scope.projectDocuments.length + 1;
-		var name = "Document " + order;
+		var name = "Untitled " + order;
 		var document = {};
 
 		if (type == 'cover') {
