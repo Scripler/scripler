@@ -419,7 +419,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 		}
 
-		styleset.name = 'Styleset ' + number;
+		styleset.name = 'Untitled ' + number;
 
 		$http.post('/styleset', angular.toJson( styleset ) )
 			.success( function( data ) {
