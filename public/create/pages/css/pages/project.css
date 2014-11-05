@@ -532,6 +532,9 @@ li.typo p:first-child {
 	border: 1px solid #efefef;
 	cursor: pointer;
 }
+.menu-box.center-text {
+	text-align: center;
+}
 .left-menu-parameter-margin, .right-menu-parameter-margin {
 	margin-top: 10px;
 }
