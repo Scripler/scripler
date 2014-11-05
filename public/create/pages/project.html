@@ -22,7 +22,7 @@
 			</div>
 			<div html-sortable="sortable_option" data-ng-model="projectDocuments">
 				<div class="projectDocument" data-ng-repeat="projectDocument in projectDocuments track by projectDocument._id" data-ng-selected="documentSelected === projectDocument" data-ng-hide="projectDocument.archived && !user.showArchivedDocuments" data-ng-class="{ 'archived' : projectDocument.archived }">
-					<a class="projectDocument-options-show" data-ng-click="showProjectDocumentOptions = true">
+					<a class="projectdocument-options-show" data-ng-class="{ 'open' : showProjectDocumentOptions }" data-ng-click="showProjectDocumentOptions = !showProjectDocumentOptions">
 						<div class="arrow"></div>
 					</a>
 
@@ -52,12 +52,12 @@
 				<p>+</p>
 			</div>
 			<ul>
-				<li data-ng-repeat="styleset in stylesets track by $index" class="typo" data-ng-class="{ 'open' : typoChildrenVisible == true }" data-ng-hide="styleset.archived || styleset.hidden">
-					<a class="styleset-options-show" data-ng-click="typoChildrenVisible = true; showStylesetOptions = true">
+				<li data-ng-repeat="styleset in stylesets track by $index" class="typo" data-ng-class="{ 'open' : typoChildrenVisible }" data-ng-hide="styleset.archived || styleset.hidden">
+					<a class="styleset-options-show" data-ng-click="typoChildrenVisible = true; showStylesetOptions = !showStylesetOptions" data-ng-class="{ 'open' : showStylesetOptions }">
 						<div class="arrow"></div>
 					</a>
 
-					<p class="not-selectable" data-ng-style="styleset.css" data-ng-click="typoChildrenVisible=!typoChildrenVisible; focusEditor();" data-ng-hide="styleset.rename">{{styleset.name}}</p>
+					<p class="not-selectable" data-ng-style="styleset.css" data-ng-click="typoChildrenVisible =! typoChildrenVisible; showStylesetOptions = false; focusEditor();" data-ng-hide="styleset.rename">{{styleset.name}}</p>
 
 					<form data-ng-show="styleset.rename">
 						<p>
@@ -66,7 +66,6 @@
 					</form>
 
 					<div class="styleset-options" data-ng-show="showStylesetOptions">
-						<div class="styleset-options-hide" data-ng-click="showStylesetOptions = false;" title="Close Options">x</div>
 						<div class="styleset-options-menupoint first" data-ng-click="toggleRename(styleset); showStylesetOptions = false;">rename</div>
 						<div class="styleset-options-menupoint" data-ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>
 						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToDocument(styleset,true); showStylesetOptions = false;">apply to document</div>
@@ -75,12 +74,12 @@
 
 					<ul data-ng-show="typoChildrenVisible || isDefaultStyleset(styleset)" class="typo-children">
 						<li data-ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" data-ng-hide="style.archived || style.hidden" data-ng-selected="selectedStyle._id === style._id">
-							<a class="style-options-show" data-ng-click="showStyleOptions = true">
+							<a class="style-options-show" data-ng-click="showStyleOptions = !showStyleOptions" data-ng-class="{ 'open' : showStyleOptions }">
 								<div class="arrow"></div>
 							</a>
 
+							<span class="style-isblock" data-ng-bind="isBlock(style)"></span>
 							{{style.tag === 'h1' && setStylesetStyling(styleset, style) || ''}}
-							<!--<span class="style-isblock" data-ng-bind="isBlock(style)"></span>-->
 
 							<div class="style-height" data-ng-hide="style.rename">
 								<span class="not-selectable" data-ng-style="getStyleStyling(style)" data-ng-click="applyStyle(styleset, style)">{{style.name}}</span>
@@ -99,7 +98,6 @@
 							</form>
 
 							<div class="style-options" data-ng-show="showStyleOptions">
-								<div class="style-options-hide" data-ng-click="showStyleOptions = false;" title="Close Options">x</div>
 								<div class="style-options-menupoint first" data-ng-click="toggleRename(style); showStyleOptions = false;">rename</div>
 								<div class="style-options-menupoint" data-ng-click="archiveStyle(style); showStyleOptions = false;">archive</div>
 							</div>
