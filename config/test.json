@@ -1,7 +1,7 @@
 {
 	"app": {
-		"port": 9091,
-		"url_prefix": "http://localhost:9091/",
+		"port": 9092,
+		"url_prefix": "http://localhost:9092/",
 		"cookie_secret": "abc:$",
 		"session_secret": "xyz:$",
 		"salt": "tyu:$"
