@@ -4,8 +4,7 @@ var mongoose = require('mongoose')
 	, User = require('./user').User
 	, Styleset = require('./styleset').Styleset
 	, bcrypt = require('bcrypt')
-	, MemberSchema = require('./member_schema').MemberSchema
-	, SALT_WORK_FACTOR = 10;
+	, MemberSchema = require('./member_schema').MemberSchema;
 
 /**
  * Meta TOC Entry Schema
@@ -74,6 +73,12 @@ var ProjectSchema = new Schema({
 	images: [
 		{ type: Schema.Types.ObjectId, ref: 'Image' }
 	]
+});
+
+ProjectSchema.pre('save', function (next) {
+	var project = this;
+	project.modified = Date.now();
+	return next();
 });
 
 ProjectSchema.pre('remove', function (next) {
