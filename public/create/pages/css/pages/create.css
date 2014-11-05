@@ -61,12 +61,15 @@
 	position: absolute;
 	top: 5px;
 	right: 5px;
-	padding: 4px 2px;
+	padding: 6px;
 	cursor: pointer;
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;
+	z-index: 15;
+}
+.project .project-options-show.open {
+	padding: 5px;
+	background: #fff;
+	border: 1px solid #000;
+	border-bottom: #fff;
 }
 
 .project .project-options-show .arrow {
@@ -84,18 +87,10 @@
 .project-options {
 	position: absolute;
 	top: 20px;
-	right: 0;
+	right: 5px;
 	background: none #fff;
-	width: 250px;
-	padding: 10px;
 	z-index: 10;
-	border-radius: 5px;
-	border: 1px solid #eee;
-}
-.project-options-header {
-	border-bottom: 1px solid #eee;
-	text-align: center;
-	padding: 5px 0 10px;
+	border: 1px solid #000;
 }
 .project-options-hide {
 	position: fixed;
@@ -107,8 +102,7 @@
 }
 .project-options-menupoint {
 	cursor: pointer;
-	margin: 2px -10px;
-	padding: 5px 15px;
+	padding: 6px;
 	text-transform: capitalize;
 }
 .project-options-menupoint:hover {
