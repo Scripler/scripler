@@ -342,7 +342,7 @@
 					<img src="pages/images/insert_toc.png" alt="Table of Contents" title="Table of Contents" />
 				</li>
 				<li data-ng-click="finalizeOptionChosen('showFinalizeColophonOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
-					<img src="pages/images/insert_colophon.png" alt="Colophon" title="Colophon" />
+					<img src="pages/images/insert_colophon.png" alt="Generate Colophon" title="Generate Colophon" />
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
 					<div class="right-menu-options">
@@ -355,8 +355,14 @@
 					</div>
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
+					<span class="right-menu-feature-title">
+						Generate Colophon
+					</span>
+					<span class="right-menu-feature-text">
+						A colophon is a brief statement containing information about a specific version of a book such as the ISBN-number, a creative commons or copyright notice, the people involved and so on.
+					</span>
 					<span class="right-menu-button full-size right-menu-parameter-margin">
-							<a data-ng-click="generateColophon();">Generate Colophon</a>
+							<a data-ng-click="generateColophon();">Generate</a>
 					</span>
 				</li>
 			</ul>
