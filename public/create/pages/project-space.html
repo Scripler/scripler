@@ -68,7 +68,7 @@
 				<p>+</p>
 			</div>
 			<div class="project" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index">
-				<a class="project-options-show" data-ng-click="showProjectOptions = !showProjectOptions">
+				<a class="project-options-show" data-ng-class="{ 'open' : showProjectOptions }" data-ng-click="showProjectOptions = !showProjectOptions">
 					<div class="arrow"></div>
 				</a>
 				<!--<p data-ng-hide="editingProjectTitle" data-ng-click="editingProjectTitle = true;">-->
@@ -84,7 +84,6 @@
 				</form>
 
 				<div class="project-options" data-ng-show="showProjectOptions">
-					<div class="project-options-header">Project Options</div>
 					<div class="project-options-menupoint" data-ng-click="editingProjectTitle = true; showProjectOptions = false;">rename</div>
 					<div class="project-options-menupoint" data-ng-click="copyProject(project); showProjectOptions = false;">copy</div>
 					<div class="project-options-menupoint" data-ng-click="archiveProject(project); showProjectOptions = false;">archive</div>
