@@ -311,31 +311,27 @@
 					<img src="pages/images/insert_titlepage.png" alt="Title page" title="Title page" />
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
-					<div class="right-menu-options">
-						<span class="right-menu-feature-title">
-							Add cover
-						</span>
-						<span class="right-menu-feature-text">
-							Add an existing cover image to the beginning of the book. This image will also represent the book on virtual book shelves and in ebook stores.
-						</span>
-						<span class="menu-box center-text right-menu-parameter-margin">
-							<input type="file" id="coverInput" data-ng-file-select="onCoverSelect($files)" accept="image/*" data-ng-hide="true">
-							<label for="coverInput">Add cover image</label>
-						</span>
-					</div>
+					<span class="right-menu-feature-title">
+						Add cover
+					</span>
+					<span class="right-menu-feature-text">
+						Add an existing cover image to the beginning of the book. This image will also represent the book on virtual book shelves and in ebook stores.
+					</span>
+					<span class="menu-box center-text right-menu-parameter-margin">
+						<input type="file" id="coverInput" data-ng-file-select="onCoverSelect($files)" accept="image/*" data-ng-hide="true">
+						<label for="coverInput">Add cover image</label>
+					</span>
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
-					<div class="right-menu-options">
-						<span class="right-menu-feature-title">
-							Generate Title page
-						</span>
-						<span class="right-menu-feature-text">
-							A title page usually bears the full title, the author and similar. It is usually found at the beginning of a book.
-						</span>
-						<span class="right-menu-button full-size right-menu-parameter-margin">
-							<a data-ng-click="generateTitlePage();">Generate</a>
-						</span>
-					</div>
+					<span class="right-menu-feature-title">
+						Generate Title page
+					</span>
+					<span class="right-menu-feature-text">
+						A title page usually bears the full title, the author and similar. It is usually found at the beginning of a book.
+					</span>
+					<span class="right-menu-button full-size right-menu-parameter-margin">
+						<a data-ng-click="generateTitlePage();">Generate</a>
+					</span>
 				</li>
 
 				<li data-ng-click="finalizeOptionChosen('showFinalizeTocOptions');" class="insertOption first" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
@@ -345,14 +341,12 @@
 					<img src="pages/images/insert_colophon.png" alt="Generate Colophon" title="Generate Colophon" />
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
-					<div class="right-menu-options">
-						<span class="menu-box right-menu-parameter-margin">
-							<span class="option" data-ng-repeat="tocs in toc"><a data-ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
-						</span>
-						<span class="right-menu-button full-size right-menu-parameter-margin">
-							<a data-ng-click="generateToc();">Generate TOC</a>
-						</span>
-					</div>
+					<span class="menu-box right-menu-parameter-margin">
+						<span class="option" data-ng-repeat="tocs in toc"><a data-ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
+					</span>
+					<span class="right-menu-button full-size right-menu-parameter-margin">
+						<a data-ng-click="generateToc();">Generate TOC</a>
+					</span>
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
 					<span class="right-menu-feature-title">
