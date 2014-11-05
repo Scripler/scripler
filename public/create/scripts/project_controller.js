@@ -163,7 +163,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var deferred = $q.defer();
 
 		var order = $scope.projectDocuments.length + 1;
-		var name = "Document " + order;
+		var name = "Untitled " + order;
 		var document = {};
 
 		if (type == 'cover') {
@@ -419,7 +419,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 		}
 
-		styleset.name = 'Styleset ' + number;
+		styleset.name = 'Untitled ' + number;
 
 		$http.post('/styleset', angular.toJson( styleset ) )
 			.success( function( data ) {
