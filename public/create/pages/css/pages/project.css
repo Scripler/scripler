@@ -511,12 +511,19 @@ li.typo p:first-child {
 }
 .left-menu-button, .right-menu-button {
 	display: inline-block;
-	min-width: 30px;
-	height: 30px;
+	width: 100%;
 	padding: 5px;
 	border: 1px solid #fff56c;
 	text-align: center;
 	cursor: pointer;
+}
+.right-menu-feature-title {
+	display: block;
+	font-weight: bold;
+	line-height: 1.5em;
+}
+.right-menu-feature-text {
+	display: block;
 }
 .menu-box {
 	display: inline-block;

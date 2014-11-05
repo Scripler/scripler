@@ -308,7 +308,7 @@
 					<img src="pages/images/insert_cover.png" alt="Cover" title="Cover" />
 				</li>
 				<li data-ng-click="finalizeOptionChosen('showFinalizeTitlepageOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
-					<img src="pages/images/insert_titlepage.png" alt="Titlepage" title="Titlepage" />
+					<img src="pages/images/insert_titlepage.png" alt="Title page" title="Title page" />
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
 					<div class="right-menu-options">
@@ -320,8 +320,14 @@
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
 					<div class="right-menu-options">
+						<span class="right-menu-feature-title">
+							Generate Title page
+						</span>
+						<span class="right-menu-feature-text">
+							A title page usually bears the full title, the author and similar. It is usually found at the beginning of a book.
+						</span>
 						<span class="right-menu-button full-size right-menu-parameter-margin">
-							<a data-ng-click="generateTitlePage();">Generate Title Page</a>
+							<a data-ng-click="generateTitlePage();">Generate</a>
 						</span>
 					</div>
 				</li>
