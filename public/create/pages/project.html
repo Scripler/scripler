@@ -335,17 +335,23 @@
 				</li>
 
 				<li data-ng-click="finalizeOptionChosen('showFinalizeTocOptions');" class="insertOption first" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
-					<img src="pages/images/insert_toc.png" alt="Table of Contents" title="Table of Contents" />
+					<img src="pages/images/insert_toc.png" alt="Generate Table of Contents" title="Generate Table of Contents" />
 				</li>
 				<li data-ng-click="finalizeOptionChosen('showFinalizeColophonOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
 					<img src="pages/images/insert_colophon.png" alt="Generate Colophon" title="Generate Colophon" />
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
+					<span class="right-menu-feature-title">
+						Generate Table of Contents
+					</span>
+					<span class="right-menu-feature-text">
+						Preview
+					</span>
 					<span class="menu-box right-menu-parameter-margin">
 						<span class="option" data-ng-repeat="tocs in toc"><a data-ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
 					</span>
 					<span class="right-menu-button full-size right-menu-parameter-margin">
-						<a data-ng-click="generateToc();">Generate TOC</a>
+						<a data-ng-click="generateToc();">Generate</a>
 					</span>
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
