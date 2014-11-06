@@ -362,8 +362,10 @@
 				</span>
 				<span class="menu-box label left-menu-parameter-margin">Language</span>
 				<span class="menu-box inputfield full-size" data-ng-class="{ 'text-saved': metaLanguageSaved }">
-					<div angucomplete-alt id="output_language" placeholder="Search Languages" pause="100" selected-object="selectedLanguage" local-data="languages" search-fields="description,subtag" title-field="description" minlength="1" match-class="angucomplete-highlight" initial-value="" field-required="true" field-required-class="angucomplete-selected-required">
-					</div>
+					<form class="angucomplete">
+						<div angucomplete-alt id="output_language" placeholder="Search Languages" pause="100" selected-object="selectedLanguage" local-data="languages" search-fields="description,subtag" title-field="description" minlength="1" match-class="angucomplete-highlight" initial-value="{{selectedLanguageName}}" field-required="true">
+						</div>
+					</form>
 					<span class="statusfield" data-ng-class="{ 'text-saved': metaLanguageSaved }">Saved</span>
 				</span>
 				<span class="menu-box label left-menu-parameter-margin">Description</span>

@@ -23,6 +23,33 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		projectPromise.then( function( project ) {
 			$scope.project = project;
+			var metadataChanged = false;
+			if (!$scope.project.metadata.title) {
+				$scope.project.metadata.title = $scope.project.name;
+				metadataChanged = true;
+			}
+			if (!$scope.project.metadata.authors){
+				$scope.project.metadata.authors = $scope.user.firstname + ' ' + $scope.user.lastname;
+				metadataChanged = true;
+			}
+			if (!project.metadata.language) {
+				$scope.selectedLanguageName = "Danish";
+				$scope.project.metadata.language = "da";
+				metadataChanged = true;
+			} else {
+				for (var i = 0; i < $scope.languages.length; i++) {
+					var language = $scope.languages[i];
+					if (language.subtag == project.metadata.language) {
+						$scope.selectedLanguageName = language.description;
+						break;
+					}
+					// If unknown language is used, just show it directly
+					$scope.selectedLanguageName = project.metadata.language;
+				}
+			}
+			if (metadataChanged) {
+				$scope.saveMetaData();
+			}
 			$scope.projectDocuments = $scope.project.documents;
 
 			if ( $scope.projectDocuments.length == 0 ) {
@@ -322,7 +349,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		},
 		{
 			"subtag": "es",
-			"description": "Castilian"
+			"description": "Spanish / Castilian"
 		},
 		{
 			"subtag": "zh",
@@ -334,7 +361,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		},
 		{
 			"subtag": "nl",
-			"description": "Dutch"
+			"description": "Dutch / Flemish"
 		},
 		{
 			"subtag": "en",
@@ -349,10 +376,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			"description": "Finnish"
 		},
 		{
-			"subtag": "nl",
-			"description": "Flemish"
-		},
-		{
 			"subtag": "fr",
 			"description": "French"
 		},
@@ -362,7 +385,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		},
 		{
 			"subtag": "kl",
-			"description": "Greenlandic"
+			"description": "Greenlandic / Kalaallisut"
 		},
 		{
 			"subtag": "hi",
@@ -375,10 +398,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		{
 			"subtag": "ja",
 			"description": "Japanese"
-		},
-		{
-			"subtag": "kl",
-			"description": "Kalaallisut"
 		},
 		{
 			"subtag": "ko",
@@ -409,10 +428,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			"description": "Russian"
 		},
 		{
-			"subtag": "es",
-			"description": "Spanish"
-		},
-		{
 			"subtag": "sv",
 			"description": "Swedish"
 		},
@@ -435,10 +450,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 
     $scope.$watch('project.metadata.title', function(newValue, oldValue){
-		if (newValue === '') {
-			$scope.project.metadata.title = $scope.project.name;
-		}
-		if (newValue != '' && newValue != oldValue) {
+		if (watchReady(newValue, oldValue)) {
 			$scope.saveMetaData();
 			$scope.metaTitleSaved = true;
 			$timeout(function() {
@@ -447,10 +459,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	});
     $scope.$watch('project.metadata.authors', function(newValue, oldValue){
-		if (newValue === '') {
-			$scope.project.metadata.authors = $scope.user.firstname + ' ' + $scope.user.lastname;
-		}
-		if (newValue != '' && newValue != oldValue) {
+		if (watchReady(newValue, oldValue)) {
 			$scope.saveMetaData();
 			$scope.metaAuthorsSaved = true;
 			$timeout(function() {
@@ -459,7 +468,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	});
 	$scope.$watch('project.metadata.description', function(newValue, oldValue){
-		if (newValue != '' && newValue != oldValue) {
+		if (watchReady(newValue, oldValue)) {
 			$scope.saveMetaData();
 			$scope.metaDescriptionSaved = true;
 			$timeout(function() {
@@ -468,14 +477,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	});
 	$scope.$watch('project.metadata.isbn', function(newValue, oldValue){
-		if (newValue != '' && newValue != oldValue) {
+		if (watchReady(newValue, oldValue)) {
 			$scope.saveMetaData();
 			$scope.metaIsbnSaved = true;
 			$timeout(function() {
-			    $scope.metaIsbnSaved = false;
+			     $scope.metaIsbnSaved = false;
 			}, 2000);
 		}
 	});
+
+	function watchReady(newValue, oldValue) {
+		return !(typeof oldValue === 'undefined') && newValue != '' && newValue != oldValue;
+	}
+
 	$scope.selectedLanguage = function(str) {
 		if (str) {
 			$scope.project.metadata.language = str.originalObject.subtag;
