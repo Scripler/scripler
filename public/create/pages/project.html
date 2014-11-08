@@ -18,12 +18,12 @@
 	</div>
 	<div id="menu-left" class="menu-left" data-ng-class="{ 'open' : showDocuments || showTypo || showInsert, 'bottom-menu-space' : showDocuments || showTypo }">
 		<div class="menu-item-left documents" data-ng-show="showDocuments">
-			<div class="projectDocument new" data-ng-click="addProjectDocument()">
+			<div class="projectDocument new" data-ng-click="addProjectDocument();">
 				<p>+</p>
 			</div>
 			<div html-sortable="sortable_option" data-ng-model="projectDocuments">
 				<div class="projectDocument" data-ng-repeat="projectDocument in projectDocuments track by projectDocument._id" data-ng-selected="documentSelected === projectDocument" data-ng-hide="projectDocument.archived && !user.showArchivedDocuments" data-ng-class="{ 'archived' : projectDocument.archived }">
-					<a class="projectDocument-options-show" data-ng-click="showProjectDocumentOptions = true">
+					<a class="projectdocument-options-show" data-ng-class="{ 'open' : showProjectDocumentOptions }" data-ng-click="showProjectDocumentOptions = !showProjectDocumentOptions">
 						<div class="arrow"></div>
 					</a>
 
@@ -40,10 +40,10 @@
 					</form>
 
 					<div class="projectDocument-options" data-ng-show="showProjectDocumentOptions">
-						<div class="projectDocument-options-hide" data-ng-click="showProjectDocumentOptions = false;" title="Close Options">x</div>
 						<div class="projectDocument-options-menupoint first" data-ng-click="editingProjectDocumentTitle = true; showProjectDocumentOptions = false;">rename</div>
 						<div class="projectDocument-options-menupoint" data-ng-hide="projectDocument.archived" data-ng-click="archiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">archive</div>
 						<div class="projectDocument-options-menupoint" data-ng-show="projectDocument.archived" data-ng-click="unarchiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">unarchive</div>
+						<div class="projectDocument-options-hide" data-ng-click="showProjectDocumentOptions = false;" title="Close Options"></div>
 					</div>
 				</div>
 			</div>
@@ -53,12 +53,12 @@
 				<p>+</p>
 			</div>
 			<ul>
-				<li data-ng-repeat="styleset in stylesets track by $index" class="typo" data-ng-class="{ 'open' : typoChildrenVisible == true }" data-ng-hide="styleset.archived || styleset.hidden">
-					<a class="styleset-options-show" data-ng-click="typoChildrenVisible = true; showStylesetOptions = true">
+				<li data-ng-repeat="styleset in stylesets track by $index" class="typo" data-ng-class="{ 'open' : typoChildrenVisible }" data-ng-hide="styleset.archived || styleset.hidden">
+					<a class="styleset-options-show" data-ng-click="typoChildrenVisible = true; showStylesetOptions = !showStylesetOptions" data-ng-class="{ 'open' : showStylesetOptions }">
 						<div class="arrow"></div>
 					</a>
 
-					<p class="not-selectable" data-ng-style="styleset.css" data-ng-click="typoChildrenVisible=!typoChildrenVisible; focusEditor();" data-ng-hide="styleset.rename">{{styleset.name}}</p>
+					<p class="not-selectable" data-ng-style="styleset.css" data-ng-click="typoChildrenVisible =! typoChildrenVisible; showStylesetOptions = false; focusEditor();" data-ng-hide="styleset.rename">{{styleset.name}}</p>
 
 					<form data-ng-show="styleset.rename">
 						<p>
@@ -67,21 +67,19 @@
 					</form>
 
 					<div class="styleset-options" data-ng-show="showStylesetOptions">
-						<div class="styleset-options-hide" data-ng-click="showStylesetOptions = false;" title="Close Options">x</div>
 						<div class="styleset-options-menupoint first" data-ng-click="toggleRename(styleset); showStylesetOptions = false;">rename</div>
 						<div class="styleset-options-menupoint" data-ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>
 						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToDocument(styleset,true); showStylesetOptions = false;">apply to document</div>
-						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to project</div>
+						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to ebook</div>
 					</div>
 
 					<ul data-ng-show="typoChildrenVisible || isDefaultStyleset(styleset)" class="typo-children">
 						<li data-ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" data-ng-hide="style.archived || style.hidden" data-ng-selected="selectedStyle._id === style._id">
-							<a class="style-options-show" data-ng-click="showStyleOptions = true">
+							<a class="style-options-show" data-ng-click="showStyleOptions = !showStyleOptions" data-ng-class="{ 'open' : showStyleOptions }">
 								<div class="arrow"></div>
 							</a>
 
 							{{style.tag === 'h1' && setStylesetStyling(styleset, style) || ''}}
-							<!--<span class="style-isblock" data-ng-bind="isBlock(style)"></span>-->
 
 							<div class="style-height" data-ng-hide="style.rename">
 								<span class="not-selectable" data-ng-style="getStyleStyling(style)" data-ng-click="applyStyle(styleset, style)">{{style.name}}</span>
@@ -100,7 +98,6 @@
 							</form>
 
 							<div class="style-options" data-ng-show="showStyleOptions">
-								<div class="style-options-hide" data-ng-click="showStyleOptions = false;" title="Close Options">x</div>
 								<div class="style-options-menupoint first" data-ng-click="toggleRename(style); showStyleOptions = false;">rename</div>
 								<div class="style-options-menupoint" data-ng-click="archiveStyle(style); showStyleOptions = false;">archive</div>
 							</div>
@@ -260,7 +257,7 @@
 		<div id="menu-left-content-options" class="menu-options" data-ng-show="showDocuments" data-ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
 			<div class="options-bottom-box">
 				<div data-ng-show="showNewOptions">
-					<a data-ng-click="addProjectDocument()">New Document</a><br>
+					<a data-ng-click="addProjectDocument()">New Chapter</a><br>
 				</div>
 				<div data-ng-show="showImportOptions">
 					<div class="upload-box" data-ng-file-drop="onFileSelect($files)" data-ng-file-drag-over-class="dragover"
@@ -269,7 +266,7 @@
 					<input type="file" data-ng-file-select="onFileSelect($files)">
 				</div>
 				<div data-ng-show="showBottomOptions">
-					<input type="checkbox" data-ng-model="user.showArchivedDocuments" data-ng-change="updateUser();">Show Archived Documents<br>
+					<input type="checkbox" data-ng-model="user.showArchivedDocuments" data-ng-change="updateUser();">Show Archived Content<br>
 				</div>
 			</div>
 		</div>
@@ -277,7 +274,7 @@
 
 	<div class="editor">
 		<p class="breadcrumb">
-			<a class="breadcrumb" href="#">Projects</a> / <span data-ng-bind="project.name"></span> / <span data-ng-bind="documentSelected.name"></span>
+			<a class="breadcrumb" href="#">Ebooks</a> / <span data-ng-bind="project.name"></span> / <span data-ng-bind="documentSelected.name"></span>
 		</p>
 		<p class="savedstamp">
 			<span data-ng-bind="lastSaved"></span>
@@ -297,6 +294,9 @@
 		</div>
 		<div class="menu-tab output" data-ng-class="{ 'selectedTab' : showOutput }" data-ng-click="showOutput = !showOutput; showFinalizeOptions = false;">
 			<img src="pages/images/output.svg" width="20">
+		</div>
+		<div class="menu-tab feedback">
+			<img src="pages/images/feedback.svg" width="20">
 		</div>
 	</div>
 	<div id="menu-right" class="menu-right" data-ng-class="{ 'open' : showFinalizeOptions || showOutput }">
@@ -380,9 +380,9 @@
 				</span>
 			</li>
 			<li class="outputOptionProperties outputOptionDownload">
-				<span class="menu-box label text-align-center">Download options</span>
+				<span class="menu-box label text-align-center">Download ebook</span>
 				<span class="menu-box label left-menu-parameter-margin left-menu-download">
-					<img class="download-icon" src="pages/images/compile_epub.png" data-ng-click="exportEpub()">
+					<img title="Download epub" class="download-icon" src="pages/images/compile_epub.png" data-ng-click="exportEpub()">
 				</span>
 			</li>
 			</ul>

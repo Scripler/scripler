@@ -4,7 +4,6 @@ function projectSpaceController($scope, $http, projectsService, userService, $q,
 	$scope.user = user;
 	$scope.showProjectOptions = false;
 	$scope.frontpage = $location.host();
-
 	if ( $scope.user != undefined ) {
 		$scope.projects = projectsService.getList( $scope.user );
 	}
@@ -67,7 +66,7 @@ function projectSpaceController($scope, $http, projectsService, userService, $q,
 			order = 1;
 		}
 
-		var name = "Title " + order;
+		var name = "Untitled " + order;
 		var project = {};
 		project.name = name;
 

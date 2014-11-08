@@ -10,6 +10,7 @@ var User = require('../models/user.js').User
 	, fs = require('fs')
 	, utils = require('../lib/utils')
 	, utils_shared = require('../public/create/scripts/utils-shared')
+	, styleset_utils = require('../lib/styleset-utils')
 	, mkdirp = require('mkdirp')
 	, Styleset = require('../models/styleset.js').Styleset
 	, copyStyleset = require('../models/styleset.js').copy
@@ -25,18 +26,6 @@ function hashEmail(email) {
  */
 exports.get = function (req, res) {
 	res.send({"status": 0, "user": req.user});
-};
-
-/**
- * GET users listing.
- */
-exports.list = function (req, res, next) {
-	User.find({}, function (err, docs) {
-		if (err) {
-			return next(err);
-		}
-		res.send({"users": docs});
-	});
 };
 
 /**
@@ -62,7 +51,8 @@ exports.login = function (req, res, next) {
 			if (!req.body.remember) {
 				req.session.cookie.expires = false;
 			}
-			res.send({"user": user});
+
+			return res.send({"user": utils.cleanUserObject(user)});
 		});
 	})(req, res, next);
 };
@@ -179,6 +169,7 @@ exports.register = function (req, res, next) {
 			user.save(function (err) {
 				if (err) {
 					// return error
+					// TODO: add 11001 as in User.edit()?
 					if (err.code == 11000) {
 						return next({errors: "Email already registered", status: 400});
 					}
@@ -203,7 +194,7 @@ exports.register = function (req, res, next) {
 						if (err) {
 							return next(err);
 						} else {
-							res.send({"user": user});
+							return res.send({"user": utils.cleanUserObject(user)});
 						}
 					});
 				};
@@ -212,6 +203,7 @@ exports.register = function (req, res, next) {
 				if (numberOfStylesetsToBeCopied == 0) {
 					return createDirectories(next);
 				} else {
+					var stylesetCopies = [];
 					stylesets.forEach(function (styleset) {
 						styleset.isSystem = false;
 						styleset.members = [{userId: user._id, access: ["admin"]}];
@@ -220,7 +212,7 @@ exports.register = function (req, res, next) {
 								return next(err);
 							}
 
-							user.stylesets.addToSet(copy);
+							stylesetCopies.push(copy);
 
 							if (copy.name === conf.user.defaultStylesetName) {
 								user.defaultStyleset = copy;
@@ -229,6 +221,11 @@ exports.register = function (req, res, next) {
 							numberOfStylesetsToBeCopied--;
 
 							if (numberOfStylesetsToBeCopied == 0) {
+								// Sort stylesets by name (currently only used for integration test, i.e. not important for the app)
+								// After stylesets are added to user.stylesets, user.stylesets only contains ids, so to avoid re-reading the stylesets from the db, save them in a temporary array.
+								stylesetCopies.sort(styleset_utils.systemStylesetOrder);
+								user.stylesets = stylesetCopies;
+
 								user.save(function (err) {
 									if (err) {
 										return next(err);
@@ -267,13 +264,13 @@ exports.verify = function (req, res) {
 				res.redirect(redirectUrl + "200");//Email already verified
 			} else {
 				user.emailVerified = true;
-			user.save(function (err) {
-				if (err) {
-					res.redirect(redirectUrl + "104");//Database problem
-				} else {
-					res.redirect(redirectUrl + "100");//Email verified
-				}
-			});
+				user.save(function (err) {
+					if (err) {
+						res.redirect(redirectUrl + "104");//Database problem
+					} else {
+						res.redirect(redirectUrl + "100");//Email verified
+					}
+				});
 
 				if (user.newsletter) {
 					emailer.newsletterSubscribe(user);
@@ -369,27 +366,27 @@ exports.edit = function (req, res, next) {
 					return next({errors: "Email already registered", status: 400});
 				}
 
-				if (emailChanged && 'test' != env) {
-					var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email);
-					logger.info("Password verify url for " + user.email + ": " + url);
-					var template = 'verify-email';
-					if (userWasDemo) {
-						// If user was a demo-user before, send welcome email instead of verify email.
-						template = 'welcome';
-					}
-					emailer.sendUserEmail(
-						user,
-						[
-							{name: "URL", content: url}
-						],
-						template
-					);
-				}
-
 				return next(err);
 			}
 
-			res.send({"user": user});
+			if (emailChanged && 'test' != env) {
+				var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email);
+				logger.info("Password verify url for " + user.email + ": " + url);
+				var template = 'verify-email';
+				if (userWasDemo) {
+					// If user was a demo-user before, send welcome email instead of verify email.
+					template = 'welcome';
+				}
+				emailer.sendUserEmail(
+					user,
+					[
+						{name: "URL", content: url}
+					],
+					template
+				);
+			}
+			
+			return res.send({"user": utils.cleanUserObject(user)});
 		})
 	};
 
@@ -412,7 +409,10 @@ exports.edit = function (req, res, next) {
 				}
 			});
 		} else {
-			return next({message: "Invalid old password", status: 401});
+			// If frontend sends 'password' but not 'passwordOld', and the user was not a demo user,
+			// we justs ignore it - it's just the frontend sending the password from the model, without
+			// any intention to change it.
+			saveUser();
 		}
 	} else {
 		saveUser();

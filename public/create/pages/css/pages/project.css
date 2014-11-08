@@ -23,11 +23,11 @@ html, body {
 	position: fixed;
 	top: 0;
 	z-index: 1;
-	background-color: #F2F3F4;
+	background-color: #f3f3f3;
 	width: 260px;
 	height: 100%;
 	min-height: 100%;
-	border: 10px solid #F2F3F4;
+	border: 10px solid #f3f3f3;
 	overflow: hidden;
 	overflow-y: auto;
 	transition: all 1s;
@@ -37,7 +37,7 @@ html, body {
 	-o-transition: all 1s;
 }
 .menu-left.bottom-menu-space {
-	border-bottom: 35px solid #F2F3F4;
+	border-bottom: 35px solid #f3f3f3;
 }
 .menu-left {
 	left: -260px;
@@ -184,7 +184,7 @@ html, body {
 	padding-bottom: 20px;
 	padding-left: 20px;
 	padding-right: 20px;
-	background-color: #fff;
+	background-color: #fafafa;
 }
 
 .editor {
@@ -238,46 +238,32 @@ html, body {
 	overflow: hidden;
 }
 [selected] {
-	background-color: #eee !important;
-}
-[selected] a, [selected] span, [selected] ul, [selected] .style-copy-options li {
-	background-color: #eee !important;
+	background-color: #c3c3c3 !important;
 }
 
-
-.projectDocument .projectDocument-options-show, .styleset-options-show {
+.projectdocument-options-show, .styleset-options-show, .style-options-show {
 	position: absolute;
 	top: 5px;
 	right: 5px;
-	background-color: #fff;
-	border-radius: 2px;
-	padding: 4px 2px;
+	padding: 6px;
 	cursor: pointer;
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;
+	z-index: 15;
+}
+.projectdocument-options-show.open, .styleset-options-show.open, .style-options-show.open {
+	padding: 5px;
+	background: #fff;
+	border: 1px solid #000;
+	border-bottom: #fff;
 }
 .style-options-show {
-	position: absolute;
-	right: 5px;
-	border-radius: 2px;
-	padding: 4px 2px;
-	cursor: pointer;
-}
-.projectDocument:hover .projectDocument-options-show, .projectDocument .projectDocument-options-show.active {
-	background-color: #eee;
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;
+	z-index: 12;
 }
 .arrow {
 	width: 0;
 	height: 0;
 	border-left: 5px solid transparent;
 	border-right: 5px solid transparent;
-	border-top: 5px solid #fff;
+	border-top: 5px solid #000;
 }
 .styleset-options-show .arrow {
 	border-top: 5px solid #000;
@@ -285,42 +271,25 @@ html, body {
 .projectDocument-options, .styleset-options, .style-options {
 	position: absolute;
 	top: 20px;
-	right: 0;
+	right: 5px;
 	background: none #fff;
-	width: 90px;
-	padding: 10px;
 	z-index: 10;
-	border-radius: 5px;
-	border: 1px solid #eee;
+	border: 1px solid #000;
 }
 .styleset-options {
-	width: 170px;
-	padding: 5px;
-}
-.style-options {
-	top: inherit;
+	z-index: 14;
 }
 .projectDocument-options-header {
 	border-bottom: 1px solid #eee;
 	text-align: center;
 	padding: 5px 0 10px;
 }
-.projectDocument-options-hide, .styleset-options-hide, .style-options-hide {
-	position: absolute;
-	top: 5px;
-	right: 10px;
-	cursor: pointer;
-}
 .projectDocument-options-menupoint, .styleset-options-menupoint, .style-options-menupoint {
 	cursor: pointer;
-	margin: 2px -10px;
-	padding: 5px 15px;
+	padding: 6px;
 	text-transform: capitalize;
 }
-.projectDocument-options-menupoint.first, .styleset-options-menupoint.first, .style-options-menupoint.first {
-	margin-top: 10px;
-}
-.projectDocument-options-menupoint:hover {
+.projectDocument-options-menupoint:hover, .styleset-options-menupoint:hover, .style-options-menupoint:hover {
 	background: none #ffffcc;
 }
 .projectDocument-options-dates {
@@ -404,7 +373,6 @@ textarea#renameProjectDocument, textarea#renameStyleset, textarea#renameStyle {
 	background-color: #f3f3f3;
 }
 .typo {
-	background-color: #fff;
 	margin: 0 0 10px 0;
 	cursor: pointer;
 	position: relative;
@@ -414,9 +382,6 @@ textarea#renameProjectDocument, textarea#renameStyleset, textarea#renameStyle {
 	border: 2px dashed #c6c6c6;
 	text-align: center;
 }
-.typo.open {
-	background-color: #f3f3f3;
-}
 ul, li {
 	list-style-type: none;
 	list-style-position: inside;
@@ -424,19 +389,21 @@ ul, li {
 	padding: 0;
 }
 li.typo p {
-	padding-left: 10px;
+	padding: 15px;
 	margin: 0;
-	padding-top: 15px;
-	padding-bottom: 15px;
-	border: 2px solid #000;
+	border: 1px solid #000;
+	background: none #fff;
 }
 li.typo p:first-child {
 	border: none;
 }
 .typo-children li {
+	position: relative;
 	background-color: #fff;
 	border: 1px solid #c6c6c6;
-	padding: 10px 0 10px 10px;
+	padding: 12px;
+	width: 90%;
+	margin: 0 auto;
 }
 
 .style.new {
@@ -448,15 +415,13 @@ li.typo p:first-child {
 	margin-left: -10px;
 }
 .style-isblock {
-	position: absolute;
-	right: 30px;
-	color: #fff;
+	position: relative;
+	color: #eee;
 	font-size: 80%;
 }
 .style-height {
-	height: 60px;
+	height: 40px;
 	overflow: hidden;
-	padding: 8px;
 }
 .style-copy-options ul {
 	list-style: none;
@@ -690,6 +655,7 @@ li.typo p:first-child {
 .outputOptionDownload {
 	margin: 10px 0 0;
 }
+
 .not-selectable {
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
