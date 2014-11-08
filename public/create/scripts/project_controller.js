@@ -159,7 +159,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return deferred.promise;
 	}
 
-	$scope.addProjectDocument = function( type ) {
+	$scope.addProjectDocument = function( type, text ) {
 		var deferred = $q.defer();
 
 		var order = $scope.projectDocuments.length + 1;
@@ -182,10 +182,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			document.name = name;
 		}
 
+		// HACK: Empty string as text gives huge problems when switching between documents
+		// - CK and model get out of sync.
 		document.text = ' ';
 
 		if ( typeof type !== 'undefined' ) {
 			document.type = type;
+		}
+		if ( typeof text !== 'undefined' && text != '' ) {
+			document.text = text;
 		}
 
 		if ( $scope.user._id ) {
@@ -524,7 +529,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.applyStyle = function( styleset, style ) {
 		var styleIndex = styleset.styles.indexOf( style );
 
-		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
+		var editor = getEditor();
 
 		var isDefault = styleset._id === $scope.documentSelected.defaultStyleset;
 
@@ -1048,19 +1053,23 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		editorInsert( imageInsert );
 	}
 
-	function overwriteExistingDocument( type, isNew, image ) {
+	function overwriteExistingDocument( type, text ) {
+		var isNew = true;
 		for ( var i = 0; i < $scope.projectDocuments.length; i++ ) {
 			var document = $scope.projectDocuments[i];
 			if ( typeof document.type !== 'undefined' ) {
 				if ( document.type === type ) {
 
 					if ( $scope.documentSelected._id !== document._id ) {
+						// The existing matching document is not currnetly selected
 						var waitPromise = $scope.openProjectDocument( document );
 						waitPromise.then( function() {
-							updateDocumentText( type, image );
+							updateDocumentText( type, text );
 						});
 					} else {
-						updateDocumentText( type, image );
+						// The existing matching document is already selected - update text directly in CK
+						var editor = getEditor();
+						editor.setData(text);
 					}
 
 					isNew = false;
@@ -1072,33 +1081,28 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return isNew;
 	}
 
-	function updateDocumentText( type, image ) {
+	function updateDocumentText( type, text ) {
 		if ( type === 'cover' ) {
 			$scope.ck.document.$.body.className += ' cover';
-			$scope.documentSelected.text = constructImageTag( image );
+			$scope.documentSelected.text = text;
 		}
 		if ( type === 'toc' ) {
-			$scope.documentSelected.text = generateTocHtml();
+			$scope.documentSelected.text = text;
 		}
 		if ( type === 'titlepage' ) {
-			$scope.documentSelected.text = generateTitlePageHtml();
+			$scope.documentSelected.text = text;
 		}
 		if ( type === 'colophon' ) {
-			$scope.documentSelected.text = generateColophonHtml();
+			$scope.documentSelected.text = text;
 		}
 	}
 
 	$scope.createCover = function( image ) {
-		var isNewCover = true;
-
-		isNewCover = overwriteExistingDocument( 'cover', isNewCover, image );
+		var html = constructImageTag( image );
+		var isNewCover = overwriteExistingDocument( 'cover', html );
 
 		if ( isNewCover ) {
-			var promise = $scope.addProjectDocument( 'cover' );
-
-			promise.then( function() {
-				insertImage( image );
-			});
+			$scope.addProjectDocument( 'cover', html );
 		}
 
 		var json = {};
@@ -1118,16 +1122,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.generateToc = function() {
-		var isNewToc = true;
-
-		isNewToc = overwriteExistingDocument( 'toc', isNewToc );
+		var html = generateTocHtml();
+		var isNewToc = overwriteExistingDocument( 'toc', html );
 
 		if ( isNewToc ) {
-			var promise = $scope.addProjectDocument( 'toc' );
-
-			promise.then( function() {
-				$scope.documentSelected.text = generateTocHtml();
-			});
+			$scope.addProjectDocument( 'toc', html );
 		}
 
 		$scope.setToc();
@@ -1157,16 +1156,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.generateTitlePage = function() {
-		var isNewTitlePage = true;
-
-		isNewTitlePage = overwriteExistingDocument( 'titlepage', isNewTitlePage );
+		var html = generateTitlePageHtml();
+		var isNewTitlePage = overwriteExistingDocument( 'titlepage', html );
 
 		if ( isNewTitlePage ) {
-			var promise = $scope.addProjectDocument( 'titlepage' );
-
-			promise.then( function() {
-				$scope.documentSelected.text = generateTitlePageHtml();
-			});
+			$scope.addProjectDocument( 'titlepage', html );
 		}
 	}
 
@@ -1180,21 +1174,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.generateColophon = function() {
-		var isNewColophon = true;
-
-		isNewColophon = overwriteExistingDocument( 'colophon', isNewColophon );
+		var html = generateColophonHtml();
+		var isNewColophon = overwriteExistingDocument( 'colophon', html );
 
 		if ( isNewColophon ) {
-			var promise = $scope.addProjectDocument( 'colophon' );
-
-			promise.then( function() {
-				$scope.documentSelected.text = generateColophonHtml();
-			});
+			$scope.addProjectDocument( 'colophon', html );
 		}
 	}
 
 	function editorInsert( insert ) {
-		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
+		var editor = getEditor();
 		var element = $rootScope.CKEDITOR.dom.element.createFromHtml( insert );
 		editor.insertElement( element );
 		var range = editor.createRange();
@@ -1223,15 +1212,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	});
 
-    function initiateEditor(scope) {
-    	$scope.ckContent = 'test';
-
-//		var startChapter = $scope.documents[0];
-//		$scope.entrybody = startChapter.content;
-		// Mangler at tilf??je stylen startChapter.documentstyleSheet
-    }
-
-	initiateEditor();
+	function getEditor(scope) {
+		return $rootScope.CKEDITOR.instances.bodyeditor
+	}
 
 	$scope.$onRootScope('ckDocument:ready', function( event ) {
 		$scope.ckReady = true;
@@ -1289,7 +1272,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$rootScope.ck.commands.pagebreakavoid.exec();
 		}
 
-		var editor = $rootScope.CKEDITOR.instances.bodyeditor;
+		var editor = getEditor();
 		editor.on( 'selectionChange', function( ev ) {
 			if ( typeof $scope.stylesets != 'undefined') {
 				var elementPath = ev.data.path;
