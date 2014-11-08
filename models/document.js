@@ -29,6 +29,12 @@ var DocumentSchema = new Schema({
 	]
 });
 
+DocumentSchema.pre('save', function (next) {
+	var document = this;
+	document.modified = Date.now();
+	return next();
+});
+
 DocumentSchema.pre('remove', function (next) {
 	// TODO: add log message "WARN: Documents should not be deleted - why is this happening?"
 
