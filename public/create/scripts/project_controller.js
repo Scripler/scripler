@@ -33,8 +33,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				metadataChanged = true;
 			}
 			if (!project.metadata.language) {
-				$scope.selectedLanguageName = "Danish";
-				$scope.project.metadata.language = "da";
+				$scope.selectedLanguageName = "English";
+				$scope.project.metadata.language = "en";
 				metadataChanged = true;
 			} else {
 				for (var i = 0; i < $scope.languages.length; i++) {
