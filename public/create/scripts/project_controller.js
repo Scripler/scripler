@@ -23,6 +23,33 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		projectPromise.then( function( project ) {
 			$scope.project = project;
+			var metadataChanged = false;
+			if (!$scope.project.metadata.title) {
+				$scope.project.metadata.title = $scope.project.name;
+				metadataChanged = true;
+			}
+			if (!$scope.project.metadata.authors){
+				$scope.project.metadata.authors = $scope.user.firstname + ' ' + $scope.user.lastname;
+				metadataChanged = true;
+			}
+			if (!project.metadata.language) {
+				$scope.selectedLanguageName = "Danish";
+				$scope.project.metadata.language = "da";
+				metadataChanged = true;
+			} else {
+				for (var i = 0; i < $scope.languages.length; i++) {
+					var language = $scope.languages[i];
+					if (language.subtag == project.metadata.language) {
+						$scope.selectedLanguageName = language.description;
+						break;
+					}
+					// If unknown language is used, just show it directly
+					$scope.selectedLanguageName = project.metadata.language;
+				}
+			}
+			if (metadataChanged) {
+				$scope.saveMetaData();
+			}
 			$scope.projectDocuments = $scope.project.documents;
 
 			if ( $scope.projectDocuments.length == 0 ) {
@@ -316,6 +343,105 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
+	$scope.languages = [
+		{
+			"subtag": "arb",
+			"description": "Arabic"
+		},
+		{
+			"subtag": "bn",
+			"description": "Bengali"
+		},
+		{
+			"subtag": "es",
+			"description": "Spanish / Castilian"
+		},
+		{
+			"subtag": "zh",
+			"description": "Chinese"
+		},
+		{
+			"subtag": "da",
+			"description": "Danish"
+		},
+		{
+			"subtag": "nl",
+			"description": "Dutch / Flemish"
+		},
+		{
+			"subtag": "en",
+			"description": "English"
+		},
+		{
+			"subtag": "fo",
+			"description": "Faroese"
+		},
+		{
+			"subtag": "fi",
+			"description": "Finnish"
+		},
+		{
+			"subtag": "fr",
+			"description": "French"
+		},
+		{
+			"subtag": "de",
+			"description": "German"
+		},
+		{
+			"subtag": "kl",
+			"description": "Greenlandic / Kalaallisut"
+		},
+		{
+			"subtag": "hi",
+			"description": "Hindi"
+		},
+		{
+			"subtag": "is",
+			"description": "Icelandic"
+		},
+		{
+			"subtag": "ja",
+			"description": "Japanese"
+		},
+		{
+			"subtag": "ko",
+			"description": "Korean"
+		},
+		{
+			"subtag": "cmn",
+			"description": "Mandarin Chinese"
+		},
+		{
+			"subtag": "nn",
+			"description": "Norwegian Nynorsk"
+		},
+		{
+			"subtag": "no",
+			"description": "Norwegian"
+		},
+		{
+			"subtag": "nb",
+			"description": "Norwegian Bokmål"
+		},
+		{
+			"subtag": "pt",
+			"description": "Portuguese"
+		},
+		{
+			"subtag": "ru",
+			"description": "Russian"
+		},
+		{
+			"subtag": "sv",
+			"description": "Swedish"
+		},
+		{
+			"subtag": "th",
+			"description": "Thai"
+		},
+	];
+
 	$scope.saveMetaData = function() {
 		$http.put('/project/' + $scope.project._id + '/metadata', {
 			'title': $scope.project.metadata.title,
@@ -329,10 +455,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 
     $scope.$watch('project.metadata.title', function(newValue, oldValue){
-		if (newValue === '') {
-			$scope.project.metadata.title = $scope.project.name;
-		}
-		if (newValue != '' && newValue != oldValue) {
+		if (watchReady(newValue, oldValue)) {
 			$scope.saveMetaData();
 			$scope.metaTitleSaved = true;
 			$timeout(function() {
@@ -341,10 +464,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	});
     $scope.$watch('project.metadata.authors', function(newValue, oldValue){
-		if (newValue === '') {
-			$scope.project.metadata.authors = $scope.user.firstname + ' ' + $scope.user.lastname;
-		}
-		if (newValue != '' && newValue != oldValue) {
+		if (watchReady(newValue, oldValue)) {
 			$scope.saveMetaData();
 			$scope.metaAuthorsSaved = true;
 			$timeout(function() {
@@ -352,17 +472,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}, 2000);
 		}
 	});
-	$scope.$watch('project.metadata.language', function(newValue, oldValue){
-		if (newValue != '' && newValue != oldValue) {
-			$scope.saveMetaData();
-			$scope.metaLanguageSaved = true;
-			$timeout(function() {
-			    $scope.metaLanguageSaved = false;
-			}, 2000);
-		}
-	});
 	$scope.$watch('project.metadata.description', function(newValue, oldValue){
-		if (newValue != '' && newValue != oldValue) {
+		if (watchReady(newValue, oldValue)) {
 			$scope.saveMetaData();
 			$scope.metaDescriptionSaved = true;
 			$timeout(function() {
@@ -371,14 +482,29 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	});
 	$scope.$watch('project.metadata.isbn', function(newValue, oldValue){
-		if (newValue != '' && newValue != oldValue) {
+		if (watchReady(newValue, oldValue)) {
 			$scope.saveMetaData();
 			$scope.metaIsbnSaved = true;
 			$timeout(function() {
-			    $scope.metaIsbnSaved = false;
+			     $scope.metaIsbnSaved = false;
 			}, 2000);
 		}
 	});
+
+	function watchReady(newValue, oldValue) {
+		return !(typeof oldValue === 'undefined') && newValue != '' && newValue != oldValue;
+	}
+
+	$scope.selectedLanguage = function(str) {
+		if (str) {
+			$scope.project.metadata.language = str.originalObject.subtag;
+			$scope.saveMetaData();
+			$scope.metaLanguageSaved = true;
+			$timeout(function() {
+			    $scope.metaLanguageSaved = false;
+			}, 2000);
+		}
+	};
 
 	$scope.exportEpub = function() {
 		var getTocPromise = $scope.getToc();

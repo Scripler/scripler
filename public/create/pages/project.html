@@ -1,5 +1,6 @@
 <link rel="stylesheet" type="text/css" href="pages/css/shared/default.css" />
 <link rel="stylesheet" type="text/css" href="pages/css/pages/project.css" />
+<link rel="stylesheet" type="text/css" href="pages/css/shared/angucomplete-alt.css"/>
 <link rel="stylesheet" type="text/css" href="pages/css/shared/fonts.css">
 
 <div class="container">
@@ -361,7 +362,10 @@
 				</span>
 				<span class="menu-box label left-menu-parameter-margin">Language</span>
 				<span class="menu-box inputfield full-size" data-ng-class="{ 'text-saved': metaLanguageSaved }">
-					<input type="text" name="output_language" id="output_language" data-ng-model="project.metadata.language" data-ng-model-options="{ debounce: 2000 }" />
+					<form class="angucomplete">
+						<div angucomplete-alt id="output_language" placeholder="Search Languages" pause="100" selected-object="selectedLanguage" local-data="languages" search-fields="description,subtag" title-field="description" minlength="1" match-class="angucomplete-highlight" initial-value="{{selectedLanguageName}}" field-required="true">
+						</div>
+					</form>
 					<span class="statusfield" data-ng-class="{ 'text-saved': metaLanguageSaved }">Saved</span>
 				</span>
 				<span class="menu-box label left-menu-parameter-margin">Description</span>
