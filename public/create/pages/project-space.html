@@ -97,9 +97,9 @@
 			</div>
 
 			<div class="feedback">
-				<img src="pages/images/feedback.svg" width="20">
+				<a ng-if="user._id && !user.isDemo" href="http://talk.scripler.com/session/sso?return_path=%2F" target="_blank"><img src="pages/images/feedback.svg" width="20" /></a>
+				<a ng-if="!user._id || user.isDemo" href="http://talk.scripler.com/" target="_blank"><img src="pages/images/feedback.svg" width="20" /></a>
 			</div>
-	</div>
 		</section>
 	</div>
 </div>
