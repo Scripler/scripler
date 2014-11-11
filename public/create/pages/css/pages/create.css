@@ -20,13 +20,26 @@
 .section-unisquare.white-bg {
 	background-color: #fff;
 }
+
+.section-projects-container {
+	min-height: 360px;
+	width: -webkit-calc(100% - 360px) !important;
+	width: -o-calc(100% - 360px) !important;
+	width: -moz-calc(100% - 360px) !important;
+	width: calc(100% - 360px) !important;
+	margin: 0 0 0 325px !important;
+}
+
+.projects-title {
+	margin: 0 0 5px 0 !important;
+	font-size: 40px;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 700;
+	color: #000;
+}
+
 .section-projects {
-	margin: 0 0 0 10px !important;
-	min-height: 340px;
-	width: -webkit-calc(100% - 340px) !important;
-	width: -o-calc(100% - 340px) !important;
-	width: -moz-calc(100% - 340px) !important;
-	width: calc(100% - 340px) !important;
+	margin: 0 0 0 0 !important;
 }
 
 .project {

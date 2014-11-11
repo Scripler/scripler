@@ -63,41 +63,45 @@
 		</section>
 
 		<!--<section class="section-projects" data-ng-click="editingProjectTitle = false;">-->
-		<section class="section-projects">
-			<div class="project new" data-ng-click="addProject();">
-				<p>+</p>
-			</div>
-			<div class="project" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index">
-				<a class="project-options-show" data-ng-class="{ 'open' : showProjectOptions }" data-ng-click="showProjectOptions = !showProjectOptions">
-					<div class="arrow"></div>
-				</a>
-				<!--<p data-ng-hide="editingProjectTitle" data-ng-click="editingProjectTitle = true;">-->
-				<p data-ng-hide="editingProjectTitle">
-					<a href="#/project?pid={{project._id}}" class="project-link">{{project.name}}</a>
-				</p>
+		<section class="section-projects-container">
+			<div class="projects-title">Ebooks</div>
 
-				<form data-ng-show="editingProjectTitle">
-				<p>
-					<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!editingProjectTitle" on-enter="editingProjectTitle = false; renameProject(project);" data-ng-blur="editingProjectTitle = false; renameProject(project);"></textarea>
-				</p>
-				</form>
-
-				<div class="project-options" data-ng-show="showProjectOptions">
-					<div class="project-options-menupoint" data-ng-click="editingProjectTitle = true; showProjectOptions = false;">rename</div>
-					<div class="project-options-menupoint" data-ng-click="copyProject(project); showProjectOptions = false;">copy</div>
-					<div class="project-options-menupoint" data-ng-click="archiveProject(project); showProjectOptions = false;">archive</div>
-					<div class="project-options-menupoint" data-ng-click="unarchiveProject(project); showProjectOptions = false;">unarchive</div>
-					<div class="project-options-dates" data-ng-show="project.created && project.changed">
-						<div>Created Date: </div><div class="dates">{{project.created | date:'yyyy-MM-dd HH:mm'}}</div>
-						<div>Last Changed: </div><div class="dates">{{project.modified | date:'yyyy-MM-dd HH:mm'}}</div>
-					</div>
-					<div class="project-options-hide" data-ng-click="showProjectOptions = false;" title="Close Options"></div>
+			<div class="section-projects">
+				<div class="project new" data-ng-click="addProject();">
+					<p>+</p>
 				</div>
-			</div>
+				<div class="project" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index">
+					<a class="project-options-show" data-ng-class="{ 'open' : showProjectOptions }" data-ng-click="showProjectOptions = !showProjectOptions">
+						<div class="arrow"></div>
+					</a>
+					<!--<p data-ng-hide="editingProjectTitle" data-ng-click="editingProjectTitle = true;">-->
+					<p data-ng-hide="editingProjectTitle">
+						<a href="#/project?pid={{project._id}}" class="project-link">{{project.name}}</a>
+					</p>
 
-			<div class="feedback">
-				<a ng-if="user._id && !user.isDemo" href="http://talk.scripler.com/session/sso?return_path=%2F" target="_blank"><img src="pages/images/feedback.svg" width="20" /></a>
-				<a ng-if="!user._id || user.isDemo" href="http://talk.scripler.com/" target="_blank"><img src="pages/images/feedback.svg" width="20" /></a>
+					<form data-ng-show="editingProjectTitle">
+					<p>
+						<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!editingProjectTitle" on-enter="editingProjectTitle = false; renameProject(project);" data-ng-blur="editingProjectTitle = false; renameProject(project);"></textarea>
+					</p>
+					</form>
+
+					<div class="project-options" data-ng-show="showProjectOptions">
+						<div class="project-options-menupoint" data-ng-click="editingProjectTitle = true; showProjectOptions = false;">rename</div>
+						<div class="project-options-menupoint" data-ng-click="copyProject(project); showProjectOptions = false;">copy</div>
+						<div class="project-options-menupoint" data-ng-click="archiveProject(project); showProjectOptions = false;">archive</div>
+						<div class="project-options-menupoint" data-ng-click="unarchiveProject(project); showProjectOptions = false;">unarchive</div>
+						<div class="project-options-dates" data-ng-show="project.created && project.changed">
+							<div>Created Date: </div><div class="dates">{{project.created | date:'yyyy-MM-dd HH:mm'}}</div>
+							<div>Last Changed: </div><div class="dates">{{project.modified | date:'yyyy-MM-dd HH:mm'}}</div>
+						</div>
+						<div class="project-options-hide" data-ng-click="showProjectOptions = false;" title="Close Options"></div>
+					</div>
+				</div>
+
+				<div class="feedback">
+					<a ng-if="user._id && !user.isDemo" href="http://talk.scripler.com/session/sso?return_path=%2F" target="_blank"><img src="pages/images/feedback.svg" width="20" /></a>
+					<a ng-if="!user._id || user.isDemo" href="http://talk.scripler.com/" target="_blank"><img src="pages/images/feedback.svg" width="20" /></a>
+				</div>
 			</div>
 		</section>
 	</div>
