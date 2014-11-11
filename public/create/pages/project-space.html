@@ -78,8 +78,7 @@
 
 				<form data-ng-show="editingProjectTitle">
 				<p>
-					<!--<input type="text" data-ng-model="project.name" placeholder="project title" focus-on="!!editingProjectTitle" />-->
-					<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!editingProjectTitle" on-enter="editingProjectTitle = false; renameProject(project);"></textarea>
+					<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!editingProjectTitle" on-enter="editingProjectTitle = false; renameProject(project);" data-ng-blur="editingProjectTitle = false; renameProject(project);"></textarea>
 				</p>
 				</form>
 

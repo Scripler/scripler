@@ -986,10 +986,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.copyCSS = false;
 	}
 
-	$scope.toggleRename = function( obj ) {
-		obj.rename = !obj.rename;
-	}
-
 	$scope.isDefaultStyleset = function( styleset ) {
 		return styleset._id === $scope.documentSelected.defaultStyleset;
 	}
