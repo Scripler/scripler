@@ -35,7 +35,7 @@
 
 					<form data-ng-show="editingProjectDocumentTitle">
 						<p>
-							<textarea id="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!editingProjectDocumentTitle" on-enter="editingProjectDocumentTitle = false; renameProjectDocument(projectDocument);"></textarea>
+							<textarea id="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!editingProjectDocumentTitle" on-enter="editingProjectDocumentTitle = false; renameProjectDocument(projectDocument);" data-ng-blur="editingProjectDocumentTitle = false; renameProjectDocument(projectDocument);"></textarea>
 						</p>
 					</form>
 
@@ -58,16 +58,16 @@
 						<div class="arrow"></div>
 					</a>
 
-					<p class="not-selectable" data-ng-style="styleset.css" data-ng-click="typoChildrenVisible =! typoChildrenVisible; showStylesetOptions = false; focusEditor();" data-ng-hide="styleset.rename">{{styleset.name}}</p>
+					<p class="not-selectable" data-ng-style="styleset.css" data-ng-click="typoChildrenVisible =! typoChildrenVisible; showStylesetOptions = false; focusEditor();" data-ng-hide="editingStyleSetTitle">{{styleset.name}}</p>
 
-					<form data-ng-show="styleset.rename">
+					<form data-ng-show="editingStyleSetTitle">
 						<p>
-							<textarea id="renameStyleset" rows="1" data-ng-model="styleset.name" focus-on="!!styleset.rename" on-enter="toggleRename(styleset); renameStyleset(styleset);"></textarea>
+							<textarea id="renameStyleset" rows="1" data-ng-model="styleset.name" focus-on="!!editingStyleSetTitle" on-enter="editingStyleSetTitle = false; renameStyleset(styleset);" data-ng-blur="editingStyleSetTitle = false; renameStyleset(styleset);"></textarea>
 						</p>
 					</form>
 
 					<div class="styleset-options" data-ng-show="showStylesetOptions">
-						<div class="styleset-options-menupoint first" data-ng-click="toggleRename(styleset); showStylesetOptions = false;">rename</div>
+						<div class="styleset-options-menupoint first" data-ng-click="editingStyleSetTitle = true; showStylesetOptions = false;">rename</div>
 						<div class="styleset-options-menupoint" data-ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>
 						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToDocument(styleset,true); showStylesetOptions = false;">apply to document</div>
 						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to ebook</div>
@@ -81,7 +81,7 @@
 
 							{{style.tag === 'h1' && setStylesetStyling(styleset, style) || ''}}
 
-							<div class="style-height" data-ng-hide="style.rename">
+							<div class="style-height" data-ng-hide="editingStyleTitle">
 								<span class="not-selectable" data-ng-style="getStyleStyling(style)" data-ng-click="applyStyle(styleset, style)">{{style.name}}</span>
 							</div>
 
@@ -93,12 +93,12 @@
 								</ul>
 							</div>
 
-							<form data-ng-show="style.rename">
-								<textarea id="renameStyle" rows="1" data-ng-model="style.name" focus-on="!!style.rename" on-enter="toggleRename(style); updateStyle(style);"></textarea>
+							<form data-ng-show="editingStyleTitle">
+								<textarea id="renameStyle" rows="1" data-ng-model="style.name" focus-on="!!editingStyleTitle" on-enter="editingStyleTitle = false; updateStyle(style);" data-ng-blur="editingStyleTitle = false; updateStyle(style);"></textarea>
 							</form>
 
 							<div class="style-options" data-ng-show="showStyleOptions">
-								<div class="style-options-menupoint first" data-ng-click="toggleRename(style); showStyleOptions = false;">rename</div>
+								<div class="style-options-menupoint first" data-ng-click="editingStyleTitle = true; showStyleOptions = false;">rename</div>
 								<div class="style-options-menupoint" data-ng-click="archiveStyle(style); showStyleOptions = false;">archive</div>
 							</div>
 						</li>
