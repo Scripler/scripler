@@ -137,11 +137,6 @@ $(document).ready(function() {
 		forgotPassword = false;
 	}
 
-	$(".menu-login").one("click", function (event) {
-		$("#login").animate({ "paddingBottom": "20", "paddingTop": "70" }, 800);
-	});
-
-
 	$(".menu-login").on("click", function (event) {
 		// Ensure that it's the normal login form that is shown.
 		hideInvalidBoxes();

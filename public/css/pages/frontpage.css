@@ -39,8 +39,8 @@ div.half {
 }
 #login {
 	background-color: #c6c6c6;
-	padding-top: 0;
-	padding-bottom: 0;
+	padding-top: 70px;
+	padding-bottom: 20px;
 }
 
 #scripler article, #explore article, #features article, #pricing article, #learn article {
