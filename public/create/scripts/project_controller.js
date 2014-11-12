@@ -1370,6 +1370,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$scope.hideStyleEditor();
 			} else {
 				$rootScope.ck.commands.showFloatingTools.exec();
+				$rootScope.updateBottomOffset();
 				$scope.styleEditorVisible = true;
 			}
 		}

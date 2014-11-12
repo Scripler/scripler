@@ -13,7 +13,57 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 
 		$scope.user = {};
 
-		$scope.registrationBarManuallyHidden = false;
+		$scope.registrationBarHiddenByUser = false;
+
+		var ckeOrgHeight;
+		var currentBarOffset = 0;
+
+		$rootScope.updateBottomOffset = function() {
+			var bar = document.getElementById("registrationFooter");
+			var height = bar ? bar.offsetHeight : 0;
+			if (currentBarOffset != height) {
+				var editor = document.getElementById("cke_1_contents");
+				if (editor && editor.style.height) {
+					currentBarOffset = height;
+					if (!ckeOrgHeight) {
+						ckeOrgHeight = editor.style.height;
+					}
+					if (height > 0) {
+						var newHeight = ckeOrgHeight.replace('px', '') - height;
+						editor.style.height = newHeight + 'px';
+					} else {
+						editor.style.height = ckeOrgHeight;
+					}
+				}
+			}
+
+			var elements = document.getElementsByClassName('bottom-fixed');
+			for (var i = 0; i < elements.length; i++) {
+				elements[i].style.bottom = height + 'px';
+			}
+			elements = document.getElementsByClassName('full-height');
+			for (var i = 0; i < elements.length; i++) {
+				elements[i].style.height = 'calc(100% - ' + height + 'px)';
+				elements[i].style.minHeight = 'calc(100% - ' + height + 'px)';
+			}
+
+			var styleEditor = document.getElementById("cke_1_floatingtools");
+			if (styleEditor) {
+				var defaultOffset = 28; // From hardcoded value in floating-tools CK plugin.
+				var currentOffset = styleEditor.style.bottom.replace('px', '');
+				// If current offset is negative, it's hidden, so don't mess with it
+				if (currentOffset > 0) {
+					styleEditor.style.bottom = (defaultOffset + height) + 'px';
+				}
+			}
+		}
+
+		$scope.$watch('registrationBarHiddenByUser', function () {
+			// Wait for the registration-bar visual changes before updating bottom offset.
+			setTimeout(function () {
+				$rootScope.updateBottomOffset();
+			}, 0);
+		});
 
 		$scope.$onRootScope('user:updated', function( event, user ) {
 			if (user.isDemo) {
@@ -24,6 +74,10 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 					$scope.registrationText = 'Remove this message by verifying your email address. Click the link you received in your welcome email.';
 				}
 			}
+			// Wait for the registration-bar visual changes before updating bottom offset.
+			setTimeout(function () {
+				$rootScope.updateBottomOffset();
+			}, 0);
 		});
 
 		$scope.$onRootScope('login:failed', function( event ) {
@@ -56,6 +110,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				iDoc.addEventListener('copy', $scope.copySelection);
 				iDoc.addEventListener('cut', $scope.copySelection);
 			};
+			$rootScope.updateBottomOffset();
 		});
 
 		$scope.copySelection = function() {
