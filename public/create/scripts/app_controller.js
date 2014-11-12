@@ -239,6 +239,14 @@ app.service('userService', function( $rootScope, $http ) {
 						$scope.registerForm.$invalid = true;
 					}
 				});
+		},
+		openFeedback: function (user) {
+			var url = 'http://talk.scripler.com/';
+			if (user && user._id && !user.isDemo) {
+				// Since this is a registered user, we can send him to the auto-login url.
+				url = 'http://talk.scripler.com/session/sso?return_path=%2F';
+			}
+			window.open(url);
 		}
 	};
 });
@@ -329,7 +337,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				contentsCss: ['ckeditor/contents.css', 'stylesets/non-editable.css'],
 				//Load css sheet via angualr here
 				toolbar: [
-					['Undo'], ['Redo'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['imageScripler'], ['linkScripler'], ['Source'] // TODO: Remove "Source" button before "real" launch (ALPHA? BETA?)
+					['Undo'], ['Redo'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['imageScripler'], ['linkScripler']
 				],
 				removeButtons: 'language,CreateDiv,Flash,Iframe'
 			});
