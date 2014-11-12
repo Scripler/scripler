@@ -2,7 +2,7 @@
 	float: left;
 }
 .section-unisquare {
-	position: relative;
+	position: fixed;
 	margin: 0 10px 0 0 !important;
 	padding: 10px !important;
 	width: 300px !important;
