@@ -241,10 +241,12 @@ app.service('userService', function( $rootScope, $http ) {
 				});
 		},
 		openFeedback: function (user) {
-			var url = 'http://talk.scripler.com/';
+			var hostname = 'http://talk.scripler.com';
+			var path = '/c/feedback';
+			var url = hostname+path;
 			if (user && user._id && !user.isDemo) {
 				// Since this is a registered user, we can send him to the auto-login url.
-				url = 'http://talk.scripler.com/session/sso?return_path=%2F';
+				url = hostname+'/session/sso?return_path='+encodeURIComponent(path);
 			}
 			window.open(url);
 		}
