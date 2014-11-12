@@ -7,10 +7,10 @@
 
 	<div id="menu-left-tabs" class="menu-tabs left" ondragstart="return false;" ondrop="return false;">
 		<div class="menu-tab" data-ng-class="{ 'selectedTab' : showDocuments }" data-ng-click="showDocuments = !showDocuments; showTypo = false; showInsert = false;">
-			<img src="pages/images/documents.svg" width="20">
+			<img src="pages/images/contents.svg" width="20">
 		</div>
 		<div class="menu-tab" data-ng-class="{ 'selectedTab' : showTypo }" data-ng-click="showTypo = !showTypo; hideStyleEditor(); showDocuments = false; showInsert = false; focusEditor();">
-			<img src="pages/images/typography.svg" width="20">
+			<img src="pages/images/design.svg" width="20">
 		</div>
 		<div class="menu-tab" data-ng-class="{ 'selectedTab' : showInsert }" data-ng-click="showInsert = !showInsert; showDocuments = false; showTypo = false;">
 			<img src="pages/images/insert.svg" width="20">
@@ -295,9 +295,8 @@
 		<div class="menu-tab output" data-ng-class="{ 'selectedTab' : showOutput }" data-ng-click="showOutput = !showOutput; showFinalizeOptions = false;">
 			<img src="pages/images/output.svg" width="20" />
 		</div>
-		<div class="menu-tab feedback">
-			<a ng-if="user._id && !user.isDemo" href="http://talk.scripler.com/session/sso?return_path=%2F" target="_blank"><img src="pages/images/feedback.svg" width="20" /></a>
-			<a ng-if="!user._id || user.isDemo" href="http://talk.scripler.com/" target="_blank"><img src="pages/images/feedback.svg" width="20" /></a>
+		<div class="menu-tab feedback" data-ng-click="openFeedback()">
+			<img src="pages/images/feedback.svg" width="20" />
 		</div>
 	</div>
 	<div id="menu-right" class="menu-right" data-ng-class="{ 'open' : showFinalizeOptions || showOutput }">

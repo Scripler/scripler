@@ -32,6 +32,10 @@ function projectSpaceController($scope, $http, projectsService, userService, $q,
 		}
 	}
 
+	$scope.openFeedback = function() {
+		userService.openFeedback( $scope.user );
+	}
+
 	$scope.updateUser = function() {
 		$scope.saveSubmitted = true;
 
