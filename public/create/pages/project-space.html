@@ -90,8 +90,8 @@
 					<div class="project-options" data-ng-show="showProjectOptions">
 						<div class="project-options-menupoint" data-ng-click="editingProjectTitle = true; showProjectOptions = false;">rename</div>
 						<div class="project-options-menupoint" data-ng-click="copyProject(project); showProjectOptions = false;">copy</div>
-						<div class="project-options-menupoint" data-ng-click="archiveProject(project); showProjectOptions = false;">archive</div>
-						<div class="project-options-menupoint" data-ng-click="unarchiveProject(project); showProjectOptions = false;">unarchive</div>
+						<div class="project-options-menupoint" data-ng-hide="project.archived" data-ng-click="archiveProject(project); showProjectOptions = false;">archive</div>
+						<div class="project-options-menupoint" data-ng-show="project.archived" data-ng-click="unarchiveProject(project); showProjectOptions = false;">unarchive</div>
 						<div class="project-options-dates" data-ng-show="project.created && project.changed">
 							<div>Created Date: </div><div class="dates">{{project.created | date:'yyyy-MM-dd HH:mm'}}</div>
 							<div>Last Changed: </div><div class="dates">{{project.modified | date:'yyyy-MM-dd HH:mm'}}</div>
