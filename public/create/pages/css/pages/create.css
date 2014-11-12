@@ -280,7 +280,7 @@ hr {
 }
 .user-settings-options .user-email input {
 	width: auto;
-	border: -moz-border-radius: 1px;
+	-moz-border-radius: 1px;
 	-webkit-border-radius: 1px;
 	border-radius: 1px;
 	-webkit-appearance: none;
