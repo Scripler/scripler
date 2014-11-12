@@ -138,11 +138,6 @@ $(document).ready(function() {
 	}
 
 	$(".menu-login").on("click", function (event) {
-		$("#login").animate({ "paddingBottom": "20", "paddingTop": "70" }, 800);
-	});
-
-
-	$(".menu-login").on("click", function (event) {
 		// Ensure that it's the normal login form that is shown.
 		hideInvalidBoxes();
 		$("#login-form").css("display", "block");
