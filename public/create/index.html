@@ -9,7 +9,7 @@
 
 	<div data-ng-view></div>
 
-	<div class="registration" data-ng-hide="user.emailVerified || user.isDemo || registrationBarHiddenByUser" data-ng-class="{ 'green' : user._id }" data-ng-cloak>
+	<div id="registrationFooter" class="registration" data-ng-hide="user.emailVerified || user.isDemo || registrationBarHiddenByUser" data-ng-class="{ 'green' : user._id }" data-ng-cloak>
 		<div class="registration-close-button" data-ng-click="registrationBarHiddenByUser = !registrationBarHiddenByUser" data-ng-show="user._id">x</div>
 		<div class="error-boxes" data-ng-show="registerForm.$invalid && !registerForm.$pristine && registrationSubmitted && !user._id">
 			<div class="arrow-box" data-ng-show="registerForm.name.$invalid && !registerForm.name.$pristine" data-ng-bind="errors.name"></div>

@@ -387,18 +387,21 @@ textarea {
 
 .feedback{
 	background:#c6c6c6;
-	position:fixed;
-	bottom:0;
-	right:0;
 	width: 50px;
 	-webkit-transform-style: preserve-3d;
 	-moz-transform-style: preserve-3d;
 	transform-style: preserve-3d;
 	height: calc(100% / 3);
 	cursor: pointer;
-	min-height: 190px;
 	padding: 0;
 	text-align: center;
+}
+
+.feedback-fixed {
+	position:fixed;
+	bottom:0;
+	right:0;
+	min-height: 150px;
 }
 
 .feedback img {

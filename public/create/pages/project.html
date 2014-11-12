@@ -5,7 +5,7 @@
 
 <div class="container">
 
-	<div id="menu-left-tabs" class="menu-tabs left" ondragstart="return false;" ondrop="return false;">
+	<div id="menu-left-tabs" class="menu-tabs left full-height" ondragstart="return false;" ondrop="return false;">
 		<div class="menu-tab" data-ng-class="{ 'selectedTab' : showDocuments }" data-ng-click="showDocuments = !showDocuments; showTypo = false; showInsert = false;">
 			<img src="pages/images/contents.svg" width="20">
 		</div>
@@ -16,7 +16,7 @@
 			<img src="pages/images/insert.svg" width="20">
 		</div>
 	</div>
-	<div id="menu-left" class="menu-left" data-ng-class="{ 'open' : showDocuments || showTypo || showInsert, 'bottom-menu-space' : showDocuments || showTypo }">
+	<div id="menu-left" class="menu-left full-height" data-ng-class="{ 'open' : showDocuments || showTypo || showInsert, 'bottom-menu-space' : showDocuments || showTypo }">
 		<div class="menu-item-left documents" data-ng-show="showDocuments">
 			<div class="projectDocument new" data-ng-click="addProjectDocument();">
 				<p>+</p>
@@ -244,17 +244,17 @@
 				</li>-->
 			</ul>
 		</div>
-		<div class="documents-options-bottom-buttons" data-ng-show="showDocuments">
+		<div class="documents-options-bottom-buttons bottom-fixed" data-ng-show="showDocuments">
 			<a data-ng-class="{ 'open' : showNewOptions }" data-ng-click="showNewOptions = !showNewOptions; showImportOptions = false; showBottomOptions = false;">new</a>
 			<a data-ng-class="{ 'open' : showImportOptions }" data-ng-click="showImportOptions = !showImportOptions; showNewOptions = false; showBottomOptions = false;">import</a>
 			<a class="last" data-ng-class="{ 'open' : showBottomOptions }" data-ng-click="showBottomOptions = !showBottomOptions; showNewOptions = false; showImportOptions = false;">options</a>
 		</div>
 
-		<div class="stylesets-options-bottom-buttons" data-ng-show="showTypo">
+		<div class="stylesets-options-bottom-buttons bottom-fixed" data-ng-show="showTypo">
 			<a data-ng-click="showStyleEditor()" data-ng-class="{ 'open' : styleEditorVisible }">style editor</a>
 		</div>
 
-		<div id="menu-left-content-options" class="menu-options" data-ng-show="showDocuments" data-ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
+		<div id="menu-left-content-options" class="menu-options bottom-fixed" data-ng-show="showDocuments" data-ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
 			<div class="options-bottom-box">
 				<div data-ng-show="showNewOptions">
 					<a data-ng-click="addProjectDocument()">New Chapter</a><br>
@@ -288,14 +288,14 @@
 		<textarea ck-editor="" data-ng-model="documentSelected.text" class="form-control" id="bodyeditor"></textarea>
 	</div>
 
-	<div id="menu-right-tabs" class="menu-tabs right" ondragstart="return false;" ondrop="return false;">
-		<div class="menu-tab" data-ng-class="{ 'selectedTab' : showFinalizeOptions }" data-ng-click="showFinalizeOptions = !showFinalizeOptions; showOutput = false;">
+	<div id="menu-right-tabs" class="menu-tabs right full-height" ondragstart="return false;" ondrop="return false;">
+		<div class="menu-tab one-third-height" data-ng-class="{ 'selectedTab' : showFinalizeOptions }" data-ng-click="showFinalizeOptions = !showFinalizeOptions; showOutput = false;">
 			<img src="pages/images/finalize.svg" width="20" />
 		</div>
-		<div class="menu-tab output" data-ng-class="{ 'selectedTab' : showOutput }" data-ng-click="showOutput = !showOutput; showFinalizeOptions = false;">
+		<div class="menu-tab output one-third-height" data-ng-class="{ 'selectedTab' : showOutput }" data-ng-click="showOutput = !showOutput; showFinalizeOptions = false;">
 			<img src="pages/images/output.svg" width="20" />
 		</div>
-		<div class="menu-tab feedback" data-ng-click="openFeedback()">
+		<div class="menu-tab feedback one-third-height" data-ng-click="openFeedback()">
 			<img src="pages/images/feedback.svg" width="20" />
 		</div>
 	</div>

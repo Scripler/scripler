@@ -77,7 +77,7 @@ html, body {
 .menu-tab {
 	cursor: pointer;
 	height: calc(100% / 3);
-	min-height: 190px;
+	min-height: 150px;
 	padding: 0;
 	text-align: center;
 	-webkit-transform-style: preserve-3d;
