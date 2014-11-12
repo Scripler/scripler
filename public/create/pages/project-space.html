@@ -68,7 +68,8 @@
 
 			<div class="section-projects">
 				<div class="project new" data-ng-click="addProject();">
-					<p>+</p>
+					<p class="project-new-sign">+</p>
+					<img alt="" src="pages/images/ebook.svg">
 				</div>
 				<div class="project" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index">
 					<a class="project-options-show" data-ng-class="{ 'open' : showProjectOptions }" data-ng-click="showProjectOptions = !showProjectOptions">
@@ -77,6 +78,7 @@
 					<!--<p data-ng-hide="editingProjectTitle" data-ng-click="editingProjectTitle = true;">-->
 					<p data-ng-hide="editingProjectTitle">
 						<a href="#/project?pid={{project._id}}" class="project-link">{{project.name}}</a>
+						<img alt="" src="pages/images/ebook.svg">
 					</p>
 
 					<form data-ng-show="editingProjectTitle">

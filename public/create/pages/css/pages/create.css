@@ -45,22 +45,29 @@
 .project {
 	position: relative;
 	margin: 0 15px 15px 0;
-	width: 88px;
-	height: 142px;
-	background: none #fefefe;
+	width: 100px;
+	height: 129px;
 	float: left;
-	border: 1px solid #ffff99;
 	display: table;
-	box-shadow: 0px 5px 5px -5px #ccc;
+	cursor: pointer;
 }
+
 .project.new {
-	border: 1px dashed #eee;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	cursor: pointer;
+}
+
+.project-new-sign {
+	left: 0;
+	position: absolute;
+	text-align: center;
+	top: 14px;
+	width: 85%;
 }
 
 .project p {
@@ -73,7 +80,7 @@
 .project .project-options-show {
 	position: absolute;
 	top: 5px;
-	right: 5px;
+	right: 17px;
 	padding: 6px;
 	cursor: pointer;
 	z-index: 15;
@@ -140,9 +147,12 @@
 	opacity: 0.5;
 }
 .project-link {
-	display: block;
-	padding-top: 60px;
-	height: 140px;
+	left: 0;
+	position: absolute;
+	text-align: center;
+	padding-top:30px;
+	width: 85%;
+	height: 100%;
 }
 
 .filter-sort, .filter-search {
