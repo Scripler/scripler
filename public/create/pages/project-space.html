@@ -64,11 +64,10 @@
 
 		<!--<section class="section-projects" data-ng-click="editingProjectTitle = false;">-->
 		<section class="section-projects">
-			<a href=""> <!-- Ensure that the whole "New ebook" (+) icon shows a "hyperlink hand" icon -->
 			<div class="project new" data-ng-click="addProject();">
 				<p class="project-new-sign">+</p>
+				<img alt="" src="pages/images/ebook.svg">
 			</div>
-			</a>
 			<div class="project" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index">
 				<a class="project-options-show" data-ng-class="{ 'open' : showProjectOptions }" data-ng-click="showProjectOptions = !showProjectOptions">
 					<div class="arrow"></div>
@@ -76,6 +75,7 @@
 				<!--<p data-ng-hide="editingProjectTitle" data-ng-click="editingProjectTitle = true;">-->
 				<p data-ng-hide="editingProjectTitle">
 					<a href="#/project?pid={{project._id}}" class="project-link">{{project.name}}</a>
+					<img alt="" src="pages/images/ebook.svg">
 				</p>
 
 				<form data-ng-show="editingProjectTitle">

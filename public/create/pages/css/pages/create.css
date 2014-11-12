@@ -36,8 +36,9 @@
 	height: 129px;
 	float: left;
 	display: table;
-	background-image: url("../../images/ebook.svg");
+	cursor: pointer;
 }
+
 .project.new {
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -45,6 +46,7 @@
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	cursor: pointer;
 }
 
 .project-new-sign {
@@ -52,7 +54,7 @@
 	position: absolute;
 	text-align: center;
 	top: 14px;
-	width: 85%
+	width: 85%;
 }
 
 .project p {
@@ -135,8 +137,9 @@
 	left: 0;
 	position: absolute;
 	text-align: center;
-	top: 30px;
-	width: 85%
+	padding-top:30px;
+	width: 85%;
+	height: 100%;
 }
 
 .filter-sort, .filter-search {
