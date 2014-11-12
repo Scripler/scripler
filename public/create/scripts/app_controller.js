@@ -239,6 +239,14 @@ app.service('userService', function( $rootScope, $http ) {
 						$scope.registerForm.$invalid = true;
 					}
 				});
+		},
+		openFeedback: function (user) {
+			var url = 'http://talk.scripler.com/';
+			if (user && user._id && !user.isDemo) {
+				// Since this is a registered user, we can send him to the auto-login url.
+				url = 'http://talk.scripler.com/session/sso?return_path=%2F';
+			}
+			window.open(url);
 		}
 	};
 });
