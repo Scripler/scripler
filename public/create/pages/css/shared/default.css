@@ -27,7 +27,7 @@ body, html { position: relative; font-size: 100%; padding: 0; margin: 0; }
 /* General Styling */
 body {
 	background: none #F8F9F9;
-	font-family: 'Lato', Calibri, Arial, sans-serif;
+	font-family: 'Roboto', Arial, sans-serif;
 	color: #666;
 }
 
