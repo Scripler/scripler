@@ -203,9 +203,13 @@ $(document).ready(function() {
 					$(".menu-loggedin").attr("title", "You are logged in as " + data.user.firstname);
 					$(".menu-login").css("display", "none");
 				} else if (user.isDemo) {
+					$("#login").animate({ "paddingBottom": "20", "paddingTop": "70" }, 800);
 					$(".menu-login").css("display", "inline");
 				}
 			}
+		},
+		error: function (request, status, error) {
+			$("#login").animate({ "paddingBottom": "20", "paddingTop": "70" }, 800);
 		}
 	});
 
