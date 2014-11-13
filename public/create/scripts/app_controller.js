@@ -168,12 +168,19 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 
 			if ($scope.registerForm.$valid) {
 				$scope.user.isDemo = false;
-				userService.updateUser($scope.user, function () {
-					$rootScope.$emit('user:registered', $scope.user);
-					$scope.registrationText = 'Good job! We\'ve emailed you a confirmation link. You can keep writing, though...';
+				userService.updateUser($scope.user, function (err) {
+					if (err) {
+						if (err && err.errorDetails && err.errorDetails === 'Email already registered' ) {
+							$scope.errors.email = err.errorDetails;
+							$scope.registerForm.email.$invalid = true;
+							$scope.registerForm.$invalid = true;
+						}
+					} else {
+						$rootScope.$emit('user:registered', $scope.user);
+						$scope.registrationText = 'Good job! We\'ve emailed you a confirmation link. You can keep writing, though...';
+					}
 				});
 			}
-
 		}
 }]);
 
@@ -267,7 +274,7 @@ app.service('userService', function( $rootScope, $http ) {
 	var user = {};
 
 	return {
-		setUser: function( user ) {
+		setUser: function(user) {
 			this.user = user;
 			if (user.password) {
 				delete user.password; // No need to store user password hash.
@@ -277,22 +284,17 @@ app.service('userService', function( $rootScope, $http ) {
 		getUser: function() {
 			return this.user;
 		},
-		updateUser: function( user, next ) {
+		updateUser: function(user, next) {
 			var self = this;
-			$http.put( '/user', angular.toJson( user ) )
-				.success( function( data ) {
-					self.setUser( data.user );
+			$http.put( '/user', angular.toJson(user) )
+				.success( function(data) {
+					self.setUser(data.user);
 					if (next) {
-						next();
+						return next();
 					}
 				})
-				.error( function( data ) {
-					//console.log("ERROR: " + JSON.stringify(data));
-					if (data && data.errorDetails && data.errorDetails === 'Email already registered' ) {
-						$scope.errors.email = err;
-						$scope.registerForm.email.$invalid = true;
-						$scope.registerForm.$invalid = true;
-					}
+				.error(function(data) {
+					return next(data);
 				});
 		},
 		openFeedback: function (user) {
