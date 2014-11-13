@@ -97,7 +97,8 @@ function projectSpaceController($scope, $http, projectsService, userService, $q,
 						'description': null,
 						'isbn': null
 					}).success( function() {
-							$scope.projects.push( data.project );
+						data.project.editingProjectTitle = true;
+						$scope.projects.push( data.project );
 					});
 				});
 		} else {

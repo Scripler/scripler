@@ -75,20 +75,16 @@
 					<a class="project-options-show" data-ng-class="{ 'open' : showProjectOptions }" data-ng-click="showProjectOptions = !showProjectOptions">
 						<div class="arrow"></div>
 					</a>
-					<!--<p data-ng-hide="editingProjectTitle" data-ng-click="editingProjectTitle = true;">-->
-					<p data-ng-hide="editingProjectTitle">
-						<a href="#/project?pid={{project._id}}" class="project-link">{{project.name}}</a>
+					<p>
+						<a href="#/project?pid={{project._id}}" class="project-link" data-ng-hide="project.editingProjectTitle">{{project.name}}</a>
+						<form data-ng-show="project.editingProjectTitle">
+							<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!project.editingProjectTitle" on-enter="project.editingProjectTitle = false; renameProject(project);" data-ng-blur="project.editingProjectTitle = false; renameProject(project);"></textarea>
+						</form>
 						<img alt="" src="pages/images/ebook.svg">
 					</p>
 
-					<form data-ng-show="editingProjectTitle">
-					<p>
-						<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!editingProjectTitle" on-enter="editingProjectTitle = false; renameProject(project);" data-ng-blur="editingProjectTitle = false; renameProject(project);"></textarea>
-					</p>
-					</form>
-
 					<div class="project-options" data-ng-show="showProjectOptions">
-						<div class="project-options-menupoint" data-ng-click="editingProjectTitle = true; showProjectOptions = false;">rename</div>
+						<div class="project-options-menupoint" data-ng-click="project.editingProjectTitle = true; showProjectOptions = false;">rename</div>
 						<div class="project-options-menupoint" data-ng-click="copyProject(project); showProjectOptions = false;">copy</div>
 						<div class="project-options-menupoint" data-ng-hide="project.archived" data-ng-click="archiveProject(project); showProjectOptions = false;">archive</div>
 						<div class="project-options-menupoint" data-ng-show="project.archived" data-ng-click="unarchiveProject(project); showProjectOptions = false;">unarchive</div>
