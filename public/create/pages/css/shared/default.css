@@ -252,7 +252,7 @@ textarea {
 	position: fixed;
 	width: 100%;
 	padding-top: 20px;
-	z-index: 10;
+	z-index: 20;
 	text-align: center;
 	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
 	bottom: 0;
