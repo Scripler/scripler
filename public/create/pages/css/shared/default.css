@@ -249,34 +249,22 @@ textarea {
 	background-color: #c6c6c6;
 	position: fixed;
 	width: 100%;
-	padding-top: 20px;
+	padding: 20px;
 	z-index: 20;
-	text-align: center;
 	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
 	bottom: 0;
-	padding-bottom: 20px;
 }
 .green {
 	background-color: #5cb85c;
 }
-.registration-form {
-	float: left;
-}
 .registration-text {
-	color: #000;
-	opacity: 0.6;
-	float: left;
-	padding-left: 20px;
-	padding-top: 8px;
-	width: 400px;
-	text-align: left;
 	font-weight: 900;
+	margin-bottom: 10px;
 }
 .registration-text.validate {
 	color: #fff;
 	text-align: center;
-	float: none;
-	width: auto;
+	margin: 0;
 	opacity: 1;
 }
 .button.registration-button {
@@ -300,9 +288,9 @@ textarea {
 	font-family: 'Roboto', sans-serif;
 }
 .registration-close-button {
-	position: fixed;
-	right: 8px;
-	bottom: 43px;
+	position: absolute;
+	right: 10px;
+	top: 6px;
 	color: #fff;
 	font-size: 120%;
 	cursor: pointer;
