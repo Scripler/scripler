@@ -230,8 +230,7 @@ textarea#rename {
 	bottom: 0;
 }
 .user-box {
-	padding-top: 6px;
-	padding-left: 20px;
+	padding: 6px;
 }
 .user-image {
 	float: left;
