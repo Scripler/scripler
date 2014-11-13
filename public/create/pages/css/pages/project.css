@@ -222,7 +222,7 @@ html, body {
 	height: 80px;
 }
 .projectDocument.new {
-	padding-top: 20px;
+	padding-top: 15px;
 	border: 1px dashed #eee;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -232,9 +232,9 @@ html, body {
 	user-select: none;
 }
 .projectDocument p {
-	vertical-align: middle;
+	height: 62px;
+	margin: 25px 5px 5px;
 	text-align: center;
-	cursor: pointer;
 	overflow: hidden;
 }
 [selected] {
@@ -307,8 +307,8 @@ html, body {
 	opacity: 0.5;
 }
 textarea#renameProjectDocument, textarea#renameStyleset, textarea#renameStyle {
-	width: 90%;
-	height: auto;
+	width: 100%;
+	height: 64px;
 	border: 1px solid #ffff99;
 	resize: none;
 	outline: none;
@@ -383,7 +383,7 @@ textarea#renameProjectDocument, textarea#renameStyleset, textarea#renameStyle {
 	margin: 0 0 10px 0;
 	cursor: pointer;
 	position: relative;
-	overflow-x: hidden;
+	overflow: visible;
 }
 .typo.new {
 	border: 2px dashed #c6c6c6;

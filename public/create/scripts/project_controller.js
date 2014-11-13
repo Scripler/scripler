@@ -558,7 +558,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		$http.post('/styleset', angular.toJson( styleset ) )
 			.success( function( data ) {
-				data.styleset.rename = true;
+				data.styleset.editingStyleSetTitle = true;
 				$scope.stylesets.push( data.styleset );
 			});
 	}
@@ -899,9 +899,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				if ( index > -1 ) {
 					styleset.styles.splice( index+1, 0, style );
 				} else {
+					style.editingStyleTitle = true;
 					styleset.styles.push( style );
 				}
-				style.rename = true;
 			});
 	}
 
