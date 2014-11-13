@@ -80,7 +80,7 @@
 .project .project-options-show {
 	position: absolute;
 	top: 5px;
-	right: 17px;
+	right: 20px;
 	padding: 6px;
 	cursor: pointer;
 	z-index: 15;
@@ -107,7 +107,7 @@
 .project-options {
 	position: absolute;
 	top: 20px;
-	right: 5px;
+	right: 20px;
 	background: none #fff;
 	z-index: 10;
 	border: 1px solid #000;
@@ -147,12 +147,13 @@
 	opacity: 0.5;
 }
 .project-link {
-	left: 0;
 	position: absolute;
+	top: 0;
+	left: 6px;
 	text-align: center;
-	padding-top:30px;
-	width: 85%;
-	height: 100%;
+	padding: 30px 5px 5px;
+	width: 75px;
+	height: 110px;
 }
 
 .filter-sort, .filter-search {
@@ -166,9 +167,14 @@
 }
 
 textarea#rename {
-	width: 90%;
-	margin-top: 37px;
-	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 6px;
+	text-align: center;
+	padding: 5px;
+	margin: 30px 5px 5px;
+	width: 65px;
+	height: 75px;
 	border: 1px solid #ffff99;
 	resize: none;
 	outline: none;
