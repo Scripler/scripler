@@ -229,6 +229,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$http.post('/document', angular.toJson( document ) )
 				.success( function( data ) {
 
+					data.document.editingProjectDocumentTitle = true;
+					console.log(data);
+
 					if ( typeof data.document.type !== 'undefined' ) {
 						$scope.projectDocuments.unshift( data.document );
 						$scope.rearrange( $scope.projectDocuments );
