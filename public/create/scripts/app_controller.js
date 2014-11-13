@@ -1,39 +1,104 @@
 'use strict';
 
-var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload',
-										 	'ngProgress', 'utilsSharedModule' ] );
+var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload', 'angucomplete-alt', 'ngProgress', 'utilsSharedModule' ] );
 
-app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStorageService', '$rootScope', '$timeout',
-	function( $http, $scope, userService, localStorageService, $rootScope, $timeout ) {
+app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope', 'utilsService',
+	function( $http, $scope, userService, $rootScope, utilsService) {
 		$scope.errors = {};
 		$scope.errors.name = 'Name is empty';
 		$scope.errors.email = 'Email is invalid';
-		$scope.errors.password = '6 Characters minimum';
-		$scope.registrationText = 'Hey Stranger - register to save your work!';
+		$scope.errors.password = 'Six characters minimum';
+		$scope.registrationText = 'Hey, stranger. Register to save your work!';
 		$scope.EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 		$scope.user = {};
 
-		$scope.$onRootScope('user:updated', function( event, user ) {
-			$scope.user = user;
-			if (!$scope.user.emailValidated) {
-				$scope.registrationText = 'Hey there, remember to validate your email-address. Learn more.';
+		$scope.registrationBarHiddenByUser = false;
+
+		var ckeOrgHeight;
+		var currentBarOffset = 0;
+
+		$rootScope.updateBottomOffset = function() {
+			var bar = document.getElementById("registrationFooter");
+			var height = bar ? bar.offsetHeight : 0;
+			if (currentBarOffset != height) {
+				var editor = document.getElementById("cke_1_contents");
+				if (editor && editor.style.height) {
+					currentBarOffset = height;
+					if (!ckeOrgHeight) {
+						ckeOrgHeight = editor.style.height;
+					}
+					if (height > 0) {
+						var newHeight = ckeOrgHeight.replace('px', '') - height;
+						editor.style.height = newHeight + 'px';
+					} else {
+						editor.style.height = ckeOrgHeight;
+					}
+				}
 			}
+
+			var elements = document.getElementsByClassName('bottom-fixed');
+			for (var i = 0; i < elements.length; i++) {
+				elements[i].style.bottom = height + 'px';
+			}
+			elements = document.getElementsByClassName('full-height');
+			for (var i = 0; i < elements.length; i++) {
+				elements[i].style.height = 'calc(100% - ' + height + 'px)';
+				elements[i].style.minHeight = 'calc(100% - ' + height + 'px)';
+			}
+
+			var styleEditor = document.getElementById("cke_1_floatingtools");
+			if (styleEditor) {
+				var defaultOffset = 28; // From hardcoded value in floating-tools CK plugin.
+				var currentOffset = styleEditor.style.bottom.replace('px', '');
+				// If current offset is negative, it's hidden, so don't mess with it
+				if (currentOffset > 0) {
+					styleEditor.style.bottom = (defaultOffset + height) + 'px';
+				}
+			}
+		}
+
+		$scope.$watch('registrationBarHiddenByUser', function () {
+			// Wait for the registration-bar visual changes before updating bottom offset.
+			setTimeout(function () {
+				$rootScope.updateBottomOffset();
+			}, 0);
+		});
+
+		$scope.$onRootScope('user:updated', function( event, user ) {
+			if (user.isDemo) {
+				$scope.demoUser = user;
+			} else {
+				$scope.user = user;
+				if (!$scope.user.emailVerified) {
+					$scope.registrationText = 'Remove this message by verifying your email address. Click the link you received in your welcome email.';
+				}
+			}
+			// Wait for the registration-bar visual changes before updating bottom offset.
+			setTimeout(function () {
+				$rootScope.updateBottomOffset();
+			}, 0);
 		});
 
 		$scope.$onRootScope('login:failed', function( event ) {
-			var publications = [];
-			var lsName = 'demo-scripler-publications';
-			var lsPublications = localStorageService.get( lsName );
+				var demoId = Date.now();
+				var password = utilsService.createRandomString(10);
+				$scope.demoUser = {
+					name: "Scripler Demo " + demoId,
+					email: "demo-" + demoId + "@scripler.com",
+					password: password,
+					isDemo: true
+				};
 
-				if ( lsPublications ) {
-					if ( lsPublications.length !== 0 ) {
-						publications = lsPublications;
+				$scope.registerUser($scope.demoUser, function (err) {
+					if (err) {
+						// TODO: show "something went wrong" error to the user
+						console.log("ERROR registering demo user: " + JSON.stringify(err));
+					} else {
+						// TODO: emit 'user:registered' event when a demo user registers?
+						//$rootScope.$emit('user:registered', $scope.demoUser);
 					}
-				} else {
-					publications = [ { _id: Date.now(), name:'Demo Title' } ];
-					localStorageService.add( lsName, publications );
-				}
+				});
 		});
 
 		$scope.$onRootScope('ckDocument:dataReady', function( event ) {
@@ -45,6 +110,7 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 				iDoc.addEventListener('copy', $scope.copySelection);
 				iDoc.addEventListener('cut', $scope.copySelection);
 			};
+			$rootScope.updateBottomOffset();
 		});
 
 		$scope.copySelection = function() {
@@ -80,6 +146,19 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 			selection.selectRanges( selectedRanges );
 		}
 
+		$scope.registerUser = function(user, next) {
+			$http.post( '/user/register', angular.toJson( user ) )
+				.success( function( data ) {
+					$http.post('/user/login/', angular.toJson( user ) )
+						.success( function( data ) {
+							next();
+						});
+				})
+				.error( function( data ) {
+					next(data.errorDetails || 'Could not register user');
+				});
+		}
+
 		$scope.submitRegistration = function() {
 			$scope.registrationSubmitted = true;
 			$scope.registerForm.$pristine = false;
@@ -88,28 +167,13 @@ app.controller( 'appController', [ '$http', '$scope', 'userService', 'localStora
 			$scope.registerForm.password.$pristine = false;
 
 			if ($scope.registerForm.$valid) {
-				$http.post( '/user/register', angular.toJson( $scope.user ) )
-					.success( function( data ) {
-						if ( data.user ) {
-							$http.post('/user/login/', angular.toJson( $scope.user ) )
-								.success( function( data ) {
-									if ( data.user ) {
-										$rootScope.$emit('user:registered', data.user);
-										$scope.registrationText = 'Great! We\'ve emailed you a confirmation link (learn more). You can keep writing though...';
-									}
-								});
-						}
-					})
-					.error( function( data ) {
-						if ( data.errorDetails ) {
-							if ( data.errorDetails === 'Email already registered' ) {
-								$scope.errors.email = data.errorDetails;
-								$scope.registerForm.email.$invalid = true;
-								$scope.registerForm.$invalid = true;
-							}
-						}
-					});
+				$scope.user.isDemo = false;
+				userService.updateUser($scope.user, function () {
+					$rootScope.$emit('user:registered', $scope.user);
+					$scope.registrationText = 'Good job! We\'ve emailed you a confirmation link. You can keep writing, though...';
+				});
 			}
+
 		}
 }]);
 
@@ -133,14 +197,27 @@ app.config( function( $routeProvider, $httpProvider, $provide ) {
 			var deferred = $q.defer();
 
 			$http.get( '/user' )
-				.success( function( data ) {
-					if ( data.user ) {
-						userService.setUser( data.user );
-						deferred.resolve( data.user );
+				.success(function(data) {
+					if (data.user) {
+						userService.setUser(data.user);
+						deferred.resolve(data.user);
 					}
 				})
-				.error( function( data ) {
-					$rootScope.$emit('login:failed');
+				.error(function(data) {
+					/*
+					 Avoid displaying the demo user info in the input fields in the "Register" bar: Angular will
+					 automatically reflect the changed model in the view (synchronization is not always smart!) so use
+					 a "demoUser" variable and don't set the "real" user variable (which is also used from here on, i.e. in the app
+					 equal to the demoUser variable until this point (e.g. we cannot set the value when the demo user is created)).
+
+					 - demoUser = false, when going from the frontpage to projectspace (/), i.e. emit "login:failed" causing demo user creation.
+					 - demoUser = true, when going from projectspace (/) to the app (/project)
+					 */
+					if (typeof $scope != 'undefined' && $scope.demoUser) {
+						$scope.user = $scope.demoUser;
+					} else {
+						$rootScope.$emit('login:failed');
+					}
 					deferred.resolve();
 				});
 
@@ -192,17 +269,41 @@ app.service('userService', function( $rootScope, $http ) {
 	return {
 		setUser: function( user ) {
 			this.user = user;
+			if (user.password) {
+				delete user.password; // No need to store user password hash.
+			}
 			$rootScope.$emit('user:updated', this.user);
 		},
 		getUser: function() {
 			return this.user;
 		},
-		updateUser: function( user ) {
+		updateUser: function( user, next ) {
 			var self = this;
 			$http.put( '/user', angular.toJson( user ) )
 				.success( function( data ) {
 					self.setUser( data.user );
+					if (next) {
+						next();
+					}
+				})
+				.error( function( data ) {
+					//console.log("ERROR: " + JSON.stringify(data));
+					if (data && data.errorDetails && data.errorDetails === 'Email already registered' ) {
+						$scope.errors.email = err;
+						$scope.registerForm.email.$invalid = true;
+						$scope.registerForm.$invalid = true;
+					}
 				});
+		},
+		openFeedback: function (user) {
+			var hostname = 'http://talk.scripler.com';
+			var path = '/c/feedback';
+			var url = hostname+path;
+			if (user && user._id && !user.isDemo) {
+				// Since this is a registered user, we can send him to the auto-login url.
+				url = hostname+'/session/sso?return_path='+encodeURIComponent(path);
+			}
+			window.open(url);
 		}
 	};
 });
@@ -212,13 +313,13 @@ app.directive('onClickChangeText', function( $timeout, $parse ) {
 		link: function( scope, element, attrs ) {
 			element.bind('focus', function() {
 				if ( attrs.id === 'reg-name' ) {
-					scope.registrationText = 'Just put in your name ...';
+					scope.registrationText = 'Type in your name...';
 				}
 				if ( attrs.id === 'reg-email' ) {
-					scope.registrationText = 'Good job, now your email. We\'ll verify it shortly ...';
+					scope.registrationText = 'Now your email. You can verify it shortly...';
 				}
 				if ( attrs.id === 'reg-password' ) {
-					scope.registrationText = 'Nice. Now choose a password, a good one.';
+					scope.registrationText = 'Nice. Now choose a good password.';
 				}
 
 				scope.$digest();
@@ -293,7 +394,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				contentsCss: ['ckeditor/contents.css', 'stylesets/non-editable.css'],
 				//Load css sheet via angualr here
 				toolbar: [
-					['Undo'], ['Redo'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['imageScripler'], ['linkScripler'], ['Source'] // TODO: Remove "Source" button before "real" launch (ALPHA? BETA?)
+					['Undo'], ['Redo'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['imageScripler'], ['linkScripler']
 				],
 				removeButtons: 'language,CreateDiv,Flash,Iframe'
 			});

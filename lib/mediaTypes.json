@@ -2,6 +2,7 @@
 	"css": "text/css",
 	"html": "application/xhtml+xml",
 	"jpg": "image/jpeg",
+	"jpeg": "image/jpeg",
 	"png": "image/png",
 	"svg": "image/svg+xml",
 	"ttf": "application/x-font-ttf",

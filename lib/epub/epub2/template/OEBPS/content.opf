@@ -21,22 +21,22 @@
     <dc:source>%metadata_source%</dc:source>
   </metadata>
   <manifest>
-	<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
 
 %manifest_font_files%
 %manifest_html_files%
 %manifest_image_files%
 %manifest_style_files%
 
-	<item id="%manifest_font_license_name%" href="%manifest_font_license_name%" media-type="text/plain" />
+    <item id="%manifest_font_license_name%" href="%manifest_font_license_name%" media-type="text/plain" />
   </manifest>
   <spine toc="ncx">
 %spine_documents%
   </spine>
   <guide>
-	%guide_cover%
-	%guide_titlepage%
-	%guide_toc%
-	%guide_colophon%
+    %guide_cover%
+    %guide_titlepage%
+    %guide_toc%
+    %guide_colophon%
   </guide>
 </package>

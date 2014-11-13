@@ -50,13 +50,13 @@ exports.copy = function (styleset, next) {
 		if ('object' == typeof styleset) {
 
 			/*
-			 console.log("Styleset.copy - name: " + styleset.name);
-			 console.log("Styleset.copy - members: " + styleset.members);
-			 console.log("Styleset.copy - archived: " + styleset.archived);
-			 console.log("Styleset.copy - isSystem: " + styleset.isSystem);
-			 console.log("Styleset.copy - original: " + styleset._id);
-			 console.log("Styleset.copy - order: " + styleset.order);
-			 */
+			console.log("Styleset.copy - name: " + styleset.name);
+			console.log("Styleset.copy - members: " + styleset.members);
+			console.log("Styleset.copy - archived: " + styleset.archived);
+			console.log("Styleset.copy - isSystem: " + styleset.isSystem);
+			console.log("Styleset.copy - original: " + styleset._id);
+			console.log("Styleset.copy - order: " + styleset.order);
+			*/
 
 			if (isPopulatedPrivate(styleset)) {
 				var result = new InternalStyleset({
@@ -90,7 +90,7 @@ exports.copy = function (styleset, next) {
 												return next(err);
 											}
 
-											//console.log("Saved styleset copy " + result);
+											//console.log("Saved styleset copy " + JSON.stringify(result));
 
 											return next(null, result);
 										});

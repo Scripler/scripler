@@ -29,8 +29,6 @@ body {
 	background: none #F8F9F9;
 	font-family: 'Lato', Calibri, Arial, sans-serif;
 	color: #666;
-	overflow-x: hidden;
-	overflow-y: hidden;
 }
 
 h1 {
@@ -383,4 +381,75 @@ textarea {
 	left: 0;
 	right: 0;
 	z-index: 99999;
+}
+
+.feedback{
+	background:#c6c6c6;
+	width: 50px;
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+	height: calc(100% / 3);
+	cursor: pointer;
+	padding: 0;
+	text-align: center;
+}
+
+.feedback-fixed {
+	position:fixed;
+	bottom:0;
+	right:0;
+	min-height: 150px;
+}
+
+.feedback img {
+	position: relative;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+
+/* Styling for autocomplete */
+.autocomplete{
+  width: 100%;
+  position: relative;
+}
+
+.autocomplete input {
+  font-size: 1.2em;
+  width: 100%;
+  padding:0.4em;
+}
+
+.autocomplete ul {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 100%;
+  border-left: 1px solid #efefef;
+  border-right: 1px solid #efefef;
+  border-bottom: 1px solid #efefef;
+  z-index: 5;
+}
+
+.autocomplete li {
+  text-align: left;
+  list-style:none;
+  width: 100%;
+  padding:0.4em;
+  background-color: #fff;
+}
+
+.autocomplete li.active {
+  width: 100%;
+  background-color: #fff265;
+}
+
+.autocomplete .highlight {
+  background-color: #E2E2E2;
+}
+
+.autocomplete li.active .highlight {
+  background: #fff265;
 }

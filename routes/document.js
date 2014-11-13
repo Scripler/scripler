@@ -58,12 +58,12 @@ var create = exports.create = function (req, res, next) {
 		]
 	});
 
-	Styleset.findOne({"_id": project.styleset}, function (err, populatedStyleset) {
+	Styleset.findOne({"_id": project.styleset}, function (err, styleset) {
 		if (err) {
 			return next(err);
 		}
 
-		copyStyleset(populatedStyleset, function(err, copy) {
+		copyStyleset(styleset, function(err, copy) {
 			if (err) {
 				return next(err);
 			}
@@ -99,6 +99,8 @@ exports.update = function (req, res, next) {
 		document.text = req.body.text;
 	}
 
+	// TODO: implement via styleset-utils.getStylsetOrStyleType()?
+
 	// Is defaultstyleset to be changed?
 	if (req.body.defaultStyleset != undefined &&
 		!utils_shared.mongooseEquals(document.defaultStyleset, req.body.defaultStyleset)) {
@@ -110,48 +112,13 @@ exports.update = function (req, res, next) {
 		}
 	}
 
-	var saveDocument = function (err) {
-		document.save(function (err, document) {
-			if (err) {
-				return next(err);
-			}
+	document.save(function (err, document) {
+		if (err) {
+			return next(err);
+		}
+		res.send({document: document});
+	});
 
-			//logger.info('document.fonts: ' + document.fonts);
-
-			res.send({document: document});
-		});
-	}
-
-	if (req.body.fonts != undefined) {
-		// TODO: can this be optimized by looking up ALL ids in one query (using $in)?
-		async.each(req.body.fonts, function (font, callback) {
-			// Frontend does not know the Mongo ids of fonts so we must translate (family, style, weight) to an id for it
-			//logger.info('font: ' + JSON.stringify(font));
-			Font.findOne({"family": font.family, "style": font.style, "weight": font.weight}, function (err, font) {
-				if (err) {
-					callback(err);
-				}
-
-				font.documentId = document._id;
-				font.save(function (err, font) {
-					if (err) {
-						callback(err);
-					}
-
-					document.fonts.addToSet(font);
-					callback();
-				});
-			})
-		}, function (err) {
-			if (err) {
-				saveDocument(err);
-			}
-
-			saveDocument();
-		});
-	} else {
-		saveDocument();
-	}
 }
 
 exports.rename = function (req, res, next) {
@@ -296,9 +263,10 @@ exports.upload = function (req, res, next) {
 
 exports.applyStyleset = function (req, res, next) {
 	var stylesetToApply = req.styleset;
-	var stylesetToApplyId = stylesetToApply._id;
 	var documentStylesetIds = req.document.stylesets;
 	var defaultStylesetId = req.document.defaultStyleset;
+
+	// TODO: implement via styleset-utils.getStylsetOrStyleType()?
 
 	if (req.user.level == "free") {
 		return next({message: "Free users are not allowed to apply styles", status: 402});

@@ -1,28 +1,29 @@
 <link rel="stylesheet" type="text/css" href="pages/css/shared/default.css" />
 <link rel="stylesheet" type="text/css" href="pages/css/pages/project.css" />
+<link rel="stylesheet" type="text/css" href="pages/css/shared/angucomplete-alt.css"/>
 <link rel="stylesheet" type="text/css" href="pages/css/shared/fonts.css">
 
 <div class="container">
 
-	<div id="menu-left-tabs" class="menu-tabs left" ondragstart="return false;" ondrop="return false;">
+	<div id="menu-left-tabs" class="menu-tabs left full-height" ondragstart="return false;" ondrop="return false;">
 		<div class="menu-tab" data-ng-class="{ 'selectedTab' : showDocuments }" data-ng-click="showDocuments = !showDocuments; showTypo = false; showInsert = false;">
-			<img src="pages/images/documents.svg" width="20">
+			<img src="pages/images/contents.svg" width="20">
 		</div>
 		<div class="menu-tab" data-ng-class="{ 'selectedTab' : showTypo }" data-ng-click="showTypo = !showTypo; hideStyleEditor(); showDocuments = false; showInsert = false; focusEditor();">
-			<img src="pages/images/typography.svg" width="20">
+			<img src="pages/images/design.svg" width="20">
 		</div>
 		<div class="menu-tab" data-ng-class="{ 'selectedTab' : showInsert }" data-ng-click="showInsert = !showInsert; showDocuments = false; showTypo = false;">
 			<img src="pages/images/insert.svg" width="20">
 		</div>
 	</div>
-	<div id="menu-left" class="menu-left" data-ng-class="{ 'open' : showDocuments || showTypo || showInsert, 'bottom-menu-space' : showDocuments || showTypo }">
+	<div id="menu-left" class="menu-left full-height" data-ng-class="{ 'open' : showDocuments || showTypo || showInsert, 'bottom-menu-space' : showDocuments || showTypo }">
 		<div class="menu-item-left documents" data-ng-show="showDocuments">
-			<div class="projectDocument new" data-ng-click="addProjectDocument()">
+			<div class="projectDocument new" data-ng-click="addProjectDocument();">
 				<p>+</p>
 			</div>
 			<div html-sortable="sortable_option" data-ng-model="projectDocuments">
 				<div class="projectDocument" data-ng-repeat="projectDocument in projectDocuments track by projectDocument._id" data-ng-selected="documentSelected === projectDocument" data-ng-hide="projectDocument.archived && !user.showArchivedDocuments" data-ng-class="{ 'archived' : projectDocument.archived }">
-					<a class="projectDocument-options-show" data-ng-click="showProjectDocumentOptions = true">
+					<a class="projectdocument-options-show" data-ng-class="{ 'open' : showProjectDocumentOptions }" data-ng-click="showProjectDocumentOptions = !showProjectDocumentOptions">
 						<div class="arrow"></div>
 					</a>
 
@@ -34,15 +35,15 @@
 
 					<form data-ng-show="editingProjectDocumentTitle">
 						<p>
-							<textarea id="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!editingProjectDocumentTitle" on-enter="editingProjectDocumentTitle = false; renameProjectDocument(projectDocument);"></textarea>
+							<textarea id="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!editingProjectDocumentTitle" on-enter="editingProjectDocumentTitle = false; renameProjectDocument(projectDocument);" data-ng-blur="editingProjectDocumentTitle = false; renameProjectDocument(projectDocument);"></textarea>
 						</p>
 					</form>
 
 					<div class="projectDocument-options" data-ng-show="showProjectDocumentOptions">
-						<div class="projectDocument-options-hide" data-ng-click="showProjectDocumentOptions = false;" title="Close Options">x</div>
 						<div class="projectDocument-options-menupoint first" data-ng-click="editingProjectDocumentTitle = true; showProjectDocumentOptions = false;">rename</div>
 						<div class="projectDocument-options-menupoint" data-ng-hide="projectDocument.archived" data-ng-click="archiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">archive</div>
 						<div class="projectDocument-options-menupoint" data-ng-show="projectDocument.archived" data-ng-click="unarchiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">unarchive</div>
+						<div class="projectDocument-options-hide" data-ng-click="showProjectDocumentOptions = false;" title="Close Options"></div>
 					</div>
 				</div>
 			</div>
@@ -52,37 +53,35 @@
 				<p>+</p>
 			</div>
 			<ul>
-				<li data-ng-repeat="styleset in stylesets track by $index" class="typo" data-ng-class="{ 'open' : typoChildrenVisible == true }" data-ng-hide="styleset.archived || styleset.hidden">
-					<a class="styleset-options-show" data-ng-click="typoChildrenVisible = true; showStylesetOptions = true">
+				<li data-ng-repeat="styleset in stylesets track by $index" class="typo" data-ng-class="{ 'open' : typoChildrenVisible }" data-ng-hide="styleset.archived || styleset.hidden">
+					<a class="styleset-options-show" data-ng-click="typoChildrenVisible = true; showStylesetOptions = !showStylesetOptions" data-ng-class="{ 'open' : showStylesetOptions }">
 						<div class="arrow"></div>
 					</a>
 
-					<p class="not-selectable" data-ng-style="styleset.css" data-ng-click="typoChildrenVisible=!typoChildrenVisible; focusEditor();" data-ng-hide="styleset.rename">{{styleset.name}}</p>
+					<p class="not-selectable" data-ng-style="styleset.css" data-ng-click="typoChildrenVisible =! typoChildrenVisible; showStylesetOptions = false; focusEditor();" data-ng-hide="editingStyleSetTitle">{{styleset.name}}</p>
 
-					<form data-ng-show="styleset.rename">
+					<form data-ng-show="editingStyleSetTitle">
 						<p>
-							<textarea id="renameStyleset" rows="1" data-ng-model="styleset.name" focus-on="!!styleset.rename" on-enter="toggleRename(styleset); renameStyleset(styleset);"></textarea>
+							<textarea id="renameStyleset" rows="1" data-ng-model="styleset.name" focus-on="!!editingStyleSetTitle" on-enter="editingStyleSetTitle = false; renameStyleset(styleset);" data-ng-blur="editingStyleSetTitle = false; renameStyleset(styleset);"></textarea>
 						</p>
 					</form>
 
 					<div class="styleset-options" data-ng-show="showStylesetOptions">
-						<div class="styleset-options-hide" data-ng-click="showStylesetOptions = false;" title="Close Options">x</div>
-						<div class="styleset-options-menupoint first" data-ng-click="toggleRename(styleset); showStylesetOptions = false;">rename</div>
-						<div class="styleset-options-menupoint" data-ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>
+						<div class="styleset-options-menupoint first" data-ng-click="editingStyleSetTitle = true; showStylesetOptions = false;">rename</div>
+						<!--<div class="styleset-options-menupoint" data-ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>-->
 						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToDocument(styleset,true); showStylesetOptions = false;">apply to document</div>
-						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to project</div>
+						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to ebook</div>
 					</div>
 
 					<ul data-ng-show="typoChildrenVisible || isDefaultStyleset(styleset)" class="typo-children">
 						<li data-ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" data-ng-hide="style.archived || style.hidden" data-ng-selected="selectedStyle._id === style._id">
-							<a class="style-options-show" data-ng-click="showStyleOptions = true">
+							<a class="style-options-show" data-ng-click="showStyleOptions = !showStyleOptions" data-ng-class="{ 'open' : showStyleOptions }">
 								<div class="arrow"></div>
 							</a>
 
 							{{style.tag === 'h1' && setStylesetStyling(styleset, style) || ''}}
-							<!--<span class="style-isblock" data-ng-bind="isBlock(style)"></span>-->
 
-							<div class="style-height" data-ng-hide="style.rename">
+							<div class="style-height" data-ng-hide="editingStyleTitle">
 								<span class="not-selectable" data-ng-style="getStyleStyling(style)" data-ng-click="applyStyle(styleset, style)">{{style.name}}</span>
 							</div>
 
@@ -94,14 +93,13 @@
 								</ul>
 							</div>
 
-							<form data-ng-show="style.rename">
-								<textarea id="renameStyle" rows="1" data-ng-model="style.name" focus-on="!!style.rename" on-enter="toggleRename(style); updateStyle(style);"></textarea>
+							<form data-ng-show="editingStyleTitle">
+								<textarea id="renameStyle" rows="1" data-ng-model="style.name" focus-on="!!editingStyleTitle" on-enter="editingStyleTitle = false; updateStyle(style);" data-ng-blur="editingStyleTitle = false; updateStyle(style);"></textarea>
 							</form>
 
 							<div class="style-options" data-ng-show="showStyleOptions">
-								<div class="style-options-hide" data-ng-click="showStyleOptions = false;" title="Close Options">x</div>
-								<div class="style-options-menupoint first" data-ng-click="toggleRename(style); showStyleOptions = false;">rename</div>
-								<div class="style-options-menupoint" data-ng-click="archiveStyle(style); showStyleOptions = false;">archive</div>
+								<div class="style-options-menupoint first" data-ng-click="editingStyleTitle = true; showStyleOptions = false;">rename</div>
+								<!--<div class="style-options-menupoint" data-ng-click="archiveStyle(style); showStyleOptions = false;">archive</div>-->
 							</div>
 						</li>
 						<li class="new style" data-ng-click="addNewStyle( styleset )"><p>+</p></li>
@@ -246,20 +244,20 @@
 				</li>-->
 			</ul>
 		</div>
-		<div class="documents-options-bottom-buttons" data-ng-show="showDocuments">
+		<div class="documents-options-bottom-buttons bottom-fixed" data-ng-show="showDocuments">
 			<a data-ng-class="{ 'open' : showNewOptions }" data-ng-click="showNewOptions = !showNewOptions; showImportOptions = false; showBottomOptions = false;">new</a>
 			<a data-ng-class="{ 'open' : showImportOptions }" data-ng-click="showImportOptions = !showImportOptions; showNewOptions = false; showBottomOptions = false;">import</a>
 			<a class="last" data-ng-class="{ 'open' : showBottomOptions }" data-ng-click="showBottomOptions = !showBottomOptions; showNewOptions = false; showImportOptions = false;">options</a>
 		</div>
 
-		<div class="stylesets-options-bottom-buttons" data-ng-show="showTypo">
+		<div class="stylesets-options-bottom-buttons bottom-fixed" data-ng-show="showTypo">
 			<a data-ng-click="showStyleEditor()" data-ng-class="{ 'open' : styleEditorVisible }">style editor</a>
 		</div>
 
-		<div id="menu-left-content-options" class="menu-options" data-ng-show="showDocuments" data-ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
+		<div id="menu-left-content-options" class="menu-options bottom-fixed" data-ng-show="showDocuments" data-ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
 			<div class="options-bottom-box">
 				<div data-ng-show="showNewOptions">
-					<a data-ng-click="addProjectDocument()">New Document</a><br>
+					<a data-ng-click="addProjectDocument()">New Chapter</a><br>
 				</div>
 				<div data-ng-show="showImportOptions">
 					<div class="upload-box" data-ng-file-drop="onFileSelect($files)" data-ng-file-drag-over-class="dragover"
@@ -268,7 +266,7 @@
 					<input type="file" data-ng-file-select="onFileSelect($files)">
 				</div>
 				<div data-ng-show="showBottomOptions">
-					<input type="checkbox" data-ng-model="user.showArchivedDocuments" data-ng-change="updateUser();">Show Archived Documents<br>
+					<input type="checkbox" data-ng-model="user.showArchivedDocuments" data-ng-change="updateUser();">Show Archived Content<br>
 				</div>
 			</div>
 		</div>
@@ -276,7 +274,7 @@
 
 	<div class="editor">
 		<p class="breadcrumb">
-			<a class="breadcrumb" href="#">Projects</a> / <span data-ng-bind="project.name"></span> / <span data-ng-bind="documentSelected.name"></span>
+			<a class="breadcrumb" href="#">Ebooks</a> / <span data-ng-bind="project.name"></span> / <span data-ng-bind="documentSelected.name"></span>
 		</p>
 		<p class="savedstamp">
 			<span data-ng-bind="lastSaved"></span>
@@ -290,58 +288,82 @@
 		<textarea ck-editor="" data-ng-model="documentSelected.text" class="form-control" id="bodyeditor"></textarea>
 	</div>
 
-	<div id="menu-right-tabs" class="menu-tabs right" ondragstart="return false;" ondrop="return false;">
-		<div class="menu-tab" data-ng-class="{ 'selectedTab' : showFinalizeOptions }" data-ng-click="showFinalizeOptions = !showFinalizeOptions; showOutput = false;">
-			<img src="pages/images/finalize.svg" width="20">
+	<div id="menu-right-tabs" class="menu-tabs right full-height" ondragstart="return false;" ondrop="return false;">
+		<div class="menu-tab one-third-height" data-ng-class="{ 'selectedTab' : showFinalizeOptions }" data-ng-click="showFinalizeOptions = !showFinalizeOptions; showOutput = false;">
+			<img src="pages/images/finalize.svg" width="20" />
 		</div>
-		<div class="menu-tab output" data-ng-class="{ 'selectedTab' : showOutput }" data-ng-click="showOutput = !showOutput; showFinalizeOptions = false;">
-			<img src="pages/images/output.svg" width="20">
+		<div class="menu-tab output one-third-height" data-ng-class="{ 'selectedTab' : showOutput }" data-ng-click="showOutput = !showOutput; showFinalizeOptions = false;">
+			<img src="pages/images/output.svg" width="20" />
+		</div>
+		<div class="menu-tab feedback one-third-height" data-ng-click="openFeedback()">
+			<img src="pages/images/feedback.svg" width="20" />
 		</div>
 	</div>
 	<div id="menu-right" class="menu-right" data-ng-class="{ 'open' : showFinalizeOptions || showOutput }">
 		<div class="menu-item-right inserts" data-ng-show="showFinalizeOptions">
 			<ul>
 				<li data-ng-click="finalizeOptionChosen('showFinalizeCoverOptions');" class="insertOption first" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
-					<img src="pages/images/insert_cover.png" alt="Cover" title="Cover" />
+					<img src="pages/images/insert_cover.png" alt="Add cover image" title="Add cover image" />
 				</li>
 				<li data-ng-click="finalizeOptionChosen('showFinalizeTitlepageOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
-					<img src="pages/images/insert_titlepage.png" alt="Titlepage" title="Titlepage" />
+					<img src="pages/images/insert_titlepage.png" alt="Title page" title="Title page" />
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
-					<div class="right-menu-options">
-						<span class="menu-box">
-							<input type="file" id="coverInput" data-ng-file-select="onCoverSelect($files)" accept="image/*" data-ng-hide="true">
-							<label for="coverInput">Create a cover</label>
-						</span>
-					</div>
+					<span class="right-menu-feature-title">
+						Add cover
+					</span>
+					<span class="right-menu-feature-text">
+						Add an existing cover image to the beginning of the book. This image will also represent the book on virtual book shelves and in ebook stores.
+					</span>
+					<span class="menu-box center-text right-menu-parameter-margin">
+						<input type="file" id="coverInput" data-ng-file-select="onCoverSelect($files)" accept="image/*" data-ng-hide="true">
+						<label for="coverInput">Add cover image</label>
+					</span>
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
-					<div class="right-menu-options">
-						<span class="right-menu-button full-size right-menu-parameter-margin">
-							<a data-ng-click="generateTitlePage();">Generate Title Page</a>
-						</span>
-					</div>
+					<span class="right-menu-feature-title">
+						Generate Title page
+					</span>
+					<span class="right-menu-feature-text">
+						A title page usually bears the full title, the author and similar. It is usually found at the beginning of a book.
+					</span>
+					<span class="right-menu-button full-size right-menu-parameter-margin">
+						<a data-ng-click="generateTitlePage();">Generate</a>
+					</span>
 				</li>
 
 				<li data-ng-click="finalizeOptionChosen('showFinalizeTocOptions');" class="insertOption first" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
-					<img src="pages/images/insert_toc.png" alt="Table of Contents" title="Table of Contents" />
+					<img src="pages/images/insert_toc.png" alt="Generate Table of Contents" title="Generate Table of Contents" />
 				</li>
 				<li data-ng-click="finalizeOptionChosen('showFinalizeColophonOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
-					<img src="pages/images/insert_colophon.png" alt="Colophon" title="Colophon" />
+					<img src="pages/images/insert_colophon.png" alt="Generate Colophon" title="Generate Colophon" />
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
-					<div class="right-menu-options">
-						<span class="menu-box right-menu-parameter-margin">
-							<span class="option" data-ng-repeat="tocs in toc"><a data-ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
-						</span>
-						<span class="right-menu-button full-size right-menu-parameter-margin">
-							<a data-ng-click="generateToc();">Generate TOC</a>
-						</span>
-					</div>
+					<span class="right-menu-feature-title">
+						Generate<br />Table of Contents
+					</span>
+					<span class="right-menu-feature-text">
+						The table of contents will be inserted in the beginning of the ebook and will be accessible in ebook readers for easy navigation.
+					</span>
+					<span class="right-menu-feature-text">
+						<br />Preview
+					</span>
+					<span class="menu-box right-menu-parameter-margin">
+						<span class="option" data-ng-repeat="tocs in toc"><a data-ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
+					</span>
+					<span class="right-menu-button full-size right-menu-parameter-margin">
+						<a data-ng-click="generateToc();">Generate</a>
+					</span>
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
+					<span class="right-menu-feature-title">
+						Generate Colophon
+					</span>
+					<span class="right-menu-feature-text">
+						A colophon is a brief statement containing information about a specific version of a book such as the ISBN-number, a creative commons or copyright notice, the people involved and so on.
+					</span>
 					<span class="right-menu-button full-size right-menu-parameter-margin">
-							<a data-ng-click="generateColophon();">Generate Colophon</a>
+							<a data-ng-click="generateColophon();">Generate</a>
 					</span>
 				</li>
 			</ul>
@@ -361,7 +383,10 @@
 				</span>
 				<span class="menu-box label left-menu-parameter-margin">Language</span>
 				<span class="menu-box inputfield full-size" data-ng-class="{ 'text-saved': metaLanguageSaved }">
-					<input type="text" name="output_language" id="output_language" data-ng-model="project.metadata.language" data-ng-model-options="{ debounce: 2000 }" />
+					<form class="angucomplete">
+						<div angucomplete-alt id="output_language" placeholder="Search Languages" pause="100" selected-object="selectedLanguage" local-data="languages" search-fields="description,subtag" title-field="description" minlength="1" match-class="angucomplete-highlight" initial-value="{{selectedLanguageName}}" field-required="true">
+						</div>
+					</form>
 					<span class="statusfield" data-ng-class="{ 'text-saved': metaLanguageSaved }">Saved</span>
 				</span>
 				<span class="menu-box label left-menu-parameter-margin">Description</span>
@@ -376,9 +401,9 @@
 				</span>
 			</li>
 			<li class="outputOptionProperties outputOptionDownload">
-				<span class="menu-box label text-align-center">Download options</span>
+				<span class="menu-box label text-align-center">Download ebook</span>
 				<span class="menu-box label left-menu-parameter-margin left-menu-download">
-					<img class="download-icon" src="pages/images/compile_epub.png" data-ng-click="exportEpub()">
+					<img title="Download epub" class="download-icon" src="pages/images/compile_epub.png" data-ng-click="exportEpub()">
 				</span>
 			</li>
 			</ul>

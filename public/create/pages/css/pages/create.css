@@ -1,8 +1,8 @@
-.section-unisquare, .section-publications {
+.section-unisquare, .section-projects {
 	float: left;
 }
 .section-unisquare {
-	position: relative;
+	position: fixed;
 	margin: 0 10px 0 0 !important;
 	padding: 10px !important;
 	width: 300px !important;
@@ -20,129 +20,139 @@
 .section-unisquare.white-bg {
 	background-color: #fff;
 }
-.section-publications {
-	margin: 0 0 0 10px !important;
-	min-height: 340px;
-	width: -webkit-calc(100% - 340px) !important;
-	width: -o-calc(100% - 340px) !important;
-	width: -moz-calc(100% - 340px) !important;
-	width: calc(100% - 340px) !important;
+
+.section-projects-container {
+	min-height: 360px;
+	width: -webkit-calc(100% - 360px) !important;
+	width: -o-calc(100% - 360px) !important;
+	width: -moz-calc(100% - 360px) !important;
+	width: calc(100% - 360px) !important;
+	margin: 0 0 0 325px !important;
 }
 
-.publication {
+.projects-title {
+	margin: 0 0 5px 0 !important;
+	font-size: 40px;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 700;
+	color: #000;
+}
+
+.section-projects {
+	margin: 0 0 0 0 !important;
+}
+
+.project {
 	position: relative;
 	margin: 0 15px 15px 0;
-	width: 88px;
-	height: 142px;
-	background: none #fefefe;
+	width: 100px;
+	height: 129px;
 	float: left;
-	border: 1px solid #ffff99;
 	display: table;
-	box-shadow: 0px 5px 5px -5px #ccc;
+	cursor: pointer;
 }
-.publication.new {
-	border: 1px dashed #eee;
+
+.project.new {
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	cursor: pointer;
 }
 
-.publication p {
+.project-new-sign {
+	left: 0;
+	position: absolute;
+	text-align: center;
+	top: 14px;
+	width: 85%;
+}
+
+.project p {
 	display: table-cell;
 	vertical-align: middle;
 	text-align: center;
 	cursor: pointer;
 }
 
-.publication .publication-options-show {
+.project .project-options-show {
 	position: absolute;
 	top: 5px;
-	right: 5px;
-	background-color: #fff;
-	border-radius: 2px;
-	padding: 4px 2px;
+	right: 17px;
+	padding: 6px;
 	cursor: pointer;
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;
+	z-index: 15;
 }
-.publication:hover .publication-options-show, .publication .publication-options-show.active {
-	background-color: #eee;
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;
+.project .project-options-show.open {
+	padding: 5px;
+	background: #fff;
+	border: 1px solid #000;
+	border-bottom: #fff;
 }
 
-.publication .publication-options-show .arrow {
+.project .project-options-show .arrow {
 	width: 0;
 	height: 0;
 	border-left: 5px solid transparent;
 	border-right: 5px solid transparent;
-	border-top: 5px solid #fff;
+	border-top: 5px solid #000;
 }
 
-.publication input {
+.project input {
 	margin-top: 30px !important;
 }
 
-.publication-options {
+.project-options {
 	position: absolute;
 	top: 20px;
-	right: 0;
+	right: 5px;
 	background: none #fff;
-	width: 250px;
-	padding: 10px;
 	z-index: 10;
-	border-radius: 5px;
-	border: 1px solid #eee;
+	border: 1px solid #000;
 }
-.publication-options-header {
-	border-bottom: 1px solid #eee;
-	text-align: center;
-	padding: 5px 0 10px;
+.project-options-hide {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width:100%;
+	height:100%;
+	z-index:-1;
 }
-.publication-options-hide {
-	position: absolute;
-	top: 5px;
-	right: 10px;
+.project-options-menupoint {
 	cursor: pointer;
-}
-.publication-options-menupoint {
-	cursor: pointer;
-	margin: 2px -10px;
-	padding: 5px 15px;
+	padding: 6px;
 	text-transform: capitalize;
 }
-.publication-options-menupoint:hover {
+.project-options-menupoint:hover {
 	background: none #ffffcc;
 }
-.publication-options-dates {
+.project-options-dates {
 	border-top: 1px solid #eee;
 	padding: 10px 0 5px;
 }
-.publication-options-dates div {
+.project-options-dates div {
 	font-size: 10px;
 	width: 40%;
 	float: left;
 }
-.publication-options-dates div.dates {
+.project-options-dates div.dates {
 	color: #ccc;
 	font-size: 10px;
 	width: 60%;
 	text-align: right;
 }
-.publication-archived {
+.project-archived {
 	opacity: 0.5;
 }
-.publication-link {
-	display: block;
-	padding-top: 60px;
-	height: 140px;
+.project-link {
+	left: 0;
+	position: absolute;
+	text-align: center;
+	padding-top:30px;
+	width: 85%;
+	height: 100%;
 }
 
 .filter-sort, .filter-search {
@@ -270,7 +280,7 @@ hr {
 }
 .user-settings-options .user-email input {
 	width: auto;
-	border: -moz-border-radius: 1px;
+	-moz-border-radius: 1px;
 	-webkit-border-radius: 1px;
 	border-radius: 1px;
 	-webkit-appearance: none;
@@ -312,3 +322,4 @@ hr {
 .archived a {
 	color: #6B6B6B;
 }
+

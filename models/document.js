@@ -1,6 +1,7 @@
 var mongoose = require('mongoose')
 	, Schema = mongoose.Schema
-	, Project // Lazy-loaded, c.f. DocumentSchema.pre()
+	, User = require('./user').User
+	, Project // Lazy-loaded, c.f. DocumentSchema.pre('remove')
 	, Styleset = require('./styleset').Styleset
 	, MemberSchema = require('./member_schema').MemberSchema
 	, bcrypt = require('bcrypt')
@@ -25,10 +26,13 @@ var DocumentSchema = new Schema({
 	defaultStyleset: { type: Schema.Types.ObjectId, ref: 'Styleset' },
 	deletedStylesets: [
 		{ type: Schema.Types.ObjectId, ref: 'Styleset' }
-	],
-	fonts: [
-		{ type: Schema.Types.ObjectId, ref: 'Font' }
 	]
+});
+
+DocumentSchema.pre('save', function (next) {
+	var document = this;
+	document.modified = Date.now();
+	return next();
 });
 
 DocumentSchema.pre('remove', function (next) {

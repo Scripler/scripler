@@ -12,7 +12,6 @@ var FontSchema = new Schema({
 	weight: { type: Number, required: true },
 	// src is the value
 	src: { type: String, required: true },
-	documentId: { type: Schema.Types.ObjectId, ref: 'Document' },
 	members: [MemberSchema], // Currently not used but will be used when user's can upload their own fonts
 	archived: { type: Boolean, default: false},
 	deleted: { type: Boolean, default: false},
