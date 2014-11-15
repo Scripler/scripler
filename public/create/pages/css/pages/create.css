@@ -33,7 +33,6 @@
 .projects-title {
 	margin: 0 0 5px 0 !important;
 	font-size: 40px;
-	font-family: 'Roboto', sans-serif;
 	font-weight: 700;
 	color: #000;
 }
@@ -290,7 +289,6 @@ hr {
 	border-radius: 1px;
 	-webkit-appearance: none;
 	color: #818285;
-	font-family: 'Roboto', sans-serif;
 }
 .user-settings-options .user-email input:disabled {
 	background: #f6f6f6;
