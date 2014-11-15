@@ -257,9 +257,14 @@ textarea {
 .green {
 	background-color: #5cb85c;
 }
+.registration-form {
+	float: left;
+}
 .registration-text {
 	font-weight: 900;
-	margin-bottom: 10px;
+	line-height: 32px;
+	margin: 0 10px 0 0;
+	float: left;
 }
 .registration-text.validate {
 	color: #fff;
