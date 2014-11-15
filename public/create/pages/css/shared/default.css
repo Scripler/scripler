@@ -269,6 +269,7 @@ textarea {
 	text-align: center;
 	margin: 0;
 	opacity: 1;
+	float: none;
 }
 .button.registration-button {
 	font-size: 15px;
