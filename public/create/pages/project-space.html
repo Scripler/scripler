@@ -67,11 +67,8 @@
 			<div class="projects-title">Ebooks</div>
 
 			<div class="section-projects">
-				<div class="project new" data-ng-click="addProject();">
-					<p class="project-new-sign">+</p>
-					<img alt="" src="pages/images/ebook.svg">
-				</div>
-				<div class="project" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index">
+				<div class="project new" data-ng-click="addProject();"></div>
+				<div class="project" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index" >
 					<a class="project-options-show" data-ng-class="{ 'open' : showProjectOptions }" data-ng-click="showProjectOptions = !showProjectOptions">
 						<div class="arrow"></div>
 					</a>
@@ -80,7 +77,6 @@
 						<form data-ng-show="project.editingProjectTitle">
 							<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!project.editingProjectTitle" on-enter="project.editingProjectTitle = false; renameProject(project);" data-ng-blur="project.editingProjectTitle = false; renameProject(project);"></textarea>
 						</form>
-						<img alt="" src="pages/images/ebook.svg">
 					</p>
 
 					<div class="project-options" data-ng-show="showProjectOptions">

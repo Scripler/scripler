@@ -43,30 +43,24 @@
 
 .project {
 	position: relative;
+	background: url("../../images/ebook.svg");
 	margin: 0 15px 15px 0;
 	width: 100px;
 	height: 129px;
 	float: left;
-	display: table;
 	cursor: pointer;
 }
-
+.project:hover, .project:focus {
+	background: url("../../images/ebook_hover.svg")
+}
 .project.new {
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	cursor: pointer;
+	background: url("../../images/ebook_new.svg")
 }
-
-.project-new-sign {
-	left: 0;
-	position: absolute;
-	text-align: center;
-	top: 14px;
-	width: 85%;
+.project.new:hover, .project.new:focus {
+	background: url("../../images/ebook_new_hover.svg")
+}
+.project.archived {
+	background: url("../../images/ebook_archived.svg")
 }
 
 .project p {
@@ -319,10 +313,3 @@ hr {
 .edit-newsletter {
 	padding-top: 5px;
 }
-.archived {
-	background-color: #CFCFCF;
-}
-.archived a {
-	color: #6B6B6B;
-}
-
