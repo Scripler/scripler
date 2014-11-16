@@ -131,7 +131,16 @@ function projectSpaceController($scope, $http, projectsService, userService, $q,
 	$scope.renameProject = function( project ) {
 		if ( $scope.user || $scope.demoUser ) {
 			$http.put('/project/' + project._id + '/rename', angular.toJson( project ) )
-				.success( function() {});
+				.success( function() {
+					$http.put('/project/' + project._id + '/metadata', {
+						'title': project.name,
+						'authors': project.metadata.authors,
+						'language': project.metadata.language,
+						'description': project.metadata.description,
+						'isbn': project.metadata.isbn
+					}).success( function() {
+					});
+				});
 		} else {
 			console.log("ERROR renaming project: this should not have happened: either a real user or a demo user should exist.");
 		}
