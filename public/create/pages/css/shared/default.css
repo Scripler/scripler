@@ -270,6 +270,7 @@ textarea {
 	text-align: center;
 	margin: 0;
 	opacity: 1;
+	width: 100%;
 	float: none;
 }
 .button.registration-button {
