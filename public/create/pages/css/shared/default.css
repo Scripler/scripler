@@ -262,6 +262,7 @@ textarea {
 	font-weight: 900;
 	line-height: 32px;
 	margin: 0 10px 0 0;
+	width: 325px;
 	float: left;
 }
 .registration-text.validate {
@@ -269,6 +270,7 @@ textarea {
 	text-align: center;
 	margin: 0;
 	opacity: 1;
+	width: 100%;
 	float: none;
 }
 .button.registration-button {
