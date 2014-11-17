@@ -326,6 +326,7 @@ exports.edit = function (req, res, next) {
 				user.oldEmail = user.email;
 			}
 			user.email = email;
+			user.emailVerified = false;
 			emailChanged = true;
 			// The email will be send later when we successfully persisted the user,
 			// so that we don't send out any emails for failed registrations
@@ -432,7 +433,7 @@ exports.resendVerifyEmail = function (req, res, nxt) {
 }
 
 exports.sso = function (req, res, next) {
-	if (!req.isAuthenticated()) {
+	if (!req.isAuthenticated() || req.user.isDemo) {
 		// User is not logged in.
 		// Scripler account is required to use Discourse. Ask user to create an account.
 		res.redirect(conf.app.url_prefix + "?code=510");
