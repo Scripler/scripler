@@ -190,10 +190,29 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return deferred.promise;
 	}
 
+
+	$scope.move = function( array, from, to ) {
+	  if( to === from ) return;
+
+	  var target = array[from];                         
+	  var increment = to < from ? -1 : 1;
+
+	  for(var k = from; k != to; k += increment){
+	    array[k] = array[k + increment];
+	  }
+	  array[to] = target;
+	}
+
+
 	$scope.addProjectDocument = function( type, text ) {
+		var coverExists = false;
+		var tocExists = false;
+		var titlePageExists = false;
+
 		var deferred = $q.defer();
 
 		var order = $scope.projectDocuments.length + 1;
+		
 		var name = "Untitled " + order;
 		var document = {};
 
@@ -226,6 +245,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		if ( $scope.user._id ) {
 			document.projectId = $scope.pid;
+
 			$http.post('/document', angular.toJson( document ) )
 				.success( function( data ) {
 
@@ -233,9 +253,44 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					console.log(data);
 
 					if ( typeof data.document.type !== 'undefined' ) {
-						$scope.projectDocuments.unshift( data.document );
-						$scope.rearrange( $scope.projectDocuments );
-					} else {
+						
+						for(var i=0; i<order-1; i++) {
+						        if ($scope.projectDocuments[i].type == 'cover')coverExists = true;
+						        else if ($scope.projectDocuments[i].type == 'toc')tocExists = true;
+						        else if ($scope.projectDocuments[i].type == 'titlepage')titlePageExists = true;
+						    }
+
+
+						if (type == 'cover') {
+							$scope.projectDocuments.unshift( data.document );
+							$scope.rearrange( $scope.projectDocuments );
+						}
+						else if (type == 'colophon') {
+							$scope.projectDocuments.push( data.document );
+							$scope.rearrange( $scope.projectDocuments );
+						}
+						else if (type == 'toc') {
+							$scope.projectDocuments.unshift( data.document );
+							$scope.rearrange( $scope.projectDocuments );
+						    if(coverExists && titlePageExists){
+								$scope.move($scope.projectDocuments, 0, 2);
+							}
+							else if(coverExists && !titlePageExists){
+								$scope.move($scope.projectDocuments, 0, 1);
+							}
+							else if(!coverExists && titlePageExists){
+								$scope.move($scope.projectDocuments, 0, 1);
+							}
+						}
+						else if (type == 'titlepage') {
+							$scope.projectDocuments.unshift( data.document );
+							$scope.rearrange( $scope.projectDocuments );
+						    if(coverExists){
+								$scope.move($scope.projectDocuments, 0, 1);
+							}
+						}
+					} 
+					else{
 						$scope.projectDocuments.push( data.document );
 					}
 
