@@ -201,8 +201,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	    array[k] = array[k + increment];
 	  }
 	  array[to] = target;
-	  
-	  return array;
 	}
 
 
@@ -250,7 +248,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 			$http.post('/document', angular.toJson( document ) )
 				.success( function( data ) {
-					console.log('document added');
 
 					data.document.editingProjectDocumentTitle = true;
 					console.log(data);
@@ -295,7 +292,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					} 
 					else{
 						$scope.projectDocuments.push( data.document );
-						console.dir($scope.projectDocuments);
 					}
 
 					var promise = $scope.openProjectDocument( data.document );
