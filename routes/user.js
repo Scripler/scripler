@@ -6,20 +6,13 @@ var User = require('../models/user.js').User
 	, logger = require('../lib/logger')
 	, conf = require('config')
 	, env = process.env.NODE_ENV
-	, path = require('path')
 	, fs = require('fs')
 	, utils = require('../lib/utils')
 	, utils_shared = require('../public/create/scripts/utils-shared')
-	, styleset_utils = require('../lib/styleset-utils')
-	, mkdirp = require('mkdirp')
+	, user_utils = require('../lib/user-utils')
 	, Styleset = require('../models/styleset.js').Styleset
-	, copyStyleset = require('../models/styleset.js').copy
 	, discourse_sso = require('discourse-sso')
 ;
-
-function hashEmail(email) {
-	return crypto.createHash('md5').update(conf.app.salt + email).digest("hex");
-}
 
 /**
  * GET current user.
@@ -82,7 +75,7 @@ exports.passwordReset = function (req, res, next) {
 				return res.send({});
 			}
 			if ('test' != env) {
-				var url = conf.app.url_prefix + '#password-reset/' + user._id + '/' + token + '/' + hashEmail(user.email);
+				var url = conf.app.url_prefix + '#password-reset/' + user._id + '/' + token + '/' + user_utils.hashEmail(user.email);
 				logger.info("Password reset url for " + user.email + ": " + url);
 				emailer.sendUserEmail(
 					user,
@@ -154,95 +147,8 @@ exports.register = function (req, res, next) {
 			isDemo: req.body.isDemo
 		});
 
-		if ('test' != env) {
-			// Currently we just force user to become premium member immediately (for free)
-			// TODO: When launching (currently Beta1) this should be removed!
-			user.level = "premium";
-		}
-
-		// Copy all system/Scripler stylesets (and styles) to the user
-		Styleset.find({isSystem: true}, function (err, stylesets) {
-			if (err) {
-				return next(err);
-			}
-
-			user.save(function (err) {
-				if (err) {
-					// return error
-					// TODO: add 11001 as in User.edit()?
-					if (err.code == 11000) {
-						return next({errors: "Email already registered", status: 400});
-					}
-					return next(err);
-				} else {
-					if ('test' != env) {
-						if (!user.isDemo) {
-							emailer.sendUserEmail(
-								user,
-								[
-									{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}
-								],
-								'welcome'
-							);
-						}
-					}
-				}
-
-				var createDirectories = function (next) {
-					var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + user._id);
-					mkdirp(userDir, function (err) {
-						if (err) {
-							return next(err);
-						} else {
-							return res.send({"user": utils.cleanUserObject(user)});
-						}
-					});
-				};
-
-				var numberOfStylesetsToBeCopied = stylesets.length;
-				if (numberOfStylesetsToBeCopied == 0) {
-					return createDirectories(next);
-				} else {
-					var stylesetCopies = [];
-					stylesets.forEach(function (styleset) {
-						styleset.isSystem = false;
-						styleset.members = [{userId: user._id, access: ["admin"]}];
-						copyStyleset(styleset, function(err, copy) {
-							if (err) {
-								return next(err);
-							}
-
-							stylesetCopies.push(copy);
-
-							if (copy.name === conf.user.defaultStylesetName) {
-								user.defaultStyleset = copy;
-							}
-
-							numberOfStylesetsToBeCopied--;
-
-							if (numberOfStylesetsToBeCopied == 0) {
-								// Sort stylesets by name (currently only used for integration test, i.e. not important for the app)
-								// After stylesets are added to user.stylesets, user.stylesets only contains ids, so to avoid re-reading the stylesets from the db, save them in a temporary array.
-								stylesetCopies.sort(styleset_utils.systemStylesetOrder);
-								user.stylesets = stylesetCopies;
-
-								user.save(function (err) {
-									if (err) {
-										return next(err);
-									}
-
-									if (utils.isEmpty(user.defaultStyleset)) {
-										// TODO: should this error be shown to the user?
-										logger.error("No default styleset set for user " + user.firstname + " " + user.lastname + "(id = " + user._id + ").");
-									}
-
-									return createDirectories(next);
-								});
-							}
-						});
-					});
-				}
-			});
+		user_utils.initUser(user, function () {
+			res.send({"user": utils.cleanUserObject(user)})
 		});
 	}
 };
@@ -257,7 +163,7 @@ exports.verify = function (req, res) {
 			res.redirect(redirectUrl + "104");//Database problem
 		} else if (!user) {
 			res.redirect(redirectUrl + "101");//User not found
-		} else if (req.params.hash != hashEmail(user.email)) {
+		} else if (req.params.hash != user_utils.hashEmail(user.email)) {
 			res.redirect(redirectUrl + "102");//Email not verified
 		} else {
 			if (user.emailVerified) {
@@ -326,6 +232,7 @@ exports.edit = function (req, res, next) {
 				user.oldEmail = user.email;
 			}
 			user.email = email;
+			user.emailVerified = false;
 			emailChanged = true;
 			// The email will be send later when we successfully persisted the user,
 			// so that we don't send out any emails for failed registrations
@@ -370,7 +277,7 @@ exports.edit = function (req, res, next) {
 			}
 
 			if (emailChanged && 'test' != env) {
-				var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email);
+				var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + user_utils.hashEmail(user.email);
 				logger.info("Password verify url for " + user.email + ": " + url);
 				var template = 'verify-email';
 				if (userWasDemo) {
@@ -424,7 +331,7 @@ exports.resendVerifyEmail = function (req, res, nxt) {
 	emailer.sendUserEmail(
 		user,
 		[
-			{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}
+			{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + user_utils.hashEmail(user.email)}
 		],
 		'verify-email'
 	);
@@ -432,7 +339,7 @@ exports.resendVerifyEmail = function (req, res, nxt) {
 }
 
 exports.sso = function (req, res, next) {
-	if (!req.isAuthenticated()) {
+	if (!req.isAuthenticated() || req.user.isDemo) {
 		// User is not logged in.
 		// Scripler account is required to use Discourse. Ask user to create an account.
 		res.redirect(conf.app.url_prefix + "?code=510");
