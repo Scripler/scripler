@@ -75,7 +75,7 @@ exports.passwordReset = function (req, res, next) {
 				return res.send({});
 			}
 			if ('test' != env) {
-				var url = conf.app.url_prefix + '#password-reset/' + user._id + '/' + token + '/' + hashEmail(user.email);
+				var url = conf.app.url_prefix + '#password-reset/' + user._id + '/' + token + '/' + user_utils.hashEmail(user.email);
 				logger.info("Password reset url for " + user.email + ": " + url);
 				emailer.sendUserEmail(
 					user,
@@ -163,7 +163,7 @@ exports.verify = function (req, res) {
 			res.redirect(redirectUrl + "104");//Database problem
 		} else if (!user) {
 			res.redirect(redirectUrl + "101");//User not found
-		} else if (req.params.hash != hashEmail(user.email)) {
+		} else if (req.params.hash != user_utils.hashEmail(user.email)) {
 			res.redirect(redirectUrl + "102");//Email not verified
 		} else {
 			if (user.emailVerified) {
@@ -277,7 +277,7 @@ exports.edit = function (req, res, next) {
 			}
 
 			if (emailChanged && 'test' != env) {
-				var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email);
+				var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + user_utils.hashEmail(user.email);
 				logger.info("Password verify url for " + user.email + ": " + url);
 				var template = 'verify-email';
 				if (userWasDemo) {
@@ -331,7 +331,7 @@ exports.resendVerifyEmail = function (req, res, nxt) {
 	emailer.sendUserEmail(
 		user,
 		[
-			{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + hashEmail(user.email)}
+			{name: "URL", content: conf.app.url_prefix + 'user/' + user._id + '/verify/' + user_utils.hashEmail(user.email)}
 		],
 		'verify-email'
 	);
