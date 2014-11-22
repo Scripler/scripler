@@ -4,6 +4,7 @@
 	<title>Scripler</title>
 
 	<link rel="stylesheet" type="text/css" href="pages/css/shared/default.css" />
+	<link rel="stylesheet" type="text/css" href="../css/shared/fonts.css" />
 </head>
 <body data-ng-controller="appController" data-ng-cloak>
 
@@ -23,6 +24,12 @@
 			<input on-click-change-text type="password" id="reg-password" name="password" data-ng-model="user.password" data-ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" data-ng-minlength="6" required>
 			<button type="submit" class="button registration-button">Register</button>
 		</form>
+		<div class="socialicons clearfix" data-ng-hide="user._id && !user.isDemo">
+			<div class="social-registration-text" data-ng-bind="socialRegistrationText" data-ng-class="{ 'validate' : user._id }" data-ng-hide="user.isDemo"></div>
+			<div class="socialicon"><a href="auth/facebook"><span class="icon-facebook"></span></a></div>
+			<div class="socialicon"><a href="auth/linkedin"><span class="icon-linkedin"></span></a></div>
+			<div class="socialicon"><a href="auth/google"><span class="icon-google-plus"></span></a></div>
+		</div>
 	</div>
 	<script type="text/javascript" src="scripts/angular-file-upload-html5-shim.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.3/webfont.js"></script>
