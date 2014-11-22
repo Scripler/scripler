@@ -9,6 +9,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		$scope.errors.email = 'Email is invalid';
 		$scope.errors.password = 'Six characters minimum';
 		$scope.registrationText = 'Hey, stranger. Register to save your work!';
+		$scope.socialRegistrationText = 'Or register via:';
 		$scope.EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 		$scope.user = {};
