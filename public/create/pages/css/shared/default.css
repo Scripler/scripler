@@ -270,6 +270,8 @@ textarea {
 .social-registration-text {
 	font-weight: 900;
 	margin-bottom: 10px;
+	margin-right: 5px;
+	display: inline-block;
 }
 
 .registration-text.validate {
@@ -457,10 +459,9 @@ textarea {
 		  If, instead, "socialicons" styles are placed in css/shared/default.css and this CSS is included in create/index.html, the page's style is completely broken.
 */
 .socialicons {
-	width: 200px;
-	float: right;
-	margin-right: 300px;
-	/* border: 2px solid; */
+	width: 300px;
+	float: left;
+	margin-left: 100px;
 }
 
 .socialicon {
