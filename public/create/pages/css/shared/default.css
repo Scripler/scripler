@@ -269,9 +269,10 @@ textarea {
 
 .social-registration-text {
 	font-weight: 900;
-	margin-bottom: 10px;
+	bottom: 8px;
 	margin-right: 5px;
 	display: inline-block;
+	position: relative;
 }
 
 .registration-text.validate {
