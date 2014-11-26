@@ -250,7 +250,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				.success( function( data ) {
 
 					data.document.editingProjectDocumentTitle = true;
-					console.log(data);
 
 					if ( typeof data.document.type !== 'undefined' ) {
 						
@@ -357,6 +356,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			console.log("ERROR: it is not possible to archive the last document");
 		}
 		return result;
+		console.log(result);
 	};
 
 	$scope.archiveProjectDocument = function( projectDocument ) {
