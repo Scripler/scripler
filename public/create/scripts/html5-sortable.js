@@ -25,15 +25,15 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
       var sortable = {};
       sortable.is_handle = false;
       sortable.in_use = false;
-  	  var currentlyDraggingElement = null;
-  	  var global_drop_index = 0;
-  	  var global_drag_index = 0;
+	  var currentlyDraggingElement = null;
+	  var global_drop_index = 0;
+	  var global_drag_index = 0;
 
       sortable.handleDragStart = function(e) {
 
-        $window['drag_source'] = null;
-        $window['drag_source_extra'] = null;
-		    currentlyDraggingElement = this;
+         $window['drag_source'] = null;
+         $window['drag_source_extra'] = null;
+		 currentlyDraggingElement = this;
 
         if ( sortable.options &&  !sortable.is_handle && sortable.options.handle ){
           e.preventDefault();
@@ -50,8 +50,6 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
 
         // this/e.target is the source node.
         this.classList.add('moving');
-
-        console.log('started dragging');
       };
 
       sortable.handleDragOver = function(e) {
@@ -88,35 +86,22 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
 		var drop_index = this.index;
 		var drag_index = currentlyDraggingElement.index;
 
-    console.log(drag_index);
-    console.log(drop_index);
-
-
 		global_drop_index = this.index;
 		global_drag_index = currentlyDraggingElement.index;
-    
-    console.log(global_drag_index);
-    console.log(global_drop_index);
-    
 
 		if (drop_index !== drag_index) {
 			moveElementNextTo(currentlyDraggingElement, this);
 		}
-
-
-    console.log('finished dragging');
       };
 
 	function moveElementNextTo(element, elementToMoveNextTo) {
         if (isBelow(element, elementToMoveNextTo)) {
             // Insert element before to elementToMoveNextTo.
-			      elementToMoveNextTo.parentNode.insertBefore(element, elementToMoveNextTo);
-            console.log('moved in front of its initial position');
+			elementToMoveNextTo.parentNode.insertBefore(element, elementToMoveNextTo);
         }
         else {
             // Insert element after to elementToMoveNextTo.
-			      elementToMoveNextTo.parentNode.insertBefore(element, elementToMoveNextTo.nextSibling);
-            console.log('moved behind its initial position');
+			elementToMoveNextTo.parentNode.insertBefore(element, elementToMoveNextTo.nextSibling);
         }
     }
 
@@ -137,7 +122,7 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
     }
 
       sortable.handleDragLeave = function(e) {
-        // this.classList.remove('over');
+        /*this.classList.remove('over');*/
       };
 
       sortable.handleDrop = function(e) {
@@ -206,7 +191,7 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
 
       sortable.update = function(){
 
-        $window['drag_source'] = null;
+         $window['drag_source'] = null;
         var index = 0;
         this.cols_ =  element[0].children;
 
@@ -220,7 +205,6 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
           col.model = ngModel.$modelValue[index];
 
           index++;
-          // console.log(index);
 
           col.setAttribute('draggable', 'true');  // Enable columns to be draggable.
           col.addEventListener('dragstart', sortable.handleDragStart, false);
@@ -251,6 +235,7 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
               sortable.options = angular.copy(value) ;
 
               if (value == "destroy" ){
+
                 if (sortable.in_use){
                   sortable.unbind();
                   sortable.in_use = false;
@@ -286,7 +271,6 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
 
               $timeout(function(){
                 sortable.update();
-                console.log('sortable update');
               });
 
             },true);
