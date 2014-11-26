@@ -250,7 +250,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				.success( function( data ) {
 
 					data.document.editingProjectDocumentTitle = true;
-					console.log(data);
 
 					if ( typeof data.document.type !== 'undefined' ) {
 						
