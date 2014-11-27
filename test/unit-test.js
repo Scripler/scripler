@@ -484,7 +484,39 @@ describe('epub', function () {
         		'.styleset-abc123 h1, body h1.style-xxx123 {|font-weight: 11px;|color: red;|}|'+
         		'.styleset-abc123 .testclass, body .style-yyy123 {|margin-left: 5px;|color: green;|}|'+
         		'.styleset-abc123 p.anotherclass, body p.style-zzz123 {|color: black;|}|');
-    })
+    }),
+	it('removeUndefinedTags', function () {
+		var html =
+			'  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">\r\n' +
+			'    <dc:identifier id="BookId">urn:uuid:12354684</dc:identifier>\r\n'+
+			'    <dc:identifier>urn:isbn:321561651</dc:identifier>\r\n' +
+			'    <dc:title>Hello You</dc:title>\r\n' +
+			'    <dc:description>This is abook</dc:description>\r\n' +
+			'    <dc:language>Danish</dc:language>\r\n' +
+			'    <dc:type>undefined</dc:type>\r\n' +
+			'    <dc:rights>undefined</dc:rights>\r\n' +
+			'    <dc:publisher>Scripler</dc:publisher>\r\n' +
+			'    <dc:format>book</dc:format>\r\n' +
+			'    <dc:coverage>undefined</dc:coverage>\r\n' +
+			'    <dc:relation>undefined</dc:relation>\r\n' +
+			'    <dc:source>undefined</dc:source>\r\n' +
+			'  </metadata>';
+		var cleanupTags = ['dc:type', 'dc:rights', 'dc:publisher', 'dc:coverage', 'dc:source'];
+
+		var cleanHtml =
+			'  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">\r\n' +
+			'    <dc:identifier id="BookId">urn:uuid:12354684</dc:identifier>\r\n'+
+			'    <dc:identifier>urn:isbn:321561651</dc:identifier>\r\n' +
+			'    <dc:title>Hello You</dc:title>\r\n' +
+			'    <dc:description>This is abook</dc:description>\r\n' +
+			'    <dc:language>Danish</dc:language>\r\n' +
+			'    <dc:publisher>Scripler</dc:publisher>\r\n' +
+			'    <dc:format>book</dc:format>\r\n' +
+			'    <dc:relation>undefined</dc:relation>\r\n' +
+			'  </metadata>';
+
+		assert.equal(epub.removeUndefinedTags(html, cleanupTags), cleanHtml);
+	})
 }),
 describe('epub3', function () {
 	it('getTocString', function () {
