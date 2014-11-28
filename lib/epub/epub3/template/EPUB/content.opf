@@ -5,6 +5,7 @@
     <dc:identifier>urn:isbn:%metadata_isbn%</dc:identifier>
     <dc:title>%metadata_title%</dc:title>
     <dc:description>%metadata_description%</dc:description>
+    <meta name="formatter" content="Scripler %scripler_version%" />
     %metadata_creators%
     %metadata_subjects%
     <dc:language>%metadata_language%</dc:language>
