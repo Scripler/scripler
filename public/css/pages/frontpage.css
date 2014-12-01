@@ -170,12 +170,10 @@ div.half {
 	font-size: 22px;
 	margin: 0 auto;
 	display: inline-block;
+	color: #ABACAF;
 }
 .socialicon:hover {
 	background-color: #fff265;
-}
-.socialicon a {
-	color: #ABACAF;
 }
 
 .row {

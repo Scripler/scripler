@@ -3,6 +3,7 @@
   <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
     <dc:identifier opf:scheme="UUID" id="BookId">urn:uuid:%metadata_uuid%</dc:identifier>
     <dc:identifier opf:scheme="ISBN">urn:isbn:%metadata_isbn%</dc:identifier>
+    <meta name="formatter" content="Scripler %scripler_version%" />
     <dc:title>%metadata_title%</dc:title>
     <dc:description>%metadata_description%</dc:description>
     %metadata_creators%

@@ -194,7 +194,7 @@ exports.rearrange = function (req, res, next) {
 		if (err) {
 			return next(err);
 		}
-
+		orderedStylesets.sort(styleset_utils.systemStylesetOrder);
 		res.send({stylesets: orderedStylesets});
 	});
 }

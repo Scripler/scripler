@@ -149,9 +149,9 @@ input[type="password"], input[type="text"], input[type="email"] {
 	border: none;
 	background: #f6f6f6;
 	font-size: 15px;
-	width: 250px;
+	width: 25%;
 	height: 32px;
-	padding: 0 0 0 15px;
+	padding: 0 5px 0 5px;
 	margin: 0 5px 0 0;
 }
 input.has-error {
@@ -255,16 +255,36 @@ textarea {
 .green {
 	background-color: #5cb85c;
 }
+
+#registrationContainer{
+	width:99%;
+	margin:0 auto;
+}
+
 .registration-form {
 	float: left;
 }
+
 .registration-text {
 	font-weight: 900;
-	line-height: 32px;
-	margin: 0 10px 0 0;
-	width: 325px;
+	width: 22%;
+	font-size:15px;
 	float: left;
+	padding-top:7px;
+	line-height: 1.3;
+	margin-right:5px;
 }
+
+.social-registration-text {
+	font-weight: 900;
+	bottom: 8px;
+	display: inline-block;
+	position: relative;
+	font-size:15px;
+	vertical-align: sub;
+	margin-right:5px;
+}
+
 .registration-text.validate {
 	color: #fff;
 	text-align: center;
@@ -443,4 +463,34 @@ textarea {
 
 .autocomplete li.active .highlight {
   background: #fff265;
+}
+
+/*
+	TODO: "socialicons" styles COPIED from css/pages/frontpage.css: refactor into common location!
+		  If, instead, "socialicons" styles are placed in css/shared/default.css and this CSS is included in create/index.html, the page's style is completely broken.
+*/
+.socialicons {
+	width: 16%;
+	float: left;
+}
+
+.socialicon {
+	background-color: #fff;
+	border-radius: 50%;
+	width: 33px;
+	height: 33px;
+	padding: 5px;
+	font-size: 20px;
+	text-align:center;
+	display: inline-block;
+	cursor:pointer;
+
+}
+
+.socialicon:hover {
+	background-color: #fff265;
+}
+
+.socialicons a {
+	color: #ABACAF;
 }
