@@ -1,5 +1,7 @@
 /**
- * smooth-scroll v5.2.0
+ * smooth-scroll v5.2.0-patched
+ * Patched to support container element scrolling. Based on suggestions from issue #33.
+ *
  * Animate scrolling to anchor links, by Chris Ferdinandi.
  * http://github.com/cferdinandi/smooth-scroll
  *
@@ -269,8 +271,8 @@
 	 * @param {Object} settings
 	 * @param {Event} event
 	 */
-	smoothScroll.animateScroll = function ( toggle, anchor, options ) {
-
+	smoothScroll.animateScroll = function ( toggle, anchor, options, container ) {
+		root = container ? container : root;
 		// Options and overrides
 		var settings = extend( settings || defaults, options || {} );  // Merge user options with defaults
 		var overrides = getDataOptions( toggle ? toggle.getAttribute('data-options') : null );
@@ -281,7 +283,7 @@
 		var anchorElem = document.querySelector(anchor);
 		var fixedHeader = document.querySelector('[data-scroll-header]'); // Get the fixed header
 		var headerHeight = fixedHeader === null ? 0 : (fixedHeader.offsetHeight + fixedHeader.offsetTop); // Get the height of a fixed header if one exists
-		var startLocation = root.pageYOffset; // Current location on the page
+		var startLocation = (root == window ? root.pageYOffset : root.scrollTop);
 		var endLocation = getEndLocation( anchorElem, headerHeight, parseInt(settings.offset, 10) ); // Scroll to location
 		var animationInterval; // interval timer
 		var distance = endLocation - startLocation; // distance to travel
@@ -300,7 +302,7 @@
 		 * @param {Number} animationInterval How much to scroll on this loop
 		 */
 		var stopAnimateScroll = function (position, endLocation, animationInterval) {
-			var currentLocation = root.pageYOffset;
+			var currentLocation = (root == window ? root.pageYOffset : root.scrollTop);
 			if ( position == endLocation || currentLocation == endLocation || ( (root.innerHeight + currentLocation) >= documentHeight ) ) {
 				clearInterval(animationInterval);
 				anchorElem.focus();
@@ -317,7 +319,11 @@
 			percentage = ( timeLapsed / parseInt(settings.speed, 10) );
 			percentage = ( percentage > 1 ) ? 1 : percentage;
 			position = startLocation + ( distance * easingPattern(settings.easing, percentage) );
-			root.scrollTo( 0, Math.floor(position) );
+			if (root == window) {
+				root.scrollTo(0, Math.floor(position));
+			} else {
+				root.scrollTop = Math.floor(position);
+			}
 			stopAnimateScroll(position, endLocation, animationInterval);
 		};
 
