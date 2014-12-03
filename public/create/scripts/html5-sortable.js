@@ -11,7 +11,7 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
   return {
     restrict: 'A',
     require: '?ngModel',
-    scope: {
+    scope: { 
       htmlSortable: '=',
       ngModel : '=',
       ngExtraSortable:'='
@@ -25,16 +25,12 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
       var sortable = {};
       sortable.is_handle = false;
       sortable.in_use = false;
-	  var currentlyDraggingElement = null;
-	  var global_drop_index = 0;
-	  var global_drag_index = 0;
-
+      
       sortable.handleDragStart = function(e) {
 
          $window['drag_source'] = null;
          $window['drag_source_extra'] = null;
-		 currentlyDraggingElement = this;
-
+        
         if ( sortable.options &&  !sortable.is_handle && sortable.options.handle ){
           e.preventDefault();
           return;
@@ -44,7 +40,7 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
         e.dataTransfer.effectAllowed = 'move';
         //Fixed on firefox
         e.dataTransfer.setData('text/plain', 'anything');
-
+        
          $window['drag_source'] = this;
          $window['drag_source_extra'] = element.extra_data;
 
@@ -53,117 +49,87 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
       };
 
       sortable.handleDragOver = function(e) {
-
-		if (!currentlyDraggingElement) {
-                return true;
-        }
-
-		if (e.preventDefault) {
+        if (e.preventDefault) {
           e.preventDefault(); // Allows us to drop.
         }
 
         e.dataTransfer.dropEffect = 'move';
-
-        /*if ( !this.classList.contains('over') ){
+        
+        if ( !this.classList.contains('over') ){
           this.classList.add('over');
-        }*/
+        }
 
-
-        return false;
+        //return false;
       };
-
 
       sortable.handleDragEnter = function(e) {
-
-		if (!currentlyDraggingElement || currentlyDraggingElement === this) {
-        	return true;
+        if ( !this.classList.contains('over') ){
+          this.classList.add('over');
         }
 
-        /*if ( !this.classList.contains('over') ){
-          this.classList.add('over');
-        }*/
-
-		var drop_index = this.index;
-		var drag_index = currentlyDraggingElement.index;
-
-		global_drop_index = this.index;
-		global_drag_index = currentlyDraggingElement.index;
-
-		if (drop_index !== drag_index) {
-			moveElementNextTo(currentlyDraggingElement, this);
-		}
       };
 
-	function moveElementNextTo(element, elementToMoveNextTo) {
-        if (isBelow(element, elementToMoveNextTo)) {
-            // Insert element before to elementToMoveNextTo.
-			elementToMoveNextTo.parentNode.insertBefore(element, elementToMoveNextTo);
-        }
-        else {
-            // Insert element after to elementToMoveNextTo.
-			elementToMoveNextTo.parentNode.insertBefore(element, elementToMoveNextTo.nextSibling);
-        }
-    }
-
-    function isBelow(el1, el2) {
-        var parent = el1.parentNode;
-        if (el2.parentNode != parent) {
-            return false;
-        }
-
-        var cur = el1.previousSibling;
-        while (cur && cur.nodeType !== 9) {
-            if (cur === el2) {
-                return true;
-            }
-            cur = cur.previousSibling;
-        }
-        return false;
-    }
-
       sortable.handleDragLeave = function(e) {
-        /*this.classList.remove('over');*/
+        this.classList.remove('over');
+        this.classList.remove('moving');
       };
 
       sortable.handleDrop = function(e) {
         // this/e.target is current target element.
         if (e.stopPropagation) {
           // stops the browser from redirecting.
-          e.stopPropagation();
+          e.stopPropagation(); 
         }
         e.preventDefault();
-		this.classList.remove('moving');
+        this.classList.remove('over');
 
-		var source_model = $window['drag_source'].model;
+        // Don't do anything if we're dropping on the same column we're dragging.
+        if ( $window['drag_source'] != this) {
+          
+          if ( $window['drag_source'] == null){
+            return;
+          }
 
-		if (ngModel.$modelValue.indexOf(source_model) != -1) {
+          
+          var source_model = $window['drag_source'].model;
+          var drop_index = this.index;
 
-			var temp = angular.copy(ngModel.$modelValue[global_drag_index]);
+          if (ngModel.$modelValue.indexOf(source_model) != -1){
+            
+            var drag_index =  $window['drag_source'].index;
+            var temp = angular.copy(ngModel.$modelValue[drag_index]);
+            
+            sortable.unbind();
+            
+            ngModel.$modelValue.splice(drag_index,1);
+            ngModel.$modelValue.splice(drop_index,0, temp);
 
-			sortable.unbind();
-
-			ngModel.$modelValue.splice(global_drag_index,1);
-			ngModel.$modelValue.splice(global_drop_index,0, temp);
-
-		}
-
+          }
+          else if ( sortable.options.allow_cross ){
+            ngModel.$modelValue.splice(drop_index,0, source_model);
+          }
+          else{
+            
+            return;
+          }
+          
           //return;
           scope.$apply();
 
           if ( sortable.options &&  angular.isDefined(sortable.options.stop) ){
-
-            sortable.options.stop(ngModel.$modelValue,global_drop_index,
+            
+            sortable.options.stop(ngModel.$modelValue,drop_index,
               element.extra_data,$window['drag_source_extra']);
           }
-
-
+        }
         return false;
       };
 
       sortable.handleDragEnd = function(e) {
         // this/e.target is the source node.
+
         [].forEach.call(sortable.cols_, function (col) {
-          //col.classList.remove('over');
+          col.classList.remove('over');
           col.classList.remove('moving');
         });
 
@@ -171,8 +137,8 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
 
       //Unbind all events are registed before
       sortable.unbind = function(){
-
-
+        
+        
         [].forEach.call(sortable.cols_, function (col) {
           col.removeAttribute('draggable');
           col.removeEventListener('dragstart', sortable.handleDragStart, false);
@@ -190,7 +156,7 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
       }
 
       sortable.update = function(){
-
+        
          $window['drag_source'] = null;
         var index = 0;
         this.cols_ =  element[0].children;
@@ -200,7 +166,7 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
             var handle = col.querySelectorAll(sortable.options.handle)[0];
             handle.addEventListener('mousedown', sortable.activehandle, false);
           }
-
+          
           col.index = index;
           col.model = ngModel.$modelValue[index];
 
@@ -217,7 +183,7 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
 
         sortable.in_use = true;
       }
-
+      
       if (ngModel) {
         ngModel.$render = function() {
           $timeout(function(){
@@ -228,14 +194,14 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
               element.extra_data = value;
               //sortable.extra_data = value;
             })
-
+            
             scope.$watch('htmlSortable', function(value) {
-
-
+              
+              
               sortable.options = angular.copy(value) ;
 
               if (value == "destroy" ){
-
+                
                 if (sortable.in_use){
                   sortable.unbind();
                   sortable.in_use = false;
@@ -267,8 +233,8 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
                 //Ignore on first load
                 return;
               }
-
-
+              
+              
               $timeout(function(){
                 sortable.update();
               });
@@ -279,7 +245,7 @@ sortable_app.directive('htmlSortable', function($parse,$timeout, $log, $window) 
         };
       }
       else{
-
+        
       }
     }
   };
