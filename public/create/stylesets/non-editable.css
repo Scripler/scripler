@@ -125,7 +125,7 @@ body.cover {
 /*This makes first line indents on paragraphs that follows paragraphs (this is currently disabled). And removes the margin-top.*/
 p + p {
 	/*text-indent: 1.5em;*/
-	margin: 0;
+	margin-top: 0;
 }
 
 /*Currently disabled: This removes first line indent from paragraphs that comes after empty paragraphs*/
@@ -144,23 +144,23 @@ p.empty-paragraph {
 }*/
 
 p.toc-item-h1 + p.toc-item-h2 {
-	text-indent:0.5em;
+	margin-left:0.5em;
 }
 
 p.toc-item-h1 + p.toc-item-h3 {
-	text-indent:1em;
+	margin-left:1em;
 }
 
 p.toc-item-h1 + p.toc-item-h4 {
-	text-indent:2em;
+	margin-left:2em;
 }
 
 p.toc-item-h1 + p.toc-item-h5 {
-	text-indent:3em;
+	margin-left:3em;
 }
 
 p.toc-item-h1 + p.toc-item-h6 {
-	text-indent:4em;
+	margin-left:4em;
 }
 
 /*Currently disabled: This removes first line indent in h1 following h2 items in toc*/
@@ -169,23 +169,23 @@ p.toc-item-h1 + p.toc-item-h6 {
 }*/
 
 p.toc-item-h2 + p.toc-item-h2 {
-	text-indent:0.5em;
+	margin-left:0.5em;
 }
 
 p.toc-item-h2 + p.toc-item-h3 {
-	text-indent:1em;
+	margin-left:1em;
 }
 
 p.toc-item-h2 + p.toc-item-h4 {
-	text-indent:2em;
+	margin-left:2em;
 }
 
 p.toc-item-h2 + p.toc-item-h5 {
-	text-indent:3em;
+	margin-left:3em;
 }
 
 p.toc-item-h2 + p.toc-item-h6 {
-	text-indent:4em;
+	margin-left:4em;
 }
 
 /*Currently disabled: This removes first line indent in h1 following h3 items in toc*/
@@ -194,23 +194,23 @@ p.toc-item-h2 + p.toc-item-h6 {
 }*/
 
 p.toc-item-h3 + p.toc-item-h2 {
-	text-indent:0.5em;
+	margin-left:0.5em;
 }
 
 p.toc-item-h3 + p.toc-item-h3 {
-	text-indent:1em;
+	margin-left:1em;
 }
 
 p.toc-item-h3 + p.toc-item-h4 {
-	text-indent:2em;
+	margin-left:2em;
 }
 
 p.toc-item-h3 + p.toc-item-h5 {
-	text-indent:3em;
+	margin-left:3em;
 }
 
 p.toc-item-h3 + p.toc-item-h6 {
-	text-indent:4em;
+	margin-left:4em;
 }
 
 /*Currently disabled: This removes first line indent in h1 following h4 items in toc*/
@@ -219,23 +219,23 @@ p.toc-item-h3 + p.toc-item-h6 {
 }*/
 
 p.toc-item-h4 + p.toc-item-h2 {
-	text-indent:0.5em;
+	margin-left:0.5em;
 }
 
 p.toc-item-h4 + p.toc-item-h3 {
-	text-indent:1em;
+	margin-left:1em;
 }
 
 p.toc-item-h4 + p.toc-item-h4 {
-	text-indent:2em;
+	margin-left:2em;
 }
 
 p.toc-item-h4 + p.toc-item-h5 {
-	text-indent:3em;
+	margin-left:3em;
 }
 
 p.toc-item-h4 + p.toc-item-h6 {
-	text-indent:4em;
+	margin-left:4em;
 }
 
 /*Currently disabled: This removes first line indent in h1 following h5 items in toc*/
@@ -244,23 +244,23 @@ p.toc-item-h4 + p.toc-item-h6 {
 }*/
 
 p.toc-item-h5 + p.toc-item-h2 {
-	text-indent:0.5em;
+	margin-left:0.5em;
 }
 
 p.toc-item-h5 + p.toc-item-h3 {
-	text-indent:1em;
+	margin-left:1em;
 }
 
 p.toc-item-h5 + p.toc-item-h4 {
-	text-indent:2em;
+	margin-left:2em;
 }
 
 p.toc-item-h5 + p.toc-item-h5 {
-	text-indent:3em;
+	margin-left:3em;
 }
 
 p.toc-item-h5 + p.toc-item-h6 {
-	text-indent:4em;
+	margin-left:4em;
 }
 
 /*Currently disabled: This removes first line indent in h1 following h6 items in toc*/
@@ -269,23 +269,23 @@ p.toc-item-h5 + p.toc-item-h6 {
 }*/
 
 p.toc-item-h6 + p.toc-item-h2 {
-	text-indent:0.5em;
+	margin-left:0.5em;
 }
 
 p.toc-item-h6 + p.toc-item-h3 {
-	text-indent:1em;
+	margin-left:1em;
 }
 
 p.toc-item-h6 + p.toc-item-h4 {
-	text-indent:2em;
+	margin-left:2em;
 }
 
 p.toc-item-h6 + p.toc-item-h5 {
-	text-indent:3em;
+	margin-left:3em;
 }
 
 p.toc-item-h6 + p.toc-item-h6 {
-	text-indent:4em;
+	margin-left:4em;
 }
 
 

@@ -239,7 +239,7 @@ figcaption {
 	font-style:normal;
 	font-weight: 400;
 	color:#B50000;
-	text-indent: 0.5em;
+	margin-left: 0.5em;
 	text-transform: uppercase;
 }
 
@@ -250,7 +250,7 @@ figcaption {
 	font-style:normal;
 	font-weight: 400;
 	color:#B50000;
-	text-indent: 1em;
+	margin-left: 1em;
 	text-transform: uppercase;
 }
 
@@ -261,7 +261,7 @@ figcaption {
 	font-style:normal;
 	font-weight: 400;
 	color:#B50000;
-	text-indent: 2em;
+	margin-left: 2em;
 	text-transform: uppercase;
 }
 
@@ -272,7 +272,7 @@ figcaption {
 	font-style:normal;
 	font-weight: 400;
 	color:#B50000;
-	text-indent: 3em;
+	margin-left: 3em;
 	text-transform: uppercase;
 }
 
@@ -283,7 +283,7 @@ figcaption {
 	font-style:normal;
 	font-weight: 400;
 	color:#B50000;
-	text-indent: 4em;
+	margin-left: 4em;
 	text-transform: uppercase;
 }
 
