@@ -1528,27 +1528,27 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					selectedStyle = {};
 				}
 
-				var elm = document.getElementById( selectedStyle._id );
-				if ( elm ) {
+				var styleNode = document.getElementById( selectedStyle._id );
+				if ( styleNode ) {
 					// The list-item dom-node reprenseting the parent styleset
-					var styletNode = elm.parentNode.parentNode;
+					var stylesetNode = styleNode.parentNode.parentNode;
 					var stylesetsContainer = document.getElementById('menu-left');
 					// Check whether the style is visible (is the parent styleset expanded?)
-					var wasVisible = angular.element(styletNode).scope().typoChildrenVisible;
+					var alreadyExpanded = angular.element(stylesetNode).scope().typoChildrenVisible;
 					var resizeAboveSelected = false;
 
 					// If styleset was not already expanded, we might need to compensate for the resize
-					if (!wasVisible) {
-						// Expand the styleset containg the newly selected style
-						angular.element(styletNode).scope().typoChildrenVisible = true;
+					if (!alreadyExpanded) {
+						// Expand the styleset containing the newly selected style
+						angular.element(stylesetNode).scope().typoChildrenVisible = true;
 
 						// If a style was previously selected we need to determine if the resize influences the scroll offset
 						if ($scope.selectedStyle) {
 							// Determine the positions of the new and old stylesets in the styleset list
-							var oldHeight = elm.parentNode.parentNode.offsetHeight;
-							var containerList = styletNode.parentNode.children;
+							var oldHeight = styleNode.parentNode.parentNode.offsetHeight;
+							var containerList = stylesetNode.parentNode.children;
 							var oldStylesetNode = document.getElementById($scope.selectedStyle._id).parentNode.parentNode
-							var indexNewStyleset = Array.prototype.indexOf.call(containerList, styletNode);
+							var indexNewStyleset = Array.prototype.indexOf.call(containerList, stylesetNode);
 							var indexOldStyleset = Array.prototype.indexOf.call(containerList, oldStylesetNode);
 
 							// The resize only influences the scroll offset if the new styleset is above the old styleset
@@ -1563,12 +1563,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 								// If the newly selected styleset was not previously expanded, and is positioned above the old styleset,
 								// we need to compensate for the resize in our scroll offset, to ensure that the scroll animation
 								// starts with the old styleset in the same scroll position as before.
-								if (!wasVisible && resizeAboveSelected) {
-									var newHeight =  styletNode.offsetHeight;
+								if (!alreadyExpanded && resizeAboveSelected) {
+									// oldHeight - the height of the newly selected styleset element before renredering
+									// newHeight - the height of the newly selected styleset element after renredering
+									var newHeight =  stylesetNode.offsetHeight;
 									var scrollAdjust =  newHeight - oldHeight;
 									stylesetsContainer.scrollTop += scrollAdjust;
 								}
-								smoothScroll.animateScroll(null, '#' + elm.id, { updateURL: false, speed: 700, easing: 'easeInCubic' }, stylesetsContainer);
+								smoothScroll.animateScroll(null, '#' + styleNode.id, { updateURL: false, speed: 700, easing: 'easeInCubic' }, stylesetsContainer);
 							}, 0);
 						});
 					}
