@@ -250,6 +250,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				.success( function( data ) {
 
 					data.document.editingProjectDocumentTitle = true;
+					data.document.editingNewProjectDocument = true;
 
 					if ( typeof data.document.type !== 'undefined' ) {
 						
@@ -292,11 +293,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					else{
 						$scope.projectDocuments.push( data.document );
 					}
-
-					var promise = $scope.openProjectDocument( data.document );
-					promise.then( function() {
-						deferred.resolve();
-					});
 				})
 		} else {
 			document._id = Date.now();
@@ -395,10 +391,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
-	$scope.renameProjectDocument = function( projectDocument ) {
+	$scope.renameProjectDocument = function(projectDocument) {
 		if ( $scope.user._id ) {
 			$http.put('/document/' + projectDocument._id + '/rename', angular.toJson( projectDocument ) )
-				.success( function() {});
+				.success( function() {
+					if (projectDocument.editingNewProjectDocument) {
+						$scope.openProjectDocument(projectDocument);
+					}
+				});
 		} else {
 			//TODO save to localstorage
 		}
