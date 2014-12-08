@@ -430,17 +430,21 @@ li.typo p:first-child {
 	height: 40px;
 	overflow: hidden;
 }
-.style-copy-options ul {
+li.typo .style-copy-options ul {
 	list-style: none;
 }
-.style-copy-options li {
+li.typo .style-copy-options li {
 	display: block;
 	border: none !important;
 	padding: 2px 0 2px 0;
 	text-decoration: underline;
 }
-.style-copy-options li a:hover {
-	color: #fff !important;
+li.typo .style-copy-options li a:hover {
+	color: #fff;
+}
+li.typo .style-copy-options p {
+	background: none;
+	padding: 10px 0;
 }
 
 .cke_floatingtools {

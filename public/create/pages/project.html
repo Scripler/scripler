@@ -69,7 +69,7 @@
 					<div class="styleset-options" data-ng-show="showStylesetOptions">
 						<div class="styleset-options-menupoint first" data-ng-click="styleset.editingStyleSetTitle = true; showStylesetOptions = false;">rename</div>
 						<!--<div class="styleset-options-menupoint" data-ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>-->
-						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToDocument(styleset,true); showStylesetOptions = false;">apply to document</div>
+						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToDocument(styleset,true); showStylesetOptions = false;">apply to chapter</div>
 						<!--<div class="styleset-options-menupoint" data-ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to ebook</div>-->
 					</div>
 
@@ -81,11 +81,12 @@
 
 							{{style.tag === 'h1' && setStylesetStyling(styleset, style) || ''}}
 
-							<div class="style-height" data-ng-hide="style.editingStyleTitle">
-								<span class="not-selectable" data-ng-style="getStyleStyling(style)" data-ng-click="applyStyle(styleset, style)">{{style.name}}</span>
+							<div class="style-height" data-ng-hide="style.editingStyleTitle" data-ng-click="applyStyle(styleset, style)">
+								<span class="not-selectable" data-ng-style="getStyleStyling(style)">{{style.name}}</span>
 							</div>
 
 							<div class="style-copy-options" data-ng-show="copyCSS && selectedStyle._id === style._id">
+								<p>The style has been changed, do you want to save these changes to the style?</p>
 								<ul>
 									<!--<li><a data-ng-click="saveAsCharStyle(styleset, style)">save as character style</a></li>-->
 									<li><a data-ng-click="saveAsBlockStyle(styleset, style)">save as new</a></li>
