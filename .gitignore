@@ -11,3 +11,4 @@ debug.log
 exceptions.log
 tmp/*
 *.epub
+public/create/stylesets/Colophon_template.html
