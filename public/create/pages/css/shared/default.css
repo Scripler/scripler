@@ -24,6 +24,9 @@ body, html { position: relative; font-size: 100%; padding: 0; margin: 0; }
 	clear: both;
 }
 
+/* Font load */
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,700,900,400italic,700italic,900italic);
+
 /* General Styling */
 body {
 	background: none #F8F9F9;
