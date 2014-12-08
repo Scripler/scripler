@@ -1440,7 +1440,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 
 		$scope.focusEditor = function() {
-			$rootScope.ck.focus();
+			setTimeout(function(){
+				$rootScope.ck.focus();
+			}, 500);
 		}
 
 		$scope.$watch('showTypo', function() {
@@ -1528,17 +1530,32 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					selectedStyle = {};
 				}
 
-				if ( !$scope.$$phase ) {
-					$scope.$apply(function() {
+				var styleNode = document.getElementById( selectedStyle._id );
+				// If design tab is open, scroll to selected style if it is not already the selected style
+				if ( $scope.showTypo && styleNode && (!$scope.selectedStyle || $scope.selectedStyle._id != selectedStyle._id) ) {
+					// The list-item dom-node reprenseting the parent styleset
+					var stylesetNode = styleNode.parentNode.parentNode;
+					// The container for all the stylesets, which is the scrolling container
+					var stylesetsContainer = document.getElementById('menu-left');
+
+					var alreadyExpanded = angular.element(stylesetNode).scope().typoChildrenVisible;
+					var animationTime = 700;
+
+					// If the styleset is already expanded, we don't wait additional time before setting the selected style in the angular scope.
+					var waitBeforeExpand = alreadyExpanded ? 0 : 300;
+
+					// Do the actual scrolling
+					smoothScroll.animateScroll(null, '#' + stylesetNode.id, { updateURL: false, speed: animationTime, easing: 'easeInCubic' }, stylesetsContainer);
+
+					// Update angular scope after the animation is done
+					setTimeout(function () {
 						$scope.selectedStyle = selectedStyle;
-						var elm = document.getElementById( selectedStyle._id );
-						if ( elm ) {
-							elm.scrollIntoView();
+						angular.element(stylesetNode).scope().typoChildrenVisible = true;
+						if ( !$scope.$$phase ) {
+							$scope.$apply();
 						}
-
-					});
+					}, animationTime + waitBeforeExpand);
 				}
-
 			}
 
 		}, this );
