@@ -1,6 +1,7 @@
+/* General */
 body, html { position: relative; font-size: 100%; padding: 0; margin: 0; }
 
-/*angular cloak*/
+/* Angular Cloak */
 [ng\:cloak], [ng-cloak], .ng-cloak {
   display: none !important;
 }
@@ -23,9 +24,6 @@ body, html { position: relative; font-size: 100%; padding: 0; margin: 0; }
 .clearfix:after {
 	clear: both;
 }
-
-/* Font load */
-@import url(http://fonts.googleapis.com/css?family=Roboto:400,700,900,400italic,700italic,900italic);
 
 /* General Styling */
 body {
