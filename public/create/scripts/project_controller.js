@@ -1531,7 +1531,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				}
 
 				var styleNode = document.getElementById( selectedStyle._id );
-				if ( styleNode ) {
+				// If design tab is open, scroll to selected style if it is not already the selected style
+				if ( $scope.showTypo && styleNode && (!$scope.selectedStyle || $scope.selectedStyle._id != selectedStyle._id) ) {
 					// The list-item dom-node reprenseting the parent styleset
 					var stylesetNode = styleNode.parentNode.parentNode;
 					// The container for all the stylesets, which is the scrolling container

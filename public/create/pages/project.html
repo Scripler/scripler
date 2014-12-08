@@ -9,7 +9,7 @@
 		<div class="menu-tab" data-ng-class="{ 'selectedTab' : showDocuments }" data-ng-click="showDocuments = !showDocuments; showTypo = false; showInsert = false;">
 			<img src="pages/images/contents.svg" width="20">
 		</div>
-		<div class="menu-tab" data-ng-class="{ 'selectedTab' : showTypo }" data-ng-click="showTypo = !showTypo; hideStyleEditor(); showDocuments = false; showInsert = false; focusEditor();">
+		<div class="menu-tab" data-ng-class="{ 'selectedTab' : showTypo }" data-ng-click="showTypo = !showTypo; hideStyleEditor(); showDocuments = false; showInsert = false; selectedStyle = null; focusEditor();">
 			<img src="pages/images/design.svg" width="20">
 		</div>
 		<div class="menu-tab" data-ng-class="{ 'selectedTab' : showInsert }" data-ng-click="showInsert = !showInsert; showDocuments = false; showTypo = false;">
