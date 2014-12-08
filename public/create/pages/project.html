@@ -81,8 +81,8 @@
 
 							{{style.tag === 'h1' && setStylesetStyling(styleset, style) || ''}}
 
-							<div class="style-height" data-ng-hide="style.editingStyleTitle">
-								<span class="not-selectable" data-ng-style="getStyleStyling(style)" data-ng-click="applyStyle(styleset, style)">{{style.name}}</span>
+							<div class="style-height" data-ng-hide="style.editingStyleTitle" data-ng-click="applyStyle(styleset, style)">
+								<span class="not-selectable" data-ng-style="getStyleStyling(style)">{{style.name}}</span>
 							</div>
 
 							<div class="style-copy-options" data-ng-show="copyCSS && selectedStyle._id === style._id">
