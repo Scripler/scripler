@@ -293,7 +293,6 @@ html, body {
 .projectDocument-options-menupoint, .styleset-options-menupoint, .style-options-menupoint {
 	cursor: pointer;
 	padding: 6px;
-	text-transform: capitalize;
 }
 .projectDocument-options-menupoint:hover, .styleset-options-menupoint:hover, .style-options-menupoint:hover {
 	background: none #ffffcc;

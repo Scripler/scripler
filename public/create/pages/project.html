@@ -40,9 +40,9 @@
 					</form>
 
 					<div class="projectDocument-options" data-ng-show="showProjectDocumentOptions">
-						<div class="projectDocument-options-menupoint first" data-ng-click="projectDocument.editingProjectDocumentTitle = true; showProjectDocumentOptions = false;">rename</div>
-						<div class="projectDocument-options-menupoint" data-ng-hide="projectDocument.archived" data-ng-click="archiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">archive</div>
-						<div class="projectDocument-options-menupoint" data-ng-show="projectDocument.archived" data-ng-click="unarchiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">unarchive</div>
+						<div class="projectDocument-options-menupoint first" data-ng-click="projectDocument.editingProjectDocumentTitle = true; showProjectDocumentOptions = false;">Rename</div>
+						<div class="projectDocument-options-menupoint" data-ng-hide="projectDocument.archived" data-ng-click="archiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">Archive</div>
+						<div class="projectDocument-options-menupoint" data-ng-show="projectDocument.archived" data-ng-click="unarchiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">Unarchive</div>
 						<div class="projectDocument-options-hide" data-ng-click="showProjectDocumentOptions = false;" title="Close Options"></div>
 					</div>
 				</div>
@@ -67,9 +67,9 @@
 					</form>
 
 					<div class="styleset-options" data-ng-show="showStylesetOptions">
-						<div class="styleset-options-menupoint first" data-ng-click="styleset.editingStyleSetTitle = true; showStylesetOptions = false;">rename</div>
+						<div class="styleset-options-menupoint first" data-ng-click="styleset.editingStyleSetTitle = true; showStylesetOptions = false;">Rename</div>
 						<!--<div class="styleset-options-menupoint" data-ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>-->
-						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToDocument(styleset,true); showStylesetOptions = false;">apply to chapter</div>
+						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToDocument(styleset,true); showStylesetOptions = false;">Apply to chapter</div>
 						<!--<div class="styleset-options-menupoint" data-ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to ebook</div>-->
 					</div>
 
@@ -86,11 +86,11 @@
 							</div>
 
 							<div class="style-copy-options" data-ng-show="copyCSS && selectedStyle._id === style._id">
-								<p>The style has been changed, do you want to save these changes to the style?</p>
+								<p>This style has been changed. Do you want to save as new or overwrite?</p>
 								<ul>
 									<!--<li><a data-ng-click="saveAsCharStyle(styleset, style)">save as character style</a></li>-->
-									<li><a data-ng-click="saveAsBlockStyle(styleset, style)">save as new</a></li>
-									<li><a data-ng-click="overwriteStyle(style)">overwrite</a></li>
+									<li><a data-ng-click="saveAsBlockStyle(styleset, style)">Save as new</a></li>
+									<li><a data-ng-click="overwriteStyle(style)">Overwrite</a></li>
 								</ul>
 							</div>
 
@@ -99,7 +99,7 @@
 							</form>
 
 							<div class="style-options" data-ng-show="showStyleOptions">
-								<div class="style-options-menupoint first" data-ng-click="style.editingStyleTitle = true; showStyleOptions = false;">rename</div>
+								<div class="style-options-menupoint first" data-ng-click="style.editingStyleTitle = true; showStyleOptions = false;">Rename</div>
 								<!--<div class="style-options-menupoint" data-ng-click="archiveStyle(style); showStyleOptions = false;">archive</div>-->
 							</div>
 						</li>
@@ -246,28 +246,28 @@
 			</ul>
 		</div>
 		<div class="documents-options-bottom-buttons bottom-fixed" data-ng-show="showDocuments">
-			<a data-ng-class="{ 'open' : showNewOptions }" data-ng-click="showNewOptions = !showNewOptions; showImportOptions = false; showBottomOptions = false;">new</a>
-			<a data-ng-class="{ 'open' : showImportOptions }" data-ng-click="showImportOptions = !showImportOptions; showNewOptions = false; showBottomOptions = false;">import</a>
-			<a class="last" data-ng-class="{ 'open' : showBottomOptions }" data-ng-click="showBottomOptions = !showBottomOptions; showNewOptions = false; showImportOptions = false;">options</a>
+			<a data-ng-class="{ 'open' : showNewOptions }" data-ng-click="showNewOptions = !showNewOptions; showImportOptions = false; showBottomOptions = false;">New</a>
+			<a data-ng-class="{ 'open' : showImportOptions }" data-ng-click="showImportOptions = !showImportOptions; showNewOptions = false; showBottomOptions = false;">Import</a>
+			<a class="last" data-ng-class="{ 'open' : showBottomOptions }" data-ng-click="showBottomOptions = !showBottomOptions; showNewOptions = false; showImportOptions = false;">Options</a>
 		</div>
 
 		<div class="stylesets-options-bottom-buttons bottom-fixed" data-ng-show="showTypo">
-			<a data-ng-click="showStyleEditor()" data-ng-class="{ 'open' : styleEditorVisible }">style editor</a>
+			<a data-ng-click="showStyleEditor()" data-ng-class="{ 'open' : styleEditorVisible }">Style editor</a>
 		</div>
 
 		<div id="menu-left-content-options" class="menu-options bottom-fixed" data-ng-show="showDocuments" data-ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
 			<div class="options-bottom-box">
 				<div data-ng-show="showNewOptions">
-					<a data-ng-click="addProjectDocument()">New Chapter</a><br>
+					<a data-ng-click="addProjectDocument()">New chapter</a><br>
 				</div>
 				<div data-ng-show="showImportOptions">
 					<div class="upload-box" data-ng-file-drop="onFileSelect($files)" data-ng-file-drag-over-class="dragover"
-						 data-ng-show="dropSupported" data-ng-file-drop-available="dropSupported=true">drop files here</div>
+						 data-ng-show="dropSupported" data-ng-file-drop-available="dropSupported=true">Drop files here</div>
 					<p>Scripler imports Word files and other common word processor formats (link).</p>
 					<input type="file" data-ng-file-select="onFileSelect($files)">
 				</div>
 				<div data-ng-show="showBottomOptions">
-					<input type="checkbox" data-ng-model="user.showArchivedDocuments" data-ng-change="updateUser();">Show Archived Content<br>
+					<input type="checkbox" data-ng-model="user.showArchivedDocuments" data-ng-change="updateUser();">Show archived content<br>
 				</div>
 			</div>
 		</div>
