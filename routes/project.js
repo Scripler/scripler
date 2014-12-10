@@ -17,6 +17,9 @@ var mkdirp = require('mkdirp');
 var async = require('async');
 var project_utils = require('../lib/project-utils');
 var TOCEntry = require('../models/project.js').TOCEntry;
+var env = process.env.NODE_ENV;
+var emailer = require('../lib/email/email.js');
+var exec = require('child_process').exec;
 
 //Load project by id
 exports.load = function (id) {
@@ -406,16 +409,63 @@ exports.get_toc = function (req, res, next) {
 }
 
 exports.compile = function (req, res, next) {
-	epub3.create(req.user._id, req.project, function (err, epub) {
+	var userId = req.user._id;
+	epub3.create(userId, req.project, function (err, epub) {
 		if (err) {
 			return next(err);
 		}
 
-		var filename = req.project.metadata.title || req.project.name;
+		var filename = (req.project.metadata.title || req.project.name) + ".epub";
 		var saneTitle = sanitize(filename);
-		res.setHeader('Content-disposition', 'attachment; filename="' + saneTitle + '.epub"');
+		res.setHeader('Content-disposition', 'attachment; filename="' + saneTitle + '"');
 		res.setHeader('Content-type', 'application/epub+zip');
+
+		// TODO: also return EPUB validation result to client
 		epub.pipe(res);
+
+		// The sending of the validation result email can happen after the response has been returned to the user
+		if ('test' != env) {
+			var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + userId);
+			var fullPath = path.join(userDir, saneTitle);
+			exec('java -jar test/epubcheck-3.0.1.jar "' + fullPath + '"',
+				function (error, stdout, stderr) {
+					var epubValidationResult = "OK";
+					var errorMessage = null;
+					if (error !== null) {
+						epubValidationResult = "ERROR";
+						errorMessage = error.code + ':\n' + error.stack;
+					}
+
+					var authorName = req.user.firstname + " " + req.user.lastname;
+
+					console.log('EPUB Validation Result');
+					console.log('Author name: ' + authorName);
+					console.log('EPUB filename: ' + fullPath);
+					console.log('Validation Result: ' + epubValidationResult);
+					if (errorMessage !== null) console.log('Error: ' + errorMessage);
+
+					// Dummy user who is the recipient of the validation result
+					var validationResultRecipient = {
+						_id: req.user._id, // TODO: just use a dummy id?
+						email: conf.epub.validationResultEmail,
+						firstname: "Frank",
+						lastname: "EPUB"
+					};
+
+					emailer.sendUserEmail(
+						validationResultRecipient,
+						[
+							{name: "USEREMAIL", content: req.user.email},
+							{name: "NAME", content: authorName},
+							{name: "EPUBTITLE", content: saneTitle},
+							{name: "EPUBVALIDATIONRESULT", content: epubValidationResult},
+							{name: "ERROR", content: errorMessage}
+						],
+						'epub-validation-result'
+					);
+				}
+			);
+		}
 	});
 
 }
