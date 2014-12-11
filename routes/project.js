@@ -420,7 +420,7 @@ exports.compile = function (req, res, next) {
 		res.setHeader('Content-disposition', 'attachment; filename="' + saneTitle + '"');
 		res.setHeader('Content-type', 'application/epub+zip');
 
-		// TODO: also return EPUB validation result to client
+		// TODO: When a GUI design has been made, also return the EPUB validation result to client
 		epub.pipe(res);
 
 		// The sending of the validation result email can happen after the response has been returned to the user
