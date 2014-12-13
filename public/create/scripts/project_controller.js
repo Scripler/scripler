@@ -1549,12 +1549,17 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 					// Update angular scope after the animation is done
 					setTimeout(function () {
-						$scope.selectedStyle = selectedStyle;
 						angular.element(stylesetNode).scope().typoChildrenVisible = true;
 						if ( !$scope.$$phase ) {
 							$scope.$apply();
 						}
 					}, animationTime + waitBeforeExpand);
+				}
+
+				// Immediately ensure that the style matching the selection is highlighted
+				$scope.selectedStyle = selectedStyle;
+				if ( !$scope.$$phase ) {
+					$scope.$apply();
 				}
 			}
 
