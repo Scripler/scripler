@@ -35,7 +35,7 @@
 
 					<form data-ng-show="projectDocument.editingProjectDocumentTitle">
 						<p>
-							<textarea id="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!projectDocument.editingProjectDocumentTitle" on-enter="projectDocument.editingProjectDocumentTitle = false; renameProjectDocument(projectDocument);" data-ng-blur="projectDocument.editingProjectDocumentTitle = false; renameProjectDocument(projectDocument);"></textarea>
+							<textarea id="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!projectDocument.editingProjectDocumentTitle" on-enter="renameProjectDocument(projectDocument); projectDocument.editingProjectDocumentTitle = false;" data-ng-blur="renameProjectDocument(projectDocument); projectDocument.editingProjectDocumentTitle = false;"></textarea>
 						</p>
 					</form>
 
