@@ -53,7 +53,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.projectDocuments = $scope.project.documents;
 
 			if ( $scope.projectDocuments.length == 0 ) {
-				$scope.addProjectDocument( 'newdocument', '' );
+				$scope.addProjectDocument( 'firstDocument', '' );
 			} else {
 				var index = getIndexForDocumentToDisplay($scope.projectDocuments, 0);
 				$scope.openProjectDocument( $scope.projectDocuments[index] );
@@ -236,7 +236,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		// - CK and model get out of sync.
 		document.text = ' ';
 
-		if ( typeof type !== 'undefined' && type !== 'newdocument') {
+		if ( typeof type !== 'undefined' && type !== 'firstDocument') {
 			document.type = type;
 		}
 		if ( typeof text !== 'undefined' && text != '' ) {
@@ -251,7 +251,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 					data.document.editingNewProjectDocument = true;
 
-					if ( typeof data.document.type !== 'undefined' && data.document.type !== 'newdocument' ) {
+					if ( typeof data.document.type !== 'undefined' && data.document.type !== 'firstDocument' ) {
 
 						for(var i=0; i<order-1; i++) {
 						        if ($scope.projectDocuments[i].type == 'cover')coverExists = true;
@@ -290,7 +290,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					} 
 					else{
 
-						if ( type !== 'newdocument' ) {
+						if ( type !== 'firstDocument' ) {
 							data.document.editingProjectDocumentTitle = true;
 						}
 
