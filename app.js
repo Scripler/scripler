@@ -6,7 +6,8 @@ var express = require('express')
 	, auth = require('./lib/auth')
 	, logger = require('./lib/logger')
 	, routes = require('./routes')
-	, expressConf = require('./config/express');
+	, expressConf = require('./config/express')
+	, mkdirp = require('mkdirp');
 
 var app = express();
 
@@ -30,3 +31,9 @@ mongoose.connect(conf.db.uri, function(err) {
 
 });
 
+mkdirp(conf.epub.tmpDir, function (err) {
+	if (err) {
+		logger.error("Could not create " + conf.epub.tmpDir + ": " + JSON.stringify(err));
+		process.exit(1);
+	}
+});
