@@ -460,12 +460,16 @@ exports.compile = function (req, res, next) {
 							lastname: "EPUB"
 						};
 
+						var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + userId);
+						var epubDownloadUrl = path.join(conf.resources.usersUrl, userDir, req.project._id + '.epub');
+
 						emailer.sendUserEmail(
 							validationResultRecipient,
 							[
 								{name: "USEREMAIL", content: req.user.email},
 								{name: "NAME", content: authorName},
 								{name: "EPUBTITLE", content: saneTitle},
+								{name: "EPUBURL", content: epubDownloadUrl},
 								{name: "EPUBVALIDATIONRESULT", content: epubValidationResult},
 								{name: "ERROR", content: errorMessage}
 							],

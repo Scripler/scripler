@@ -86,12 +86,10 @@
 							</div>
 
 							<div class="style-copy-options" data-ng-show="copyCSS && selectedStyle._id === style._id">
-								<p>This style has been changed. Do you want to save as new or overwrite?</p>
-								<ul>
-									<!--<li><a data-ng-click="saveAsCharStyle(styleset, style)">save as character style</a></li>-->
-									<li><a data-ng-click="saveAsBlockStyle(styleset, style)">Save as new</a></li>
-									<li><a data-ng-click="overwriteStyle(style)">Overwrite</a></li>
-								</ul>
+								<p>This style has been changed. Do you want to <br />
+									<a data-ng-click="saveAsBlockStyle(styleset, style)">save as new</a> or <br />
+									<a data-ng-click="overwriteStyle(style)">overwrite</a>
+								</p>
 							</div>
 
 							<form data-ng-show="style.editingStyleTitle">
