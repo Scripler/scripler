@@ -263,6 +263,7 @@ textarea {
 }
 
 .registration-form {
+	position: relative;
 	float: left;
 }
 
@@ -324,49 +325,38 @@ textarea {
 .registration-close-button:hover {
 	color: #000;
 }
-.error-boxes {
-	position: fixed;
-	margin-left: 425px;
-	margin-bottom: -90px;
-	margin-top: -40px;
-}
-.arrow-box {
-	position: fixed;
+
+.error-box {
+	position: absolute;
 	background: #FF0500;
-	border: 2px solid #fff;
-	padding-top: 5px;
-	height: 32px;
-	width: 200px;
+	margin: -40px 0 0;
+	padding: 5px 10px;
 	color: #fff;
 }
-.arrow-box.second {
-	margin-left: 259px;
+.error-box.error-box-name {
+	margin-left: 24px;
 }
-.arrow-box.third {
-	margin-left: 518px;
+.error-box.error-box-email {
+	margin-left: 206px;
 }
-.arrow-box:after, .arrow-box:before {
+.error-box.error-box-password {
+	margin-left: 354px;
+}
+.error-box:after {
 	top: 100%;
 	left: 50%;
-	border: solid transparent;
+	border: 6px solid transparent;
 	content: " ";
 	height: 0;
 	width: 0;
 	position: absolute;
 	pointer-events: none;
-}
-.arrow-box:after {
 	border-color: rgba(213, 0, 0, 0);
 	border-top-color: #FF0500;
-	border-width: 10px;
-	margin-left: -10px;
+	margin-left: -3px;
 }
-.arrow-box:before {
-	border-color: rgba(194, 225, 245, 0);
-	border-top-color: #fff;
-	border-width: 13px;
-	margin-left: -13px;
-}
+
+
 /* Styling for the ngProgress itself */
 #ngProgress {
 	margin: 0;
