@@ -5,33 +5,36 @@
 
 	<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Roboto:400,700italic,700,500italic,400italic,500'>
 	<link rel="stylesheet" type="text/css" href="pages/css/shared/default.css" />
-	<link rel="stylesheet" type="text/css" href="../css/shared/fonts.css" />
+	<link rel="stylesheet" type="text/css" href="pages/css/shared/fonts.css" />
 </head>
 <body data-ng-controller="appController" data-ng-cloak>
 
 	<div data-ng-view></div>
 
 	<div id="registrationFooter" class="registration" data-ng-hide="user.emailVerified || user.isDemo || registrationBarHiddenByUser" data-ng-class="{ 'green' : user._id }" data-ng-cloak>
-		<div id="registrationContainer">
+		<div id="registrationContainer" class="registration-container">
 			<div class="registration-close-button" data-ng-click="registrationBarHiddenByUser = !registrationBarHiddenByUser" data-ng-show="user._id">x</div>
 			<div class="registration-text" data-ng-bind="registrationText" data-ng-class="{ 'validate' : user._id }" data-ng-hide="user.isDemo"></div>
-			<form name="registerForm" class="registration-form" data-ng-submit="submitRegistration()" data-ng-hide="user._id && !user.isDemo" novalidate>
-				<div class="error-box error-box-name" data-ng-show="registerForm.name.$invalid && !registerForm.name.$pristine" data-ng-bind="errors.name"></div>
-				<div class="error-box error-box-email" data-ng-show="registerForm.email.$invalid && !registerForm.email.$pristine" data-ng-bind="errors.email"></div>
-				<div class="error-box error-box-password" data-ng-show="registerForm.password.$invalid && !registerForm.password.$pristine" data-ng-bind="errors.password"></div>
 
-				<input on-click-change-text type="text" id="reg-name" name="name" data-ng-model="user.name" data-ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First and last name" required>
-				<input on-click-change-text type="email" id="reg-email" name="email" data-ng-model="user.email" data-ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email address" data-ng-pattern="EMAIL_REGEXP" required>
-				<input on-click-change-text type="password" id="reg-password" name="password" data-ng-model="user.password" data-ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" data-ng-minlength="6" required>
-				<button type="submit" class="button registration-button">Register</button>
-			</form>
+			<div class="registration-form">
+				<form name="registerForm" data-ng-submit="submitRegistration()" data-ng-hide="user._id && !user.isDemo" novalidate>
+					<div class="error-box error-box-name" data-ng-show="registerForm.name.$invalid && !registerForm.name.$pristine" data-ng-bind="errors.name"></div>
+					<div class="error-box error-box-email" data-ng-show="registerForm.email.$invalid && !registerForm.email.$pristine" data-ng-bind="errors.email"></div>
+					<div class="error-box error-box-password" data-ng-show="registerForm.password.$invalid && !registerForm.password.$pristine" data-ng-bind="errors.password"></div>
 
-		<div class="socialicons clearfix" data-ng-hide="user._id && !user.isDemo">
-			<div class="social-registration-text" data-ng-bind="socialRegistrationText" data-ng-class="{ 'validate' : user._id }" data-ng-hide="user.isDemo"></div>
-				<a class="socialicon" href="../auth/facebook"><span class="icon-facebook"></span></a>
-				<a class="socialicon" href="../auth/linkedin"><span class="icon-linkedin"></span></a>
-				<a class="socialicon" href="../auth/google"><span class="icon-google-plus"></span></a>
-		</div>
+					<input on-click-change-text type="text" id="reg-name" name="name" data-ng-model="user.name" data-ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First and last name" required>
+					<input on-click-change-text type="email" id="reg-email" name="email" data-ng-model="user.email" data-ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email address" data-ng-pattern="EMAIL_REGEXP" required>
+					<input on-click-change-text type="password" id="reg-password" name="password" data-ng-model="user.password" data-ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" data-ng-minlength="6" required>
+					<button type="submit" class="btn-primary registration-button">Register</button>
+				</form>
+			</div>
+
+			<div class="registration-social clearfix" data-ng-hide="user._id && !user.isDemo">
+				<div class="social-registration-text" data-ng-bind="socialRegistrationText" data-ng-class="{ 'validate' : user._id }" data-ng-hide="user.isDemo"></div>
+					<a class="socialicon" href="../auth/facebook"><span class="icon-facebook"></span></a>
+					<a class="socialicon" href="../auth/linkedin"><span class="icon-linkedin"></span></a>
+					<a class="socialicon" href="../auth/google"><span class="icon-google-plus"></span></a>
+			</div>
 		</div>
 	</div>
 	<script type="text/javascript" src="scripts/angular-file-upload-html5-shim.min.js"></script>
