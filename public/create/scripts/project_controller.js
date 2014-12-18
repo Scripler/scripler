@@ -287,6 +287,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 								$scope.move($scope.projectDocuments, 0, 1);
 							}
 						}
+
+						$scope.openProjectDocument( data.document );
 					} 
 					else{
 
@@ -295,6 +297,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						}
 
 						$scope.projectDocuments.push( data.document );
+
+						if ( type == 'firstDocument' ) {
+							$scope.openProjectDocument( data.document );
+						}
 					}
 				})
 		} else {
