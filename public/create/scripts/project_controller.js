@@ -389,15 +389,21 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 
 	$scope.unarchiveProjectDocument = function( projectDocument ) {
+		var deferred = $q.defer();
+
 		if ( $scope.user._id ) {
 			$http.put('/document/' + projectDocument._id + '/unarchive')
 				.success( function() {
 					projectDocument.archived = false;
 					$scope.openProjectDocument(projectDocument);
+					deferred.resolve();
 				});
 		} else {
 			projectDocument.archived = false;
+			deferred.resolve();
 		}
+
+		return deferred.promise;
 	};
 
 	$scope.renameProjectDocument = function(projectDocument) {
@@ -1252,17 +1258,17 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			if ( typeof document.type !== 'undefined' ) {
 				if ( document.type === type ) {
 
-					if ( $scope.documentSelected._id !== document._id ) {
-						// The existing matching document is not currnetly selected
-						var waitPromise = $scope.openProjectDocument( document );
-						waitPromise.then( function() {
-							updateDocumentText( type, text );
-						});
-					} else {
-						// The existing matching document is already selected - update text directly in CK
-						var editor = getEditor();
-						editor.setData(text);
-					}
+					var waitPromise = $scope.unarchiveProjectDocument( document );
+					waitPromise.then( function() {
+						if ( $scope.documentSelected._id !== document._id ) {
+							// The existing matching document is not currnetly selected
+								updateDocumentText( type, text );
+						} else {
+							// The existing matching document is already selected - update text directly in CK
+							var editor = getEditor();
+							editor.setData(text);
+						}
+					});
 
 					isNew = false;
 					break;
