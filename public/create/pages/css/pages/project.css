@@ -429,16 +429,10 @@ li.typo p:first-child {
 	height: 40px;
 	overflow: hidden;
 }
-li.typo .style-copy-options ul {
-	list-style: none;
-}
-li.typo .style-copy-options li {
-	display: block;
-	border: none !important;
-	padding: 2px 0 2px 0;
+li.typo .style-copy-options a {
 	text-decoration: underline;
 }
-li.typo .style-copy-options li a:hover {
+li.typo .style-copy-options a:hover {
 	color: #fff;
 }
 li.typo .style-copy-options p {
