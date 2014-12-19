@@ -391,7 +391,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				indentOffset: 2,
 				enterMode: CKEDITOR.ENTER_P,
 				height: $window.innerHeight - 90,
-				width: 800,
+				width: '100%',
 				language: 'en',
 				//Change to standard font we want to start all projects with :)
 				contentsCss: ['ckeditor/contents.css', 'stylesets/non-editable.css'],
