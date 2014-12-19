@@ -413,6 +413,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
+	$scope.selectedProjectDocumentOptions = -1;
+	$scope.showProjectDocumentOptions = function ($index) {
+		if ($index != $scope.selectedProjectDocumentOptions) {
+			$scope.selectedProjectDocumentOptions  = $index;
+		}
+		else {
+			$scope.hideProjectDocumentOptions();
+		}
+	};
+	$scope.hideProjectDocumentOptions = function () {
+		$scope.selectedProjectDocumentOptions = -1;
+	};
+
 	$scope.languages = [
 		{
 			"subtag": "arb",
@@ -1135,6 +1148,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		styleset.css = stylesetCSS;
 	}
+
+	$scope.selectedStylesetOptions = -1;
+	$scope.showStylesetOptions = function ($index) {
+		if ($index != $scope.selectedStylesetOptions) {
+			$scope.selectedStylesetOptions  = $index;
+		}
+		else {
+			$scope.hideStylesetOptions();
+		}
+	};
+	$scope.hideStylesetOptions = function () {
+		$scope.selectedStylesetOptions = -1;
+	};
 
 	$scope.loadFonts = function() {
 		WebFont.load({
