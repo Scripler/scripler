@@ -192,7 +192,9 @@ html, body {
 .editor {
 	position: relative;
 	margin: 0 auto;
-	width: 800px;
+	min-width: 250px;
+	max-width: 800px;
+	width: calc(100% - 100px);
 }
 .editor .toolbar-area {
 }
