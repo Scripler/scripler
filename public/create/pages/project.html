@@ -35,7 +35,7 @@
 
 					<form data-ng-show="projectDocument.editingProjectDocumentTitle">
 						<p>
-							<textarea id="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!projectDocument.editingProjectDocumentTitle" on-enter="renameProjectDocument(projectDocument); projectDocument.editingProjectDocumentTitle = false;" data-ng-blur="renameProjectDocument(projectDocument); projectDocument.editingProjectDocumentTitle = false;"></textarea>
+							<textarea class="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!projectDocument.editingProjectDocumentTitle" on-enter="projectDocument.editingProjectDocumentTitle = false;" data-ng-blur="renameProjectDocument(projectDocument); projectDocument.editingProjectDocumentTitle = false;"></textarea>
 						</p>
 					</form>
 
@@ -62,7 +62,7 @@
 
 					<form data-ng-show="styleset.editingStyleSetTitle">
 						<p>
-							<textarea id="renameStyleset" rows="1" data-ng-model="styleset.name" focus-on="!!styleset.editingStyleSetTitle" on-enter="styleset.editingStyleSetTitle = false; renameStyleset(styleset);" data-ng-blur="styleset.editingStyleSetTitle = false; renameStyleset(styleset);"></textarea>
+							<textarea class="renameStyleset" rows="1" data-ng-model="styleset.name" focus-on="!!styleset.editingStyleSetTitle" on-enter="styleset.editingStyleSetTitle = false;" data-ng-blur="styleset.editingStyleSetTitle = false; renameStyleset(styleset);"></textarea>
 						</p>
 					</form>
 
@@ -93,7 +93,7 @@
 							</div>
 
 							<form data-ng-show="style.editingStyleTitle">
-								<textarea id="renameStyle" rows="1" data-ng-model="style.name" focus-on="!!style.editingStyleTitle" on-enter="style.editingStyleTitle = false; updateStyle(style);" data-ng-blur="style.editingStyleTitle = false; updateStyle(style);"></textarea>
+								<textarea class="renameStyle" rows="1" data-ng-model="style.name" focus-on="!!style.editingStyleTitle" on-enter="style.editingStyleTitle = false;" data-ng-blur="style.editingStyleTitle = false; updateStyle(style);"></textarea>
 							</form>
 
 							<div class="style-options" data-ng-show="showStyleOptions">
