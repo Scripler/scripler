@@ -21,7 +21,7 @@
 			</div>
 			<div html-sortable="sortable_option" data-ng-model="projectDocuments">
 				<div class="projectDocument" data-ng-repeat="projectDocument in projectDocuments track by projectDocument._id" data-ng-selected="documentSelected === projectDocument" data-ng-hide="projectDocument.archived && !user.showArchivedDocuments" data-ng-class="{ 'archived' : projectDocument.archived }">
-					<a class="projectdocument-options-show" data-ng-class="{ 'open' : showProjectDocumentOptions }" data-ng-click="showProjectDocumentOptions = !showProjectDocumentOptions">
+					<a class="projectdocument-options-show" data-ng-class="{ 'open' : $index == selectedProjectDocumentOptions }" data-ng-click="showProjectDocumentOptions($index)">
 						<div class="arrow"></div>
 					</a>
 
@@ -37,11 +37,11 @@
 						</p>
 					</form>
 
-					<div class="projectDocument-options" data-ng-show="showProjectDocumentOptions">
-						<div class="projectDocument-options-menupoint first" data-ng-click="projectDocument.editingProjectDocumentTitle = true; showProjectDocumentOptions = false;">Rename</div>
-						<div class="projectDocument-options-menupoint" data-ng-hide="projectDocument.archived" data-ng-click="archiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">Archive</div>
-						<div class="projectDocument-options-menupoint" data-ng-show="projectDocument.archived" data-ng-click="unarchiveProjectDocument(projectDocument); showProjectDocumentOptions = false;">Unarchive</div>
-						<div class="projectDocument-options-hide" data-ng-click="showProjectDocumentOptions = false;" title="Close Options"></div>
+					<div class="projectDocument-options" data-ng-show="$index == selectedProjectDocumentOptions">
+						<div class="projectDocument-options-menupoint first" data-ng-click="projectDocument.editingProjectDocumentTitle = true; hideProjectDocumentOptions();">Rename</div>
+						<div class="projectDocument-options-menupoint" data-ng-hide="projectDocument.archived" data-ng-click="archiveProjectDocument(projectDocument); hideProjectDocumentOptions();">Archive</div>
+						<div class="projectDocument-options-menupoint" data-ng-show="projectDocument.archived" data-ng-click="unarchiveProjectDocument(projectDocument); hideProjectDocumentOptions();">Unarchive</div>
+						<div class="projectDocument-options-hide" data-ng-click="hideProjectDocumentOptions();" title="Close Options"></div>
 					</div>
 				</div>
 			</div>
@@ -52,11 +52,11 @@
 			</div>
 			<ul>
 				<li data-ng-repeat="styleset in stylesets track by $index" id="{{styleset._id}}" class="typo" data-ng-class="{ 'open' : typoChildrenVisible }" data-ng-hide="styleset.archived || styleset.hidden">
-					<a class="styleset-options-show" data-ng-click="typoChildrenVisible = true; showStylesetOptions = !showStylesetOptions" data-ng-class="{ 'open' : showStylesetOptions }">
+					<a class="styleset-options-show" data-ng-click="typoChildrenVisible = true; showStylesetOptions($index);" data-ng-class="{ 'open' : $index == selectedStylesetOptions }">
 						<div class="arrow"></div>
 					</a>
 
-					<p class="not-selectable" data-ng-style="styleset.css" data-ng-click="typoChildrenVisible =! typoChildrenVisible; showStylesetOptions = false; focusEditor();" data-ng-hide="styleset.editingStyleSetTitle">{{styleset.name}}</p>
+					<p class="not-selectable" data-ng-style="styleset.css" data-ng-click="typoChildrenVisible =! typoChildrenVisible; hideStylesetOptions(); focusEditor();" data-ng-hide="styleset.editingStyleSetTitle">{{styleset.name}}</p>
 
 					<form data-ng-show="styleset.editingStyleSetTitle">
 						<p>
@@ -64,16 +64,16 @@
 						</p>
 					</form>
 
-					<div class="styleset-options" data-ng-show="showStylesetOptions">
-						<div class="styleset-options-menupoint first" data-ng-click="styleset.editingStyleSetTitle = true; showStylesetOptions = false;">Rename</div>
-						<!--<div class="styleset-options-menupoint" data-ng-click="archiveStyleset(styleset); showStylesetOptions = false;">archive</div>-->
-						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToDocument(styleset,true); showStylesetOptions = false;">Apply to chapter</div>
-						<!--<div class="styleset-options-menupoint" data-ng-click="applyStylesetToProject(styleset); showStylesetOptions = false;">apply to ebook</div>-->
+					<div class="styleset-options" data-ng-show="$index == selectedStylesetOptions">
+						<div class="styleset-options-menupoint first" data-ng-click="styleset.editingStyleSetTitle = true; hideStylesetOptions();">Rename</div>
+						<!--<div class="styleset-options-menupoint" data-ng-click="archiveStyleset(styleset); hideStylesetOptions();">archive</div>-->
+						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToDocument(styleset,true); hideStylesetOptions();">Apply to chapter</div>
+						<!--<div class="styleset-options-menupoint" data-ng-click="applyStylesetToProject(styleset); hideStylesetOptions();">apply to ebook</div>-->
 					</div>
 
 					<ul data-ng-show="typoChildrenVisible || isDefaultStyleset(styleset)" class="typo-children">
 						<li data-ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" data-ng-hide="style.archived || style.hidden" data-ng-selected="selectedStyle._id === style._id" class="typo-children-style">
-							<a class="style-options-show" data-ng-click="showStyleOptions = !showStyleOptions" data-ng-class="{ 'open' : showStyleOptions }">
+							<a class="style-options-show" data-ng-click="showStylesetOptions($index)" data-ng-class="{ 'open' : $index == selectedStylesetOptions }">
 								<div class="arrow"></div>
 							</a>
 
@@ -94,9 +94,9 @@
 								<textarea class="renameStyle" rows="1" data-ng-model="style.name" focus-on="!!style.editingStyleTitle" on-enter="style.editingStyleTitle = false;" data-ng-blur="style.editingStyleTitle = false; updateStyle(style);"></textarea>
 							</form>
 
-							<div class="style-options" data-ng-show="showStyleOptions">
-								<div class="style-options-menupoint first" data-ng-click="style.editingStyleTitle = true; showStyleOptions = false;">Rename</div>
-								<!--<div class="style-options-menupoint" data-ng-click="archiveStyle(style); showStyleOptions = false;">archive</div>-->
+							<div class="style-options" data-ng-show="$index == selectedStylesetOptions">
+								<div class="style-options-menupoint first" data-ng-click="style.editingStyleTitle = true; hideStylesetOptions();">Rename</div>
+								<!--<div class="style-options-menupoint" data-ng-click="archiveStyle(style); hideStylesetOptions();">archive</div>-->
 							</div>
 						</li>
 						<li class="new style" data-ng-click="addNewStyle( styleset )"><p>+</p></li>
