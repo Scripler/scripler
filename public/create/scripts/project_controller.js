@@ -7,7 +7,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		timeoutMetadata = null,
 		lastSavedDocumentLength = 0,
 		documentWatch = false,
-		secondsToWait = 5;
+		secondsToWait = 5,
+		resetUndoHistory = false;
 
 	$scope.pid = ($location.search()).pid;
 	$scope.user = user;
@@ -184,6 +185,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					$scope.documentWatch = true;
 				}
 
+				resetUndoHistory = true;
 				deferred.resolve();
 			})
 
@@ -1439,6 +1441,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	function getEditor(scope) {
 		return $rootScope.CKEDITOR.instances.bodyeditor
 	}
+
+	$scope.$onRootScope('ckDocument:dataReady', function (event) {
+		if ($scope.ck.resetUndo && resetUndoHistory) {
+			$scope.ck.resetUndo();
+			resetUndoHistory = false;
+		}
+	});
 
 	$scope.$onRootScope('ckDocument:ready', function( event ) {
 		$scope.ckReady = true;

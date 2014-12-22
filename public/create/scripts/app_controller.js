@@ -473,7 +473,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				}
 			});
 			ck.on('key', function( event ) { timeOutModel( event ); });
-			ck.on('dataReady', function( event ) { timeOutModel( event ); });
+			ck.on('dataReady', function( event ) { $rootScope.$emit('ckDocument:dataReady'); timeOutModel( event ); });
 			/*ck.on('save', function() {
 				ngModel.$setViewValue(ck.getData());
 			});*/
