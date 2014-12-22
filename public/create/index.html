@@ -11,6 +11,9 @@
 
 	<div data-ng-view></div>
 
+	<div class="notifications">
+		We're in ALPHA. <a class="readmore" href="http://blog.scripler.com/test-scripler-now.html">Read more</a>
+	</div>
 	<div id="registrationFooter" class="registration" data-ng-hide="user.emailVerified || user.isDemo || registrationBarHiddenByUser" data-ng-class="{ 'green' : user._id }" data-ng-cloak>
 		<div id="registrationContainer" class="registration-container">
 			<div class="registration-close-button" data-ng-click="registrationBarHiddenByUser = !registrationBarHiddenByUser" data-ng-show="user._id">x</div>

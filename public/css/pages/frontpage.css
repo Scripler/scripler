@@ -138,7 +138,12 @@ div.half {
 .create_logo {
 	padding: 50px 0 30px;
 }
-
+.newsletter-signup-text{
+	margin-top: 100px;
+}
+.newsletter-signup-text a{
+	text-decoration: underline;
+}
 #login-extras {
 	font-size: 70%;
 	float: left;
