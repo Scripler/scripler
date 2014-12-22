@@ -21,9 +21,9 @@
 
 			<div class="registration-form">
 				<form name="registerForm" data-ng-submit="submitRegistration()" data-ng-hide="user._id && !user.isDemo" novalidate>
-					<div class="error-box error-box-name" data-ng-show="registerForm.name.$invalid && !registerForm.name.$pristine" data-ng-bind="errors.name"></div>
-					<div class="error-box error-box-email" data-ng-show="registerForm.email.$invalid && !registerForm.email.$pristine" data-ng-bind="errors.email"></div>
-					<div class="error-box error-box-password" data-ng-show="registerForm.password.$invalid && !registerForm.password.$pristine" data-ng-bind="errors.password"></div>
+					<div class="error-box error-box-name" data-ng-show="registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted " data-ng-bind="errors.name"></div>
+					<div class="error-box error-box-email" data-ng-show="registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted " data-ng-bind="errors.email"></div>
+					<div class="error-box error-box-password" data-ng-show="registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted " data-ng-bind="errors.password"></div>
 
 					<input on-click-change-text type="text" id="reg-name" name="name" data-ng-model="user.name" data-ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First and last name" required>
 					<input on-click-change-text type="email" id="reg-email" name="email" data-ng-model="user.email" data-ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email address" data-ng-pattern="EMAIL_REGEXP" required>
