@@ -62,14 +62,13 @@
 			</div>
 		</section>
 
-		<!--<section class="section-projects" data-ng-click="editingProjectTitle = false;">-->
 		<section class="section-projects-container">
 			<div class="projects-title">Ebooks</div>
 
 			<div class="section-projects">
 				<div class="project new" data-ng-click="addProject();"></div>
 				<div class="project" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index" >
-					<a class="project-options-show" data-ng-class="{ 'open' : showProjectOptions }" data-ng-click="showProjectOptions = !showProjectOptions">
+					<a class="project-options-show" data-ng-class="{ 'open' : $index == selectedProjectOptions }" data-ng-click="showProjectOptions($index)">
 						<div class="arrow"></div>
 					</a>
 					<p>
@@ -79,16 +78,11 @@
 						</form>
 					</p>
 
-					<div class="project-options" data-ng-show="showProjectOptions">
-						<div class="project-options-menupoint" data-ng-click="project.editingProjectTitle = true; showProjectOptions = false;">rename</div>
-						<div class="project-options-menupoint" data-ng-click="copyProject(project); showProjectOptions = false;">copy</div>
-						<div class="project-options-menupoint" data-ng-hide="project.archived" data-ng-click="archiveProject(project); showProjectOptions = false;">archive</div>
-						<div class="project-options-menupoint" data-ng-show="project.archived" data-ng-click="unarchiveProject(project); showProjectOptions = false;">unarchive</div>
-						<div class="project-options-dates" data-ng-show="project.created && project.changed">
-							<div>Created Date: </div><div class="dates">{{project.created | date:'yyyy-MM-dd HH:mm'}}</div>
-							<div>Last Changed: </div><div class="dates">{{project.modified | date:'yyyy-MM-dd HH:mm'}}</div>
-						</div>
-						<div class="project-options-hide" data-ng-click="showProjectOptions = false;" title="Close Options"></div>
+					<div class="project-options" data-ng-show="$index == selectedProjectOptions">
+						<div class="project-options-menupoint" data-ng-click="project.editingProjectTitle = true; hideProjectOptions();">rename</div>
+						<div class="project-options-menupoint" data-ng-click="copyProject(project); hideProjectOptions();">copy</div>
+						<div class="project-options-menupoint" data-ng-hide="project.archived" data-ng-click="archiveProject(project); hideProjectOptions();">archive</div>
+						<div class="project-options-menupoint" data-ng-show="project.archived" data-ng-click="unarchiveProject(project); hideProjectOptions();">unarchive</div>
 					</div>
 				</div>
 

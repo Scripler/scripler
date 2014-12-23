@@ -122,165 +122,170 @@ body.cover {
 
 /*PARAGRAPH RULES*/
 
-/*This makes first line indents on paragraphs that follows paragraphs. And removes the margin-top.*/
+/*This makes first line indents on paragraphs that follows paragraphs (this is currently disabled). And removes the margin-top.*/
 p + p {
-	text-indent: 1.5em;
-	margin: 0;
+	/*text-indent: 1.5em;*/
+	margin-top: 0;
 }
 
-/*This removes first line indent from paragraphs that comes after empty paragraphs*/
-p.empty-paragraph + p {
+/*Currently disabled: This removes first line indent from paragraphs that comes after empty paragraphs*/
+/*p.empty-paragraph + p {
 	text-indent: 0;
-}
+}*/
 
 /*When empty paragraphs are added, the should not have margin-top, since they are themselves acting as a sort of margin-top with their emptyness. The line-height is then specified to have the same height as the same removed margin-top.*/
 p.empty-paragraph {
 	line-height:1.5em;
 	margin-top:0;
 }
-
-p.toc-item-h1 + p.toc-item-h1 {
+/*Currently disabled: This removes first line indent in h1 items in toc*/
+/*p.toc-item-h1 + p.toc-item-h1 {
 	text-indent:0;
-}
+}*/
 
 p.toc-item-h1 + p.toc-item-h2 {
-	text-indent:0.5em;
+	margin-left:0.5em;
 }
 
 p.toc-item-h1 + p.toc-item-h3 {
-	text-indent:1em;
+	margin-left:1em;
 }
 
 p.toc-item-h1 + p.toc-item-h4 {
-	text-indent:2em;
+	margin-left:2em;
 }
 
 p.toc-item-h1 + p.toc-item-h5 {
-	text-indent:3em;
+	margin-left:3em;
 }
 
 p.toc-item-h1 + p.toc-item-h6 {
-	text-indent:4em;
+	margin-left:4em;
 }
 
-p.toc-item-h2 + p.toc-item-h1 {
+/*Currently disabled: This removes first line indent in h1 following h2 items in toc*/
+/*p.toc-item-h2 + p.toc-item-h1 {
 	text-indent:0;
-}
+}*/
 
 p.toc-item-h2 + p.toc-item-h2 {
-	text-indent:0.5em;
+	margin-left:0.5em;
 }
 
 p.toc-item-h2 + p.toc-item-h3 {
-	text-indent:1em;
+	margin-left:1em;
 }
 
 p.toc-item-h2 + p.toc-item-h4 {
-	text-indent:2em;
+	margin-left:2em;
 }
 
 p.toc-item-h2 + p.toc-item-h5 {
-	text-indent:3em;
+	margin-left:3em;
 }
 
 p.toc-item-h2 + p.toc-item-h6 {
-	text-indent:4em;
+	margin-left:4em;
 }
 
-p.toc-item-h3 + p.toc-item-h1 {
+/*Currently disabled: This removes first line indent in h1 following h3 items in toc*/
+/*p.toc-item-h3 + p.toc-item-h1 {
 	text-indent:0;
-}
+}*/
 
 p.toc-item-h3 + p.toc-item-h2 {
-	text-indent:0.5em;
+	margin-left:0.5em;
 }
 
 p.toc-item-h3 + p.toc-item-h3 {
-	text-indent:1em;
+	margin-left:1em;
 }
 
 p.toc-item-h3 + p.toc-item-h4 {
-	text-indent:2em;
+	margin-left:2em;
 }
 
 p.toc-item-h3 + p.toc-item-h5 {
-	text-indent:3em;
+	margin-left:3em;
 }
 
 p.toc-item-h3 + p.toc-item-h6 {
-	text-indent:4em;
+	margin-left:4em;
 }
 
-p.toc-item-h4 + p.toc-item-h1 {
+/*Currently disabled: This removes first line indent in h1 following h4 items in toc*/
+/*p.toc-item-h4 + p.toc-item-h1 {
 	text-indent:0;
-}
+}*/
 
 p.toc-item-h4 + p.toc-item-h2 {
-	text-indent:0.5em;
+	margin-left:0.5em;
 }
 
 p.toc-item-h4 + p.toc-item-h3 {
-	text-indent:1em;
+	margin-left:1em;
 }
 
 p.toc-item-h4 + p.toc-item-h4 {
-	text-indent:2em;
+	margin-left:2em;
 }
 
 p.toc-item-h4 + p.toc-item-h5 {
-	text-indent:3em;
+	margin-left:3em;
 }
 
 p.toc-item-h4 + p.toc-item-h6 {
-	text-indent:4em;
+	margin-left:4em;
 }
 
-p.toc-item-h5 + p.toc-item-h1 {
+/*Currently disabled: This removes first line indent in h1 following h5 items in toc*/
+/*p.toc-item-h5 + p.toc-item-h1 {
 	text-indent:0;
-}
+}*/
 
 p.toc-item-h5 + p.toc-item-h2 {
-	text-indent:0.5em;
+	margin-left:0.5em;
 }
 
 p.toc-item-h5 + p.toc-item-h3 {
-	text-indent:1em;
+	margin-left:1em;
 }
 
 p.toc-item-h5 + p.toc-item-h4 {
-	text-indent:2em;
+	margin-left:2em;
 }
 
 p.toc-item-h5 + p.toc-item-h5 {
-	text-indent:3em;
+	margin-left:3em;
 }
 
 p.toc-item-h5 + p.toc-item-h6 {
-	text-indent:4em;
+	margin-left:4em;
 }
 
-p.toc-item-h6 + p.toc-item-h1 {
+/*Currently disabled: This removes first line indent in h1 following h6 items in toc*/
+/*p.toc-item-h6 + p.toc-item-h1 {
 	text-indent:0;
-}
+}*/
 
 p.toc-item-h6 + p.toc-item-h2 {
-	text-indent:0.5em;
+	margin-left:0.5em;
 }
 
 p.toc-item-h6 + p.toc-item-h3 {
-	text-indent:1em;
+	margin-left:1em;
 }
 
 p.toc-item-h6 + p.toc-item-h4 {
-	text-indent:2em;
+	margin-left:2em;
 }
 
 p.toc-item-h6 + p.toc-item-h5 {
-	text-indent:3em;
+	margin-left:3em;
 }
 
 p.toc-item-h6 + p.toc-item-h6 {
-	text-indent:4em;
+	margin-left:4em;
 }
 
 

@@ -1,6 +1,7 @@
+/* General */
 body, html { position: relative; font-size: 100%; padding: 0; margin: 0; }
 
-/*angular cloak*/
+/* Angular Cloak */
 [ng\:cloak], [ng-cloak], .ng-cloak {
   display: none !important;
 }
@@ -22,6 +23,28 @@ body, html { position: relative; font-size: 100%; padding: 0; margin: 0; }
 }
 .clearfix:after {
 	clear: both;
+}
+
+/* Standard Elements */
+button, .btn-primary, .btn-secondary {
+	outline: none;
+	border: none;
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	border-radius: 1px;
+	-webkit-appearance: none;
+	font-size: 16px;
+	font-weight: 700;
+	text-align: center;
+	cursor: pointer;
+	margin: 0;
+	padding: 6px 10px 7px;
+}
+.btn-primary {
+	background: #fff265;
+}
+.btn-secondary {
+	background: #efefef;
 }
 
 /* General Styling */
@@ -146,22 +169,18 @@ input[type="password"], input[type="text"], input[type="email"] {
 	-webkit-border-radius: 1px;
 	border-radius: 1px;
 	-webkit-appearance: none;
-	border: none;
+	border: 1px solid #f6f6f6;
 	background: #f6f6f6;
 	font-size: 15px;
-	width: 25%;
-	height: 32px;
-	padding: 0 5px 0 5px;
+	padding: 6px 8px;
 	margin: 0 5px 0 0;
 }
 input.has-error {
-	border: 1px solid #b94a48;
+	border-color: #ff0000;
 }
 input:focus {
-	outline: -webkit-focus-ring-color auto 5px;
-	outline-color: -webkit-focus-ring-color;
-	outline-style: auto;
-	outline-width: 5px;
+	border-color: #ffff99;
+	outline: none;
 }
 textarea {
 	-moz-border-radius: 1px;
@@ -175,45 +194,6 @@ textarea {
 	height: 32px;
 	padding: 0 0 0 15px;
 	margin: 0 5px 0 0;
-}
-
-/*.main > section input {
-	border: none;
-	background: #fff;
-	color: #000;
-	padding: 0.5em;
-	display: inline-block;
-	width: 90%;
-	margin: 5px 0 0;
-	font-size: 0.8em;
-	outline: none;
-}
-.main > section input:focus {
-	border: 1px solid #ffff99;
-	border-radius: 5px;
-	outline: none;
-}*/
-
-.main > section button {
-	outline: none;
-	border: none;
-	background: #ffff99;
-	color: #000;
-	padding: 0.5em;
-	display: inline-block;
-	width: 90%;
-	cursor: pointer;
-	margin: 5px 0 0;
-	font-size: 0.8em;
-}
-
-.main > section button.active {
-	background: #CCCC66;
-}
-
-.main > section button.disabled {
-	background: #B3B34D;
-	pointer-events: none;
 }
 
 .icon-drop:before,
@@ -242,7 +222,9 @@ textarea {
 	display: none;
 }
 
+
 /*registration styling*/
+
 .registration {
 	background-color: #c6c6c6;
 	position: fixed;
@@ -252,36 +234,65 @@ textarea {
 	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
 	bottom: 0;
 }
-.green {
+.registration.green {
 	background-color: #5cb85c;
 }
 
-#registrationContainer{
-	width:99%;
+.registration-container {
+	width:100%;
 	margin:0 auto;
 }
-
+.registration-text {
+	font-weight: 700;
+	margin: 0 0 10px 0;
+}
+@media all and (min-width: 1220px) {
+	.registration-text {
+		float: left;
+		margin: 0 10px 0 0;
+		padding: 7px 0 0;
+	}
+}
 .registration-form {
+	position: relative;
 	float: left;
+	min-width: 692px;
+}
+.registration-social {
+	float: left;
+	margin: 10px 0 0 0;
+}
+@media all and (min-width: 890px) {
+	.registration-social {
+		margin: 0 0 0 10px;
+	}
 }
 
-.registration-text {
-	font-weight: 900;
-	width: 22%;
-	font-size:15px;
-	float: left;
-	padding-top:7px;
-	line-height: 1.3;
-	margin-right:5px;
+/*
+	TODO: "socialicons" styles COPIED from css/pages/frontpage.css: refactor into common location!
+		  If, instead, "socialicons" styles are placed in css/shared/default.css and this CSS is included in create/index.html, the page's style is completely broken.
+*/
+.socialicon {
+	background-color: #fff;
+	border-radius: 50%;
+	width: 33px;
+	height: 33px;
+	padding: 3px 0 0 0;
+	font-size: 20px;
+	text-align:center;
+	display: inline-block;
+	cursor:pointer;
+
+}
+.socialicon:hover {
+	background-color: #fff265;
 }
 
 .social-registration-text {
-	font-weight: 900;
-	bottom: 8px;
+	font-weight: 700;
+	bottom: 3px;
 	display: inline-block;
 	position: relative;
-	font-size:15px;
-	vertical-align: sub;
 	margin-right:5px;
 }
 
@@ -293,24 +304,8 @@ textarea {
 	width: 100%;
 	float: none;
 }
-.button.registration-button {
-	font-size: 15px;
-}
 .registration-button {
-	-moz-border-radius: 1px;
-	-webkit-border-radius: 1px;
-	border-radius: 1px;
-	-webkit-appearance: none;
-	border: none;
-	background: #fff265;
-	color: #231f20;
-	font-size: 20px;
-	font-weight: bold;
-	width: 120px;
-	height: 33px;
-	cursor: pointer;
-	margin: 0 0 0 5px;
-	text-align: center;
+	min-width: 100px;
 }
 .registration-close-button {
 	position: absolute;
@@ -323,50 +318,49 @@ textarea {
 .registration-close-button:hover {
 	color: #000;
 }
-.error-boxes {
-	position: fixed;
-	margin-left: 425px;
-	margin-bottom: -90px;
-	margin-top: -40px;
-}
-.arrow-box {
-	position: fixed;
-	background: #FF0500;
-	border: 2px solid #fff;
-	padding-top: 5px;
-	height: 32px;
-	width: 200px;
+
+.error-box {
+	position: absolute;
+	background: #ff0000;
+	margin: -40px 0 0;
+	padding: 5px 10px;
 	color: #fff;
 }
-.arrow-box.second {
-	margin-left: 259px;
+.error-box.error-box-name {
+	margin-left: 30px;
 }
-.arrow-box.third {
-	margin-left: 518px;
+.error-box.error-box-email {
+	margin-left: 230px;
 }
-.arrow-box:after, .arrow-box:before {
+.error-box.error-box-password {
+	margin-left: 392px;
+}
+.error-box:after {
 	top: 100%;
 	left: 50%;
-	border: solid transparent;
+	border: 6px solid transparent;
 	content: " ";
 	height: 0;
 	width: 0;
 	position: absolute;
 	pointer-events: none;
+	border-color: rgba(0, 0, 0, 0);
+	border-top-color: #ff0000;
+	margin-left: -3px;
 }
-.arrow-box:after {
-	border-color: rgba(213, 0, 0, 0);
-	border-top-color: #FF0500;
-	border-width: 10px;
-	margin-left: -10px;
+
+
+/* Styling for the ngProgress */
+
+#ngProgress-container {
+	position: fixed;
+	margin: 0;
+	padding: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 99999;
 }
-.arrow-box:before {
-	border-color: rgba(194, 225, 245, 0);
-	border-top-color: #fff;
-	border-width: 13px;
-	margin-left: -13px;
-}
-/* Styling for the ngProgress itself */
 #ngProgress {
 	margin: 0;
 	padding: 0;
@@ -381,17 +375,6 @@ textarea {
 	-moz-transition: all 0.5s ease-in-out;
 	-o-transition: all 0.5s ease-in-out;
 	transition: all 0.5s ease-in-out;
-}
-
-/* Styling for the ngProgress-container */
-#ngProgress-container {
-	position: fixed;
-	margin: 0;
-	padding: 0;
-	top: 0;
-	left: 0;
-	right: 0;
-	z-index: 99999;
 }
 
 .feedback{
@@ -421,7 +404,9 @@ textarea {
 	transform: translateY(-50%);
 }
 
+
 /* Styling for autocomplete */
+
 .autocomplete{
   width: 100%;
   position: relative;
@@ -465,32 +450,30 @@ textarea {
   background: #fff265;
 }
 
-/*
-	TODO: "socialicons" styles COPIED from css/pages/frontpage.css: refactor into common location!
-		  If, instead, "socialicons" styles are placed in css/shared/default.css and this CSS is included in create/index.html, the page's style is completely broken.
-*/
-.socialicons {
-	width: 16%;
-	float: left;
-}
-
-.socialicon {
-	background-color: #fff;
-	border-radius: 50%;
-	width: 33px;
-	height: 33px;
+.notifications{
+	outline: none;
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	border-radius: 1px;
+	-webkit-appearance: none;
+	background: #fff265;
+	color: #231f20;
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
+	text-align: center;
+	font-family: 'Roboto', sans-serif;
+	width: 250px;
 	padding: 5px;
-	font-size: 20px;
-	text-align:center;
-	display: inline-block;
-	cursor:pointer;
-
+	position:fixed;
+	bottom:73px;
+	left:50%;
+	margin-left: -125px;
 }
-
-.socialicon:hover {
-	background-color: #fff265;
+.loggedin{
+	bottom:0;
 }
-
-.socialicons a {
-	color: #ABACAF;
+.readmore{
+	text-decoration: underline;
+	color:#999;
 }

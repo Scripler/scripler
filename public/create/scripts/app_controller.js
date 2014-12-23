@@ -59,6 +59,11 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 			}
 		}
 
+		$rootScope.updateNotificationOffset = function() {
+			var notifications = document.getElementById("notification-area");	
+			notifications.setAttribute('class', 'notifications loggedin');
+		}
+
 		$scope.$watch('registrationBarHiddenByUser', function () {
 			// Wait for the registration-bar visual changes before updating bottom offset.
 			setTimeout(function () {
@@ -73,6 +78,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				$scope.user = user;
 				if (!$scope.user.emailVerified) {
 					$scope.registrationText = 'Remove this message by verifying your email address. Click the link you received in your welcome email.';
+					$rootScope.updateNotificationOffset();
 				}
 			}
 			// Wait for the registration-bar visual changes before updating bottom offset.
@@ -391,7 +397,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				indentOffset: 2,
 				enterMode: CKEDITOR.ENTER_P,
 				height: $window.innerHeight - 90,
-				width: 800,
+				width: '100%',
 				language: 'en',
 				//Change to standard font we want to start all projects with :)
 				contentsCss: ['ckeditor/contents.css', 'stylesets/non-editable.css'],
@@ -473,7 +479,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				}
 			});
 			ck.on('key', function( event ) { timeOutModel( event ); });
-			ck.on('dataReady', function( event ) { timeOutModel( event ); });
+			ck.on('dataReady', function( event ) { $rootScope.$emit('ckDocument:dataReady'); timeOutModel( event ); });
 			/*ck.on('save', function() {
 				ngModel.$setViewValue(ck.getData());
 			});*/

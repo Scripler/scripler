@@ -7,7 +7,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		timeoutMetadata = null,
 		lastSavedDocumentLength = 0,
 		documentWatch = false,
-		secondsToWait = 5;
+		secondsToWait = 5,
+		resetUndoHistory = false;
 
 	$scope.pid = ($location.search()).pid;
 	$scope.user = user;
@@ -53,7 +54,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.projectDocuments = $scope.project.documents;
 
 			if ( $scope.projectDocuments.length == 0 ) {
-				$scope.addProjectDocument();
+				$scope.addProjectDocument( 'firstDocument', '' );
 			} else {
 				var index = getIndexForDocumentToDisplay($scope.projectDocuments, 0);
 				$scope.openProjectDocument( $scope.projectDocuments[index] );
@@ -184,6 +185,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					$scope.documentWatch = true;
 				}
 
+				resetUndoHistory = true;
 				deferred.resolve();
 			})
 
@@ -236,7 +238,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		// - CK and model get out of sync.
 		document.text = ' ';
 
-		if ( typeof type !== 'undefined' ) {
+		if ( typeof type !== 'undefined' && type !== 'firstDocument') {
 			document.type = type;
 		}
 		if ( typeof text !== 'undefined' && text != '' ) {
@@ -249,16 +251,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$http.post('/document', angular.toJson( document ) )
 				.success( function( data ) {
 
-					data.document.editingProjectDocumentTitle = true;
+					data.document.editingNewProjectDocument = true;
 
-					if ( typeof data.document.type !== 'undefined' ) {
-						
+					if ( typeof data.document.type !== 'undefined' && data.document.type !== 'firstDocument' ) {
+
 						for(var i=0; i<order-1; i++) {
 						        if ($scope.projectDocuments[i].type == 'cover')coverExists = true;
 						        else if ($scope.projectDocuments[i].type == 'toc')tocExists = true;
 						        else if ($scope.projectDocuments[i].type == 'titlepage')titlePageExists = true;
 						    }
-
 
 						if (type == 'cover') {
 							$scope.projectDocuments.unshift( data.document );
@@ -288,15 +289,21 @@ function projectController( $scope, $location, userService, projectsService, $ht
 								$scope.move($scope.projectDocuments, 0, 1);
 							}
 						}
+
+						$scope.openProjectDocument( data.document );
 					} 
 					else{
-						$scope.projectDocuments.push( data.document );
-					}
 
-					var promise = $scope.openProjectDocument( data.document );
-					promise.then( function() {
-						deferred.resolve();
-					});
+						if ( type !== 'firstDocument' ) {
+							data.document.editingProjectDocumentTitle = true;
+						}
+
+						$scope.projectDocuments.push( data.document );
+
+						if ( type == 'firstDocument' ) {
+							$scope.openProjectDocument( data.document );
+						}
+					}
 				})
 		} else {
 			document._id = Date.now();
@@ -384,24 +391,47 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 
 	$scope.unarchiveProjectDocument = function( projectDocument ) {
+		var deferred = $q.defer();
+
 		if ( $scope.user._id ) {
 			$http.put('/document/' + projectDocument._id + '/unarchive')
 				.success( function() {
 					projectDocument.archived = false;
 					$scope.openProjectDocument(projectDocument);
+					deferred.resolve();
 				});
 		} else {
 			projectDocument.archived = false;
+			deferred.resolve();
 		}
+
+		return deferred.promise;
 	};
 
-	$scope.renameProjectDocument = function( projectDocument ) {
+	$scope.renameProjectDocument = function(projectDocument) {
 		if ( $scope.user._id ) {
 			$http.put('/document/' + projectDocument._id + '/rename', angular.toJson( projectDocument ) )
-				.success( function() {});
+				.success( function() {
+					if (projectDocument.editingNewProjectDocument) {
+						$scope.openProjectDocument(projectDocument);
+					}
+				});
 		} else {
 			//TODO save to localstorage
 		}
+	};
+
+	$scope.selectedProjectDocumentOptions = -1;
+	$scope.showProjectDocumentOptions = function ($index) {
+		if ($index != $scope.selectedProjectDocumentOptions) {
+			$scope.selectedProjectDocumentOptions  = $index;
+		}
+		else {
+			$scope.hideProjectDocumentOptions();
+		}
+	};
+	$scope.hideProjectDocumentOptions = function () {
+		$scope.selectedProjectDocumentOptions = -1;
 	};
 
 	$scope.languages = [
@@ -1127,6 +1157,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		styleset.css = stylesetCSS;
 	}
 
+	$scope.selectedStylesetOptions = -1;
+	$scope.showStylesetOptions = function ($index) {
+		if ($index != $scope.selectedStylesetOptions) {
+			$scope.selectedStylesetOptions  = $index;
+		}
+		else {
+			$scope.hideStylesetOptions();
+		}
+	};
+	$scope.hideStylesetOptions = function () {
+		$scope.selectedStylesetOptions = -1;
+	};
+
 	$scope.loadFonts = function() {
 		WebFont.load({
 			custom: {
@@ -1243,17 +1286,17 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			if ( typeof document.type !== 'undefined' ) {
 				if ( document.type === type ) {
 
-					if ( $scope.documentSelected._id !== document._id ) {
-						// The existing matching document is not currnetly selected
-						var waitPromise = $scope.openProjectDocument( document );
-						waitPromise.then( function() {
-							updateDocumentText( type, text );
-						});
-					} else {
-						// The existing matching document is already selected - update text directly in CK
-						var editor = getEditor();
-						editor.setData(text);
-					}
+					var waitPromise = $scope.unarchiveProjectDocument( document );
+					waitPromise.then( function() {
+						if ( $scope.documentSelected._id !== document._id ) {
+							// The existing matching document is not currnetly selected
+								updateDocumentText( type, text );
+						} else {
+							// The existing matching document is already selected - update text directly in CK
+							var editor = getEditor();
+							editor.setData(text);
+						}
+					});
 
 					isNew = false;
 					break;
@@ -1399,6 +1442,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return $rootScope.CKEDITOR.instances.bodyeditor
 	}
 
+	$scope.$onRootScope('ckDocument:dataReady', function (event) {
+		if ($scope.ck.resetUndo && resetUndoHistory) {
+			$scope.ck.resetUndo();
+			resetUndoHistory = false;
+		}
+	});
+
 	$scope.$onRootScope('ckDocument:ready', function( event ) {
 		$scope.ckReady = true;
 		$scope.loadFonts();
@@ -1440,7 +1490,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 
 		$scope.focusEditor = function() {
-			$rootScope.ck.focus();
+			setTimeout(function(){
+				$rootScope.ck.focus();
+			}, 500);
 		}
 
 		$scope.$watch('showTypo', function() {
@@ -1528,17 +1580,37 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					selectedStyle = {};
 				}
 
-				if ( !$scope.$$phase ) {
-					$scope.$apply(function() {
-						$scope.selectedStyle = selectedStyle;
-						var elm = document.getElementById( selectedStyle._id );
-						if ( elm ) {
-							elm.scrollIntoView();
-						}
+				var styleNode = document.getElementById( selectedStyle._id );
+				// If design tab is open, scroll to selected style if it is not already the selected style
+				if ( $scope.showTypo && styleNode && (!$scope.selectedStyle || $scope.selectedStyle._id != selectedStyle._id) ) {
+					// The list-item dom-node reprenseting the parent styleset
+					var stylesetNode = styleNode.parentNode.parentNode;
+					// The container for all the stylesets, which is the scrolling container
+					var stylesetsContainer = document.getElementById('menu-left');
 
-					});
+					var alreadyExpanded = angular.element(stylesetNode).scope().typoChildrenVisible;
+					var animationTime = 700;
+
+					// If the styleset is already expanded, we don't wait additional time before setting the selected style in the angular scope.
+					var waitBeforeExpand = alreadyExpanded ? 0 : 300;
+
+					// Do the actual scrolling
+					smoothScroll.animateScroll(null, '#' + stylesetNode.id, { updateURL: false, speed: animationTime, easing: 'easeInCubic' }, stylesetsContainer);
+
+					// Update angular scope after the animation is done
+					setTimeout(function () {
+						angular.element(stylesetNode).scope().typoChildrenVisible = true;
+						if ( !$scope.$$phase ) {
+							$scope.$apply();
+						}
+					}, animationTime + waitBeforeExpand);
 				}
 
+				// Immediately ensure that the style matching the selection is highlighted
+				$scope.selectedStyle = selectedStyle;
+				if ( !$scope.$$phase ) {
+					$scope.$apply();
+				}
 			}
 
 		}, this );

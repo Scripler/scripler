@@ -486,29 +486,38 @@ describe('epub', function () {
         		'.styleset-abc123 p.anotherclass, body p.style-zzz123 {|color: black;|}|');
     }),
 	it('removeUndefinedTags', function () {
+		assert.ok(epub.isEmptyWhitespace(""));
+		assert.ok(epub.isEmptyWhitespace());
+		assert.ok(epub.isEmptyWhitespace(null));
+		assert.ok(epub.isEmptyWhitespace("    "));
+		assert.ok(epub.isEmptyWhitespace("		"));
+	}),
+	it('removeUndefinedTags', function () {
 		var html =
 			'  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">\r\n' +
 			'    <dc:identifier id="BookId">urn:uuid:12354684</dc:identifier>\r\n'+
-			'    <dc:identifier>urn:isbn:321561651</dc:identifier>\r\n' +
+			'    <dc:identifier>urn:isbn:undefined</dc:identifier>\r\n' +
 			'    <dc:title>Hello You</dc:title>\r\n' +
-			'    <dc:description>This is abook</dc:description>\r\n' +
+			'    <dc:description>      </dc:description>\r\n' +
 			'    <dc:language>Danish</dc:language>\r\n' +
 			'    <dc:type>undefined</dc:type>\r\n' +
 			'    <dc:rights>undefined</dc:rights>\r\n' +
 			'    <dc:publisher>Scripler</dc:publisher>\r\n' +
 			'    <dc:format>book</dc:format>\r\n' +
+			'    \r\n' +
 			'    <dc:coverage>undefined</dc:coverage>\r\n' +
 			'    <dc:relation>undefined</dc:relation>\r\n' +
-			'    <dc:source>undefined</dc:source>\r\n' +
+			'    \r\n' +
+			'    \r\n' +
+			'    <dc:source></dc:source>\r\n' +
+			'    <meta name="cover" content="undefined" />\r\n' +
 			'  </metadata>';
-		var cleanupTags = ['dc:type', 'dc:rights', 'dc:publisher', 'dc:coverage', 'dc:source'];
+		var cleanupTags = ['dc:type', 'dc:rights', 'dc:publisher', 'dc:coverage', 'dc:source', 'dc:identifier', 'dc:description', 'meta name="cover"'];
 
 		var cleanHtml =
 			'  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">\r\n' +
 			'    <dc:identifier id="BookId">urn:uuid:12354684</dc:identifier>\r\n'+
-			'    <dc:identifier>urn:isbn:321561651</dc:identifier>\r\n' +
 			'    <dc:title>Hello You</dc:title>\r\n' +
-			'    <dc:description>This is abook</dc:description>\r\n' +
 			'    <dc:language>Danish</dc:language>\r\n' +
 			'    <dc:publisher>Scripler</dc:publisher>\r\n' +
 			'    <dc:format>book</dc:format>\r\n' +

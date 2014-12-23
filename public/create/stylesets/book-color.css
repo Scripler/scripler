@@ -224,7 +224,7 @@ figcaption {
 	font-style:normal;
 	font-weight: 700;
 	color:#CD7400;
-	text-indent: 0.5em;
+	margin-left: 0.5em;
 }
 
 .toc-item-h3 {
@@ -233,7 +233,7 @@ figcaption {
 	font-style:normal;
 	font-weight: 400;
 	color:#CD7400;
-	text-indent: 1em;
+	margin-left: 1em;
 }
 
 .toc-item-h4 {
@@ -242,7 +242,7 @@ figcaption {
 	font-style:normal;
 	font-weight: 400;
 	color:#CD7400;
-	text-indent: 2em;
+	margin-left: 2em;
 }
 
 .toc-item-h5 {
@@ -251,7 +251,7 @@ figcaption {
 	font-style:normal;
 	font-weight: 400;
 	color:#CD7400;
-	text-indent: 3em;
+	margin-left: 3em;
 }
 
 .toc-item-h6 {
@@ -260,7 +260,7 @@ figcaption {
 	font-style:normal;
 	font-weight: 400;
 	color:#CD7400;
-	text-indent: 4em;
+	margin-left: 4em;
 }
 
 /*Name: Colophon*/
