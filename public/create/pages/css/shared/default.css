@@ -470,6 +470,9 @@ textarea {
 	left:50%;
 	margin-left: -125px;
 }
+.loggedin{
+	bottom:0;
+}
 .readmore{
 	text-decoration: underline;
 	color:#999;

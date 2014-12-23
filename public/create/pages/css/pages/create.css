@@ -191,22 +191,6 @@ textarea#rename {
 .logo {
 	width: 30%;
 }
-.banner-button{
-	outline: none;
-	-moz-border-radius: 1px;
-	-webkit-border-radius: 1px;
-	border-radius: 1px;
-	-webkit-appearance: none;
-	border: none;
-	background: #fff265;
-	color: #231f20;
-	font-size: 16px;
-	font-weight: bold;
-	cursor: pointer;
-	margin: 0 0 0 5px;
-	text-align: center;
-	font-family: 'Roboto', sans-serif;
-}
 .readmore{
 	text-decoration: underline;
 	color:#999;
