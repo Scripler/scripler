@@ -215,6 +215,7 @@ app.config( function( $routeProvider, $httpProvider, $provide ) {
 					if (data.user) {
 						userService.setUser(data.user);
 						deferred.resolve(data.user);
+						$rootScope.updateNotificationOffset();
 					}
 				})
 				.error(function(data) {
