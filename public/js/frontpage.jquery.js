@@ -47,6 +47,13 @@ $(document).ready(function() {
 		}
 	});
 
+	$(".newsletter-signup-text").on("click", function (event) {
+			if (!isScrolledIntoView($("#mc_embed_signup"))) {
+				$('html, body').stop(true, true).animate({scrollTop: $("#mc_embed_signup").offset().top}, 800);
+			}
+	});
+
+
 	$("#login-form").submit(function (event) {
 		event.preventDefault();
 		hideInvalidBoxes();
