@@ -106,6 +106,19 @@ function projectSpaceController($scope, $http, projectsService, userService, $q,
 		}
 	};
 
+	$scope.selectedProjectOptions = -1;
+	$scope.showProjectOptions = function ($index) {
+		if ($index != $scope.selectedProjectOptions) {
+			$scope.selectedProjectOptions  = $index;
+		}
+		else {
+			$scope.hideProjectOptions();
+		}
+	};
+	$scope.hideProjectOptions = function () {
+		$scope.selectedProjectOptions = -1;
+	};
+
 	$scope.archiveProject = function( project ) {
 		if ( $scope.user || $scope.demoUser ) {
 			$http.put('/project/' + project._id + '/archive')

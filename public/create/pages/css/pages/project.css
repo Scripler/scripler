@@ -192,9 +192,27 @@ html, body {
 .editor {
 	position: relative;
 	margin: 0 auto;
-	width: 800px;
+	min-width: 250px;
+	max-width: 800px;
+	width: calc(100% - 100px);
 }
 .editor .toolbar-area {
+}
+
+/* This should with time be fixed in the menubar plugin or how it works in ckeditor, a lot of styles are set on the elements */
+.cke_toolbox {
+	margin: 0 auto !important;
+	width: 225px !important;
+	padding: 2px 0 0 !important;
+	background: none !important;
+}
+.cke_toolgroup {
+	margin: 0 2px 4px !important;
+}
+@media all and (min-width: 640px) {
+	.cke_toolbox {
+		width: 450px !important;
+	}
 }
 
 .menu-left ul li div .document {

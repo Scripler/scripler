@@ -105,14 +105,6 @@
 	z-index: 10;
 	border: 1px solid #000;
 }
-.project-options-hide {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width:100%;
-	height:100%;
-	z-index:-1;
-}
 .project-options-menupoint {
 	cursor: pointer;
 	padding: 6px;
@@ -120,21 +112,6 @@
 }
 .project-options-menupoint:hover {
 	background: none #ffffcc;
-}
-.project-options-dates {
-	border-top: 1px solid #eee;
-	padding: 10px 0 5px;
-}
-.project-options-dates div {
-	font-size: 10px;
-	width: 40%;
-	float: left;
-}
-.project-options-dates div.dates {
-	color: #ccc;
-	font-size: 10px;
-	width: 60%;
-	text-align: right;
 }
 .project-archived {
 	opacity: 0.5;
@@ -213,6 +190,10 @@ textarea#rename {
 }
 .logo {
 	width: 30%;
+}
+.readmore{
+	text-decoration: underline;
+	color:#999;
 }
 .uni-bottom-box {
 	height: 60px;

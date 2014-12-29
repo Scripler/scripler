@@ -493,6 +493,10 @@ describe('epub', function () {
     }),
 	it('removeUndefinedTags', function () {
 		assert.ok(epub.isEmptyWhitespace(""));
+		assert.ok(epub.isEmptyWhitespace());
+		assert.ok(epub.isEmptyWhitespace(null));
+		assert.ok(epub.isEmptyWhitespace("    "));
+		assert.ok(epub.isEmptyWhitespace("		"));
 	}),
 	it('removeUndefinedTags', function () {
 		var html =
