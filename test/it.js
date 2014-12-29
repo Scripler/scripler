@@ -2040,10 +2040,11 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					downloadUrl = url.parse(res.body.url).path;
+					assert.equal(!!downloadUrl, true);
 					done();
 				});
 		}),
-		it('Download a project should return the compiled project (as an EPUB archive)', function (done) {
+		it('Downloading a project should return the compiled project (as an EPUB archive)', function (done) {
 			request(host)
 				.get(downloadUrl)
 				.set('cookie', cookie)

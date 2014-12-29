@@ -418,7 +418,6 @@ exports.compile = function (req, res, next) {
 		}
 
 		// Create a temporary file to avoid the second compile() call from the client, c.f. #483, trying to write to the same file while the EPUB checker has it open.
-		// TODO: when fixing #483 it should no longer be necessary to create a temporary file because only one file will be created.
 		var tempFilename = path.join(conf.epub.tmpDir, uuid_lib.v4() + ".epub");
 		var tempFile = fs.createWriteStream(tempFilename);
 		epub.pipe(tempFile);
