@@ -606,7 +606,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$http.get('/project/' + $scope.pid + '/compile')
 					.success( function(data, status) {
 						if (data.url) {
-							console.log("Redirecting to: " + data.url);
 							window.location.href = data.url;
 						} else {
 							console.log("error compiling, status ok, but return value is: " + JSON.stringify(data));
