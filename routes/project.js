@@ -423,13 +423,12 @@ exports.compile = function (req, res, next) {
 		var tempFile = fs.createWriteStream(tempFilename);
 		epub.pipe(tempFile);
 
+		var epubDownloadUrl = conf.resources.usersUrl + "/" + conf.epub.userDirPrefix + userId + "/" + req.project._id + '.epub';
 		var filename = (req.project.metadata.title || req.project.name) + ".epub";
 		var saneTitle = sanitize(filename);
 
 		// TODO: When a GUI design has been made, also return the EPUB validation result to client
-		res.setHeader('Content-disposition', 'attachment; filename="' + saneTitle + '"');
-		res.setHeader('Content-type', 'application/epub+zip');
-		epub.pipe(res);
+		res.send({url: epubDownloadUrl});
 
 		if ('test' != env) {
 			tempFile.once('close', function() {
@@ -459,8 +458,6 @@ exports.compile = function (req, res, next) {
 							firstname: "Frank",
 							lastname: "EPUB"
 						};
-
-						var epubDownloadUrl = path.join(conf.resources.usersUrl, conf.epub.userDirPrefix + userId, req.project._id + '.epub');
 
 						emailer.sendUserEmail(
 							validationResultRecipient,

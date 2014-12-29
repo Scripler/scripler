@@ -49,8 +49,8 @@
 	"resources": {
 		"projectsDir": "/tmp/scripler/app/projects",
 		"usersDir": "/tmp/scripler/app/users",
-		"projectsUrl": "http://scripler.com:3000/public/resources/projects",
-		"usersUrl": "http://scripler.com:3000/public/resources/users"
+		"projectsUrl": "http://scripler.com:3000/resources/projects",
+		"usersUrl": "http://scripler.com:3000/resources/users"
 	},
 	"subscriptions": {
 		"free": {

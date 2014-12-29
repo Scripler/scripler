@@ -605,10 +605,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			setTocPromise.then(function () {
 				$http.get('/project/' + $scope.pid + '/compile')
 					.success( function(data, status) {
-						window.location.href = "/project/" + $scope.pid + "/compile";
+						if (data.url) {
+							console.log("Redirecting to: " + data.url);
+							window.location.href = data.url;
+						} else {
+							console.log("error compiling, status ok, but return value is: " + JSON.stringify(data));
+						}
 					})
 					.error( function(status) {
-						console.log("error downloading, status: " + status);
+						console.log("error compiling, status: " + status);
 					});
 			});
 		});
