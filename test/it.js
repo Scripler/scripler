@@ -6,6 +6,7 @@ var assert = require("assert")
 	, mongoose = require('mongoose')
 	, request = require('supertest')
 	, fs = require('fs')
+	, url = require('url')
 	, path = require('path')
 	, moment = require('moment')
 	, utils = require('../public/create/scripts/utils-shared')
@@ -40,6 +41,7 @@ var tocDocumentId;
 var colophonDocumentId;
 var copyCrappyDocumentId;
 var jimboDocumentId;
+var downloadUrl;
 
 var text;
 
@@ -2030,12 +2032,22 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-		it('Compiling a project should return the compiled project (as an EPUB archive)', function (done) {
+		it('Compiling a project should return the the download url of the EPUB', function (done) {
 			request(host)
 				.get('/project/' + projectId + '/compile')
 				.set('cookie', cookie)
 				.expect(200)
-				.expect('Content-Type', 'application/epub+zip')
+				.end(function (err, res) {
+					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+					downloadUrl = url.parse(res.body.url).path;
+					done();
+				});
+		}),
+		it('Download a project should return the compiled project (as an EPUB archive)', function (done) {
+			request(host)
+				.get(downloadUrl)
+				.set('cookie', cookie)
+				.expect(200)
 				.parse(function (res, callback) {
 					res.setEncoding('binary');
 					res.data = '';
@@ -2046,7 +2058,7 @@ describe('Scripler RESTful API', function () {
 						callback(null, new Buffer(res.data, 'binary'));
 					});
 				}).end(function (err, res) {
-                    if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
+                    if (err) throw new Error(err);
 
 					// binary response data is in res.body as a buffer
 					assert.ok(Buffer.isBuffer(res.body));
