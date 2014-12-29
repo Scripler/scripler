@@ -46,7 +46,8 @@
 		"epubDir": "EPUB"
 	},
 	"import": {
-		"uploadDir": "/tmp/scripler/test/uploads/"
+		"uploadDir": "/tmp/scripler/test/uploads/",
+		"uploadLimit": 104857600//100 MB (Nginx will have a lower limit)
 	},
 	"user": {
 		"defaultStylesetName": "simple-bw"
