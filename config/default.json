@@ -75,6 +75,7 @@
 		"imagePrefix": "img_",
 		"stylePrefix": "style_",
 		"anchorIdPrefix": "id_", // TODO: move somewhere the frontend can access it when generating anchors
+		"validatorEnabled": true,
 		"validationResultEmail": "ebookresults@scripler.com",
 		"validatorPath": "test/epubcheck-3.0.1.jar",
 		"tmpDir": "/tmp/scripler/app/"

@@ -430,7 +430,7 @@ exports.compile = function (req, res, next) {
 		// TODO: When a GUI design has been made, also return the EPUB validation result to client
 		res.send({url: epubDownloadUrl});
 
-		if ('test' != env) {
+		if ('test' != env && conf.epub.validatorEnabled) {
 			tempFile.once('close', function() {
 				// The sending of the validation result email can happen after the response has been returned to the user but must happen on the temp file, c.f. comment above.
 				var fullPath = tempFilename;
