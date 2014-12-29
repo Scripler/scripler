@@ -43,6 +43,12 @@ describe('utils', function () {
 		assert.equal('Kenny', nameParts.firstname);
 		assert.equal(undefined, nameParts.lastname);
 	})
+	it('cleanFilename', function () {
+		assert.equal(utils.cleanFilename("bla bla"), "blabla");
+		assert.equal(utils.cleanFilename("Hello123"), "Hello123");
+		assert.equal(utils.cleanFilename("helloæøå123"), "hello123");
+		assert.equal(utils.cleanFilename(",.-*¨´+:"), ".-");
+	})
 }),
 describe('shared_utils', function () {
     var str1 = "4eed2d88c3dedf0d0300001a";

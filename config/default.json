@@ -49,8 +49,8 @@
 	"resources": {
 		"projectsDir": "/tmp/scripler/app/projects",
 		"usersDir": "/tmp/scripler/app/users",
-		"projectsUrl": "http://scripler.com:3000/public/resources/projects",
-		"usersUrl": "http://scripler.com:3000/public/resources/users"
+		"projectsUrl": "http://scripler.com:3000/resources/projects",
+		"usersUrl": "http://scripler.com:3000/resources/users"
 	},
 	"subscriptions": {
 		"free": {
@@ -75,6 +75,7 @@
 		"imagePrefix": "img_",
 		"stylePrefix": "style_",
 		"anchorIdPrefix": "id_", // TODO: move somewhere the frontend can access it when generating anchors
+		"validatorEnabled": true,
 		"validationResultEmail": "ebookresults@scripler.com",
 		"validatorPath": "test/epubcheck-3.0.1.jar",
 		"tmpDir": "/tmp/scripler/app/"

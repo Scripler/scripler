@@ -373,6 +373,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 			var ck = CKEDITOR.replace('bodyeditor', {
 				allowedContent: true,
 				skin: 'scripler',
+				bodyId: 'scripler',
 				resize_enabled: false,
 				extraPlugins: 'scripler,floating-tools,lineHeight,texttransform,indent-right,indentations,scripler_pagebreak,imageScripler,linkScripler',
 				floatingtools: 'Basic',
