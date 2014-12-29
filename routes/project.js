@@ -431,9 +431,9 @@ exports.compile = function (req, res, next) {
 		res.setHeader('Content-type', 'application/epub+zip');
 		epub.pipe(res);
 
-		tempFile.once('close', function() {
-			// The sending of the validation result email can happen after the response has been returned to the user but must happen on the temp file, c.f. comment above.
-			if ('test' != env) {
+		if ('test' != env) {
+			tempFile.once('close', function() {
+				// The sending of the validation result email can happen after the response has been returned to the user but must happen on the temp file, c.f. comment above.
 				var fullPath = tempFilename;
 				exec('java -jar ' + conf.epub.validatorPath + ' "' + fullPath + '"',
 					function (error, stdout, stderr) {
@@ -460,8 +460,7 @@ exports.compile = function (req, res, next) {
 							lastname: "EPUB"
 						};
 
-						var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + userId);
-						var epubDownloadUrl = path.join(conf.resources.usersUrl, userDir, req.project._id + '.epub');
+						var epubDownloadUrl = path.join(conf.resources.usersUrl, conf.epub.userDirPrefix + userId, req.project._id + '.epub');
 
 						emailer.sendUserEmail(
 							validationResultRecipient,
@@ -479,8 +478,8 @@ exports.compile = function (req, res, next) {
 						fs.unlink(tempFilename, function () {});
 					}
 				);
-			}
-		});
+			});
+		}
 	});
 
 }
