@@ -195,6 +195,14 @@ html, body {
 	min-width: 250px;
 	max-width: 800px;
 	width: calc(100% - 100px);
+	transition: all 1s;
+	-moz-transition: all 1s;
+	-ms-transition: all 1s;
+	-webkit-transition: all 1s;
+	-o-transition: all 1s;
+}
+.editor.menu-extended {
+	width: calc(100% - 610px);	
 }
 .editor .toolbar-area {
 }
@@ -210,6 +218,11 @@ html, body {
 	margin: 0 2px 4px !important;
 }
 @media all and (min-width: 640px) {
+	.cke_toolbox {
+		width: 100% !important;
+	}
+}
+@media all and (min-width: 1120px) {
 	.cke_toolbox {
 		width: 450px !important;
 	}
