@@ -269,7 +269,7 @@
 		</div>
 	</div>
 
-	<div class="editor">
+	<div class="editor" data-ng-class="{ 'menu-extended' : showDocuments || showTypo || showInsert || showFinalizeOptions || showOutput }">
 		<p class="breadcrumb">
 			<a class="breadcrumb" href="#">Ebooks</a> / <span data-ng-bind="project.name"></span> / <span data-ng-bind="documentSelected.name"></span>
 		</p>
@@ -280,7 +280,7 @@
 		<div style="clear: both;"></div>
 	</div>
 
-	<div class="editor">
+	<div class="editor" data-ng-class="{ 'menu-extended' : showDocuments || showTypo || showInsert || showFinalizeOptions || showOutput }">
 		<div id="toolbar-area" class="toolbar-area"></div>
 		<textarea ck-editor="" data-ng-model="documentSelected.text" class="form-control" id="bodyeditor"></textarea>
 	</div>
