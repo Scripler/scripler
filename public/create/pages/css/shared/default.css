@@ -245,6 +245,7 @@ textarea {
 .registration-text {
 	font-weight: 700;
 	margin: 0 0 10px 0;
+	min-width: 310px;
 }
 @media all and (min-width: 1220px) {
 	.registration-text {
