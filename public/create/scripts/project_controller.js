@@ -1274,12 +1274,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	function constructImageTag( image ) {
-		var imageTag = '<img class="cover" src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		var imageTag = '<img class="regularImage" src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
 		return imageTag;
 	}
 
 	function constructCoverTag(image){
-
+		var imageTag = '<img class="cover" src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		return imageTag;
 	}
 
 	function insertImage( image ) {
@@ -1332,7 +1333,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.createCover = function( image ) {
-		var html = constructImageTag( image );
+		var html = constructCoverTag( image );
 		var isNewCover = overwriteExistingDocument( 'cover', html );
 
 		if ( isNewCover ) {
