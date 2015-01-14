@@ -1253,7 +1253,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.insertNewAnchor = function() {
 		var id = 'id_' + Date.now();
-		var insert = '<a id="' + id + '" name="' + id + '" title="' + $scope.anchorName + '"></a>';
+		var insert = '<a id="' + id + '" name="" title=""></a>';
 		editorInsert( insert );
 		$scope.updateProjectDocument();
 		$scope.getToc();
@@ -1414,10 +1414,39 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	function editorInsert( insert ) {
 		var editor = getEditor();
+		var selection = editor.getSelection();
+
+		// get the selected content
+		if (selection.getType() == CKEDITOR.SELECTION_ELEMENT) {
+		  var selectedContent = selection.getSelectedElement().$.outerHTML;
+		} else if (selection.getType() == CKEDITOR.SELECTION_TEXT) {
+		  if (CKEDITOR.env.ie) {
+		    selection.unlock(true);
+		    selectedContent = selection.getNative().createRange().text;
+		  } else {
+		    selectedContent = selection.getNative();
+		  }
+		}
+
+		// defaulting the title/name of the anchor to the selected content
+		var title = selectedContent;
+		// if name is provided in the input field, replace title/name of the anchor with this one
+		if( $scope.anchorName ){
+			title =  $scope.anchorName;
+		}
+		insert = insert.replace('title=""', 'title="' + title + '"');
+		insert = insert.replace('name=""', 'name="' + title + '"');
+
+		
+		// insert anchor on the caret, but keep the old content
 		var element = $rootScope.CKEDITOR.dom.element.createFromHtml( insert );
-		editor.insertElement( element );
+		var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
+		element.append(replacedContent);
+		editor.insertElement( element );	
+
 		var range = editor.createRange();
 		range.moveToElementEditablePosition( element );
+		
 		$rootScope.ck.focus();
 		range.select();
 		$scope.updateProjectDocument();
@@ -1443,7 +1472,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	});
 
 	function getEditor(scope) {
-		return $rootScope.CKEDITOR.instances.bodyeditor
+		return $rootScope.CKEDITOR.instances.bodyeditor;
 	}
 
 	$scope.$onRootScope('ckDocument:dataReady', function (event) {
