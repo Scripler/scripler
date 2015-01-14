@@ -1278,6 +1278,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return imageTag;
 	}
 
+	function constructCoverTag(image){
+
+	}
+
 	function insertImage( image ) {
 		var imageInsert = constructImageTag( image );
 		editorInsert( imageInsert );
