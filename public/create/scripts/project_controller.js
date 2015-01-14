@@ -1253,16 +1253,18 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.insertNewAnchor = function() {
 		var id = 'id_' + Date.now();
+		var type = "anchor";
 		var insert = '<a id="' + id + '" name="" title=""></a>';
-		editorInsert( insert );
+		editorInsert( insert, type );
 		$scope.updateProjectDocument();
 		$scope.getToc();
 		$scope.anchorName = '';
 	}
 
 	$scope.insertNewLink = function() {
-		var link = '<a href="' + $scope.linkAddress + '">' + $scope.linkText + '</a>';
-		editorInsert( link );
+		var type = "link";
+		var link = '<a href="' + $scope.linkAddress + '">link_text</a>';
+		editorInsert( link, type);
 		$scope.updateProjectDocument();
 		$scope.linkAddress = '';
 		$scope.linkText = '';
@@ -1412,7 +1414,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
-	function editorInsert( insert ) {
+	function editorInsert( insert, type ) {
 		var editor = getEditor();
 		var selection = editor.getSelection();
 
@@ -1431,17 +1433,28 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		// defaulting the title/name of the anchor to the selected content
 		var title = selectedContent;
 		// if name is provided in the input field, replace title/name of the anchor with this one
-		if( $scope.anchorName ){
-			title =  $scope.anchorName;
-		}
-		insert = insert.replace('title=""', 'title="' + title + '"');
-		insert = insert.replace('name=""', 'name="' + title + '"');
-
 		
-		// insert anchor on the caret, but keep the old content
+		if(type=="anchor"){
+			if( $scope.anchorName ){
+				title =  $scope.anchorName;
+			}
+			insert = insert.replace('title=""', 'title="' + title + '"');
+			insert = insert.replace('name=""', 'name="' + title + '"');
+
+			var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
+		}
+		else if(type="link"){
+			if( $scope.linkText ){
+				title =  $scope.linkText;
+			}
+			insert = insert.replace('link_text', title);
+		}	
+		
+		
+
 		var element = $rootScope.CKEDITOR.dom.element.createFromHtml( insert );
-		var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
-		element.append(replacedContent);
+		// insert anchor on the caret, but keep the old content
+		if(type=="anchor")element.append(replacedContent);
 		editor.insertElement( element );	
 
 		var range = editor.createRange();
