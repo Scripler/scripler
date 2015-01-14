@@ -718,10 +718,10 @@ li.typo .style-copy-options p {
     color: #6B6B6B;
 }
 
-.anchor-button{
-	margin-top: 40px;
-}
-
 .anchor-link{
 	display: block
+}
+
+.left-menu-options .menu-box .anchor-name{
+	width:100%;
 }
