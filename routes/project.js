@@ -22,6 +22,7 @@ var emailer = require('../lib/email/email.js');
 var exec = require('child_process').exec;
 var logger = require('../lib/logger');
 var uuid_lib = require('node-uuid');
+var document_utils = require('../lib/document-utils');
 
 //Load project by id
 exports.load = function (id) {
@@ -45,7 +46,7 @@ exports.load = function (id) {
 exports.loadPopulated = function (id) {
 	return function (req, res, next) {
 		var idCopy = id || req.body.projectId;
-		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', select: 'name folderId modified archived stylesets members type'}).exec(function (err, project) {
+		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', select: 'name folderId modified archived stylesets defaultStyleset members type'}).exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
@@ -481,11 +482,32 @@ exports.compile = function (req, res, next) {
 }
 
 exports.applyStyleset = function (req, res, next) {
-	req.project.styleset = req.styleset;
-	req.project.save(function (err) {
+	var stylesetToApply = req.styleset;
+	req.project.styleset = stylesetToApply;
+	var level = req.user.level;
+
+	var apply = function (document, callback) {
+		document_utils.applyStylesetToDocument(document, stylesetToApply, level, function (err, populatedStyleset) {
+			if (err) {
+				return callback(err);
+			}
+
+			callback();
+		});
+	};
+
+	async.each(req.project.documents, apply, function(err) {
 		if (err) {
 			return next(err);
 		}
-		res.send({project: req.project});
+
+		req.project.save(function (err) {
+			if (err) {
+				return next(err);
+			}
+			res.send({project: req.project});
+		});
 	});
+
+
 }

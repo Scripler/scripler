@@ -669,6 +669,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$http.put('/styleset/' + styleset._id + '/project/' + $scope.project._id)
 			.success( function( data ) {
 				$scope.project = data.project;
+				//$scope.documentSelected.defaultStyleset = $scope.documentSelected.stylesets[0]._id;
+				//$scope.applyStylesetsToEditor();
 			});
 	}
 
