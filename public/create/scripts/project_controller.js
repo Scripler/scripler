@@ -1165,6 +1165,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.showStylesetOptions = function ($index) {
 		if ($index != $scope.selectedStylesetOptions) {
 			$scope.selectedStylesetOptions  = $index;
+			$scope.hideStylesetChildOptions();
 		}
 		else {
 			$scope.hideStylesetOptions();
@@ -1172,6 +1173,20 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 	$scope.hideStylesetOptions = function () {
 		$scope.selectedStylesetOptions = -1;
+	};
+
+	$scope.selectedStylesetChildOptions = -1;
+	$scope.showStylesetChildOptions = function ($index) {
+		if ($index != $scope.selectedStylesetChildOptions) {
+			$scope.selectedStylesetChildOptions  = $index;
+			$scope.hideStylesetOptions();
+		}
+		else {
+			$scope.hideStylesetChildOptions();
+		}
+	};
+	$scope.hideStylesetChildOptions = function () {
+		$scope.selectedStylesetChildOptions = -1;
 	};
 
 	$scope.loadFonts = function() {

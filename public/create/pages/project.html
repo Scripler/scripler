@@ -71,7 +71,7 @@
 
 				<ul data-ng-show="typoChildrenVisible || isDefaultStyleset(styleset)" class="typo-children">
 					<li data-ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" data-ng-hide="style.archived || style.hidden" data-ng-selected="selectedStyle._id === style._id" class="typo-children-style">
-						<a class="style-options-show" data-ng-click="showStylesetOptions($index)" data-ng-class="{ 'open' : $index == selectedStylesetOptions }">
+						<a class="style-options-show" data-ng-click="showStylesetChildOptions($index)" data-ng-class="{ 'open' : $index == selectedStylesetChildOptions }">
 							<div class="arrow"></div>
 						</a>
 
@@ -92,7 +92,7 @@
 							<textarea class="renameStyle" rows="1" data-ng-model="style.name" focus-on="!!style.editingStyleTitle" on-enter="style.editingStyleTitle = false;" data-ng-blur="style.editingStyleTitle = false; updateStyle(style);"></textarea>
 						</form>
 
-						<div class="style-options" data-ng-show="$index == selectedStylesetOptions">
+						<div class="style-options" data-ng-show="$index == selectedStylesetChildOptions">
 							<div class="style-options-menupoint first" data-ng-click="style.editingStyleTitle = true; hideStylesetOptions();">Rename</div>
 							<!--<div class="style-options-menupoint" data-ng-click="archiveStyle(style); hideStylesetOptions();">archive</div>-->
 						</div>
