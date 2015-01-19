@@ -1435,30 +1435,24 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		// if name is provided in the input field, replace title/name of the anchor with this one
 		
 		if(type=="anchor"){
-			if( $scope.anchorName ){
-				title =  $scope.anchorName;
-			}
-			insert = insert.replace('title=""', 'title="' + title + '"');
-			insert = insert.replace('name=""', 'name="' + title + '"');
-
+			if($scope.anchorName)title=$scope.anchorName;
+			insert = insert.replace('title=""', 'title="' + title + '"').replace('name=""', 'name="' + title + '"');
 			var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
 		}
 		else if(type="link"){
-			if( $scope.linkText ){
-				title =  $scope.linkText;
-			}
+			if($scope.linkText )title=$scope.linkText;
 			insert = insert.replace('link_text', title);
 		}	
 		
+
+		var element = $rootScope.CKEDITOR.dom.element.createFromHtml(insert);
+		// insert anchor on the caret, but keep the old content
+		editor.insertElement(element);
+		if(type=="anchor")editor.insertText(replacedContent.getText());
 		
 
-		var element = $rootScope.CKEDITOR.dom.element.createFromHtml( insert );
-		// insert anchor on the caret, but keep the old content
-		if(type=="anchor")element.append(replacedContent);
-		editor.insertElement( element );	
-
 		var range = editor.createRange();
-		range.moveToElementEditablePosition( element );
+		range.moveToElementEditablePosition(element);
 		
 		$rootScope.ck.focus();
 		range.select();
