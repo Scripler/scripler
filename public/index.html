@@ -11,7 +11,7 @@
 	<link rel="stylesheet" type="text/css" href="css/pages/frontpage.css" />
 	<link rel="stylesheet" type="text/css" href="css/modules/navigation.css" />
 
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBk6FHf_Xec1ykYuZoWjcicCwP-heTCL-w&sensor=true"></script>
+	<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=AIzaSyBk6FHf_Xec1ykYuZoWjcicCwP-heTCL-w&sensor=true"></script>
 </head>
 <body>
 
@@ -235,7 +235,7 @@
 
 				<!-- MailChimp -->
 				<div class="create_form" id="mc_embed_signup">
-					<form action="http://scripler.us6.list-manage.com/subscribe/post?u=1b5826d9bbcb3775e3f837180&amp;id=74f540769b" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+					<form action="//scripler.us6.list-manage.com/subscribe/post?u=1b5826d9bbcb3775e3f837180&amp;id=74f540769b" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
 						<div class="mc-field-group">
 							<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="Email Address">
 							<input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
@@ -297,7 +297,7 @@
 						}
 						var script = document.createElement('script');
 						script.type = 'text/javascript';
-						script.src = 'http://downloads.mailchimp.com/js/jquery.form-n-validate.js';
+						script.src = '//downloads.mailchimp.com/js/jquery.form-n-validate.js';
 						head.appendChild(script);
 						try {
 							var validatorLoaded=jQuery("#fake-form").validate({});
@@ -312,7 +312,7 @@
 							var options = { errorClass: 'mce_inline_error', errorElement: 'div', onkeyup: function(){}, onfocusout:function(){}, onblur:function(){}  };
 							var mce_validator = $("#mc-embedded-subscribe-form").validate(options);
 							$("#mc-embedded-subscribe-form").unbind('submit');//remove the validator so we can get into beforeSubmit on the ajaxform, which then calls the validator
-							options = { url: 'http://scripler.us6.list-manage.com/subscribe/post-json?u=1b5826d9bbcb3775e3f837180&id=74f540769b&c=?', type: 'GET', dataType: 'json', contentType: "application/json; charset=utf-8",
+							options = { url: 'https://scripler.us6.list-manage.com/subscribe/post-json?u=1b5826d9bbcb3775e3f837180&id=74f540769b&c=?', type: 'GET', dataType: 'json', contentType: "application/json; charset=utf-8",
 										beforeSubmit: function(){
 											$('#mce_tmp_error_msg').remove();
 											$('.datefield','#mc_embed_signup').each(
@@ -447,10 +447,10 @@
 
 	<!-- JS Code -->
 	<!--[if lt IE 9]>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<![endif]-->
 	<!--[if gte IE 9]><!---->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 	<!--<![endif]-->
 
 	<script src="js/frontpage.jquery.js"></script>

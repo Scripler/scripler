@@ -1289,15 +1289,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	function constructImageTag( image ) {
-		var imageTag = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
-		//removed class="regularImage"
+		var imageTag = '<img src="//' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
 		return imageTag;
 	}
 
-	//use the :3000 port to allow images to be uploaded on localhost
-
 	function constructCoverTag(image){
-		var imageTag = '<img class="cover" src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		var imageTag = '<img class="cover" src="//' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
 		return imageTag;
 	}
 
