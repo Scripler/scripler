@@ -1289,6 +1289,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	function constructImageTag( image ) {
+		var imageTag = '<img src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		//removed class="regularImage"
+		return imageTag;
+	}
+
+	//use the :3000 port to allow images to be uploaded on localhost
+
+	function constructCoverTag(image){
 		var imageTag = '<img class="cover" src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
 		return imageTag;
 	}
@@ -1343,7 +1351,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.createCover = function( image ) {
-		var html = constructImageTag( image );
+		var html = constructCoverTag( image );
 		var isNewCover = overwriteExistingDocument( 'cover', html );
 
 		if ( isNewCover ) {
