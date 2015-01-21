@@ -8,6 +8,8 @@ function projectSpaceController($scope, $http, projectsService, userService, $q,
 		$scope.projects = projectsService.getList( $scope.user );
 	}
 
+	 
+
 	$scope.changePassword = function() {
 		$scope.passwordSubmitted = true;
 
@@ -147,4 +149,5 @@ function projectSpaceController($scope, $http, projectsService, userService, $q,
 		}
 	};
 
-};
+
+} ;

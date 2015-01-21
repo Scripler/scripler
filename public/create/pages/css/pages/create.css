@@ -150,9 +150,23 @@
 	left: 0;
 	position: absolute;
 	text-align: center;
-	padding-top:30px;
-	width: 85%;
-	height: 100%;
+	margin-top:14px;
+	margin-left:7px;
+	width:70%;
+	height: 72%;
+	overflow:hidden;
+}
+
+a.project-link {
+	 word-wrap: break-word;
+
+}
+a.showAll{
+	overflow:visible;
+	background-color:#FFF;
+	height: auto;
+	/*box-shadow:1px 1px 0px #000;
+*/
 }
 
 .filter-sort, .filter-search {
