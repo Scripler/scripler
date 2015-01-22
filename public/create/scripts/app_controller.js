@@ -11,9 +11,8 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		$scope.registrationText = 'Hey, stranger. Register to save your work!';
 		$scope.socialRegistrationText = 'or use:';
 		$scope.EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+		$scope.showRegistrationInfoBar = true;
 		$scope.user = {};
-		$scope.showBottomRegistrationBar = true;
 
 		$scope.$onRootScope('user:updated', function( event, user ) {
 			if (user.isDemo) {
@@ -46,6 +45,15 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 					}
 				});
 		});
+
+		$scope.showRegistrationBar = function(status) {
+			if ( status == 'hide' ) {
+				$scope.showRegistrationInfoBar = false;
+			}
+			else {
+				$scope.showRegistrationInfoBar = true;	
+			}
+		};
 
 		$scope.$onRootScope('ckDocument:dataReady', function( event ) {
 			var editableBody = document.getElementById('cke_bodyeditor');
