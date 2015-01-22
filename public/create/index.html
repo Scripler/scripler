@@ -9,18 +9,20 @@
 </head>
 <body data-ng-controller="appController" data-ng-cloak>
 
-	<div class="container" data-ng-class="{'shownotification' : showBottomRegistrationBar}" data-ng-view></div>
+	<div class="container" data-ng-class="{'shownotification' : showRegistrationInfoBar, 'activation' : user._id}" data-ng-view></div>
 
-	<div id="notification-area" class="notifications" data-ng-class="{ 'loggedin' : !showBottomRegistrationBar }">
+	<div class="notifications" data-ng-class="{ 'loggedin' : !showRegistrationInfoBar, 'activation' : user._id }">
 		We're in alpha. <a class="readmore" target="_blank" href="http://blog.scripler.com/test-scripler-now.html">Read more</a>
 	</div>
-	<div id="registrationFooter" class="registration" data-ng-hide="!showBottomRegistrationBar" data-ng-class="{ 'green' : user._id }" data-ng-cloak>
+	<div class="registration" data-ng-hide="user.emailVerified || user.isDemo || !showRegistrationInfoBar" data-ng-class="{ 'activation' : user._id }" data-ng-cloak>
 		<div id="registrationContainer" class="registration-container">
-			<div class="registration-close-button" data-ng-click="showBottomRegistrationBar = !showBottomRegistrationBar" data-ng-show="user._id">x</div>
-			<div class="registration-text" data-ng-bind="registrationText" data-ng-class="{ 'validate' : user._id }" data-ng-hide="user.isDemo"></div>
+			<div class="registration-form explanation" data-ng-hide="user.isDemo">
+				<div class="registration-close-button" data-ng-click="showRegistrationBar('hide')" data-ng-show="user._id">x</div>
+				<div class="registration-text" data-ng-bind="registrationText"></div>
+			</div>
 
-			<div class="registration-form">
-				<form name="registerForm" data-ng-submit="submitRegistration()" data-ng-hide="user._id && !user.isDemo" novalidate>
+			<div class="registration-form" data-ng-hide="user._id && !user.isDemo">
+				<form name="registerForm" data-ng-submit="submitRegistration()" novalidate>
 					<div class="error-box error-box-name" data-ng-show="registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted " data-ng-bind="errors.name"></div>
 					<div class="error-box error-box-email" data-ng-show="registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted " data-ng-bind="errors.email"></div>
 					<div class="error-box error-box-password" data-ng-show="registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted " data-ng-bind="errors.password"></div>
@@ -31,12 +33,11 @@
 					<button type="submit" class="btn-primary registration-button">Register</button>
 				</form>
 			</div>
-
 			<div class="registration-social clearfix" data-ng-hide="user._id && !user.isDemo">
-				<div class="social-registration-text" data-ng-bind="socialRegistrationText" data-ng-class="{ 'validate' : user._id }" data-ng-hide="user.isDemo"></div>
-					<a class="socialicon" href="../auth/facebook"><span class="icon-facebook"></span></a>
-					<a class="socialicon" href="../auth/linkedin"><span class="icon-linkedin"></span></a>
-					<a class="socialicon" href="../auth/google"><span class="icon-google-plus"></span></a>
+				<div class="social-registration-text" data-ng-bind="socialRegistrationText"></div>
+				<a class="socialicon" href="../auth/facebook"><span class="icon-facebook"></span></a>
+				<a class="socialicon" href="../auth/linkedin"><span class="icon-linkedin"></span></a>
+				<a class="socialicon" href="../auth/google"><span class="icon-google-plus"></span></a>
 			</div>
 		</div>
 	</div>
