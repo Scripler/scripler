@@ -291,6 +291,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						}
 
 						$scope.openProjectDocument( data.document );
+						$scope.showLeftMenu('contents');
 					} 
 					else{
 
@@ -433,6 +434,34 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.hideProjectDocumentOptions = function () {
 		$scope.selectedProjectDocumentOptions = -1;
 	};
+
+	$scope.showLeftMenu = function (status) {
+		if (status != $scope.leftMenuShowItem) {
+			$scope.leftMenuShow = true;
+			$scope.leftMenuShowItem = status;
+		}
+		else {
+			$scope.hideLeftMenu();
+		}
+	}
+	$scope.hideLeftMenu = function (status) {
+		$scope.leftMenuShow = false;
+		$scope.leftMenuShowItem	= "";
+	}
+
+	$scope.showRightMenu = function (status) {
+		if (status != $scope.rightMenuShowItem) {
+			$scope.rightMenuShow = true;
+			$scope.rightMenuShowItem = status;
+		}
+		else {
+			$scope.hideRightMenu();
+		}
+	}
+	$scope.hideRightMenu = function (status) {
+		$scope.rightMenuShow = false;
+		$scope.rightMenuShowItem	= "";
+	}
 
 	$scope.languages = [
 		{
