@@ -1414,25 +1414,45 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
-	function editorInsert( insert, type ) {
+
+	// find a better way of doing this
+	var selectContent = setInterval(function(){
+		var selectedContent = returnSelectedContent();
+		updateInputFields(selectedContent);
+	},1000);
+
+	// returns content that is selected in the caret
+	function returnSelectedContent(){
 		var editor = getEditor();
 		var selection = editor.getSelection();
 
-		// get the selected content
-		if (selection.getType() == CKEDITOR.SELECTION_ELEMENT) {
-		  var selectedContent = selection.getSelectedElement().$.outerHTML;
-		} else if (selection.getType() == CKEDITOR.SELECTION_TEXT) {
-		  if (CKEDITOR.env.ie) {
-		    selection.unlock(true);
-		    selectedContent = selection.getNative().createRange().text;
-		  } else {
-		    selectedContent = selection.getNative();
-		  }
+		if(selection){
+			if (selection.getType() == CKEDITOR.SELECTION_ELEMENT) {
+			  var selectedContent = selection.getSelectedElement().$.outerHTML;
+			} else if (selection.getType() == CKEDITOR.SELECTION_TEXT) {
+			  if (CKEDITOR.env.ie) {
+			    selection.unlock(true);
+			    selectedContent = selection.getNative().createRange().text;
+			  } else {
+			    selectedContent = selection.getNative();
+			  }
+			}
 		}
+
+		return selectedContent;
+	}
+
+	function updateInputFields(content) {
+		   document.getElementById("anchorInputBox").value = content;
+		   document.getElementById("hyperlinkInputBox").value = content;
+		}
+
+	function editorInsert( insert, type ) {
+		var editor = getEditor();
+		var selectedContent = returnSelectedContent();
 
 		// defaulting the title/name of the anchor to the selected content
 		var title = selectedContent;
-		// if name is provided in the input field, replace title/name of the anchor with this one
 		
 		if(type=="anchor"){
 			if($scope.anchorName)title=$scope.anchorName;
@@ -1444,7 +1464,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			insert = insert.replace('link_text', title);
 		}	
 		
-
 		var element = $rootScope.CKEDITOR.dom.element.createFromHtml(insert);
 		// insert anchor on the caret, but keep the old content
 		editor.insertElement(element);

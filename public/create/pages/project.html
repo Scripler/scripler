@@ -126,7 +126,7 @@
 						<input type="text" data-ng-model="linkAddress" placeholder="Target">
 					</span>
 					<span class="menu-box inputfield full-size left-menu-parameter-margin">
-						<input type="text" data-ng-model="linkText" placeholder="Text">
+						<input id="hyperlinkInputBox" type="text" data-ng-model="linkText" placeholder="Text">
 					</span>
 					<span class="menu-box inputfield full-size left-menu-parameter-margin">
 						<select data-ng-model="linkAnchor" data-ng-options="anchor.text for anchor in toc">
@@ -223,7 +223,7 @@
 			<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
 				<div class="left-menu-options">
 					<span class="menu-box">
-						<input type="text" data-ng-model="anchorName" placeholder="Anchor name" class="anchor-name">
+						<input id="anchorInputBox" type="text" data-ng-model="anchorName" placeholder="Anchor name" class="anchor-name">
 					</span>
 					<span class="left-menu-button anchor-button">
 						<a class="anchor-link" data-ng-click="insertNewAnchor();">+</a>
