@@ -62,6 +62,24 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	}
 
+	var selectContent;
+	var allMenuTabs = document.getElementsByClassName('menu-tab');
+
+	for(var i=0;i<=allMenuTabs.length-1;i++){
+		allMenuTabs[i].addEventListener('click', function(){
+				setTimeout(function(){ 
+					if($scope.showInsert==true){
+							selectContent = setInterval(function(){
+							var selectedContent = returnSelectedContent();
+							updateInputFields(selectedContent);
+						},1000); 
+					} else clearInterval(selectContent);
+				}, 1000);
+				clearTimeout();
+			});
+	}
+
+
 	$scope.openFeedback = function() {
 		userService.openFeedback( $scope.user );
 	}
@@ -1413,13 +1431,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.addProjectDocument( 'colophon', html );
 		}
 	}
-
-
-	// find a better way of doing this
-	var selectContent = setInterval(function(){
-		var selectedContent = returnSelectedContent();
-		updateInputFields(selectedContent);
-	},1000);
 
 	// returns content that is selected in the caret
 	function returnSelectedContent(){
