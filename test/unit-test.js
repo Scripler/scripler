@@ -298,18 +298,35 @@ describe('epub', function () {
 		var tocEntry3 = new TOCEntry;
 		tocEntry3.text = 'Kapitel Drei';
 		tocEntry3.target = 'Kapitel Drei.html';
-		tocEntry3.level = 0;
+		tocEntry3.level = 2;
 
 		tocEntries = [tocEntry1, tocEntry2, tocEntry3];
 		result = epub.getNavPointsString(tocEntries);
 		assert.equal(result, 	'\r\n' +
 								'    <navPoint id="navpoint-1" playOrder="1"><navLabel><text>' + tocEntry1.text + '</text></navLabel><content src="HTML/' + tocEntry1.target + '"/>\r\n' +
 								'        <navPoint id="navpoint-2" playOrder="2"><navLabel><text>' + tocEntry2.text + '</text></navLabel><content src="HTML/' + tocEntry2.target + '"/>\r\n' +
+								'            <navPoint id="navpoint-3" playOrder="3"><navLabel><text>' + tocEntry3.text + '</text></navLabel><content src="HTML/' + tocEntry3.target + '"/>\r\n' +
+								'            </navPoint>\r\n' +
 								'        </navPoint>\r\n' +
-								'    </navPoint>\r\n' +
-								'\r\n' +
-								'    <navPoint id="navpoint-3" playOrder="3"><navLabel><text>' + tocEntry3.text + '</text></navLabel><content src="HTML/' + tocEntry3.target + '"/>\r\n' +
 								'    </navPoint>\r\n');
+
+		var tocEntry4 = new TOCEntry;
+		tocEntry4.text = 'Kapitel Drei';
+		tocEntry4.target = 'Kapitel Drei.html';
+		tocEntry4.level = 0;
+
+		tocEntries = [tocEntry1, tocEntry2, tocEntry3, tocEntry4];
+		result = epub.getNavPointsString(tocEntries);
+		assert.equal(result, 	'\r\n' +
+			'    <navPoint id="navpoint-1" playOrder="1"><navLabel><text>' + tocEntry1.text + '</text></navLabel><content src="HTML/' + tocEntry1.target + '"/>\r\n' +
+			'        <navPoint id="navpoint-2" playOrder="2"><navLabel><text>' + tocEntry2.text + '</text></navLabel><content src="HTML/' + tocEntry2.target + '"/>\r\n' +
+			'            <navPoint id="navpoint-3" playOrder="3"><navLabel><text>' + tocEntry3.text + '</text></navLabel><content src="HTML/' + tocEntry3.target + '"/>\r\n' +
+			'            </navPoint>\r\n' +
+			'        </navPoint>\r\n' +
+			'    </navPoint>\r\n' +
+			'\r\n' +
+			'    <navPoint id="navpoint-4" playOrder="4"><navLabel><text>' + tocEntry4.text + '</text></navLabel><content src="HTML/' + tocEntry4.target + '"/>\r\n' +
+			'    </navPoint>\r\n');
 	}),
 	it('getManifestHtmlFilesString', function () {
 		var folderName = 'HTML';
