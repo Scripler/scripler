@@ -11,65 +11,8 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		$scope.registrationText = 'Hey, stranger. Register to save your work!';
 		$scope.socialRegistrationText = 'or use:';
 		$scope.EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+		$scope.showRegistrationInfoBar = true;
 		$scope.user = {};
-
-		$scope.registrationBarHiddenByUser = false;
-
-		var ckeOrgHeight;
-		var currentBarOffset = 0;
-
-		$rootScope.updateBottomOffset = function() {
-			var bar = document.getElementById("registrationFooter");
-			var height = bar ? bar.offsetHeight : 0;
-			if (currentBarOffset != height) {
-				var editor = document.getElementById("cke_1_contents");
-				if (editor && editor.style.height) {
-					currentBarOffset = height;
-					if (!ckeOrgHeight) {
-						ckeOrgHeight = editor.style.height;
-					}
-					if (height > 0) {
-						var newHeight = ckeOrgHeight.replace('px', '') - height;
-						editor.style.height = newHeight + 'px';
-					} else {
-						editor.style.height = ckeOrgHeight;
-					}
-				}
-			}
-
-			var elements = document.getElementsByClassName('bottom-fixed');
-			for (var i = 0; i < elements.length; i++) {
-				elements[i].style.bottom = height + 'px';
-			}
-			elements = document.getElementsByClassName('full-height');
-			for (var i = 0; i < elements.length; i++) {
-				elements[i].style.height = 'calc(100% - ' + height + 'px)';
-				elements[i].style.minHeight = 'calc(100% - ' + height + 'px)';
-			}
-
-			var styleEditor = document.getElementById("cke_1_floatingtools");
-			if (styleEditor) {
-				var defaultOffset = 28; // From hardcoded value in floating-tools CK plugin.
-				var currentOffset = styleEditor.style.bottom.replace('px', '');
-				// If current offset is negative, it's hidden, so don't mess with it
-				if (currentOffset > 0) {
-					styleEditor.style.bottom = (defaultOffset + height) + 'px';
-				}
-			}
-		}
-
-		$rootScope.updateNotificationOffset = function() {
-			var notifications = document.getElementById("notification-area");	
-			notifications.setAttribute('class', 'notifications loggedin');
-		}
-
-		$scope.$watch('registrationBarHiddenByUser', function () {
-			// Wait for the registration-bar visual changes before updating bottom offset.
-			setTimeout(function () {
-				$rootScope.updateBottomOffset();
-			}, 0);
-		});
 
 		$scope.$onRootScope('user:updated', function( event, user ) {
 			if (user.isDemo) {
@@ -78,13 +21,8 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				$scope.user = user;
 				if (!$scope.user.emailVerified) {
 					$scope.registrationText = 'Remove this message by verifying your email address. Click the link you received in your welcome email.';
-					$rootScope.updateNotificationOffset();
 				}
 			}
-			// Wait for the registration-bar visual changes before updating bottom offset.
-			setTimeout(function () {
-				$rootScope.updateBottomOffset();
-			}, 0);
 		});
 
 		$scope.$onRootScope('login:failed', function( event ) {
@@ -108,6 +46,15 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				});
 		});
 
+		$scope.showRegistrationBar = function(status) {
+			if ( status == 'hide' ) {
+				$scope.showRegistrationInfoBar = false;
+			}
+			else {
+				$scope.showRegistrationInfoBar = true;	
+			}
+		};
+
 		$scope.$onRootScope('ckDocument:dataReady', function( event ) {
 			var editableBody = document.getElementById('cke_bodyeditor');
 			var iframe = editableBody.getElementsByTagName('iframe')[0];
@@ -117,7 +64,6 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				iDoc.addEventListener('copy', $scope.copySelection);
 				iDoc.addEventListener('cut', $scope.copySelection);
 			};
-			$rootScope.updateBottomOffset();
 		});
 
 		$scope.copySelection = function() {
@@ -215,7 +161,6 @@ app.config( function( $routeProvider, $httpProvider, $provide ) {
 					if (data.user) {
 						userService.setUser(data.user);
 						deferred.resolve(data.user);
-						$rootScope.updateNotificationOffset();
 					}
 				})
 				.error(function(data) {
@@ -373,6 +318,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 			var ck = CKEDITOR.replace('bodyeditor', {
 				allowedContent: true,
 				skin: 'scripler',
+				bodyId: 'scripler',
 				resize_enabled: false,
 				extraPlugins: 'scripler,floating-tools,lineHeight,texttransform,indent-right,indentations,scripler_pagebreak,imageScripler,linkScripler',
 				floatingtools: 'Basic',
@@ -397,7 +343,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				indentUnit: 'em',
 				indentOffset: 2,
 				enterMode: CKEDITOR.ENTER_P,
-				height: $window.innerHeight - 90,
+				height: 'calc(100% - 36px)',
 				width: '100%',
 				language: 'en',
 				//Change to standard font we want to start all projects with :)

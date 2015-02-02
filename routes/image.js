@@ -48,7 +48,7 @@ exports.create = function (req, res, next) {
 			mediaType: mediaType
 		});
 
-		var imageNameWithoutExtension = utils.getFilenameWithoutExtension(originalFilename);
+		var imageNameWithoutExtension = utils.cleanFilename(utils.getFilenameWithoutExtension(originalFilename));
 		var finalName = imageNameWithoutExtension + '-' + image._id + '.'  + fileExtension;
 		image.name = finalName;
 

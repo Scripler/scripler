@@ -10,10 +10,10 @@
 		"uri": "mongodb://localhost/scripler_test?connectTimeoutMS=10000"
 	},
 	"resources": {
-		"projectsDir": "/tmp/scripler/test/projects",
-		"usersDir": "/tmp/scripler/test/users",
-		"projectsUrl": "http://localhost:3000/public/resources/projects",
-		"usersUrl": "http://localhost:3000/public/resources/users"
+		"projectsDir": "./public/resources/projects",
+		"usersDir": "./public/resources/users",
+		"projectsUrl": "http://localhost:9092/resources/projects",
+		"usersUrl": "http://localhost:9092/resources/users"
 	},
 	"subscriptions": {
 		"free": {

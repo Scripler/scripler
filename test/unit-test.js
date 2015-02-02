@@ -43,6 +43,12 @@ describe('utils', function () {
 		assert.equal('Kenny', nameParts.firstname);
 		assert.equal(undefined, nameParts.lastname);
 	})
+	it('cleanFilename', function () {
+		assert.equal(utils.cleanFilename("bla bla"), "blabla");
+		assert.equal(utils.cleanFilename("Hello123"), "Hello123");
+		assert.equal(utils.cleanFilename("helloæøå123"), "hello123");
+		assert.equal(utils.cleanFilename(",.-*¨´+:"), ".-");
+	})
 }),
 describe('shared_utils', function () {
     var str1 = "4eed2d88c3dedf0d0300001a";
@@ -292,18 +298,65 @@ describe('epub', function () {
 		var tocEntry3 = new TOCEntry;
 		tocEntry3.text = 'Kapitel Drei';
 		tocEntry3.target = 'Kapitel Drei.html';
-		tocEntry3.level = 0;
+		tocEntry3.level = 2;
 
 		tocEntries = [tocEntry1, tocEntry2, tocEntry3];
 		result = epub.getNavPointsString(tocEntries);
 		assert.equal(result, 	'\r\n' +
 								'    <navPoint id="navpoint-1" playOrder="1"><navLabel><text>' + tocEntry1.text + '</text></navLabel><content src="HTML/' + tocEntry1.target + '"/>\r\n' +
 								'        <navPoint id="navpoint-2" playOrder="2"><navLabel><text>' + tocEntry2.text + '</text></navLabel><content src="HTML/' + tocEntry2.target + '"/>\r\n' +
+								'            <navPoint id="navpoint-3" playOrder="3"><navLabel><text>' + tocEntry3.text + '</text></navLabel><content src="HTML/' + tocEntry3.target + '"/>\r\n' +
+								'            </navPoint>\r\n' +
 								'        </navPoint>\r\n' +
-								'    </navPoint>\r\n' +
-								'\r\n' +
-								'    <navPoint id="navpoint-3" playOrder="3"><navLabel><text>' + tocEntry3.text + '</text></navLabel><content src="HTML/' + tocEntry3.target + '"/>\r\n' +
 								'    </navPoint>\r\n');
+
+		var tocEntry4 = new TOCEntry;
+		tocEntry4.text = 'Kapitel Vier';
+		tocEntry4.target = 'Kapitel Vier.html';
+		tocEntry4.level = 0;
+
+		tocEntries = [tocEntry1, tocEntry2, tocEntry3, tocEntry4];
+		result = epub.getNavPointsString(tocEntries);
+		assert.equal(result, 	'\r\n' +
+			'    <navPoint id="navpoint-1" playOrder="1"><navLabel><text>' + tocEntry1.text + '</text></navLabel><content src="HTML/' + tocEntry1.target + '"/>\r\n' +
+			'        <navPoint id="navpoint-2" playOrder="2"><navLabel><text>' + tocEntry2.text + '</text></navLabel><content src="HTML/' + tocEntry2.target + '"/>\r\n' +
+			'            <navPoint id="navpoint-3" playOrder="3"><navLabel><text>' + tocEntry3.text + '</text></navLabel><content src="HTML/' + tocEntry3.target + '"/>\r\n' +
+			'            </navPoint>\r\n' +
+			'        </navPoint>\r\n' +
+			'    </navPoint>\r\n' +
+			'\r\n' +
+			'    <navPoint id="navpoint-4" playOrder="4"><navLabel><text>' + tocEntry4.text + '</text></navLabel><content src="HTML/' + tocEntry4.target + '"/>\r\n' +
+			'    </navPoint>\r\n');
+
+		var tocEntry5 = new TOCEntry;
+		tocEntry5.text = 'Kapitel Fümf';
+		tocEntry5.target = 'Kapitel Fümf.html';
+		tocEntry5.level = 2;
+		var tocEntry6 = new TOCEntry;
+		tocEntry6.text = 'Kapitel Sechs';
+		tocEntry6.target = 'Kapitel Sechs.html';
+		tocEntry6.level = 3;
+
+		tocEntries = [tocEntry1, tocEntry2, tocEntry3, tocEntry4, tocEntry5, tocEntry6];
+		result = epub.getNavPointsString(tocEntries);
+		assert.equal(result, 	'\r\n' +
+			'    <navPoint id="navpoint-1" playOrder="1"><navLabel><text>' + tocEntry1.text + '</text></navLabel><content src="HTML/' + tocEntry1.target + '"/>\r\n' +
+			'        <navPoint id="navpoint-2" playOrder="2"><navLabel><text>' + tocEntry2.text + '</text></navLabel><content src="HTML/' + tocEntry2.target + '"/>\r\n' +
+			'            <navPoint id="navpoint-3" playOrder="3"><navLabel><text>' + tocEntry3.text + '</text></navLabel><content src="HTML/' + tocEntry3.target + '"/>\r\n' +
+			'            </navPoint>\r\n' +
+			'        </navPoint>\r\n' +
+			'    </navPoint>\r\n' +
+			'\r\n' +
+			'    <navPoint id="navpoint-4" playOrder="4"><navLabel><text>' + tocEntry4.text + '</text></navLabel><content src="HTML/' + tocEntry4.target + '"/>\r\n' +
+			'        <navPoint id="navpoint-5" playOrder="5"><navLabel><text>' + tocEntry5.text + '</text></navLabel><content src="HTML/' + tocEntry5.target + '"/>\r\n' +
+			'            <navPoint id="navpoint-6" playOrder="6"><navLabel><text>' + tocEntry6.text + '</text></navLabel><content src="HTML/' + tocEntry6.target + '"/>\r\n' +
+			'            </navPoint>\r\n' +
+			'        </navPoint>\r\n' +
+			'    </navPoint>\r\n');
+
+		tocEntries = [tocEntry6];
+		result = epub.getNavPointsString(tocEntries);
+		assert.equal(result, '\r\n    <navPoint id="navpoint-1" playOrder="1"><navLabel><text>' + tocEntry6.text + '</text></navLabel><content src="HTML/' + tocEntry6.target + '"/>\r\n    </navPoint>\r\n');
 	}),
 	it('getManifestHtmlFilesString', function () {
 		var folderName = 'HTML';

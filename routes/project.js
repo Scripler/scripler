@@ -418,20 +418,18 @@ exports.compile = function (req, res, next) {
 		}
 
 		// Create a temporary file to avoid the second compile() call from the client, c.f. #483, trying to write to the same file while the EPUB checker has it open.
-		// TODO: when fixing #483 it should no longer be necessary to create a temporary file because only one file will be created.
 		var tempFilename = path.join(conf.epub.tmpDir, uuid_lib.v4() + ".epub");
 		var tempFile = fs.createWriteStream(tempFilename);
 		epub.pipe(tempFile);
 
+		var epubDownloadUrl = conf.resources.usersUrl + "/" + conf.epub.userDirPrefix + userId + "/" + req.project._id + '.epub';
 		var filename = (req.project.metadata.title || req.project.name) + ".epub";
 		var saneTitle = sanitize(filename);
 
 		// TODO: When a GUI design has been made, also return the EPUB validation result to client
-		res.setHeader('Content-disposition', 'attachment; filename="' + saneTitle + '"');
-		res.setHeader('Content-type', 'application/epub+zip');
-		epub.pipe(res);
+		res.send({url: epubDownloadUrl});
 
-		if ('test' != env) {
+		if ('test' != env && conf.epub.validatorEnabled) {
 			tempFile.once('close', function() {
 				// The sending of the validation result email can happen after the response has been returned to the user but must happen on the temp file, c.f. comment above.
 				var fullPath = tempFilename;
@@ -459,8 +457,6 @@ exports.compile = function (req, res, next) {
 							firstname: "Frank",
 							lastname: "EPUB"
 						};
-
-						var epubDownloadUrl = path.join(conf.resources.usersUrl, conf.epub.userDirPrefix + userId, req.project._id + '.epub');
 
 						emailer.sendUserEmail(
 							validationResultRecipient,
