@@ -440,6 +440,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if (status != $scope.leftMenuShowItem) {
 			$scope.leftMenuShow = true;
 			$scope.leftMenuShowItem = status;
+			$rootScope.ck.focus();
 		}
 		else {
 			$scope.hideLeftMenu();
@@ -454,6 +455,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if (status != $scope.rightMenuShowItem) {
 			$scope.rightMenuShow = true;
 			$scope.rightMenuShowItem = status;
+			$rootScope.ck.focus();
 		}
 		else {
 			$scope.hideRightMenu();
