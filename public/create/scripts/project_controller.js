@@ -309,6 +309,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						}
 
 						$scope.openProjectDocument( data.document );
+						$scope.showLeftMenu('contents');
 					} 
 					else{
 
@@ -451,6 +452,34 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.hideProjectDocumentOptions = function () {
 		$scope.selectedProjectDocumentOptions = -1;
 	};
+
+	$scope.showLeftMenu = function (status) {
+		if (status != $scope.leftMenuShowItem) {
+			$scope.leftMenuShow = true;
+			$scope.leftMenuShowItem = status;
+		}
+		else {
+			$scope.hideLeftMenu();
+		}
+	}
+	$scope.hideLeftMenu = function (status) {
+		$scope.leftMenuShow = false;
+		$scope.leftMenuShowItem	= "";
+	}
+
+	$scope.showRightMenu = function (status) {
+		if (status != $scope.rightMenuShowItem) {
+			$scope.rightMenuShow = true;
+			$scope.rightMenuShowItem = status;
+		}
+		else {
+			$scope.hideRightMenu();
+		}
+	}
+	$scope.hideRightMenu = function (status) {
+		$scope.rightMenuShow = false;
+		$scope.rightMenuShowItem	= "";
+	}
 
 	$scope.languages = [
 		{
@@ -1183,6 +1212,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.showStylesetOptions = function ($index) {
 		if ($index != $scope.selectedStylesetOptions) {
 			$scope.selectedStylesetOptions  = $index;
+			$scope.hideStylesetChildOptions();
 		}
 		else {
 			$scope.hideStylesetOptions();
@@ -1190,6 +1220,20 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 	$scope.hideStylesetOptions = function () {
 		$scope.selectedStylesetOptions = -1;
+	};
+
+	$scope.selectedStylesetChildOptions = -1;
+	$scope.showStylesetChildOptions = function ($index) {
+		if ($index != $scope.selectedStylesetChildOptions) {
+			$scope.selectedStylesetChildOptions  = $index;
+			$scope.hideStylesetOptions();
+		}
+		else {
+			$scope.hideStylesetChildOptions();
+		}
+	};
+	$scope.hideStylesetChildOptions = function () {
+		$scope.selectedStylesetChildOptions = -1;
 	};
 
 	$scope.loadFonts = function() {
@@ -1294,7 +1338,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	function constructImageTag( image ) {
-		var imageTag = '<img class="cover" src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		var imageTag = '<img src="//' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		return imageTag;
+	}
+
+	function constructCoverTag(image){
+		var imageTag = '<img class="cover" src="//' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
 		return imageTag;
 	}
 
@@ -1348,7 +1397,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.createCover = function( image ) {
-		var html = constructImageTag( image );
+		var html = constructCoverTag( image );
 		var isNewCover = overwriteExistingDocument( 'cover', html );
 
 		if ( isNewCover ) {

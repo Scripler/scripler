@@ -99,9 +99,15 @@ a:hover {
 .container.shownotification {
 	height: calc(100% - 142px);
 }
+.container.shownotification.activation {
+	height: calc(100% - 90px);
+}
 @media all and (min-width: 890px) {
 	.container.shownotification {
 		height: calc(100% - 102px);
+	}
+	.container.shownotification.activation {
+		height: calc(100% - 72px);
 	}
 }
 @media all and (min-width: 1220px) {
@@ -242,42 +248,67 @@ textarea {
 
 .registration {
 	background-color: #c6c6c6;
-	position: fixed;
+	position: absolute;
 	width: 100%;
 	padding: 20px;
-	z-index: 20;
-	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
+/*	z-index: 20;
+	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);*/
 	bottom: 0;
 }
-.registration.green {
+.registration.activation {
 	background-color: #5cb85c;
-	padding: 27px 20px 26px;
+	color: white;
+/*	padding: 27px 20px 26px;*/
 }
 
-.registration-container {
+/*.registration-container {
 	width:100%;
 	margin:0 auto;
-}
+}*/
 .registration-text {
 	font-weight: 700;
-	margin: 0 0 10px 0;
+/*	margin: 0 0 10px 0;*/
 	min-width: 310px;
-}
-@media all and (min-width: 1220px) {
-	.registration.green {
-		background-color: #5cb85c;
-		padding: 23px 20px;s
-	}
-	.registration-text {
-		float: left;
-		margin: 0 10px 0 0;
-		padding: 7px 0 0;
-	}
 }
 .registration-form {
 	position: relative;
 	float: left;
 	min-width: 692px;
+}
+.registration-form.explanation {
+	margin: 0 0 10px;
+}
+.activation .registration-text {
+	float: none;
+	margin: 6px 0;
+	padding: 0 30px;
+}
+.activation .registration-form {
+	float: none;
+	min-width: 0;
+	text-align: center;
+}
+.activation .registration-form.explanation {
+	margin: 0;
+}
+@media all and (min-width: 1220px) {
+	/*.registration.activation {
+		background-color: #5cb85c;
+		padding: 23px 20px;s
+	}*/
+	.registration-text {
+		float: left;
+		margin: 0 10px 0 0;
+		padding: 7px 0 0;
+	}
+	.registration-form {
+		position: relative;
+		float: left;
+		min-width: 0;
+	}
+	.registration-form.explanation {
+		margin: 0;
+	}
 }
 .registration-social {
 	float: left;
@@ -317,21 +348,21 @@ textarea {
 	margin-right:5px;
 }
 
-.registration-text.validate {
+/*.registration-text.validate {
 	color: #fff;
 	text-align: center;
 	margin: 0;
 	opacity: 1;
 	width: 100%;
 	float: none;
-}
+}*/
 .registration-button {
 	min-width: 100px;
 }
 .registration-close-button {
 	position: absolute;
-	right: 10px;
-	top: 6px;
+	right: 0;
+	top: 0;
 	color: #fff;
 	font-size: 120%;
 	cursor: pointer;
@@ -489,9 +520,20 @@ textarea {
 	left: 50%;
 	margin-left: -125px;
 }
+.notifications.activation {
+	bottom: 110px;
+}
+@media all and (min-width: 500px) {
+	.notifications.activation {
+		bottom: 90px;
+	}
+}
 @media all and (min-width: 890px) {
 	.notifications {
 		bottom: 102px;
+	}
+	.notifications.activation {
+		bottom: 72px;
 	}
 }
 @media all and (min-width: 1220px) {
