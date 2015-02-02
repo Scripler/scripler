@@ -62,23 +62,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	}
 
-	var selectContent;
-	var allMenuTabs = document.getElementsByClassName('menu-tab');
-
-	for(var i=0;i<=allMenuTabs.length-1;i++){
-		allMenuTabs[i].addEventListener('click', function(){
-				setTimeout(function(){ 
-					if($scope.showInsert==true){
-							selectContent = setInterval(function(){
-							var selectedContent = returnSelectedContent();
-							updateInputFields(selectedContent);
-						},1000); 
-					} else clearInterval(selectContent);
-				}, 1000);
-				clearTimeout();
-			});
-	}
-
 
 	$scope.openFeedback = function() {
 		userService.openFeedback( $scope.user );
@@ -591,6 +574,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		});
 	};
+
+	$scope.$watch( 
+        function( $scope ) {
+	        	if($scope.leftMenuShowItem == "insert"){
+						var selectedContent = returnSelectedContent();
+						updateInputFields(selectedContent);
+					}
+	});
 
     $scope.$watch('project.metadata.title', function(newValue, oldValue){
 		if (watchReady(newValue, oldValue)) {
