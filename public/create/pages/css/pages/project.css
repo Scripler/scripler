@@ -717,3 +717,11 @@ li.typo .style-copy-options p {
 .archived a {
     color: #6B6B6B;
 }
+
+.anchor-link{
+	display: block
+}
+
+.left-menu-options .menu-box .anchor-name{
+	width:100%;
+}

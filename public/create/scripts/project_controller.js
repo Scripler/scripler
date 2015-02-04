@@ -62,6 +62,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	}
 
+
 	$scope.openFeedback = function() {
 		userService.openFeedback( $scope.user );
 	}
@@ -443,6 +444,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		else {
 			$scope.hideLeftMenu();
 		}
+		$rootScope.ck.focus();
 	}
 	$scope.hideLeftMenu = function (status) {
 		$scope.leftMenuShow = false;
@@ -457,6 +459,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		else {
 			$scope.hideRightMenu();
 		}
+		$rootScope.ck.focus();
 	}
 	$scope.hideRightMenu = function (status) {
 		$scope.rightMenuShow = false;
@@ -573,6 +576,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		});
 	};
+
+	$scope.$watch( 
+        function( $scope ) {
+	        	if($scope.leftMenuShowItem == "insert"){
+						var selectedContent = returnSelectedContent();
+						updateInputFields(selectedContent);
+					}
+	});
 
     $scope.$watch('project.metadata.title', function(newValue, oldValue){
 		if (watchReady(newValue, oldValue)) {
@@ -1297,16 +1308,18 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.insertNewAnchor = function() {
 		var id = 'id_' + Date.now();
-		var insert = '<a id="' + id + '" name="' + id + '" title="' + $scope.anchorName + '"></a>';
-		editorInsert( insert );
+		var type = "anchor";
+		var insert = '<a id="' + id + '" name="" title=""></a>';
+		editorInsert( insert, type );
 		$scope.updateProjectDocument();
 		$scope.getToc();
 		$scope.anchorName = '';
 	}
 
 	$scope.insertNewLink = function() {
-		var link = '<a href="' + $scope.linkAddress + '">' + $scope.linkText + '</a>';
-		editorInsert( link );
+		var type = "link";
+		var link = '<a href="' + $scope.linkAddress + '">link_text</a>';
+		editorInsert( link, type);
 		$scope.updateProjectDocument();
 		$scope.linkAddress = '';
 		$scope.linkText = '';
@@ -1461,12 +1474,58 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
-	function editorInsert( insert ) {
+	// returns content that is selected in the caret
+	function returnSelectedContent(){
 		var editor = getEditor();
-		var element = $rootScope.CKEDITOR.dom.element.createFromHtml( insert );
-		editor.insertElement( element );
+		var selection = editor.getSelection();
+
+		if(selection){
+			if (selection.getType() == CKEDITOR.SELECTION_ELEMENT) {
+			  var selectedContent = selection.getSelectedElement().$.outerHTML;
+			} else if (selection.getType() == CKEDITOR.SELECTION_TEXT) {
+			  if (CKEDITOR.env.ie) {
+			    selection.unlock(true);
+			    selectedContent = selection.getNative().createRange().text;
+			  } else {
+			    selectedContent = selection.getNative();
+			  }
+			}
+		}
+
+		return selectedContent;
+	}
+
+	function updateInputFields(content) {
+		   document.getElementById("anchorInputBox").value = content;
+		   document.getElementById("hyperlinkInputBox").value = content;
+		}
+
+	function editorInsert( insert, type ) {
+		var editor = getEditor();
+		var selectedContent = returnSelectedContent();
+
+		// defaulting the title/name of the anchor to the selected content
+		var title = selectedContent;
+		
+		if(type=="anchor"){
+			if($scope.anchorName)title=$scope.anchorName;
+			insert = insert.replace('title=""', 'title="' + title + '"').replace('name=""', 'name="' + title + '"');
+			var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
+		}
+		else if(type="link"){
+			if($scope.linkText )title=$scope.linkText;
+			insert = insert.replace('link_text', title);
+		}	
+		
+		var element = $rootScope.CKEDITOR.dom.element.createFromHtml(insert);
+		// insert anchor on the caret, but keep the old content
+		editor.insertElement(element);
+		if(type=="anchor")editor.insertText(replacedContent.getText());
+		
+
 		var range = editor.createRange();
-		range.moveToElementEditablePosition( element );
+		range.moveToElementEditablePosition(element);
+		
 		$rootScope.ck.focus();
 		range.select();
 		$scope.updateProjectDocument();
@@ -1492,7 +1551,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	});
 
 	function getEditor(scope) {
-		return $rootScope.CKEDITOR.instances.bodyeditor
+		return $rootScope.CKEDITOR.instances.bodyeditor;
 	}
 
 	$scope.$onRootScope('ckDocument:dataReady', function (event) {
