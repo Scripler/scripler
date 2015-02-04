@@ -147,7 +147,5 @@ function projectSpaceController($scope, $http, projectsService, userService, $q,
 		} else {
 			console.log("ERROR copying project: this should not have happened: either a real user or a demo user should exist.");
 		}
-	};
-
-
+	}; 
 } ;
