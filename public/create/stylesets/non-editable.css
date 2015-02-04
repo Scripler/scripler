@@ -108,9 +108,8 @@ content: close-quote;
 
 /*Cover image css*/
  
-.cover {
-
-    width:105%;
+.cover { 
+    width:102%;
 	margin: 0;
 	margin-left: -20px;
 	margin-top: -20px;
@@ -120,7 +119,9 @@ content: close-quote;
 }
 
 body.cover {
-	margin:0;
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/voltaireregular.ttf");
 }
 
 /*PARAGRAPH RULES*/
