@@ -107,11 +107,22 @@ content: close-quote;
 }
 
 /*Cover image css*/
-#scripler .cover {
-	width: 100%;
-	margin:0;
+ 
+.cover {
+	/* Firefox */
+	width: -moz-calc(100% + 40px); 
+	/* WebKit */
+	width: -webkit-calc(100% +40px); 
+	/* Opera */
+	width: -o-calc(100% + 40px);
+	 /* Standard */
+	width: calc(100% + 40px);
+	margin: 0;
+	margin-left: -20px;
+	margin-top: -20px;
 	height: auto;
-	page-break-inside:avoid;
+	page-break-inside: avoid;
+	 
 }
 
 body.cover {
