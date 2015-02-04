@@ -46,6 +46,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				});
 		});
 
+		// TODO: this check should include if user.emailVerified and user.isDemo
 		$scope.showRegistrationBar = function(status) {
 			if ( status == 'hide' ) {
 				$scope.showRegistrationInfoBar = false;

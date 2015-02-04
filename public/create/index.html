@@ -9,9 +9,9 @@
 </head>
 <body data-ng-controller="appController" data-ng-cloak>
 
-	<div class="container" data-ng-class="{'shownotification' : showRegistrationInfoBar, 'activation' : user._id}" data-ng-view></div>
+	<div class="container" data-ng-class="{'shownotification' : showRegistrationInfoBar && !user.emailVerified && !user.isDemo, 'activation' : user._id}" data-ng-view></div>
 
-	<div class="notifications" data-ng-class="{ 'loggedin' : !showRegistrationInfoBar, 'activation' : user._id }">
+	<div class="notifications" data-ng-class="{ 'loggedin' : !showRegistrationInfoBar || user.emailVerified || user.isDemo, 'activation' : user._id }">
 		We're in alpha. <a class="readmore" target="_blank" href="http://blog.scripler.com/test-scripler-now.html">Read more</a>
 	</div>
 	<div class="registration" data-ng-hide="user.emailVerified || user.isDemo || !showRegistrationInfoBar" data-ng-class="{ 'activation' : user._id }" data-ng-cloak>

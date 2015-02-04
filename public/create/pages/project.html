@@ -12,7 +12,7 @@
 		<img src="pages/images/insert.svg" width="20">
 	</div>
 </div>
-<div id="menu-left" class="menu-left full-height" data-ng-class="{ 'open' : leftMenuShow, 'bottom-menu-space' : leftMenuShowItem == 'contents' || leftMenuShowItem == 'design' }">
+<div id="menu-left" class="menu-left full-height" data-ng-class="{ 'open' : leftMenuShow, 'bottom-menu-space' : leftMenuShowItem == 'contents' || leftMenuShowItem == 'design', 'open-small' : showNewOptions || showBottomOptions, 'open-big' : showImportOptions }">
 	<div class="menu-item-left" data-ng-show="leftMenuShowItem == 'contents'">
 		<div class="projectDocument new" data-ng-click="addProjectDocument();">
 			<p>+</p>
@@ -239,17 +239,17 @@
 			</li>-->
 		</ul>
 	</div>
-	<div class="documents-options-bottom-buttons bottom-fixed" data-ng-show="leftMenuShowItem == 'contents'">
+	<div class="documents-options-bottom-buttons" data-ng-show="leftMenuShowItem == 'contents'">
 		<a data-ng-class="{ 'open' : showNewOptions }" data-ng-click="showNewOptions = !showNewOptions; showImportOptions = false; showBottomOptions = false;">New</a>
 		<a data-ng-class="{ 'open' : showImportOptions }" data-ng-click="showImportOptions = !showImportOptions; showNewOptions = false; showBottomOptions = false;">Import</a>
 		<a class="last" data-ng-class="{ 'open' : showBottomOptions }" data-ng-click="showBottomOptions = !showBottomOptions; showNewOptions = false; showImportOptions = false;">Options</a>
 	</div>
 
-	<div class="stylesets-options-bottom-buttons bottom-fixed" data-ng-show="leftMenuShowItem == 'design'">
+	<div class="stylesets-options-bottom-buttons" data-ng-show="leftMenuShowItem == 'design'">
 		<a data-ng-click="showStyleEditor()" data-ng-class="{ 'open' : styleEditorVisible }">Style editor</a>
 	</div>
 
-	<div id="menu-left-content-options" class="menu-options bottom-fixed" data-ng-show="leftMenuShowItem == 'contents'" data-ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
+	<div id="menu-left-content-options" class="menu-options" data-ng-show="leftMenuShowItem == 'contents' && (showNewOptions || showImportOptions || showBottomOptions)">
 		<div class="options-bottom-box">
 			<div data-ng-show="showNewOptions">
 				<a data-ng-click="addProjectDocument()">New chapter</a><br>

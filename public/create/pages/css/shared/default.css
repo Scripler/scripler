@@ -245,29 +245,20 @@ textarea {
 
 
 /*registration styling*/
-
 .registration {
 	background-color: #c6c6c6;
 	position: absolute;
 	width: 100%;
 	padding: 20px;
-/*	z-index: 20;
-	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);*/
+	z-index: 2;
 	bottom: 0;
 }
 .registration.activation {
 	background-color: #5cb85c;
 	color: white;
-/*	padding: 27px 20px 26px;*/
 }
-
-/*.registration-container {
-	width:100%;
-	margin:0 auto;
-}*/
 .registration-text {
 	font-weight: 700;
-/*	margin: 0 0 10px 0;*/
 	min-width: 310px;
 }
 .registration-form {
@@ -292,10 +283,6 @@ textarea {
 	margin: 0;
 }
 @media all and (min-width: 1220px) {
-	/*.registration.activation {
-		background-color: #5cb85c;
-		padding: 23px 20px;s
-	}*/
 	.registration-text {
 		float: left;
 		margin: 0 10px 0 0;

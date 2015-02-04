@@ -436,8 +436,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.selectedProjectDocumentOptions = -1;
 	};
 
-	$scope.showLeftMenu = function (status) {
-		if (status != $scope.leftMenuShowItem) {
+	$scope.showLeftMenu = function (status, preserve) {
+		if (status != $scope.leftMenuShowItem || preserve) {
 			$scope.leftMenuShow = true;
 			$scope.leftMenuShowItem = status;
 		}
@@ -1395,6 +1395,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		if ( isNewCover ) {
 			$scope.addProjectDocument( 'cover', html );
+		} else {
+			$scope.showLeftMenu('contents', true);
 		}
 
 		var json = {};
@@ -1419,6 +1421,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		if ( isNewToc ) {
 			$scope.addProjectDocument( 'toc', html );
+		} else {
+			$scope.showLeftMenu('contents', true);
 		}
 
 		$scope.setToc();
@@ -1453,6 +1457,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		if ( isNewTitlePage ) {
 			$scope.addProjectDocument( 'titlepage', html );
+		} else {
+			$scope.showLeftMenu('contents', true);
 		}
 	}
 
@@ -1471,6 +1477,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		if ( isNewColophon ) {
 			$scope.addProjectDocument( 'colophon', html );
+		} else {
+			$scope.showLeftMenu('contents', true);
 		}
 	}
 
