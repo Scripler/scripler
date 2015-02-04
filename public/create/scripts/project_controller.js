@@ -575,12 +575,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	};
 
-	$scope.$watch( 
-        function( $scope ) {
-	        	if($scope.leftMenuShowItem == "insert"){
-						var selectedContent = returnSelectedContent();
-						updateInputFields(selectedContent);
-					}
+	$scope.$watch(function(leftMenuShowItem) {
+		if( $scope.leftMenuShowItem=='insert' ){
+			var selectedContent = returnSelectedContent();
+			updateInputFields(selectedContent);
+		}
 	});
 
     $scope.$watch('project.metadata.title', function(newValue, oldValue){
