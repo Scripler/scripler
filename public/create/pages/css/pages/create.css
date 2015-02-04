@@ -1,3 +1,7 @@
+.container {
+	padding: 20px;
+}
+
 .section-unisquare, .section-projects {
 	float: left;
 }
@@ -33,7 +37,6 @@
 .projects-title {
 	margin: 0 0 5px 0 !important;
 	font-size: 40px;
-	font-family: 'Roboto', sans-serif;
 	font-weight: 700;
 	color: #000;
 }
@@ -44,30 +47,24 @@
 
 .project {
 	position: relative;
+	background: url("../../images/ebook.svg");
 	margin: 0 15px 15px 0;
 	width: 100px;
 	height: 129px;
 	float: left;
-	display: table;
 	cursor: pointer;
 }
-
+.project:hover, .project:focus {
+	background: url("../../images/ebook_hover.svg")
+}
 .project.new {
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	cursor: pointer;
+	background: url("../../images/ebook_new.svg")
 }
-
-.project-new-sign {
-	left: 0;
-	position: absolute;
-	text-align: center;
-	top: 14px;
-	width: 85%;
+.project.new:hover, .project.new:focus {
+	background: url("../../images/ebook_new_hover.svg")
+}
+.project.archived {
+	background: url("../../images/ebook_archived.svg")
 }
 
 .project p {
@@ -80,7 +77,7 @@
 .project .project-options-show {
 	position: absolute;
 	top: 5px;
-	right: 17px;
+	right: 20px;
 	padding: 6px;
 	cursor: pointer;
 	z-index: 15;
@@ -107,18 +104,10 @@
 .project-options {
 	position: absolute;
 	top: 20px;
-	right: 5px;
+	right: 20px;
 	background: none #fff;
 	z-index: 10;
 	border: 1px solid #000;
-}
-.project-options-hide {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width:100%;
-	height:100%;
-	z-index:-1;
 }
 .project-options-menupoint {
 	cursor: pointer;
@@ -128,27 +117,12 @@
 .project-options-menupoint:hover {
 	background: none #ffffcc;
 }
-.project-options-dates {
-	border-top: 1px solid #eee;
-	padding: 10px 0 5px;
-}
-.project-options-dates div {
-	font-size: 10px;
-	width: 40%;
-	float: left;
-}
-.project-options-dates div.dates {
-	color: #ccc;
-	font-size: 10px;
-	width: 60%;
-	text-align: right;
-}
 .project-archived {
 	opacity: 0.5;
 }
 .project-link {
-	left: 0;
 	position: absolute;
+	top: 0;
 	text-align: center;
 	margin-top:14px;
 	margin-left:7px;
@@ -161,12 +135,10 @@ a.project-link {
 	 word-wrap: break-word;
 
 }
-a.showAll{
+a:hover{
 	overflow:visible;
 	background-color:#FFF;
 	height: auto;
-	/*box-shadow:1px 1px 0px #000;
-*/
 }
 
 .filter-sort, .filter-search {
@@ -180,9 +152,14 @@ a.showAll{
 }
 
 textarea#rename {
-	width: 90%;
-	margin-top: 37px;
-	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 6px;
+	text-align: center;
+	padding: 5px;
+	margin: 30px 5px 5px;
+	width: 65px;
+	height: 75px;
 	border: 1px solid #ffff99;
 	resize: none;
 	outline: none;
@@ -229,6 +206,10 @@ textarea#rename {
 .logo {
 	width: 30%;
 }
+.readmore{
+	text-decoration: underline;
+	color:#999;
+}
 .uni-bottom-box {
 	height: 60px;
 	background-color: #fff;
@@ -238,8 +219,7 @@ textarea#rename {
 	bottom: 0;
 }
 .user-box {
-	padding-top: 6px;
-	padding-left: 20px;
+	padding: 6px;
 }
 .user-image {
 	float: left;
@@ -299,7 +279,6 @@ hr {
 	border-radius: 1px;
 	-webkit-appearance: none;
 	color: #818285;
-	font-family: 'Roboto', sans-serif;
 }
 .user-settings-options .user-email input:disabled {
 	background: #f6f6f6;
@@ -329,15 +308,4 @@ hr {
 }
 .edit-newsletter {
 	padding-top: 5px;
-}
-.archived {
-	background-color: #CFCFCF;
-}
-.archived a {
-	color: #6B6B6B;
-}
-
-img.cover{
-	margin-left:-15px;
-	margin-right:15px;
 }
