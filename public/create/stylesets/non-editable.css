@@ -110,13 +110,7 @@ content: close-quote;
  
 .cover {
 	/* Firefox */
-	width: -moz-calc(100% + 40px); 
-	/* WebKit */
-	width: -webkit-calc(100% +40px); 
-	/* Opera */
-	width: -o-calc(100% + 40px);
-	 /* Standard */
-	width: calc(100% + 40px);
+    width:105%;
 	margin: 0;
 	margin-left: -20px;
 	margin-top: -20px;
