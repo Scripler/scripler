@@ -31,7 +31,8 @@
 
 				<form data-ng-show="projectDocument.editingProjectDocumentTitle">
 					<p>
-						<textarea class="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!projectDocument.editingProjectDocumentTitle" on-enter="projectDocument.editingProjectDocumentTitle = false;" data-ng-blur="renameProjectDocument(projectDocument); projectDocument.editingProjectDocumentTitle = false;"></textarea>
+						<!-- it is not working because ff doesn't take it as a blur, with the on-enter, if I put the rename in there it works in ff, but then not in chrome -->
+						<textarea class="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!projectDocument.editingProjectDocumentTitle" blur-on-enter data-ng-blur="renameProjectDocument(projectDocument); projectDocument.editingProjectDocumentTitle = false;"></textarea>
 					</p>
 				</form>
 

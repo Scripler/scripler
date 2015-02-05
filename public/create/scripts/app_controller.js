@@ -312,6 +312,18 @@ app.directive('onEnter', function() {
 	};
 });
 
+app.directive('blurOnEnter', function() {
+	return function(scope, element, attributes) {
+		element.bind("keydown keypress", function( event ) {
+			event.preventDefault();
+
+			if(event.which === 13) {
+				element[0].blur();
+			};
+		});
+	}
+});
+
 app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 	return {
 		require: '?ngModel',
