@@ -577,10 +577,17 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	};
 
-	$scope.$watch(function(leftMenuShowItem) {
-		if( $scope.leftMenuShowItem=='insert' ){
+	$scope.$watch('leftMenuShowItem', function( newValue ) {
+		if( newValue=='insert' ){
 			var selectedContent = returnSelectedContent();
 			updateInputFields(selectedContent);
+			$scope.getToc();
+		}
+	});
+
+	$scope.$watch('rightMenuShowItem', function( newValue ) {
+		if( newValue=='finalize' ){
+			$scope.getToc();
 		}
 	});
 
@@ -1537,18 +1544,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		range.select();
 		$scope.updateProjectDocument();
 	}
-
-	$scope.$watch('showInsert', function( newValue ) {
-		if ( newValue === true ) {
-			$scope.getToc();
-		}
-	});
-
-	$scope.$watch('showFinalizeOptions', function( newValue ) {
-		if ( newValue === true ) {
-			$scope.getToc();
-		}
-	});
 
 	$scope.$watch('linkAnchor', function( newValue, oldValue ) {
 		if ( newValue !== oldValue ) {
