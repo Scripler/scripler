@@ -24,6 +24,11 @@
 	"mandrill": {
 		"apiKey": "xxxx"
 	},
+	"braintree":{
+		"merchantId": "xxx",
+		"publicKey": "xxx",
+		"privateKey": "xxx"
+	},
 	"passport": {
 		"twitter": {
 			"consumerKey": "xxx",

@@ -47,7 +47,8 @@
     "strftime": "^0.8.2",
     "underscore": "^1.7.0",
     "winston": "~0.7.2",
-    "xtend": "^2.2.0"
+    "xtend": "^2.2.0",
+    "braintree": "^1.23.0"
   },
   "readmeFilename": "README.md",
   "main": "app.js",

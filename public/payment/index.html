@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Scripler - Braintree test</title>
+	<script src="//js.braintreegateway.com/v2/braintree.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+	<script>
+
+		$.ajax({
+			url: '/payment/token',
+			type: 'GET',
+			dataType: 'json',
+			success: function (data) {
+				if (data && data.token) {
+					braintree.setup(data.token, 'dropin', {container: 'dropin'});
+				} else {
+					console.log("Data error: ");
+					console.log(data);
+
+				}
+			},
+			error: function (request, status, error) {
+				console.log("Error: " + error);
+			}
+		});
+
+	</script>
+</head>
+<body>
+<form style="margin:auto; width: 300px;" method="post" action="/payment">
+	<div id="dropin"></div>
+	<input type="submit" value="Pay" />
+</form>
+</body>
+</html>
