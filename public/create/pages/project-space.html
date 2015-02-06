@@ -73,7 +73,7 @@
 				<p>
 					<a href="#/project?pid={{project._id}}" class="project-link" data-ng-hide="project.editingProjectTitle">{{project.name}}</a>
 					<form data-ng-show="project.editingProjectTitle">
-						<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!project.editingProjectTitle" on-enter="project.editingProjectTitle = false; renameProject(project);" data-ng-blur="project.editingProjectTitle = false; renameProject(project);"></textarea>
+						<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!project.editingProjectTitle" blur-on-enter data-ng-blur="project.editingProjectTitle = false; renameProject(project);"></textarea>
 					</form>
 				</p>
 

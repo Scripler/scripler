@@ -299,17 +299,16 @@ app.directive('focusOn', function( $timeout, $parse ) {
 	};
 });
 
-app.directive('onEnter', function() {
-	return function( scope, element, attrs ) {
+app.directive('blurOnEnter', function() {
+	return function(scope, element, attributes) {
 		element.bind("keydown keypress", function( event ) {
+			event.preventDefault();
+
 			if(event.which === 13) {
-				scope.$apply(function(){
-				scope.$eval(attrs.onEnter, {'event': event});
-			});
-				event.preventDefault();
-			}
+				element[0].blur();
+			};
 		});
-	};
+	}
 });
 
 app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
