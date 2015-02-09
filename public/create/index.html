@@ -19,6 +19,8 @@
 			<div class="registration-form explanation" data-ng-hide="user.isDemo">
 				<div class="registration-close-button" data-ng-click="showRegistrationBar('hide')" data-ng-show="user._id">x</div>
 				<div class="registration-text" data-ng-bind="registrationText"></div>
+				<div class="registration-missing-email" data-ng-hide="verificationEmailSent" data-ng-click="resendUserVerificationEmail()">Didn't get an email? Click here to for us to resend it</div>
+				<div class="registration-missing-email not-link" data-ng-show="verificationEmailSent">Verification email have been sent</div>
 			</div>
 
 			<div class="registration-form" data-ng-hide="user._id && !user.isDemo">
@@ -43,9 +45,10 @@
 	</div>
 	<script type="text/javascript" src="scripts/angular-file-upload-html5-shim.min.js"></script>
 	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/webfont/1.5.3/webfont.js"></script>
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.js"></script>
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-route.js"></script>
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-sanitize.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-route.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-sanitize.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-animate.min.js"></script>
 	<script type="text/javascript" src="scripts/angular-local-storage.min.js"></script>
 	<script type="text/javascript" src="scripts/angular-file-upload.min.js"></script>
 	<script type="text/javascript" src="scripts/angucomplete-alt.js"></script>
