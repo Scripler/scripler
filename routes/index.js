@@ -87,6 +87,8 @@ module.exports = function (app, auth) {
 
 	app.get('/payment/token', auth.isLoggedIn(), payment.token);
 	app.post('/payment', auth.isLoggedIn(), payment.create);
+	app.get('/payment/webhook', payment.initWebhook);
+	app.post('/payment/webhook', payment.webhook);
 
 	/* API Output */
 	app.get('/project/:projectIdPopulatedFull/compile', auth.isLoggedIn(), project.compile);

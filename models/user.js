@@ -37,7 +37,17 @@ var UserSchema = new Schema({
 	level: { type: String, default: "free" },
 	storageUsed: { type: Number, default: 0},
 	passwordResetToken: {type: String},
-	isDemo: { type: Boolean, default: false }
+	isDemo: { type: Boolean, default: false },
+	payment: {
+		customerId: { type: String },
+		subscriptionId: { type: String},
+		payments: [{
+			id: { type: String },
+			amount: { type: String },
+			date: { type: Date, default: Date.now },
+			type: { type: String }
+		}]
+	}
 });
 
 /** Handle bcrypt password-hashing.

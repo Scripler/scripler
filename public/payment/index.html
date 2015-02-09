@@ -27,11 +27,29 @@
 		});
 
 	</script>
+	<style type="text/css">
+		#submit {
+			-webkit-transition: background 200ms ease-out,color 200ms ease-out;
+			-moz-transition: background 200ms ease-out,color 200ms ease-out;
+			-o-transition: background 200ms ease-out,color 200ms ease-out;
+			transition: background 200ms ease-out,color 200ms ease-out;
+			display: inline-block;
+			line-height: 0.5;
+			text-align: center;
+			border-radius: 0.1875em;
+			padding: 0.75em 1.5em;
+			border: 1px solid #3c94d3;
+			background: #3c94d3;
+			color: #FFF;
+			cursor: pointer;
+		}
+	</style>
 </head>
 <body>
 <form style="margin:auto; width: 300px;" method="post" action="/payment">
-	<div id="dropin"></div>
-	<input type="submit" value="Pay" />
+	<div id="dropin">
+	</div>
+	<input type="submit" id="submit" value="Pay">
 </form>
 </body>
 </html>
