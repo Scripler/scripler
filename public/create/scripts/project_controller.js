@@ -1221,9 +1221,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.selectedStylesetOptions = -1;
 	};
 
+	$scope.selectedStylesetParentOptions = -1;
 	$scope.selectedStylesetChildOptions = -1;
-	$scope.showStylesetChildOptions = function ($index) {
-		if ($index != $scope.selectedStylesetChildOptions) {
+	$scope.showStylesetChildOptions = function ($parentIndex, $index) {
+		if ($parentIndex != $scope.selectedStylesetParentOptions || $index != $scope.selectedStylesetChildOptions) {
+			$scope.selectedStylesetParentOptions  = $parentIndex;
 			$scope.selectedStylesetChildOptions  = $index;
 			$scope.hideStylesetOptions();
 		}
@@ -1232,6 +1234,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 	$scope.hideStylesetChildOptions = function () {
+		$scope.selectedStylesetParentOptions = -1;
 		$scope.selectedStylesetChildOptions = -1;
 	};
 
