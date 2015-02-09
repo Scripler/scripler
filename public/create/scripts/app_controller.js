@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload', 'angucomplete-alt', 'ngProgress', 'utilsSharedModule' ] );
+var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'ngAnimate', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload', 'angucomplete-alt', 'ngProgress', 'utilsSharedModule' ] );
 
 app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope', 'utilsService',
 	function( $http, $scope, userService, $rootScope, utilsService) {
@@ -9,6 +9,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		$scope.errors.email = 'Email is invalid';
 		$scope.errors.password = 'Six characters minimum';
 		$scope.registrationText = 'Hey, stranger. Register to save your work!';
+		$scope.verificationEmailSent = false;
 		$scope.socialRegistrationText = 'or use:';
 		$scope.EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		$scope.showRegistrationInfoBar = true;
@@ -101,7 +102,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		}
 
 		$scope.registerUser = function(user, next) {
-			$http.post( '/user/register', angular.toJson( user ) )
+			$http.post('/user/register', angular.toJson( user ) )
 				.success( function( data ) {
 					$http.post('/user/login/', angular.toJson( user ) )
 						.success( function( data ) {
@@ -110,6 +111,15 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				})
 				.error( function( data ) {
 					next(data.errorDetails || 'Could not register user');
+				});
+		}
+		$scope.resendUserVerificationEmail = function() {
+			$http.post('/user/resend-verify-email')
+				.success( function(data) {
+					$scope.verificationEmailSent = true;
+				})
+				.error( function(data) {
+
 				});
 		}
 

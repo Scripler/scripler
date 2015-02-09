@@ -3,7 +3,12 @@ body, html { position: relative; width: 100%; height: 100%; overflow: hidden; fo
 
 /* Angular Cloak */
 [ng\:cloak], [ng-cloak], .ng-cloak {
-  display: none !important;
+	display: none !important;
+}
+
+/* Angular Animate */
+.ng-hide-add, .ng-hide-remove {
+	display: block !important;
 }
 
 /* Reset */
@@ -345,6 +350,30 @@ textarea {
 }*/
 .registration-button {
 	min-width: 100px;
+}
+.registration-missing-email {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -20px;
+	font-size: 80%;
+	cursor: pointer;
+	-webkit-transition: 1s linear all;
+	transition: 1s linear all;
+    opacity: 1;
+}
+.registration-missing-email.ng-hide {
+    opacity: 0;
+}
+.registration-missing-email:hover {
+	text-decoration: underline;
+}
+.registration-missing-email.not-link {
+	text-decoration: none;
+	cursor: default;
+}
+.registration-missing-email.not-link:hover {
+	color: white;
 }
 .registration-close-button {
 	position: absolute;
