@@ -417,19 +417,16 @@ exports.compile = function (req, res, next) {
 			return next(err);
 		}
 
-		var userEpubFilename = (req.project.metadata.title || req.project.name) + ".epub";
-		var saneTitle = sanitize(userEpubFilename);
-		var epubDownloadUrl = conf.resources.usersUrl + "/" + conf.epub.userDirPrefix + userId + "/" + req.project._id + '.epub';
-
 		// TODO: When a GUI design has been made, also return the EPUB validation result to client
-		res.send({url: epubDownloadUrl});
-
-		// Create a temporary file to avoid the second compile() call from the client, c.f. #483, trying to write to the same file while the EPUB checker has it open.
-		var tempFilename = path.join(conf.epub.tmpDir, uuid_lib.v4() + ".epub");
-		var tempFile = fs.createWriteStream(tempFilename);
-		epub.pipe(tempFile);
+		var userEpubDownloadUrl = conf.app.url_prefix + 'project/' + req.project._id + '/epub';
+		res.send({url: userEpubDownloadUrl});
 
 		if ('test' != env && conf.epub.validatorEnabled) {
+			// Create a temporary file to avoid the second compile() call from the client, c.f. #483, trying to write to the same file while the EPUB checker has it open.
+			var tempFilename = path.join(conf.epub.tmpDir, uuid_lib.v4() + ".epub");
+			var tempFile = fs.createWriteStream(tempFilename);
+			epub.pipe(tempFile);
+
 			tempFile.once('close', function() {
 				// The sending of the validation result email can happen after the response has been returned to the user but must happen on the temp file, c.f. comment above.
 				var fullPath = tempFilename;
@@ -442,6 +439,9 @@ exports.compile = function (req, res, next) {
 							errorMessage = error.code + ':\n' + error.stack;
 						}
 
+						var userEpubFilename = (req.project.metadata.title || req.project.name) + ".epub";
+						var saneTitle = sanitize(userEpubFilename);
+						var scriplerEpubDownloadUrl = conf.resources.usersUrl + "/" + conf.epub.userDirPrefix + userId + "/" + req.project._id + '.epub';
 						var authorName = req.user.firstname + " " + req.user.lastname;
 
 						logger.info('EPUB Validation Result');
@@ -464,7 +464,7 @@ exports.compile = function (req, res, next) {
 								{name: "USEREMAIL", content: req.user.email},
 								{name: "NAME", content: authorName},
 								{name: "EPUBTITLE", content: saneTitle},
-								{name: "EPUBURL", content: epubDownloadUrl},
+								{name: "EPUBURL", content: scriplerEpubDownloadUrl},
 								{name: "EPUBVALIDATIONRESULT", content: epubValidationResult},
 								{name: "ERROR", content: errorMessage}
 							],
@@ -484,13 +484,8 @@ exports.downloadEpub = function (req, res, next) {
 	var userEpubFullPath = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + req.user._id, req.project._id + '.epub');
 	var userEpubFilename = (req.project.metadata.title || req.project.name) + ".epub";
 	var saneTitle = sanitize(userEpubFilename);
-	res.download(userEpubFullPath, saneTitle, function(err){
-		if (err) {
-			return next(err);
-		} else {
-			logger.info(req.user.firstname + ' ' + req.user.lastname + ' (user' + req.user._id + ') downloaded ebook ' + saneTitle + ' (' + req.project._id + '.epub)');
-		}
-	});
+	res.download(userEpubFullPath, saneTitle);
+	logger.info(req.user.firstname + ' ' + req.user.lastname + ' (user' + req.user._id + ') downloaded ebook ' + saneTitle + ' (' + req.project._id + '.epub)');
 }
 
 exports.applyStyleset = function (req, res, next) {
