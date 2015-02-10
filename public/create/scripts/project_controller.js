@@ -652,13 +652,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$http.get('/project/' + $scope.pid + '/compile')
 					.success( function(data, status) {
 						if (data.url) {
-							window.location.href = data.url;
+							window.location.href = "/project/" + $scope.pid + "/epub";
 						} else {
-							console.log("error compiling, status ok, but return value is: " + JSON.stringify(data));
+							console.log("Error compiling, status ok, but return value is: " + JSON.stringify(data));
 						}
 					})
 					.error( function(status) {
-						console.log("error compiling, status: " + status);
+						console.log("Error compiling, status: " + status);
 					});
 			});
 		});
