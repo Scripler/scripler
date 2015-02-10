@@ -41,7 +41,7 @@
 		"validatorEnabled": false,
 		"validationResultEmail": "ebookresults@scripler.com",
 		"validatorPath": "test/epubcheck-3.0.1.jar",
-		"tmpDir": "./tmp/test/tmp"
+		"tmpDir": "/tmp/test/tmp"
 	},
 	"epub2": {
 		"oepbsDir": "OEBPS"
@@ -50,7 +50,7 @@
 		"epubDir": "EPUB"
 	},
 	"import": {
-		"uploadDir": "./tmp/test/uploads/",
+		"uploadDir": "/tmp/test/uploads/",
 		"uploadLimit": 104857600//100 MB (Nginx will have a lower limit)
 	},
 	"user": {
