@@ -86,6 +86,7 @@ module.exports = function (app, auth) {
 
 	/* API Output */
 	app.get('/project/:projectIdPopulatedFull/compile', auth.isLoggedIn(), project.compile);
+	app.get('/project/:projectId/epub', auth.isLoggedIn(), project.downloadEpub);
 
 	// API Parameters
 	app.param('projectId', function (req, res, next, id) {

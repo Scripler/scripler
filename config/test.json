@@ -10,10 +10,10 @@
 		"uri": "mongodb://localhost/scripler_test?connectTimeoutMS=10000"
 	},
 	"resources": {
-		"projectsDir": "./public/resources/projects",
-		"usersDir": "./public/resources/users",
-		"projectsUrl": "http://localhost:9092/resources/projects",
-		"usersUrl": "http://localhost:9092/resources/users"
+		"projectsDir": "./public/resources/projects/test",
+		"usersDir": "./public/resources/users/test",
+		"projectsUrl": "http://localhost:9092/resources/projects/test",
+		"usersUrl": "http://localhost:9092/resources/users/test"
 	},
 	"subscriptions": {
 		"free": {
@@ -37,7 +37,11 @@
 		"fontPrefix": "font_",
 		"imagePrefix": "img_",
 		"stylePrefix": "style_",
-		"anchorIdPrefix": "id_" // TODO: move somewhere the frontend can access it when generating anchors
+		"anchorIdPrefix": "id_", // TODO: move somewhere the frontend can access it when generating anchors
+		"validatorEnabled": false,
+		"validationResultEmail": "ebookresults@scripler.com",
+		"validatorPath": "test/epubcheck-3.0.1.jar",
+		"tmpDir": "./tmp/test/tmp"
 	},
 	"epub2": {
 		"oepbsDir": "OEBPS"
@@ -46,7 +50,7 @@
 		"epubDir": "EPUB"
 	},
 	"import": {
-		"uploadDir": "/tmp/scripler/test/uploads/",
+		"uploadDir": "./tmp/test/uploads/",
 		"uploadLimit": 104857600//100 MB (Nginx will have a lower limit)
 	},
 	"user": {

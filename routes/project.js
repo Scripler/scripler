@@ -417,31 +417,12 @@ exports.compile = function (req, res, next) {
 			return next(err);
 		}
 
-		// TODO: epub has been closed here ("readable: false") which explains why the files written are empty - what to do????
-
-		// The filename of the EPUB sent to the user must be the ebook's real name
 		var userEpubFilename = (req.project.metadata.title || req.project.name) + ".epub";
 		var saneTitle = sanitize(userEpubFilename);
-		var userEpubDownloadUrl = conf.resources.ebookUrl + "/" + saneTitle;
-		var userEpubFullPath = path.join(conf.epub.tmpDir, saneTitle);
-		console.log('userEpubFullPath: ' + userEpubFullPath);
-		var userEpubFile = fs.createWriteStream(userEpubFullPath);
-		epub.pipe(userEpubFile);
+		var epubDownloadUrl = conf.resources.usersUrl + "/" + conf.epub.userDirPrefix + userId + "/" + req.project._id + '.epub';
 
-		userEpubFile.on('finish', function() {
-			//console.log(epub);
-			//console.log(userEpubFile);
-			console.log('userEpubFile finish');
-		});
-
-		userEpubFile.on('close', function() {
-			console.log(epub);
-			//console.log(userEpubFile);
-			console.log('userEpubFile close');
-
-			// TODO: When a GUI design has been made, also return the EPUB validation result to client
-			res.send({url: userEpubDownloadUrl});
-		});
+		// TODO: When a GUI design has been made, also return the EPUB validation result to client
+		res.send({url: epubDownloadUrl});
 
 		// Create a temporary file to avoid the second compile() call from the client, c.f. #483, trying to write to the same file while the EPUB checker has it open.
 		var tempFilename = path.join(conf.epub.tmpDir, uuid_lib.v4() + ".epub");
@@ -477,16 +458,13 @@ exports.compile = function (req, res, next) {
 							lastname: "EPUB"
 						};
 
-						// It is not important that the name of the ebook in the validation status email sent to Scripler is nice
-						var scriplerEpubDownloadUrl = conf.resources.usersUrl + "/" + conf.epub.userDirPrefix + userId + "/" + req.project._id + '.epub';
-
 						emailer.sendUserEmail(
 							validationResultRecipient,
 							[
 								{name: "USEREMAIL", content: req.user.email},
 								{name: "NAME", content: authorName},
 								{name: "EPUBTITLE", content: saneTitle},
-								{name: "EPUBURL", content: scriplerEpubDownloadUrl},
+								{name: "EPUBURL", content: epubDownloadUrl},
 								{name: "EPUBVALIDATIONRESULT", content: epubValidationResult},
 								{name: "ERROR", content: errorMessage}
 							],
@@ -500,6 +478,19 @@ exports.compile = function (req, res, next) {
 		}
 	});
 
+}
+
+exports.downloadEpub = function (req, res, next) {
+	var userEpubFullPath = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + req.user._id, req.project._id + '.epub');
+	var userEpubFilename = (req.project.metadata.title || req.project.name) + ".epub";
+	var saneTitle = sanitize(userEpubFilename);
+	res.download(userEpubFullPath, saneTitle, function(err){
+		if (err) {
+			return next(err);
+		} else {
+			logger.info(req.user.firstname + ' ' + req.user.lastname + ' (user' + req.user._id + ') downloaded ebook ' + saneTitle + ' (' + req.project._id + '.epub)');
+		}
+	});
 }
 
 exports.applyStyleset = function (req, res, next) {
