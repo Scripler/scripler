@@ -237,8 +237,8 @@
 	text-align: center;
 	overflow: hidden;
 }
-[selected] {
-	background-color: #c3c3c3 !important;
+.projectDocument.selected {
+	border: 2px solid #000;
 }
 
 .projectdocument-options-show, .styleset-options-show, .style-options-show {

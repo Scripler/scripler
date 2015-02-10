@@ -179,6 +179,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				var index = $scope.projectDocuments.indexOf( projectDocument );
 				$scope.projectDocuments[index] = data.document;
 				$scope.documentSelected = data.document;
+				$scope.showProjectDocument(data.document._id);
 				lastSavedDocumentLength = data.document.text.length;
 
 				if ( !$scope.documentWatch ) {
@@ -420,6 +421,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				});
 		} else {
 			//TODO save to localstorage
+		}
+	};
+
+	$scope.selectedProjectDocument = -1;
+	$scope.showProjectDocument = function ($index) {
+		if ($index != $scope.selectedProjectDocument) {
+			$scope.selectedProjectDocument  = $index;
 		}
 	};
 

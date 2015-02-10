@@ -18,7 +18,7 @@
 			<p>+</p>
 		</div>
 		<div html-sortable="sortable_option" data-ng-model="projectDocuments">
-			<div class="projectDocument" data-ng-repeat="projectDocument in projectDocuments track by projectDocument._id" data-ng-selected="documentSelected === projectDocument" data-ng-hide="projectDocument.archived && !user.showArchivedDocuments" data-ng-class="{ 'archived' : projectDocument.archived }">
+			<div class="projectDocument" data-ng-repeat="projectDocument in projectDocuments track by projectDocument._id" data-ng-click="showProjectDocument(projectDocument._id)" data-ng-hide="projectDocument.archived && !user.showArchivedDocuments" data-ng-class="{ 'archived' : projectDocument.archived, 'selected' : selectedProjectDocument == projectDocument._id }">
 				<a class="projectdocument-options-show" data-ng-class="{ 'open' : $index == selectedProjectDocumentOptions }" data-ng-click="showProjectDocumentOptions($index)">
 					<div class="arrow"></div>
 				</a>
