@@ -312,9 +312,8 @@ app.directive('focusOn', function( $timeout, $parse ) {
 app.directive('blurOnEnter', function() {
 	return function(scope, element, attributes) {
 		element.bind("keydown keypress", function( event ) {
-			event.preventDefault();
-
 			if(event.which === 13) {
+				event.preventDefault();
 				element[0].blur();
 			};
 		});
