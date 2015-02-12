@@ -318,6 +318,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.updateProjectDocument = function() {
+		var deferred = $q.defer();
 		var document = angular.copy( $scope.documentSelected );
 		lastSavedDocumentLength = document.text.length;
 		document.text = $scope.ck.getData();
@@ -331,7 +332,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					var minutes = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
 					var seconds = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds();
 					$scope.lastSaved = 'Last saved: ' + now.getDate() + '/' + now.getMonth() + '/' + now.getFullYear() + ' ' + hours + ':' + minutes + ':' + seconds;
+					deferred.resolve();
 				});
+
+				return deferred.promise;
 		} else {
 			//TODO save to localstorage
 		}
@@ -653,8 +657,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.exportEpub = function() {
 		var getTocPromise = $scope.getToc();
+		var updateProjectDocumentPromise = $scope.updateProjectDocument();
 
-		getTocPromise.then(function () {
+		$q.all([getTocPromise, updateProjectDocumentPromise]).then(function () {
 			var setTocPromise = $scope.setToc();
 			setTocPromise.then(function () {
 				$http.get('/project/' + $scope.pid + '/compile')
