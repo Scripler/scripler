@@ -293,7 +293,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						}
 
 						$scope.openProjectDocument( data.document );
-						$scope.showLeftMenu('contents');
+						$scope.showLeftMenu('contents', true);
 					} 
 					else{
 
