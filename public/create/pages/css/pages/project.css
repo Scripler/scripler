@@ -703,3 +703,8 @@ li.typo .style-copy-options p {
 .left-menu-options .menu-box .anchor-name{
 	width:100%;
 }
+
+#anchorInputBox{
+	border: none;
+	background: #fff;
+}
