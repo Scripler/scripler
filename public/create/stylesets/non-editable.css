@@ -117,12 +117,7 @@ content: close-quote;
 	margin-bottom: -1%; 
 	page-break-inside: avoid;	 
 }
-
-body.cover {
-	font-style:normal;
-	font-weight:400;
-	src : url("Fonts/voltaireregular.ttf");
-}
+ 
 
 /*PARAGRAPH RULES*/
 
