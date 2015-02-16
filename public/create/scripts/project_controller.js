@@ -1556,14 +1556,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 
-
-	$scope.$watch('showInsert', function( newValue ) {
-		if ( newValue === true ) {
-			$scope.getToc();
-		}
-	});
-
-
 	$scope.$watch('linkAnchor', function( newValue, oldValue ) {
 		if ( newValue !== oldValue ) {
 			$scope.linkAddress = newValue.target;

@@ -705,6 +705,6 @@ li.typo .style-copy-options p {
 }
 
 #anchorInputBox{
-	border: 0px solid #fff;
+	border: none;
 	background: #fff;
 }
