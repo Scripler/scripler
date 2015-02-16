@@ -9,7 +9,7 @@ footer, header, hgroup, menu, nav, section {
 }
 
 body#scripler {
-	margin:0.5em;
+	margin:1%;
 /*Margin is added to body to avoid text being directly on the edge of ebook-readers taking css seriously (which is increasingly few - I'm looking at you apple). But just a litte, to preserve screen estate in most usage scenarios. But it might conflict with e.g. wanting to define a backgroundcolor edge to edge ...*/
 }
 
@@ -107,15 +107,21 @@ content: close-quote;
 }
 
 /*Cover image css*/
-#scripler .cover {
-	width: 100%;
-	margin:0;
+ 
+.cover { 
+	width:102%; 
 	height: auto;
-	page-break-inside:avoid;
+	margin-left: -1%;
+	margin-right: -1%;
+	margin-top: -1%;
+	margin-bottom: -1%; 
+	page-break-inside: avoid;	 
 }
 
 body.cover {
-	margin:0;
+	font-style:normal;
+	font-weight:400;
+	src : url("Fonts/voltaireregular.ttf");
 }
 
 /*PARAGRAPH RULES*/
