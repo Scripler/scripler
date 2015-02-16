@@ -2,23 +2,23 @@
 <link rel="stylesheet" type="text/css" href="pages/css/shared/angucomplete-alt.css"/>
 
 <div id="menu-left-tabs" class="menu-tabs left full-height" ondragstart="return false;" ondrop="return false;">
-	<div class="menu-tab" data-ng-class="{ 'selectedTab' : showDocuments }" data-ng-click="showDocuments = !showDocuments; showTypo = false; showInsert = false;">
+	<div class="menu-tab" data-ng-class="{ 'selectedTab' : leftMenuShowItem == 'contents' }" data-ng-click="showLeftMenu('contents');">
 		<img src="pages/images/contents.svg" width="20">
 	</div>
-	<div class="menu-tab" data-ng-class="{ 'selectedTab' : showTypo }" data-ng-click="showTypo = !showTypo; hideStyleEditor(); showDocuments = false; showInsert = false; selectedStyle = null; focusEditor();">
+	<div class="menu-tab" data-ng-class="{ 'selectedTab' : leftMenuShowItem == 'design' }" data-ng-click="showLeftMenu('design'); hideStyleEditor(); selectedStyle = null; focusEditor();">
 		<img src="pages/images/design.svg" width="20">
 	</div>
-	<div class="menu-tab" data-ng-class="{ 'selectedTab' : showInsert }" data-ng-click="showInsert = !showInsert; showDocuments = false; showTypo = false;">
+	<div class="menu-tab" data-ng-class="{ 'selectedTab' : leftMenuShowItem == 'insert' }" data-ng-click="showLeftMenu('insert');">
 		<img src="pages/images/insert.svg" width="20">
 	</div>
 </div>
-<div id="menu-left" class="menu-left full-height" data-ng-class="{ 'open' : showDocuments || showTypo || showInsert, 'bottom-menu-space' : showDocuments || showTypo }">
-	<div class="menu-item-left documents" data-ng-show="showDocuments">
+<div id="menu-left" class="menu-left full-height" data-ng-class="{ 'open' : leftMenuShow, 'bottom-menu-space' : leftMenuShowItem == 'contents' || leftMenuShowItem == 'design', 'open-small' : showNewOptions || showBottomOptions, 'open-big' : showImportOptions }">
+	<div class="menu-item-left" data-ng-show="leftMenuShowItem == 'contents'">
 		<div class="projectDocument new" data-ng-click="addProjectDocument();">
 			<p>+</p>
 		</div>
 		<div html-sortable="sortable_option" data-ng-model="projectDocuments">
-			<div class="projectDocument" data-ng-repeat="projectDocument in projectDocuments track by projectDocument._id" data-ng-selected="documentSelected === projectDocument" data-ng-hide="projectDocument.archived && !user.showArchivedDocuments" data-ng-class="{ 'archived' : projectDocument.archived }">
+			<div class="projectDocument" data-ng-repeat="projectDocument in projectDocuments track by projectDocument._id" data-ng-click="showProjectDocument(projectDocument._id)" data-ng-hide="projectDocument.archived && !user.showArchivedDocuments" data-ng-class="{ 'archived' : projectDocument.archived, 'selected' : selectedProjectDocument == projectDocument._id }">
 				<a class="projectdocument-options-show" data-ng-class="{ 'open' : $index == selectedProjectDocumentOptions }" data-ng-click="showProjectDocumentOptions($index)">
 					<div class="arrow"></div>
 				</a>
@@ -31,7 +31,7 @@
 
 				<form data-ng-show="projectDocument.editingProjectDocumentTitle">
 					<p>
-						<textarea class="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!projectDocument.editingProjectDocumentTitle" on-enter="projectDocument.editingProjectDocumentTitle = false;" data-ng-blur="renameProjectDocument(projectDocument); projectDocument.editingProjectDocumentTitle = false;"></textarea>
+						<textarea class="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!projectDocument.editingProjectDocumentTitle" blur-on-enter data-ng-blur="renameProjectDocument(projectDocument); projectDocument.editingProjectDocumentTitle = false;"></textarea>
 					</p>
 				</form>
 
@@ -44,7 +44,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="menu-item-left" data-ng-show="showTypo">
+	<div class="menu-item-left" data-ng-show="leftMenuShowItem == 'design'">
 		<div class="typo new" data-ng-click="addNewStyleset()">
 			<p>+</p>
 		</div>
@@ -58,7 +58,7 @@
 
 				<form data-ng-show="styleset.editingStyleSetTitle">
 					<p>
-						<textarea class="renameStyleset" rows="1" data-ng-model="styleset.name" focus-on="!!styleset.editingStyleSetTitle" on-enter="styleset.editingStyleSetTitle = false;" data-ng-blur="styleset.editingStyleSetTitle = false; renameStyleset(styleset);"></textarea>
+						<textarea class="renameStyleset" rows="1" data-ng-model="styleset.name" focus-on="!!styleset.editingStyleSetTitle" blur-on-enter data-ng-blur="styleset.editingStyleSetTitle = false; renameStyleset(styleset);"></textarea>
 					</p>
 				</form>
 
@@ -71,7 +71,7 @@
 
 				<ul data-ng-show="typoChildrenVisible || isDefaultStyleset(styleset)" class="typo-children">
 					<li data-ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" data-ng-hide="style.archived || style.hidden" data-ng-selected="selectedStyle._id === style._id" class="typo-children-style">
-						<a class="style-options-show" data-ng-click="showStylesetOptions($index)" data-ng-class="{ 'open' : $index == selectedStylesetOptions }">
+						<a class="style-options-show" data-ng-click="showStylesetChildOptions($parent.$index, $index)" data-ng-class="{ 'open' : $parent.$index == selectedStylesetParentOptions && $index == selectedStylesetChildOptions }">
 							<div class="arrow"></div>
 						</a>
 
@@ -89,10 +89,10 @@
 						</div>
 
 						<form data-ng-show="style.editingStyleTitle">
-							<textarea class="renameStyle" rows="1" data-ng-model="style.name" focus-on="!!style.editingStyleTitle" on-enter="style.editingStyleTitle = false;" data-ng-blur="style.editingStyleTitle = false; updateStyle(style);"></textarea>
+							<textarea class="renameStyle" rows="1" data-ng-model="style.name" focus-on="!!style.editingStyleTitle" blur-on-enter data-ng-blur="style.editingStyleTitle = false; updateStyle(style);"></textarea>
 						</form>
 
-						<div class="style-options" data-ng-show="$index == selectedStylesetOptions">
+						<div class="style-options" data-ng-show="$parent.$index == selectedStylesetParentOptions && $index == selectedStylesetChildOptions">
 							<div class="style-options-menupoint first" data-ng-click="style.editingStyleTitle = true; hideStylesetOptions();">Rename</div>
 							<!--<div class="style-options-menupoint" data-ng-click="archiveStyle(style); hideStylesetOptions();">archive</div>-->
 						</div>
@@ -102,7 +102,7 @@
 			</li>
 		</ul>
 	</div>
-	<div class="menu-item-left inserts" data-ng-show="showInsert">
+	<div class="menu-item-left" data-ng-show="leftMenuShowItem == 'insert'">
 		<ul>
 			<!--<li data-ng-click="insertOptionChosen('showInsertBoxOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
 				<img src="pages/images/insert_box_button.png" alt="" title="" />
@@ -126,7 +126,7 @@
 						<input type="text" data-ng-model="linkAddress" placeholder="Target">
 					</span>
 					<span class="menu-box inputfield full-size left-menu-parameter-margin">
-						<input type="text" data-ng-model="linkText" placeholder="Text">
+						<input id="hyperlinkInputBox" type="text" data-ng-model="linkText" placeholder="Text">
 					</span>
 					<span class="menu-box inputfield full-size left-menu-parameter-margin">
 						<select data-ng-model="linkAnchor" data-ng-options="anchor.text for anchor in toc">
@@ -134,7 +134,7 @@
 						</select>
 					</span>
 					<span class="left-menu-button full-size left-menu-parameter-margin">
-						<a data-ng-click="insertNewLink();">+</a>
+						<a class="anchor-link" data-ng-click="insertNewLink();">+</a>
 					</span>
 				</div>
 			</li>
@@ -222,11 +222,11 @@
 			<!--<li class="insertOption"><img src="pages/images/insert_cover_button.png" width="80" height="80"></li>-->
 			<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
 				<div class="left-menu-options">
-					<span class="menu-box inputfield">
-						<input type="text" data-ng-model="anchorName" placeholder="Anchor name">
+					<span class="menu-box">
+						<input id="anchorInputBox" type="text" data-ng-model="anchorName" placeholder="Anchor name" class="anchor-name">
 					</span>
-					<span class="left-menu-button">
-						<a data-ng-click="insertNewAnchor();">+</a>
+					<span class="left-menu-button anchor-button">
+						<a class="anchor-link" data-ng-click="insertNewAnchor();">+</a>
 					</span>
 
 					<span class="menu-box left-menu-parameter-margin">
@@ -239,17 +239,17 @@
 			</li>-->
 		</ul>
 	</div>
-	<div class="documents-options-bottom-buttons bottom-fixed" data-ng-show="showDocuments">
+	<div class="documents-options-bottom-buttons" data-ng-show="leftMenuShowItem == 'contents'">
 		<a data-ng-class="{ 'open' : showNewOptions }" data-ng-click="showNewOptions = !showNewOptions; showImportOptions = false; showBottomOptions = false;">New</a>
 		<a data-ng-class="{ 'open' : showImportOptions }" data-ng-click="showImportOptions = !showImportOptions; showNewOptions = false; showBottomOptions = false;">Import</a>
 		<a class="last" data-ng-class="{ 'open' : showBottomOptions }" data-ng-click="showBottomOptions = !showBottomOptions; showNewOptions = false; showImportOptions = false;">Options</a>
 	</div>
 
-	<div class="stylesets-options-bottom-buttons bottom-fixed" data-ng-show="showTypo">
+	<div class="stylesets-options-bottom-buttons" data-ng-show="leftMenuShowItem == 'design'">
 		<a data-ng-click="showStyleEditor()" data-ng-class="{ 'open' : styleEditorVisible }">Style editor</a>
 	</div>
 
-	<div id="menu-left-content-options" class="menu-options bottom-fixed" data-ng-show="showDocuments" data-ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
+	<div id="menu-left-content-options" class="menu-options" data-ng-show="leftMenuShowItem == 'contents' && (showNewOptions || showImportOptions || showBottomOptions)">
 		<div class="options-bottom-box">
 			<div data-ng-show="showNewOptions">
 				<a data-ng-click="addProjectDocument()">New chapter</a><br>
@@ -267,7 +267,7 @@
 	</div>
 </div>
 
-<div class="editor information" data-ng-class="{ 'menu-extended' : showDocuments || showTypo || showInsert || showFinalizeOptions || showOutput }">
+<div class="editor information" data-ng-class="{ 'menu-extended' : leftMenuShow || rightMenuShow }">
 	<p class="breadcrumb">
 		<a class="breadcrumb" href="#">Ebooks</a> / <span data-ng-bind="project.name"></span> / <span data-ng-bind="documentSelected.name"></span>
 	</p>
@@ -278,24 +278,24 @@
 	<div style="clear: both;"></div>
 </div>
 
-<div class="editor content" data-ng-class="{ 'menu-extended' : showDocuments || showTypo || showInsert || showFinalizeOptions || showOutput }">
+<div class="editor content" data-ng-class="{ 'menu-extended' : leftMenuShow || rightMenuShow }">
 	<div id="toolbar-area" class="toolbar-area"></div>
 	<textarea ck-editor="" data-ng-model="documentSelected.text" class="form-control" id="bodyeditor"></textarea>
 </div>
 
 <div id="menu-right-tabs" class="menu-tabs right full-height" ondragstart="return false;" ondrop="return false;">
-	<div class="menu-tab one-third-height" data-ng-class="{ 'selectedTab' : showFinalizeOptions }" data-ng-click="showFinalizeOptions = !showFinalizeOptions; showOutput = false;">
+	<div class="menu-tab" data-ng-class="{ 'selectedTab' : rightMenuShowItem == 'finalize' }" data-ng-click="showRightMenu('finalize');">
 		<img src="pages/images/finalize.svg" width="20" />
 	</div>
-	<div class="menu-tab output one-third-height" data-ng-class="{ 'selectedTab' : showOutput }" data-ng-click="showOutput = !showOutput; showFinalizeOptions = false;">
+	<div class="menu-tab" data-ng-class="{ 'selectedTab' : rightMenuShowItem == 'output' }" data-ng-click="showRightMenu('output')">
 		<img src="pages/images/output.svg" width="20" />
 	</div>
-	<div class="menu-tab feedback one-third-height" data-ng-click="openFeedback()">
+	<div class="menu-tab feedback" data-ng-click="openFeedback()">
 		<img src="pages/images/feedback.svg" width="20" />
 	</div>
 </div>
-<div id="menu-right" class="menu-right" data-ng-class="{ 'open' : showFinalizeOptions || showOutput }">
-	<div class="menu-item-right inserts" data-ng-show="showFinalizeOptions">
+<div id="menu-right" class="menu-right" data-ng-class="{ 'open' : rightMenuShow }">
+	<div class="menu-item-right" data-ng-show="rightMenuShowItem == 'finalize'">
 		<ul>
 			<li data-ng-click="finalizeOptionChosen('showFinalizeCoverOptions');" class="insertOption first" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
 				<img src="pages/images/insert_cover.png" alt="Add cover image" title="Add cover image" />
@@ -363,7 +363,7 @@
 			</li>
 		</ul>
 	</div>
-	<div class="menu-item-right output" data-ng-show="showOutput">
+	<div class="menu-item-right" data-ng-show="rightMenuShowItem == 'output'">
 		<ul>
 		<li class="outputOptionProperties">
 			<span class="menu-box label">Title</span>

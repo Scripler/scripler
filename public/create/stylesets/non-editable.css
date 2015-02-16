@@ -8,7 +8,7 @@ footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 
-#scripler body {
+body#scripler {
 	margin:1%;
 /*Margin is added to body to avoid text being directly on the edge of ebook-readers taking css seriously (which is increasingly few - I'm looking at you apple). But just a litte, to preserve screen estate in most usage scenarios. But it might conflict with e.g. wanting to define a backgroundcolor edge to edge ...*/
 }

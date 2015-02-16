@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload', 'angucomplete-alt', 'ngProgress', 'utilsSharedModule' ] );
+var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'ngAnimate', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload', 'angucomplete-alt', 'ngProgress', 'utilsSharedModule' ] );
 
 app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope', 'utilsService',
 	function( $http, $scope, userService, $rootScope, utilsService) {
@@ -9,11 +9,11 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		$scope.errors.email = 'Email is invalid';
 		$scope.errors.password = 'Six characters minimum';
 		$scope.registrationText = 'Hey, stranger. Register to save your work!';
+		$scope.verificationEmailSent = false;
 		$scope.socialRegistrationText = 'or use:';
 		$scope.EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+		$scope.showRegistrationInfoBar = true;
 		$scope.user = {};
-		$scope.showBottomRegistrationBar = true;
 
 		$scope.$onRootScope('user:updated', function( event, user ) {
 			if (user.isDemo) {
@@ -46,6 +46,16 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 					}
 				});
 		});
+
+		// TODO: this check should include if user.emailVerified and user.isDemo
+		$scope.showRegistrationBar = function(status) {
+			if ( status == 'hide' ) {
+				$scope.showRegistrationInfoBar = false;
+			}
+			else {
+				$scope.showRegistrationInfoBar = true;	
+			}
+		};
 
 		$scope.$onRootScope('ckDocument:dataReady', function( event ) {
 			var editableBody = document.getElementById('cke_bodyeditor');
@@ -92,7 +102,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		}
 
 		$scope.registerUser = function(user, next) {
-			$http.post( '/user/register', angular.toJson( user ) )
+			$http.post('/user/register', angular.toJson( user ) )
 				.success( function( data ) {
 					$http.post('/user/login/', angular.toJson( user ) )
 						.success( function( data ) {
@@ -101,6 +111,15 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				})
 				.error( function( data ) {
 					next(data.errorDetails || 'Could not register user');
+				});
+		}
+		$scope.resendUserVerificationEmail = function() {
+			$http.post('/user/resend-verify-email')
+				.success( function(data) {
+					$scope.verificationEmailSent = true;
+				})
+				.error( function(data) {
+
 				});
 		}
 
@@ -290,17 +309,15 @@ app.directive('focusOn', function( $timeout, $parse ) {
 	};
 });
 
-app.directive('onEnter', function() {
-	return function( scope, element, attrs ) {
+app.directive('blurOnEnter', function() {
+	return function(scope, element, attributes) {
 		element.bind("keydown keypress", function( event ) {
 			if(event.which === 13) {
-				scope.$apply(function(){
-				scope.$eval(attrs.onEnter, {'event': event});
-			});
 				event.preventDefault();
-			}
+				element[0].blur();
+			};
 		});
-	};
+	}
 });
 
 app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
