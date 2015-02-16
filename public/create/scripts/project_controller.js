@@ -585,11 +585,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	};
 
-	$scope.$watch('leftMenuShowItem', function( newValue ) {
-		if( newValue=='insert' ){
+	$scope.$watch(function(leftMenuShowItem) {
+		if( $scope.leftMenuShowItem=='insert' ){
 			var selectedContent = returnSelectedContent();
 			updateInputFields(selectedContent);
-			$scope.getToc();
 		}
 	});
 
@@ -1326,7 +1325,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.insertNewAnchor = function() {
 		var id = 'id_' + Date.now();
 		var type = "anchor";
-		var insert = '<a id="' + id + '" name="" title=""></a>';
+		var insert = '<a id="' + id + '" name="name" title="title"></a>';
 		editorInsert( insert, type );
 		$scope.updateProjectDocument();
 		$scope.getToc();
@@ -1534,7 +1533,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		
 		if(type=="anchor"){
 			if($scope.anchorName)title=$scope.anchorName;
-			insert = insert.replace('title=""', 'title="' + title + '"').replace('name=""', 'name="' + title + '"');
+			insert = insert.replace('title="title"', 'title="' + title + '"').replace('name="name"', 'name="' + title + '"');
 			var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
 		}
 		else if(type="link"){
@@ -1555,6 +1554,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		range.select();
 		$scope.updateProjectDocument();
 	}
+
+
+
+	$scope.$watch('showInsert', function( newValue ) {
+		if ( newValue === true ) {
+			$scope.getToc();
+		}
+	});
+
 
 	$scope.$watch('linkAnchor', function( newValue, oldValue ) {
 		if ( newValue !== oldValue ) {
