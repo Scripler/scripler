@@ -585,12 +585,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	};
 
-	$scope.$watch(function(leftMenuShowItem) {
-		if( $scope.leftMenuShowItem=='insert' ){
-			var selectedContent = returnSelectedContent();
-			updateInputFields(selectedContent);
-		}
-	});
 
 	$scope.$watch('rightMenuShowItem', function( newValue ) {
 		if( newValue=='finalize' ){
@@ -1519,10 +1513,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return selectedContent;
 	}
 
-	function updateInputFields(content) {
-		   document.getElementById("anchorInputBox").value = content;
-		   document.getElementById("hyperlinkInputBox").value = content;
+	function updateInputFields() {
+		if( $scope.leftMenuShowItem=='insert' ){
+			var content = returnSelectedContent();
+			document.getElementById("anchorInputBox").value = content;
+		   	document.getElementById("hyperlinkInputBox").value = content;
 		}
+	}
 
 	function editorInsert( insert, type ) {
 		var editor = getEditor();
@@ -1737,6 +1734,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					$scope.$apply();
 				}
 			}
+
+			updateInputFields();
 
 		}, this );
 
