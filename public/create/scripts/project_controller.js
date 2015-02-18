@@ -1269,6 +1269,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		else {
 			$scope.activeInsertOption = insertoption;
 		}
+		$rootScope.ck.focus();
 	}
 
 	$scope.insertImageOption = function(imageoption) {
@@ -1278,6 +1279,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		else {
 			$scope.activeImageOption = imageoption;
 		}
+		$rootScope.ck.focus();
 	}
 
 	$scope.finalizeOptionChosen = function( finalizeOption ) {
@@ -1286,6 +1288,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		} else {
 			$scope.activeFinalizeOption = finalizeOption;
 		}
+		$rootScope.ck.focus();
 	}
 
 	$scope.scrollToToc = function( tocEntry ) {
@@ -1316,7 +1319,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
-	$scope.insertNewAnchor = function() {
+	$scope.insertNewAnchor = function(){
 		var id = 'id_' + Date.now();
 		var type = "anchor";
 		var insert = '<a id="' + id + '" name="name" title="title"></a>';
