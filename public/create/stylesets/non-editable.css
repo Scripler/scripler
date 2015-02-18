@@ -108,7 +108,7 @@ content: close-quote;
 
 /*Cover image css*/
  
-.cover { 
+#scripler .cover { 
 	width:102%; 
 	height: auto;
 	margin-left: -1%;
