@@ -235,20 +235,22 @@ app.config( function( $routeProvider, $httpProvider, $provide ) {
 		.otherwise({ redirectTo:'/' });
 });
 app.filter('titleFilter', function () {
-    return function (input, chars, isVisited) {
+    return function (input, chars) {
         if (isNaN(chars)) {
             return input;
         }
         if (chars <= 0) {
             return '';
         } 
-       if (input && input.length > chars) {
+        if (input && input.length > chars) {
             input = input.substring(0, chars); 
             while (input.charAt(input.length - 1) === ' ' || input.charAt(input.length - 1) === '.' || input.charAt(input.length - 1) === ',') {
                 input = input.substr(0, input.length - 1);
             }
-            return input + '(…s)';
-        } 
+
+            return input + '(…)';
+        }
+
         return input;
     };
 })

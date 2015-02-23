@@ -6,31 +6,14 @@ function projectSpaceController($scope, $http, projectsService, userService, $q,
     $scope.frontpage = $location.host();
     if ($scope.user != undefined) {
         $scope.projects = projectsService.getList($scope.user);
-
     }
-    $scope.titleVisited = false;
     $scope.selectedIndex = -1;
-
-    angular.element(document).ready(function() {
-        $scope.$watchCollection('projects', function(newp, oldp) {
-            var pLen = newp.length;
-            if (pLen !== 0) {
-                angular.forEach([].concat($scope.projects), function(project, index) {
-                    project.nameTooLong = (project.name.length > 35); 
-                }); 
-            }
-        });
-    });
 
     $scope.showTitle = function(index) { 
         $scope.selectedIndex = index;
-         $scope.titleVisited = true;
-        console.log(index); 
     };
     $scope.hideTitle = function(index) { 
         $scope.selectedIndex = -1;
-         $scope.titleVisited = false;
-        console.log(index); 
     }; 
   
     $scope.changePassword = function() {

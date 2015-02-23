@@ -76,11 +76,13 @@
 						<div class="arrow"></div>
 					</a>
 					<!--<p data-ng-hide="editingProjectTitle" data-ng-click="editingProjectTitle = true;">-->
-					<p  ng-mouseenter="showTitle($index)" ng-mouseleave="hideTitle($index)"  data-ng-hide="editingProjectTitle">
-						<a  href="#/project?pid={{project._id}}" class="wholeTitle" ng-class="{isVisited:$index==selectedIndex}">
-                     {{project.name}}
+					<p  data-ng-mouseenter="showTitle($index)" data-ng-mouseleave="hideTitle($index)"  data-ng-hide="editingProjectTitle">
+						<a  href="#/project?pid={{project._id}}" class="wholeTitle" data-ng-class="{isVisited:$index==selectedIndex}">
+							{{project.name}}
                     	</a>
-						<a href="#/project?pid={{project._id}}"  class="project-link">{{project.name | titleFilter:29:project.nameTooLong }}</a> 
+						<a href="#/project?pid={{project._id}}"  class="project-link">
+							{{project.name | titleFilter:29 }}
+						</a>
 						<img alt="" src="pages/images/ebook.svg">
 					</p>
 
