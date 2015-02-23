@@ -234,7 +234,24 @@ app.config( function( $routeProvider, $httpProvider, $provide ) {
 		.when('/error', { templateUrl:'pages/error.html' })
 		.otherwise({ redirectTo:'/' });
 });
-
+app.filter('titleFilter', function () {
+    return function (input, chars, isVisited) {
+        if (isNaN(chars)) {
+            return input;
+        }
+        if (chars <= 0) {
+            return '';
+        } 
+       if (input && input.length > chars) {
+            input = input.substring(0, chars); 
+            while (input.charAt(input.length - 1) === ' ' || input.charAt(input.length - 1) === '.' || input.charAt(input.length - 1) === ',') {
+                input = input.substr(0, input.length - 1);
+            }
+            return input + '(…s)';
+        } 
+        return input;
+    };
+})
 app.service('projectsService', function( $http, $q ) {
 	var projects = [];
 	return {

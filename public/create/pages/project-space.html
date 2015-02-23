@@ -71,13 +71,16 @@
 					<p class="project-new-sign">+</p>
 					<img alt="" src="pages/images/ebook.svg">
 				</div>
-				<div class="project" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index">
+				<div class="project" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index ">
 					<a class="project-options-show" data-ng-class="{ 'open' : showProjectOptions }" data-ng-click="showProjectOptions = !showProjectOptions">
 						<div class="arrow"></div>
 					</a>
 					<!--<p data-ng-hide="editingProjectTitle" data-ng-click="editingProjectTitle = true;">-->
-					<p data-ng-hide="editingProjectTitle">
-						<a href="#/project?pid={{project._id}}" id="link{{$index}}" class="project-link">{{project.name}}</a>
+					<p  ng-mouseenter="showTitle($index)" ng-mouseleave="hideTitle($index)"  data-ng-hide="editingProjectTitle">
+						<a  href="#/project?pid={{project._id}}" class="wholeTitle" ng-class="{isVisited:$index==selectedIndex}">
+                     {{project.name}}
+                    	</a>
+						<a href="#/project?pid={{project._id}}"  class="project-link">{{project.name | titleFilter:29:project.nameTooLong }}</a> 
 						<img alt="" src="pages/images/ebook.svg">
 					</p>
 
@@ -105,6 +108,8 @@
 				</div>
 			</div>
 		</section>
+
+	 
 	</div>
 </div>
 
