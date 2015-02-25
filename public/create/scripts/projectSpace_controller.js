@@ -8,6 +8,15 @@ function projectSpaceController($scope, $http, projectsService, userService, $q,
 		$scope.projects = projectsService.getList( $scope.user );
 	}
 
+	$scope.selectedIndex = -1;
+
+    $scope.showTitle = function(index) { 
+        $scope.selectedIndex = index;
+    };
+    $scope.hideTitle = function(index) { 
+        $scope.selectedIndex = -1;
+    }; 
+	
 	$scope.changePassword = function() {
 		$scope.passwordSubmitted = true;
 

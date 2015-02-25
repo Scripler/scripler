@@ -120,16 +120,41 @@
 .project-archived {
 	opacity: 0.5;
 }
-.project-link {
-	position: absolute;
-	top: 0;
-	left: 6px;
-	text-align: center;
-	padding: 30px 5px 5px;
-	width: 75px;
-	height: 110px;
-}
 
+a.project-link {
+	left: 0;
+	background-color: white;
+	position: absolute;
+	z-index: 4;
+	text-align: center;
+	margin-top:30px;
+	margin-left:5px;
+	width:75%;
+	height: 62%;
+	overflow:hidden;
+	word-wrap: break-word; 
+}
+ 
+.wholeTitle{
+	margin-top:30px;
+	overflow:hidden;
+	position:absolute;
+	left:0;
+	z-index: 3;
+	width:75%;
+	height: 61%;
+	margin-left:5px;
+	word-wrap: break-word;
+	text-align: center;
+	background-color: white;
+
+} 
+.isVisited{
+	z-index: 5;
+	height: auto;
+    overflow:auto;
+}
+ 
 .filter-sort, .filter-search {
 	position: relative;
 }
