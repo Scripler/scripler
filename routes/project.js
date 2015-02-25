@@ -571,24 +571,16 @@ exports.compile = function(req, res, next) {
 
 }
 
-exports.applyStyleset = function(req, res, next) {
-  
-    var stylesetToApply = req.styleset;
-    req.project.styleset = stylesetToApply;
+exports.applyStyleset = function(req, res, next) { 
+    var stylesetToApply = req.styleset;  
     var level = req.user.level;
-   	var stylesetCopies=[];
-
-
-    var apply = function(document, callback) {
-
+   	var stylesetCopies=[]; 
+    var apply = function(document, callback) { 
         document_utils.applyStylesetToDocument(document, stylesetToApply, level, function(err, populatedStyleset) {
             if (err) {
                 return callback(err);
-            } else {
-           
-            stylesetCopies.push({ document:document, styleset: populatedStyleset});
-           // console.log( populatedStyleset);
-           //console.log(stylesetCopies[stylesetCopies.length-1].styleset._id);
+            } else { 
+            stylesetCopies.push({ document:document, styleset: populatedStyleset}); 
             callback();
         	}
         });
@@ -598,8 +590,7 @@ exports.applyStyleset = function(req, res, next) {
         if (err) {
             return next(err);
         }
-        else{
-       
+        else{ 
         req.project.save(function(err) {
             if (err) {
             	 console.log('something went wrong');

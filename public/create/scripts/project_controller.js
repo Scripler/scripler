@@ -160,12 +160,8 @@ function projectController($scope, $location, userService, projectsService, $htt
                     if ($scope.timeout) {
                         $timeout.cancel($scope.timeout)
                     }
-                }
-
-                $scope.timeout = $timeout($scope.updateProjectDocument, secondsToWait * 1000);
-                //$scope.ck.document.getBody().addClass('cover');
-                 console.log('FU1'+ $scope.ck.document);
-                //console.log('FU'+$ scope.ck.document.$.document.body);
+                } 
+                $scope.timeout = $timeout($scope.updateProjectDocument, secondsToWait * 1000); 
             }
         }
     };
@@ -182,18 +178,11 @@ function projectController($scope, $location, userService, projectsService, $htt
                 var index = $scope.projectDocuments.indexOf(projectDocument);
                 $scope.projectDocuments[index] = data.document;
                 //THIS--- $scope.ck.document.getBody().addClass('cover');
-                $scope.documentSelected = data.document;
-                
-                lastSavedDocumentLength = data.document.text.length;
-                //console.log(data);
-               // console.log(data.document);
+                $scope.documentSelected = data.document; 
+                lastSavedDocumentLength = data.document.text.length; 
                 if (!$scope.documentWatch) {
                     $scope.$watch('documentSelected', $scope.saveProjectDocumentUpdates, true);
-                    $scope.documentWatch = true;
-                    
-                    
-
-                    setTimeout(function(){  console.log( $scope.ck.document);}, 3000);
+                    $scope.documentWatch = true;  
                 }
 
                 resetUndoHistory = true;
@@ -642,37 +631,14 @@ function projectController($scope, $location, userService, projectsService, $htt
     }
 
     $scope.applyStylesetToProject = function(styleset, setAsDefault) {
+    	//apply to Document is called because the function for some reason doesn't apply the styleset to the current document as well. 
+    	//ugly but works
+    	$scope.applyStylesetToDocument(styleset, true);
         var deferred = $q.defer();
-
+        var index = $scope.stylesets.indexOf(styleset);
         $http.put('/styleset/' + styleset._id + '/project/' + $scope.project._id)
-
-        //project Selected?
-        .success(function(data) {
-            var replaceData = data;
-            ///why you fucking with my life?
-            for (var i = 0; i < replaceData.length; i++) {
-                if (replaceData[i].document._id === $scope.documentSelected._id) {
-                 //fuck you   
-                   // console.log(replaceData[i].styleset._id);
-                    $scope.documentSelected.stylesets.push(replaceData[i].styleset._id);
-                    if (setAsDefault) {
-                        $scope.documentSelected.defaultStyleset = replaceData[i].styleset._id;
-                    }
-                    $scope.applyStylesetsToEditor();
-                    replaceData.splice(i, 1);
-                }
-
-            };
-            for (var i=0;i<replaceData.length;i++){
-                console.log(i);
-                 console.log('proj doc'+$scope.projectDocuments[i]._id);
-                 console.log('rep data'+replaceData[i].document._id);
-                if($scope.projectDocuments[i]._id==replaceData[i].document._id){
-                    $scope.projectDocuments[i].defaultStyleset._id=replaceData[i].styleset._id;
-                }
-            }
-
-
+        .success(function(data) { 
+            $scope.applyStylesetsToEditor();
             deferred.resolve(data);
         });
         return deferred.promise;
@@ -684,11 +650,9 @@ function projectController($scope, $location, userService, projectsService, $htt
         var index = $scope.stylesets.indexOf(styleset);
 
         $http.put('/styleset/' + styleset._id + '/document/' + $scope.documentSelected._id)
-            .success(function(data) {
-              //  console.log(data);
+            .success(function(data) { 
                 if (data.styleset) {
-                    $scope.documentSelected.stylesets.push(data.styleset._id);
-                    //console.log($scope.documentSelected.stylesets);
+                    $scope.documentSelected.stylesets.push(data.styleset._id); 
                     if (setAsDefault) {
                         $scope.documentSelected.defaultStyleset = data.styleset._id;
                     }
@@ -1299,12 +1263,9 @@ function projectController($scope, $location, userService, projectsService, $htt
 
     function overwriteExistingDocument(type, text) {
         var isNew = true;
-        console.log($scope.projectDocuments);
-      
-        for (var i = 0; i < $scope.projectDocuments.length; i++) {
-
-            var document = $scope.projectDocuments[i];
-           // console.log(document.type);
+        console.log($scope.projectDocuments); 
+        for (var i = 0; i < $scope.projectDocuments.length; i++) { 
+            var document = $scope.projectDocuments[i]; 
             if (typeof document.type !== 'undefined') {
                 if (document.type === type) {
                   
@@ -1330,10 +1291,7 @@ function projectController($scope, $location, userService, projectsService, $htt
     }
 
     function updateDocumentText(type, text) {
-        if (type === 'cover') {
-           console.log('fsdfdsfds'+ $scope.ck.document);
-            console.log( $scope.ck.document.$.body);
-           
+        if (type === 'cover') { 
             $scope.documentSelected.text = text;
         }
         if (type === 'toc') {
@@ -1391,8 +1349,7 @@ function projectController($scope, $location, userService, projectsService, $htt
             .success(function(data) {
                 deferred.resolve();
             })
-            .error(function(status) {
-                //console.log("error setting toc, status: " + status);
+            .error(function(status) { 
             });
 
         return deferred.promise;
