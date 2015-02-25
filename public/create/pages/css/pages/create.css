@@ -120,25 +120,38 @@
 .project-archived {
 	opacity: 0.5;
 }
-.project-link {
+a.project-link {
+	left: 0;
+	background-color: white;
 	position: absolute;
-	top: 0;
+	z-index: 4;
 	text-align: center;
-	margin-top:14px;
+	margin-top:30px;
 	margin-left:7px;
 	width:70%;
-	height: 72%;
+	height: 60%;
 	overflow:hidden;
+	word-wrap: break-word; 
 }
+ 
+.wholeTitle{
+	margin-top:30px;
+	overflow:hidden;
+	position:absolute;
+	left:0;
+	z-index: 3;
+	width:70%;
+	height: 60%;
+	margin-left:7px;
+	word-wrap: break-word;
+	text-align: center;
+	background-color: white;
 
-a.project-link {
-	 word-wrap: break-word;
-
-}
-a:hover{
-	overflow:visible;
-	background-color:#FFF;
+} 
+.isVisited{
+	z-index: 5;
 	height: auto;
+    overflow:auto;
 }
 
 .filter-sort, .filter-search {
