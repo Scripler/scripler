@@ -122,22 +122,18 @@
 }
 .project-link {
 	position: absolute;
-	top: 0;
+	top: 15px;
+	left: 6px;
+	overflow: hidden;
+	width: 74px;
+	height: 95px;
+	padding: 5px;
 	text-align: center;
-	margin-top:14px;
-	margin-left:7px;
-	width:70%;
-	height: 72%;
-	overflow:hidden;
+	word-wrap: break-word;
 }
-
-a.project-link {
-	 word-wrap: break-word;
-
-}
-a:hover{
-	overflow:visible;
-	background-color:#FFF;
+.project-link.show-all{
+	overflow: visible;
+	background-color: #fff;
 	height: auto;
 }
 
@@ -154,7 +150,7 @@ a:hover{
 textarea#rename {
 	position: absolute;
 	top: 0;
-	left: 6px;
+	left: 5px;
 	text-align: center;
 	padding: 5px;
 	margin: 30px 5px 5px;
