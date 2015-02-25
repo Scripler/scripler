@@ -1349,12 +1349,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	function constructImageTag( image ) {
-		var imageTag = '<img src="//' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		var imageTag = '<figure><img src="//' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" /></figure>';
 		return imageTag;
 	}
 
 	function constructCoverTag(image){
-		var imageTag = '<img class="cover" src="//' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		var imageTag = '<figure><img class="cover" src="//' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" /></figure>';
 		return imageTag;
 	}
 
