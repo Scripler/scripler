@@ -274,6 +274,27 @@ app.service('userService', function( $rootScope, $http ) {
 	};
 });
 
+app.filter('filterTruncation', function () {
+    return function (input, chars) {
+        if (isNaN(chars)) {
+            return input;
+        }
+        if (chars <= 0) {
+            return '';
+        }
+        if (input && input.length > chars) {
+            input = input.substring(0, chars);
+            while (input.charAt(input.length - 1) === ' ' || input.charAt(input.length - 1) === '.' || input.charAt(input.length - 1) === ',') {
+                input = input.substr(0, input.length - 1);
+            }
+
+            return input + '…';
+        }
+
+        return input;
+    };
+})
+
 app.directive('onClickChangeText', function( $timeout, $parse ) {
 	return {
 		link: function( scope, element, attrs ) {
