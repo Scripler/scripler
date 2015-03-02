@@ -1504,29 +1504,35 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	function returnSelectedContent(){
 		var editor = getEditor();
 		var selection = editor.getSelection();
+		var selectedContent;
+		var range;
+	
+		// "selectedContent" is used in another function, therefore we need to return it
+		// however, it is buggy for updating the anchors / hyperlinks input fields...
+		// for Chrome, the fix is in the 'onselectionchange' function, but that is not supported
+		// by Firefox, therefore we still update with "selectedContent" there, until I find a further fix
 
 		if(selection){
-			if (selection.getType() == CKEDITOR.SELECTION_ELEMENT) {
-			  var selectedContent = selection.getSelectedElement().$.outerHTML;
-			} else if (selection.getType() == CKEDITOR.SELECTION_TEXT) {
-			  if (CKEDITOR.env.ie) {
-			    selection.unlock(true);
-			    selectedContent = selection.getNative().createRange().text;
-			  } else {
-			    selectedContent = selection.getNative();
-			  }
-			}
+			selectedContent = selection.getSelectedText();
 		}
+
+		// get the iframe document
+		var iframeDoc = document.getElementsByClassName("cke_wysiwyg_frame")[0].contentDocument;
+
+		iframeDoc.onselectionchange = OnChange;
+        function OnChange () {
+            range = iframeDoc.getSelection().toString();
+           	document.getElementById("anchorInputBox").value = range;
+           	document.getElementById("hyperlinkInputBox").value = range;
+        }
+
+        // onselectionchange doesn't work for Firefox, so instead we update with the old selectedContent returned by CKEditor
+        if(navigator.userAgent.search("Firefox")>-1){
+        	document.getElementById("anchorInputBox").value = selectedContent;
+           	document.getElementById("hyperlinkInputBox").value = selectedContent;
+        }
 
 		return selectedContent;
-	}
-
-	function updateInputFields() {
-		if( $scope.leftMenuShowItem=='insert' ){
-			var content = returnSelectedContent();
-			document.getElementById("anchorInputBox").value = content;
-		   	document.getElementById("hyperlinkInputBox").value = content;
-		}
 	}
 
 	function editorInsert( insert, type ) {
@@ -1743,7 +1749,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				}
 			}
 
-			updateInputFields();
+			returnSelectedContent();
 
 		}, this );
 
