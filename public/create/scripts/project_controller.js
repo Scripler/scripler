@@ -630,20 +630,15 @@ function projectController($scope, $location, userService, projectsService, $htt
             });
     }
 
-    $scope.applyStylesetToProject = function(styleset, setAsDefault) {
+    $scope.applyStylesetToProject = function(styleset) {
     	//apply to Document is called because the function for some reason doesn't apply the styleset to the current document as well. 
     	//ugly but works
     	$scope.applyStylesetToDocument(styleset, true);
         var deferred = $q.defer(); 
         $http.put('/styleset/' + styleset._id + '/project/' + $scope.project._id)
         .success(function(data) { 
-          /*
-            if (setAsDefault) {
-                        $scope.documentSelected.defaultStyleset = data.styleset._id;
-                    } 
-    */
             $scope.applyStylesetsToEditor();
-            deferred.resolve(data);
+            deferred.resolve();
         });
         return deferred.promise;
 
