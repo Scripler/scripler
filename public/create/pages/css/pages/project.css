@@ -412,6 +412,9 @@ li.typo p:first-child {
 	width: 90%;
 	margin: 0 auto;
 }
+.typo-children-style.selected {
+	background-color: #f3f3f3;
+}
 
 .style.new {
 	height: 40px;

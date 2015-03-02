@@ -70,7 +70,7 @@
 				</div>
 
 				<ul data-ng-show="typoChildrenVisible || isDefaultStyleset(styleset)" class="typo-children">
-					<li data-ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" data-ng-hide="style.archived || style.hidden" data-ng-selected="selectedStyle._id === style._id" class="typo-children-style">
+					<li data-ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" data-ng-hide="style.archived || style.hidden" data-ng-selected="selectedStyle._id === style._id" class="typo-children-style" data-ng-class="{ selected : selectedStyle._id === style._id }">
 						<a class="style-options-show" data-ng-click="showStylesetChildOptions($parent.$index, $index)" data-ng-class="{ 'open' : $parent.$index == selectedStylesetParentOptions && $index == selectedStylesetChildOptions }">
 							<div class="arrow"></div>
 						</a>

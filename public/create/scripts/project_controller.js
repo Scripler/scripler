@@ -15,6 +15,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.projectDocuments = [];
 	$scope.stylesets = [];
 	$scope.fonts = [];
+	$scope.styleEditorVisible = false;
 
 	if ( $scope.user === 'undefined' ) {
 		// TODO: how to handle error? (awaiting "Show error messages to the user" task)
@@ -452,9 +453,17 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if (status != $scope.leftMenuShowItem || preserve) {
 			$scope.leftMenuShow = true;
 			$scope.leftMenuShowItem = status;
+
+			if ( $scope.leftMenuShowItem != 'design' && $scope.styleEditorVisible ) {
+				$scope.hideStyleEditor();
+			}
 		}
 		else {
 			$scope.hideLeftMenu();
+			
+			if ( $scope.styleEditorVisible ) {
+				$scope.hideStyleEditor();
+			}
 		}
 		$rootScope.ck.focus();
 	}
@@ -1613,11 +1622,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$scope.hideStyleEditor();
 			} else {
 				$rootScope.ck.commands.showFloatingTools.exec();
-				$rootScope.updateBottomOffset();
 				$scope.styleEditorVisible = true;
 			}
 		}
-
 		$scope.hideStyleEditor = function() {
 			if ( $scope.styleEditorVisible ) {
 				$rootScope.ck.commands.hideFloatingTools.exec();
@@ -1630,12 +1637,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$rootScope.ck.focus();
 			}, 500);
 		}
-
-		$scope.$watch('showTypo', function() {
-			if ( !$scope.showTypo && $scope.styleEditorVisible ) {
-				$scope.hideStyleEditor();
-			}
-		});
 
 		$scope.insertPageBreak = function() {
 			$rootScope.ck.commands.pagebreak.exec();
@@ -1718,7 +1719,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 				var styleNode = document.getElementById( selectedStyle._id );
 				// If design tab is open, scroll to selected style if it is not already the selected style
-				if ( $scope.showTypo && styleNode && (!$scope.selectedStyle || $scope.selectedStyle._id != selectedStyle._id) ) {
+				if ( $scope.leftMenuShowItem == 'design' && styleNode && (!$scope.selectedStyle || $scope.selectedStyle._id != selectedStyle._id) ) {
 					// The list-item dom-node reprenseting the parent styleset
 					var stylesetNode = styleNode.parentNode.parentNode;
 					// The container for all the stylesets, which is the scrolling container
