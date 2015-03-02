@@ -634,10 +634,14 @@ function projectController($scope, $location, userService, projectsService, $htt
     	//apply to Document is called because the function for some reason doesn't apply the styleset to the current document as well. 
     	//ugly but works
     	$scope.applyStylesetToDocument(styleset, true);
-        var deferred = $q.defer();
-        var index = $scope.stylesets.indexOf(styleset);
+        var deferred = $q.defer(); 
         $http.put('/styleset/' + styleset._id + '/project/' + $scope.project._id)
         .success(function(data) { 
+          /*
+            if (setAsDefault) {
+                        $scope.documentSelected.defaultStyleset = data.styleset._id;
+                    } 
+    */
             $scope.applyStylesetsToEditor();
             deferred.resolve(data);
         });
@@ -646,17 +650,14 @@ function projectController($scope, $location, userService, projectsService, $htt
     }
 
     $scope.applyStylesetToDocument = function(styleset, setAsDefault) {
-        var deferred = $q.defer();
-        var index = $scope.stylesets.indexOf(styleset);
-
+        var deferred = $q.defer(); 
         $http.put('/styleset/' + styleset._id + '/document/' + $scope.documentSelected._id)
             .success(function(data) { 
                 if (data.styleset) {
                     $scope.documentSelected.stylesets.push(data.styleset._id); 
                     if (setAsDefault) {
                         $scope.documentSelected.defaultStyleset = data.styleset._id;
-                    }
-
+                    } 
                     $scope.applyStylesetsToEditor();
                     deferred.resolve(data.styleset);
                 }
@@ -717,13 +718,7 @@ function projectController($scope, $location, userService, projectsService, $htt
                 ckDocument.getHead().append(style);
             }
         }
-    }
-
-    //used for apply styleset to ebook function to apply to rest of documents
-    var applyStylesetsToDoc = function(document) {
-
-    }
-
+    }  
 
     $scope.applyStyle = function(styleset, style) {
         var styleIndex = styleset.styles.indexOf(style);
