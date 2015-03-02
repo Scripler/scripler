@@ -1,4 +1,4 @@
-.container {
+#container {
 	padding: 20px;
 }
 
@@ -122,19 +122,25 @@
 }
 .project-link {
 	position: absolute;
-	top: 15px;
+	top: 20px;
 	left: 6px;
 	overflow: hidden;
 	width: 74px;
-	height: 95px;
+	height: 90px;
 	padding: 5px;
 	text-align: center;
 	word-wrap: break-word;
 }
-.project-link.show-all{
+.project-link.show-all {
 	overflow: visible;
 	background-color: #fff;
 	height: auto;
+}
+.project-link.show-more {
+	top: inherit;
+	bottom: 18px;
+	height: 28px;
+	background: #fff;
 }
 
 .filter-sort, .filter-search {
