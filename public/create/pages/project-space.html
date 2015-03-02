@@ -71,11 +71,12 @@
 					<div class="arrow"></div>
 				</a>
 
-				<a href="#/project?pid={{project._id}}" class="project-link show-all" data-ng-hide="$index != selectedProjectHover || project.editingProjectTitle">
+				<a href="#/project?pid={{project._id}}" class="project-link" data-ng-hide="project.editingProjectTitle" data-ng-class="{ 'show-all' : $index == selectedProjectHover && !project.editingProjectTitle}">
 					{{project.name}}
 				</a>
-				<a href="#/project?pid={{project._id}}" class="project-link" data-ng-hide="$index == selectedProjectHover || project.editingProjectTitle">	{{project.name | filterTruncation:29}}
-				</a>
+				<div class="project-link show-more" data-ng-hide="$index == selectedProjectHover || project.editingProjectTitle || project.name.length < 29">
+					(…)
+				</div>
 
 				<form data-ng-show="project.editingProjectTitle">
 					<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!project.editingProjectTitle" blur-on-enter data-ng-blur="project.editingProjectTitle = false; renameProject(project);"></textarea>
