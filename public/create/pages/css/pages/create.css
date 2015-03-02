@@ -1,3 +1,7 @@
+#container {
+	padding: 20px;
+}
+
 .section-unisquare, .section-projects {
 	float: left;
 }
@@ -118,12 +122,25 @@
 }
 .project-link {
 	position: absolute;
-	top: 0;
+	top: 20px;
 	left: 6px;
+	overflow: hidden;
+	width: 74px;
+	height: 90px;
+	padding: 5px;
 	text-align: center;
-	padding: 30px 5px 5px;
-	width: 75px;
-	height: 110px;
+	word-wrap: break-word;
+}
+.project-link.show-all {
+	overflow: visible;
+	background-color: #fff;
+	height: auto;
+}
+.project-link.show-more {
+	top: inherit;
+	bottom: 18px;
+	height: 28px;
+	background: #fff;
 }
 
 .filter-sort, .filter-search {
@@ -139,7 +156,7 @@
 textarea#rename {
 	position: absolute;
 	top: 0;
-	left: 6px;
+	left: 5px;
 	text-align: center;
 	padding: 5px;
 	margin: 30px 5px 5px;

@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload', 'angucomplete-alt', 'ngProgress', 'utilsSharedModule' ] );
+var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'ngAnimate', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload', 'angucomplete-alt', 'ngProgress', 'utilsSharedModule' ] );
 
 app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope', 'utilsService',
 	function( $http, $scope, userService, $rootScope, utilsService) {
@@ -9,67 +9,11 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		$scope.errors.email = 'Email is invalid';
 		$scope.errors.password = 'Six characters minimum';
 		$scope.registrationText = 'Hey, stranger. Register to save your work!';
+		$scope.verificationEmailSent = false;
 		$scope.socialRegistrationText = 'or use:';
 		$scope.EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+		$scope.showRegistrationInfoBar = true;
 		$scope.user = {};
-
-		$scope.registrationBarHiddenByUser = false;
-
-		var ckeOrgHeight;
-		var currentBarOffset = 0;
-
-		$rootScope.updateBottomOffset = function() {
-			var bar = document.getElementById("registrationFooter");
-			var height = bar ? bar.offsetHeight : 0;
-			if (currentBarOffset != height) {
-				var editor = document.getElementById("cke_1_contents");
-				if (editor && editor.style.height) {
-					currentBarOffset = height;
-					if (!ckeOrgHeight) {
-						ckeOrgHeight = editor.style.height;
-					}
-					if (height > 0) {
-						var newHeight = ckeOrgHeight.replace('px', '') - height;
-						editor.style.height = newHeight + 'px';
-					} else {
-						editor.style.height = ckeOrgHeight;
-					}
-				}
-			}
-
-			var elements = document.getElementsByClassName('bottom-fixed');
-			for (var i = 0; i < elements.length; i++) {
-				elements[i].style.bottom = height + 'px';
-			}
-			elements = document.getElementsByClassName('full-height');
-			for (var i = 0; i < elements.length; i++) {
-				elements[i].style.height = 'calc(100% - ' + height + 'px)';
-				elements[i].style.minHeight = 'calc(100% - ' + height + 'px)';
-			}
-
-			var styleEditor = document.getElementById("cke_1_floatingtools");
-			if (styleEditor) {
-				var defaultOffset = 28; // From hardcoded value in floating-tools CK plugin.
-				var currentOffset = styleEditor.style.bottom.replace('px', '');
-				// If current offset is negative, it's hidden, so don't mess with it
-				if (currentOffset > 0) {
-					styleEditor.style.bottom = (defaultOffset + height) + 'px';
-				}
-			}
-		}
-
-		$rootScope.updateNotificationOffset = function() {
-			var notifications = document.getElementById("notification-area");	
-			notifications.setAttribute('class', 'notifications loggedin');
-		}
-
-		$scope.$watch('registrationBarHiddenByUser', function () {
-			// Wait for the registration-bar visual changes before updating bottom offset.
-			setTimeout(function () {
-				$rootScope.updateBottomOffset();
-			}, 0);
-		});
 
 		$scope.$onRootScope('user:updated', function( event, user ) {
 			if (user.isDemo) {
@@ -78,13 +22,8 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				$scope.user = user;
 				if (!$scope.user.emailVerified) {
 					$scope.registrationText = 'Remove this message by verifying your email address. Click the link you received in your welcome email.';
-					$rootScope.updateNotificationOffset();
 				}
 			}
-			// Wait for the registration-bar visual changes before updating bottom offset.
-			setTimeout(function () {
-				$rootScope.updateBottomOffset();
-			}, 0);
 		});
 
 		$scope.$onRootScope('login:failed', function( event ) {
@@ -108,6 +47,16 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				});
 		});
 
+		// TODO: this check should include if user.emailVerified and user.isDemo
+		$scope.showRegistrationBar = function(status) {
+			if ( status == 'hide' ) {
+				$scope.showRegistrationInfoBar = false;
+			}
+			else {
+				$scope.showRegistrationInfoBar = true;	
+			}
+		};
+
 		$scope.$onRootScope('ckDocument:dataReady', function( event ) {
 			var editableBody = document.getElementById('cke_bodyeditor');
 			var iframe = editableBody.getElementsByTagName('iframe')[0];
@@ -117,7 +66,6 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				iDoc.addEventListener('copy', $scope.copySelection);
 				iDoc.addEventListener('cut', $scope.copySelection);
 			};
-			$rootScope.updateBottomOffset();
 		});
 
 		$scope.copySelection = function() {
@@ -154,7 +102,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		}
 
 		$scope.registerUser = function(user, next) {
-			$http.post( '/user/register', angular.toJson( user ) )
+			$http.post('/user/register', angular.toJson( user ) )
 				.success( function( data ) {
 					$http.post('/user/login/', angular.toJson( user ) )
 						.success( function( data ) {
@@ -163,6 +111,15 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				})
 				.error( function( data ) {
 					next(data.errorDetails || 'Could not register user');
+				});
+		}
+		$scope.resendUserVerificationEmail = function() {
+			$http.post('/user/resend-verify-email')
+				.success( function(data) {
+					$scope.verificationEmailSent = true;
+				})
+				.error( function(data) {
+
 				});
 		}
 
@@ -215,7 +172,6 @@ app.config( function( $routeProvider, $httpProvider, $provide ) {
 					if (data.user) {
 						userService.setUser(data.user);
 						deferred.resolve(data.user);
-						$rootScope.updateNotificationOffset();
 					}
 				})
 				.error(function(data) {
@@ -318,6 +274,27 @@ app.service('userService', function( $rootScope, $http ) {
 	};
 });
 
+app.filter('filterTruncation', function () {
+    return function (input, chars) {
+        if (isNaN(chars)) {
+            return input;
+        }
+        if (chars <= 0) {
+            return '';
+        }
+        if (input && input.length > chars) {
+            input = input.substring(0, chars);
+            while (input.charAt(input.length - 1) === ' ' || input.charAt(input.length - 1) === '.' || input.charAt(input.length - 1) === ',') {
+                input = input.substr(0, input.length - 1);
+            }
+
+            return input + '…';
+        }
+
+        return input;
+    };
+})
+
 app.directive('onClickChangeText', function( $timeout, $parse ) {
 	return {
 		link: function( scope, element, attrs ) {
@@ -353,17 +330,15 @@ app.directive('focusOn', function( $timeout, $parse ) {
 	};
 });
 
-app.directive('onEnter', function() {
-	return function( scope, element, attrs ) {
+app.directive('blurOnEnter', function() {
+	return function(scope, element, attributes) {
 		element.bind("keydown keypress", function( event ) {
 			if(event.which === 13) {
-				scope.$apply(function(){
-				scope.$eval(attrs.onEnter, {'event': event});
-			});
 				event.preventDefault();
-			}
+				element[0].blur();
+			};
 		});
-	};
+	}
 });
 
 app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
@@ -398,7 +373,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				indentUnit: 'em',
 				indentOffset: 2,
 				enterMode: CKEDITOR.ENTER_P,
-				height: $window.innerHeight - 90,
+				height: 'calc(100% - 36px)',
 				width: '100%',
 				language: 'en',
 				//Change to standard font we want to start all projects with :)

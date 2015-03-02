@@ -2064,7 +2064,7 @@ describe('Scripler RESTful API', function () {
 					// binary response data is in res.body as a buffer
 					assert.ok(Buffer.isBuffer(res.body));
 					//console.log("res: ", res.body);
-					var epub = projectId + '.epub';
+					var epub = path.join(conf.epub.tmpDir, projectId + '.epub');
 					fs.writeFile(epub, res.body);
 
 					child = exec('java -jar test/epubcheck-3.0.1.jar ' + epub,

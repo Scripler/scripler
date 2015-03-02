@@ -62,6 +62,7 @@ function projectController($scope, $location, userService, projectsService, $htt
         });
     }
 
+
     $scope.openFeedback = function() {
         userService.openFeedback($scope.user);
     }
@@ -177,10 +178,11 @@ function projectController($scope, $location, userService, projectsService, $htt
             .success(function(data) {
                 var index = $scope.projectDocuments.indexOf(projectDocument);
                 $scope.projectDocuments[index] = data.document;
-                //THIS--- $scope.ck.document.getBody().addClass('cover');
-                $scope.documentSelected = data.document; 
-                lastSavedDocumentLength = data.document.text.length; 
-                if (!$scope.documentWatch) {
+				$scope.documentSelected = data.document;
+				$scope.showProjectDocument(data.document._id);
+				lastSavedDocumentLength = data.document.text.length;
+
+				if ( !$scope.documentWatch ) {
                     $scope.$watch('documentSelected', $scope.saveProjectDocumentUpdates, true);
                     $scope.documentWatch = true;  
                 }
@@ -282,8 +284,10 @@ function projectController($scope, $location, userService, projectsService, $htt
                             }
                         }
 
-                        $scope.openProjectDocument(data.document);
-                    } else {
+						$scope.openProjectDocument( data.document );
+						$scope.showLeftMenu('contents', true);
+					} 
+					else{
 
                         if (type !== 'firstDocument') {
                             data.document.editingProjectDocumentTitle = true;
@@ -306,7 +310,8 @@ function projectController($scope, $location, userService, projectsService, $htt
     }
 
     $scope.updateProjectDocument = function() {
-        var document = angular.copy($scope.documentSelected);
+		var deferred = $q.defer();
+		var document = angular.copy( $scope.documentSelected );
         lastSavedDocumentLength = document.text.length;
         document.text = $scope.ck.getData();
 
@@ -319,7 +324,10 @@ function projectController($scope, $location, userService, projectsService, $htt
                     var minutes = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
                     var seconds = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds();
                     $scope.lastSaved = 'Last saved: ' + now.getDate() + '/' + now.getMonth() + '/' + now.getFullYear() + ' ' + hours + ':' + minutes + ':' + seconds;
+					deferred.resolve();
                 });
+
+				return deferred.promise;
         } else {
             //TODO save to localstorage
         }
@@ -412,6 +420,13 @@ function projectController($scope, $location, userService, projectsService, $htt
         }
     };
 
+	$scope.selectedProjectDocument = -1;
+	$scope.showProjectDocument = function ($index) {
+		if ($index != $scope.selectedProjectDocument) {
+			$scope.selectedProjectDocument  = $index;
+		}
+	};
+
     $scope.selectedProjectDocumentOptions = -1;
     $scope.showProjectDocumentOptions = function($index) {
         if ($index != $scope.selectedProjectDocumentOptions) {
@@ -424,7 +439,38 @@ function projectController($scope, $location, userService, projectsService, $htt
         $scope.selectedProjectDocumentOptions = -1;
     };
 
-    $scope.languages = [{
+	$scope.showLeftMenu = function (status, preserve) {
+		if (status != $scope.leftMenuShowItem || preserve) {
+			$scope.leftMenuShow = true;
+			$scope.leftMenuShowItem = status;
+		}
+		else {
+			$scope.hideLeftMenu();
+		}
+		$rootScope.ck.focus();
+	}
+	$scope.hideLeftMenu = function (status) {
+		$scope.leftMenuShow = false;
+		$scope.leftMenuShowItem	= "";
+	}
+
+	$scope.showRightMenu = function (status) {
+		if (status != $scope.rightMenuShowItem) {
+			$scope.rightMenuShow = true;
+			$scope.rightMenuShowItem = status;
+		}
+		else {
+			$scope.hideRightMenu();
+		}
+		$rootScope.ck.focus();
+	}
+	$scope.hideRightMenu = function (status) {
+		$scope.rightMenuShow = false;
+		$scope.rightMenuShowItem	= "";
+	}
+
+	$scope.languages = [
+		{
         "subtag": "arb",
         "description": "Arabic"
     }, {
@@ -510,7 +556,14 @@ function projectController($scope, $location, userService, projectsService, $htt
         });
     };
 
-    $scope.$watch('project.metadata.title', function(newValue, oldValue) {
+
+	$scope.$watch('rightMenuShowItem', function( newValue ) {
+		if( newValue=='finalize' ){
+			$scope.getToc();
+		}
+	});
+
+    $scope.$watch('project.metadata.title', function(newValue, oldValue){
         if (watchReady(newValue, oldValue)) {
             $scope.saveMetaData();
             $scope.metaTitleSaved = true;
@@ -564,20 +617,21 @@ function projectController($scope, $location, userService, projectsService, $htt
 
     $scope.exportEpub = function() {
         var getTocPromise = $scope.getToc();
+		var updateProjectDocumentPromise = $scope.updateProjectDocument();
 
-        getTocPromise.then(function() {
+		$q.all([getTocPromise, updateProjectDocumentPromise]).then(function () {
             var setTocPromise = $scope.setToc();
             setTocPromise.then(function() {
                 $http.get('/project/' + $scope.pid + '/compile')
                     .success(function(data, status) {
                         if (data.url) {
-                            window.location.href = data.url;
+							window.location.href = "/project/" + $scope.pid + "/epub";
                         } else {
-                            console.log("error compiling, status ok, but return value is: " + JSON.stringify(data));
+							console.log("Error compiling, status ok, but return value is: " + JSON.stringify(data));
                         }
                     })
                     .error(function(status) {
-                        console.log("error compiling, status: " + status);
+						console.log("Error compiling, status: " + status);
                     });
             });
         });
@@ -1136,13 +1190,32 @@ function projectController($scope, $location, userService, projectsService, $htt
     $scope.showStylesetOptions = function($index) {
         if ($index != $scope.selectedStylesetOptions) {
             $scope.selectedStylesetOptions = $index;
-        } else {
+			$scope.hideStylesetChildOptions();
+		}
+		else {
             $scope.hideStylesetOptions();
         }
     };
     $scope.hideStylesetOptions = function() {
         $scope.selectedStylesetOptions = -1;
     };
+
+	$scope.selectedStylesetParentOptions = -1;
+	$scope.selectedStylesetChildOptions = -1;
+	$scope.showStylesetChildOptions = function ($parentIndex, $index) {
+		if ($parentIndex != $scope.selectedStylesetParentOptions || $index != $scope.selectedStylesetChildOptions) {
+			$scope.selectedStylesetParentOptions  = $parentIndex;
+			$scope.selectedStylesetChildOptions  = $index;
+			$scope.hideStylesetOptions();
+		}
+		else {
+			$scope.hideStylesetChildOptions();
+		}
+	};
+	$scope.hideStylesetChildOptions = function () {
+		$scope.selectedStylesetParentOptions = -1;
+		$scope.selectedStylesetChildOptions = -1;
+	};
 
     $scope.loadFonts = function() {
         WebFont.load({
@@ -1173,6 +1246,7 @@ function projectController($scope, $location, userService, projectsService, $htt
         } else {
             $scope.activeInsertOption = insertoption;
         }
+		$rootScope.ck.focus();
     }
 
     $scope.insertImageOption = function(imageoption) {
@@ -1181,6 +1255,7 @@ function projectController($scope, $location, userService, projectsService, $htt
         } else {
             $scope.activeImageOption = imageoption;
         }
+		$rootScope.ck.focus();
     }
 
     $scope.finalizeOptionChosen = function(finalizeOption) {
@@ -1189,6 +1264,7 @@ function projectController($scope, $location, userService, projectsService, $htt
         } else {
             $scope.activeFinalizeOption = finalizeOption;
         }
+		$rootScope.ck.focus();
     }
 
     $scope.scrollToToc = function(tocEntry) {
@@ -1219,18 +1295,20 @@ function projectController($scope, $location, userService, projectsService, $htt
         }
     };
 
-    $scope.insertNewAnchor = function() {
+	$scope.insertNewAnchor = function(){
         var id = 'id_' + Date.now();
-        var insert = '<a id="' + id + '" name="' + id + '" title="' + $scope.anchorName + '"></a>';
-        editorInsert(insert);
+		var type = "anchor";
+		var insert = '<a id="' + id + '" name="name" title="title"></a>';
+		editorInsert( insert, type );
         $scope.updateProjectDocument();
         $scope.getToc();
         $scope.anchorName = '';
     }
 
     $scope.insertNewLink = function() {
-        var link = '<a href="' + $scope.linkAddress + '">' + $scope.linkText + '</a>';
-        editorInsert(link);
+		var type = "link";
+		var link = '<a href="' + $scope.linkAddress + '">link_text</a>';
+		editorInsert( link, type);
         $scope.updateProjectDocument();
         $scope.linkAddress = '';
         $scope.linkText = '';
@@ -1242,13 +1320,18 @@ function projectController($scope, $location, userService, projectsService, $htt
     }
 
     function constructImageTag(image) {
-        var imageTag = '<img class="cover" src="http://' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
+		var imageTag = '<figure><img src="//' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" /></figure>';
         return imageTag;
     }
 
-    function insertImage(image) {
-        var imageInsert = constructImageTag(image);
-        editorInsert(imageInsert);
+	function constructCoverTag(image){
+		var imageTag = '<figure><img class="cover" src="//' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" /></figure>';
+		return imageTag;
+	}
+
+	function insertImage( image ) {
+		var imageInsert = constructImageTag( image );
+		editorInsert( imageInsert );
     }
 
     function overwriteExistingDocument(type, text) {
@@ -1295,13 +1378,16 @@ function projectController($scope, $location, userService, projectsService, $htt
         }
     }
 
+	
     $scope.createCover = function(image) {
-        var html = constructImageTag(image);
-        var isNewCover = overwriteExistingDocument('cover', html);
+    	var html = constructImageTag( image );
+		var isNewCover = overwriteExistingDocument( 'cover', html );
 
 
         if (isNewCover) {
             $scope.addProjectDocument('cover', html);
+		} else {
+			$scope.showLeftMenu('contents', true);
         }
 
         var json = {};
@@ -1326,6 +1412,8 @@ function projectController($scope, $location, userService, projectsService, $htt
 
         if (isNewToc) {
             $scope.addProjectDocument('toc', html);
+		} else {
+			$scope.showLeftMenu('contents', true);
         }
 
         $scope.setToc();
@@ -1359,6 +1447,8 @@ function projectController($scope, $location, userService, projectsService, $htt
 
         if (isNewTitlePage) {
             $scope.addProjectDocument('titlepage', html);
+		} else {
+			$scope.showLeftMenu('contents', true);
         }
     }
 
@@ -1377,31 +1467,77 @@ function projectController($scope, $location, userService, projectsService, $htt
 
         if (isNewColophon) {
             $scope.addProjectDocument('colophon', html);
+		} else {
+			$scope.showLeftMenu('contents', true);
         }
     }
 
-    function editorInsert(insert) {
+	// returns content that is selected in the caret
+	function returnSelectedContent(){
         var editor = getEditor();
-        var element = $rootScope.CKEDITOR.dom.element.createFromHtml(insert);
-        editor.insertElement(element);
+		var selection = editor.getSelection();
+		var selectedContent;
+		var range;
+	
+		// "selectedContent" is used in another function, therefore we need to return it
+		// however, it is buggy for updating the anchors / hyperlinks input fields...
+		// for Chrome, the fix is in the 'onselectionchange' function, but that is not supported
+		// by Firefox, therefore we still update with "selectedContent" there, until I find a further fix
+
+		if(selection){
+			selectedContent = selection.getSelectedText();
+		}
+
+		// get the iframe document
+		var iframeDoc = document.getElementsByClassName("cke_wysiwyg_frame")[0].contentDocument;
+
+		iframeDoc.onselectionchange = OnChange;
+        function OnChange () {
+            range = iframeDoc.getSelection().toString();
+           	document.getElementById("anchorInputBox").value = range;
+           	document.getElementById("hyperlinkInputBox").value = range;
+        }
+
+        // onselectionchange doesn't work for Firefox, so instead we update with the old selectedContent returned by CKEditor
+        if(navigator.userAgent.search("Firefox")>-1){
+        	document.getElementById("anchorInputBox").value = selectedContent;
+           	document.getElementById("hyperlinkInputBox").value = selectedContent;
+        }
+
+		return selectedContent;
+	}
+
+	function editorInsert( insert, type ) {
+		var editor = getEditor();
+		var selectedContent = returnSelectedContent();
+
+		// defaulting the title/name of the anchor to the selected content
+		var title = selectedContent;
+		
+		if(type=="anchor"){
+			if($scope.anchorName)title=$scope.anchorName;
+			insert = insert.replace('title="title"', 'title="' + title + '"').replace('name="name"', 'name="' + title + '"');
+			var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
+		}
+		else if(type="link"){
+			if($scope.linkText )title=$scope.linkText;
+			insert = insert.replace('link_text', title);
+		}	
+		
+		var element = $rootScope.CKEDITOR.dom.element.createFromHtml(insert);
+		// insert anchor on the caret, but keep the old content
+		editor.insertElement(element);
+		if(type=="anchor")editor.insertText(replacedContent.getText());
+		
+
         var range = editor.createRange();
-        range.moveToElementEditablePosition(element);
+		range.moveToElementEditablePosition(element);
+		
         $rootScope.ck.focus();
         range.select();
         $scope.updateProjectDocument();
     }
 
-    $scope.$watch('showInsert', function(newValue) {
-        if (newValue === true) {
-            $scope.getToc();
-        }
-    });
-
-    $scope.$watch('showFinalizeOptions', function(newValue) {
-        if (newValue === true) {
-            $scope.getToc();
-        }
-    });
 
     $scope.$watch('linkAnchor', function(newValue, oldValue) {
         if (newValue !== oldValue) {
@@ -1411,7 +1547,7 @@ function projectController($scope, $location, userService, projectsService, $htt
     });
 
     function getEditor(scope) {
-        return $rootScope.CKEDITOR.instances.bodyeditor
+		return $rootScope.CKEDITOR.instances.bodyeditor;
     }
 
     $scope.$onRootScope('ckDocument:dataReady', function(event) {
@@ -1589,7 +1725,9 @@ function projectController($scope, $location, userService, projectsService, $htt
                 }
             }
 
-        }, this);
+			returnSelectedContent();
+
+		}, this );
 
         //editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
 

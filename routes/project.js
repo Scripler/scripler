@@ -25,22 +25,16 @@ var uuid_lib = require('node-uuid');
 var document_utils = require('../lib/document-utils');
 
 //Load project by id
-exports.load = function(id) {
-	return function(req, res, next) {
+exports.load = function (id) {
+	return function (req, res, next) {
 		// Avoiding global scope!
 		var idCopy = id || req.body.projectId;
-		Project.findOne({
-			"_id": idCopy,
-			"deleted": false
-		}).exec(function(err, project) {
+		Project.findOne({"_id": idCopy, "deleted": false}).exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
-				return next({
-					message: "Project not found",
-					status: 404
-				});
+				return next({message: "Project not found", status: 404});
 			}
-			if (!req.user) return next(); //Let missing authentication be handled in auth middleware
+			if (!req.user) return next();//Let missing authentication be handled in auth middleware
 			if (!utils.hasAccessToModel(req.user, project)) return next(403);
 
 			req.project = project;
@@ -49,24 +43,15 @@ exports.load = function(id) {
 	}
 }
 
-exports.loadPopulated = function(id) {
-	return function(req, res, next) {
+exports.loadPopulated = function (id) {
+	return function (req, res, next) {
 		var idCopy = id || req.body.projectId;
-		Project.findOne({
-			"_id": idCopy,
-			"deleted": false
-		}).populate({
-			path: 'documents',
-			select: 'name folderId modified archived stylesets defaultStyleset members type'
-		}).exec(function(err, project) {
+		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', select: 'name folderId modified archived stylesets members type'}).exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
-				return next({
-					message: "Project not found",
-					status: 404
-				});
+				return next({message: "Project not found", status: 404});
 			}
-			if (!req.user) return next(); //Let missing authentication be handled in auth middleware
+			if (!req.user) return next();//Let missing authentication be handled in auth middleware
 			if (!utils.hasAccessToModel(req.user, project)) return next(403);
 
 			req.project = project;
@@ -75,27 +60,15 @@ exports.loadPopulated = function(id) {
 	}
 }
 
-exports.loadPopulatedFull = function(id) {
-	return function(req, res, next) {
+exports.loadPopulatedFull = function (id) {
+	return function (req, res, next) {
 		var idCopy = id || req.body.projectId;
-		Project.findOne({
-			"_id": idCopy,
-			"deleted": false
-		}).populate({
-			path: 'documents',
-			match: {
-				archived: false
-			},
-			select: 'name folderId modified archived stylesets defaultStyleset members type text'
-		}).exec(function(err, project) {
+		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', match: {archived: false}, select: 'name folderId modified archived stylesets defaultStyleset members type text'}).exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
-				return next({
-					message: "Project not found",
-					status: 404
-				});
+				return next({message: "Project not found", status: 404});
 			}
-			if (!req.user) return next(); //Let missing authentication be handled in auth middleware
+			if (!req.user) return next();//Let missing authentication be handled in auth middleware
 			if (!utils.hasAccessToModel(req.user, project)) return next(403);
 
 			req.project = project;
@@ -104,35 +77,30 @@ exports.loadPopulatedFull = function(id) {
 	}
 }
 
-var list = exports.list = function(req, res, next) {
-	User.findOne({
-		"_id": req.user._id
-	}).populate('projects').exec(function(err, user) {
+var list = exports.list = function (req, res, next) {
+	User.findOne({"_id": req.user._id}).populate('projects').exec(function (err, user) {
 		if (err) {
 			return next(err);
 		}
 
-		res.send({
-			"projects": user.projects
-		});
+		res.send({"projects": user.projects});
 	});
 };
 
-exports.create = function(req, res, next) {
+exports.create = function (req, res, next) {
 	var project = new Project({
 		name: req.body.name,
-		members: [{
-			userId: req.user._id,
-			access: ["admin"]
-		}],
+		members: [
+			{userId: req.user._id, access: ["admin"]}
+		],
 		styleset: req.user.defaultStyleset
 	});
-	project.save(function(err) {
+	project.save(function (err) {
 		if (err) {
 			return next(err);
 		}
 		req.user.projects.addToSet(project);
-		req.user.save(function(err) {
+		req.user.save(function (err) {
 			if (err) {
 				return next(err);
 			}
@@ -141,63 +109,55 @@ exports.create = function(req, res, next) {
 			var dstImagesDir = path.join(projectDir, conf.epub.imagesDir);
 
 			// mkdirp automatically creates all missing parent folders so we can simply create one of the sub folders, e.g. Images
-			mkdirp(dstImagesDir, function(err) {
+            mkdirp(dstImagesDir, function (err) {
 				if (err) {
 					return next(err);
 				}
 
-				res.send({
-					project: project
-				});
+				res.send({project: project});
 			});
 		});
 	});
 }
 
-exports.open = function(req, res) {
-	res.send({
-		project: req.project
-	});
+exports.open = function (req, res) {
+	res.send({ project: req.project });
 }
 
-exports.rename = function(req, res, next) {
+exports.rename = function (req, res, next) {
 	var project = req.project;
 	project.name = req.body.name;
-	project.save(function(err) {
+	project.save(function (err) {
 		if (err) {
 			return next(err);
 		}
-		res.send({
-			project: project
-		});
+		res.send({project: project});
 	});
 }
 
-exports.archive = function(req, res, next) {
+exports.archive = function (req, res, next) {
 	var project = req.project;
 	project.archived = true;
 
 	// TODO: also archive the project's documents?
 	// TODO: also archive the stylesets and styles of the documents of the project since these are copies?
 
-	project.save(function(err) {
+	project.save(function (err) {
 		if (err) {
 			return next(err);
 		}
-		res.send({
-			project: project
-		});
+		res.send({project: project});
 	});
 }
 
-exports.unarchive = function(req, res, next) {
+exports.unarchive = function (req, res, next) {
 	var project = req.project;
 	project.archived = false;
 
 	// TODO: also unarchive the project's documents?
 	// TODO: also unarchive the stylesets and styles of the documents of the project since these are copies?
 
-	project.save(function(err) {
+	project.save(function (err) {
 		if (err) {
 			return next(err);
 		}
@@ -207,24 +167,14 @@ exports.unarchive = function(req, res, next) {
 		for (var i = 0; i < project.members.length; i++) {
 			membersArray.push(project.members[i].userId);
 		}
-		res.send({
-			project: project
-		});
+		res.send({project: project});
 	});
 }
 
-exports.delete = function(req, res, next) {
+exports.delete = function (req, res, next) {
 	var project = req.project;
 
-	User.update({
-		"projects": project._id
-	}, {
-		"$pull": {
-			"projects": project._id
-		}
-	}, {
-		multi: true
-	}, function(err, numberAffected, raw) {
+	User.update({"projects": project._id}, {"$pull": {"projects": project._id}}, {multi: true}, function (err, numberAffected, raw) {
 		if (err) {
 			return next(err);
 		}
@@ -235,29 +185,19 @@ exports.delete = function(req, res, next) {
 		// TODO: also delete the stylesets and styles of the documents of the project since these are copies?
 
 		// "Delete" documents
-		Document.find({
-			projectId: project._id
-		}, function(err, documents) {
+		Document.find({projectId: project._id}, function (err, documents) {
 			var numberOfDocumentsToBeDeleted = documents.length;
 			if (numberOfDocumentsToBeDeleted == 0) {
 				res.send({});
 			} else {
-				documents.forEach(function(document) {
-					Project.update({
-						"documents": document._id
-					}, {
-						"$pull": {
-							"documents": document._id
-						}
-					}, {
-						multi: true
-					}, function(err, numberAffected, raw) {
+				documents.forEach(function (document) {
+					Project.update({"documents": document._id}, {"$pull": {"documents": document._id}}, {multi: true}, function (err, numberAffected, raw) {
 						if (err) {
 							return next(err);
 						}
 
 						document.deleted = true;
-						document.save(function(err) {
+						document.save(function (err) {
 							if (err) {
 								return next(err);
 							}
@@ -277,7 +217,7 @@ exports.delete = function(req, res, next) {
 	});
 }
 
-exports.copy = function(req, res, next) {
+exports.copy = function (req, res, next) {
 	var project = req.project;
 
 	var newProject = new Project({
@@ -309,9 +249,7 @@ exports.copy = function(req, res, next) {
 		newDocuments.push(newDocument);
 	}
 
-	Styleset.findOne({
-		"_id": project.styleset
-	}).exec(function(err, styleset) {
+	Styleset.findOne({"_id": project.styleset}).exec(function (err, styleset) {
 		if (err) {
 			return next(err);
 		}
@@ -323,12 +261,12 @@ exports.copy = function(req, res, next) {
 
 			newProject.styleset = copy;
 
-			newProject.save(function(err) {
+			newProject.save(function (err) {
 				if (err) {
 					return next(err);
 				}
 
-				Document.create(newDocuments, function(err) {
+				Document.create(newDocuments, function (err) {
 					if (err) {
 						return next(err);
 					}
@@ -339,13 +277,11 @@ exports.copy = function(req, res, next) {
 					var newProjectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + newProject._id);
 					var newImagesDir = path.join(newProjectDir, conf.epub.imagesDir);
 
-					ncp(projectDir, newProjectDir, function(err) {
+					ncp(projectDir, newProjectDir, function (err) {
 						if (err) {
 							return next(err);
 						}
-						res.send({
-							project: newProject
-						});
+						res.send({project: newProject});
 					});
 				});
 			});
@@ -354,39 +290,33 @@ exports.copy = function(req, res, next) {
 
 }
 
-exports.rearrange = function(req, res, next) {
+exports.rearrange = function (req, res, next) {
 	var errorMessage = "/project/rearrange can only rearrange existing projects (not e.g. add or delete projects)";
 
 	var rearrangedProjectIds = req.body.projects;
 	var existingProjectIds = req.user.projects;
 
 	if (rearrangedProjectIds && rearrangedProjectIds.length == existingProjectIds.length) {
-		for (var i = 0; i < rearrangedProjectIds.length; i++) {
+		for (var i=0; i<rearrangedProjectIds.length; i++) {
 			var rearrangedProjectId = rearrangedProjectIds[i];
 			var containsRearrangedProjectId = existingProjectIds.indexOf(rearrangedProjectId) > -1;
 			if (!containsRearrangedProjectId) {
-				return next({
-					message: errorMessage,
-					status: 400
-				});
+				return next({message: errorMessage, status: 400});
 			}
 		}
 		req.user.projects = rearrangedProjectIds;
-		req.user.save(function(err) {
+		req.user.save(function (err) {
 			if (err) {
 				return next(err);
 			}
 			list(req, res);
 		});
 	} else {
-		return next({
-			message: errorMessage,
-			status: 400
-		});
+		return next({message: errorMessage, status: 400});
 	}
 }
 
-exports.metadata = function(req, res, next) {
+exports.metadata = function (req, res, next) {
 	var project = req.project;
 	project.metadata.isbn = req.body.isbn;
 	project.metadata.title = req.body.title;
@@ -403,49 +333,43 @@ exports.metadata = function(req, res, next) {
 	project.metadata.relation = req.body.relation;
 	project.metadata.source = req.body.source;
 
-	project.save(function(err) {
+	project.save(function (err) {
 		if (err) {
 			return next(err);
 		}
-		res.send({
-			project: project
-		});
+		res.send({project: project});
 	});
 }
 
-exports.metadata_cover = function(req, res, next) {
+exports.metadata_cover = function (req, res, next) {
 	var project = req.project;
 	project.metadata.cover = req.body.cover;
 
-	project.save(function(err) {
+	project.save(function (err) {
 		if (err) {
 			return next(err);
 		}
-		res.send({
-			project: project
-		});
+		res.send({project: project});
 	});
 }
 
-exports.set_toc = function(req, res, next) {
+exports.set_toc = function (req, res, next) {
 	var project = req.project;
 	project.metadata.toc = req.body;
-	project.save(function(err) {
+	project.save(function (err) {
 		if (err) {
 			return next(err);
 		}
-		res.send({
-			project: project
-		});
+		res.send({project: project});
 	});
 }
 
-exports.get_toc = function(req, res, next) {
+exports.get_toc = function (req, res, next) {
 	var project = req.project;
 	var documents = project.documents;
 	var documentToCs = [];
 
-	var getDocumentToC = function(document, callback) {
+	var getDocumentToC = function (document, callback) {
 		if (project_utils.includeInEbook(document)) {
 			var documentId = document._id;
 			var documentType = document.type;
@@ -483,39 +407,32 @@ exports.get_toc = function(req, res, next) {
 
 		// async.each() does not guarantee to process elements in order, so we must do it ourselves - because we still like to get things done in parallel
 		var sortedToCEntries = project_utils.sortToCEntries(documents, documentToCs);
-		res.send({
-			toc: sortedToCEntries
-		});
+	 	res.send({toc: sortedToCEntries});
 	});
 }
 
-exports.compile = function(req, res, next) {
+exports.compile = function (req, res, next) {
 	var userId = req.user._id;
-	epub3.create(userId, req.project, function(err, epub) {
+	epub3.create(userId, req.project, function (err, epub) {
 		if (err) {
 			return next(err);
 		}
 
-		// Create a temporary file to avoid the second compile() call from the client, c.f. #483, trying to write to the same file while the EPUB checker has it open.
-		var tempFilename = path.join(conf.epub.tmpDir, uuid_lib.v4() + ".epub");
-		var tempFile = fs.createWriteStream(tempFilename);
-		epub.pipe(tempFile);
-
-		var epubDownloadUrl = conf.resources.usersUrl + "/" + conf.epub.userDirPrefix + userId + "/" + req.project._id + '.epub';
-		var filename = (req.project.metadata.title || req.project.name) + ".epub";
-		var saneTitle = sanitize(filename);
-
 		// TODO: When a GUI design has been made, also return the EPUB validation result to client
-		res.send({
-			url: epubDownloadUrl
-		});
+		var userEpubDownloadUrl = conf.app.url_prefix + 'project/' + req.project._id + '/epub';
+		res.send({url: userEpubDownloadUrl});
 
 		if ('test' != env && conf.epub.validatorEnabled) {
+			// Create a temporary file to avoid the second compile() call from the client, c.f. #483, trying to write to the same file while the EPUB checker has it open.
+			var tempFilename = path.join(conf.epub.tmpDir, uuid_lib.v4() + ".epub");
+			var tempFile = fs.createWriteStream(tempFilename);
+			epub.pipe(tempFile);
+
 			tempFile.once('close', function() {
 				// The sending of the validation result email can happen after the response has been returned to the user but must happen on the temp file, c.f. comment above.
 				var fullPath = tempFilename;
 				exec('java -jar ' + conf.epub.validatorPath + ' "' + fullPath + '"',
-					function(error, stdout, stderr) {
+					function (error, stdout, stderr) {
 						var epubValidationResult = "OK";
 						var errorMessage = null;
 						if (error !== null) {
@@ -523,6 +440,9 @@ exports.compile = function(req, res, next) {
 							errorMessage = error.code + ':\n' + error.stack;
 						}
 
+						var userEpubFilename = (req.project.metadata.title || req.project.name) + ".epub";
+						var saneTitle = sanitize(userEpubFilename);
+						var scriplerEpubDownloadUrl = conf.resources.usersUrl + "/" + conf.epub.userDirPrefix + userId + "/" + req.project._id + '.epub';
 						var authorName = req.user.firstname + " " + req.user.lastname;
 
 						logger.info('EPUB Validation Result');
@@ -540,35 +460,33 @@ exports.compile = function(req, res, next) {
 						};
 
 						emailer.sendUserEmail(
-							validationResultRecipient, [{
-								name: "USEREMAIL",
-								content: req.user.email
-							}, {
-								name: "NAME",
-								content: authorName
-							}, {
-								name: "EPUBTITLE",
-								content: saneTitle
-							}, {
-								name: "EPUBURL",
-								content: epubDownloadUrl
-							}, {
-								name: "EPUBVALIDATIONRESULT",
-								content: epubValidationResult
-							}, {
-								name: "ERROR",
-								content: errorMessage
-							}],
+							validationResultRecipient,
+							[
+								{name: "USEREMAIL", content: req.user.email},
+								{name: "NAME", content: authorName},
+								{name: "EPUBTITLE", content: saneTitle},
+								{name: "EPUBURL", content: scriplerEpubDownloadUrl},
+								{name: "EPUBVALIDATIONRESULT", content: epubValidationResult},
+								{name: "ERROR", content: errorMessage}
+							],
 							'epub-validation-result'
 						);
 
-						fs.unlink(tempFilename, function() {});
+						fs.unlink(tempFilename, function () {});
 					}
 				);
 			});
 		}
 	});
 
+}
+
+exports.downloadEpub = function (req, res, next) {
+	var userEpubFullPath = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + req.user._id, req.project._id + '.epub');
+	var userEpubFilename = (req.project.metadata.title || req.project.name) + ".epub";
+	var saneTitle = sanitize(userEpubFilename);
+	res.download(userEpubFullPath, saneTitle);
+	logger.info(req.user.firstname + ' ' + req.user.lastname + ' (user' + req.user._id + ') downloaded ebook ' + saneTitle + ' (' + req.project._id + '.epub)');
 }
 
 exports.applyStyleset = function(req, res, next) {
@@ -599,8 +517,5 @@ exports.applyStyleset = function(req, res, next) {
 				});
 			});
 		}
-
 	});
-
-
 }

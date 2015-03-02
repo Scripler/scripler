@@ -1,97 +1,100 @@
 <link rel="stylesheet" type="text/css" href="pages/css/pages/create.css" />
 
-<div class="container">
-	<div class="main">
-		<section class="section-unisquare" data-ng-class="{ 'white-bg' : showSettings}">
-			<div data-ng-hide="showSettings">
-				<div class="links">
-					<a href="http://{{frontpage}}" target="_self" class="frontpage-link">
-						<span class="arrow-left"></span><p>Frontpage</p>
-					</a>
-				</div>
-				<div class="logo-box">
-					<img class="logo" src="/images/logo.png">
-				</div>
-				<div class="uni-bottom-box" data-ng-show="user._id && !user.isDemo">
-					<div class="user-box">
-						<img class="user-image" src="pages/images/profilepicture.png" height="50" width="50">
-						<div class="user-text">
-							<div class="user-name" data-ng-bind-html="user.firstname + ' ' + user.lastname"></div>
-							<div class="user-links">
-								<a data-ng-click="showSettings = !showSettings">Settings</a>
-								<span>|</span>
-								<a href="/logout">Log out</a>
-							</div>
-						</div>
-					</div>
-				</div>
+<div class="main">
+	<section class="section-unisquare" data-ng-class="{ 'white-bg' : showSettings}">
+		<div data-ng-hide="showSettings">
+			<div class="links">
+				<a href="http://{{frontpage}}" target="_self" class="frontpage-link">
+					<span class="arrow-left"></span><p>Frontpage</p>
+				</a>
 			</div>
-			<div class="user-settings" data-ng-show="showSettings && !user.isDemo">
+			<div class="logo-box">
+				<img class="logo" src="/images/logo.png">
+			</div>
+			<div class="uni-bottom-box" data-ng-show="user._id && !user.isDemo">
 				<div class="user-box">
-						<img class="user-image" src="pages/images/profilepicture.png" height="100" width="100">
-						<div class="settings-text">
-							<div class="user-name settings" data-ng-bind-html="user.firstname"></div>
-							<div class="user-name settings" data-ng-bind-html="user.lastname"></div>
+					<img class="user-image" src="pages/images/profilepicture.png" height="50" width="50">
+					<div class="user-text">
+						<div class="user-name" data-ng-bind-html="user.firstname + ' ' + user.lastname"></div>
+						<div class="user-links">
+							<a data-ng-click="showSettings = !showSettings">Settings</a>
+							<span>|</span>
+							<a href="/logout">Log out</a>
 						</div>
-				</div>
-				<hr>
-				<div class="user-settings-options">
-					<div class="user-email" data-ng-show="!editPassword">
-						<form name="emailEditForm">
-							<input name="editEmailInput" data-ng-class="{ 'has-error' : emailEditForm.editEmailInput.$invalid && saveSubmitted}" type="email" data-ng-model="user.email" data-ng-pattern="EMAIL_REGEXP" data-ng-disabled="!editEmail" focus-on="editEmail">
-							<a data-ng-click="editEmail = !editEmail">Edit</a>
-						</form>
 					</div>
-					<div class="edit-password">
-						<a data-ng-click="editPassword = !editPassword" data-ng-show="!editPassword">Edit password</a>
-						<form name="editPasswordForm" data-ng-submit="changePassword()" data-ng-show="editPassword" novalidate>
-							<input type="password" id="current-password" name="currentPassword" data-ng-model="password" data-ng-class="{ 'has-error' : editPasswordForm.currentPassword.$invalid && passwordSubmitted }" placeholder="Current" data-ng-minlength="6" required>
-							<input type="password" id="new-password" name="newPassword" data-ng-model="newPassword" data-ng-class="{ 'has-error' : editPasswordForm.newPassword.$invalid && passwordSubmitted }" placeholder="New" data-ng-minlength="6" required>
-							<input type="password" id="new-retype-password" name="newPasswordRetype" data-ng-model="newPasswordRetype" data-ng-class="{ 'has-error' : editPasswordForm.newPasswordRetype.$invalid && passwordSubmitted }" placeholder="Retype New" data-ng-minlength="6" required>
-							<button type="submit" class="button">Save Changes</button>
-						</form>
-					</div>
-					<div class="edit-newsletter" data-ng-show="!editPassword">
-						<input type="checkbox" data-ng-model="user.newsletter">Receive newsletter
-					</div>
-					<div class="edit-archived" data-ng-show="!editPassword">
-						<input type="checkbox" data-ng-model="user.showArchived">Show Archived
-					</div>
-					<button data-ng-click="updateUser()" class="button" data-ng-show="!editPassword">Save Changes</button>
 				</div>
 			</div>
-		</section>
-
-		<section class="section-projects-container">
-			<div class="projects-title">Ebooks</div>
-
-			<div class="section-projects">
-				<div class="project new" data-ng-click="addProject();"></div>
-				<div class="project" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index" >
-					<a class="project-options-show" data-ng-class="{ 'open' : $index == selectedProjectOptions }" data-ng-click="showProjectOptions($index)">
-						<div class="arrow"></div>
-					</a>
-					<p>
-						<a href="#/project?pid={{project._id}}" class="project-link" data-ng-hide="project.editingProjectTitle">{{project.name}}</a>
-						<form data-ng-show="project.editingProjectTitle">
-							<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!project.editingProjectTitle" on-enter="project.editingProjectTitle = false; renameProject(project);" data-ng-blur="project.editingProjectTitle = false; renameProject(project);"></textarea>
-						</form>
-					</p>
-
-					<div class="project-options" data-ng-show="$index == selectedProjectOptions">
-						<div class="project-options-menupoint" data-ng-click="project.editingProjectTitle = true; hideProjectOptions();">rename</div>
-						<div class="project-options-menupoint" data-ng-click="copyProject(project); hideProjectOptions();">copy</div>
-						<div class="project-options-menupoint" data-ng-hide="project.archived" data-ng-click="archiveProject(project); hideProjectOptions();">archive</div>
-						<div class="project-options-menupoint" data-ng-show="project.archived" data-ng-click="unarchiveProject(project); hideProjectOptions();">unarchive</div>
+		</div>
+		<div class="user-settings" data-ng-show="showSettings && !user.isDemo">
+			<div class="user-box">
+					<img class="user-image" src="pages/images/profilepicture.png" height="100" width="100">
+					<div class="settings-text">
+						<div class="user-name settings" data-ng-bind-html="user.firstname"></div>
+						<div class="user-name settings" data-ng-bind-html="user.lastname"></div>
 					</div>
+			</div>
+			<hr>
+			<div class="user-settings-options">
+				<div class="user-email" data-ng-show="!editPassword">
+					<form name="emailEditForm">
+						<input name="editEmailInput" data-ng-class="{ 'has-error' : emailEditForm.editEmailInput.$invalid && saveSubmitted}" type="email" data-ng-model="user.email" data-ng-pattern="EMAIL_REGEXP" data-ng-disabled="!editEmail" focus-on="editEmail">
+						<a data-ng-click="editEmail = !editEmail">Edit</a>
+					</form>
+				</div>
+				<div class="edit-password">
+					<a data-ng-click="editPassword = !editPassword" data-ng-show="!editPassword">Edit password</a>
+					<form name="editPasswordForm" data-ng-submit="changePassword()" data-ng-show="editPassword" novalidate>
+						<input type="password" id="current-password" name="currentPassword" data-ng-model="password" data-ng-class="{ 'has-error' : editPasswordForm.currentPassword.$invalid && passwordSubmitted }" placeholder="Current" data-ng-minlength="6" required>
+						<input type="password" id="new-password" name="newPassword" data-ng-model="newPassword" data-ng-class="{ 'has-error' : editPasswordForm.newPassword.$invalid && passwordSubmitted }" placeholder="New" data-ng-minlength="6" required>
+						<input type="password" id="new-retype-password" name="newPasswordRetype" data-ng-model="newPasswordRetype" data-ng-class="{ 'has-error' : editPasswordForm.newPasswordRetype.$invalid && passwordSubmitted }" placeholder="Retype New" data-ng-minlength="6" required>
+						<button type="submit" class="button">Save Changes</button>
+					</form>
+				</div>
+				<div class="edit-newsletter" data-ng-show="!editPassword">
+					<input type="checkbox" data-ng-model="user.newsletter">Receive newsletter
+				</div>
+				<div class="edit-archived" data-ng-show="!editPassword">
+					<input type="checkbox" data-ng-model="user.showArchived">Show Archived
+				</div>
+				<button data-ng-click="updateUser()" class="button" data-ng-show="!editPassword">Save Changes</button>
+			</div>
+		</div>
+	</section>
+
+	<section class="section-projects-container">
+		<div class="projects-title">Ebooks</div>
+
+		<div class="section-projects">
+			<div class="project new" data-ng-click="addProject();"></div>
+			<div class="project clearfix" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index" data-ng-mouseenter="showProjectTitle($index)" data-ng-mouseleave="hideProjectTitle()">
+				<a class="project-options-show" data-ng-class="{ 'open' : $index == selectedProjectOptions }" data-ng-click="showProjectOptions($index)">
+					<div class="arrow"></div>
+				</a>
+
+				<a href="#/project?pid={{project._id}}" class="project-link" data-ng-hide="project.editingProjectTitle" data-ng-class="{ 'show-all' : $index == selectedProjectHover && !project.editingProjectTitle}">
+					{{project.name}}
+				</a>
+				<div class="project-link show-more" data-ng-hide="$index == selectedProjectHover || project.editingProjectTitle || project.name.length < 29">
+					(…)
 				</div>
 
-				<div class="feedback feedback-fixed bottom-fixed" data-ng-click="openFeedback()">
-					<img src="pages/images/feedback.svg" width="20" />
+				<form data-ng-show="project.editingProjectTitle">
+					<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!project.editingProjectTitle" blur-on-enter data-ng-blur="project.editingProjectTitle = false; renameProject(project);"></textarea>
+				</form>
+
+				<div class="project-options" data-ng-show="$index == selectedProjectOptions">
+					<div class="project-options-menupoint" data-ng-click="project.editingProjectTitle = true; hideProjectOptions();">rename</div>
+					<div class="project-options-menupoint" data-ng-click="copyProject(project); hideProjectOptions();">copy</div>
+					<div class="project-options-menupoint" data-ng-hide="project.archived" data-ng-click="archiveProject(project); hideProjectOptions();">archive</div>
+					<div class="project-options-menupoint" data-ng-show="project.archived" data-ng-click="unarchiveProject(project); hideProjectOptions();">unarchive</div>
 				</div>
 			</div>
-		</section>
-	</div>
+
+			<div class="feedback fixed-position" data-ng-click="openFeedback()">
+				<img src="pages/images/feedback.svg" width="20" />
+			</div>
+		</div>
+	</section>
 </div>
 
 

@@ -1,9 +1,14 @@
 /* General */
-body, html { position: relative; font-size: 100%; padding: 0; margin: 0; }
+body, html { position: relative; width: 100%; height: 100%; overflow: hidden; font-size: 100%; padding: 0; margin: 0; }
 
 /* Angular Cloak */
 [ng\:cloak], [ng-cloak], .ng-cloak {
-  display: none !important;
+	display: none !important;
+}
+
+/* Angular Animate */
+.ng-hide-add, .ng-hide-remove {
+	display: block !important;
 }
 
 /* Reset */
@@ -90,13 +95,34 @@ a:hover {
 	color: #666;
 }
 
-.main, .container > header {
+.container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background-color: #fafafa;
+}
+.container.shownotification {
+	height: calc(100% - 142px);
+}
+.container.shownotification.activation {
+	height: calc(100% - 90px);
+}
+@media all and (min-width: 890px) {
+	.container.shownotification {
+		height: calc(100% - 102px);
+	}
+	.container.shownotification.activation {
+		height: calc(100% - 72px);
+	}
+}
+@media all and (min-width: 1220px) {
+	.container.shownotification {
+		height: calc(100% - 72px);
+	}
+}
+.container > header {
 	width: 100%;
 	margin: 0 auto;
-	padding: 1em;
-}
-
-.container > header {
 	padding: 1em;
 }
 
@@ -224,28 +250,42 @@ textarea {
 
 
 /*registration styling*/
-
 .registration {
 	background-color: #c6c6c6;
-	position: fixed;
+	position: absolute;
 	width: 100%;
 	padding: 20px;
-	z-index: 20;
-	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
+	z-index: 2;
 	bottom: 0;
 }
-.registration.green {
+.registration.activation {
 	background-color: #5cb85c;
-}
-
-.registration-container {
-	width:100%;
-	margin:0 auto;
+	color: white;
 }
 .registration-text {
 	font-weight: 700;
-	margin: 0 0 10px 0;
 	min-width: 310px;
+}
+.registration-form {
+	position: relative;
+	float: left;
+	min-width: 692px;
+}
+.registration-form.explanation {
+	margin: 0 0 10px;
+}
+.activation .registration-text {
+	float: none;
+	margin: 6px 0;
+	padding: 0 30px;
+}
+.activation .registration-form {
+	float: none;
+	min-width: 0;
+	text-align: center;
+}
+.activation .registration-form.explanation {
+	margin: 0;
 }
 @media all and (min-width: 1220px) {
 	.registration-text {
@@ -253,11 +293,14 @@ textarea {
 		margin: 0 10px 0 0;
 		padding: 7px 0 0;
 	}
-}
-.registration-form {
-	position: relative;
-	float: left;
-	min-width: 692px;
+	.registration-form {
+		position: relative;
+		float: left;
+		min-width: 0;
+	}
+	.registration-form.explanation {
+		margin: 0;
+	}
 }
 .registration-social {
 	float: left;
@@ -297,21 +340,45 @@ textarea {
 	margin-right:5px;
 }
 
-.registration-text.validate {
+/*.registration-text.validate {
 	color: #fff;
 	text-align: center;
 	margin: 0;
 	opacity: 1;
 	width: 100%;
 	float: none;
-}
+}*/
 .registration-button {
 	min-width: 100px;
 }
+.registration-missing-email {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -20px;
+	font-size: 80%;
+	cursor: pointer;
+	-webkit-transition: 1s linear all;
+	transition: 1s linear all;
+    opacity: 1;
+}
+.registration-missing-email.ng-hide {
+    opacity: 0;
+}
+.registration-missing-email:hover {
+	text-decoration: underline;
+}
+.registration-missing-email.not-link {
+	text-decoration: none;
+	cursor: default;
+}
+.registration-missing-email.not-link:hover {
+	color: white;
+}
 .registration-close-button {
 	position: absolute;
-	right: 10px;
-	top: 6px;
+	right: 0;
+	top: 0;
 	color: #fff;
 	font-size: 120%;
 	cursor: pointer;
@@ -389,14 +456,12 @@ textarea {
 	padding: 0;
 	text-align: center;
 }
-
-.feedback-fixed {
-	position:fixed;
+.feedback.fixed-position {
+	position:absolute;
 	bottom:0;
 	right:0;
 	min-height: 150px;
 }
-
 .feedback img {
 	position: relative;
 	top: 50%;
@@ -451,7 +516,7 @@ textarea {
   background: #fff265;
 }
 
-.notifications{
+.notifications {
 	outline: none;
 	-moz-border-radius: 1px;
 	-webkit-border-radius: 1px;
@@ -466,12 +531,33 @@ textarea {
 	font-family: 'Roboto', sans-serif;
 	width: 250px;
 	padding: 5px;
-	position:fixed;
-	bottom:73px;
-	left:50%;
+	position: absolute;
+	bottom: 144px;
+	left: 50%;
 	margin-left: -125px;
 }
-.loggedin{
+.notifications.activation {
+	bottom: 110px;
+}
+@media all and (min-width: 500px) {
+	.notifications.activation {
+		bottom: 90px;
+	}
+}
+@media all and (min-width: 890px) {
+	.notifications {
+		bottom: 102px;
+	}
+	.notifications.activation {
+		bottom: 72px;
+	}
+}
+@media all and (min-width: 1220px) {
+	.notifications {
+		bottom: 72px;
+	}
+}
+.notifications.loggedin {
 	bottom:0;
 }
 .readmore{

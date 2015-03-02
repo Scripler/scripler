@@ -107,9 +107,9 @@ function projectSpaceController($scope, $http, projectsService, userService, $q,
 	};
 
 	$scope.selectedProjectOptions = -1;
-	$scope.showProjectOptions = function ($index) {
-		if ($index != $scope.selectedProjectOptions) {
-			$scope.selectedProjectOptions  = $index;
+	$scope.showProjectOptions = function (index) {
+		if (index != $scope.selectedProjectOptions) {
+			$scope.selectedProjectOptions  = index;
 		}
 		else {
 			$scope.hideProjectOptions();
@@ -119,7 +119,15 @@ function projectSpaceController($scope, $http, projectsService, userService, $q,
 		$scope.selectedProjectOptions = -1;
 	};
 
-	$scope.archiveProject = function( project ) {
+	$scope.selectedProjectHover = -1;
+    $scope.showProjectTitle = function(index) {
+        $scope.selectedProjectHover = index;
+    };
+    $scope.hideProjectTitle = function() {
+        $scope.selectedProjectHover = -1;
+    };
+
+	$scope.archiveProject = function(project) {
 		if ( $scope.user || $scope.demoUser ) {
 			$http.put('/project/' + project._id + '/archive')
 				.success( function() {
