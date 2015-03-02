@@ -22,6 +22,7 @@ var emailer = require('../lib/email/email.js');
 var exec = require('child_process').exec;
 var logger = require('../lib/logger');
 var uuid_lib = require('node-uuid');
+var document_utils = require('../lib/document-utils');
 
 //Load project by id
 exports.load = function (id) {
@@ -488,12 +489,33 @@ exports.downloadEpub = function (req, res, next) {
 	logger.info(req.user.firstname + ' ' + req.user.lastname + ' (user' + req.user._id + ') downloaded ebook ' + saneTitle + ' (' + req.project._id + '.epub)');
 }
 
-exports.applyStyleset = function (req, res, next) {
-	req.project.styleset = req.styleset;
-	req.project.save(function (err) {
+exports.applyStyleset = function(req, res, next) {
+	var stylesetToApply = req.styleset;
+	var level = req.user.level;
+	req.project.styleset = stylesetToApply._id; 
+	var apply = function(document, callback) {
+		document_utils.applyStylesetToDocument(document, stylesetToApply, level, function(err, populatedStyleset) {
+			if (err) {
+				return callback(err);
+			} else { 
+				callback();
+			}
+		});
+	};
+
+	async.each(req.project.documents, apply, function(err) {
 		if (err) {
 			return next(err);
+		} else {
+			req.project.save(function(err) {
+				if (err) {
+					console.log('something went wrong');
+					return next(err);
+				}
+				res.send({
+					project: req.project
+				});
+			});
 		}
-		res.send({project: req.project});
 	});
 }
