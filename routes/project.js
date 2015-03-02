@@ -596,7 +596,7 @@ exports.applyStyleset = function(req, res, next) {
             	 console.log('something went wrong');
                 return next(err);
             }
-              res.send(stylesetCopies);
+              res.send(200, stylesetCopies);
         });
     }
 

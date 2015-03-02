@@ -159,7 +159,7 @@ describe('Scripler RESTful API', function () {
 					userStylesetId1 = res.body.user.stylesets[0]; // book-bw
 					userStylesetId2 = res.body.user.stylesets[1]; // book-color
 					userStylesetId3 = res.body.user.stylesets[2]; // draft-bw
-					userStylesetId4 = res.body.user.stylesets[3]; // draft-color
+					userStylesetId4 = res.body.user.stylesets[3]; // draft-color  
 					defaultUserStyleset = res.body.user.stylesets[15]; // simple-bw
                     done();
 				});
@@ -1404,7 +1404,7 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset._id, documentStylesetId4);
 					assert.equal(res.body.styleset.styles.length, numberOfStylesInSystemStyleset);
-					assert.equal(res.body.styleset.name, "draft-color");
+					assert.equal(res.body.styleset.name, "simple-bw");
 					done();
 				});
 		}),
