@@ -52,7 +52,6 @@
 	width: 100px;
 	height: 129px;
 	float: left;
-	cursor: pointer;
 }
 .project:hover, .project:focus {
 	background: url("../../images/ebook_hover.svg")
@@ -122,9 +121,11 @@
 }
 .project-link {
 	position: absolute;
+	display: block;
 	top: 20px;
 	left: 6px;
 	overflow: hidden;
+	background: none #fff;
 	width: 74px;
 	height: 90px;
 	padding: 5px;
@@ -133,7 +134,7 @@
 }
 .project-link.show-all {
 	overflow: visible;
-	background-color: #fff;
+	min-height: 90px;
 	height: auto;
 	z-index: 15;
 }
