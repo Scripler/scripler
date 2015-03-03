@@ -19,7 +19,7 @@
 			<div class="registration-form explanation" data-ng-hide="user.isDemo">
 				<div class="registration-close-button" data-ng-click="showRegistrationBar('hide')" data-ng-show="user._id">x</div>
 				<div class="registration-text" data-ng-bind="registrationText"></div>
-				<div class="registration-missing-email" data-ng-hide="verificationEmailSent || !user._id" data-ng-click="resendUserVerificationEmail()">Didn't get an email? Click here to for us to resend it</div>
+				<div class="registration-missing-email" data-ng-hide="verificationEmailSent || !user._id" data-ng-click="resendUserVerificationEmail()">Didn't get an email? Click here to resend it</div>
 				<div class="registration-missing-email not-link" data-ng-show="verificationEmailSent && user._id">Verification email has been sent</div>
 			</div>
 
