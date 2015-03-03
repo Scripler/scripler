@@ -80,7 +80,7 @@
 	right: 20px;
 	padding: 6px;
 	cursor: pointer;
-	z-index: 15;
+	z-index: 12;
 }
 .project .project-options-show.open {
 	padding: 5px;
@@ -135,6 +135,7 @@
 	overflow: visible;
 	background-color: #fff;
 	height: auto;
+	z-index: 15;
 }
 .project-link.show-more {
 	top: inherit;
