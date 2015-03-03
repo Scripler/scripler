@@ -71,7 +71,7 @@
 					<div class="arrow"></div>
 				</a>
 
-				<a href="#/project?pid={{project._id}}" class="project-link" data-ng-hide="project.editingProjectTitle" data-ng-class="{ 'show-all' : $index == selectedProjectHover && !project.editingProjectTitle}">
+				<a data-ng-href="#/project?pid={{project._id}}" class="project-link" data-ng-hide="project.editingProjectTitle" data-ng-class="{ 'show-all' : $index == selectedProjectHover && !project.editingProjectTitle && $index != selectedProjectOptions }">
 					{{project.name}}
 				</a>
 				<div class="project-link show-more" data-ng-hide="$index == selectedProjectHover || project.editingProjectTitle || project.name.length < 29">
