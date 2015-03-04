@@ -1331,7 +1331,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
     }
 
 	function constructCoverTag(image){
-		var imageTag = '<figure><img class="cover" src="//' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" /></figure>';
+		var imageTag = '<img class="cover" src="//' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
 		return imageTag;
 	}
 
