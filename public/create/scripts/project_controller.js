@@ -1342,7 +1342,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
     function overwriteExistingDocument(type, text) {
         var isNew = true;
-        console.log($scope.projectDocuments); 
+        //console.log($scope.projectDocuments); 
         for (var i = 0; i < $scope.projectDocuments.length; i++) { 
             var document = $scope.projectDocuments[i]; 
             if (typeof document.type !== 'undefined') {
@@ -1386,16 +1386,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	
     $scope.createCover = function(image) {
-    	var html = constructImageTag( image );
+    	var html = constructCoverTag( image );
 		var isNewCover = overwriteExistingDocument( 'cover', html );
-
-
         if (isNewCover) {
             $scope.addProjectDocument('cover', html);
 		} else {
 			$scope.showLeftMenu('contents', true);
         }
-
         var json = {};
         json.cover = 'images/' + image.name;
         $http.put('/project/' + $scope.pid + '/metadata/cover', angular.toJson(json));
