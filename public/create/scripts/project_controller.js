@@ -453,7 +453,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$scope.hideStyleEditor();
 			}
 		}
-		$rootScope.ck.focus();
+
+		$scope.focusEditor();
         $scope.scrollToStyle();
 	}
 	$scope.hideLeftMenu = function (status) {
@@ -469,7 +470,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		else {
 			$scope.hideRightMenu();
 		}
-		$rootScope.ck.focus();
+		$scope.focusEditor();
 	}
 	$scope.hideRightMenu = function (status) {
 		$scope.rightMenuShow = false;
@@ -892,8 +893,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
         }
 
         $scope.updateProjectDocument();
+        $scope.focusEditor();
 
-        $rootScope.ck.focus();
         selectedRanges.moveToBookmarks(bookmarks);
         selection.selectRanges(selectedRanges);
     }
@@ -1253,7 +1254,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
         } else {
             $scope.activeInsertOption = insertoption;
         }
-		$rootScope.ck.focus();
+
+        $scope.focusEditor();
     }
 
     $scope.insertImageOption = function(imageoption) {
@@ -1262,7 +1264,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
         } else {
             $scope.activeImageOption = imageoption;
         }
-		$rootScope.ck.focus();
+
+        $scope.focusEditor();
     }
 
     $scope.finalizeOptionChosen = function(finalizeOption) {
@@ -1271,7 +1274,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
         } else {
             $scope.activeFinalizeOption = finalizeOption;
         }
-		$rootScope.ck.focus();
+
+        $scope.focusEditor();
     }
 
     $scope.scrollToToc = function(tocEntry) {
@@ -1536,7 +1540,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
         var range = editor.createRange();
 		range.moveToElementEditablePosition(element);
 		
-        $rootScope.ck.focus();
+        $scope.focusEditor();
         range.select();
         $scope.updateProjectDocument();
     }
@@ -1572,8 +1576,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
         if (typeof $scope.ckReady !== 'undefined') {
             if ($scope.ckReady) {
                 $scope.applyStylesetsToEditor();
-                //focus editor when data is ready
-                $rootScope.ck.focus();
+                $scope.focusEditor();
             }
         }
     });
