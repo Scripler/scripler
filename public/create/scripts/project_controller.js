@@ -219,7 +219,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var document = {};
 
 		if (type == 'cover') {
-
 			document.name = 'Cover';
         } else if (type == 'colophon') {
 			document.name = 'Colophon';
@@ -394,8 +393,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$http.put('/document/' + projectDocument._id + '/unarchive')
                 .success(function() {
 					projectDocument.archived = false;
-					$scope.openProjectDocument(projectDocument);
-					deferred.resolve();
+
+					var waitPromise = $scope.openProjectDocument(projectDocument);
+                    waitPromise.then(function() {
+                        deferred.resolve();
+					});
 				});
 		} else {
 			projectDocument.archived = false;
@@ -444,14 +446,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 			if ( $scope.leftMenuShowItem != 'design' && $scope.styleEditorVisible ) {
 				$scope.hideStyleEditor();
-		}
+			}
 		}
 		else {
 			$scope.hideLeftMenu();
 			
 			if ( $scope.styleEditorVisible ) {
 				$scope.hideStyleEditor();
-		}
+			}
 		}
 
 		$scope.focusEditor();
@@ -1352,17 +1354,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
             var document = $scope.projectDocuments[i]; 
             if (typeof document.type !== 'undefined') {
                 if (document.type === type) {
-                  
+
+					// Check if the document is archieved and activate it, TODO: refactore to only make the check if document is archieved
                     var waitPromise = $scope.unarchiveProjectDocument(document);
                     waitPromise.then(function() {
-                        if ($scope.documentSelected._id !== document._id) {
-							// The existing matching document is not currnetly selected
-                            updateDocumentText(type, text);
-						} else {
-							// The existing matching document is already selected - update text directly in CK
-							var editor = getEditor();
-							editor.setData(text);
-						}
+						$scope.documentSelected.text = text;
 					});
 
 					isNew = false;
@@ -1373,22 +1369,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		return isNew;
 	}
-
-    function updateDocumentText(type, text) {
-        if (type === 'cover') { 
-			$scope.documentSelected.text = text;
-		}
-        if (type === 'toc') {
-			$scope.documentSelected.text = text;
-		}
-        if (type === 'titlepage') {
-			$scope.documentSelected.text = text;
-		}
-        if (type === 'colophon') {
-			$scope.documentSelected.text = text;
-		}
-	}
-
 	
     $scope.createCover = function(image) {
 		var html = constructCoverTag( image );
@@ -1689,9 +1669,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$scope.selectedStyle = selectedStyle;
 
                 // Scroll to the selected style
-                if ($scope.leftMenuShowItem == 'design') {
-                    $scope.scrollToStyle();
-                }
+                $scope.scrollToStyle();
 			}
 
 			returnSelectedContent();
@@ -1699,7 +1677,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}, this );
 
         $scope.scrollToStyle = function() {
-            if ($scope.selectedStyle) {
+            if ($scope.selectedStyle && $scope.leftMenuShowItem == 'design') {
                 var styleNode = document.getElementById( $scope.selectedStyle._id );
                 // If design tab is open, scroll to selected style if it is not already the selected style
                 if (styleNode) {
