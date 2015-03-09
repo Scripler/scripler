@@ -1359,8 +1359,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	function insertImage( image ) {
+		var type="image";
 		var imageInsert = constructImageTag( image );
-		editorInsert( imageInsert );
+		editorInsert( imageInsert, type );
 	}
 
 	function overwriteExistingDocument( type, text ) {
@@ -1541,7 +1542,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			insert = insert.replace('title="title"', 'title="' + title + '"').replace('name="name"', 'name="' + title + '"');
 			var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
 		}
-		else if(type="link"){
+		else if(type=="link"){
 			if($scope.linkText )title=$scope.linkText;
 			insert = insert.replace('link_text', title);
 		}	
@@ -1550,13 +1551,17 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		// insert anchor on the caret, but keep the old content
 		editor.insertElement(element);
 		if(type=="anchor")editor.insertText(replacedContent.getText());
-		
-
 		var range = editor.createRange();
 		range.moveToElementEditablePosition(element);
 		
-		$rootScope.ck.focus();
-		range.select();
+		if (type=="image"){
+			var imageRangeChange=range.startContainer;
+			range.moveToElementEditablePosition(imageRangeChange, true);
+		}
+		else {
+			range.select();
+		}
+		$rootScope.ck.focus(); 
 		$scope.updateProjectDocument();
 	}
 
