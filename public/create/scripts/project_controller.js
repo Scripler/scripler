@@ -1325,13 +1325,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
         insertImage(image);
     }
 
-    function constructImageTag(image) {
+	function constructImageTag(image) {
 		var imageTag = '<figure><img src="//' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" /></figure>';
         return imageTag;
     }
 
 	function constructCoverTag(image){
-		var imageTag = '<figure><img class="cover" src="//' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" /></figure>';
+		var imageTag = '<img class="cover" src="//' + $location.host() + '/project/' + $scope.pid + '/images/' + image.name + '" />';
 		return imageTag;
 	}
 
@@ -1342,7 +1342,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
     function overwriteExistingDocument(type, text) {
         var isNew = true;
-        console.log($scope.projectDocuments); 
         for (var i = 0; i < $scope.projectDocuments.length; i++) { 
             var document = $scope.projectDocuments[i]; 
             if (typeof document.type !== 'undefined') {
@@ -1386,16 +1385,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	
     $scope.createCover = function(image) {
-    	var html = constructImageTag( image );
+    	var html = constructCoverTag( image );
 		var isNewCover = overwriteExistingDocument( 'cover', html );
-
-
         if (isNewCover) {
             $scope.addProjectDocument('cover', html);
 		} else {
 			$scope.showLeftMenu('contents', true);
         }
-
         var json = {};
         json.cover = 'images/' + image.name;
         $http.put('/project/' + $scope.pid + '/metadata/cover', angular.toJson(json));
