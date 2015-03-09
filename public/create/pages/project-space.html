@@ -66,16 +66,20 @@
 
 		<div class="section-projects">
 			<div class="project new" data-ng-click="addProject();"></div>
-			<div class="project" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index" >
+			<div class="project clearfix" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index" data-ng-mouseenter="showProjectTitle($index)" data-ng-mouseleave="hideProjectTitle()">
 				<a class="project-options-show" data-ng-class="{ 'open' : $index == selectedProjectOptions }" data-ng-click="showProjectOptions($index)">
 					<div class="arrow"></div>
 				</a>
-				<p>
-					<a href="#/project?pid={{project._id}}" class="project-link" data-ng-hide="project.editingProjectTitle">{{project.name}}</a>
-					<form data-ng-show="project.editingProjectTitle">
-						<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!project.editingProjectTitle" blur-on-enter data-ng-blur="project.editingProjectTitle = false; renameProject(project);"></textarea>
-					</form>
-				</p>
+
+				<a href="#/project?pid={{project._id}}" class="project-link show-all" data-ng-hide="$index != selectedProjectHover || project.editingProjectTitle">
+					{{project.name}}
+				</a>
+				<a href="#/project?pid={{project._id}}" class="project-link" data-ng-hide="$index == selectedProjectHover || project.editingProjectTitle">	{{project.name | filterTruncation:29}}
+				</a>
+
+				<form data-ng-show="project.editingProjectTitle">
+					<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!project.editingProjectTitle" blur-on-enter data-ng-blur="project.editingProjectTitle = false; renameProject(project);"></textarea>
+				</form>
 
 				<div class="project-options" data-ng-show="$index == selectedProjectOptions">
 					<div class="project-options-menupoint" data-ng-click="project.editingProjectTitle = true; hideProjectOptions();">rename</div>
