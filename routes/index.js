@@ -79,7 +79,7 @@ module.exports = function (app, auth) {
 	app.put('/styleset/:stylesetId/unarchive', auth.isLoggedIn(), styleset.unarchive);
 	app.put('/style/:styleId/archive', auth.isLoggedIn(), style.archive);
 	app.put('/style/:styleId/unarchive', auth.isLoggedIn(), style.unarchive);
-	app.put('/styleset/:stylesetId/project/:projectId', auth.isLoggedIn(), project.applyStyleset);
+	app.put('/styleset/:stylesetId/project/:projectIdPopulated', auth.isLoggedIn(), project.applyStyleset);
 	app.put('/styleset/:stylesetId/document/:documentId', auth.isLoggedIn(), document.applyStyleset);
 	app.get('/document/:documentIdPopulatedStylesets/stylesets', auth.isLoggedIn(), document.listStylesets);
 	app.post('/font', auth.isLoggedIn(), font.create);

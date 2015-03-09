@@ -11,6 +11,7 @@ var async = require('async');
 var conf = require('config');
 var logger = require('../lib/logger');
 var styleset_utils = require('../lib/styleset-utils');
+var document_utils = require('../lib/document-utils');
 
 //Load a document by id
 exports.load = function (id) {
@@ -263,48 +264,15 @@ exports.upload = function (req, res, next) {
 
 exports.applyStyleset = function (req, res, next) {
 	var stylesetToApply = req.styleset;
-	var documentStylesetIds = req.document.stylesets;
-	var defaultStylesetId = req.document.defaultStyleset;
-
-	// TODO: implement via styleset-utils.getStylsetOrStyleType()?
-
-	if (req.user.level == "free") {
-		return next({message: "Free users are not allowed to apply styles", status: 402});
-	}
-	/*
-	 Only copy the styleset if it is not already applied to the document, i.e. if:
-	 - The styleset to apply is not the same as the default styleset
-	 AND
-	 (
-	 - The document does not have any stylesets
-	 OR
-	 - The styleset to apply is not in the document's stylesets
-	 )
-
-	 TODO: could use an IT or two.
-	 */
-	if (stylesetToApply._id != defaultStylesetId && (!documentStylesetIds || documentStylesetIds.length == 0 || documentStylesetIds.indexOf(stylesetToApply._id) < 0)) {
-		copyStyleset(stylesetToApply, function(err, copy) {
-			req.document.stylesets.addToSet(copy);
-			req.document.save(function (err) {
-				if (err) {
-					return next(err);
-				}
-
-				Styleset.findOne({"_id": copy._id}).populate('styles').exec(function (err, populatedCopy) {
-					if (err) {
-						return next(err);
-					}
-
-					populatedCopy.styles.sort(styleset_utils.systemStyleOrder);
-
-					res.send({styleset: populatedCopy});
-				});
-			});
-		});
-	} else {
-		res.send({});
-	}
+	document_utils.applyStylesetToDocument(req.document, stylesetToApply, req.user.level, function(err, populatedStyleset) {
+		if (err) {
+			return next(err);
+		} else if (!populatedStyleset) {
+			res.send({});
+		} else {
+			res.send({styleset: populatedStyleset});
+		}
+	});
 }
 
 exports.listStylesets = function (req, res, next) {
