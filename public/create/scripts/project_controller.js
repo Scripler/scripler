@@ -892,15 +892,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.applyStylesetsToEditor();
 		}
 
-<<<<<<< HEAD
         $scope.updateProjectDocument();
         $scope.focusEditor();
 
-=======
-		$scope.updateProjectDocument();
-
-		$rootScope.ck.focus();
->>>>>>> df9246a82c10855448cccbba85e0be3d53a804b0
         selectedRanges.moveToBookmarks(bookmarks);
         selection.selectRanges(selectedRanges);
 	}
