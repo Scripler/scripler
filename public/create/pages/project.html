@@ -5,15 +5,15 @@
 	<div class="menu-tab" data-ng-class="{ 'selectedTab' : leftMenuShowItem == 'contents' }" data-ng-click="showLeftMenu('contents');">
 			<img src="pages/images/contents.svg" width="20">
 		</div>
-	<div class="menu-tab" data-ng-class="{ 'selectedTab' : leftMenuShowItem == 'design' }" data-ng-click="showLeftMenu('design'); hideStyleEditor(); selectedStyle = null; focusEditor();">
+	<div class="menu-tab" data-ng-class="{ 'selectedTab' : leftMenuShowItem == 'design' }" data-ng-click="showLeftMenu('design');">
 			<img src="pages/images/design.svg" width="20">
 		</div>
 	<div class="menu-tab" data-ng-class="{ 'selectedTab' : leftMenuShowItem == 'insert' }" data-ng-click="showLeftMenu('insert');">
 			<img src="pages/images/insert.svg" width="20">
 		</div>
 </div>
-<div id="menu-left" class="menu-left full-height" data-ng-class="{ 'open' : leftMenuShow, 'bottom-menu-space' : leftMenuShowItem == 'contents' || leftMenuShowItem == 'design', 'open-small' : showNewOptions || showBottomOptions, 'open-big' : showImportOptions }">
-	<div class="menu-item-left" data-ng-show="leftMenuShowItem == 'contents'">
+<div class="menu-left full-height" data-ng-class="{ 'open' : leftMenuShow, 'bottom-menu-space' : leftMenuShowItem == 'contents' || leftMenuShowItem == 'design', 'open-small' : showNewOptions || showBottomOptions, 'open-big' : showImportOptions }">
+	<div id="menu-left-contents" class="menu-item-left" data-ng-show="leftMenuShowItem == 'contents'">
 			<div class="projectDocument new" data-ng-click="addProjectDocument();">
 				<p>+</p>
 			</div>
@@ -44,7 +44,7 @@
 				</div>
 			</div>
 		</div>
-	<div class="menu-item-left" data-ng-show="leftMenuShowItem == 'design'">
+	<div id="menu-left-design" class="menu-item-left" data-ng-show="leftMenuShowItem == 'design'">
 			<div class="typo new" data-ng-click="addNewStyleset()">
 				<p>+</p>
 			</div>
@@ -102,7 +102,7 @@
 				</li>
 			</ul>
 		</div>
-		<div class="menu-item-left" data-ng-show="leftMenuShowItem == 'insert'">
+		<div id="menu-left-insert" class="menu-item-left" data-ng-show="leftMenuShowItem == 'insert'">
 			<ul>
 				<!--<li data-ng-click="insertOptionChosen('showInsertBoxOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
 					<img src="pages/images/insert_box_button.png" alt="" title="" />

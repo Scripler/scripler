@@ -453,7 +453,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$scope.hideStyleEditor();
 		}
 		}
-		$rootScope.ck.focus();
+
+		$scope.focusEditor();
+        $scope.scrollToStyle();
 	}
 	$scope.hideLeftMenu = function (status) {
 		$scope.leftMenuShow = false;
@@ -468,7 +470,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		else {
 			$scope.hideRightMenu();
 		}
-		$rootScope.ck.focus();
+		$scope.focusEditor();
 	}
 	$scope.hideRightMenu = function (status) {
 		$scope.rightMenuShow = false;
@@ -890,9 +892,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.applyStylesetsToEditor();
 		}
 
-		$scope.updateProjectDocument();
+        $scope.updateProjectDocument();
+        $scope.focusEditor();
 
-		$rootScope.ck.focus();
         selectedRanges.moveToBookmarks(bookmarks);
         selection.selectRanges(selectedRanges);
 	}
@@ -1250,28 +1252,31 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if ($scope.activeInsertOption === insertoption) {
 			$scope.activeInsertOption = null;
         } else {
-			$scope.activeInsertOption = insertoption;
-		}
-		$rootScope.ck.focus();
-	}
+            $scope.activeInsertOption = insertoption;
+        }
+
+        $scope.focusEditor();
+    }
 
 	$scope.insertImageOption = function(imageoption) {
 		if ($scope.activeImageOption === imageoption) {
 			$scope.activeImageOption = null;
         } else {
-			$scope.activeImageOption = imageoption;
-		}
-		$rootScope.ck.focus();
-	}
+            $scope.activeImageOption = imageoption;
+        }
+
+        $scope.focusEditor();
+    }
 
     $scope.finalizeOptionChosen = function(finalizeOption) {
         if ($scope.activeFinalizeOption === finalizeOption) {
-			$scope.activeFinalizeOption = null;
-		} else {
-			$scope.activeFinalizeOption = finalizeOption;
-		}
-		$rootScope.ck.focus();
-	}
+            $scope.activeFinalizeOption = null;
+        } else {
+            $scope.activeFinalizeOption = finalizeOption;
+        }
+
+        $scope.focusEditor();
+    }
 
     $scope.scrollToToc = function(tocEntry) {
         var elm = $rootScope.ck.document.$.getElementById(tocEntry.id);
@@ -1533,7 +1538,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if(type=="anchor")editor.insertText(replacedContent.getText());
 		var range = editor.createRange();
 		range.moveToElementEditablePosition(element);
-		
+
 		if (type=="image"){
 			var imageRangeChange=range.startContainer;
 			range.moveToElementEditablePosition(imageRangeChange, true);
@@ -1541,7 +1546,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		else {
 			range.select();
 		}
-		$rootScope.ck.focus(); 
+
+		$scope.focusEditor();
 		$scope.updateProjectDocument();
 	}
 
@@ -1575,12 +1581,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
     $scope.$onRootScope('ckDocument:dataReady', function(event) {
         if (typeof $scope.ckReady !== 'undefined') {
             if ($scope.ckReady) {
-				$scope.applyStylesetsToEditor();
-				//focus editor when data is ready
-				$rootScope.ck.focus();
-			}
-		}
-	});
+                $scope.applyStylesetsToEditor();
+                $scope.focusEditor();
+            }
+        }
+    });
 
     angular.element(document).ready(function() {
 
@@ -1680,50 +1685,50 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					}
 				}
 
-				//if selected style was not set, remove active selection
-				if ( !isSet ) {
-					selectedStyle = {};
-				}
-
-				var styleNode = document.getElementById( selectedStyle._id );
-				// If design tab is open, scroll to selected style if it is not already the selected style
-				if ( $scope.leftMenuShowItem == 'design' && styleNode && (!$scope.selectedStyle || $scope.selectedStyle._id != selectedStyle._id) ) {
-					// The list-item dom-node reprenseting the parent styleset
-					var stylesetNode = styleNode.parentNode.parentNode;
-					// The container for all the stylesets, which is the scrolling container
-					var stylesetsContainer = document.getElementById('menu-left');
-
-					var alreadyExpanded = angular.element(stylesetNode).scope().typoChildrenVisible;
-					var animationTime = 700;
-
-					// If the styleset is already expanded, we don't wait additional time before setting the selected style in the angular scope.
-					var waitBeforeExpand = alreadyExpanded ? 0 : 300;
-
-					// Do the actual scrolling
-					smoothScroll.animateScroll(null, '#' + stylesetNode.id, { updateURL: false, speed: animationTime, easing: 'easeInCubic' }, stylesetsContainer);
-
-					// Update angular scope after the animation is done
-					setTimeout(function () {
-						angular.element(stylesetNode).scope().typoChildrenVisible = true;
-						if ( !$scope.$$phase ) {
-							$scope.$apply();
-						}
-					}, animationTime + waitBeforeExpand);
-				}
-
 				// Immediately ensure that the style matching the selection is highlighted
 				$scope.selectedStyle = selectedStyle;
-				if ( !$scope.$$phase ) {
-					$scope.$apply();
-				}
+
+                // Scroll to the selected style
+                if ($scope.leftMenuShowItem == 'design') {
+                    $scope.scrollToStyle();
+                }
 			}
 
 			returnSelectedContent();
 
 		}, this );
 
-		//editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
+        $scope.scrollToStyle = function() {
+            if ($scope.selectedStyle) {
+                var styleNode = document.getElementById( $scope.selectedStyle._id );
+                // If design tab is open, scroll to selected style if it is not already the selected style
+                if (styleNode) {
+                    // The list-item dom-node reprenseting the parent styleset
+                    var stylesetNode = styleNode.parentNode.parentNode;
+                    // The container for all the stylesets, which is the scrolling container
+                    var stylesetsContainer = document.getElementById('menu-left-design');
 
+                    var alreadyExpanded = angular.element(stylesetNode).scope().typoChildrenVisible;
+                    var animationTime = 700;
+
+                    // If the styleset is already expanded, we don't wait additional time before setting the selected style in the angular scope.
+                    var waitBeforeExpand = alreadyExpanded ? 0 : 300;
+
+                    // Do the actual scrolling
+                    smoothScroll.animateScroll(null, '#' + stylesetNode.id, { updateURL: false, speed: animationTime, easing: 'easeInCubic' }, stylesetsContainer);
+
+                    // Update angular scope after the animation is done
+                    setTimeout(function () {
+                        angular.element(stylesetNode).scope().typoChildrenVisible = true;
+                        if ( !$scope.$$phase ) {
+                            $scope.$apply();
+                        }
+                    }, animationTime + waitBeforeExpand);
+                }
+            }
+        };
+
+        //editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
         //      var startChapter = $scope.documents[0];
         //      $scope.entrybody = startChapter.content;
 	    // Mangler at tilf??je stylen startChapter.documentstyleSheet
