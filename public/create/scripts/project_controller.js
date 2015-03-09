@@ -1690,7 +1690,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					// The list-item dom-node reprenseting the parent styleset
 					var stylesetNode = styleNode.parentNode.parentNode;
 					// The container for all the stylesets, which is the scrolling container
-					var stylesetsContainer = document.getElementById('menu-left');
+					var stylesetsContainer = document.getElementById('menu-left-design');
 
 					var alreadyExpanded = angular.element(stylesetNode).scope().typoChildrenVisible;
 					var animationTime = 700;
