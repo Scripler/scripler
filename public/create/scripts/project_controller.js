@@ -454,6 +454,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 		}
 		$rootScope.ck.focus();
+        $scope.scrollToStyle();
 	}
 	$scope.hideLeftMenu = function (status) {
 		$scope.leftMenuShow = false;
@@ -1675,48 +1676,48 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					}
 				}
 
-				//if selected style was not set, remove active selection
-				if ( !isSet ) {
-					selectedStyle = {};
-				}
-
-				var styleNode = document.getElementById( selectedStyle._id );
-				// If design tab is open, scroll to selected style if it is not already the selected style
-				if ( $scope.leftMenuShowItem == 'design' && styleNode && (!$scope.selectedStyle || $scope.selectedStyle._id != selectedStyle._id) ) {
-					// The list-item dom-node reprenseting the parent styleset
-					var stylesetNode = styleNode.parentNode.parentNode;
-					// The container for all the stylesets, which is the scrolling container
-					var stylesetsContainer = document.getElementById('menu-left-design');
-
-					var alreadyExpanded = angular.element(stylesetNode).scope().typoChildrenVisible;
-					var animationTime = 700;
-
-					// If the styleset is already expanded, we don't wait additional time before setting the selected style in the angular scope.
-					var waitBeforeExpand = alreadyExpanded ? 0 : 300;
-
-					// Do the actual scrolling
-					smoothScroll.animateScroll(null, '#' + stylesetNode.id, { updateURL: false, speed: animationTime, easing: 'easeInCubic' }, stylesetsContainer);
-
-					// Update angular scope after the animation is done
-					setTimeout(function () {
-						angular.element(stylesetNode).scope().typoChildrenVisible = true;
-						if ( !$scope.$$phase ) {
-							$scope.$apply();
-						}
-					}, animationTime + waitBeforeExpand);
-				}
-
 				// Immediately ensure that the style matching the selection is highlighted
 				$scope.selectedStyle = selectedStyle;
-				if ( !$scope.$$phase ) {
-					$scope.$apply();
-				}
+
+                // Scroll to the selected style
+                if ($scope.leftMenuShowItem == 'design') {
+                    $scope.scrollToStyle();
+                }
 			}
 
 			returnSelectedContent();
 
 		}, this );
 
+        $scope.scrollToStyle = function() {
+            if ($scope.selectedStyle) {
+                var styleNode = document.getElementById( $scope.selectedStyle._id );
+                // If design tab is open, scroll to selected style if it is not already the selected style
+                if (styleNode) {
+                    // The list-item dom-node reprenseting the parent styleset
+                    var stylesetNode = styleNode.parentNode.parentNode;
+                    // The container for all the stylesets, which is the scrolling container
+                    var stylesetsContainer = document.getElementById('menu-left-design');
+
+                    var alreadyExpanded = angular.element(stylesetNode).scope().typoChildrenVisible;
+                    var animationTime = 700;
+
+                    // If the styleset is already expanded, we don't wait additional time before setting the selected style in the angular scope.
+                    var waitBeforeExpand = alreadyExpanded ? 0 : 300;
+
+                    // Do the actual scrolling
+                    smoothScroll.animateScroll(null, '#' + stylesetNode.id, { updateURL: false, speed: animationTime, easing: 'easeInCubic' }, stylesetsContainer);
+
+                    // Update angular scope after the animation is done
+                    setTimeout(function () {
+                        angular.element(stylesetNode).scope().typoChildrenVisible = true;
+                        if ( !$scope.$$phase ) {
+                            $scope.$apply();
+                        }
+                    }, animationTime + waitBeforeExpand);
+                }
+            }
+        };
         //editor.$.document.getElementsByTagName("link")[0].href = 'stylesets/'+startChapter.documentstyleSheet+'.css';
 
         //      var startChapter = $scope.documents[0];
