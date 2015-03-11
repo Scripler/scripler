@@ -47,8 +47,9 @@ exports.beforeRoutes = function (app, conf, mongoose) {
 	app.use(expressLogger('short', {stream: {write: function (msg) {
 		logger.info(msg.trim());
 	}}}));
-	app.use(bodyParser.json());
-	app.use(bodyParser.urlencoded({ extended: false }));
+	// TODO: create a separate configuration value for this?
+	app.use(bodyParser.json({limit: conf.import.uploadLimit }));
+	app.use(bodyParser.urlencoded({ limit: conf.import.uploadLimit, extended: false }));
 	app.use(multipart({
 		uploadDir: conf.import.uploadDir,
 		keepExtensions: true,
