@@ -268,9 +268,6 @@ exports.applyStyleset = function (req, res, next) {
 
 	// TODO: implement via styleset-utils.getStylsetOrStyleType()?
 
-	if (req.user.level == "free") {
-		return next({message: "Free users are not allowed to apply styles", status: 402});
-	}
 	/*
 	 Only copy the styleset if it is not already applied to the document, i.e. if:
 	 - The styleset to apply is not the same as the default styleset
@@ -284,6 +281,9 @@ exports.applyStyleset = function (req, res, next) {
 	 TODO: could use an IT or two.
 	 */
 	if (stylesetToApply._id != defaultStylesetId && (!documentStylesetIds || documentStylesetIds.length == 0 || documentStylesetIds.indexOf(stylesetToApply._id) < 0)) {
+		if (stylesetToApply.accessLevels.indexOf(req.user.level) == -1 && !stylesetToApply.accessPayment) {
+			return next({message: "Free users are not allowed to apply premium styles", status: 402});
+		}
 		copyStyleset(stylesetToApply, function(err, copy) {
 			req.document.stylesets.addToSet(copy);
 			req.document.save(function (err) {

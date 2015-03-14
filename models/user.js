@@ -45,7 +45,8 @@ var UserSchema = new Schema({
 			id: { type: String },
 			amount: { type: String },
 			date: { type: Date, default: Date.now },
-			type: { type: String }
+			type: { type: String, enum: ['recurring', 'single'] },
+			description: { type: String}
 		}]
 	}
 });

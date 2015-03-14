@@ -12,6 +12,7 @@
     "async": "^0.2.10",
     "bcrypt": "^0.7.8",
     "body-parser": "^1.8.1",
+    "braintree": "^1.23.0",
     "chai": "^1.9.1",
     "cheerio": "^0.16.0",
     "config": "^0.4.37",
@@ -45,10 +46,10 @@
     "rimraf": "~2.2.5",
     "sanitize-filename": "^1.1.1",
     "strftime": "^0.8.2",
+    "stripe": "^3.2.0",
     "underscore": "^1.7.0",
     "winston": "~0.7.2",
-    "xtend": "^2.2.0",
-    "braintree": "^1.23.0"
+    "xtend": "^2.2.0"
   },
   "readmeFilename": "README.md",
   "main": "app.js",
