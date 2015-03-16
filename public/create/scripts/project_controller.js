@@ -418,6 +418,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		} else {
 			//TODO save to localstorage
 		}
+		$scope.focusEditor();
 	};
 
 	$scope.selectedProjectDocument = -1;
@@ -434,6 +435,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
         } else {
 			$scope.hideProjectDocumentOptions();
 		}
+		$scope.focusEditor();
 	};
     $scope.hideProjectDocumentOptions = function() {
 		$scope.selectedProjectDocumentOptions = -1;
@@ -591,6 +593,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			    $scope.metaAuthorsSaved = false;
 			}, 2000);
 		}
+		$scope.focusEditor();
 	});
     $scope.$watch('project.metadata.description', function(newValue, oldValue) {
 		if (watchReady(newValue, oldValue)) {
@@ -600,6 +603,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			    $scope.metaDescriptionSaved = false;
 			}, 2000);
 		}
+		$scope.focusEditor();
 	});
     $scope.$watch('project.metadata.isbn', function(newValue, oldValue) {
 		if (watchReady(newValue, oldValue)) {
@@ -609,6 +613,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			     $scope.metaIsbnSaved = false;
 			}, 2000);
 		}
+		$scope.focusEditor();
 	});
 
 	function watchReady(newValue, oldValue) {
@@ -624,6 +629,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			    $scope.metaLanguageSaved = false;
 			}, 2000);
 		}
+		$scope.focusEditor();
 	};
 
 	$scope.exportEpub = function() {
@@ -1538,6 +1544,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.linkAddress = newValue.target;
 			$scope.linkText = newValue.text;
 		}
+		$scope.focusEditor();
 	});
 
 	function getEditor(scope) {
