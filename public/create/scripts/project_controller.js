@@ -418,6 +418,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		} else {
 			//TODO save to localstorage
 		}
+		$scope.focusEditor();
 	};
 
 	$scope.selectedProjectDocument = -1;
@@ -434,6 +435,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
         } else {
 			$scope.hideProjectDocumentOptions();
 		}
+		$scope.focusEditor();
 	};
     $scope.hideProjectDocumentOptions = function() {
 		$scope.selectedProjectDocumentOptions = -1;
