@@ -1581,7 +1581,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
             if ($scope.styleEditorVisible) {
 				$scope.hideStyleEditor();
 			} else {
-				$rootScope.ck.commands.showFloatingTools.exec();
+				var registrationWrapperHeight = document.getElementById('registrationWrapper').offsetHeight;
+				$rootScope.ck.commands.showFloatingTools.exec(registrationWrapperHeight);
 				$scope.styleEditorVisible = true;
 			}
 		}
