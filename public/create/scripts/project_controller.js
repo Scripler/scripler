@@ -447,6 +447,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			if ( $scope.leftMenuShowItem != 'design' && $scope.styleEditorVisible ) {
 				$scope.hideStyleEditor();
 			}
+
+			$scope.selectedStyle.scroll = true;
 		}
 		else {
 			$scope.hideLeftMenu();
@@ -457,7 +459,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 
 		$scope.focusEditor();
-        $scope.scrollToStyle();
 	}
 	$scope.hideLeftMenu = function (status) {
 		$scope.leftMenuShow = false;
@@ -1665,11 +1666,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					}
 				}
 
-				// Immediately ensure that the style matching the selection is highlighted
-				$scope.selectedStyle = selectedStyle;
-
                 // Scroll to the selected style
-                $scope.scrollToStyle();
+                if (!$scope.selectedStyle || $scope.selectedStyle._id != selectedStyle._id || $scope.selectedStyle.scroll) {
+					$scope.selectedStyle = selectedStyle;
+					$scope.selectedStyle.scroll = false;
+					$scope.scrollToStyle();
+                }
 			}
 
 			returnSelectedContent();
@@ -1677,32 +1679,31 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}, this );
 
         $scope.scrollToStyle = function() {
-            if ($scope.selectedStyle && $scope.leftMenuShowItem == 'design') {
-                var styleNode = document.getElementById( $scope.selectedStyle._id );
-                // If design tab is open, scroll to selected style if it is not already the selected style
-                if (styleNode) {
-                    // The list-item dom-node reprenseting the parent styleset
-                    var stylesetNode = styleNode.parentNode.parentNode;
-                    // The container for all the stylesets, which is the scrolling container
-                    var stylesetsContainer = document.getElementById('menu-left-design');
 
-                    var alreadyExpanded = angular.element(stylesetNode).scope().typoChildrenVisible;
-                    var animationTime = 700;
+			if ($scope.leftMenuShowItem == 'design') {
 
-                    // If the styleset is already expanded, we don't wait additional time before setting the selected style in the angular scope.
-                    var waitBeforeExpand = alreadyExpanded ? 0 : 300;
+				var styleNode = document.getElementById( $scope.selectedStyle._id );
+                // The list-item dom-node reprenseting the parent styleset
+                var stylesetNode = styleNode.parentNode.parentNode;
+                // The container for all the stylesets, which is the scrolling container
+                var stylesetsContainer = document.getElementById('menu-left-design');
 
-                    // Do the actual scrolling
-                    smoothScroll.animateScroll(null, '#' + stylesetNode.id, { updateURL: false, speed: animationTime, easing: 'easeInCubic' }, stylesetsContainer);
+                var alreadyExpanded = angular.element(stylesetNode).scope().typoChildrenVisible;
+                var animationTime = 700;
 
-                    // Update angular scope after the animation is done
-                    setTimeout(function () {
-                        angular.element(stylesetNode).scope().typoChildrenVisible = true;
-                        if ( !$scope.$$phase ) {
-                            $scope.$apply();
-                        }
-                    }, animationTime + waitBeforeExpand);
-                }
+                // If the styleset is already expanded, we don't wait additional time before setting the selected style in the angular scope.
+                var waitBeforeExpand = alreadyExpanded ? 0 : 300;
+
+                // Do the actual scrolling
+                smoothScroll.animateScroll(null, '#' + stylesetNode.id, { updateURL: false, speed: animationTime, easing: 'easeInCubic' }, stylesetsContainer);
+
+                // Update angular scope after the animation is done
+                setTimeout(function () {
+                    angular.element(stylesetNode).scope().typoChildrenVisible = true;
+                    if ( !$scope.$$phase ) {
+                        $scope.$apply();
+                    }
+                }, animationTime + waitBeforeExpand);
             }
         };
 
