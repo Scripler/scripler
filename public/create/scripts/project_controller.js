@@ -1543,6 +1543,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.linkAddress = newValue.target;
 			$scope.linkText = newValue.text;
 		}
+		$scope.focusEditor();
 	});
 
 	function getEditor(scope) {
