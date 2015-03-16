@@ -5,6 +5,7 @@ var User = require('../models/user.js').User;
 var env = process.env.NODE_ENV;
 var Styleset = require('../models/styleset.js').Styleset;
 var emailer = require('../lib/email/email.js');
+var utils = require('../lib/utils');
 
 var gateway = braintree.connect({
 	environment: braintree.Environment.Sandbox,
@@ -184,7 +185,7 @@ exports.create = function (req, res, next) {
 	var addSubscription = function (paymentMethodToken) {
 		logger.info("Adding braintree subscription for user " + user.id + ". Token: " +  paymentMethodToken);
 		var subscriptionRequest = {
-			planId: "premium",
+			planId: "bad-premium",
 			paymentMethodToken: paymentMethodToken
 		};
 
@@ -228,6 +229,10 @@ exports.create = function (req, res, next) {
 		// We don't want to talk to Braintree during unit-test.
 		user.level = 'premium';
 		user.payment.subscriptionId = 'test-subscription';
+
+		//test
+		user.payment.endDate = new Date('2015-03-16');
+
 		user.save(function (err) {
 			if (err) {
 				return next(err);
@@ -306,93 +311,129 @@ exports.initWebhook = function (req, res, next) {
 };
 
 exports.webhook = function (req, res, next) {
-	logger.info("Got webhook:");
-	logger.info(JSON.stringify(req.body));
-	gateway.webhookNotification.parse(
-		req.body.bt_signature,
-		req.body.bt_payload,
-		function (err, webhookNotification) {
-			logger.info(JSON.stringify(webhookNotification));
-			logger.info("[Webhook Received " + webhookNotification.timestamp + "] | Kind: " + webhookNotification.kind + " | Subscription: " + webhookNotification.subscription.id + " | Data: " + JSON.stringify(webhookNotification));
-			var subscription = webhookNotification.subject.subscription;
-			var subscriptionId = subscription.id;
 
-			var kind = webhookNotification.kind;
-			var changedUser = false;
+	var handleWebhook = function (webhookNotification) {
+		logger.info("[Webhook Received " + webhookNotification.timestamp + "] | Kind: " + webhookNotification.kind + " | Subscription: " + webhookNotification.subscription.id + " | Data: " + JSON.stringify(webhookNotification));
+		var subscription = webhookNotification.subject.subscription;
+		var subscriptionId = subscription.id;
 
-			if (subscription && subscriptionId) {
-				// Load associated customer
-				User.findOne({"payment.subscriptionId": subscriptionId}, function (err, user) {
-					if (err) {
-						logger.error("Error looking up user associated with subscription: " + subscriptionId);
-						return res.sendStatus(500);
-					}
-					if (!user) {
-						logger.info("Could not find user associated with subscription: " + subscriptionId);
-						return res.sendStatus(200);
-					}
-					if (['subscription_expired', 'subscription_past_due', 'subscription_trial_ended'].indexOf(kind) >= 0) {
-						if (subscription && subscription.status != 'active' && user.level != 'free') {
-							// We got data on the subscription (degraded)
-							user.level = 'free';
-							changedUser = true;
-							logger.info("User " + user.id + "downgraded to 'free', because of " + kind +" webhook.");
-						} else {
-							logger.info("Ignored " + kind + "webhook, because subscription is still active.");
-						}
+		var kind = webhookNotification.kind;
+		var changedUser = false;
 
-					} else if (kind == 'subscription_charged_successfully') {
-						// TODO: Implement: Send invoice to user
-						logger.info("Sending invoice to user...");
-						emailer.sendUserEmail(
-							user,
-							[
-								{name: "PRODUCTNAME", content: "Premium"},
-								{name: "PRODUCTPRICE", content: "999"}
-							],
-							'payment-invoice'
-						);
+		if (subscription && subscriptionId) {
+			// Load associated customer
+			User.findOne({"payment.subscriptionId": subscriptionId}, function (err, user) {
+				if (err) {
+					logger.error("Error looking up user associated with subscription: " + subscriptionId);
+					return res.sendStatus(500);
+				}
+				if (!user) {
+					logger.info("Could not find user associated with subscription: " + subscriptionId);
+					return res.sendStatus(200);
+				}
+				if (['subscription_expired', 'subscription_past_due'].indexOf(kind) >= 0) {
+					// subscription_expired - Subscription had an end date set, which has now been reached
+					// subscription_past_due - Subscription bill cycle is past due (we should already have gotten a subscription_charged_unsuccessfully)
+					user.level = 'free';
+					changedUser = true;
+					logger.info("User '" + user.id + "' downgraded to 'free', because of '" + kind + "' webhook.");
 
-					} else if (kind == 'subscription_charged_unsuccessfully') {
-						// TODO: Implement: Send warning to user. Suspend subscription?
-						logger.info("Sending notification to user...");
-						emailer.sendUserEmail(
-							user,
-							[
-								{name: "PLAN", content: "Premium"}
-							],
-							'payment-subscription-charge-failed'
-						);
-					} else if (kind == 'subscription_canceled') {
-						// TODO: Implement: Send subscription cancellation confirmation to user.
-						emailer.sendUserEmail(
-							user,
-							[
-								{name: "PLAN", content: "Premium"},
-								{name: "BILLCYCLEEND", content: "12/12-2015"}
-							],
-							'payment-subscription-charge-failed'
-						);
+				} else if (['subscription_trial_ended'].indexOf(kind) >= 0) {
+					// subscription_trial_ended - The trial days has ended, and now the first billed cycle will start (unless already cancelled)
+					if (subscription && subscription.status != 'active' && user.level != 'free') {
+						// We got data on the subscription (degraded)
+						user.level = 'free';
+						changedUser = true;
+						logger.info("User '" + user.id + "' downgraded to 'free', because of '" + kind +"' webhook.");
 					} else {
-						logger.info("Unhandled " + kind + " webhook. Nothing to do?");
+						logger.info("Ignored " + kind + "webhook, because subscription is still active.");
 					}
 
-					if (changedUser) {
-						user.save(function (err) {
-							if (err) {
-								logger.error("Could not update subscription information on user " + user.id + ", for subscription id " + subscriptionId);
-							};
-							res.sendStatus(200);
-						});
+				} else if (kind == 'subscription_went_active') {
+					// subscription_went_active - Subscription has been reactivated for some reason (administrator intervention?)
+					user.level = subscription.planId
+					changedUser = true;
+					logger.info("User '" + user.id + "' upgraded to '"+subscription.planId+"', because of '" + kind +"' webhook.");
+
+				} else if (kind == 'subscription_charged_successfully') {
+					logger.info("Sending invoice to user...");
+					emailer.sendUserEmail(
+						user,
+						[
+							{name: "PRODUCTNAME", content: subscription.planId},
+							{name: "PRODUCTPRICE", content: subscription.price}
+						],
+						'payment-invoice'
+					);
+
+				} else if (kind == 'subscription_charged_unsuccessfully') {
+					logger.info("Sending notification to user...");
+					emailer.sendUserEmail(
+						user,
+						[
+							{name: "PLAN", content: subscription.planId},
+							{name: "PRICE", content: subscription.price}
+						],
+						'payment-subscription-charge-failed'
+					);
+				} else if (kind == 'subscription_canceled') {
+					var endDate;
+					if (subscription.trialPeriod) {
+						// We need to substract one, becayse the last day of the trial is the day before the next billing date.
+						// Format : YYYY-MM-DD
+						endDate = utils.addDaysToDate(subscription.nextBillingDate, -1);
 					} else {
+						endDate = subscription.paidThroughDate;
+					}
+					user.payment.endDate = new Date(endDate);
+					changedUser = true;
+
+					emailer.sendUserEmail(
+						user,
+						[
+							{name: "PLAN", content: subscription.planId},
+							{name: "BILLCYCLEEND", content: endDate}
+						],
+						'payment-subscription-charge-failed'
+					);
+				} else {
+					logger.info("Unhandled " + kind + " webhook. Nothing to do?");
+				}
+
+				if (changedUser) {
+					user.save(function (err) {
+						if (err) {
+							logger.error("Could not update subscription information on user " + user.id + ", for subscription id " + subscriptionId);
+						};
 						res.sendStatus(200);
-					}
-				});
-			} else {
-				logger.info("Skipping webhook " + kind + ", since it is not related to subscription.");
-				return res.sendStatus(200);
-			}
+					});
+				} else {
+					res.sendStatus(200);
+				}
+			});
+		} else {
+			logger.info("Skipping webhook " + kind + ", since it is not related to subscription.");
+			return res.sendStatus(200);
 		}
-	);
+	}
+
+	if (req.body.bt_signature && req.body.bt_payload) {
+		// We got real encrypted payload from Braintree
+		gateway.webhookNotification.parse(
+			req.body.bt_signature,
+			req.body.bt_payload,
+			function (err, webhookNotification) {
+				if (err) {
+					return next(err);
+				}
+				return handleWebhook(webhookNotification);
+			}
+		);
+	} else if (req.body.kind) {
+		// We got plain text payload - from test.
+		return handleWebhook(req.body);
+	} else {
+		return next("Unknown webhook payload: " + JSON.stringify(req.body));
+	}
 };
 

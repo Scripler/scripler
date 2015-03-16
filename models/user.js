@@ -41,6 +41,7 @@ var UserSchema = new Schema({
 	payment: {
 		customerId: { type: String },
 		subscriptionId: { type: String},
+		endDate: { type: Date },
 		payments: [{
 			id: { type: String },
 			amount: { type: String },
