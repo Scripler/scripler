@@ -1263,13 +1263,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return deferred.promise;
 	}
 
-	$scope.insertOptionChosen = function(insertoption) {
-		if ($scope.activeInsertOption === insertoption) {
-			$scope.activeInsertOption = null;
-        } else {
-            $scope.activeInsertOption = insertoption;
-        }
-
+	$scope.insertOptionChosen = function(status, preserve) {
+		$scope.activeInsertOption = ((status != $scope.activeInsertOption || preserve) ? status : null);
         $scope.focusEditor();
     }
 
