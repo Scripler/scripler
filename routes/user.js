@@ -325,6 +325,7 @@ exports.edit = function (req, res, next) {
 };
 
 exports.resendVerifyEmail = function (req, res, nxt) {
+	var user = req.user;
 	emailer.sendUserEmail(
 		user,
 		[

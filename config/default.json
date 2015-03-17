@@ -5,7 +5,8 @@
 		"cookie_secret": "xxx",
 		"cookie_expire": 2592000000,// 30 days.
 		"session_secret": "xxx",
-		"salt": "xxx"
+		"salt": "xxx",
+		"logLevel": "info"
 	},
 	"db": {
 		"uri": "mongodb://localhost/scripler?connectTimeoutMS=10000"

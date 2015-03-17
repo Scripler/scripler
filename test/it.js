@@ -159,7 +159,7 @@ describe('Scripler RESTful API', function () {
 					userStylesetId1 = res.body.user.stylesets[0]; // book-bw
 					userStylesetId2 = res.body.user.stylesets[1]; // book-color
 					userStylesetId3 = res.body.user.stylesets[2]; // draft-bw
-					userStylesetId4 = res.body.user.stylesets[3]; // draft-color
+					userStylesetId4 = res.body.user.stylesets[3]; // draft-color  
 					defaultUserStyleset = res.body.user.stylesets[15]; // simple-bw
                     done();
 				});
@@ -2064,7 +2064,7 @@ describe('Scripler RESTful API', function () {
 					// binary response data is in res.body as a buffer
 					assert.ok(Buffer.isBuffer(res.body));
 					//console.log("res: ", res.body);
-					var epub = projectId + '.epub';
+					var epub = path.join(conf.epub.tmpDir, projectId + '.epub');
 					fs.writeFile(epub, res.body);
 
 					child = exec('java -jar test/epubcheck-3.0.1.jar ' + epub,

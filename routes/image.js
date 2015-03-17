@@ -119,6 +119,7 @@ exports.get = function(req, res, next) {
 			var imagesDir = path.join(projectDir, conf.epub.imagesDir);
 			var imagePath = path.join(imagesDir, image.name);
 
+			//res.sendfile is deprecated
 			res.sendfile(imagePath);
 		});
 

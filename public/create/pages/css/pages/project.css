@@ -22,25 +22,29 @@
 	width: 260px;
 	height: 100%;
 	min-height: 100%;
-	border: 10px solid #f3f3f3;
-	overflow: hidden;
-	overflow-y: auto;
-	transition: all 1s;
-	-moz-transition: all 1s;
-	-ms-transition: all 1s;
-	-webkit-transition: all 1s;
-	-o-transition: all 1s;
+	padding: 10px;
+	transition: left 1s, right  1s;
+	-moz-transition: left 1s, right  1s;
+	-ms-transition: left 1s, right  1s;
+	-webkit-transition: left 1s, right  1s;
+	-o-transition: left 1s, right  1s;
 }
 .menu-left.bottom-menu-space {
-	border-bottom: 35px solid #f3f3f3;
+	padding-bottom: 35px;
+}
+.menu-left.bottom-menu-space.open-small {
+	padding-bottom: 76px;
+}
+.menu-left.bottom-menu-space.open-big {
+	padding-bottom: 190px;
 }
 .menu-left {
 	left: -260px;
-	border-right: 0;
+	padding-right: 0;
 }
 .menu-right {
 	right: -260px;
-	border-left: 0;
+	padding-left: 0;
 }
 
 .menu-left.open {
@@ -91,6 +95,9 @@
 
 .menu-item-left, .menu-item-right {
 	opacity:1;
+	height: 100%;
+	overflow: hidden;
+	overflow-y: auto;
 }
 .menu-item-left.ng-hide, .menu-item-right.ng-hide {
 	opacity: 0;
@@ -101,52 +108,22 @@
 	display:block!important;
 }
 
-/*.menu-left .content, .menu-right .content {
-	overflow-y: auto;
-	float: left;
-}
-.menu-left .content, .menu-right .content {
-	width: 100%;
-	height: 94%;
-	min-height: 94%;
-}
-
-.menu-left .content-icon, .menu-right .content-icon {
-	background: #fff;
-	width: 42px;
-	height: 42px;
-	padding: 10px 0 0 12px;
-	font-size: 20px;
-	float: left;
-	cursor: pointer;
-}*/
-
 .menu-options {
 	padding: 10px;
 	background-color: #fff;
 	height: auto;
 	width: 260px;
-	position: fixed;
-	left: 50px;
-	bottom: 0;
-	z-index: 1;
-	margin-bottom: -150px;
-	transition: all 0.5s;
-	-moz-transition: all 0.5s;
-	-ms-transition: all 0.5s;
-	-webkit-transition: all 0.5s;
-	-o-transition: all 0.5s;
-}
-.menu-options.open {
-	margin-bottom: 28px !important;
+	position: absolute;
+	left: 0;
+	bottom: 28px;
 }
 
 .documents-options-bottom-buttons, .stylesets-options-bottom-buttons {
-	width: 260px;
-	position: fixed;
-	z-index: 2;
+	width: 100%;
+	position: absolute;
 	bottom: 0;
-	left: 50px;
+	left: 0;
+	z-index: 1;
 }
 .documents-options-bottom-buttons a, .stylesets-options-bottom-buttons a {
 	float: left;
@@ -260,8 +237,8 @@
 	text-align: center;
 	overflow: hidden;
 }
-[selected] {
-	background-color: #c3c3c3 !important;
+.projectDocument.selected {
+	border: 2px solid #000;
 }
 
 .projectdocument-options-show, .styleset-options-show, .style-options-show {
@@ -435,15 +412,20 @@ li.typo p:first-child {
 	width: 90%;
 	margin: 0 auto;
 }
+.typo-children-style.selected {
+	background-color: #c3c3c3;
+}
 
 .style.new {
+	width: 90%;
 	height: 40px;
 	text-align: center;
+	margin: 0 auto;
 }
 .style.new p {
-	padding: 0;
-	margin-left: -10px;
+	padding: 10px;
 }
+
 .style-isblock {
 	position: relative;
 	color: #eee;
@@ -464,6 +446,7 @@ li.typo .style-copy-options p {
 	padding: 10px 0;
 }
 
+/* This really need to be changed, loading it as fixed position is not working with our other functionality */
 .cke_floatingtools {
 	position: fixed;
 	z-index: 1;
@@ -716,4 +699,17 @@ li.typo .style-copy-options p {
 }
 .archived a {
     color: #6B6B6B;
+}
+
+.anchor-link{
+	display: block
+}
+
+.left-menu-options .menu-box .anchor-name{
+	width:100%;
+}
+
+#anchorInputBox{
+	border: none;
+	background: #fff;
 }

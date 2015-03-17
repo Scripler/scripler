@@ -80,11 +80,12 @@ module.exports = function (app, auth) {
 	app.put('/styleset/:stylesetId/unarchive', auth.isLoggedIn(), styleset.unarchive);
 	app.put('/style/:styleId/archive', auth.isLoggedIn(), style.archive);
 	app.put('/style/:styleId/unarchive', auth.isLoggedIn(), style.unarchive);
-	app.put('/styleset/:stylesetIdPopulated/project/:projectId', auth.isLoggedIn(), project.applyStyleset);
+	app.put('/styleset/:stylesetIdPopulated/project/:projectIdPopulated', auth.isLoggedIn(), project.applyStyleset);
 	app.put('/styleset/:stylesetIdPopulated/document/:documentId', auth.isLoggedIn(), document.applyStyleset);
 	app.get('/document/:documentIdPopulatedStylesets/stylesets', auth.isLoggedIn(), document.listStylesets);
 	app.post('/font', auth.isLoggedIn(), font.create);
 
+	/* Payment */
 	app.get('/payment/token', auth.isLoggedIn(), payment.token);
 	app.post('/payment/subscription', auth.isLoggedIn(), payment.create);
 	app.delete('/payment/subscription', auth.isLoggedIn(), payment.cancel);
@@ -96,6 +97,7 @@ module.exports = function (app, auth) {
 
 	/* API Output */
 	app.get('/project/:projectIdPopulatedFull/compile', auth.isLoggedIn(), project.compile);
+	app.get('/project/:projectId/epub', auth.isLoggedIn(), project.downloadEpub);
 
 	// API Parameters
 	app.param('projectId', function (req, res, next, id) {

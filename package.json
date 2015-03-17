@@ -1,7 +1,7 @@
 {
   "name": "scripler-server",
   "description": "Scripler Server",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "private": true,
   "scripts": {
     "test": "mocha"
