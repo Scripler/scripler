@@ -75,7 +75,6 @@ exports.transaction = function (req, res, next) {
 					description: (styleset ? 'Payment for styleset: ' + styleset.id : 'Payment for ' + productName)
 				});
 
-				// TODO: Implement: Send invoice to user.
 				emailer.sendUserEmail(
 					user,
 					[
@@ -231,9 +230,6 @@ exports.create = function (req, res, next) {
 		user.level = 'premium';
 		user.payment.subscriptionId = 'test-subscription';
 
-		//test
-		user.payment.endDate = new Date('2015-03-16');
-
 		user.save(function (err) {
 			if (err) {
 				return next(err);
@@ -290,8 +286,7 @@ exports.cancel = function (req, res, next) {
 	if (user.payment.subscriptionId) {
 		gateway.subscription.cancel(user.payment.subscriptionId, function (err, result) {
 			if (result.success) {
-				console.log("Subscription cancelled:");
-				console.log(result);
+				// All good. We will notify the customer by email when we get the cancellation confirmatio nfrom Braintree through webhook.
 				res.send({});
 			} else {
 				return next( {message: result.message, status: 591} );
