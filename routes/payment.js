@@ -45,7 +45,7 @@ exports.transaction = function (req, res, next) {
 		} else if (styleset.accessPayment){
 			return next( {message: "You have already paid for this styleset.", status: 594} )
 		}
-		amount = "2.99";
+		amount = conf.prices.styleset.price;
 	} else {
 		// Some other kind of payment:
 		// - Help with creating an ebook?
@@ -53,6 +53,7 @@ exports.transaction = function (req, res, next) {
 		// - etc?
 		amount = "10.00";
 		productName = "xxx";
+		return next( {message: "Unsupported non-styleset single transaction was requested!", status: 595} )
 	}
 
 	var addTransaction = function (next) {
@@ -78,7 +79,7 @@ exports.transaction = function (req, res, next) {
 				emailer.sendUserEmail(
 					user,
 					[
-						{name: "PRODUCTNAME", content: (styleset ? 'Design: ' + styleset.name : productName)},
+						{name: "PRODUCTNAME", content: (styleset ? conf.prices.styleset.name + ': ' + styleset.name : productName)},
 						{name: "PRODUCTPRICE", content: amount}
 					],
 					'payment-invoice'
@@ -185,7 +186,7 @@ exports.create = function (req, res, next) {
 	var addSubscription = function (paymentMethodToken) {
 		logger.info("Adding braintree subscription for user " + user.id + ". Token: " +  paymentMethodToken);
 		var subscriptionRequest = {
-			planId: "bad-premium",
+			planId: "premium",
 			paymentMethodToken: paymentMethodToken
 		};
 
@@ -200,13 +201,13 @@ exports.create = function (req, res, next) {
 				user.payment.subscriptionId = subscriptionId;
 				logger.info("Added braintree subscription for user " + user.id + ". Subscription id: " +  subscriptionId);
 
-				// TODO: Implement: Send order confirmation to user.
+				var plan = conf.plans[user.level];
 				emailer.sendUserEmail(
 					user,
 					[
-						{name: "PLAN", content: "Premium"},
-						{name: "PRICE", content: "9.99/month"},
-						{name: "TRIAL", content: "10 days"}
+						{name: "PLAN", content: plan.name},
+						{name: "PRICE", content: plan.price + "/month"},
+						{name: "TRIAL", content: plan.trial + " days"}
 					],
 					'payment-subscription-confirmation'
 				);
@@ -331,6 +332,15 @@ exports.webhook = function (req, res, next) {
 					logger.info("Could not find user associated with subscription: " + subscriptionId);
 					return res.sendStatus(200);
 				}
+
+				var planName;
+				if (conf.plans[subscription.planId]) {
+					planName = conf.plans[subscription.planId].name;
+				} else {
+					logger.warn("We charged for an 'unknown' planId: " + subscription.planId);
+					planName = subscription.planId;
+				}
+
 				if (['subscription_expired', 'subscription_past_due'].indexOf(kind) >= 0) {
 					// subscription_expired - Subscription had an end date set, which has now been reached
 					// subscription_past_due - Subscription bill cycle is past due (we should already have gotten a subscription_charged_unsuccessfully)
@@ -357,10 +367,11 @@ exports.webhook = function (req, res, next) {
 
 				} else if (kind == 'subscription_charged_successfully') {
 					logger.info("Sending invoice to user...");
+
 					emailer.sendUserEmail(
 						user,
 						[
-							{name: "PRODUCTNAME", content: subscription.planId},
+							{name: "PRODUCTNAME", content: planName},
 							{name: "PRODUCTPRICE", content: subscription.price}
 						],
 						'payment-invoice'
@@ -371,7 +382,7 @@ exports.webhook = function (req, res, next) {
 					emailer.sendUserEmail(
 						user,
 						[
-							{name: "PLAN", content: subscription.planId},
+							{name: "PLAN", content: planName},
 							{name: "PRICE", content: subscription.price}
 						],
 						'payment-subscription-charge-failed'
@@ -391,7 +402,7 @@ exports.webhook = function (req, res, next) {
 					emailer.sendUserEmail(
 						user,
 						[
-							{name: "PLAN", content: subscription.planId},
+							{name: "PLAN", content: planName},
 							{name: "BILLCYCLEEND", content: endDate}
 						],
 						'payment-subscription-charge-failed'

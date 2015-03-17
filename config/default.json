@@ -30,8 +30,8 @@
 		"privateKey": "xxx"
 	},
 	"plans": {
-		"premium": {"name": "Premium Subscription", "price": "14.99"},
-		"free": {"name": "Free Subscription", "price": "0.0"}
+		"premium": {"name": "Premium Subscription", "price": "14.99", "trial": "10"},
+		"free": {"name": "Free Subscription", "price": "0.0", "trial": "0"}
 	},
 	"prices": {
 		"styleset": {"name": "Premium Styleset", "price": "5.99"}
