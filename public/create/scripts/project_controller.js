@@ -62,6 +62,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	}
 
+	$scope.focusEditor = function() {
+        setTimeout(function() {
+			$rootScope.ck.focus();
+		}, 500);
+	}
+
 	$scope.openFeedback = function() {
 		userService.openFeedback( $scope.user );
 	}
@@ -1590,12 +1596,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$rootScope.ck.commands.hideFloatingTools.exec();
 				$scope.styleEditorVisible = false;
 			}
-		}
-
-		$scope.focusEditor = function() {
-            setTimeout(function() {
-				$rootScope.ck.focus();
-			}, 500);
 		}
 
 		$scope.insertPageBreak = function() {
