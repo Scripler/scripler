@@ -1263,6 +1263,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return deferred.promise;
 	}
 
+	// status in function is witch insert option that is clicked, preserve will be used to make sure it is not toggeling the open/close state, but will always have it open
 	$scope.insertOptionChosen = function(status, preserve) {
 		$scope.activeInsertOption = ((status != $scope.activeInsertOption || preserve) ? status : null);
         $scope.focusEditor();
