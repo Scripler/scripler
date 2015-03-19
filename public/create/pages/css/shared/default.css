@@ -195,7 +195,7 @@ input[type="password"], input[type="text"], input[type="email"] {
 	-webkit-border-radius: 1px;
 	border-radius: 1px;
 	-webkit-appearance: none;
-	border: 1px solid #f6f6f6;
+	border: 0px solid #fff;
 	background: #f6f6f6;
 	font-size: 15px;
 	padding: 6px 8px;

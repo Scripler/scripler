@@ -213,7 +213,7 @@
 	height: 95px;
 	background: none #fefefe;
 	float: left;
-	border: 1px solid #ffff99;
+	border: 1px solid #e6e6e6;
 	box-shadow: 0px 5px 5px -5px #ccc;
 	cursor: pointer;
 }
@@ -386,7 +386,7 @@ textarea.renameProjectDocument, textarea.renameStyleset, textarea.renameStyle {
 	overflow: visible;
 }
 .typo.new {
-	border: 2px dashed #c6c6c6;
+	border: 2px dashed #e6e6e6;
 	text-align: center;
 }
 ul, li {
@@ -395,19 +395,25 @@ ul, li {
 	margin: 0;
 	padding: 0;
 }
-li.typo p {
+.typo p {
 	padding: 15px;
 	margin: 0;
-	border: 1px solid #000;
+	border: 1px solid #e6e6e6;
 	background: none #fff;
 }
-li.typo p:first-child {
+.typo.new p {
+	border: none;
+}
+.typo.open p {
+	border: 2px solid #000;
+}
+.typo.open .style.new p {
 	border: none;
 }
 .typo-children-style {
 	position: relative;
 	background-color: #fff;
-	border: 1px solid #c6c6c6;
+	border: 1px solid #e6e6e6;
 	padding: 12px;
 	width: 90%;
 	margin: 0 auto;
@@ -418,9 +424,9 @@ li.typo p:first-child {
 
 .style.new {
 	width: 90%;
-	height: 40px;
 	text-align: center;
 	margin: 0 auto;
+	border: 2px dashed #e6e6e6;
 }
 .style.new p {
 	padding: 10px;
@@ -487,9 +493,20 @@ li.typo .style-copy-options p {
 	display: inline-block;
 	width: 100%;
 	padding: 5px;
+	background: #fff56c;
 	border: 1px solid #fff56c;
 	text-align: center;
 	cursor: pointer;
+}
+.left-menu-button label, .right-menu-button label {
+	color: #000;
+	cursor: pointer;
+}
+.left-menu-button:hover, .right-menu-button:hover, .left-menu-button:active, .right-menu-button:active {
+	border: 1px solid #fefefe;
+}
+.left-menu-button:hover label, .right-menu-button:hover label, .left-menu-button:active label, .right-menu-button:active label {
+	color: #666;
 }
 .right-menu-feature-title {
 	display: block;
@@ -585,6 +602,7 @@ li.typo .style-copy-options p {
 	top: 0;
 	left: 0;
 	z-index: 2;
+	border: 0;
 	background: none white;
 	width: 100%;
 	height: 28px;
@@ -633,7 +651,7 @@ li.typo .style-copy-options p {
 	width: calc(50% - 10px);
 	background: none #fefefe;
 	float: left;
-	border: 1px solid #ffff99;
+	border: 1px solid #e6e6e6;
 	box-shadow: 0px 5px 5px -5px #ccc;
 	cursor: pointer;
 }
@@ -663,7 +681,7 @@ li.typo .style-copy-options p {
 	height: auto;
 	background: none #fefefe;
 	float: left;
-	border: 1px solid #ffff99;
+	border: 1px solid #e6e6e6;
 	box-shadow: 0px 5px 5px -5px #ccc;
 }
 .menu-left .insertOptionProperties.expanded {
@@ -678,7 +696,7 @@ li.typo .style-copy-options p {
 	margin: 0 0 0 10px;
 	padding: 16px;
 	background: none #fefefe;
-	border: 1px solid #ffff99;
+	border: 1px solid #e6e6e6;
 	box-shadow: 0px 5px 5px -5px #ccc;
 }
 .outputOptionDownload {
