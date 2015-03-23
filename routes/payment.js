@@ -8,7 +8,7 @@ var emailer = require('../lib/email/email.js');
 var utils = require('../lib/utils');
 
 var gateway = braintree.connect({
-	environment: braintree.Environment.Sandbox,
+	environment: (env == 'production' ? braintree.Environment.Production : braintree.Environment.Sandbox),
 	merchantId: conf.braintree.merchantId,
 	publicKey: conf.braintree.publicKey,
 	privateKey: conf.braintree.privateKey
@@ -34,9 +34,7 @@ exports.token = function (req, res, next) {
 
 exports.transaction = function (req, res, next) {
 	var user = req.user;
-	var nonce = req.body.payment_method_nonce;
 	var styleset = req.styleset;
-
 	var amount;
 	var productName;
 	if (styleset) {
@@ -61,7 +59,7 @@ exports.transaction = function (req, res, next) {
 		gateway.transaction.sale({
 			amount: amount,
 			customerId: user.payment.customerId,
-			paymentMethodNonce: nonce
+			paymentMethodNonce: req.body.payment_method_nonce
 		}, function (err, result) {
 			if (err) {
 				return next(err);
@@ -93,7 +91,7 @@ exports.transaction = function (req, res, next) {
 				});
 				if (styleset) {
 					addStyleSetAccess(transactionId, function (err, next){
-						return res.send({});
+						return next();
 					});
 				} else {
 					return next();
@@ -106,10 +104,10 @@ exports.transaction = function (req, res, next) {
 	}
 
 	var addStyleSetAccess = function (transactionId, next) {
-		// If user has never been premium, he should only have the input styleset as a user styleset.
-		// In this case we only need to update that single styleset with payment information.
-		// Otherwise, if the user for some reason, already has this styleset as user stylesets (maybe he was premium earlier),
-		// then we should also update payment information or these.
+		// If user has never been premium, he should only have the input styleset as a user styleset (and not any copies).
+		// In this case we only need to update that single styleset instance with payment information.
+		// Otherwise, if the user for some reason, already has copies of this styleset as document styleset in multiple documents (maybe he was premium earlier),
+		// then we should also update payment information for these.
 
 		// If input was document styleset instead of user-styleset, we need to look up the original.
 		Styleset.findOne({"_id": styleset.original}).exec(function (err, stylesetOriginal) {
@@ -138,6 +136,7 @@ exports.transaction = function (req, res, next) {
 				if (err) {
 					return next(err);
 				}
+				// We return some additional information when running in test, so that the unit-test can verify what has been done.
 				return res.send({numberAffected: numberAffected});
 			});
 		} else {
@@ -164,6 +163,7 @@ exports.transaction = function (req, res, next) {
 				return next(err);
 			}
 			if (result.success) {
+				logger.debug("Successfully created Braintree customer for user " + user.id + ".");
 				user.payment.customerId = result.customer.id;
 				addTransaction(function (err) {
 					if (err) {
@@ -178,7 +178,7 @@ exports.transaction = function (req, res, next) {
 	}
 }
 
-exports.create = function (req, res, next) {
+exports.create_subscription = function (req, res, next) {
 	var user = req.user;
 	var nonce = req.body.payment_method_nonce;
 
@@ -201,6 +201,10 @@ exports.create = function (req, res, next) {
 				logger.info("Added braintree subscription for user " + user.id + ". Subscription id: " +  subscriptionId);
 
 				var plan = conf.plans[user.level];
+				if (!plan) {
+					logger.error("Plan '"+plan+"' is not configured.");
+					return next("Internal error");
+				}
 				emailer.sendUserEmail(
 					user,
 					[
@@ -280,13 +284,13 @@ exports.create = function (req, res, next) {
 	}
 };
 
-exports.cancel = function (req, res, next) {
+exports.cancel_subscription = function (req, res, next) {
 	var user = req.user;
 
 	if (user.payment.subscriptionId) {
 		gateway.subscription.cancel(user.payment.subscriptionId, function (err, result) {
 			if (result.success) {
-				// All good. We will notify the customer by email when we get the cancellation confirmatio nfrom Braintree through webhook.
+				// All good. We will notify the customer by email when we get the cancellation confirmation from Braintree through webhook.
 				res.send({});
 			} else {
 				return next( {message: result.message, status: 591} );
@@ -332,7 +336,7 @@ exports.webhook = function (req, res, next) {
 				if (conf.plans[subscription.planId]) {
 					planName = conf.plans[subscription.planId].name;
 				} else {
-					logger.warn("We charged for an 'unknown' planId: " + subscription.planId);
+					logger.error("We charged for an 'unknown' planId: " + subscription.planId);
 					planName = subscription.planId;
 				}
 
@@ -400,7 +404,7 @@ exports.webhook = function (req, res, next) {
 							{name: "PLAN", content: planName},
 							{name: "BILLCYCLEEND", content: endDate}
 						],
-						'payment-subscription-charge-failed'
+						'payment-subscription-cancelled'
 					);
 				} else {
 					logger.info("Unhandled " + kind + " webhook. Nothing to do?");

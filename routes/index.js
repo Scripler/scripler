@@ -87,8 +87,8 @@ module.exports = function (app, auth) {
 
 	/* Payment */
 	app.get('/payment/token', auth.isLoggedIn(), payment.token);
-	app.post('/payment/subscription', auth.isLoggedIn(), payment.create);
-	app.delete('/payment/subscription', auth.isLoggedIn(), payment.cancel);
+	app.post('/payment/subscription', auth.isLoggedIn(), payment.create_subscription);
+	app.delete('/payment/subscription', auth.isLoggedIn(), payment.cancel_subscription);
 	app.post('/payment/transaction', auth.isLoggedIn(), payment.transaction);
 	app.post('/payment/transaction/styleset/:stylesetId', auth.isLoggedIn(), payment.transaction);
 

@@ -44,7 +44,7 @@ mongoose.connect(conf.db.uri, function(err) {
 						logger.error("Could not downgrade user " + user.id)
 						return callback(err);
 					}
-					logger.info("Users " + user.id + " was downgraded because his cancelled subscription (" + user.payment.subscriptionId + ") expired. Its last day was: " + oldEndDay);
+					logger.info("User " + user.id + " was downgraded because his cancelled subscription (" + user.payment.subscriptionId + ") expired. Its last day was: " + oldEndDay);
 					return callback();
 				});
 			}, function (err) {
