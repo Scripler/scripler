@@ -81,12 +81,12 @@
 								<span class="not-selectable" data-ng-style="getStyleStyling(style)">{{style.name}}</span>
 							</div>
 
-							<div class="style-copy-options" data-ng-show="copyCSS && selectedStyle._id === style._id">
+<!--							<div class="style-copy-options" data-ng-show="copyCSS && selectedStyle._id === style._id">
 								<p>This style has been changed.<br />Do you want to <br />
 									<a data-ng-click="saveAsBlockStyle(styleset, style)">save as new</a> or <br />
 									<a data-ng-click="overwriteStyle(style)">overwrite</a>
 								</p>
-							</div>
+							</div>-->
 
 							<form data-ng-show="style.editingStyleTitle">
 							<textarea class="renameStyle" rows="1" data-ng-model="style.name" focus-on="!!style.editingStyleTitle" blur-on-enter data-ng-blur="style.editingStyleTitle = false; updateStyle(style);"></textarea>
