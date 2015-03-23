@@ -62,6 +62,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	}
 
+	$scope.focusEditor = function() {
+        setTimeout(function() {
+			$rootScope.ck.focus();
+		}, 500);
+	}
+
 	$scope.openFeedback = function() {
 		userService.openFeedback( $scope.user );
 	}
@@ -1257,13 +1263,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return deferred.promise;
 	}
 
-	$scope.insertOptionChosen = function(insertoption) {
-		if ($scope.activeInsertOption === insertoption) {
-			$scope.activeInsertOption = null;
-        } else {
-            $scope.activeInsertOption = insertoption;
-        }
-
+	// status in function is witch insert option that is clicked, preserve will be used to make sure it is not toggeling the open/close state, but will always have it open
+	$scope.insertOptionChosen = function(status, preserve) {
+		$scope.activeInsertOption = ((status != $scope.activeInsertOption || preserve) ? status : null);
         $scope.focusEditor();
     }
 
@@ -1592,12 +1594,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$rootScope.ck.commands.hideFloatingTools.exec();
 				$scope.styleEditorVisible = false;
 			}
-		}
-
-		$scope.focusEditor = function() {
-            setTimeout(function() {
-				$rootScope.ck.focus();
-			}, 500);
 		}
 
 		$scope.insertPageBreak = function() {
