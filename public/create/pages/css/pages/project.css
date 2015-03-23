@@ -506,7 +506,10 @@ li.typo .style-copy-options p {
 	color: #000;
 	cursor: pointer;
 }
-.left-menu-button:hover, .right-menu-button:hover, .left-menu-button:active, .right-menu-button:active {
+.left-menu-button:hover, .right-menu-button:hover {
+	border: 1px solid #000;
+}
+.left-menu-button:active, .right-menu-button:active {
 	border: 1px solid #fefefe;
 }
 .left-menu-button:hover label, .right-menu-button:hover label, .left-menu-button:active label, .right-menu-button:active label {
