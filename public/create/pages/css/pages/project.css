@@ -410,6 +410,10 @@ ul, li {
 .typo.open .style.new p {
 	border: none;
 }
+
+.typo .typo-children-style p, .typo.open .typo-children-style p {
+	border: 0;
+}
 .typo-children-style {
 	position: relative;
 	background-color: #fff;
