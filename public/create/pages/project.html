@@ -12,7 +12,7 @@
 			<img src="pages/images/insert.svg" width="20">
 		</div>
 </div>
-<div class="menu-left full-height" data-ng-class="{ 'open' : leftMenuShow, 'bottom-menu-space' : leftMenuShowItem == 'contents' || leftMenuShowItem == 'design', 'open-small' : showNewOptions || showBottomOptions, 'open-big' : showImportOptions }">
+<div class="menu-left full-height" data-ng-class="{ 'open' : leftMenuShow, 'bottom-menu-space' : leftMenuShowItem == 'contents' || leftMenuShowItem == 'design', 'open-small' : leftMenuShowItem == 'contents' && (showNewOptions || showBottomOptions), 'open-big' : leftMenuShowItem == 'contents' && showImportOptions }">
 	<div id="menu-left-contents" class="menu-item-left" data-ng-show="leftMenuShowItem == 'contents'">
 			<div class="projectDocument new" data-ng-click="addProjectDocument();">
 				<p>+</p>
