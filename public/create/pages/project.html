@@ -133,17 +133,17 @@
 								<option value="">Choose internal target</option>
 							</select>
 						</span>
-						<span class="left-menu-button full-size left-menu-parameter-margin">
-						<a class="anchor-link" data-ng-click="insertNewLink();">Insert hyperlink</a>
-						</span>
+						<div class="left-menu-button left-menu-parameter-margin" data-ng-click="insertNewLink();">
+							Insert hyperlink
+						</div>
 					</div>
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
 					<div class="left-menu-options">
-						<span class="left-menu-button">
+						<label class="left-menu-button" for="imagesInput">
 							<input type="file" id="imagesInput" data-ng-file-select="onImageSelect($files)" accept="image/*" data-ng-hide="true">
-							<label for="imagesInput">Click to insert an image</label>
-						</span>
+							<span>Insert image</span>
+						</label>
 					</div>
 					<!--<div class="left-menu-options left-menu-parameter-margin">
 						<span class="left-menu-button">
@@ -207,11 +207,9 @@
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
 					<div class="left-menu-options">
-						<span class="left-menu-button">
-							<a data-ng-click="insertPageBreak()">
-								Insert pagebreak
-							</a>
-						</span>
+						<div class="left-menu-button" data-ng-click="insertPageBreak()">
+							Insert pagebreak
+						</div>
 						<!--<span class="left-menu-button">
 							<a data-ng-click="insertPageBreakAvoid()">
 								<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Avoid pagebreak" />
@@ -225,9 +223,9 @@
 						<span class="menu-box">
 							<input id="anchorInputBox" type="text" data-ng-model="anchorName" placeholder="Anchor name" class="anchor-name">
 						</span>
-						<span class="left-menu-button left-menu-parameter-margin">
-							<a class="anchor-link" data-ng-click="insertNewAnchor();">Insert anchor</a>
-						</span>
+						<div class="left-menu-button left-menu-parameter-margin" data-ng-click="insertNewAnchor();">
+							Insert anchor
+						</div>
 						<span class="menu-box left-menu-parameter-margin" data-ng-show="toc">
 							<span class="option" data-ng-repeat="tocs in toc">
 								<a data-ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a>
@@ -311,10 +309,10 @@
 					<span class="right-menu-feature-text">
 						Add an existing cover image to the beginning of the book. This image will also represent the book on virtual book shelves and in ebook stores.
 					</span>
-					<span class="right-menu-button right-menu-parameter-margin">
+					<label class="right-menu-button right-menu-parameter-margin" for="coverInput">
 						<input type="file" id="coverInput" data-ng-file-select="onCoverSelect($files)" accept="image/*" data-ng-hide="true">
-						<label for="coverInput">Add cover image</label>
-					</span>
+						Add cover image
+					</label>
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
 					<span class="right-menu-feature-title">
@@ -323,9 +321,9 @@
 					<span class="right-menu-feature-text">
 						A title page usually bears the full title, the author and similar. It is usually found at the beginning of a book.
 					</span>
-					<span class="right-menu-button full-size right-menu-parameter-margin">
-						<a data-ng-click="generateTitlePage();">Generate titlepage</a>
-					</span>
+					<div class="right-menu-button full-size right-menu-parameter-margin" data-ng-click="generateTitlePage();">
+						Generate titlepage
+					</div>
 				</li>
 
 				<li data-ng-click="finalizeOptionChosen('showFinalizeTocOptions');" class="insertOption first" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
@@ -341,14 +339,14 @@
 					<span class="right-menu-feature-text">
 						The table of contents will be inserted in the beginning of the ebook and will be accessible in ebook readers for easy navigation.
 					</span>
-					<span class="right-menu-feature-text">
-						<br />Preview
+					<span class="right-menu-feature-text right-menu-parameter-margin">
+						Preview
 					</span>
-					<span class="menu-box right-menu-parameter-margin">
+					<span class="menu-box">
 						<span class="option" data-ng-repeat="tocs in toc"><a data-ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
 					</span>
-					<span class="right-menu-button full-size right-menu-parameter-margin">
-						<a data-ng-click="generateToc();">Generate ToC</a>
+					<span class="right-menu-button full-size right-menu-parameter-margin" data-ng-click="generateToc();">
+						Generate ToC
 					</span>
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
@@ -358,8 +356,8 @@
 					<span class="right-menu-feature-text">
 						A colophon is a brief statement containing information about a specific version of a book such as the ISBN-number, a creative commons or copyright notice, the people involved and so on.
 					</span>
-					<span class="right-menu-button full-size right-menu-parameter-margin">
-							<a data-ng-click="generateColophon();">Generate colophon</a>
+					<span class="right-menu-button full-size right-menu-parameter-margin" data-ng-click="generateColophon();">
+						Generate colophon
 					</span>
 				</li>
 			</ul>
