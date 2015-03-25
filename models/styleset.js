@@ -19,6 +19,7 @@ var StylesetSchema = new Schema({
 	deleted: { type: Boolean, default: false },
 	isSystem: { type: Boolean, default: false },
 	accessLevels: [String],
+	accessPayment: { type: String },
 	original: { type: Schema.Types.ObjectId, ref: 'Styleset' },
 	order: { type: Number }
 });
@@ -65,6 +66,7 @@ exports.copy = function (styleset, next) {
 					archived: styleset.archived,
 					isSystem: styleset.isSystem,
 					original: styleset._id,
+					accessLevels: styleset.accessLevels,
 					order: styleset.order
 				});
 

@@ -4,7 +4,6 @@ var User = require('../models/user.js').User
 	, crypto = require('crypto')
 	, conf = require('config')
 	, logger = require('../lib/logger')
-	, conf = require('config')
 	, env = process.env.NODE_ENV
 	, fs = require('fs')
 	, utils = require('../lib/utils')
@@ -74,17 +73,15 @@ exports.passwordReset = function (req, res, next) {
 				logger.info("Unknown email requested password reset: " + req.body.email);
 				return res.send({});
 			}
-			if ('test' != env) {
-				var url = conf.app.url_prefix + '#password-reset/' + user._id + '/' + token + '/' + user_utils.hashEmail(user.email);
-				logger.info("Password reset url for " + user.email + ": " + url);
-				emailer.sendUserEmail(
-					user,
-					[
-						{name: "URL", content: url}
-					],
-					'password-reset'
-				);
-			}
+			var url = conf.app.url_prefix + '#password-reset/' + user._id + '/' + token + '/' + user_utils.hashEmail(user.email);
+			logger.info("Password reset url for " + user.email + ": " + url);
+			emailer.sendUserEmail(
+				user,
+				[
+					{name: "URL", content: url}
+				],
+				'password-reset'
+			);
 			return res.send({});
 		});
 	});
@@ -276,7 +273,7 @@ exports.edit = function (req, res, next) {
 				return next(err);
 			}
 
-			if (emailChanged && 'test' != env) {
+			if (emailChanged) {
 				var url = conf.app.url_prefix + 'user/' + user._id + '/verify/' + user_utils.hashEmail(user.email);
 				logger.info("Password verify url for " + user.email + ": " + url);
 				var template = 'verify-email';
