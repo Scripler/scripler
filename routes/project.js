@@ -22,6 +22,7 @@ var emailer = require('../lib/email/email.js');
 var exec = require('child_process').exec;
 var logger = require('../lib/logger');
 var uuid_lib = require('node-uuid');
+var document_utils = require('../lib/document-utils');
 
 //Load project by id
 exports.load = function (id) {
@@ -417,19 +418,16 @@ exports.compile = function (req, res, next) {
 			return next(err);
 		}
 
-		// Create a temporary file to avoid the second compile() call from the client, c.f. #483, trying to write to the same file while the EPUB checker has it open.
-		var tempFilename = path.join(conf.epub.tmpDir, uuid_lib.v4() + ".epub");
-		var tempFile = fs.createWriteStream(tempFilename);
-		epub.pipe(tempFile);
-
-		var epubDownloadUrl = conf.resources.usersUrl + "/" + conf.epub.userDirPrefix + userId + "/" + req.project._id + '.epub';
-		var filename = (req.project.metadata.title || req.project.name) + ".epub";
-		var saneTitle = sanitize(filename);
-
 		// TODO: When a GUI design has been made, also return the EPUB validation result to client
-		res.send({url: epubDownloadUrl});
+		var userEpubDownloadUrl = conf.app.url_prefix + 'project/' + req.project._id + '/epub';
+		res.send({url: userEpubDownloadUrl});
 
 		if ('test' != env && conf.epub.validatorEnabled) {
+			// Create a temporary file to avoid the second compile() call from the client, c.f. #483, trying to write to the same file while the EPUB checker has it open.
+			var tempFilename = path.join(conf.epub.tmpDir, uuid_lib.v4() + ".epub");
+			var tempFile = fs.createWriteStream(tempFilename);
+			epub.pipe(tempFile);
+
 			tempFile.once('close', function() {
 				// The sending of the validation result email can happen after the response has been returned to the user but must happen on the temp file, c.f. comment above.
 				var fullPath = tempFilename;
@@ -442,6 +440,9 @@ exports.compile = function (req, res, next) {
 							errorMessage = error.code + ':\n' + error.stack;
 						}
 
+						var userEpubFilename = (req.project.metadata.title || req.project.name) + ".epub";
+						var saneTitle = sanitize(userEpubFilename);
+						var scriplerEpubDownloadUrl = conf.resources.usersUrl + "/" + conf.epub.userDirPrefix + userId + "/" + req.project._id + '.epub';
 						var authorName = req.user.firstname + " " + req.user.lastname;
 
 						logger.info('EPUB Validation Result');
@@ -464,7 +465,7 @@ exports.compile = function (req, res, next) {
 								{name: "USEREMAIL", content: req.user.email},
 								{name: "NAME", content: authorName},
 								{name: "EPUBTITLE", content: saneTitle},
-								{name: "EPUBURL", content: epubDownloadUrl},
+								{name: "EPUBURL", content: scriplerEpubDownloadUrl},
 								{name: "EPUBVALIDATIONRESULT", content: epubValidationResult},
 								{name: "ERROR", content: errorMessage}
 							],
@@ -480,12 +481,41 @@ exports.compile = function (req, res, next) {
 
 }
 
-exports.applyStyleset = function (req, res, next) {
-	req.project.styleset = req.styleset;
-	req.project.save(function (err) {
+exports.downloadEpub = function (req, res, next) {
+	var userEpubFullPath = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + req.user._id, req.project._id + '.epub');
+	var userEpubFilename = (req.project.metadata.title || req.project.name) + ".epub";
+	var saneTitle = sanitize(userEpubFilename);
+	res.download(userEpubFullPath, saneTitle);
+	logger.info(req.user.firstname + ' ' + req.user.lastname + ' (user' + req.user._id + ') downloaded ebook ' + saneTitle + ' (' + req.project._id + '.epub)');
+}
+
+exports.applyStyleset = function(req, res, next) {
+	var stylesetToApply = req.styleset;
+	var level = req.user.level;
+	req.project.styleset = stylesetToApply._id; 
+	var apply = function(document, callback) {
+		document_utils.applyStylesetToDocument(document, stylesetToApply, level, function(err, populatedStyleset) {
+			if (err) {
+				return callback(err);
+			} else { 
+				callback();
+			}
+		});
+	};
+
+	async.each(req.project.documents, apply, function(err) {
 		if (err) {
 			return next(err);
+		} else {
+			req.project.save(function(err) {
+				if (err) {
+					console.log('something went wrong');
+					return next(err);
+				}
+				res.send({
+					project: req.project
+				});
+			});
 		}
-		res.send({project: req.project});
 	});
 }

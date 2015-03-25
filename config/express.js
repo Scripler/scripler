@@ -26,7 +26,7 @@ var allowCrossDomain = function (req, res, next) {
 };
 
 // If uploadDir hasn't been specified in configuration folder, default to subfolder in current dir
-// TODO: when running "mocha", it seems that the value from config/default.json is used, even though "conf.import.uploadDir" is specified in config/test.json used by test/it.js - why?
+// TODO: when running "mocha", it seems that the value from config/runtime.json is used, even though "conf.import.uploadDir" is specified in config/test.json used by test/it.js - why?
 if (!conf.import.uploadDir || conf.import.uploadDir == "") {
     conf.import.uploadDir = __dirname + '/../tmp/uploads';
 }
@@ -47,8 +47,9 @@ exports.beforeRoutes = function (app, conf, mongoose) {
 	app.use(expressLogger('short', {stream: {write: function (msg) {
 		logger.info(msg.trim());
 	}}}));
-	app.use(bodyParser.json());
-	app.use(bodyParser.urlencoded({ extended: false }));
+	// TODO: create a separate configuration value for this?
+	app.use(bodyParser.json({limit: conf.import.uploadLimit }));
+	app.use(bodyParser.urlencoded({ limit: conf.import.uploadLimit, extended: false }));
 	app.use(multipart({
 		uploadDir: conf.import.uploadDir,
 		keepExtensions: true,

@@ -3,404 +3,403 @@
 
 <div id="menu-left-tabs" class="menu-tabs left full-height" ondragstart="return false;" ondrop="return false;">
 	<div class="menu-tab" data-ng-class="{ 'selectedTab' : leftMenuShowItem == 'contents' }" data-ng-click="showLeftMenu('contents');">
-		<img src="pages/images/contents.svg" width="20">
-	</div>
-	<div class="menu-tab" data-ng-class="{ 'selectedTab' : leftMenuShowItem == 'design' }" data-ng-click="showLeftMenu('design'); hideStyleEditor(); selectedStyle = null; focusEditor();">
-		<img src="pages/images/design.svg" width="20">
-	</div>
+			<img src="pages/images/contents.svg" width="20">
+		</div>
+	<div class="menu-tab" data-ng-class="{ 'selectedTab' : leftMenuShowItem == 'design' }" data-ng-click="showLeftMenu('design');">
+			<img src="pages/images/design.svg" width="20">
+		</div>
 	<div class="menu-tab" data-ng-class="{ 'selectedTab' : leftMenuShowItem == 'insert' }" data-ng-click="showLeftMenu('insert');">
-		<img src="pages/images/insert.svg" width="20">
-	</div>
+			<img src="pages/images/insert.svg" width="20">
+		</div>
 </div>
-<div id="menu-left" class="menu-left full-height" data-ng-class="{ 'open' : leftMenuShow, 'bottom-menu-space' : leftMenuShowItem == 'contents' || leftMenuShowItem == 'design' }">
-	<div class="menu-item-left" data-ng-show="leftMenuShowItem == 'contents'">
-		<div class="projectDocument new" data-ng-click="addProjectDocument();">
-			<p>+</p>
-		</div>
-		<div html-sortable="sortable_option" data-ng-model="projectDocuments">
-			<div class="projectDocument" data-ng-repeat="projectDocument in projectDocuments track by projectDocument._id" data-ng-selected="documentSelected === projectDocument" data-ng-hide="projectDocument.archived && !user.showArchivedDocuments" data-ng-class="{ 'archived' : projectDocument.archived }">
-				<a class="projectdocument-options-show" data-ng-class="{ 'open' : $index == selectedProjectDocumentOptions }" data-ng-click="showProjectDocumentOptions($index)">
-					<div class="arrow"></div>
-				</a>
-
-				<p data-ng-hide="projectDocument.editingProjectDocumentTitle">
-					<a class="projectDocument-link" data-ng-click="projectDocumentChosen(projectDocument)">
-						{{projectDocument.name}}
+<div class="menu-left full-height" data-ng-class="{ 'open' : leftMenuShow, 'bottom-menu-space' : leftMenuShowItem == 'contents' || leftMenuShowItem == 'design', 'open-small' : leftMenuShowItem == 'contents' && (showNewOptions || showBottomOptions), 'open-big' : leftMenuShowItem == 'contents' && showImportOptions }">
+	<div id="menu-left-contents" class="menu-item-left" data-ng-show="leftMenuShowItem == 'contents'">
+			<div class="projectDocument new" data-ng-click="addProjectDocument();">
+				<p>+</p>
+			</div>
+			<div html-sortable="sortable_option" data-ng-model="projectDocuments">
+			<div class="projectDocument" data-ng-repeat="projectDocument in projectDocuments track by projectDocument._id" data-ng-click="showProjectDocument(projectDocument._id)" data-ng-hide="projectDocument.archived && !user.showArchivedDocuments" data-ng-class="{ 'archived' : projectDocument.archived, 'selected' : selectedProjectDocument == projectDocument._id }">
+					<a class="projectdocument-options-show" data-ng-class="{ 'open' : $index == selectedProjectDocumentOptions }" data-ng-click="showProjectDocumentOptions($index)">
+						<div class="arrow"></div>
 					</a>
-				</p>
 
-				<form data-ng-show="projectDocument.editingProjectDocumentTitle">
-					<p>
-						<textarea class="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!projectDocument.editingProjectDocumentTitle" on-enter="projectDocument.editingProjectDocumentTitle = false;" data-ng-blur="renameProjectDocument(projectDocument); projectDocument.editingProjectDocumentTitle = false;"></textarea>
+					<p data-ng-hide="projectDocument.editingProjectDocumentTitle">
+						<a class="projectDocument-link" data-ng-click="projectDocumentChosen(projectDocument)">
+							{{projectDocument.name}}
+						</a>
 					</p>
-				</form>
 
-				<div class="projectDocument-options" data-ng-show="$index == selectedProjectDocumentOptions">
-					<div class="projectDocument-options-menupoint first" data-ng-click="projectDocument.editingProjectDocumentTitle = true; hideProjectDocumentOptions();">Rename</div>
-					<div class="projectDocument-options-menupoint" data-ng-hide="projectDocument.archived" data-ng-click="archiveProjectDocument(projectDocument); hideProjectDocumentOptions();">Archive</div>
-					<div class="projectDocument-options-menupoint" data-ng-show="projectDocument.archived" data-ng-click="unarchiveProjectDocument(projectDocument); hideProjectDocumentOptions();">Unarchive</div>
-					<div class="projectDocument-options-hide" data-ng-click="hideProjectDocumentOptions();" title="Close Options"></div>
+					<form data-ng-show="projectDocument.editingProjectDocumentTitle">
+						<p>
+						<textarea class="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!projectDocument.editingProjectDocumentTitle" blur-on-enter data-ng-blur="renameProjectDocument(projectDocument); projectDocument.editingProjectDocumentTitle = false;"></textarea>
+						</p>
+					</form>
+
+					<div class="projectDocument-options" data-ng-show="$index == selectedProjectDocumentOptions">
+						<div class="projectDocument-options-menupoint first" data-ng-click="projectDocument.editingProjectDocumentTitle = true; hideProjectDocumentOptions();">Rename</div>
+						<div class="projectDocument-options-menupoint" data-ng-hide="projectDocument.archived" data-ng-click="archiveProjectDocument(projectDocument); hideProjectDocumentOptions();">Archive</div>
+						<div class="projectDocument-options-menupoint" data-ng-show="projectDocument.archived" data-ng-click="unarchiveProjectDocument(projectDocument); hideProjectDocumentOptions();">Unarchive</div>
+						<div class="projectDocument-options-hide" data-ng-click="hideProjectDocumentOptions();" title="Close Options"></div>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="menu-item-left" data-ng-show="leftMenuShowItem == 'design'">
-		<div class="typo new" data-ng-click="addNewStyleset()">
-			<p>+</p>
+	<div id="menu-left-design" class="menu-item-left" data-ng-show="leftMenuShowItem == 'design'">
+			<div class="typo new" data-ng-click="addNewStyleset()">
+				<p>+</p>
+			</div>
+			<ul>
+				<li data-ng-repeat="styleset in stylesets track by $index" id="{{styleset._id}}" class="typo" data-ng-class="{ 'open' : typoChildrenVisible }" data-ng-hide="styleset.archived || styleset.hidden">
+					<a class="styleset-options-show" data-ng-click="typoChildrenVisible = true; showStylesetOptions($index);" data-ng-class="{ 'open' : $index == selectedStylesetOptions }">
+						<div class="arrow"></div>
+					</a>
+
+					<p class="not-selectable" data-ng-style="styleset.css" data-ng-click="typoChildrenVisible =! typoChildrenVisible; hideStylesetOptions(); focusEditor();" data-ng-hide="styleset.editingStyleSetTitle">{{styleset.name}}</p>
+
+					<form data-ng-show="styleset.editingStyleSetTitle">
+						<p>
+						<textarea class="renameStyleset" rows="1" data-ng-model="styleset.name" focus-on="!!styleset.editingStyleSetTitle" blur-on-enter data-ng-blur="styleset.editingStyleSetTitle = false; renameStyleset(styleset);"></textarea>
+						</p>
+					</form>
+
+					<div class="styleset-options" data-ng-show="$index == selectedStylesetOptions">
+						<div class="styleset-options-menupoint first" data-ng-click="styleset.editingStyleSetTitle = true; hideStylesetOptions();">Rename</div>
+						<!--<div class="styleset-options-menupoint" data-ng-click="archiveStyleset(styleset); hideStylesetOptions();">archive</div>-->
+						<div class="styleset-options-menupoint" data-ng-click="applyStylesetToDocument(styleset,true); hideStylesetOptions();">Apply to chapter</div>
+						<!--<div class="styleset-options-menupoint" data-ng-click="applyStylesetToProject(styleset); hideStylesetOptions();">Apply to ebook</div>-->
+					</div>
+
+					<ul data-ng-show="typoChildrenVisible || isDefaultStyleset(styleset)" class="typo-children">
+						<li data-ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" data-ng-hide="style.archived || style.hidden" data-ng-selected="selectedStyle._id === style._id" class="typo-children-style" data-ng-class="{ selected : selectedStyle._id === style._id }">
+							<a class="style-options-show" data-ng-click="showStylesetChildOptions($parent.$index, $index)" data-ng-class="{ 'open' : $parent.$index == selectedStylesetParentOptions && $index == selectedStylesetChildOptions }">
+								<div class="arrow"></div>
+							</a>
+
+							{{style.tag === 'h1' && setStylesetStyling(styleset, style) || ''}}
+
+							<div class="style-height" data-ng-hide="style.editingStyleTitle" data-ng-click="applyStyle(styleset, style)">
+								<span class="not-selectable" data-ng-style="getStyleStyling(style)">{{style.name}}</span>
+							</div>
+
+<!--							<div class="style-copy-options" data-ng-show="copyCSS && selectedStyle._id === style._id">
+								<p>This style has been changed.<br />Do you want to <br />
+									<a data-ng-click="saveAsBlockStyle(styleset, style)">save as new</a> or <br />
+									<a data-ng-click="overwriteStyle(style)">overwrite</a>
+								</p>
+							</div>-->
+
+							<form data-ng-show="style.editingStyleTitle">
+							<textarea class="renameStyle" rows="1" data-ng-model="style.name" focus-on="!!style.editingStyleTitle" blur-on-enter data-ng-blur="style.editingStyleTitle = false; updateStyle(style);"></textarea>
+							</form>
+
+						<div class="style-options" data-ng-show="$parent.$index == selectedStylesetParentOptions && $index == selectedStylesetChildOptions">
+								<div class="style-options-menupoint first" data-ng-click="style.editingStyleTitle = true; hideStylesetOptions();">Rename</div>
+								<!--<div class="style-options-menupoint" data-ng-click="archiveStyle(style); hideStylesetOptions();">archive</div>-->
+							</div>
+						</li>
+						<li class="new style" data-ng-click="addNewStyle( styleset )"><p>+</p></li>
+					</ul>
+				</li>
+			</ul>
 		</div>
-		<ul>
-			<li data-ng-repeat="styleset in stylesets track by $index" id="{{styleset._id}}" class="typo" data-ng-class="{ 'open' : typoChildrenVisible }" data-ng-hide="styleset.archived || styleset.hidden">
-				<a class="styleset-options-show" data-ng-click="typoChildrenVisible = true; showStylesetOptions($index);" data-ng-class="{ 'open' : $index == selectedStylesetOptions }">
-					<div class="arrow"></div>
-				</a>
-
-				<p class="not-selectable" data-ng-style="styleset.css" data-ng-click="typoChildrenVisible =! typoChildrenVisible; hideStylesetOptions(); focusEditor();" data-ng-hide="styleset.editingStyleSetTitle">{{styleset.name}}</p>
-
-				<form data-ng-show="styleset.editingStyleSetTitle">
-					<p>
-						<textarea class="renameStyleset" rows="1" data-ng-model="styleset.name" focus-on="!!styleset.editingStyleSetTitle" on-enter="styleset.editingStyleSetTitle = false;" data-ng-blur="styleset.editingStyleSetTitle = false; renameStyleset(styleset);"></textarea>
-					</p>
-				</form>
-
-				<div class="styleset-options" data-ng-show="$index == selectedStylesetOptions">
-					<div class="styleset-options-menupoint first" data-ng-click="styleset.editingStyleSetTitle = true; hideStylesetOptions();">Rename</div>
-					<!--<div class="styleset-options-menupoint" data-ng-click="archiveStyleset(styleset); hideStylesetOptions();">archive</div>-->
-					<div class="styleset-options-menupoint" data-ng-click="applyStylesetToDocument(styleset,true); hideStylesetOptions();">Apply to chapter</div>
-					<!--<div class="styleset-options-menupoint" data-ng-click="applyStylesetToProject(styleset); hideStylesetOptions();">apply to ebook</div>-->
-				</div>
-
-				<ul data-ng-show="typoChildrenVisible || isDefaultStyleset(styleset)" class="typo-children">
-					<li data-ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" data-ng-hide="style.archived || style.hidden" data-ng-selected="selectedStyle._id === style._id" class="typo-children-style">
-						<a class="style-options-show" data-ng-click="showStylesetChildOptions($index)" data-ng-class="{ 'open' : $index == selectedStylesetChildOptions }">
-							<div class="arrow"></div>
-						</a>
-
-						{{style.tag === 'h1' && setStylesetStyling(styleset, style) || ''}}
-
-						<div class="style-height" data-ng-hide="style.editingStyleTitle" data-ng-click="applyStyle(styleset, style)">
-							<span class="not-selectable" data-ng-style="getStyleStyling(style)">{{style.name}}</span>
-						</div>
-
-						<div class="style-copy-options" data-ng-show="copyCSS && selectedStyle._id === style._id">
-							<p>This style has been changed.<br />Do you want to <br />
-								<a data-ng-click="saveAsBlockStyle(styleset, style)">save as new</a> or <br />
-								<a data-ng-click="overwriteStyle(style)">overwrite</a>
-							</p>
-						</div>
-
-						<form data-ng-show="style.editingStyleTitle">
-							<textarea class="renameStyle" rows="1" data-ng-model="style.name" focus-on="!!style.editingStyleTitle" on-enter="style.editingStyleTitle = false;" data-ng-blur="style.editingStyleTitle = false; updateStyle(style);"></textarea>
-						</form>
-
-						<div class="style-options" data-ng-show="$index == selectedStylesetChildOptions">
-							<div class="style-options-menupoint first" data-ng-click="style.editingStyleTitle = true; hideStylesetOptions();">Rename</div>
-							<!--<div class="style-options-menupoint" data-ng-click="archiveStyle(style); hideStylesetOptions();">archive</div>-->
-						</div>
-					</li>
-					<li class="new style" data-ng-click="addNewStyle( styleset )"><p>+</p></li>
-				</ul>
-			</li>
-		</ul>
-	</div>
-	<div class="menu-item-left" data-ng-show="leftMenuShowItem == 'insert'">
-		<ul>
-			<!--<li data-ng-click="insertOptionChosen('showInsertBoxOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
-				<img src="pages/images/insert_box_button.png" alt="" title="" />
-			</li>-->
-			<li data-ng-click="insertOptionChosen('showInsertHyperlinkOptions');" class="insertOption first" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
-				<img src="pages/images/insert_hyperlink_button.png" alt="Hyperlink" title="Hyperlink" />
-			</li>
-			<li data-ng-click="insertOptionChosen('showInsertImageOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
-				<img src="pages/images/insert_image_button.png" alt="Image" title="Image" />
-			</li>
-			<!--<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
-				line properties
-				<div class="left-menu-divider"></div>
-				padding settings
-				<div class="left-menu-divider"></div>
-				margin settings
-			</li>-->
-			<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
-				<div class="left-menu-options">
-					<span class="menu-box inputfield full-size">
-						<input type="text" data-ng-model="linkAddress" placeholder="Target">
-					</span>
-					<span class="menu-box inputfield full-size left-menu-parameter-margin">
-						<input type="text" data-ng-model="linkText" placeholder="Text">
-					</span>
-					<span class="menu-box inputfield full-size left-menu-parameter-margin">
-						<select data-ng-model="linkAnchor" data-ng-options="anchor.text for anchor in toc">
-							<option value="">Choose internal target</option>
-						</select>
-					</span>
-					<span class="left-menu-button full-size left-menu-parameter-margin">
-						<a data-ng-click="insertNewLink();">+</a>
-					</span>
-				</div>
-			</li>
-			<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
-				<div class="left-menu-options">
-					<span class="menu-box">
-						<input type="file" id="imagesInput" data-ng-file-select="onImageSelect($files)" accept="image/*" data-ng-hide="true">
-						<label for="imagesInput">Click to insert an image</label>
-					</span>
-				</div>
-				<!--<div class="left-menu-options left-menu-parameter-margin">
-					<span class="left-menu-button">
-						<a data-ng-click="alignImageLeft(); insertImageOption('')">
-							<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Left" />
-						</a>
-					</span>
-					<span class="left-menu-button">
-						<a data-ng-click="alignImageCenter(); insertImageOption('')">
-							<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Center" />
-						</a>
-					</span>
-					<span class="left-menu-button">
-						<a data-ng-click="alignImageRight(); insertImageOption('')">
-							<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Right" />
-						</a>
-					</span>
-					<span class="left-menu-button">
-						<a data-ng-click="insertImageOption('turnImage')">
-							<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Turn Image" />
-						</a>
-					</span>
-					<span class="left-menu-button">
-						<a data-ng-click="duplicateImage(); insertImageOption('')">
-							<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Duplicate Image" />
-						</a>
-					</span>
-					<span class="left-menu-button">
-						<a data-ng-click="insertImageOption('resizeImage')">
-							<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Resize Image" />
-						</a>
-					</span>
-				</div>
-				<div class="left-menu-options-parameters left-menu-parameter-margin">
-					<div data-ng-class="{ 'expanded' : activeImageOption === 'turnImage' }">
-						<span class="left-menu-button">
-							<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Resize Image Set Procentages" />
+		<div id="menu-left-insert" class="menu-item-left" data-ng-show="leftMenuShowItem == 'insert'">
+			<ul>
+				<!--<li data-ng-click="insertOptionChosen('showInsertBoxOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
+					<img src="pages/images/insert_box_button.png" alt="" title="" />
+				</li>-->
+				<li data-ng-click="insertOptionChosen('showInsertHyperlinkOptions');" class="insertOption first" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
+					<img src="pages/images/insert_hyperlink_button.png" alt="Hyperlink" title="Hyperlink" />
+				</li>
+				<li data-ng-click="insertOptionChosen('showInsertImageOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
+					<img src="pages/images/insert_image_button.png" alt="Image" title="Image" />
+				</li>
+				<!--<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions' }">
+					line properties
+					<div class="left-menu-divider"></div>
+					padding settings
+					<div class="left-menu-divider"></div>
+					margin settings
+				</li>-->
+				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
+					<div class="left-menu-options">
+						<span class="menu-box inputfield full-size">
+							<input type="text" data-ng-model="linkAddress" placeholder="Target">
 						</span>
-						<span class="menu-box inputfield">
-							<input type="text" value="45" class="show-info">
-							<span class="extra-info">&deg;</span>
+						<span class="menu-box inputfield full-size left-menu-parameter-margin">
+						<input id="hyperlinkInputBox" type="text" data-ng-model="linkText" placeholder="Text">
+						</span>
+						<span class="menu-box inputfield full-size left-menu-parameter-margin">
+							<select data-ng-model="linkAnchor" data-ng-options="anchor.text for anchor in toc">
+								<option value="">Choose internal target</option>
+							</select>
+						</span>
+						<div class="left-menu-button left-menu-parameter-margin" data-ng-click="insertNewLink();">
+							Insert hyperlink
+						</div>
+					</div>
+				</li>
+				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
+					<div class="left-menu-options">
+						<label class="left-menu-button" for="imagesInput">
+							<input type="file" id="imagesInput" data-ng-file-select="onImageSelect($files)" accept="image/*" data-ng-hide="true">
+							<span>Insert image</span>
+						</label>
+					</div>
+					<!--<div class="left-menu-options left-menu-parameter-margin">
+						<span class="left-menu-button">
+							<a data-ng-click="alignImageLeft(); insertImageOption('')">
+								<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Left" />
+							</a>
+						</span>
+						<span class="left-menu-button">
+							<a data-ng-click="alignImageCenter(); insertImageOption('')">
+								<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Center" />
+							</a>
+						</span>
+						<span class="left-menu-button">
+							<a data-ng-click="alignImageRight(); insertImageOption('')">
+								<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Right" />
+							</a>
+						</span>
+						<span class="left-menu-button">
+							<a data-ng-click="insertImageOption('turnImage')">
+								<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Turn Image" />
+							</a>
+						</span>
+						<span class="left-menu-button">
+							<a data-ng-click="duplicateImage(); insertImageOption('')">
+								<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Duplicate Image" />
+							</a>
+						</span>
+						<span class="left-menu-button">
+							<a data-ng-click="insertImageOption('resizeImage')">
+								<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Resize Image" />
+							</a>
 						</span>
 					</div>
-					<div data-ng-class="{ 'expanded' : activeImageOption === 'resizeImage' }">
-						<span class="left-menu-button">
-							<img src="/create/ckeditor/skins/scripler/icons/maximize.png" title="Resize Image Set Procentages" />
+					<div class="left-menu-options-parameters left-menu-parameter-margin">
+						<div data-ng-class="{ 'expanded' : activeImageOption === 'turnImage' }">
+							<span class="left-menu-button">
+								<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Resize Image Set Procentages" />
+							</span>
+							<span class="menu-box inputfield">
+								<input type="text" value="45" class="show-info">
+								<span class="extra-info">&deg;</span>
+							</span>
+						</div>
+						<div data-ng-class="{ 'expanded' : activeImageOption === 'resizeImage' }">
+							<span class="left-menu-button">
+								<img src="/create/ckeditor/skins/scripler/icons/maximize.png" title="Resize Image Set Procentages" />
+							</span>
+							<span class="menu-box inputfield">
+								<input type="text" value="100" class="show-info">
+								<span class="extra-info">%</span>
+							</span>
+						</div>
+					</div>-->
+				</li>
+
+				<li data-ng-click="insertOptionChosen('showInsertPagebreakOptions');" class="insertOption first" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
+					<img src="pages/images/insert_pagebreak_button.png" alt="Page break" title="Page break" />
+				</li>
+				<li data-ng-click="insertOptionChosen('showInsertAnchorOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
+					<img src="pages/images/insert_anchor_button.png" alt="Anchor" title="Anchor" />
+				</li>
+				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
+					<div class="left-menu-options">
+						<div class="left-menu-button" data-ng-click="insertPageBreak()">
+							Insert page break
+						</div>
+						<!--<span class="left-menu-button">
+							<a data-ng-click="insertPageBreakAvoid()">
+								<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Avoid pagebreak" />
+							</a>
+						</span>-->
+					</div>
+				</li>
+				<!--<li class="insertOption"><img src="pages/images/insert_cover_button.png" width="80" height="80"></li>-->
+				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
+					<div class="left-menu-options">
+						<span class="menu-box">
+							<input id="anchorInputBox" type="text" data-ng-model="anchorName" placeholder="Anchor name" class="anchor-name">
 						</span>
-						<span class="menu-box inputfield">
-							<input type="text" value="100" class="show-info">
-							<span class="extra-info">%</span>
+						<div class="left-menu-button left-menu-parameter-margin" data-ng-click="insertNewAnchor();">
+							Insert anchor
+						</div>
+						<span class="menu-box left-menu-parameter-margin" data-ng-show="toc">
+							<span class="option" data-ng-repeat="tocs in toc">
+								<a data-ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a>
+							</span>
 						</span>
 					</div>
-				</div>-->
-			</li>
+				</li>
+				<!--<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions'showInsertHyperlinkOptions }">
+					this is the options for insert hyperlink
+				</li>-->
+			</ul>
+		</div>
+	<div class="documents-options-bottom-buttons" data-ng-show="leftMenuShowItem == 'contents'">
+			<a data-ng-class="{ 'open' : showNewOptions }" data-ng-click="showNewOptions = !showNewOptions; showImportOptions = false; showBottomOptions = false;">New</a>
+			<a data-ng-class="{ 'open' : showImportOptions }" data-ng-click="showImportOptions = !showImportOptions; showNewOptions = false; showBottomOptions = false;">Import</a>
+			<a class="last" data-ng-class="{ 'open' : showBottomOptions }" data-ng-click="showBottomOptions = !showBottomOptions; showNewOptions = false; showImportOptions = false;">Options</a>
+		</div>
 
-			<li data-ng-click="insertOptionChosen('showInsertPagebreakOptions');" class="insertOption first" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
-				<img src="pages/images/insert_pagebreak_button.png" alt="Pagebreak" title="Pagebreak" />
-			</li>
-			<li data-ng-click="insertOptionChosen('showInsertAnchorOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
-				<img src="pages/images/insert_anchor_button.png" alt="Anchor" title="Anchor" />
-			</li>
-			<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
-				<div>
-					<span class="left-menu-button">
-						<a data-ng-click="insertPageBreak()">
-							<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Insert the pagebreak" />
-						</a>
-					</span>
-					<!--<span class="left-menu-button">
-						<a data-ng-click="insertPageBreakAvoid()">
-							<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Avoid pagebreak" />
-						</a>
-					</span>-->
+	<div class="stylesets-options-bottom-buttons" data-ng-show="leftMenuShowItem == 'design'">
+			<a data-ng-click="showStyleEditor()" data-ng-class="{ 'open' : styleEditorVisible }">Style editor</a>
+		</div>
+
+	<div id="menu-left-content-options" class="menu-options" data-ng-show="leftMenuShowItem == 'contents' && (showNewOptions || showImportOptions || showBottomOptions)">
+			<div class="options-bottom-box">
+				<div data-ng-show="showNewOptions">
+					<a data-ng-click="addProjectDocument()">New chapter</a><br>
 				</div>
-			</li>
-			<!--<li class="insertOption"><img src="pages/images/insert_cover_button.png" width="80" height="80"></li>-->
-			<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
-				<div class="left-menu-options">
-					<span class="menu-box inputfield">
-						<input type="text" data-ng-model="anchorName" placeholder="Anchor name">
-					</span>
-					<span class="left-menu-button">
-						<a data-ng-click="insertNewAnchor();">+</a>
-					</span>
-
-					<span class="menu-box left-menu-parameter-margin">
-						<span class="option" data-ng-repeat="tocs in toc"><a data-ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
-					</span>
+				<div data-ng-show="showImportOptions">
+					<div class="upload-box" data-ng-file-drop="onFileSelect($files)" data-ng-file-drag-over-class="dragover"
+						 data-ng-show="dropSupported" data-ng-file-drop-available="dropSupported=true">Drop files here</div>
+					<p>Scripler imports Word files and other common word processor formats (link).</p>
+					<input type="file" data-ng-file-select="onFileSelect($files)">
 				</div>
-			</li>
-			<!--<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions'showInsertHyperlinkOptions }">
-				this is the options for insert hyperlink
-			</li>-->
-		</ul>
-	</div>
-	<div class="documents-options-bottom-buttons bottom-fixed" data-ng-show="leftMenuShowItem == 'contents'">
-		<a data-ng-class="{ 'open' : showNewOptions }" data-ng-click="showNewOptions = !showNewOptions; showImportOptions = false; showBottomOptions = false;">New</a>
-		<a data-ng-class="{ 'open' : showImportOptions }" data-ng-click="showImportOptions = !showImportOptions; showNewOptions = false; showBottomOptions = false;">Import</a>
-		<a class="last" data-ng-class="{ 'open' : showBottomOptions }" data-ng-click="showBottomOptions = !showBottomOptions; showNewOptions = false; showImportOptions = false;">Options</a>
-	</div>
-
-	<div class="stylesets-options-bottom-buttons bottom-fixed" data-ng-show="leftMenuShowItem == 'design'">
-		<a data-ng-click="showStyleEditor()" data-ng-class="{ 'open' : styleEditorVisible }">Style editor</a>
-	</div>
-
-	<div id="menu-left-content-options" class="menu-options bottom-fixed" data-ng-show="leftMenuShowItem == 'contents'" data-ng-class="{ 'open' : showNewOptions || showImportOptions || showBottomOptions }">
-		<div class="options-bottom-box">
-			<div data-ng-show="showNewOptions">
-				<a data-ng-click="addProjectDocument()">New chapter</a><br>
-			</div>
-			<div data-ng-show="showImportOptions">
-				<div class="upload-box" data-ng-file-drop="onFileSelect($files)" data-ng-file-drag-over-class="dragover"
-					 data-ng-show="dropSupported" data-ng-file-drop-available="dropSupported=true">Drop files here</div>
-				<p>Scripler imports Word files and other common word processor formats (link).</p>
-				<input type="file" data-ng-file-select="onFileSelect($files)">
-			</div>
-			<div data-ng-show="showBottomOptions">
-				<input type="checkbox" data-ng-model="user.showArchivedDocuments" data-ng-change="updateUser();">Show archived content<br>
+				<div data-ng-show="showBottomOptions">
+					<input type="checkbox" data-ng-model="user.showArchivedDocuments" data-ng-change="updateUser();">Show archived content<br>
+				</div>
 			</div>
 		</div>
-	</div>
 </div>
 
 <div class="editor information" data-ng-class="{ 'menu-extended' : leftMenuShow || rightMenuShow }">
-	<p class="breadcrumb">
-		<a class="breadcrumb" href="#">Ebooks</a> / <span data-ng-bind="project.name"></span> / <span data-ng-bind="documentSelected.name"></span>
-	</p>
-	<p class="savedstamp">
-		<span data-ng-bind="lastSaved"></span>
-	</p>
-	<!-- TODO: do this in a nicer way! In CSS? -->
-	<div style="clear: both;"></div>
+		<p class="breadcrumb">
+			<a class="breadcrumb" href="#">Ebooks</a> / <span data-ng-bind="project.name"></span> / <span data-ng-bind="documentSelected.name"></span>
+		</p>
+		<p class="savedstamp">
+			<span data-ng-bind="lastSaved"></span>
+		</p>
+		<!-- TODO: do this in a nicer way! In CSS? -->
+		<div style="clear: both;"></div>
 </div>
 
 <div class="editor content" data-ng-class="{ 'menu-extended' : leftMenuShow || rightMenuShow }">
-	<div id="toolbar-area" class="toolbar-area"></div>
-	<textarea ck-editor="" data-ng-model="documentSelected.text" class="form-control" id="bodyeditor"></textarea>
+		<div id="toolbar-area" class="toolbar-area"></div>
+		<textarea ck-editor="" data-ng-model="documentSelected.text" class="form-control" id="bodyeditor"></textarea>
 </div>
 
 <div id="menu-right-tabs" class="menu-tabs right full-height" ondragstart="return false;" ondrop="return false;">
 	<div class="menu-tab" data-ng-class="{ 'selectedTab' : rightMenuShowItem == 'finalize' }" data-ng-click="showRightMenu('finalize');">
-		<img src="pages/images/finalize.svg" width="20" />
-	</div>
+			<img src="pages/images/finalize.svg" width="20" />
+		</div>
 	<div class="menu-tab" data-ng-class="{ 'selectedTab' : rightMenuShowItem == 'output' }" data-ng-click="showRightMenu('output')">
-		<img src="pages/images/output.svg" width="20" />
-	</div>
+			<img src="pages/images/output.svg" width="20" />
+		</div>
 	<div class="menu-tab feedback" data-ng-click="openFeedback()">
-		<img src="pages/images/feedback.svg" width="20" />
-	</div>
+			<img src="pages/images/feedback.svg" width="20" />
+		</div>
 </div>
 <div id="menu-right" class="menu-right" data-ng-class="{ 'open' : rightMenuShow }">
 	<div class="menu-item-right" data-ng-show="rightMenuShowItem == 'finalize'">
-		<ul>
-			<li data-ng-click="finalizeOptionChosen('showFinalizeCoverOptions');" class="insertOption first" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
-				<img src="pages/images/insert_cover.png" alt="Add cover image" title="Add cover image" />
-			</li>
-			<li data-ng-click="finalizeOptionChosen('showFinalizeTitlepageOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
-				<img src="pages/images/insert_titlepage.png" alt="Title page" title="Title page" />
-			</li>
-			<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
-				<span class="right-menu-feature-title">
-					Add cover
-				</span>
-				<span class="right-menu-feature-text">
-					Add an existing cover image to the beginning of the book. This image will also represent the book on virtual book shelves and in ebook stores.
-				</span>
-				<span class="menu-box center-text right-menu-parameter-margin">
-					<input type="file" id="coverInput" data-ng-file-select="onCoverSelect($files)" accept="image/*" data-ng-hide="true">
-					<label for="coverInput">Add cover image</label>
-				</span>
-			</li>
-			<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
-				<span class="right-menu-feature-title">
-					Generate Title page
-				</span>
-				<span class="right-menu-feature-text">
-					A title page usually bears the full title, the author and similar. It is usually found at the beginning of a book.
-				</span>
-				<span class="right-menu-button full-size right-menu-parameter-margin">
-					<a data-ng-click="generateTitlePage();">Generate</a>
-				</span>
-			</li>
-
-			<li data-ng-click="finalizeOptionChosen('showFinalizeTocOptions');" class="insertOption first" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
-				<img src="pages/images/insert_toc.png" alt="Generate Table of Contents" title="Generate Table of Contents" />
-			</li>
-			<li data-ng-click="finalizeOptionChosen('showFinalizeColophonOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
-				<img src="pages/images/insert_colophon.png" alt="Generate Colophon" title="Generate Colophon" />
-			</li>
-			<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
-				<span class="right-menu-feature-title">
-					Generate<br />Table of Contents
-				</span>
-				<span class="right-menu-feature-text">
-					The table of contents will be inserted in the beginning of the ebook and will be accessible in ebook readers for easy navigation.
-				</span>
-				<span class="right-menu-feature-text">
-					<br />Preview
-				</span>
-				<span class="menu-box right-menu-parameter-margin">
-					<span class="option" data-ng-repeat="tocs in toc"><a data-ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
-				</span>
-				<span class="right-menu-button full-size right-menu-parameter-margin">
-					<a data-ng-click="generateToc();">Generate</a>
-				</span>
-			</li>
-			<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
-				<span class="right-menu-feature-title">
-					Generate Colophon
-				</span>
-				<span class="right-menu-feature-text">
-					A colophon is a brief statement containing information about a specific version of a book such as the ISBN-number, a creative commons or copyright notice, the people involved and so on.
-				</span>
-				<span class="right-menu-button full-size right-menu-parameter-margin">
-						<a data-ng-click="generateColophon();">Generate</a>
-				</span>
-			</li>
-		</ul>
-	</div>
-	<div class="menu-item-right" data-ng-show="rightMenuShowItem == 'output'">
-		<ul>
-		<li class="outputOptionProperties">
-			<span class="menu-box label">Title</span>
-			<span class="menu-box inputfield full-size" data-ng-class="{ 'text-saved': metaTitleSaved }">
-				<input type="text" name="output_title" id="output_title" data-ng-model="project.metadata.title" data-ng-model-options="{ debounce: 2000 }"  />
-				<span class="statusfield" data-ng-class="{ 'text-saved': metaTitleSaved }">Saved</span>
-			</span>
-			<span class="menu-box label left-menu-parameter-margin">Author</span>
-			<span class="menu-box inputfield full-size" data-ng-class="{ 'text-saved': metaAuthorsSaved }">
-				<input type="text" name="output_author" id="output_author" data-ng-model="project.metadata.authors" data-ng-model-options="{ debounce: 2000 }" />
-				<span class="statusfield" data-ng-class="{ 'text-saved': metaAuthorsSaved }">Saved</span>
-			</span>
-			<span class="menu-box label left-menu-parameter-margin">Language</span>
-			<span class="menu-box inputfield full-size" data-ng-class="{ 'text-saved': metaLanguageSaved }">
-				<form class="angucomplete">
-					<div angucomplete-alt id="output_language" placeholder="Search Languages" pause="100" selected-object="selectedLanguage" local-data="languages" search-fields="description,subtag" title-field="description" minlength="1" match-class="angucomplete-highlight" initial-value="{{selectedLanguageName}}" field-required="true">
+			<ul>
+				<li data-ng-click="finalizeOptionChosen('showFinalizeCoverOptions');" class="insertOption first" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
+					<img src="pages/images/insert_cover.png" alt="Add cover image" title="Add cover image" />
+				</li>
+				<li data-ng-click="finalizeOptionChosen('showFinalizeTitlepageOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
+					<img src="pages/images/insert_titlepage.png" alt="Title page" title="Title page" />
+				</li>
+				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
+					<span class="right-menu-feature-title">
+						Add cover
+					</span>
+					<span class="right-menu-feature-text">
+						Add an existing cover image to the beginning of the book. This image will also represent the book on virtual book shelves and in ebook stores.
+					</span>
+					<label class="right-menu-button right-menu-parameter-margin" for="coverInput">
+						<input type="file" id="coverInput" data-ng-file-select="onCoverSelect($files)" accept="image/*" data-ng-hide="true">
+						Add cover image
+					</label>
+				</li>
+				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
+					<span class="right-menu-feature-title">
+						Generate title page
+					</span>
+					<span class="right-menu-feature-text">
+						A title page usually bears the full title, the author and similar. It is usually found at the beginning of a book.
+					</span>
+					<div class="right-menu-button full-size right-menu-parameter-margin" data-ng-click="generateTitlePage();">
+						Generate title page
 					</div>
-				</form>
-				<span class="statusfield" data-ng-class="{ 'text-saved': metaLanguageSaved }">Saved</span>
-			</span>
-			<span class="menu-box label left-menu-parameter-margin">Description</span>
-			<span class="menu-box inputfield full-size-text" data-ng-class="{ 'text-saved': metaDescriptionSaved }">
-				<textarea name="output_description" id="output_description" data-ng-model="project.metadata.description" data-ng-model-options="{ debounce: 2000 }" /></textarea>
-				<span class="statusfield" data-ng-class="{ 'text-saved': metaDescriptionSaved }">Saved</span>
-			</span>
-			<span class="menu-box label left-menu-parameter-margin">Unique identifier / ISBN</span>
-			<span class="menu-box inputfield full-size" data-ng-class="{ 'text-saved': metaIsbnSaved }">
-				<input type="text" name="output_unique" id="output_unique" data-ng-model="project.metadata.isbn" data-ng-model-options="{ debounce: 2000 }" />
-				<span class="statusfield" data-ng-class="{ 'text-saved': metaIsbnSaved }">Saved</span>
-			</span>
-		</li>
-		<li class="outputOptionProperties outputOptionDownload">
-			<span class="menu-box label text-align-center">Download ebook</span>
-			<span class="menu-box label left-menu-parameter-margin left-menu-download">
-				<img title="Download epub" class="download-icon" src="pages/images/compile_epub.png" data-ng-click="exportEpub()">
-			</span>
-		</li>
-		</ul>
-	</div>
+				</li>
+
+				<li data-ng-click="finalizeOptionChosen('showFinalizeTocOptions');" class="insertOption first" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
+					<img src="pages/images/insert_toc.png" alt="Generate Table of Contents" title="Generate Table of Contents" />
+				</li>
+				<li data-ng-click="finalizeOptionChosen('showFinalizeColophonOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
+					<img src="pages/images/insert_colophon.png" alt="Generate Colophon" title="Generate Colophon" />
+				</li>
+				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
+					<span class="right-menu-feature-title">
+						Generate<br />Table of Contents
+					</span>
+					<span class="right-menu-feature-text">
+						The table of contents will be inserted in the beginning of the ebook and will be accessible in ebook readers for easy navigation.
+					</span>
+					<span class="right-menu-feature-text right-menu-parameter-margin">
+						Preview
+					</span>
+					<span class="menu-box">
+						<span class="option" data-ng-repeat="tocs in toc"><a data-ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a></span>
+					</span>
+					<span class="right-menu-button full-size right-menu-parameter-margin" data-ng-click="generateToc();">
+						Generate ToC
+					</span>
+				</li>
+				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
+					<span class="right-menu-feature-title">
+						Generate colophon
+					</span>
+					<span class="right-menu-feature-text">
+						A colophon is a brief statement containing information about a specific version of a book such as the ISBN-number, a creative commons or copyright notice, the people involved and so on.
+					</span>
+					<span class="right-menu-button full-size right-menu-parameter-margin" data-ng-click="generateColophon();">
+						Generate colophon
+					</span>
+				</li>
+			</ul>
+		</div>
+	<div class="menu-item-right" data-ng-show="rightMenuShowItem == 'output'">
+			<ul>
+			<li class="outputOptionProperties">
+				<span class="menu-box label">Title</span>
+				<span class="menu-box inputfield full-size" data-ng-class="{ 'text-saved': metaTitleSaved }">
+					<input type="text" name="output_title" id="output_title" data-ng-model="project.metadata.title" data-ng-model-options="{ debounce: 2000 }"  />
+					<span class="statusfield" data-ng-class="{ 'text-saved': metaTitleSaved }">Saved</span>
+				</span>
+				<span class="menu-box label left-menu-parameter-margin">Author</span>
+				<span class="menu-box inputfield full-size" data-ng-class="{ 'text-saved': metaAuthorsSaved }">
+					<input type="text" name="output_author" id="output_author" data-ng-model="project.metadata.authors" data-ng-model-options="{ debounce: 2000 }" />
+					<span class="statusfield" data-ng-class="{ 'text-saved': metaAuthorsSaved }">Saved</span>
+				</span>
+				<span class="menu-box label left-menu-parameter-margin">Language</span>
+				<span class="menu-box inputfield full-size" data-ng-class="{ 'text-saved': metaLanguageSaved }">
+					<form class="angucomplete">
+						<div angucomplete-alt id="output_language" placeholder="Search Languages" pause="100" selected-object="selectedLanguage" local-data="languages" search-fields="description,subtag" title-field="description" minlength="1" match-class="angucomplete-highlight" initial-value="{{selectedLanguageName}}" field-required="true">
+						</div>
+					</form>
+					<span class="statusfield" data-ng-class="{ 'text-saved': metaLanguageSaved }">Saved</span>
+				</span>
+				<span class="menu-box label left-menu-parameter-margin">Description</span>
+				<span class="menu-box inputfield full-size-text" data-ng-class="{ 'text-saved': metaDescriptionSaved }">
+					<textarea name="output_description" id="output_description" data-ng-model="project.metadata.description" data-ng-model-options="{ debounce: 2000 }" /></textarea>
+					<span class="statusfield" data-ng-class="{ 'text-saved': metaDescriptionSaved }">Saved</span>
+				</span>
+				<span class="menu-box label left-menu-parameter-margin">Unique identifier / ISBN</span>
+				<span class="menu-box inputfield full-size" data-ng-class="{ 'text-saved': metaIsbnSaved }">
+					<input type="text" name="output_unique" id="output_unique" data-ng-model="project.metadata.isbn" data-ng-model-options="{ debounce: 2000 }" />
+					<span class="statusfield" data-ng-class="{ 'text-saved': metaIsbnSaved }">Saved</span>
+				</span>
+			</li>
+			<li class="outputOptionDownload">
+				<span class="menu-box label text-align-center">Download ebook</span>
+				<span class="menu-box label left-menu-parameter-margin left-menu-download">
+					<img title="Download epub" class="download-icon" src="pages/images/compile_epub.png" data-ng-click="exportEpub()">
+				</span>
+			</li>
+			</ul>
+		</div>
 </div>
