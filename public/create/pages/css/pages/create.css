@@ -1,10 +1,9 @@
-.container {
-	padding: 20px;
+.wrapper-create {
+	height: 100%;
+	padding: 20px 20px 0;
+	overflow: hidden;
 }
 
-.section-unisquare, .section-projects {
-	float: left;
-}
 .section-unisquare {
 	position: fixed;
 	margin: 0 10px 0 0 !important;
@@ -26,12 +25,13 @@
 }
 
 .section-projects-container {
-	min-height: 360px;
 	width: -webkit-calc(100% - 360px) !important;
 	width: -o-calc(100% - 360px) !important;
 	width: -moz-calc(100% - 360px) !important;
 	width: calc(100% - 360px) !important;
+	height: 100%;
 	margin: 0 0 0 325px !important;
+	overflow: scroll;
 }
 
 .projects-title {

@@ -564,6 +564,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
     }, ];
 
 	$scope.saveMetaData = function() {
+		var deferred = $q.defer();
 		$http.put('/project/' + $scope.project._id + '/metadata', {
 			'title': $scope.project.metadata.title,
 			'authors': $scope.project.metadata.authors,
@@ -571,10 +572,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			'description': $scope.project.metadata.description,
 			'isbn': $scope.project.metadata.isbn
         }).success(function() {
-
+			deferred.resolve();
 		});
-	};
 
+		return deferred.promise;
+	};
 
 	$scope.$watch('rightMenuShowItem', function( newValue ) {
 		if( newValue=='finalize' ){
@@ -588,7 +590,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.metaTitleSaved = true;
 			$timeout(function() {
 			    $scope.metaTitleSaved = false;
-			}, 2000);
+			}, 1000);
 		}
 	});
     $scope.$watch('project.metadata.authors', function(newValue, oldValue) {
@@ -597,9 +599,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.metaAuthorsSaved = true;
 			$timeout(function() {
 			    $scope.metaAuthorsSaved = false;
-			}, 2000);
+			}, 1000);
 		}
-		$scope.focusEditor();
 	});
     $scope.$watch('project.metadata.description', function(newValue, oldValue) {
 		if (watchReady(newValue, oldValue)) {
@@ -607,9 +608,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.metaDescriptionSaved = true;
 			$timeout(function() {
 			    $scope.metaDescriptionSaved = false;
-			}, 2000);
+			}, 1000);
 		}
-		$scope.focusEditor();
 	});
     $scope.$watch('project.metadata.isbn', function(newValue, oldValue) {
 		if (watchReady(newValue, oldValue)) {
@@ -617,9 +617,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.metaIsbnSaved = true;
 			$timeout(function() {
 			     $scope.metaIsbnSaved = false;
-			}, 2000);
+			}, 1000);
 		}
-		$scope.focusEditor();
 	});
 
 	function watchReady(newValue, oldValue) {
@@ -633,16 +632,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.metaLanguageSaved = true;
 			$timeout(function() {
 			    $scope.metaLanguageSaved = false;
-			}, 2000);
+			}, 1000);
 		}
-		$scope.focusEditor();
 	};
 
 	$scope.exportEpub = function() {
 		var getTocPromise = $scope.getToc();
 		var updateProjectDocumentPromise = $scope.updateProjectDocument();
+		var updateMetadataPromise = $scope.saveMetaData();
 
-		$q.all([getTocPromise, updateProjectDocumentPromise]).then(function () {
+		$q.all([getTocPromise, updateProjectDocumentPromise, updateMetadataPromise]).then(function () {
 			var setTocPromise = $scope.setToc();
             setTocPromise.then(function() {
 				$http.get('/project/' + $scope.pid + '/compile')

@@ -9,12 +9,12 @@
 </head>
 <body data-ng-controller="appController" data-ng-cloak>
 
-	<div class="container" data-ng-class="{'shownotification' : showRegistrationInfoBar && !user.emailVerified && !user.isDemo, 'activation' : user._id}" data-ng-view></div>
+	<div class="container" data-ng-class="{'shownotification' : showRegistrationInfoBar && !user.emailVerified, 'activation' : user._id}" data-ng-view></div>
 
-	<div class="notifications" data-ng-class="{ 'loggedin' : !showRegistrationInfoBar || user.emailVerified || user.isDemo, 'activation' : user._id }">
+	<div class="notifications" data-ng-class="{ 'loggedin' : !showRegistrationInfoBar || user.emailVerified, 'activation' : user._id }">
 		We're in alpha. <a class="readmore" target="_blank" href="http://blog.scripler.com/test-scripler-now.html">Read more</a>
 	</div>
-	<div id="registrationWrapper" class="registration" data-ng-hide="user.emailVerified || user.isDemo || !showRegistrationInfoBar" data-ng-class="{ 'activation' : user._id }" data-ng-cloak>
+	<div id="registrationWrapper" class="registration" data-ng-hide="user.emailVerified || !showRegistrationInfoBar" data-ng-class="{ 'activation' : user._id }" data-ng-cloak>
 		<div id="registrationContainer" class="registration-container">
 			<div class="registration-form explanation" data-ng-hide="user.isDemo">
 				<div class="registration-close-button" data-ng-click="showRegistrationBar('hide')" data-ng-show="user._id">x</div>
@@ -56,7 +56,7 @@
 	<script type="text/javascript" src="scripts/ngProgress.min.js"></script>
 	<script type="text/javascript" src="scripts/utils-shared.js"></script>
 	<script type="text/javascript" src="scripts/app_controller.js"></script>
-	<script type="text/javascript" src="scripts/projectSpace_controller.js"></script>
+	<script type="text/javascript" src="scripts/create_controller.js"></script>
 	<script type="text/javascript" src="scripts/project_controller.js"></script>
 	<script type="text/javascript" src="scripts/smooth-scroll.js"></script>
 	<script type="text/javascript" src="ckeditor/ckeditor.js"></script>
