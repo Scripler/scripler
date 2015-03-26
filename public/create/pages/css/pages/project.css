@@ -493,7 +493,8 @@ li.typo .style-copy-options p {
 	display: block;
 	text-align: center;
 }
-.left-menu-button, .right-menu-button {
+
+.menu-button {
 	display: inline-block;
 	width: 100%;
 	padding: 5px;
@@ -502,27 +503,28 @@ li.typo .style-copy-options p {
 	text-align: center;
 	cursor: pointer;
 }
-.left-menu-button label, .right-menu-button label {
+.menu-button label {
 	color: #000;
 	cursor: pointer;
 }
-.left-menu-button:hover, .right-menu-button:hover {
+.menu-button:hover {
 	border: 1px solid #000;
 }
-.left-menu-button:active, .right-menu-button:active {
+.menu-button:active {
 	border: 1px solid #fefefe;
 }
-.left-menu-button:hover label, .right-menu-button:hover label, .left-menu-button:active label, .right-menu-button:active label {
+.menu-button:hover label, .menu-button:active label {
 	color: #666;
 }
-.right-menu-feature-title {
-	display: block;
+
+.menu-feature-title {
 	font-weight: bold;
 	line-height: 1.5em;
 }
-.right-menu-feature-text {
-	display: block;
+.menu-parameter-margin {
+	margin-top: 10px;
 }
+
 .menu-box {
 	display: inline-block;
 	width: 100%;
@@ -530,13 +532,6 @@ li.typo .style-copy-options p {
 	border: 1px solid #efefef;
 	cursor: pointer;
 }
-.menu-box.center-text {
-	text-align: center;
-}
-.left-menu-parameter-margin, .right-menu-parameter-margin {
-	margin-top: 10px;
-}
-
 .menu-box.label {
 	position: relative;
 	display: block;
@@ -546,64 +541,22 @@ li.typo .style-copy-options p {
 
 .menu-box.inputfield {
 	position: relative;
-	width: calc(100% - 36px);
-	padding: 0;
-	transition: all 1s;
-	-moz-transition: all 1s;
-	-ms-transition: all 1s;
-	-webkit-transition: all 1s;
-	-o-transition: all 1s;
-}
-/*left*/
-.menu-box.inputfield.full-size {
-	position: relative;
 	width: 100%;
 	height: 32px;
 	padding: 0;
-}
-.menu-box.inputfield.full-size-text {
-	position: relative;
-	width: 100%;
-	height: 64px;
-	padding: 0;
-}
-.menu-box.inputfield.text-saved {
-	border-color: yellow;
-	height: 56px;
-}
-.menu-box.inputfield.full-size-text.text-saved {
-	position: relative;
-	width: 100%;
-	height: 92px;
-	padding: 0;
-}
-.menu-box .statusfield {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	margin: 0 auto;
-	z-index: 1;
-	width: auto;
-	height: 28px;
-	color: black;
-	padding: 5px;
 	transition: all 1s;
 	-moz-transition: all 1s;
 	-ms-transition: all 1s;
 	-webkit-transition: all 1s;
 	-o-transition: all 1s;
 }
-.menu-box .statusfield.text-saved {
-	background: none yellow;
-	top: 28px;
+.menu-box.inputfield.textfield {
+	height: 64px;
 }
-.menu-box.inputfield.full-size-text .statusfield {
-	top: 34px;
+.menu-box.inputfield.text-saved {
+	border-color: yellow;
 }
-.menu-box.inputfield.full-size-text .statusfield.text-saved  {
-	top: 62px;
-}
+
 .menu-box.inputfield input, .menu-box.inputfield select {
 	position: absolute;
 	top: 0;
