@@ -517,24 +517,16 @@ textarea {
 }
 
 .notifications {
-	outline: none;
-	-moz-border-radius: 1px;
-	-webkit-border-radius: 1px;
-	border-radius: 1px;
-	-webkit-appearance: none;
 	background: #fff265;
-	color: #231f20;
-	font-size: 16px;
 	font-weight: bold;
-	cursor: pointer;
 	text-align: center;
-	font-family: 'Roboto', sans-serif;
 	width: 250px;
 	padding: 5px;
 	position: absolute;
 	bottom: 144px;
 	left: 50%;
 	margin-left: -125px;
+	z-index: 20;
 }
 .notifications.activation {
 	bottom: 110px;

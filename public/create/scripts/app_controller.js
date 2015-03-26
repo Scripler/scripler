@@ -196,7 +196,7 @@ app.config( function( $routeProvider, $httpProvider, $provide ) {
 	}]
 
 	$routeProvider
-		.when('/', { templateUrl:'pages/project-space.html', controller: projectSpaceController,
+		.when('/', { templateUrl:'pages/create.html', controller: createController,
 					resolve: { user: isLoggedIn }
 					})
 		.when('/project', { templateUrl:'pages/project.html', controller: projectController,

@@ -1,6 +1,6 @@
 'use strict'
 
-function projectSpaceController($scope, $http, projectsService, userService, $q, user, $location, utilsService) {
+function createController($scope, $http, projectsService, userService, $q, user, $location, utilsService) {
 	$scope.user = user;
 	$scope.showProjectOptions = false;
 	$scope.frontpage = $location.host();
