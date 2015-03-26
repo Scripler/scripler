@@ -564,6 +564,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
     }, ];
 
 	$scope.saveMetaData = function() {
+		var deferred = $q.defer();
 		$http.put('/project/' + $scope.project._id + '/metadata', {
 			'title': $scope.project.metadata.title,
 			'authors': $scope.project.metadata.authors,
@@ -571,10 +572,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			'description': $scope.project.metadata.description,
 			'isbn': $scope.project.metadata.isbn
         }).success(function() {
-
+			deferred.resolve();
 		});
-	};
 
+		return deferred.promise;
+	};
 
 	$scope.$watch('rightMenuShowItem', function( newValue ) {
 		if( newValue=='finalize' ){
@@ -641,8 +643,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.exportEpub = function() {
 		var getTocPromise = $scope.getToc();
 		var updateProjectDocumentPromise = $scope.updateProjectDocument();
+		var updateMetadataPromise = $scope.saveMetaData();
 
-		$q.all([getTocPromise, updateProjectDocumentPromise]).then(function () {
+		$q.all([getTocPromise, updateProjectDocumentPromise, updateMetadataPromise]).then(function () {
 			var setTocPromise = $scope.setToc();
             setTocPromise.then(function() {
 				$http.get('/project/' + $scope.pid + '/compile')
