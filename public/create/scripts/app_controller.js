@@ -295,21 +295,33 @@ app.filter('filterTruncation', function () {
     };
 })
 
-app.directive('confirmSaveOnExit', function() {
+app.directive('confirmSaveOnExit', function( $window, $location, $route ) {
 	return {
 		link: function( scope, elem, attrs ) {
-	        window.onbeforeunload = function(){
-	            //if (!confirm('BE ADVISED:  \n\n You have unsaved changes. \n If you navigate away from the page now, the data might be lost. \n\n Are you sure you wish to leave?')) {
-				//	event.preventDefault();
-	            //}
-	        }
-	        scope.$on('$locationChangeStart', function(event, next, current) {
-	        	console.log(scope);
-				//if (!confirm('BE ADVISED:  \n\n You have unsaved changes. \n If you leave the page now, the data might be lost. \n\n Are you sure you wish to leave?')) {
-				//	event.preventDefault();
-	            //}
-	        });
-		}
+
+	        $window.onbeforeunload = function(){
+				if ($location.path() === "/") {
+					var updateProjectDocumentPromise = scope.updateProjectDocument();
+					updateProjectDocumentPromise.then(function() {
+						return true;
+					}, function() {
+						event.preventDefault();
+					});
+				};
+			};
+
+			scope.$on('$locationChangeStart', function(event, next, current) {
+				if ($location.path() === "/") {
+					var updateProjectDocumentPromise = scope.updateProjectDocument();
+					updateProjectDocumentPromise.then(function() {
+						return true;
+					}, function() {
+						event.preventDefault();
+					});
+				};
+			});
+
+        }
 	};
 });
 
