@@ -368,12 +368,10 @@
 				<span class="menu-box label">Title</span>
 				<span class="menu-box inputfield full-size" data-ng-class="{ 'text-saved': metaTitleSaved }">
 					<input type="text" name="output_title" id="output_title" data-ng-model="project.metadata.title" data-ng-model-options="{ debounce: 2000 }"  />
-					<span class="statusfield" data-ng-class="{ 'text-saved': metaTitleSaved }">Saved</span>
 				</span>
 				<span class="menu-box label left-menu-parameter-margin">Author</span>
 				<span class="menu-box inputfield full-size" data-ng-class="{ 'text-saved': metaAuthorsSaved }">
 					<input type="text" name="output_author" id="output_author" data-ng-model="project.metadata.authors" data-ng-model-options="{ debounce: 2000 }" />
-					<span class="statusfield" data-ng-class="{ 'text-saved': metaAuthorsSaved }">Saved</span>
 				</span>
 				<span class="menu-box label left-menu-parameter-margin">Language</span>
 				<span class="menu-box inputfield full-size" data-ng-class="{ 'text-saved': metaLanguageSaved }">
@@ -381,17 +379,14 @@
 						<div angucomplete-alt id="output_language" placeholder="Search Languages" pause="100" selected-object="selectedLanguage" local-data="languages" search-fields="description,subtag" title-field="description" minlength="1" match-class="angucomplete-highlight" initial-value="{{selectedLanguageName}}" field-required="true">
 						</div>
 					</form>
-					<span class="statusfield" data-ng-class="{ 'text-saved': metaLanguageSaved }">Saved</span>
 				</span>
 				<span class="menu-box label left-menu-parameter-margin">Description</span>
 				<span class="menu-box inputfield full-size-text" data-ng-class="{ 'text-saved': metaDescriptionSaved }">
 					<textarea name="output_description" id="output_description" data-ng-model="project.metadata.description" data-ng-model-options="{ debounce: 2000 }" /></textarea>
-					<span class="statusfield" data-ng-class="{ 'text-saved': metaDescriptionSaved }">Saved</span>
 				</span>
 				<span class="menu-box label left-menu-parameter-margin">Unique identifier / ISBN</span>
 				<span class="menu-box inputfield full-size" data-ng-class="{ 'text-saved': metaIsbnSaved }">
 					<input type="text" name="output_unique" id="output_unique" data-ng-model="project.metadata.isbn" data-ng-model-options="{ debounce: 2000 }" />
-					<span class="statusfield" data-ng-class="{ 'text-saved': metaIsbnSaved }">Saved</span>
 				</span>
 			</li>
 			<li class="outputOptionDownload">
