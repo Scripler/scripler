@@ -207,11 +207,9 @@
 	 */
 	function canCreateProject(userLevel, projectIds) {
 		if (!userLevel) return false;
-		if (userLevel == "premium" || userLevel == "professional") return true;
-		if (userLevel == "free") {
-			if (!projectIds) return true;
-			if (projectIds.length < maxNumberOfProjects[userLevel]) return true;
-		}
+		if (!maxNumberOfProjects[userLevel]) return false;
+		if (!projectIds) return true;
+		if (projectIds.length < maxNumberOfProjects[userLevel]) return true;
 		return false;
 	}
 
@@ -225,16 +223,15 @@
 	 */
 	function canLoadProject(userLevel, projectIds, projectIdToCheck) {
 		if (!userLevel) return false;
-		if (userLevel == "premium" || userLevel == "professional") return true;
-		if (userLevel == "free") {
-			// A free user is allowed to load any of his/her projects, if he/she has fewer than the max
-			if (projectIds && projectIds.length <= maxNumberOfProjects[userLevel] && projectIds.indexOf(projectIdToCheck) > -1) return true;
+		if (!maxNumberOfProjects[userLevel]) return false;
 
-			// Since the first four bytes of a Mongo id represents a creation timestamp, we can use this to sort by date.
-			var sortedProjectIds = projectIds.sort();
-			var firstXProjectIds = sortedProjectIds.slice(0, maxNumberOfProjects[userLevel]);
-			return firstXProjectIds.indexOf(projectIdToCheck) > -1;
-		}
+		// The user is allowed to load any of his/her projects, if he/she has fewer than the max
+		if (projectIds && projectIds.length <= maxNumberOfProjects[userLevel] && projectIds.indexOf(projectIdToCheck) > -1) return true;
+
+		// Since the first four bytes of a Mongo id represents a creation timestamp, we can use this to sort by date.
+		var sortedProjectIds = projectIds.sort();
+		var firstXProjectIds = sortedProjectIds.slice(0, maxNumberOfProjects[userLevel]);
+		return firstXProjectIds.indexOf(projectIdToCheck) > -1;
 		return false;
 	}
 
