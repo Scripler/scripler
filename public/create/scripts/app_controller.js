@@ -295,29 +295,37 @@ app.filter('filterTruncation', function () {
     };
 })
 
-app.directive('confirmSaveOnExit', function( $window, $location, $route ) {
+app.directive('confirmSaveOnExit', function($window, $location, $route) {
 	return {
-		link: function( scope, elem, attrs ) {
+		link: function(scope, elem, attrs) {
 
-	        $window.onbeforeunload = function(){
-				if ($location.path() === "/") {
-					var updateProjectDocumentPromise = scope.updateProjectDocument();
-					updateProjectDocumentPromise.then(function() {
-						return true;
-					}, function() {
-						event.preventDefault();
-					});
+			function confirmSaveChanges(event) {
+				var updateProjectDocumentPromise = scope.updateProjectDocument();
+				updateProjectDocumentPromise.then(function() {
+					return true;
+				}, function() {
+					event.preventDefault();
+				});
+			}
+
+			$window.onbeforeunload = function(event){
+				if ($location.path() === "/project") {
+					var message = 'If you leave this page you are going to lose all unsaved changes, are you sure you want to leave?';
+					if (typeof event == 'undefined') {
+						event = $window.event;
+					}
+					if (event) {
+						event.returnValue = message;
+				    }
+
+				    confirmSaveChanges(event);
+				    return message;
 				};
 			};
 
 			scope.$on('$locationChangeStart', function(event, next, current) {
 				if ($location.path() === "/") {
-					var updateProjectDocumentPromise = scope.updateProjectDocument();
-					updateProjectDocumentPromise.then(function() {
-						return true;
-					}, function() {
-						event.preventDefault();
-					});
+					confirmSaveChanges(event);
 				};
 			});
 
