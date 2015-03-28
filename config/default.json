@@ -37,6 +37,9 @@
 	"prices": {
 		"styleset": {"name": "Premium Styleset", "price": "5.99"}
 	},
+	"free":{
+		"stylesets": ["book-bw", "book-color", "future-bw", "future-color", "light-bw", "light-color", "simple-bw", "simple-color"]
+	},
 	"passport": {
 		"twitter": {
 			"consumerKey": "xxx",

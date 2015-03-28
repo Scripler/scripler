@@ -508,7 +508,7 @@ exports.applyStyleset = function(req, res, next) {
 
 		// Apply the styleset to all the projects' documents
 		async.each(req.project.documents, function(document, callback) {
-			document_utils.applyStylesetToDocument(document, stylesetToApply, level, function(err, populatedStyleset) {
+			document_utils.applyStylesetToDocument(document, stylesetToApply, true, level, function(err, populatedStyleset) {
 				if (err) {
 					return callback(err);
 				} else {
