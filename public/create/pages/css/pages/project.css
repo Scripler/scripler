@@ -94,6 +94,7 @@
 	-webkit-transform: translateY(-50%);
 	-ms-transform: translateY(-50%);
 	transform: translateY(-50%);
+	width: 20px;
 }
 
 .menu-item-left, .menu-item-right {
@@ -636,8 +637,8 @@ li.typo .style-copy-options p {
 .menu-right .insertOptionProperties.expanded {
 	margin: -1px 0 10px 10px;
 }
-.outputOptionProperties {
-	display: block;
+
+.menu-item-background {
 	position: relative;
 	margin: 0 0 0 10px;
 	padding: 16px;
@@ -645,9 +646,16 @@ li.typo .style-copy-options p {
 	border: 1px solid #e6e6e6;
 	box-shadow: 0px 5px 5px -5px #ccc;
 }
+.menu-item-background-none {
+	position: relative;
+	margin: 10px 0 0 10px;
+	padding: 0;
+}
 
 .outputOptionDownload {
+	position: relative;
 	margin: 10px 0 0 10px;
+	padding: 0;
 }
 
 .publishedUrl {
