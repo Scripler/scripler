@@ -382,7 +382,7 @@
 		</div>
 	<div class="menu-item-right" data-ng-show="rightMenuShowItem == 'output'">
 			<ul>
-			<li class="outputOptionProperties">
+			<li class="menu-item-background">
 				<span class="menu-box label">Title</span>
 				<span class="menu-box inputfield" data-ng-class="{ 'text-saved': metaTitleSaved }">
 					<input type="text" name="output_title" id="output_title" data-ng-model="project.metadata.title" data-ng-model-options="{ debounce: 2000 }"  />
@@ -407,7 +407,7 @@
 					<input type="text" name="output_unique" id="output_unique" data-ng-model="project.metadata.isbn" data-ng-model-options="{ debounce: 2000 }" />
 				</span>
 			</li>
-			<li class="outputOptionDownload">
+			<li class="menu-item-background-none">
 				<span class="menu-box label text-align-center">Download ebook</span>
 				<span class="menu-box label margin-top left-menu-download">
 					<img title="Download epub" class="download-icon" src="pages/images/compile_epub.png" data-ng-click="exportEpub()">
