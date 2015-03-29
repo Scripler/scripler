@@ -264,7 +264,7 @@ exports.upload = function (req, res, next) {
 
 exports.applyStyleset = function (req, res, next) {
 	var stylesetToApply = req.styleset;
-	document_utils.applyStylesetToDocument(req.document, stylesetToApply, req.user.level, function(err, populatedStyleset) {
+	document_utils.applyStylesetToDocument(req.document, stylesetToApply, false, req.user.level, function(err, populatedStyleset) {
 		if (err) {
 			return next(err);
 		} else if (!populatedStyleset) {

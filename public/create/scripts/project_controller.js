@@ -706,31 +706,33 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 	}
 
-    $scope.applyStylesetToProject = function(styleset) {
-    	//apply to Document is called because the function for some reason doesn't apply the styleset to the current document as well. 
-    	//ugly but works
-    	$scope.applyStylesetToDocument(styleset, true);
-        var deferred = $q.defer(); 
-		$http.put('/styleset/' + styleset._id + '/project/' + $scope.project._id)
-        .success(function(data) { 
-            $scope.applyStylesetsToEditor();
-            deferred.resolve();
-			});
-        return deferred.promise;
+	$scope.applyStylesetToProject = function(styleset) {
+		var deferred = $q.defer();
+		//apply-to-project handles all styleset copy stuff and sets default stylesets first, but immediately after,
+		//apply-to-document is also called because we need the proper document styleset to set for the selected document.
 
+		$http.put('/styleset/' + styleset._id + '/project/' + $scope.project._id)
+			.success(function(data) {
+				var promise = $scope.applyStylesetToDocument(styleset, true);
+				promise.then(function() {
+					deferred.resolve();
+				});
+			});
+
+		return deferred.promise;
 	}
 
-    $scope.applyStylesetToDocument = function(styleset, setAsDefault) {
-        var deferred = $q.defer(); 
+	$scope.applyStylesetToDocument = function(styleset, setAsDefault) {
+		var deferred = $q.defer();
 		$http.put('/styleset/' + styleset._id + '/document/' + $scope.documentSelected._id)
-            .success(function(data) { 
-                if (data.styleset) {
-                    $scope.documentSelected.stylesets.push(data.styleset._id); 
-                    if (setAsDefault) {
+			.success(function(data) {
+				if (data.styleset) {
+					$scope.documentSelected.stylesets.push(data.styleset._id);
+					if (setAsDefault) {
 						$scope.documentSelected.defaultStyleset = data.styleset._id;
-                    } 
+					}
 					$scope.applyStylesetsToEditor();
-                    deferred.resolve(data.styleset);
+					deferred.resolve(data.styleset);
 				}
 			});
 

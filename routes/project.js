@@ -46,7 +46,7 @@ exports.load = function (id) {
 exports.loadPopulated = function (id) {
 	return function (req, res, next) {
 		var idCopy = id || req.body.projectId;
-		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', select: 'name folderId modified archived stylesets members type'}).exec(function (err, project) {
+		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', select: 'name folderId modified archived stylesets defaultStyleset members type'}).exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
@@ -492,30 +492,42 @@ exports.downloadEpub = function (req, res, next) {
 exports.applyStyleset = function(req, res, next) {
 	var stylesetToApply = req.styleset;
 	var level = req.user.level;
-	req.project.styleset = stylesetToApply._id; 
-	var apply = function(document, callback) {
-		document_utils.applyStylesetToDocument(document, stylesetToApply, level, function(err, populatedStyleset) {
-			if (err) {
-				return callback(err);
-			} else { 
-				callback();
-			}
-		});
-	};
+	req.project.styleset = stylesetToApply._id;
 
-	async.each(req.project.documents, apply, function(err) {
+	// If input was document styleset instead of user-styleset, we need to look up the user-styleset.
+	Styleset.findOne({"_id": stylesetToApply.original}).exec(function (err, stylesetOriginal) {
 		if (err) {
 			return next(err);
-		} else {
-			req.project.save(function(err) {
-				if (err) {
-					console.log('something went wrong');
-					return next(err);
-				}
-				res.send({
-					project: req.project
-				});
-			});
 		}
+
+		if (!stylesetOriginal.isSystem) {
+			// If original styleset is system styleset, we already had the user styleset.
+			// Otherwise we had the document-styleset, and now got the user-styleset.
+			stylesetToApply = stylesetOriginal;
+		}
+
+		// Apply the styleset to all the projects' documents
+		async.each(req.project.documents, function(document, callback) {
+			document_utils.applyStylesetToDocument(document, stylesetToApply, true, level, function(err, populatedStyleset) {
+				if (err) {
+					return callback(err);
+				} else {
+					callback();
+				}
+			});
+		}, function(err) {
+			if (err) {
+				return next(err);
+			} else {
+				req.project.save(function(err) {
+					if (err) {
+						return next(err);
+					}
+					res.send({
+						project: req.project
+					});
+				});
+			}
+		});
 	});
 }

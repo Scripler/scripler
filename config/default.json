@@ -67,7 +67,8 @@
 	},
 	"subscriptions": {
 		"free": {
-			"storage": 20000//bytes
+			"storage": 20000,//bytes
+			"stylesets": ["book-bw", "book-color", "future-bw", "future-color", "light-bw", "light-color", "simple-bw", "simple-color"]
 		},
 		"premium": {
 			"storage": 20000000//bytes
