@@ -13,14 +13,14 @@
 
 <div id="menu-left-tabs" class="menu-tabs left full-height" ondragstart="return false;" ondrop="return false;">
 	<div class="menu-tab" data-ng-class="{ 'selectedTab' : leftMenuShowItem == 'contents' }" data-ng-click="showLeftMenu('contents');">
-			<img src="pages/images/contents.svg" width="20">
-		</div>
+		<img src="pages/images/contents.svg">
+	</div>
 	<div class="menu-tab" data-ng-class="{ 'selectedTab' : leftMenuShowItem == 'design' }" data-ng-click="showLeftMenu('design');">
-			<img src="pages/images/design.svg" width="20">
-		</div>
+		<img src="pages/images/design.svg">
+	</div>
 	<div class="menu-tab" data-ng-class="{ 'selectedTab' : leftMenuShowItem == 'insert' }" data-ng-click="showLeftMenu('insert');">
-			<img src="pages/images/insert.svg" width="20">
-		</div>
+		<img src="pages/images/insert.svg">
+	</div>
 </div>
 <div class="menu-left full-height" data-ng-class="{ 'open' : leftMenuShow, 'bottom-menu-space' : leftMenuShowItem == 'contents' || leftMenuShowItem == 'design', 'open-small' : leftMenuShowItem == 'contents' && (showNewOptions || showBottomOptions), 'open-big' : leftMenuShowItem == 'contents' && showImportOptions }">
 	<div id="menu-left-contents" class="menu-item-left" data-ng-show="leftMenuShowItem == 'contents'">
@@ -310,14 +310,11 @@
 
 <div id="menu-right-tabs" class="menu-tabs right full-height" ondragstart="return false;" ondrop="return false;">
 	<div class="menu-tab" data-ng-class="{ 'selectedTab' : rightMenuShowItem == 'finalize' }" data-ng-click="showRightMenu('finalize');">
-			<img src="pages/images/finalize.svg" width="20" />
-		</div>
+		<img src="pages/images/finalize.svg">
+	</div>
 	<div class="menu-tab" data-ng-class="{ 'selectedTab' : rightMenuShowItem == 'output' }" data-ng-click="showRightMenu('output')">
-			<img src="pages/images/output.svg" width="20" />
-		</div>
-	<div class="menu-tab feedback" data-ng-click="openFeedback()">
-			<img src="pages/images/feedback.svg" width="20" />
-		</div>
+		<img src="pages/images/output.svg">
+	</div>
 </div>
 <div id="menu-right" class="menu-right" data-ng-class="{ 'open' : rightMenuShow }">
 	<div class="menu-item-right" data-ng-show="rightMenuShowItem == 'finalize'">
