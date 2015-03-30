@@ -1494,12 +1494,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
             range = iframeDoc.getSelection().toString();
            	document.getElementById("anchorInputBox").value = range;
            	document.getElementById("hyperlinkInputBox").value = range;
+           	document.getElementById("hyperlinkTarget").value = "";
 			}
 
         // onselectionchange doesn't work for Firefox, so instead we update with the old selectedContent returned by CKEditor
         if(navigator.userAgent.search("Firefox")>-1){
         	document.getElementById("anchorInputBox").value = selectedContent;
            	document.getElementById("hyperlinkInputBox").value = selectedContent;
+           	document.getElementById("hyperlinkTarget").value = "";
 		}
 
 		return selectedContent;
@@ -1622,6 +1624,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						break;
 					}
 
+					if( element.getName() === "a" ){
+						var content = element.getFirst().$.data;
+						var target = element.getAttribute("href");
+						if(target=="undefined")target="";
+						document.getElementById("hyperlinkInputBox").value = content;
+						document.getElementById("hyperlinkTarget").value = target;
+					}
 
 					for ( var x = 0; x < stylesets.length; x++ ) {
 						var styles = stylesets[x].styles;
