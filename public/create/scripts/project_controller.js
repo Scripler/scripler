@@ -1520,7 +1520,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if(selectedContent!=""){
 			if(type=="anchor"){
 				if($scope.anchorName)title=$scope.anchorName;
-				insert = insert.replace('title="title"', 'title="' + title + '"').replace('name="name"', 'name="' + title + '"');
+				insert = insert.replace('title="title"', 'title="' + title + '"');
 				var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
 			}
 			else if(type=="link"){
