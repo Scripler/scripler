@@ -31,7 +31,7 @@
 	width: calc(100% - 360px) !important;
 	height: 100%;
 	margin: 0 0 0 325px !important;
-	overflow: scroll;
+	overflow: auto;
 }
 
 .projects-title {
