@@ -167,8 +167,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					}
                 } 
                 $scope.timeout = $timeout($scope.updateProjectDocument, secondsToWait * 1000); 
-				}
 			}
+		}
 	};
 
     $scope.openProjectDocument = function(projectDocument) {
