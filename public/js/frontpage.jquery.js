@@ -177,7 +177,6 @@ $(document).ready(function() {
 
         // Switch login-article from login-form to password-reset-form, and display immediately
         //$("#login").css("paddingBottom", 10);
-        console.log('ds');
         $("#login").css("paddingTop", 70);
         $("#login-form").css("display", "none");
         $("#password-reset-form").css("display", "block");
@@ -229,10 +228,11 @@ $(document).ready(function() {
                     $(".menu-loggedin").css("display", "inline");
                     $(".menu-loggedin").attr("title", "You are logged in as " + data.user.firstname);
                     $(".menu-login").css("display", "none");
+                    $("#login").css("display", "none");
                 } else if (user.isDemo) {
                     $("#login").animate({
                         "paddingBottom": "10",
-                        "paddingTop": "60"
+                        "paddingTop": "40"
                     }, 800);
                     $(".menu-login").css("display", "inline");
                 }
@@ -241,7 +241,7 @@ $(document).ready(function() {
         error: function(request, status, error) {
             $("#login").animate({
                 "paddingBottom": "10",
-                "paddingTop": "60"
+                "paddingTop": "40"
             }, 800);
         }
     });

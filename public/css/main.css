@@ -127,15 +127,18 @@ a.navbar-brand{
 	color:#000;
 }  
 .navbar-brand:hover{
-	 color:#000;
+	color:#000;
 }
 ul.navList li>a:hover{
 	background-color: #fff;
 	color:#666;
 } 
 @media (min-width:850px){
+	body{
+		padding-top: 20px;
+	}
 	.menu-blog{
-	background-color:#000;
+		background-color:#000;
 	} 
 
 	#login-form {
@@ -347,8 +350,10 @@ h2.con{
 	a.navbar-brand{
 	font-size: 2em;
 	font-weight: 700;
-
-}
+	}
+	nav {
+		margin-bottom: 0 !important;
+	}
 	.navbar {
 		position: relative;
 		display: block;
