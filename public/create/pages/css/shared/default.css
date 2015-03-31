@@ -481,34 +481,7 @@ textarea {
 	transition: all 0.5s ease-in-out;
 }
 
-.feedback{
-	background:#c6c6c6;
-	width: 50px;
-	-webkit-transform-style: preserve-3d;
-	-moz-transform-style: preserve-3d;
-	transform-style: preserve-3d;
-	height: calc(100% / 3);
-	cursor: pointer;
-	padding: 0;
-	text-align: center;
-}
-.feedback.fixed-position {
-	position:absolute;
-	bottom:0;
-	right:0;
-	min-height: 150px;
-}
-.feedback img {
-	position: relative;
-	top: 50%;
-	-webkit-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
-	transform: translateY(-50%);
-}
-
-
 /* Styling for autocomplete */
-
 .autocomplete{
   width: 100%;
   position: relative;

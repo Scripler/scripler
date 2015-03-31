@@ -308,3 +308,14 @@ hr {
 .edit-newsletter {
 	padding-top: 5px;
 }
+
+.feedback{
+	position:absolute;
+	top:0;
+	right:0;
+	background:#c6c6c6;
+	color: #fff;
+	cursor: pointer;
+	padding: 10px 15px;
+	text-align: center;
+}
