@@ -502,6 +502,20 @@ li.typo .style-copy-options p {
 	text-align: center;
 }
 
+.menu-status {
+	display: inline-block;
+	width: 100%;
+	padding: 5px;
+	background: #FF0500;
+	border: 1px solid #FF0500;
+	color: #fff;
+	text-align: center;
+}
+.menu-status.published {
+	background: #5cb85c;
+	border: 1px solid #5cb85c;
+}
+
 .menu-feature-title {
 	font-weight: bold;
 	line-height: 1.5em;
@@ -512,7 +526,6 @@ li.typo .style-copy-options p {
 	width: 100%;
 	padding: 5px 10px;
 	border: 1px solid #efefef;
-	cursor: pointer;
 }
 .menu-box.label {
 	position: relative;

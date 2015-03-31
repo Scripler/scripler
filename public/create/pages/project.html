@@ -315,6 +315,12 @@
 	<div class="menu-tab" data-ng-class="{ 'selectedTab' : rightMenuShowItem == 'output' }" data-ng-click="showRightMenu('output')">
 		<img src="pages/images/output.svg">
 	</div>
+	<div class="menu-tab" data-ng-class="{ 'selectedTab' : rightMenuShowItem == 'publish' }" data-ng-click="showRightMenu('publish')">
+		<img src="pages/images/publish.svg">
+	</div>
+<!--	<div class="menu-tab feedback" data-ng-click="openFeedback()">
+		<img src="pages/images/feedback.svg" width="20" />
+	</div>-->
 </div>
 <div id="menu-right" class="menu-right" data-ng-class="{ 'open' : rightMenuShow }">
 	<div class="menu-item-right" data-ng-show="rightMenuShowItem == 'finalize'">
@@ -427,4 +433,36 @@
 			<!-- END placeholder gui for PUBLISH -->
 			</ul>
 		</div>
+	<div class="menu-item-right" data-ng-show="rightMenuShowItem == 'publish'">
+		<ul>
+			<li class="menu-item-background">
+				<div class="menu-box label">picture</div>
+				<div class="menu-box label">Title</div>
+				<div class="menu-box label menu-parameter-margin">Status</div>
+				<div class="menu-status">Not published</div>
+				<div class="menu-status published">
+					<div>Published</div>
+					<div class="font-small font-italic">01.01.2015</div>
+				</div>
+				<div class="menu-box label menu-parameter-margin">Shareable link</div>
+				<div class="menu-box inputfield" data-ng-show="true">
+					<input type="text" name="share_link" id="share_link" data-ng-value="project.links.share" />
+				</div>
+				<div class="menu-box label desc menu-parameter-margin">
+					<div class="menu-feature-title">Publish</div>
+					<div>Description...</div>
+			</li>
+			<li class="menu-item-background-none">
+				<div class="button" data-ng-click="">
+					Publish
+				</div>
+				<div class="button" data-ng-click="">
+					Update
+				</div>
+				<div class="button revert" data-ng-click="">
+					Unpublish
+				</div>
+			</li>
+		</ul>
+	</div>
 </div>

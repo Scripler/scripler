@@ -70,6 +70,11 @@ button.secondary, .button.secondary {
 	background: #c6c6c6;
 	border: 1px solid #c6c6c6;
 }
+button.revert, .button.revert {
+	background: #000;
+	border: 1px solid #000;
+	color: #fff56c;
+}
 button label, .button label {
 	color: #000;
 	cursor: pointer;
@@ -133,6 +138,13 @@ p.savedstamp {
 
 a:hover {
 	color: #666;
+}
+
+.font-small {
+	font-size: 0.875%;
+}
+.font-italic {
+	font-style: italic;
 }
 
 .container {
