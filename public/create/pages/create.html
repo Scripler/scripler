@@ -76,12 +76,14 @@
 
 		<div class="section-projects">
 			<div class="project new" data-ng-click="addProject();"></div>
-			<div class="project clearfix" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index" data-ng-mouseenter="showProjectTitle($index, project.archived)" data-ng-mouseleave="hideProjectTitle()">
+			<div class="project clearfix" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index" data-ng-mouseenter="showProjectTitle($index, project.archived)" data-ng-mouseleave="hideProjectTitle()" data-ng-switch="project.archived">
+
 				<a class="project-options-show" data-ng-class="{ 'open' : $index == selectedProjectOptions }" data-ng-click="showProjectOptions($index)">
 					<div class="arrow"></div>
 				</a>
 
-				<a data-ng-href="#/project?pid={{project._id}}" class="project-link" data-ng-hide="project.editingProjectTitle" data-ng-class="{ 'show-all' : $index == selectedProjectHover && !project.editingProjectTitle && $index != selectedProjectOptions && !project.archived }">
+				<div data-ng-switch-when="true" class="project-link">{{project.name}}</div>
+				<a data-ng-switch-default data-ng-href="#/project?pid={{project._id}}" class="project-link" data-ng-hide="project.editingProjectTitle" data-ng-class="{ 'show-all' : $index == selectedProjectHover && !project.editingProjectTitle && $index != selectedProjectOptions && !project.archived }">
 					{{project.name}}
 				</a>
 				<div class="project-link show-more" data-ng-hide="$index == selectedProjectHover || project.editingProjectTitle || project.name.length < 29">
