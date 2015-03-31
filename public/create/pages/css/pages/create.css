@@ -123,7 +123,6 @@
 	top: 20px;
 	left: 6px;
 	overflow: hidden;
-	background: none #fff;
 	width: 74px;
 	height: 90px;
 	padding: 5px;
@@ -131,6 +130,7 @@
 	word-wrap: break-word;
 }
 .project-link.show-all {
+	background: none #fff;
 	overflow: visible;
 	min-height: 90px;
 	height: auto;
