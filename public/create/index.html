@@ -32,7 +32,7 @@
 					<input on-click-change-text type="text" id="reg-name" name="name" data-ng-model="user.name" data-ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First and last name" required>
 					<input on-click-change-text type="email" id="reg-email" name="email" data-ng-model="user.email" data-ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email address" data-ng-pattern="EMAIL_REGEXP" required>
 					<input on-click-change-text type="password" id="reg-password" name="password" data-ng-model="user.password" data-ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" data-ng-minlength="6" required>
-					<button type="submit" class="btn-primary registration-button">Register</button>
+					<button type="submit" class="button registration-button">Register</button>
 				</form>
 			</div>
 			<div class="registration-social clearfix" data-ng-hide="user._id && !user.isDemo">
