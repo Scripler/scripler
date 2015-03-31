@@ -128,8 +128,10 @@ function createController($scope, $http, projectsService, userService, $q, user,
 	};
 
 	$scope.selectedProjectHover = -1;
-    $scope.showProjectTitle = function(index) {
-        $scope.selectedProjectHover = index;
+    $scope.showProjectTitle = function(index, status) {
+		if (!status) {
+	        $scope.selectedProjectHover = index;
+		}
     };
     $scope.hideProjectTitle = function() {
         $scope.selectedProjectHover = -1;
