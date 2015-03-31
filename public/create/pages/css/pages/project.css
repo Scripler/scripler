@@ -494,35 +494,9 @@ li.typo .style-copy-options p {
 	text-align: center;
 }
 
-.menu-button {
-	display: inline-block;
-	width: 100%;
-	padding: 5px;
-	background: #fff56c;
-	border: 1px solid #fff56c;
-	text-align: center;
-	cursor: pointer;
-}
-.menu-button label {
-	color: #000;
-	cursor: pointer;
-}
-.menu-button:hover {
-	border: 1px solid #000;
-}
-.menu-button:active {
-	border: 1px solid #fefefe;
-}
-.menu-button:hover label, .menu-button:active label {
-	color: #666;
-}
-
 .menu-feature-title {
 	font-weight: bold;
 	line-height: 1.5em;
-}
-.menu-parameter-margin {
-	margin-top: 10px;
 }
 
 .menu-box {
