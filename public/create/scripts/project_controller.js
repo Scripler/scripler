@@ -1321,7 +1321,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.insertNewAnchor = function(){
 		var id = 'id_' + Date.now();
 		var type = "anchor";
-		var insert = '<a id="' + id + '" name="name" title="title"></a>';
+		var insert = '<a id="' + id + '" title="title"></a>';
 		editorInsert( insert, type );
 		$scope.updateProjectDocument();
 		$scope.getToc();
@@ -1520,7 +1520,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		if(selectedContent!=""){
 			if(type=="anchor"){
 				if($scope.anchorName)title=$scope.anchorName;
-				insert = insert.replace('title="title"', 'title="' + title + '"').replace('name="name"', 'name="' + title + '"');
+				insert = insert.replace('title="title"', 'title="' + title + '"');
 				var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
 			}
 			else if(type=="link"){
