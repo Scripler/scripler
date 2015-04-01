@@ -326,7 +326,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					var hours = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();
 					var minutes = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
 					var seconds = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds();
-					$scope.lastSaved = 'Last saved: ' + now.getDate() + '/' + now.getMonth() + '/' + now.getFullYear() + ' ' + hours + ':' + minutes + ':' + seconds;
+					//months are counted in js from 0-11 so for simplicity the month in the ui is given +1 
+					$scope.lastSaved = 'Last saved: ' + now.getDate() + '/' + (now.getMonth()+1) + '/' + now.getFullYear() + ' ' + hours + ':' + minutes + ':' + seconds;
 					deferred.resolve();
 				});
 
