@@ -1504,8 +1504,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
            	document.getElementById("hyperlinkTarget").value = "";
 		}
 
-		if(selectedContent=="" && document.getElementById("anchorInputBox").value!="")
-				selectedContent=document.getElementById("anchorInputBox").value;
 		return selectedContent;
 	}
 
@@ -1513,10 +1511,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var editor = getEditor();
 		var selectedContent = returnSelectedContent();
 
-		// defaulting the title/name of the anchor to the selected content
+		// if there is no selected content on the caret, take content from the anchor/hyperlink input box
+		if(selectedContent==""){
+			if(type=="anchor" && document.getElementById("anchorInputBox").value!="")
+				selectedContent = document.getElementById("anchorInputBox").value;
+				
+			else if(type=="link" && document.getElementById("hyperlinkInputBox").value!="")
+				selectedContent = document.getElementById("hyperlinkInputBox").value;		
+		}
+
+		// defaulting the title/name of the anchor and the text of the hyperlink to the selected content
 		var title = selectedContent;
 		
-		// if the anchor name field is not empty, then add the anchor
+		// if the anchor/hyperlink input field is not empty, then add the element
 		if(selectedContent!=""){
 			if(type=="anchor"){
 				if($scope.anchorName)title=$scope.anchorName;
@@ -1528,13 +1535,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				insert = insert.replace('link_text', title);
 			}	
 
+			//create and insert anchor/hyperlink element on the caret
 			var element = $rootScope.CKEDITOR.dom.element.createFromHtml(insert);
-
-			// insert anchor on the caret, but keep the old content
 			editor.insertElement(element);
+
+			// keep the old content of the anchor
 			if(type=="anchor")editor.insertText(replacedContent.getText());
 
-
+			// move cursor to current position
 			var range = editor.createRange();
 			range.moveToElementEditablePosition(element);
 
@@ -1549,9 +1557,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.focusEditor();
 			$scope.updateProjectDocument();
 		} else {
-				// if the field is empty, do not do anything or eventually throw an error
-				// console.log("error - anchor name field should not be empty");
-			}
+				// if the field is empty, do not do anything
+		}
 	}
 
 
