@@ -44,6 +44,14 @@ function createController($scope, $http, projectsService, userService, $q, user,
 			$scope.showSettings = false;
 		}
 	}
+	$scope.cancelUpdateUser = function() {
+		$scope.showSettings = false;
+		$scope.editPassword = false;
+	}
+	$scope.cancelUpdatePassword = function() {
+		$scope.showSettings = true;
+		$scope.editPassword = false;
+	}
 
 	$scope.$onRootScope('user:registered', function( event, user ) {
 		if ( user._id ) {

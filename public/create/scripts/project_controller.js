@@ -1321,7 +1321,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.insertNewAnchor = function(){
 		var id = 'id_' + Date.now();
 		var type = "anchor";
-		var insert = '<a id="' + id + '" name="name" title="title"></a>';
+		var insert = '<a id="' + id + '" title="title"></a>';
 		editorInsert( insert, type );
 		$scope.updateProjectDocument();
 		$scope.getToc();
@@ -1504,6 +1504,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
            	document.getElementById("hyperlinkTarget").value = "";
 		}
 
+		if(selectedContent=="" && document.getElementById("anchorInputBox").value!="")
+				selectedContent=document.getElementById("anchorInputBox").value;
 		return selectedContent;
 	}
 
@@ -1514,33 +1516,42 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		// defaulting the title/name of the anchor to the selected content
 		var title = selectedContent;
 		
-		if(type=="anchor"){
-			if($scope.anchorName)title=$scope.anchorName;
-			insert = insert.replace('title="title"', 'title="' + title + '"').replace('name="name"', 'name="' + title + '"');
-			var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
-		}
-		else if(type=="link"){
-			if($scope.linkText )title=$scope.linkText;
-			insert = insert.replace('link_text', title);
-		}	
-		
-		var element = $rootScope.CKEDITOR.dom.element.createFromHtml(insert);
-		// insert anchor on the caret, but keep the old content
-		editor.insertElement(element);
-		if(type=="anchor")editor.insertText(replacedContent.getText());
-		var range = editor.createRange();
-		range.moveToElementEditablePosition(element);
+		// if the anchor name field is not empty, then add the anchor
+		if(selectedContent!=""){
+			if(type=="anchor"){
+				if($scope.anchorName)title=$scope.anchorName;
+				insert = insert.replace('title="title"', 'title="' + title + '"');
+				var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
+			}
+			else if(type=="link"){
+				if($scope.linkText )title=$scope.linkText;
+				insert = insert.replace('link_text', title);
+			}	
 
-		if (type=="image"){
-			var imageRangeChange=range.startContainer;
-			range.moveToElementEditablePosition(imageRangeChange, true);
-		}
-		else {
-			range.select();
-		}
+			var element = $rootScope.CKEDITOR.dom.element.createFromHtml(insert);
 
-		$scope.focusEditor();
-		$scope.updateProjectDocument();
+			// insert anchor on the caret, but keep the old content
+			editor.insertElement(element);
+			editor.insertText(replacedContent.getText());
+
+
+			var range = editor.createRange();
+			range.moveToElementEditablePosition(element);
+
+			if (type=="image"){
+				var imageRangeChange=range.startContainer;
+				range.moveToElementEditablePosition(imageRangeChange, true);
+			}
+			else {
+				range.select();
+			}
+
+			$scope.focusEditor();
+			$scope.updateProjectDocument();
+		} else {
+				// if the field is empty, do not do anything or eventually throw an error
+				// console.log("error - anchor name field should not be empty");
+			}
 	}
 
 
