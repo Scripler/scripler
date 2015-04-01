@@ -58,7 +58,7 @@ function findFolder(folders, folderId) {
  * @param folder
  * @param archived
  */
-function archiveFolder(folder, archived) {
+function archiveFolder(folder, archived, next) {
 	if (!folder) return;
 
 	// Archive folder
@@ -70,18 +70,23 @@ function archiveFolder(folder, archived) {
 		, options = { multi: true };
 
 	var cb = function callback(err, numAffected) {
-		if (err) {
-			throw new Error(err);
-		}
+		if (err) return next(err);
 	};
+
 	Document.update(conditions, update, options, cb);
 
 	// Process child folders
 	if (folder.folders) {
 		for (var i = 0; i < folder.folders.length; i++) {
-			archiveFolder(folder[i]);
+			archiveFolder(folder[i], archived, function (err) {
+				if (err) return next(err);
+
+				return next();
+			});
 		}
 	}
+
+	return next();
 }
 
 /**
@@ -240,12 +245,15 @@ exports.archive = function (req, res, next) {
 	var project = req.project;
 	if (req.params.folderId) {
 		var folder = findFolder(project.folders, req.params.folderId);
-		archiveFolder(folder, true); // Change that value! (urgh, see e.g.: http://stackoverflow.com/questions/518000/is-javascript-a-pass-by-reference-or-pass-by-value-language)
-		project.save(function (err, project) {
-			if (err) {
-				return next(err);
-			}
-			res.send({});
+		archiveFolder(folder, true, function (err) { // Change that value! (urgh, see e.g.: http://stackoverflow.com/questions/518000/is-javascript-a-pass-by-reference-or-pass-by-value-language)
+			if (err) return next(err);
+
+			project.save(function (err, project) {
+				if (err) {
+					return next(err);
+				}
+				res.send({});
+			});
 		});
 	} else {
 		return next({message: "No folder specified", status: 400});
@@ -261,12 +269,13 @@ exports.unarchive = function (req, res, next) {
 	var project = req.project;
 	if (req.params.folderId) {
 		var folder = findFolder(project.folders, req.params.folderId);
-		archiveFolder(folder, false); // Change that value! (urgh, see e.g.: http://stackoverflow.com/questions/518000/is-javascript-a-pass-by-reference-or-pass-by-value-language)
-		project.save(function (err, project) {
-			if (err) {
-				return next(err);
-			}
-			res.send({ folder: folder });
+		archiveFolder(folder, false, function (err) { // Change that value! (urgh, see e.g.: http://stackoverflow.com/questions/518000/is-javascript-a-pass-by-reference-or-pass-by-value-language)
+			project.save(function (err, project) {
+				if (err) {
+					return next(err);
+				}
+				res.send({ folder: folder });
+			});
 		});
 	} else {
 		return next({message: "No folder specified", status: 400});
