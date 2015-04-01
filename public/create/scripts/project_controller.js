@@ -1509,10 +1509,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	function editorInsert( insert, type ) {
 		var editor = getEditor();
+		var selectedContentRequired = (type=="anchor" || type=="link"); 
 		var selectedContent = returnSelectedContent();
 
 		// if there is no selected content on the caret, take content from the anchor/hyperlink input box
-		if(selectedContent==""){
+		if(selectedContent=="" && selectedContentRequired){
 			if(type=="anchor" && document.getElementById("anchorInputBox").value!="")
 				selectedContent = document.getElementById("anchorInputBox").value;
 				
@@ -1524,7 +1525,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var title = selectedContent;
 		
 		// if the anchor/hyperlink input field is not empty, then add the element
-		if(selectedContent!=""){
+		if(!selectedContentRequired || selectedContent!=""){
 			if(type=="anchor"){
 				if($scope.anchorName)title=$scope.anchorName;
 				insert = insert.replace('title="title"', 'title="' + title + '"');
