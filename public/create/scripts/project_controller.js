@@ -1509,17 +1509,20 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	function editorInsert( insert, type ) {
+		var anchorInputContent = document.getElementById("anchorInputBox").value;
+		var hyperlinkInputContent = document.getElementById("hyperlinkInputBox").value;
+
 		var editor = getEditor();
 		var selectedContentRequired = (type=="anchor" || type=="link"); 
 		var selectedContent = returnSelectedContent();
 
 		// if there is no selected content on the caret, take content from the anchor/hyperlink input box
 		if(selectedContent=="" && selectedContentRequired){
-			if(type=="anchor" && document.getElementById("anchorInputBox").value!="")
-				selectedContent = document.getElementById("anchorInputBox").value;
+			if(type=="anchor" && anchorInputContent!="")
+				selectedContent = anchorInputContent;
 				
-			else if(type=="link" && document.getElementById("hyperlinkInputBox").value!="")
-				selectedContent = document.getElementById("hyperlinkInputBox").value;		
+			else if(type=="link" && hyperlinkInputContent!="")
+				selectedContent = hyperlinkInputContent;		
 		}
 
 		// defaulting the title/name of the anchor and the text of the hyperlink to the selected content
