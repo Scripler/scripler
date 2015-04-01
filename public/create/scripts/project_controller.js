@@ -1532,7 +1532,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 			// insert anchor on the caret, but keep the old content
 			editor.insertElement(element);
-			editor.insertText(replacedContent.getText());
+			if(type=="anchor")editor.insertText(replacedContent.getText());
 
 
 			var range = editor.createRange();
