@@ -1485,7 +1485,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		if(selection){
 			selectedContent = selection.getSelectedText();
-			  }
+		}
 
 		// get the iframe document
 		var iframeDoc = document.getElementsByClassName("cke_wysiwyg_frame")[0].contentDocument;
@@ -1496,7 +1496,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
            	document.getElementById("anchorInputBox").value = range;
            	document.getElementById("hyperlinkInputBox").value = range;
            	document.getElementById("hyperlinkTarget").value = "";
-			}
+		}
 
         // onselectionchange doesn't work for Firefox, so instead we update with the old selectedContent returned by CKEditor
         if(navigator.userAgent.search("Firefox")>-1){
@@ -1505,20 +1505,28 @@ function projectController( $scope, $location, userService, projectsService, $ht
            	document.getElementById("hyperlinkTarget").value = "";
 		}
 
-		if(selectedContent=="" && document.getElementById("anchorInputBox").value!="")
-				selectedContent=document.getElementById("anchorInputBox").value;
 		return selectedContent;
 	}
 
 	function editorInsert( insert, type ) {
 		var editor = getEditor();
+		var selectedContentRequired = (type=="anchor" || type=="link"); 
 		var selectedContent = returnSelectedContent();
 
-		// defaulting the title/name of the anchor to the selected content
+		// if there is no selected content on the caret, take content from the anchor/hyperlink input box
+		if(selectedContent=="" && selectedContentRequired){
+			if(type=="anchor" && document.getElementById("anchorInputBox").value!="")
+				selectedContent = document.getElementById("anchorInputBox").value;
+				
+			else if(type=="link" && document.getElementById("hyperlinkInputBox").value!="")
+				selectedContent = document.getElementById("hyperlinkInputBox").value;		
+		}
+
+		// defaulting the title/name of the anchor and the text of the hyperlink to the selected content
 		var title = selectedContent;
 		
-		// if the anchor name field is not empty, then add the anchor
-		if(selectedContent!=""){
+		// if the anchor/hyperlink input field is not empty, then add the element
+		if(!selectedContentRequired || selectedContent!=""){
 			if(type=="anchor"){
 				if($scope.anchorName)title=$scope.anchorName;
 				insert = insert.replace('title="title"', 'title="' + title + '"');
@@ -1529,13 +1537,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				insert = insert.replace('link_text', title);
 			}	
 
+			//create and insert anchor/hyperlink element on the caret
 			var element = $rootScope.CKEDITOR.dom.element.createFromHtml(insert);
-
-			// insert anchor on the caret, but keep the old content
 			editor.insertElement(element);
-			editor.insertText(replacedContent.getText());
 
+			// keep the old content of the anchor
+			if(type=="anchor")editor.insertText(replacedContent.getText());
 
+			// move cursor to current position
 			var range = editor.createRange();
 			range.moveToElementEditablePosition(element);
 
@@ -1550,9 +1559,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.focusEditor();
 			$scope.updateProjectDocument();
 		} else {
-				// if the field is empty, do not do anything or eventually throw an error
-				// console.log("error - anchor name field should not be empty");
-			}
+				// if the field is empty, do not do anything
+		}
 	}
 
 
@@ -1636,13 +1644,25 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						break;
 					}
 
+					var content = "";
+					var target = "";
 					if( element.getName() === "a" ){
-						var content = element.getFirst().$.data;
-						var target = element.getAttribute("href");
+						target = element.getAttribute("href");
 						if(target=="undefined")target="";
+
+						// fetching content of anchor
+						if(navigator.userAgent.search("Firefox")>-1){
+							content = element.$.innerHTML;
+						} else {
+							content = element.getFirst().$.data;
+						}
+
 						document.getElementById("hyperlinkInputBox").value = content;
 						document.getElementById("hyperlinkTarget").value = target;
+
+						return false;
 					}
+					
 
 					for ( var x = 0; x < stylesets.length; x++ ) {
 						var styles = stylesets[x].styles;
