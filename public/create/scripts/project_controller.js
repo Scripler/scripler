@@ -1484,7 +1484,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		if(selection){
 			selectedContent = selection.getSelectedText();
-			  }
+		}
 
 		// get the iframe document
 		var iframeDoc = document.getElementsByClassName("cke_wysiwyg_frame")[0].contentDocument;
@@ -1495,7 +1495,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
            	document.getElementById("anchorInputBox").value = range;
            	document.getElementById("hyperlinkInputBox").value = range;
            	document.getElementById("hyperlinkTarget").value = "";
-			}
+		}
 
         // onselectionchange doesn't work for Firefox, so instead we update with the old selectedContent returned by CKEditor
         if(navigator.userAgent.search("Firefox")>-1){
@@ -1642,13 +1642,25 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						break;
 					}
 
+					var content = "";
+					var target = "";
 					if( element.getName() === "a" ){
-						var content = element.getFirst().$.data;
-						var target = element.getAttribute("href");
+						target = element.getAttribute("href");
 						if(target=="undefined")target="";
+
+						// fetching content of anchor
+						if(navigator.userAgent.search("Firefox")>-1){
+							content = element.$.innerHTML;
+						} else {
+							content = element.getFirst().$.data;
+						}
+
 						document.getElementById("hyperlinkInputBox").value = content;
 						document.getElementById("hyperlinkTarget").value = target;
+
+						return false;
 					}
+					
 
 					for ( var x = 0; x < stylesets.length; x++ ) {
 						var styles = stylesets[x].styles;
