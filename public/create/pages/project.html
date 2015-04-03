@@ -136,6 +136,10 @@
 						<div class="button margin-top" data-ng-click="insertNewLink();">
 							Insert hyperlink
 						</div>
+						<div class="menu-box label desc margin-top">
+							<div class="menu-feature-title">Hyperlink</div>
+							<div>Create or edit hyperlinks. You can link to any web address or anchors inside this book. Use the drop-down box to select internal anchors.</div>
+						</div>
 					</div>
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertImageOptions' }">
@@ -144,6 +148,10 @@
 							<input type="file" id="imagesInput" data-ng-file-select="onImageSelect($files)" accept="image/*" data-ng-hide="true">
 							<span>Insert image</span>
 						</label>
+					</div>
+					<div class="menu-box label desc margin-top">
+						<div class="menu-feature-title">Image</div>
+						<div>Upload and insert images. Supported formats are JPG, PNG and SVG. As a rule of thumb the image should be around 1600 pixels on the longest side.</div>
 					</div>
 					<!--<div class="left-menu-options margin-top">
 						<span class="button">
@@ -210,6 +218,10 @@
 						<div class="button" data-ng-click="insertPageBreak()">
 							Insert page break
 						</div>
+						<div class="menu-box label desc margin-top">
+							<div class="menu-feature-title">Insert page break</div>
+							<div>Insert a soft page break at the cursor position.</div>
+						</div>
 						<!--<span class="button">
 							<a data-ng-click="insertPageBreakAvoid()">
 								<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Avoid pagebreak" />
@@ -231,6 +243,10 @@
 								<a data-ng-click="anchorScrollTo(tocs);">{{tocs.text}}</a>
 							</span>
 						</span>
+						<div class="menu-box label desc margin-top">
+							<div class="menu-feature-title">Anchor</div>
+							<div>Insert an anchor in the text. Anchors  are included in the table of contents and can be linked to with hyperlinks.</div>
+						</div>
 					</div>
 				</li>
 				<!--<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions'showInsertHyperlinkOptions }">
