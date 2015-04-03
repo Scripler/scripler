@@ -515,6 +515,11 @@ li.typo .style-copy-options p {
 	border: 0;
 	padding: 5px 0;
 }
+.menu-box.label.desc {
+	background: #ccc;
+	padding: 10px;
+	color: #000;
+}
 
 .menu-box.inputfield {
 	position: relative;
