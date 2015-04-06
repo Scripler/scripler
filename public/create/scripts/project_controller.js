@@ -1547,16 +1547,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			// keep the old content of the anchor
 			if(type=="anchor")editor.insertText(replacedContent.getText());
 
-			// move cursor to current position
-			var range = editor.createRange();
-			range.moveToElementEditablePosition(element);
-
 			if (type=="image"){
+				// move cursor to current position
+				var range = editor.createRange();
 				var imageRangeChange=range.startContainer;
 				range.moveToElementEditablePosition(imageRangeChange, true);
-			}
-			else {
-				range.select();
 			}
 
 			$scope.focusEditor();
