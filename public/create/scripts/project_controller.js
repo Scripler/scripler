@@ -1649,11 +1649,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						if(target=="undefined")target="";
 
 						// fetching content of anchor
-						if(navigator.userAgent.search("Firefox")>-1){
-							content = element.$.innerHTML;
-						} else {
-							content = element.getFirst().$.data;
-						}
+						content = element.$.innerHTML;
 
 						document.getElementById("hyperlinkInputBox").value = content;
 						document.getElementById("hyperlinkTarget").value = target;
