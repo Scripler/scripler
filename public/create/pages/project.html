@@ -245,7 +245,7 @@
 						</span>
 						<div class="menu-box label desc margin-top">
 							<div class="menu-feature-title">Anchor</div>
-							<div>Insert an anchor in the text. Anchors  are included in the table of contents and can be linked to with hyperlinks.</div>
+							<div>Insert an anchor in the text. Anchors are included in the table of contents and can be targeted with hyperlinks.</div>
 						</div>
 					</div>
 				</li>
@@ -317,26 +317,22 @@
 					<img src="pages/images/insert_titlepage.png" alt="Title page" title="Title page" />
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeCoverOptions' }">
-					<div class="menu-feature-title">
-						Add cover
-					</div>
-					<div>
-						Add an existing cover image to the beginning of the book. This image will also represent the book on virtual book shelves and in ebook stores.
-					</div>
 					<label class="button margin-top" for="coverInput">
 						<input type="file" id="coverInput" data-ng-file-select="onCoverSelect($files)" accept="image/*" data-ng-hide="true">
 						Add cover image
 					</label>
+					<div class="menu-box label desc margin-top">
+						<div class="menu-feature-title">Add cover</div>
+						<div>Add an existing cover image to the beginning of the book. This image will also represent the book on virtual book shelves and in ebook stores.</div>
+					</div>
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTitlepageOptions' }">
-					<div class="menu-feature-title">
-						Generate title page
-					</div>
-					<div>
-						A title page usually bears the full title, the author and similar. It is usually found at the beginning of a book.
-					</div>
 					<div class="button margin-top" data-ng-click="generateTitlePage();">
 						Generate title page
+					</div>
+					<div class="menu-box label desc margin-top">
+						<div class="menu-feature-title">Generate title page</div>
+						<div>A title page usually bears the full title, the author and similar. It is usually found at the beginning of a book.</div>
 					</div>
 				</li>
 
@@ -347,12 +343,6 @@
 					<img src="pages/images/insert_colophon.png" alt="Generate Colophon" title="Generate Colophon" />
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
-					<div class="menu-feature-title">
-						Generate<br />Table of Contents
-					</div>
-					<div>
-						The table of contents will be inserted in the beginning of the ebook and will be accessible in ebook readers for easy navigation.
-					</div>
 					<div class="margin-top">
 						Preview
 					</div>
@@ -362,16 +352,18 @@
 					<div class="button margin-top" data-ng-click="generateToc();">
 						Generate ToC
 					</div>
+					<div class="menu-box label desc margin-top">
+						<div class="menu-feature-title">Generate<br />Table of Contents</div>
+						<div>The table of contents will be inserted in the beginning of the ebook and will be accessible in ebook readers for easy navigation.</div>
+					</div>
 				</li>
 				<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
-					<div class="menu-feature-title">
-						Generate colophon
-					</div>
-					<div>
-						A colophon is a brief statement containing information about a specific version of a book such as the ISBN-number, a creative commons or copyright notice, the people involved and so on.
-					</div>
 					<div class="button margin-top" data-ng-click="generateColophon();">
 						Generate colophon
+					</div>
+					<div class="menu-box label desc margin-top">
+						<div class="menu-feature-title">Generate colophon</div>
+						<div>A colophon is a brief statement containing information about a specific version of a book such as the ISBN-number, a creative commons or copyright notice, the people involved and so on.</div>
 					</div>
 				</li>
 			</ul>
