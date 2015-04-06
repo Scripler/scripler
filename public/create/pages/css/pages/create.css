@@ -309,13 +309,17 @@ hr {
 	padding-top: 5px;
 }
 
-.feedback{
+.feedback {
 	position:absolute;
 	top:0;
 	right:0;
 	background:#c6c6c6;
+	font-size: 18px;
 	color: #fff;
 	cursor: pointer;
-	padding: 10px 15px;
+	padding: 11.5px 20px 11.5px 20px;
 	text-align: center;
+}
+.feedback:hover {
+	color: #fff265;
 }
