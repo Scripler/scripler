@@ -308,7 +308,7 @@
 .projectDocument-archived {
 	opacity: 0.5;
 }
-input.renameProjectDocument, textarea.renameStyleset, textarea.renameStyle {
+textarea.renameProjectDocument, textarea.renameStyleset, textarea.renameStyle {
 	width: 100%;
 	
 	border: 1px solid #ffff99;
@@ -317,7 +317,8 @@ input.renameProjectDocument, textarea.renameStyleset, textarea.renameStyle {
 	outline: none;
 	overflow: hidden;
 }
-input.renameProjectDocument{
+textarea.renameProjectDocument{
+	word-break: break-all;
 	height: 60px !important;
 	margin-top:30px;
 }
@@ -691,8 +692,9 @@ input.documentTitleEdit .ng-invalid::after{
 	width: 150px;
 	height: 20px;
 	color: #000;
-	z-index: 5115;
+	z-index: 511;
 	position: absolute; 
 	right: 0;
+	overflow: visible;
 
 }

@@ -30,8 +30,11 @@
 					</p>
 
 					<form name="titleEdit{{projectDocuments.length}}" class="documentTitleEdit" data-ng-show="projectDocument.editingProjectDocumentTitle">
-						 
-						<input type="text" name="textEdit" class="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!projectDocument.editingProjectDocumentTitle" blur-on-enter data-ng-blur="renameProjectDocument(projectDocument); projectDocument.editingProjectDocumentTitle = false;" required>
+						<!--
+						<textarea name="textEdit" class="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!projectDocument.editingProjectDocumentTitle" blur-on-enter data-ng-blur="renameProjectDocument(projectDocument,  $index ); projectDocument.editingProjectDocumentTitle = false;" required>
+						-->
+						<textarea name="textEdit" class="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!projectDocument.editingProjectDocumentTitle" blur-on-enter data-ng-blur="renameProjectDocument(projectDocument); projectDocument.editingProjectDocumentTitle = false;" required></textarea>
+						
 						<span class="nameError" ng-show="titleEdit{{projectDocuments.length}}.textEdit.$error.required">The title is required!</span><br>
 						
 					</form>

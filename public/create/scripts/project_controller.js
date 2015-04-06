@@ -417,8 +417,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return deferred.promise;
 	};
 
-	$scope.renameProjectDocument = function(projectDocument) {
+	$scope.renameProjectDocument = function(projectDocument ) {
         var title=projectDocument.name;
+ 	 
         if ($scope.user._id) {
             $http.put('/document/' + projectDocument._id + '/rename', angular.toJson(projectDocument))
                 .success(function() {
