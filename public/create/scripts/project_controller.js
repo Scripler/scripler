@@ -15,6 +15,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.stylesets = [];
 	$scope.fonts = [];
 	$scope.styleEditorVisible = false;
+	$scope.validTitle=true;
 
 	if ( $scope.user === 'undefined' ) {
 		// TODO: how to handle error? (awaiting "Show error messages to the user" task)
@@ -243,8 +244,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
         if (typeof type !== 'undefined' && type !== 'firstDocument') {
 			document.type = type;
 		}
-        if (typeof text !== 'undefined' && text != '') {
+        if (typeof text !== 'undefined' && text !== '') {
 			document.text = text;
+		} else {
+			console.log('hj');
+			document.name=name;
 		}
 
         if ($scope.user._id) {
@@ -414,18 +418,22 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	};
 
 	$scope.renameProjectDocument = function(projectDocument) {
+        var title=projectDocument.name;
         if ($scope.user._id) {
             $http.put('/document/' + projectDocument._id + '/rename', angular.toJson(projectDocument))
                 .success(function() {
 					if (projectDocument.editingNewProjectDocument) {
 						$scope.openProjectDocument(projectDocument);
 					}
+					projectDocument.editingProjectDocumentTitle = false;
+					$scope.focusEditor();
 				});
-		} else {
+            }else {
 			//TODO save to localstorage
 		}
-		$scope.focusEditor();
+		
 	};
+
 
 	$scope.selectedProjectDocument = -1;
 	$scope.showProjectDocument = function ($index) {
