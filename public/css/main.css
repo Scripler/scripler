@@ -131,7 +131,7 @@ a.navbar-brand{
 	float: left
 }
 .collapsed{
-	background-color:#fff56c; 
+	background-color:#FFF; 
 	color:#000!important;
 	border-style:solid;
 	border-color: #000;
@@ -197,6 +197,9 @@ ul.navList li>a:hover{
 	.menu-talk{
 		background-color:#000;
 	} 
+	.navpoint{
+		text-align: center;
+	}
 	a.navpoint.talk-link:hover{
 		background-color: #ccc !important;
 		color:#fff56c !important;
@@ -342,7 +345,9 @@ h2.feat{
 	background-color: #c6c6c6;
 }
  
-
+.row {
+	margin:0;
+}
 .email, .password {
 	-moz-border-radius: 1px;
 	-webkit-border-radius: 1px;
@@ -398,9 +403,25 @@ h2.feat{
 .features{
 	height: 25vh; 
 }
+
 @media (max-width:850px){ 
+	.navbar-toggle {
+		position: fixed;
+		top:-2px;
+		right:-5px;
+	}
+	#navbar{
+		position: fixed;
+		top:42px; 
+		right: 30px;
+		background-color: #FFF;
+	}
 	#login{
 		display: none;
+		min-height: 100vh;
+	}
+	#login-form{
+		margin-top: 30vh;
 	}
 	.features{
 	height: 100%;

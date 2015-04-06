@@ -117,7 +117,14 @@ $(document).ready(function() {
             }
         }
     });
-
+    if(documentwidth<850){
+        $('li.menu-login>a').click(function(){
+                    $('#login').css("display", "block");
+                });
+        $('li.navpoint>a').click(function(){
+            $('#navbar').css("display", "none");
+        });
+    }
     var forgotPassword = false;
     var passwordWidth = $("#login-password").outerWidth(true);
     $("#forgot-password").on("click", function(event) {
@@ -132,10 +139,11 @@ $(document).ready(function() {
                 "margin": 0
             }, animationTime);
             //$("#login-email").animate({ "width": "+=" + emailExtraWidth }, animationTime);
-            if (documentWidth > 850) {
+            if (documentwidth > 850) {
                 $("#login-form").animate({
                     "marginLeft": newMargin
                 }, animationTime);
+
             }
             $("#remember-me-box").fadeOut(animationTime);
             setTimeout(function() {
