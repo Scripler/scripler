@@ -363,7 +363,7 @@ exports.delete = function (req, res, next) {
 						}
 
 						// Don't use 2's complement since our config storage sizes are not
-						console.log('Decreased user\'s used storage. User now uses ' + user.storageUsed/1000000 + '/' + conf.subscriptions[user.level].storage/1000000 + ' MB.');
+						logger.info('Decreased user\'s used storage. User now uses ' + user.storageUsed/1000000 + '/' + conf.subscriptions[user.level].storage/1000000 + ' MB.');
 
 						project.deleted = true;
 						project.save(function (err) {
