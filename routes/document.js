@@ -326,7 +326,7 @@ exports.upload = function (req, res, next) {
 					// If any images where uploaded, add to user stoage
 					if (totalBytes > 0) {
 						// Image(s) was correctly uploaded and stored on project.
-						// As a background task update the users stoageUsed value.
+						// As a background task update the users storageUsed value.
 						// Don't wait for it - customer will just be happy if it fails.
 						User.update({_id: req.user._id}, {$inc: {storageUsed: totalBytes}}, function (err, numAffected) {
 							if (err) {
