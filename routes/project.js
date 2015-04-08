@@ -23,8 +23,11 @@ var exec = require('child_process').exec;
 var logger = require('../lib/logger');
 var uuid_lib = require('node-uuid');
 var document_utils = require('../lib/document-utils');
+var utils_shared = require('../public/create/scripts/utils-shared');
 
-//Load project by id
+var premiumMessage = "User not allowed to load project: user is not premium/professional or user is trying to access a 'locked' project.";
+
+// Load project by id
 exports.load = function (id) {
 	return function (req, res, next) {
 		// Avoiding global scope!
@@ -34,7 +37,27 @@ exports.load = function (id) {
 			if (!project) {
 				return next({message: "Project not found", status: 404});
 			}
-			if (!req.user) return next();//Let missing authentication be handled in auth middleware
+			if (!req.user) return next(); //Let missing authentication be handled in auth middleware
+			if (!utils.hasAccessToModel(req.user, project)) return next(403);
+			if (!utils_shared.canLoadProject(req.user.level, req.user.projects, idCopy)) return next(596, premiumMessage);
+
+			req.project = project;
+			return next();
+		});
+	}
+}
+
+// Load project by id without performing premium check: it must e.g. be possible for free users to archive and delete their projects.
+exports.loadWithoutPremiumCheck = function (id) {
+	return function (req, res, next) {
+		// Avoiding global scope!
+		var idCopy = id || req.body.projectId;
+		Project.findOne({"_id": idCopy, "deleted": false}).exec(function (err, project) {
+			if (err) return next(err);
+			if (!project) {
+				return next({message: "Project not found", status: 404});
+			}
+			if (!req.user) return next(); //Let missing authentication be handled in auth middleware
 			if (!utils.hasAccessToModel(req.user, project)) return next(403);
 
 			req.project = project;
@@ -53,6 +76,7 @@ exports.loadPopulated = function (id) {
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
 			if (!utils.hasAccessToModel(req.user, project)) return next(403);
+			if (!utils_shared.canLoadProject(req.user.level, req.user.projects, idCopy)) return next(596, premiumMessage);
 
 			req.project = project;
 			return next();
@@ -70,6 +94,7 @@ exports.loadPopulatedFull = function (id) {
 			}
 			if (!req.user) return next();//Let missing authentication be handled in auth middleware
 			if (!utils.hasAccessToModel(req.user, project)) return next(403);
+			if (!utils_shared.canLoadProject(req.user.level, req.user.projects, idCopy)) return next(596, premiumMessage);
 
 			req.project = project;
 			return next();
@@ -88,6 +113,8 @@ var list = exports.list = function (req, res, next) {
 };
 
 exports.create = function (req, res, next) {
+	if (!utils_shared.canCreateProject(req.user.level, req.user.projects)) return next(596, premiumMessage);
+
 	var project = new Project({
 		name: req.body.name,
 		members: [
