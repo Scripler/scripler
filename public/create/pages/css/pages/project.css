@@ -99,8 +99,10 @@
 .menu-item-left, .menu-item-right {
 	opacity:1;
 	height: 100%;
+	/*
 	overflow: hidden;
 	overflow-y: auto;
+	*/
 }
 .menu-item-left.ng-hide, .menu-item-right.ng-hide {
 	opacity: 0;
@@ -677,24 +679,28 @@ li.typo .style-copy-options p {
 	border-width: 2px !important;
 	border-color: black;
 }
-input.documentTitleEdit .ng-invalid::after{
-	 content: " Required!";
-	 background-color: red;
-	 position: absolute;
-	 left: 0;
-	 right:0;
-	 width: 50px;
-	 height: 50px;
-
+.nameError::before{
+	content:'';
+	width: 0; 
+	height: 0; 
+	position: absolute; 
+	left: 0;
+	top:-10px;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 10px solid red;
 }
 .nameError{
 	background-color: red;
-	width: 150px;
-	height: 20px;
+	width: 160px;
+	height: 30px;
+	padding:5px;
 	color: #000;
-	z-index: 511;
+	z-index: 5101;
+	display:block;
 	position: absolute; 
-	right: 0;
+	left: 0;
 	overflow: visible;
+	overflow-y:visible;
 
 }
