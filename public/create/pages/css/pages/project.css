@@ -99,10 +99,8 @@
 .menu-item-left, .menu-item-right {
 	opacity:1;
 	height: 100%;
-	/*
 	overflow: hidden;
 	overflow-y: auto;
-	*/
 }
 .menu-item-left.ng-hide, .menu-item-right.ng-hide {
 	opacity: 0;
@@ -692,9 +690,10 @@ li.typo .style-copy-options p {
 }
 .nameError{
 	background-color: red;
-	width: 160px;
-	height: 30px;
-	padding:5px;
+	width: 100%; 
+	text-align: center;
+	font-size: 0.7em;
+	padding:3px;
 	color: #000;
 	z-index: 5101;
 	display:block;
