@@ -308,7 +308,7 @@ app.directive('confirmSaveOnExit', function($window, $location, $route) {
 				});
 			}
 
-			$window.onbeforeunload = function(event){
+/*			$window.onbeforeunload = function(event){
 				if ($location.path() === "/project" && !scope.lastSaved) {
 					var message = 'If you leave this page you are going to lose all unsaved changes, are you sure you want to leave?';
 					if (typeof event == 'undefined') {
@@ -321,7 +321,7 @@ app.directive('confirmSaveOnExit', function($window, $location, $route) {
 				    confirmSaveChanges(event);
 				    return message;
 				};
-			};
+			}; */
 
 			scope.$on('$locationChangeStart', function(event, next, current) {
 				if ($location.path() === "/") {

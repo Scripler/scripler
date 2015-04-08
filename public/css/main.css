@@ -1,0 +1,376 @@
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto/Roboto-Regular.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+}
+@font-face {
+	font-family: 'icomoon';
+	src:url('../fonts/icomoon.eot?-ryeo5j');
+	src:url('../fonts/icomoon.eot?#iefix-ryeo5j') format('embedded-opentype'),
+		url('../fonts/icomoon.ttf?-ryeo5j') format('truetype'),
+		url('../fonts/icomoon.woff?-ryeo5j') format('woff'),
+		url('../fonts/icomoon.svg?-ryeo5j#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class*="icon-"] {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-google-plus:before {
+	content: "\e600";
+}
+.icon-facebook:before {
+	content: "\e601";
+}
+.icon-twitter:before {
+	content: "\e602";
+}
+.icon-linkedin:before {
+	content: "\e603";
+}
+.socialicons {
+	text-align: center;
+}
+.btn {
+	padding:0;
+}
+.socialicon a, a.socialicon {
+	margin: 0 auto; 
+	padding-top: 8px;
+	padding-bottom: 8px;
+	padding-left: 10px;
+	padding-right: 10px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: #fff; 
+	font-size: 22px; 
+	color:#c6c6c6;
+	text-decoration: none;
+}
+
+.socialicon a:hover, a.socialicon:hover {
+	background-color: #fff265;
+	color: #666;
+}
+body { 
+  	width: 98vw;
+	height:98vh;
+	overflow-x: hidden;
+	font-family: 'Roboto', 'Helvetica', 'Arial';
+}
+.page{
+	margin:0;
+	padding-top: 50px;
+	width:100vw;
+	height:98vh;
+	overflow-x: hidden;
+}
+nav {
+	background-color:#FFF;
+	color:#000;
+	padding-left: 30vw;
+	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
+} 
+a.navbar-brand{
+	font-size: 1.5em; 
+
+}
+#brandlogo{
+	display:none;
+}
+.collapsed{
+	background-color:#fff56c; 
+	color:#000!important;
+	border-style:solid;
+	border-color: #000;
+	border-size:5px;
+}
+.sr-only{
+	color:#000; 
+}
+.colIco{
+	float: none;
+	display:block;
+	padding: 0;
+	margin:0;
+	margin-top:-15px;
+}
+.colIco:first-child{
+	margin-top:-10px;	
+}
+.colIco:last-child{
+	margin-bottom: -5px;	
+}
+.icon-bar{
+	color:#000!important;
+	z-index: 5!important;
+}
+.navbar-brand, ul.navList li>a{
+	font-size: 1.2em;
+	color:#000;
+}  
+.navbar-brand:hover{
+	 color:#000;
+}
+ul.navList li>a:hover{
+	background-color: #fff;
+	color:#666;
+} 
+@media (min-width:850px){
+	.menu-blog{
+	background-color:#000;
+	} 
+
+	#login-form {
+		margin-left: 100px;
+		margin-top: 10px;
+	}
+	li>a.blog-link{
+		font-size: 1.2em;
+		color: #fff56c !important;
+		position:fixed;
+		right:0;
+		text-decoration: none;
+		background-color: #000;
+		width:70px;
+		height: 52px;
+	}     
+	li>a.blog-link:hover{
+		background-color: #000 !important;
+		color:#FFF !important;
+	}
+	.menu-talk{
+		background-color:#000;
+	} 
+	a.navpoint.talk-link:hover{
+		background-color: #666 !important;
+		color:#FFF !important;
+	}
+	li>a.talk-link{
+		font-size: 1.2em;
+		color: #333 !important;
+		position:fixed;
+		right:70px;
+		text-decoration: none;
+		background-color: #ececec;
+		width:70px;
+		height: 52px;
+	}     
+	li>a.talk-link:hover{
+		background-color: #fff !important;
+	}
+	.socialicons {
+		margin-top: 15px;
+		margin-left: -35px;
+	}
+}
+
+#scripler{
+	color: #666;
+	padding-top: 80px;
+	background-color:#ececec;
+}
+#features{
+	background-color:#215660;
+}
+#about{
+	background-color:#fff56c;
+}
+#contact{
+
+}
+h3{
+	font-size:1.2em;
+	font-weight: 700;
+}
+h2{
+	font-weight: 700;
+	padding-bottom: 30px;
+}
+#makeGreat{
+	
+}
+button#testTheAlpha{
+	background-color:#fff56c;
+	color:#000;
+	font-size: 1.5em;
+	font-weight: 700;
+	border:none;
+	padding:10px;
+	float:none;
+}
+ 
+a.testAlp:hover{
+	text-decoration: none;
+}
+a#signUp{
+	color:#000;
+	text-decoration: underline;
+}
+.bbb{
+	background-color:#000;
+}
+.testBtn{
+	margin:20px; 
+}
+.feats{
+	color: #fff56c;
+}
+.features{
+	display:block;
+}
+.whiteFeats{
+	color:#FFF;
+}
+#about{
+	color: #666;
+}
+a.person{
+	color:#000;
+	text-decoration:underline;
+	font-weight: 700;
+}
+.pers {
+	min-height: 15vh;
+}
+#contact{ 
+	color: #666;
+	padding-top: 0;
+}
+.cont{
+	padding-top: 50px;
+	height:100vh;
+	background-color:#fff;
+	position:absolute;	
+	display:block;
+	z-index: 5;
+}
+input#mce-EMAIL,input#mc-embedded-subscribe{
+	height: 32px;
+}
+input#mc-embedded-subscribe{
+	background-color:#fff56c;
+	color:#000;
+	font-size: 1em; 
+	border:none; 
+
+}
+iframe{ 
+	left:0px;
+	position:absolute;
+	z-index: 0;
+	width:99vw;
+	overflow-x: hidden;
+	height:100vh;
+}
+h2.con{
+	font-weight: 700;
+	padding:0;
+	margin:0;
+}
+
+
+#login
+{
+	width:100vw;
+	overflow-x:hidden;
+	background-color: #c6c6c6;
+}
+ 
+
+.email, .password {
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	border-radius: 1px;
+	-webkit-appearance: none;
+	border: none;
+	background: #f6f6f6;
+	font-size: 15px; 
+	height: 32px;
+	padding: 0 0 0 15px;
+	margin: 0 5px 0 0;
+	color: #818285;
+	font-family: 'Roboto', sans-serif; 
+	margin-bottom: 20px;
+}
+.loginBtn {
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	-webkit-appearance: none;
+	border-radius: 1px; 
+	background-color:#fff56c;
+	color: #231f20;
+	font-size: 1.2em;
+	font-weight: bold;  
+	cursor: pointer; 
+	text-align: center; 
+	height: 32px;
+	vertical-align: center; 
+	margin-bottom: 20px;
+}
+#login-extras{
+	font-size: 0.7em;
+}
+.login-main{
+	float: none;
+	
+}
+#remember{
+	margin:0;
+	padding:0; 
+	display: inline; 
+}
+#fgpass{
+	margin-bottom: 5px;
+}
+#remember-me-box{
+	margin-bottom: 5px;
+}
+@media (max-width:850px){ 
+	a.navbar-brand{
+	font-size: 2em;
+	font-weight: 700;
+
+}
+	.navbar {
+		position: relative;
+		display: block;
+	}
+	#brandlogo{
+		display:inline-block;
+		margin-top:-10px;
+		margin-right:5px;
+		float:left;
+	}
+	.cont { 
+		position:relative;
+		height:100%;
+		padding-bottom: 20px;
+		}
+	iframe{
+			position:relative;
+			}
+	#scripler, #features, #about, #contact, #login{
+		height:100%;
+		}
+	form.login-form{
+		margin:0;
+	}
+}
