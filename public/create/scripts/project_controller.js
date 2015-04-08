@@ -167,8 +167,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					}
                 } 
                 $scope.timeout = $timeout($scope.updateProjectDocument, secondsToWait * 1000); 
-				}
 			}
+		}
 	};
 
     $scope.openProjectDocument = function(projectDocument) {
@@ -564,6 +564,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
     }, ];
 
 	$scope.saveMetaData = function() {
+		var deferred = $q.defer();
 		$http.put('/project/' + $scope.project._id + '/metadata', {
 			'title': $scope.project.metadata.title,
 			'authors': $scope.project.metadata.authors,
@@ -571,10 +572,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			'description': $scope.project.metadata.description,
 			'isbn': $scope.project.metadata.isbn
         }).success(function() {
-
+			deferred.resolve();
 		});
-	};
 
+		return deferred.promise;
+	};
 
 	$scope.$watch('rightMenuShowItem', function( newValue ) {
 		if( newValue=='finalize' ){
@@ -588,7 +590,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.metaTitleSaved = true;
 			$timeout(function() {
 			    $scope.metaTitleSaved = false;
-			}, 2000);
+			}, 1000);
 		}
 	});
     $scope.$watch('project.metadata.authors', function(newValue, oldValue) {
@@ -597,9 +599,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.metaAuthorsSaved = true;
 			$timeout(function() {
 			    $scope.metaAuthorsSaved = false;
-			}, 2000);
+			}, 1000);
 		}
-		$scope.focusEditor();
 	});
     $scope.$watch('project.metadata.description', function(newValue, oldValue) {
 		if (watchReady(newValue, oldValue)) {
@@ -607,9 +608,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.metaDescriptionSaved = true;
 			$timeout(function() {
 			    $scope.metaDescriptionSaved = false;
-			}, 2000);
+			}, 1000);
 		}
-		$scope.focusEditor();
 	});
     $scope.$watch('project.metadata.isbn', function(newValue, oldValue) {
 		if (watchReady(newValue, oldValue)) {
@@ -617,9 +617,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.metaIsbnSaved = true;
 			$timeout(function() {
 			     $scope.metaIsbnSaved = false;
-			}, 2000);
+			}, 1000);
 		}
-		$scope.focusEditor();
 	});
 
 	function watchReady(newValue, oldValue) {
@@ -633,16 +632,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			$scope.metaLanguageSaved = true;
 			$timeout(function() {
 			    $scope.metaLanguageSaved = false;
-			}, 2000);
+			}, 1000);
 		}
-		$scope.focusEditor();
 	};
 
 	$scope.exportEpub = function() {
 		var getTocPromise = $scope.getToc();
 		var updateProjectDocumentPromise = $scope.updateProjectDocument();
+		var updateMetadataPromise = $scope.saveMetaData();
 
-		$q.all([getTocPromise, updateProjectDocumentPromise]).then(function () {
+		$q.all([getTocPromise, updateProjectDocumentPromise, updateMetadataPromise]).then(function () {
 			var setTocPromise = $scope.setToc();
             setTocPromise.then(function() {
 				$http.get('/project/' + $scope.pid + '/compile')
@@ -707,31 +706,33 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			});
 	}
 
-    $scope.applyStylesetToProject = function(styleset) {
-    	//apply to Document is called because the function for some reason doesn't apply the styleset to the current document as well. 
-    	//ugly but works
-    	$scope.applyStylesetToDocument(styleset, true);
-        var deferred = $q.defer(); 
-		$http.put('/styleset/' + styleset._id + '/project/' + $scope.project._id)
-        .success(function(data) { 
-            $scope.applyStylesetsToEditor();
-            deferred.resolve();
-			});
-        return deferred.promise;
+	$scope.applyStylesetToProject = function(styleset) {
+		var deferred = $q.defer();
+		//apply-to-project handles all styleset copy stuff and sets default stylesets first, but immediately after,
+		//apply-to-document is also called because we need the proper document styleset to set for the selected document.
 
+		$http.put('/styleset/' + styleset._id + '/project/' + $scope.project._id)
+			.success(function(data) {
+				var promise = $scope.applyStylesetToDocument(styleset, true);
+				promise.then(function() {
+					deferred.resolve();
+				});
+			});
+
+		return deferred.promise;
 	}
 
-    $scope.applyStylesetToDocument = function(styleset, setAsDefault) {
-        var deferred = $q.defer(); 
+	$scope.applyStylesetToDocument = function(styleset, setAsDefault) {
+		var deferred = $q.defer();
 		$http.put('/styleset/' + styleset._id + '/document/' + $scope.documentSelected._id)
-            .success(function(data) { 
-                if (data.styleset) {
-                    $scope.documentSelected.stylesets.push(data.styleset._id); 
-                    if (setAsDefault) {
+			.success(function(data) {
+				if (data.styleset) {
+					$scope.documentSelected.stylesets.push(data.styleset._id);
+					if (setAsDefault) {
 						$scope.documentSelected.defaultStyleset = data.styleset._id;
-                    } 
+					}
 					$scope.applyStylesetsToEditor();
-                    deferred.resolve(data.styleset);
+					deferred.resolve(data.styleset);
 				}
 			});
 
@@ -1320,7 +1321,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.insertNewAnchor = function(){
 		var id = 'id_' + Date.now();
 		var type = "anchor";
-		var insert = '<a id="' + id + '" name="name" title="title"></a>';
+		var insert = '<a id="' + id + '" title="title"></a>';
 		editorInsert( insert, type );
 		$scope.updateProjectDocument();
 		$scope.getToc();
@@ -1493,14 +1494,18 @@ function projectController( $scope, $location, userService, projectsService, $ht
             range = iframeDoc.getSelection().toString();
            	document.getElementById("anchorInputBox").value = range;
            	document.getElementById("hyperlinkInputBox").value = range;
+           	document.getElementById("hyperlinkTarget").value = "";
 			}
 
         // onselectionchange doesn't work for Firefox, so instead we update with the old selectedContent returned by CKEditor
         if(navigator.userAgent.search("Firefox")>-1){
         	document.getElementById("anchorInputBox").value = selectedContent;
            	document.getElementById("hyperlinkInputBox").value = selectedContent;
+           	document.getElementById("hyperlinkTarget").value = "";
 		}
 
+		if(selectedContent=="" && document.getElementById("anchorInputBox").value!="")
+				selectedContent=document.getElementById("anchorInputBox").value;
 		return selectedContent;
 	}
 
@@ -1511,33 +1516,42 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		// defaulting the title/name of the anchor to the selected content
 		var title = selectedContent;
 		
-		if(type=="anchor"){
-			if($scope.anchorName)title=$scope.anchorName;
-			insert = insert.replace('title="title"', 'title="' + title + '"').replace('name="name"', 'name="' + title + '"');
-			var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
-		}
-		else if(type=="link"){
-			if($scope.linkText )title=$scope.linkText;
-			insert = insert.replace('link_text', title);
-		}	
-		
-		var element = $rootScope.CKEDITOR.dom.element.createFromHtml(insert);
-		// insert anchor on the caret, but keep the old content
-		editor.insertElement(element);
-		if(type=="anchor")editor.insertText(replacedContent.getText());
-		var range = editor.createRange();
-		range.moveToElementEditablePosition(element);
+		// if the anchor name field is not empty, then add the anchor
+		if(selectedContent!=""){
+			if(type=="anchor"){
+				if($scope.anchorName)title=$scope.anchorName;
+				insert = insert.replace('title="title"', 'title="' + title + '"');
+				var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
+			}
+			else if(type=="link"){
+				if($scope.linkText )title=$scope.linkText;
+				insert = insert.replace('link_text', title);
+			}	
 
-		if (type=="image"){
-			var imageRangeChange=range.startContainer;
-			range.moveToElementEditablePosition(imageRangeChange, true);
-		}
-		else {
-			range.select();
-		}
+			var element = $rootScope.CKEDITOR.dom.element.createFromHtml(insert);
 
-		$scope.focusEditor();
-		$scope.updateProjectDocument();
+			// insert anchor on the caret, but keep the old content
+			editor.insertElement(element);
+			editor.insertText(replacedContent.getText());
+
+
+			var range = editor.createRange();
+			range.moveToElementEditablePosition(element);
+
+			if (type=="image"){
+				var imageRangeChange=range.startContainer;
+				range.moveToElementEditablePosition(imageRangeChange, true);
+			}
+			else {
+				range.select();
+			}
+
+			$scope.focusEditor();
+			$scope.updateProjectDocument();
+		} else {
+				// if the field is empty, do not do anything or eventually throw an error
+				// console.log("error - anchor name field should not be empty");
+			}
 	}
 
 
@@ -1621,6 +1635,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						break;
 					}
 
+					if( element.getName() === "a" ){
+						var content = element.getFirst().$.data;
+						var target = element.getAttribute("href");
+						if(target=="undefined")target="";
+						document.getElementById("hyperlinkInputBox").value = content;
+						document.getElementById("hyperlinkTarget").value = target;
+					}
 
 					for ( var x = 0; x < stylesets.length; x++ ) {
 						var styles = stylesets[x].styles;

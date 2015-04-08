@@ -1,32 +1,30 @@
 <link rel="stylesheet" type="text/css" href="pages/css/pages/create.css" />
 
-<div class="main">
+<div class="wrapper-create">
 	<section class="section-unisquare" data-ng-class="{ 'white-bg' : showSettings}">
 		<div data-ng-hide="showSettings">
-			<div class="links">
+			<div class="clearfix">
 				<a href="http://{{frontpage}}" target="_self" class="frontpage-link">
-					<span class="arrow-left"></span><p>Frontpage</p>
+					<span class="arrow-left"></span><span>Frontpage</span>
 				</a>
 			</div>
 			<div class="logo-box">
 				<img class="logo" src="/images/logo.png">
 			</div>
 			<div class="uni-bottom-box" data-ng-show="user._id && !user.isDemo">
-				<div class="user-box">
-					<img class="user-image" src="pages/images/profilepicture.png" height="50" width="50">
-					<div class="user-text">
-						<div class="user-name" data-ng-bind-html="user.firstname + ' ' + user.lastname"></div>
-						<div class="user-links">
-							<a data-ng-click="showSettings = !showSettings">Settings</a>
-							<span>|</span>
-							<a href="/logout">Log out</a>
-						</div>
+				<img class="user-image" src="pages/images/profilepicture.png" height="50" width="50">
+				<div class="user-text">
+					<div class="user-name" data-ng-bind-html="user.firstname + ' ' + user.lastname"></div>
+					<div class="user-links">
+						<a data-ng-click="showSettings = !showSettings">Settings</a>
+						<span>|</span>
+						<a href="/logout">Log out</a>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="user-settings" data-ng-show="showSettings && !user.isDemo">
-			<div class="user-box">
+			<div class="clearfix">
 					<img class="user-image" src="pages/images/profilepicture.png" height="100" width="100">
 					<div class="settings-text">
 						<div class="user-name settings" data-ng-bind-html="user.firstname"></div>
@@ -47,7 +45,8 @@
 						<input type="password" id="current-password" name="currentPassword" data-ng-model="password" data-ng-class="{ 'has-error' : editPasswordForm.currentPassword.$invalid && passwordSubmitted }" placeholder="Current" data-ng-minlength="6" required>
 						<input type="password" id="new-password" name="newPassword" data-ng-model="newPassword" data-ng-class="{ 'has-error' : editPasswordForm.newPassword.$invalid && passwordSubmitted }" placeholder="New" data-ng-minlength="6" required>
 						<input type="password" id="new-retype-password" name="newPasswordRetype" data-ng-model="newPasswordRetype" data-ng-class="{ 'has-error' : editPasswordForm.newPasswordRetype.$invalid && passwordSubmitted }" placeholder="Retype New" data-ng-minlength="6" required>
-						<button type="submit" class="button">Save Changes</button>
+						<button type="submit" class="button margin-top">Save Changes</button>
+						<button data-ng-click="cancelUpdatePassword()" class="button secondary margin-top">Cancel</button>
 					</form>
 				</div>
 				<div class="edit-newsletter" data-ng-show="!editPassword">
@@ -56,12 +55,13 @@
 				<div class="edit-archived" data-ng-show="!editPassword">
 					<input type="checkbox" data-ng-model="user.showArchived">Show Archived
 				</div>
-				<button data-ng-click="updateUser()" class="button" data-ng-show="!editPassword">Save Changes</button>
+				<button data-ng-click="updateUser()" class="button margin-top" data-ng-show="!editPassword">Save Changes</button>
+				<button data-ng-click="cancelUpdateUser()" class="button secondary margin-top" data-ng-show="!editPassword">Cancel</button>
 			</div>
 		</div>
 	</section>
 
-	<section class="section-projects-container">
+	<section class="section-projects-container clearfix">
 		<div class="projects-title">Ebooks</div>
 
 		<div class="section-projects">
@@ -71,7 +71,7 @@
 					<div class="arrow"></div>
 				</a>
 
-				<a data-ng-href="#/project?pid={{project._id}}" class="project-link" data-ng-hide="project.editingProjectTitle" data-ng-class="{ 'show-all' : $index == selectedProjectHover && !project.editingProjectTitle && $index != selectedProjectOptions }">
+				<a data-ng-href="#/project?pid={{project._id}}" class="project-link" data-ng-hide="project.editingProjectTitle" data-ng-class="{ 'show-all' : $index == selectedProjectHover && !project.editingProjectTitle && $index != selectedProjectOptions && !project.archived }">
 					{{project.name}}
 				</a>
 				<div class="project-link show-more" data-ng-hide="$index == selectedProjectHover || project.editingProjectTitle || project.name.length < 29">
@@ -90,8 +90,8 @@
 				</div>
 			</div>
 
-			<div class="feedback fixed-position" data-ng-click="openFeedback()">
-				<img src="pages/images/feedback.svg" width="20" />
+			<div class="feedback" data-ng-click="openFeedback()">
+				Talk
 			</div>
 		</div>
 	</section>

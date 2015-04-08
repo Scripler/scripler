@@ -72,6 +72,9 @@ var ProjectSchema = new Schema({
 	modified: { type: Date, default: Date.now },
 	images: [
 		{ type: Schema.Types.ObjectId, ref: 'Image' }
+	],
+	deletedImages: [
+		{ type: Schema.Types.ObjectId, ref: 'Image' }
 	]
 });
 

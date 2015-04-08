@@ -15,7 +15,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		$scope.showRegistrationInfoBar = true;
 		$scope.user = {};
 
-		$scope.$onRootScope('user:updated', function( event, user ) {
+		$scope.$onRootScope('user:updated', function(event, user) {
 			if (user.isDemo) {
 				$scope.demoUser = user;
 			} else {
@@ -26,7 +26,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 			}
 		});
 
-		$scope.$onRootScope('login:failed', function( event ) {
+		$scope.$onRootScope('login:failed', function(event) {
 				var demoId = Date.now();
 				var password = utilsService.createRandomString(10);
 				$scope.demoUser = {
@@ -49,7 +49,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 
 		// TODO: this check should include if user.emailVerified and user.isDemo
 		$scope.showRegistrationBar = function(status) {
-			if ( status == 'hide' ) {
+			if (status == 'hide') {
 				$scope.showRegistrationInfoBar = false;
 			}
 			else {
@@ -57,11 +57,11 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 			}
 		};
 
-		$scope.$onRootScope('ckDocument:dataReady', function( event ) {
+		$scope.$onRootScope('ckDocument:dataReady', function(event) {
 			var editableBody = document.getElementById('cke_bodyeditor');
 			var iframe = editableBody.getElementsByTagName('iframe')[0];
 			var iDoc = iframe.contentWindow || iframe.contentDocument;
-			if ( iDoc.document ) {
+			if (iDoc.document) {
 				iDoc = iDoc.document;
 				iDoc.addEventListener('copy', $scope.copySelection);
 				iDoc.addEventListener('cut', $scope.copySelection);
@@ -72,7 +72,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 			var editor = $rootScope.ck;
 			var selection = editor.getSelection();
 			var selectedRanges = selection.getRanges();
-			var bookmarks = selectedRanges.createBookmarks2( false );
+			var bookmarks = selectedRanges.createBookmarks2(false);
 			var startElement = selection.getStartElement();
 			var range = selectedRanges[0];
 			var elName = 'div';
@@ -80,45 +80,45 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 			var boundryNodes = range.getBoundaryNodes();
 
 			//if one line selected then add original tags of the value
-			if ( boundryNodes.startNode.equals( boundryNodes.endNode ) ) {
+			if (boundryNodes.startNode.equals(boundryNodes.endNode)) {
 				elName = startElement.getName();
 				isOneLine = true;
 			}
 
-			var el = editor.document.createElement( elName );
-			el.append( range.cloneContents() );
+			var el = editor.document.createElement(elName);
+			el.append(range.cloneContents());
 
-			if ( isOneLine ) {
-				if ( startElement.hasAttribute( 'class' ) ) {
-					el.addClass( startElement.getAttribute( 'class' ) );
+			if (isOneLine) {
+				if (startElement.hasAttribute('class')) {
+					el.addClass(startElement.getAttribute('class'));
 				}
 			}
 
 			$scope.copiedElement = el;
 
 			$rootScope.ck.focus();
-			selectedRanges.moveToBookmarks( bookmarks );
-			selection.selectRanges( selectedRanges );
+			selectedRanges.moveToBookmarks(bookmarks);
+			selection.selectRanges(selectedRanges);
 		}
 
 		$scope.registerUser = function(user, next) {
-			$http.post('/user/register', angular.toJson( user ) )
-				.success( function( data ) {
-					$http.post('/user/login/', angular.toJson( user ) )
-						.success( function( data ) {
+			$http.post('/user/register', angular.toJson(user))
+				.success(function(data) {
+					$http.post('/user/login/', angular.toJson(user))
+						.success(function(data) {
 							next();
 						});
 				})
-				.error( function( data ) {
+				.error(function(data) {
 					next(data.errorDetails || 'Could not register user');
 				});
 		}
 		$scope.resendUserVerificationEmail = function() {
 			$http.post('/user/resend-verify-email')
-				.success( function(data) {
+				.success(function(data) {
 					$scope.verificationEmailSent = true;
 				})
-				.error( function(data) {
+				.error(function(data) {
 
 				});
 		}
@@ -148,14 +148,14 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		}
 }]);
 
-app.config( function( $routeProvider, $httpProvider, $provide ) {
+app.config( function($routeProvider, $httpProvider, $provide) {
 
-	$provide.decorator( '$rootScope', [ '$delegate' , function( $delegate ) {
+	$provide.decorator('$rootScope', [ '$delegate' , function($delegate) {
 
-		Object.defineProperty( $delegate.constructor.prototype, '$onRootScope', {
-			value: function( name, listener ){
-				var unsubscribe = $delegate.$on( name, listener );
-				this.$on( '$destroy', unsubscribe );
+		Object.defineProperty($delegate.constructor.prototype, '$onRootScope', {
+			value: function(name, listener){
+				var unsubscribe = $delegate.$on(name, listener);
+				this.$on('$destroy', unsubscribe);
 			},
 			enumerable: false
 		});
@@ -163,11 +163,11 @@ app.config( function( $routeProvider, $httpProvider, $provide ) {
 		return $delegate;
 	}]);
 
-	var isLoggedIn = [ '$q', '$http', '$timeout', '$rootScope', 'userService',
-		function( $q, $http, $timeout, $rootScope, userService ) {
+	var isLoggedIn = ['$q', '$http', '$timeout', '$rootScope', 'userService',
+		function($q, $http, $timeout, $rootScope, userService) {
 			var deferred = $q.defer();
 
-			$http.get( '/user' )
+			$http.get('/user')
 				.success(function(data) {
 					if (data.user) {
 						userService.setUser(data.user);
@@ -196,7 +196,7 @@ app.config( function( $routeProvider, $httpProvider, $provide ) {
 	}]
 
 	$routeProvider
-		.when('/', { templateUrl:'pages/project-space.html', controller: projectSpaceController,
+		.when('/', { templateUrl:'pages/create.html', controller: createController,
 					resolve: { user: isLoggedIn }
 					})
 		.when('/project', { templateUrl:'pages/project.html', controller: projectController,
@@ -206,27 +206,27 @@ app.config( function( $routeProvider, $httpProvider, $provide ) {
 		.otherwise({ redirectTo:'/' });
 });
 
-app.service('projectsService', function( $http, $q ) {
+app.service('projectsService', function($http, $q) {
 	var projects = [];
 	return {
-		getList: function( user ) {
+		getList: function(user) {
 			projects = [];
 
 			$http.get('/project/list')
-				.success( function( data ) {
-					angular.forEach(data.projects, function( project ) {
-						projects.push( project );
+				.success( function(data) {
+					angular.forEach(data.projects, function(project) {
+						projects.push(project);
 					})
 				});
 
 			return projects;
 		},
-		getProject: function( projectId ) {
+		getProject: function(projectId) {
 			var deferred = $q.defer();
 
-			$http.get( '/project/' + projectId )
-				.success( function( data ) {
-					deferred.resolve( data.project );
+			$http.get('/project/' + projectId)
+				.success(function(data) {
+					deferred.resolve(data.project);
 				})
 
 			return deferred.promise;
@@ -234,7 +234,7 @@ app.service('projectsService', function( $http, $q ) {
 	}
 })
 
-app.service('userService', function( $rootScope, $http ) {
+app.service('userService', function($rootScope, $http) {
 	var user = {};
 
 	return {
@@ -250,7 +250,7 @@ app.service('userService', function( $rootScope, $http ) {
 		},
 		updateUser: function(user, next) {
 			var self = this;
-			$http.put( '/user', angular.toJson(user) )
+			$http.put('/user', angular.toJson(user))
 				.success( function(data) {
 					self.setUser(data.user);
 					if (next) {
@@ -295,17 +295,55 @@ app.filter('filterTruncation', function () {
     };
 })
 
-app.directive('onClickChangeText', function( $timeout, $parse ) {
+app.directive('confirmSaveOnExit', function($window, $location, $route) {
+	return {
+		link: function(scope, elem, attrs) {
+
+			function confirmSaveChanges(event) {
+				var updateProjectDocumentPromise = scope.updateProjectDocument();
+				updateProjectDocumentPromise.then(function() {
+					return true;
+				}, function() {
+					event.preventDefault();
+				});
+			}
+
+			$window.onbeforeunload = function(event){
+				if ($location.path() === "/project" && !scope.lastSaved) {
+					var message = 'If you leave this page you are going to lose all unsaved changes, are you sure you want to leave?';
+					if (typeof event == 'undefined') {
+						event = $window.event;
+					}
+					if (event) {
+						event.returnValue = message;
+				    }
+
+				    confirmSaveChanges(event);
+				    return message;
+				};
+			};
+
+			scope.$on('$locationChangeStart', function(event, next, current) {
+				if ($location.path() === "/") {
+					confirmSaveChanges(event);
+				};
+			});
+
+        }
+	};
+});
+
+app.directive('onClickChangeText', function($timeout, $parse) {
 	return {
 		link: function( scope, element, attrs ) {
 			element.bind('focus', function() {
-				if ( attrs.id === 'reg-name' ) {
+				if (attrs.id === 'reg-name') {
 					scope.registrationText = 'Type in your name...';
 				}
-				if ( attrs.id === 'reg-email' ) {
+				if (attrs.id === 'reg-email') {
 					scope.registrationText = 'Now your email. You can verify it shortly...';
 				}
-				if ( attrs.id === 'reg-password' ) {
+				if (attrs.id === 'reg-password') {
 					scope.registrationText = 'Nice. Now choose a good password.';
 				}
 
@@ -315,7 +353,7 @@ app.directive('onClickChangeText', function( $timeout, $parse ) {
 	};
 });
 
-app.directive('focusOn', function( $timeout, $parse ) {
+app.directive('focusOn', function($timeout, $parse) {
 	return {
 		link: function( scope, element, attrs ) {
 			var model = $parse( attrs.focusOn );
@@ -332,7 +370,7 @@ app.directive('focusOn', function( $timeout, $parse ) {
 
 app.directive('blurOnEnter', function() {
 	return function(scope, element, attributes) {
-		element.bind("keydown keypress", function( event ) {
+		element.bind("keydown keypress", function(event) {
 			if(event.which === 13) {
 				event.preventDefault();
 				element[0].blur();
@@ -341,7 +379,7 @@ app.directive('blurOnEnter', function() {
 	}
 });
 
-app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
+app.directive('ckEditor', function($window, $rootScope, $timeout) {
 	return {
 		require: '?ngModel',
 		link: function(scope, elm, attr, ngModel) {
@@ -350,17 +388,16 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				skin: 'scripler',
 				bodyId: 'scripler',
 				resize_enabled: false,
-				extraPlugins: 'scripler,floating-tools,lineHeight,texttransform,indent-right,indentations,scripler_pagebreak,imageScripler,linkScripler',
+				extraPlugins: 'scripler,floating-tools,lineHeight,texttransform,colordialog,colorbutton,indent-right,indentations,scripler_pagebreak,imageScripler,linkScripler',
 				floatingtools: 'Basic',
 				floatingtools_Basic: [
 					{ name: 'styles', items: [ 'Font' ] },
 					'/',
 					{ name: 'format', items: [ 'Format' ] },
 					'/',
-					'/',
 					{ name: 'fontstyles', items: [ 'FontSize', 'LineHeight' ] },
 					'/',
-					['Bold'], ['Italic'], ['Underline'], ['TransformTextToUppercase'], ['Subscript'], ['Superscript'],
+					['Bold'], ['Italic'], ['Underline'], ['TransformTextToUppercase'], ['Subscript'], ['Superscript'], 
 					'/',
 					['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'],
 					'/',
@@ -380,7 +417,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				contentsCss: ['ckeditor/contents.css', 'stylesets/non-editable.css'],
 				//Load css sheet via angualr here
 				toolbar: [
-					['Undo'], ['Redo'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['imageScripler'], ['linkScripler']
+					['Undo'], ['Redo'], ['Bold'], ['Italic'], ['Underline'], ['Strike'], ['TextColor'], ['BGColor'], ['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'], ['imageScripler'], ['linkScripler']
 				],
 				removeButtons: 'language,CreateDiv,Flash,Iframe'
 			});
@@ -388,75 +425,75 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 			if (!ngModel) return;
 
 			$rootScope.modelTimeout = null;
-			function timeOutModel( event ) {
-				if ( event.name === 'dataReady' ) {
+			function timeOutModel(event) {
+				if (event.name === 'dataReady') {
 					$rootScope.$emit('ckDocument:dataReady');
 				}
-				if ( event ) {
-					if ( event.data ) {
-						if ( event.data.keyCode !== 13 ) {
-							if ( $rootScope.modelTimeout ) {
-								$timeout.cancel( $rootScope.modelTimeout );
+				if (event) {
+					if (event.data) {
+						if (event.data.keyCode !== 13) {
+							if ($rootScope.modelTimeout) {
+								$timeout.cancel($rootScope.modelTimeout);
 							}
-							$rootScope.modelTimeout = $timeout( updateModel, 1000 );
+							$rootScope.modelTimeout = $timeout(updateModel, 1000);
 						}
 					}
 				}
 			}
 
 			function updateModel() {
-				if ( !scope.$$phase ) {
+				if (!scope.$$phase) {
 					scope.$apply(function() {
 						ngModel.$setViewValue(ck.getData());
 					});
 				}
 			}
 
-			ck.on('paste', function( event ) {
+			ck.on('paste', function(event) {
 				//TODO check for pasted value vs copiedElement
-				if ( scope.copiedElement ) {
+				if (scope.copiedElement) {
 					event.stop();
 
-					var el = scope.copiedElement.clone( true );
+					var el = scope.copiedElement.clone(true);
 					var headingsArray = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ];
 
-					if ( headingsArray.indexOf( el.getName() ) > -1 ) {
+					if (headingsArray.indexOf(el.getName()) > -1 ) {
 						el.$.id = 'id_' + Date.now();
 					}
 
-					if ( el.$.children.length > 0 ) {
-						for ( var i = 0; i < el.$.children.length; i++ ) {
+					if (el.$.children.length > 0) {
+						for (var i = 0; i < el.$.children.length; i++) {
 							var child = el.$.children[i];
 
-							if ( child.tagName === 'A' ) {
-								if ( child.hasAttribute( 'name' ) && child.hasAttribute( 'title' ) ) {
+							if (child.tagName === 'A') {
+								if (child.hasAttribute('name') && child.hasAttribute('title')) {
 									child.remove();
 								}
 							}
 
-							if ( child.tagName === 'IMG' ) {
-								if ( child.hasAttribute( 'class' ) ) {
-									if ( child.getAttribute( 'class' ) === 'cke_anchor' ) {
+							if (child.tagName === 'IMG') {
+								if (child.hasAttribute('class')) {
+									if (child.getAttribute('class') === 'cke_anchor') {
 										child.remove();
 									}
 								}
 							}
 
 							try {
-								if ( headingsArray.indexOf( child.nodeName.toLowerCase() ) > -1 ) {
+								if (headingsArray.indexOf(child.nodeName.toLowerCase()) > -1) {
 									child.id = Date.now() + i;
 								}
-							} catch ( e ) {
+							} catch (e) {
 								//anchor does not have getName method
 							}
 						}
 					}
 
-					ck.insertElement( el );
+					ck.insertElement(el);
 				}
 			});
-			ck.on('key', function( event ) { timeOutModel( event ); });
-			ck.on('dataReady', function( event ) { $rootScope.$emit('ckDocument:dataReady'); timeOutModel( event ); });
+			ck.on('key', function(event) { timeOutModel(event); });
+			ck.on('dataReady', function(event) { $rootScope.$emit('ckDocument:dataReady'); timeOutModel(event); });
 			/*ck.on('save', function() {
 				ngModel.$setViewValue(ck.getData());
 			});*/
@@ -466,7 +503,7 @@ app.directive('ckEditor', function( $window, $rootScope, $timeout ) {
 				$rootScope.$emit('ckDocument:renderFinished');
 			};
 
-			if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 ) {
+			if (CKEDITOR.env.ie && CKEDITOR.env.version < 9) {
 				CKEDITOR.tools.enableHtml5Elements( document );
 			}
 

@@ -169,7 +169,7 @@ exports.delete = function (req, res, next) {
 	var document = req.document;
 	var project = req.project;
 
-	if (req.user.level == "free" && document.type == "madewithscripler") {
+	if (!document_utils.canDeleteDocumentOfType(req.user.level, document.type)) {
 		return next({message: "Free users are not allowed to delete the \"made with scripler\" document", status: 402});
 	}
 
@@ -182,7 +182,7 @@ exports.delete = function (req, res, next) {
 
 		document.deleted = true;
 
-		// TODO: also delete the document's stylesets and styles since these are copies?
+		// Deletion of other resources, e.g. stylesets or images, are handled in Project.delete()
 
 		// TODO: is this acceptable? How else can we filter out deleted documents from a folder? (c.f. Folder.open())
 		document.folderId = null;
@@ -264,7 +264,7 @@ exports.upload = function (req, res, next) {
 
 exports.applyStyleset = function (req, res, next) {
 	var stylesetToApply = req.styleset;
-	document_utils.applyStylesetToDocument(req.document, stylesetToApply, req.user.level, function(err, populatedStyleset) {
+	document_utils.applyStylesetToDocument(req.document, stylesetToApply, false, req.user.level, function(err, populatedStyleset) {
 		if (err) {
 			return next(err);
 		} else if (!populatedStyleset) {
