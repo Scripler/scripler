@@ -405,10 +405,16 @@ h2.feat{
 }
 
 @media (max-width:850px){ 
+
 	.navbar-toggle {
 		position: fixed;
 		top:-2px;
 		right:-5px;
+		z-index: 50;
+		border: solid;
+		border-width: 1px;
+		border-color: #000;
+		background-color: #FFF;
 	}
 	#navbar{
 		position: fixed;
@@ -421,7 +427,7 @@ h2.feat{
 		min-height: 100vh;
 	}
 	#login-form{
-		margin-top: 30vh;
+		margin-top: 20vh;
 	}
 	.features{
 	height: 100%;
@@ -436,6 +442,12 @@ h2.feat{
 	a.navbar-brand{
 	font-size: 2em;
 	font-weight: 700;
+	}
+	a#forgot-password{
+		font-size: 1.5em;
+	}
+	#remember-me-box>label{
+		font-size: 1.5em;
 	}
 	nav {
 
@@ -468,4 +480,5 @@ h2.feat{
 	form.login-form{
 		margin:0;
 	}
+
 }

@@ -117,13 +117,25 @@ $(document).ready(function() {
             }
         }
     });
-    if(documentwidth<850){
-        $('li.menu-login>a').click(function(){
-                    $('#login').css("display", "block");
-                });
-        $('li.navpoint>a').click(function(){
-            $('#navbar').css("display", "none");
+    if (documentwidth < 850) {
+        $('li.menu-login>a').click(function() {
+            $('#login').css("display", "block");
+            $('#login').css("z-index", "10");
         });
+        $('li.navpoint>a').click(function() {
+            $("button.navbar-toggle").attr("aria-expanded", "false");
+            $('#navbar').removeClass("in");
+        });
+        $('button.navbar-toggle').click(function() {
+            if ($("button.navbar-toggle").attr("aria-expanded") == true) {
+                 $("button.navbar-toggle").attr("aria-expanded", false);
+            } else {
+                $("button.navbar-toggle").attr("aria-expanded", true) ;
+            }
+
+           // console.log($("button.navbar-toggle").attr("aria-expanded"));
+        });
+
     }
     var forgotPassword = false;
     var passwordWidth = $("#login-password").outerWidth(true);
