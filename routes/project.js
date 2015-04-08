@@ -52,7 +52,9 @@ exports.loadWithoutPremiumCheck = function (id) {
 	return function (req, res, next) {
 		// Avoiding global scope!
 		var idCopy = id || req.body.projectId;
-		Project.findOne({"_id": idCopy, "deleted": false}).exec(function (err, project) {
+		Project.findOne({"_id": idCopy, "deleted": false})
+			.populate({path: 'images'})
+			.exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
@@ -193,7 +195,7 @@ exports.delete = function (req, res, next) {
 	var project = req.project;
 
 	// "Delete" project from user
-	// TODO: when we implement collaboration, include "{multi: true}" in the User.update() below, because multiple users will "have" the same project
+	// TODO: when we implement collaboration, allow multiple user objects to be updated below, because multiple users will "have" the same project.
 	User.findOneAndUpdate({"_id": req.user._id}, {"$pull": {"projects": project._id}, "$push": {"deletedProjects": project._id}}, function (err, user) {
 		if (err) {
 			return next(err);
@@ -201,179 +203,177 @@ exports.delete = function (req, res, next) {
 
 		logger.info('Deleted project ' + project.name + ' from user');
 
-		user.save(function (err) {
-			if (err) {
-				return next(err);
-			}
+		Document.find({projectId: project._id}).populate({"path": "stylesets"}).exec(function (err, documents) {
+			var deleteDocument = function (document, documentCallback) {
+				if (!document_utils.canDeleteDocumentOfType(user.level, document.type)) {
+					return documentCallback("Free users are not allowed to delete the \"made with scripler\" document");
+				}
 
-			Document.find({projectId: project._id}).populate({"path": "stylesets"}).exec(function (err, documents) {
-				var deleteDocument = function (document, documentCallback) {
+				// "Delete" documents from project
+				Project.findOneAndUpdate({"_id": project._id}, {"$pull": {"documents": document._id}, "$push": {"deletedDocuments": document._id}}, function (err, project) {
+					if (err) {
+						return documentCallback(err);
+					}
 
-					// "Delete" documents from project
-					Project.findOneAndUpdate({"_id": project._id}, {"$pull": {"documents": document._id}, "$push": {"deletedDocuments": document._id}}, function (err, project) {
+					logger.debug('Deleted document ' + document.name + ' from project ' + project.name);
+
+					document.deleted = true;
+					document.save(function (err) {
 						if (err) {
 							return documentCallback(err);
 						}
 
-						logger.debug('Deleted document ' + document.name + ' from project ' + project.name);
+						logger.debug('Marked document ' + document.name + ' as deleted');
 
-						document.deleted = true;
-						document.save(function (err) {
-							if (err) {
-								return documentCallback(err);
-							}
+						// "Delete" stylesets from document
+						var deleteStyleset = function (styleset, stylesetCallback) {
+							Document.findOneAndUpdate({"_id": document._id}, {"$pull": {"stylesets": styleset._id}, "$push": {"deletedStylesets": styleset._id}}, function (err, document) {
+								if (err) {
+									return stylesetCallback(err);
+								}
 
-							logger.debug('Marked document ' + document.name + ' as deleted');
+								logger.debug('Deleted styleset ' + styleset.name + ' from document ' + document.name);
 
-							// "Delete" stylesets from document
-							var deleteStyleset = function (styleset, stylesetCallback) {
-								Document.findOneAndUpdate({"_id": document._id}, {"$pull": {"stylesets": styleset._id}, "$push": {"deletedStylesets": styleset._id}}, function (err, document) {
+								styleset.deleted = true;
+								styleset.save(function (err) {
 									if (err) {
 										return stylesetCallback(err);
 									}
 
-									logger.debug('Deleted styleset ' + styleset.name + ' from document ' + document.name);
+									logger.debug('Marked styleset ' + styleset.name + ' as deleted');
 
-									styleset.deleted = true;
-									styleset.save(function (err) {
-										if (err) {
-											return stylesetCallback(err);
-										}
+									// "Delete" styles from styleset
+									var deleteStyle = function (style, styleCallback) {
+										Styleset.findOneAndUpdate({"_id": styleset._id}, {"$pull": {"styles": style._id}, "$push": {"deletedStyles": style._id}}, function (err, styleset) {
+											if (err) {
+												return styleCallback(err);
+											}
 
-										logger.debug('Marked styleset ' + styleset.name + ' as deleted');
+											logger.debug('Deleted style ' + style.name + ' from styleset ' + styleset.name);
 
-										// "Delete" styles from styleset
-										var deleteStyle = function (style, styleCallback) {
-											Styleset.findOneAndUpdate({"_id": styleset._id}, {"$pull": {"styles": style._id}, "$push": {"deletedStyles": style._id}}, function (err, styleset) {
+											style.deleted = true;
+											style.save(function (err) {
 												if (err) {
 													return styleCallback(err);
 												}
 
-												logger.debug('Deleted style ' + style.name + ' from styleset ' + styleset.name);
-
-												style.deleted = true;
-												style.save(function (err) {
-													if (err) {
-														return styleCallback(err);
-													}
-
-													logger.debug('Marked style ' + style.name + ' as deleted');
-													return styleCallback();
-												});
+												logger.debug('Marked style ' + style.name + ' as deleted');
+												return styleCallback();
 											});
-										};
+										});
+									};
 
-										logger.debug('Styleset ' + styleset.name + ' has ' + styleset.styles.length + ' styles');
+									logger.debug('Styleset ' + styleset.name + ' has ' + styleset.styles.length + ' styles');
 
-										Styleset.findOne({"_id": styleset._id}).populate({"path": "styles"}).exec(function (err, populatedStyleset) {
+									Styleset.findOne({"_id": styleset._id}).populate({"path": "styles"}).exec(function (err, populatedStyleset) {
+										if (err) {
+											return stylesetCallback(err);
+										}
+
+										async.each(populatedStyleset.styles, deleteStyle, function (err) {
 											if (err) {
 												return stylesetCallback(err);
 											}
 
-											async.each(populatedStyleset.styles, deleteStyle, function (err) {
-												if (err) {
-													return stylesetCallback(err);
-												}
-
-												logger.debug("Deleted ALL styles from styleset " + populatedStyleset.name)
-												return stylesetCallback();
-											});
+											logger.debug("Deleted ALL styles from styleset " + populatedStyleset.name)
+											return stylesetCallback();
 										});
 									});
 								});
+							});
 
-							};
+						};
 
-							logger.debug('Document ' + document.name + ' has ' + document.stylesets.length + ' stylesets');
+						logger.debug('Document ' + document.name + ' has ' + document.stylesets.length + ' stylesets');
 
-							async.each(document.stylesets, deleteStyleset, function (err) {
+						async.each(document.stylesets, deleteStyleset, function (err) {
+							if (err) {
+								return documentCallback(err);
+							}
+
+							logger.debug("Deleted ALL stylesets from document " + document.name);
+							return documentCallback();
+						});
+					});
+				});
+			};
+
+			async.each(documents, deleteDocument, function (err) {
+				if (err) {
+					return next(err);
+				}
+
+				logger.debug("Deleted ALL documents from project " + project.name);
+
+				var totalImageBytesDeleted = 0;
+
+				var deleteImage = function(image, imageCallback) {
+					Project.findOneAndUpdate({"_id": project._id}, {"$pull": {"images": image._id}, "$push": {"deletedImages": image._id}}, function (err, project) {
+						if (err) {
+							return imageCallback(err);
+						}
+
+						logger.debug('Deleted image ' + image.name + ' from project ' + project.name);
+
+						// Physically delete image, c.f. comment in #923
+						var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
+						var imagesSourceDir = path.join(projectDir, conf.epub.imagesDir);
+						var imageFilename = path.join(imagesSourceDir, image.name);
+
+						fs.stat(imageFilename, function (err, stats) {
+							if (err) {
+								return imageCallback(err);
+							}
+
+							// Decrease user's limit
+							totalImageBytesDeleted += stats["size"];
+
+							fs.unlink(imageFilename, function (err) {
 								if (err) {
-									return documentCallback(err);
+									return imageCallback(err);
 								}
 
-								logger.debug("Deleted ALL stylesets from document " + document.name);
-								return documentCallback();
+								logger.debug('Physically deleted image ' + imageFilename);
+
+								image.deleted = true;
+								image.save(function (err) {
+									if (err) {
+										return imageCallback(err);
+									}
+
+									logger.debug('Marked image ' + image.name + ' as deleted');
+									return imageCallback();
+								});
 							});
 						});
 					});
 				};
 
-				async.each(documents, deleteDocument, function (err) {
+				async.each(project.images, deleteImage, function (err) {
 					if (err) {
 						return next(err);
 					}
 
-					logger.debug("Deleted ALL documents from project " + project.name);
+					logger.debug("Deleted ALL images from project " + project.name);
 
-					var deleteImage = function(image, imageCallback) {
-						Project.findOneAndUpdate({"_id": project._id}, {"$pull": {"images": image._id}, "$push": {"deletedImages": image._id}}, function (err, project) {
-							if (err) {
-								return imageCallback(err);
-							}
+					user.storageUsed -= totalImageBytesDeleted;
+					user.save(function (err) {
+						if (err) {
+							return imageCallback(err);
+						}
 
-							logger.debug('Deleted image ' + image.name + ' from project ' + project.name);
+						// Don't use 2's complement since our config storage sizes are not
+						console.log('Decreased user\'s used storage. User now uses ' + user.storageUsed/1000000 + '/' + conf.subscriptions[user.level].storage/1000000 + ' MB.');
 
-							// Physically delete image, c.f. comment in #923
-							var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
-							var imagesSourceDir = path.join(projectDir, conf.epub.imagesDir);
-							var imageFilename = path.join(imagesSourceDir, image.name);
-
-							fs.stat(imageFilename, function (err, stats) {
-								if (err) {
-									return imageCallback(err);
-								}
-
-								// Decrease user's limit
-								var imageSizeInBytes = stats["size"];
-								user.storageUsed -= imageSizeInBytes;
-								user.save(function (err) {
-									if (err) {
-										return imageCallback(err);
-									}
-
-									// Don't use 2's complement since our config storage sizes are not
-									logger.debug('Decreased user\'s used storage. User now uses ' + user.storageUsed/1000000 + '/' + conf.subscriptions[user.level].storage/1000000 + ' MB.');
-
-									fs.unlink(imageFilename, function (err) {
-										if (err) {
-											return imageCallback(err);
-										}
-
-										logger.debug('Physically deleted image ' + imageFilename);
-
-										image.deleted = true;
-										image.save(function (err) {
-											if (err) {
-												return imageCallback(err);
-											}
-
-											logger.debug('Marked image ' + image.name + ' as deleted');
-											return imageCallback();
-										});
-									});
-								});
-							});
-						});
-					};
-
-					Project.findOne({"_id": project._id}).populate({"path": "images"}).exec(function (err, populatedProject) {
-						async.each(populatedProject.images, deleteImage, function (err) {
+						project.deleted = true;
+						project.save(function (err) {
 							if (err) {
 								return next(err);
 							}
 
-							logger.debug("Deleted ALL images from project " + project.name);
+							logger.info("Finished deleting project " + project.name);
 
-							project.deleted = true;
-							project.save(function (err) {
-								if (err) {
-									return next(err);
-								}
-
-								logger.info("Finished deleting project " + project.name);
-
-								res.send({});
-							});
+							res.send({});
 						});
 					});
 				});
