@@ -157,7 +157,13 @@ function createController($scope, $http, projectsService, userService, $q, user,
 		}
 	};
 
+	$scope.storeTitle = function(project){
+		$scope.projectStoredName = project.name;
+	}
 	$scope.renameProject = function( project ) {
+		if (project.name===undefined){
+			project.name = $scope.projectStoredName;
+		}
 		if ( $scope.user || $scope.demoUser ) {
 			$http.put('/project/' + project._id + '/rename', angular.toJson( project ) )
 				.success( function() {
