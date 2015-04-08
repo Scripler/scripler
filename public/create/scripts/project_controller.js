@@ -431,11 +431,12 @@ function projectController($scope, $location, userService, projectsService, $htt
 						$scope.openProjectDocument(projectDocument);
 					}
 					projectDocument.editingProjectDocumentTitle = false;
-					$scope.focusEditor();
+					
 				});
 		} else {
 			//TODO save to localstorage
 		}
+		$scope.focusEditor();
 	};
 
 	$scope.selectedProjectDocument = -1;
