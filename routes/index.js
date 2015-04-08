@@ -7,6 +7,7 @@ var frontpage = require('./frontpage')
 	, style = require('./style')
 	, image = require('./image')
 	, font = require('./font')
+	, payment = require('./payment')
 	, utils = require('../lib/utils');
 
 module.exports = function (app, auth) {
@@ -69,7 +70,7 @@ module.exports = function (app, auth) {
 	app.post('/styleset', auth.isLoggedIn(), styleset.create);
 	app.get('/styleset/archived', auth.isLoggedIn(), styleset.archived); // This path must come before paths with variables
 	app.get('/style/archived', auth.isLoggedIn(), style.archived); // This path must come before paths with variables
-	app.get('/styleset/:stylesetId', auth.isLoggedIn(), styleset.open);
+	app.get('/styleset/:stylesetIdPopulated', auth.isLoggedIn(), styleset.open);
 	app.post('/style', auth.isLoggedIn(), styleset.load(), style.create);
 	app.get('/style/:styleId', auth.isLoggedIn(), style.open);
 	app.put('/styleset/:stylesetIdPopulated/update', auth.isLoggedIn(), styleset.update);
@@ -79,10 +80,20 @@ module.exports = function (app, auth) {
 	app.put('/styleset/:stylesetId/unarchive', auth.isLoggedIn(), styleset.unarchive);
 	app.put('/style/:styleId/archive', auth.isLoggedIn(), style.archive);
 	app.put('/style/:styleId/unarchive', auth.isLoggedIn(), style.unarchive);
-	app.put('/styleset/:stylesetId/project/:projectIdPopulated', auth.isLoggedIn(), project.applyStyleset);
-	app.put('/styleset/:stylesetId/document/:documentId', auth.isLoggedIn(), document.applyStyleset);
+	app.put('/styleset/:stylesetIdPopulated/project/:projectIdPopulated', auth.isLoggedIn(), project.applyStyleset);
+	app.put('/styleset/:stylesetIdPopulated/document/:documentId', auth.isLoggedIn(), document.applyStyleset);
 	app.get('/document/:documentIdPopulatedStylesets/stylesets', auth.isLoggedIn(), document.listStylesets);
 	app.post('/font', auth.isLoggedIn(), font.create);
+
+	/* Payment */
+	app.get('/payment/token', auth.isLoggedIn(), payment.token);
+	app.post('/payment/subscription', auth.isLoggedIn(), payment.create_subscription);
+	app.delete('/payment/subscription', auth.isLoggedIn(), payment.cancel_subscription);
+	app.post('/payment/transaction', auth.isLoggedIn(), payment.transaction);
+	app.post('/payment/transaction/styleset/:stylesetId', auth.isLoggedIn(), payment.transaction);
+
+	app.get('/payment/webhook', payment.initWebhook);
+	app.post('/payment/webhook', payment.webhook);
 
 	/* API Output */
 	app.get('/project/:projectIdPopulatedFull/compile', auth.isLoggedIn(), project.compile);

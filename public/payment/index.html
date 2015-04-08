@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="css/demo.css" />
+		<link rel="stylesheet" type="text/css" href="css/dialog.css" />
+		<link rel="stylesheet" type="text/css" href="css/dialog-ricky.css" />
+		<link rel="stylesheet" type="text/css" href="css/payment.css" />
+		<link rel="stylesheet" type="text/css" href="css/loading.css" />
+
+		<script src="js/jquery.js"></script>
+		<script src="js/jquery.payment.js"></script>
+		<script src="js/modernizr.custom.js"></script>
+		<script src="//js.braintreegateway.com/v2/braintree.js"></script>
+		<script src="js/classie.js"></script>
+		<script src="js/dialogFx.js"></script>
+		<script>
+			$( document ).ready(function() {
+
+				// Init Braintree
+				$.ajax({
+					url: '/payment/token',
+					type: 'GET',
+					dataType: 'json',
+					success: function (data) {
+						if (data && data.token) {
+
+							var client = new braintree.api.Client({clientToken: data.token});
+
+							$( "#checkout" ).submit(function( event ) {
+								console.log( "Submitting payment form" );
+								var expiry = $('#cc-exp').val().replace(/\s/g, '');
+								var ccNumber = $('#cc-num').val();
+								var cvv = $('#cc-cvc').val();
+								$('.loading-animation').show();
+								client.tokenizeCard({number: ccNumber, expirationDate: expiry, cvv: cvv}, function (err, nonce) {
+									console.log(nonce);
+
+									$.ajax({
+										url: '/payment/subscription',
+										type: 'POST',
+										data: {"payment_method_nonce": nonce},
+										dataType: 'json',
+										success: function (data) {
+											console.log("Success!");
+											if (dlg.isOpen) {
+												dlg.toggle();
+											}
+											$('.loading-animation').hide();
+										},
+										error: function (request, status, error) {
+											console.log("Error: " + error);
+											$('.loading-animation').hide();
+										}
+									});
+								});
+
+								event.preventDefault();
+							});
+
+						} else {
+							console.log("Data error: ");
+							console.log(data);
+
+						}
+					},
+					error: function (request, status, error) {
+						console.log("Error: " + error);
+					}
+				});
+
+				// dialogFx:
+				// from http://tympanus.net/codrops/2014/12/08/inspiration-dialog-effects/
+				var dlgtrigger = document.querySelector( '[data-dialog]' ),
+						somedialog = document.getElementById( dlgtrigger.getAttribute( 'data-dialog' ) ),
+						dlg = new DialogFx( somedialog );
+
+				dlgtrigger.addEventListener( 'click', dlg.toggle.bind(dlg) );
+
+				// Payment:
+				// from http://gosseti.com/demos/a-better-card-payment-form
+				// based on jquery.payment
+				$(".cc-num").payment("formatCardNumber");
+				$(".cc-exp").payment("formatCardExpiry");
+				$(".cc-cvc").payment("formatCardCVC");
+
+				var validateDetails = function() {
+					// set variables for the expiry date validation, cvc validation and expiry date 'splitter'
+					var expiry = $.payment.cardExpiryVal($('#cc-exp').val());
+					var validateCCNum = $.payment.validateCardNumber($('#cc-num').val());
+					var cardType = $.payment.cardType($('#cc-num').val());
+					var validateExpiry = $.payment.validateCardExpiry(expiry["month"], expiry["year"]);
+					var validateCVC = $.payment.validateCardCVC($('#cc-cvc').val(), cardType);
+					// if statement on whether the card’s expiry is valid or not
+					if (validateExpiry) {
+						// if the expiry is valid add the identified class
+						$('#cc-exp').addClass('identified');
+					} else {
+						// remove again if the expiry becomes invalid
+						$('#cc-exp').removeClass('identified');
+					}
+					// if statement on whether the card’s cvc is valid or not
+					if (validateCVC) {
+						// if the cvc is valid add the identified class
+						$('#cc-cvc').addClass('identified');
+					} else {
+						// remove again if the cvc becomes invalid
+						$('#cc-cvc').removeClass('identified');
+					}
+					if (validateCCNum) {
+						$('#cc-num').addClass('identified');
+					} else {
+						$('#cc-num').removeClass('identified');
+					}
+					if (validateCCNum && validateExpiry && validateCVC) {
+						$("#submitButtoon").prop('disabled', false);
+					} else {
+						$("#submitButtoon").prop('disabled', true);
+					}
+				}
+				// this runs the above function every time stuff is entered into the card inputs
+				$('.paymentInput').bind('change paste keyup', function() {
+					validateDetails();
+				});
+
+			});
+
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="content">
+                <div class="button-wrap"><button data-dialog="somedialog" class="trigger">Open Dialog</button></div>
+				
+				<div id="somedialog" class="dialog">
+					<div class="dialog__overlay"></div>
+					<div class="dialog__content">
+						<h2><strong>Howdy</strong>, plz give me money</h2>
+						<figure class="payment">
+							<div class="paymentInfo">
+							  <p class="paymentInfo__total">Your card will be charged: <span class="paymentInfo__price">£9.99</span>/month</p>
+							</div>
+
+							<form accept-charset="UTF-8" id="checkout" class="cardInfo" method="post">
+								<fieldset class="cardInfo__cardDetails">
+
+									<div class="form-row cardInfo__cc-num">
+										<label for="cc-num"><abbr title="required">*</abbr><span>Card Number</span></label>
+										<div class="cc-num__wrap">
+											<input data-braintree-name="number" id="cc-num" type="tel" class="paymentInput cc-num" placeholder="•••• •••• •••• ••••" autocompletetype="cc-number" required="required" />
+											<span class="card" aria-hidden="true"></span>
+										</div>
+									</div>
+
+									<div class="form-row cardInfo__cc-exp">
+										<label for="cc-exp"><abbr title="required">*</abbr><span>Expires</span></label>
+										<input data-braintree-name="expiration_date" id="cc-exp" type="tel" class="paymentInput cc-exp" placeholder="MM / YY" autocompletetype="cc-exp" required="required" />
+									</div>
+
+									<div class="form-row cardInfo__cc-cvc">
+										<label for="cc-cvc"><abbr title="required">*</abbr><span>CVC</span></label>
+										<input data-braintree-name="cvv" id="cc-cvc" type="tel" class="paymentInput cc-cvc" placeholder="CVC" autocompletetype="cc-cvc" required="required" />
+									</div>
+
+									<div class="cardInfo__submission">
+										<input disabled="disabled" id="submitButtoon" class="button" name="commit" type="submit" value="Subscribe" />
+										<a id="cancel-link" class="cancel-link" href="#" data-dialog-close>Cancel</a>
+									</div>
+
+								</fieldset>
+							</form>
+						</figure>
+
+						<div class="loading-animation">
+							<div class="loading-mask"></div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</body>
+</html>

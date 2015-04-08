@@ -42,12 +42,17 @@ describe('utils', function () {
 		nameParts = shared_utils.getNameParts(name);
 		assert.equal('Kenny', nameParts.firstname);
 		assert.equal(undefined, nameParts.lastname);
-	})
+	}),
 	it('cleanFilename', function () {
 		assert.equal(utils.cleanFilename("bla bla"), "blabla");
 		assert.equal(utils.cleanFilename("Hello123"), "Hello123");
 		assert.equal(utils.cleanFilename("helloæøå123"), "hello123");
 		assert.equal(utils.cleanFilename(",.-*¨´+:"), ".-");
+	}),
+	it('addDaysToDate', function () {
+		assert.equal(utils.addDaysToDate("2015-01-01", -1), "2014-12-31");
+		assert.equal(utils.addDaysToDate("2015-12-31", 1), "2016-01-01");
+		assert.equal(utils.addDaysToDate("2015-05-05", 10), "2015-05-15");
 	})
 }),
 describe('shared_utils', function () {

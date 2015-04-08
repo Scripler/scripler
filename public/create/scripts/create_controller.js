@@ -1,6 +1,6 @@
 'use strict'
 
-function projectSpaceController($scope, $http, projectsService, userService, $q, user, $location, utilsService) {
+function createController($scope, $http, projectsService, userService, $q, user, $location, utilsService) {
 	$scope.user = user;
 	$scope.showProjectOptions = false;
 	$scope.frontpage = $location.host();
@@ -43,6 +43,14 @@ function projectSpaceController($scope, $http, projectsService, userService, $q,
 			userService.updateUser( $scope.user );
 			$scope.showSettings = false;
 		}
+	}
+	$scope.cancelUpdateUser = function() {
+		$scope.showSettings = false;
+		$scope.editPassword = false;
+	}
+	$scope.cancelUpdatePassword = function() {
+		$scope.showSettings = true;
+		$scope.editPassword = false;
 	}
 
 	$scope.$onRootScope('user:registered', function( event, user ) {

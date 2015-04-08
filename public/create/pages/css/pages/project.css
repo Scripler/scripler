@@ -85,6 +85,9 @@
 	-moz-transform-style: preserve-3d;
 	transform-style: preserve-3d;
 }
+.menu-tab.feedback{
+	background: #c6c6c6;
+}
 .menu-tab img {
 	position: relative;
 	top: 50%;
@@ -213,7 +216,7 @@
 	height: 95px;
 	background: none #fefefe;
 	float: left;
-	border: 1px solid #ffff99;
+	border: 1px solid #e6e6e6;
 	box-shadow: 0px 5px 5px -5px #ccc;
 	cursor: pointer;
 }
@@ -386,7 +389,7 @@ textarea.renameProjectDocument, textarea.renameStyleset, textarea.renameStyle {
 	overflow: visible;
 }
 .typo.new {
-	border: 2px dashed #c6c6c6;
+	border: 2px dashed #e6e6e6;
 	text-align: center;
 }
 ul, li {
@@ -395,19 +398,29 @@ ul, li {
 	margin: 0;
 	padding: 0;
 }
-li.typo p {
+.typo p {
 	padding: 15px;
 	margin: 0;
-	border: 1px solid #000;
+	border: 1px solid #e6e6e6;
 	background: none #fff;
 }
-li.typo p:first-child {
+.typo.new p {
 	border: none;
+}
+.typo.open p {
+	border: 2px solid #000;
+}
+.typo.open .style.new p {
+	border: none;
+}
+
+.typo .typo-children-style p, .typo.open .typo-children-style p {
+	border: 0;
 }
 .typo-children-style {
 	position: relative;
 	background-color: #fff;
-	border: 1px solid #c6c6c6;
+	border: 1px solid #e6e6e6;
 	padding: 12px;
 	width: 90%;
 	margin: 0 auto;
@@ -418,9 +431,9 @@ li.typo p:first-child {
 
 .style.new {
 	width: 90%;
-	height: 40px;
 	text-align: center;
 	margin: 0 auto;
+	border: 2px dashed #e6e6e6;
 }
 .style.new p {
 	padding: 10px;
@@ -483,22 +496,12 @@ li.typo .style-copy-options p {
 	display: block;
 	text-align: center;
 }
-.left-menu-button, .right-menu-button {
-	display: inline-block;
-	width: 100%;
-	padding: 5px;
-	border: 1px solid #fff56c;
-	text-align: center;
-	cursor: pointer;
-}
-.right-menu-feature-title {
-	display: block;
+
+.menu-feature-title {
 	font-weight: bold;
 	line-height: 1.5em;
 }
-.right-menu-feature-text {
-	display: block;
-}
+
 .menu-box {
 	display: inline-block;
 	width: 100%;
@@ -506,85 +509,42 @@ li.typo .style-copy-options p {
 	border: 1px solid #efefef;
 	cursor: pointer;
 }
-.menu-box.center-text {
-	text-align: center;
-}
-.left-menu-parameter-margin, .right-menu-parameter-margin {
-	margin-top: 10px;
-}
-
 .menu-box.label {
 	position: relative;
 	display: block;
 	border: 0;
 	padding: 5px 0;
 }
+.menu-box.label.desc {
+	background: #efefef;
+	padding: 10px;
+	color: #999;
+}
 
 .menu-box.inputfield {
-	position: relative;
-	width: calc(100% - 36px);
-	padding: 0;
-	transition: all 1s;
-	-moz-transition: all 1s;
-	-ms-transition: all 1s;
-	-webkit-transition: all 1s;
-	-o-transition: all 1s;
-}
-/*left*/
-.menu-box.inputfield.full-size {
 	position: relative;
 	width: 100%;
 	height: 32px;
 	padding: 0;
-}
-.menu-box.inputfield.full-size-text {
-	position: relative;
-	width: 100%;
-	height: 64px;
-	padding: 0;
-}
-.menu-box.inputfield.text-saved {
-	border-color: yellow;
-	height: 56px;
-}
-.menu-box.inputfield.full-size-text.text-saved {
-	position: relative;
-	width: 100%;
-	height: 92px;
-	padding: 0;
-}
-.menu-box .statusfield {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	margin: 0 auto;
-	z-index: 1;
-	width: auto;
-	height: 28px;
-	color: black;
-	padding: 5px;
 	transition: all 1s;
 	-moz-transition: all 1s;
 	-ms-transition: all 1s;
 	-webkit-transition: all 1s;
 	-o-transition: all 1s;
 }
-.menu-box .statusfield.text-saved {
-	background: none yellow;
-	top: 28px;
+.menu-box.inputfield.textfield {
+	height: 64px;
 }
-.menu-box.inputfield.full-size-text .statusfield {
-	top: 34px;
+.menu-box.inputfield.text-saved {
+	border-color: yellow;
 }
-.menu-box.inputfield.full-size-text .statusfield.text-saved  {
-	top: 62px;
-}
+
 .menu-box.inputfield input, .menu-box.inputfield select {
 	position: absolute;
 	top: 0;
 	left: 0;
 	z-index: 2;
+	border: 0;
 	background: none white;
 	width: 100%;
 	height: 28px;
@@ -633,7 +593,7 @@ li.typo .style-copy-options p {
 	width: calc(50% - 10px);
 	background: none #fefefe;
 	float: left;
-	border: 1px solid #ffff99;
+	border: 1px solid #e6e6e6;
 	box-shadow: 0px 5px 5px -5px #ccc;
 	cursor: pointer;
 }
@@ -663,7 +623,7 @@ li.typo .style-copy-options p {
 	height: auto;
 	background: none #fefefe;
 	float: left;
-	border: 1px solid #ffff99;
+	border: 1px solid #e6e6e6;
 	box-shadow: 0px 5px 5px -5px #ccc;
 }
 .menu-left .insertOptionProperties.expanded {
@@ -678,7 +638,7 @@ li.typo .style-copy-options p {
 	margin: 0 0 0 10px;
 	padding: 16px;
 	background: none #fefefe;
-	border: 1px solid #ffff99;
+	border: 1px solid #e6e6e6;
 	box-shadow: 0px 5px 5px -5px #ccc;
 }
 .outputOptionDownload {
