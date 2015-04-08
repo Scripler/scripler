@@ -117,7 +117,26 @@ $(document).ready(function() {
             }
         }
     });
+    if (documentwidth < 850) {
+        $('li.menu-login>a').click(function() {
+            $('#login').css("display", "block");
+            $('#login').css("z-index", "10");
+        });
+        $('li.navpoint>a').click(function() {
+            $("button.navbar-toggle").attr("aria-expanded", "false");
+            $('#navbar').removeClass("in");
+        });
+        $('button.navbar-toggle').click(function() {
+            if ($("button.navbar-toggle").attr("aria-expanded") == true) {
+                $("button.navbar-toggle").attr("aria-expanded", false);
+            } else {
+                $("button.navbar-toggle").attr("aria-expanded", true);
+            }
 
+            // console.log($("button.navbar-toggle").attr("aria-expanded"));
+        });
+
+    }
     var forgotPassword = false;
     var passwordWidth = $("#login-password").outerWidth(true);
     $("#forgot-password").on("click", function(event) {
@@ -132,10 +151,11 @@ $(document).ready(function() {
                 "margin": 0
             }, animationTime);
             //$("#login-email").animate({ "width": "+=" + emailExtraWidth }, animationTime);
-            if (documentWidth > 850) {
+            if (documentwidth > 850) {
                 $("#login-form").animate({
                     "marginLeft": newMargin
                 }, animationTime);
+
             }
             $("#remember-me-box").fadeOut(animationTime);
             setTimeout(function() {
@@ -177,7 +197,6 @@ $(document).ready(function() {
 
         // Switch login-article from login-form to password-reset-form, and display immediately
         //$("#login").css("paddingBottom", 10);
-        console.log('ds');
         $("#login").css("paddingTop", 70);
         $("#login-form").css("display", "none");
         $("#password-reset-form").css("display", "block");
@@ -229,10 +248,11 @@ $(document).ready(function() {
                     $(".menu-loggedin").css("display", "inline");
                     $(".menu-loggedin").attr("title", "You are logged in as " + data.user.firstname);
                     $(".menu-login").css("display", "none");
+                    $("#login").css("display", "none");
                 } else if (user.isDemo) {
                     $("#login").animate({
                         "paddingBottom": "10",
-                        "paddingTop": "60"
+                        "paddingTop": "40"
                     }, 800);
                     $(".menu-login").css("display", "inline");
                 }
@@ -241,7 +261,7 @@ $(document).ready(function() {
         error: function(request, status, error) {
             $("#login").animate({
                 "paddingBottom": "10",
-                "paddingTop": "60"
+                "paddingTop": "40"
             }, 800);
         }
     });
