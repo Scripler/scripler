@@ -29,11 +29,11 @@
 						</a>
 					</p>
 
-					<form name="titleEdit{{projectDocuments.length}}" class="documentTitleEdit" data-ng-show="projectDocument.editingProjectDocumentTitle">
+					<form name="doc{{$index}} " class="documentTitleEdit" data-ng-show="projectDocument.editingProjectDocumentTitle">
 
 						<textarea name="textEdit" class="renameProjectDocument" rows="4" data-ng-model="projectDocument.name" focus-on="!!projectDocument.editingProjectDocumentTitle" blur-on-enter data-ng-focus="storeTitle(projectDocument)" data-ng-blur="renameProjectDocument(projectDocument)" required></textarea>
 						
-						<div class="nameError" ng-show="titleEdit{{projectDocuments.length}}.textEdit.$error.required">The title is required!</div> 
+						<div class="nameError" ng-show="doc{{$index}}.textEdit.$error.required">The title is required!</div> 
 						
 					</form>
 
