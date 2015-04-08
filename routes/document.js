@@ -264,6 +264,13 @@ exports.upload = function (req, res, next) {
 				importedHtml = importedHtml.replace(/(<img[^>]*src=")([^"]+")/g, '$1' + imagesUrl + '/$2');
 				importedHtml = importedHtml.replace(/(<img[^>]*src=")[^"]+ObjectReplacements[^"]+/g, '$1http://scripler.com/create/pages/images/broken_file.png');
 
+				// Add proper ToC id's to all heading
+				var prefix = 'id_';
+				var index = 1;
+				importedHtml = importedHtml.replace(/(<h\d(?![^>]*id=))/g, function (_, group) {
+					return group + ' id="'+prefix + index++ +'"';
+				});
+
 				// Find all images, check their filessizes, and create their image objects in the database
 				var regex = new RegExp('<img[^>]*src="'+imagesUrl+'/([^"]+)"', 'g');
 				var match;
