@@ -95,6 +95,7 @@ nav {
 	padding-left: 35vw;
 	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
 } 
+ 
 .about-scripler{
 	color:#000;
 	font-weight: 700;
@@ -130,13 +131,7 @@ a.navbar-brand{
 #remember{
 	float: left
 }
-.collapsed{
-	background-color:#FFF; 
-	color:#000!important;
-	border-style:solid;
-	border-color: #000;
-	border-size:5px;
-}
+ 
 .sr-only{
 	color:#000; 
 }
@@ -168,6 +163,16 @@ ul.navList li>a:hover{
 	background-color: #fff;
 	color:#666;
 } 
+@media (min-width:1050px){	
+	#login-form {
+		margin-left: 150px;
+	}
+	.socialicons {
+		margin-top: 15px;
+		margin-left:-80px;
+	}
+}
+
 @media (min-width:850px){
 	body{
 		padding-top: 20px;
@@ -177,7 +182,6 @@ ul.navList li>a:hover{
 	} 
 
 	#login-form {
-		margin-left: 150px;
 		margin-top: 10px;
 	}
 	li>a.blog-link{
@@ -217,10 +221,7 @@ ul.navList li>a:hover{
 	li>a.talk-link:hover{
 		background-color: #fff !important;
 	}
-	.socialicons {
-		margin-top: 15px;
-		margin-left:-110px;
-	}
+
 }
 
 #scripler{
@@ -411,10 +412,7 @@ h2.feat{
 		top:-2px;
 		right:-5px;
 		z-index: 50;
-		border: solid;
-		border-width: 1px;
-		border-color: #000;
-		background-color: #FFF;
+		display: inline!important;
 	}
 	#navbar{
 		position: fixed;
@@ -440,8 +438,7 @@ h2.feat{
 		height: 100%;
 	}
 	a.navbar-brand{
-	font-size: 2em;
-	font-weight: 700;
+		display: none;
 	}
 	a#forgot-password{
 		font-size: 1.5em;
@@ -449,14 +446,14 @@ h2.feat{
 	#remember-me-box>label{
 		font-size: 1.5em;
 	}
-	nav {
-
-		margin-bottom: 0 !important;
-	}
-	.navbar {
-		position: relative;
+	nav.navbar {
+		position: fixed;
+		height: 0!important;
 		display: block;
+		box-shadow: none;
+		background-color: transparent!important;
 	}
+
 	#brandlogo{
 		display:inline-block;
 		margin-top:-10px;
@@ -470,8 +467,8 @@ h2.feat{
 		padding-top: 20px;
 		}
 	iframe{
-			position:relative;
-			}
+		position:relative;
+		}
 	#scripler, #features, #about, #contact, #login{
 		padding-top: 20px;
 		height:100%;
