@@ -1513,17 +1513,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var hyperlinkInputContent = document.getElementById("hyperlinkInputBox").value;
 
 		var editor = getEditor();
-		var selectedContentRequired = (type=="anchor" || type=="link"); 
+		var selectedContentRequired = (type == "anchor" || type == "link"); 
 		var selectedContent = returnSelectedContent();
 		var validURL = true;
 
 		// if there is no selected content on the caret, take content from the anchor/hyperlink input box
-		if(selectedContent=="" && selectedContentRequired){
-			if(type=="anchor" && anchorInputContent!="")
+		if(selectedContent == "" && selectedContentRequired){
+			if(type == "anchor" && anchorInputContent != ""){
 				selectedContent = anchorInputContent;
+			}
 				
-			else if(type=="link" && hyperlinkInputContent!="")
-				selectedContent = hyperlinkInputContent;		
+			else if(type=="link" && hyperlinkInputContent!=""){
+				selectedContent = hyperlinkInputContent;
+			}		
 		}
 
 		// defaulting the title/name of the anchor and the text of the hyperlink to the selected content
@@ -1531,16 +1533,21 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		
 		// if the anchor/hyperlink input field is not empty, then add the element
 		if(!selectedContentRequired || selectedContent!=""){
-			if(type=="anchor"){
-				if($scope.anchorName)title=$scope.anchorName;
+			if(type == "anchor"){
+				if($scope.anchorName){
+					title=$scope.anchorName;
+				}
+
 				insert = insert.replace('title="title"', 'title="' + title + '"');
 				var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
 			}
-			else if(type=="link"){
-				if($scope.linkText)title=$scope.linkText;
+			else if(type == "link"){
+				if($scope.linkText){
+					title = $scope.linkText;
+				}
 				insert = insert.replace('link_text', title);
 
-				var regExpValidUrl =/^((https?):\/\/)?([w|W]{3}\.)+[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
+				var regExpValidUrl = /^((https?):\/\/)?([w|W]{3}\.)+[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
 				validURL = !($scope.internal != true && !regExpValidUrl.test($scope.linkAddress));
 			}	
 
@@ -1551,12 +1558,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}
 
 			// keep the old content of the anchor
-			if(type=="anchor")editor.insertText(replacedContent.getText());
+			if(type == "anchor"){
+				editor.insertText(replacedContent.getText());
+			}
 
-			if (type=="image"){
+			if (type == "image"){
 				// move cursor to current position
 				var range = editor.createRange();
-				var imageRangeChange=range.startContainer;
+				var imageRangeChange = range.startContainer;
 				range.moveToElementEditablePosition(imageRangeChange, true);
 			}
 
