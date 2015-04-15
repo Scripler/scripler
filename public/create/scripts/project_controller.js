@@ -326,7 +326,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 					var hours = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();
 					var minutes = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
 					var seconds = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds();
-					$scope.lastSaved = 'Last saved: ' + now.getDate() + '/' + now.getMonth() + '/' + now.getFullYear() + ' ' + hours + ':' + minutes + ':' + seconds;
+					//months are counted in js from 0-11 so for simplicity the month in the ui is given +1 
+					$scope.lastSaved = 'Last saved: ' + now.getDate() + '/' + (now.getMonth()+1) + '/' + now.getFullYear() + ' ' + hours + ':' + minutes + ':' + seconds;
 					deferred.resolve();
 				});
 
@@ -1484,7 +1485,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		if(selection){
 			selectedContent = selection.getSelectedText();
-			  }
+		}
 
 		// get the iframe document
 		var iframeDoc = document.getElementsByClassName("cke_wysiwyg_frame")[0].contentDocument;
@@ -1495,7 +1496,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
            	document.getElementById("anchorInputBox").value = range;
            	document.getElementById("hyperlinkInputBox").value = range;
            	document.getElementById("hyperlinkTarget").value = "";
-			}
+		}
 
         // onselectionchange doesn't work for Firefox, so instead we update with the old selectedContent returned by CKEditor
         if(navigator.userAgent.search("Firefox")>-1){
@@ -1504,62 +1505,94 @@ function projectController( $scope, $location, userService, projectsService, $ht
            	document.getElementById("hyperlinkTarget").value = "";
 		}
 
-		if(selectedContent=="" && document.getElementById("anchorInputBox").value!="")
-				selectedContent=document.getElementById("anchorInputBox").value;
 		return selectedContent;
 	}
 
 	function editorInsert( insert, type ) {
-		var editor = getEditor();
-		var selectedContent = returnSelectedContent();
+		var anchorInputContent = document.getElementById("anchorInputBox").value;
+		var hyperlinkInputContent = document.getElementById("hyperlinkInputBox").value;
 
-		// defaulting the title/name of the anchor to the selected content
+		var editor = getEditor();
+		var selectedContentRequired = (type == "anchor" || type == "link"); 
+		var selectedContent = returnSelectedContent();
+		var validURL = true;
+
+		// if there is no selected content on the caret, take content from the anchor/hyperlink input box
+		if(selectedContent == "" && selectedContentRequired){
+			if(type == "anchor" && anchorInputContent != ""){
+				selectedContent = anchorInputContent;
+			}
+				
+			else if(type=="link" && hyperlinkInputContent!=""){
+				selectedContent = hyperlinkInputContent;
+			}		
+		}
+
+		// defaulting the title/name of the anchor and the text of the hyperlink to the selected content
 		var title = selectedContent;
 		
-		// if the anchor name field is not empty, then add the anchor
-		if(selectedContent!=""){
-			if(type=="anchor"){
-				if($scope.anchorName)title=$scope.anchorName;
+		// if the anchor/hyperlink input field is not empty, then add the element
+		if(!selectedContentRequired || selectedContent!=""){
+			if(type == "anchor"){
+				if($scope.anchorName){
+					title=$scope.anchorName;
+				}
+
 				insert = insert.replace('title="title"', 'title="' + title + '"');
 				var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
 			}
-			else if(type=="link"){
-				if($scope.linkText )title=$scope.linkText;
+			else if(type == "link"){
+				if($scope.linkText){
+					title = $scope.linkText;
+				}
 				insert = insert.replace('link_text', title);
+
+				var regExpValidUrl = /^((https?):\/\/)?([w|W]{3}\.)+[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
+				validURL = !($scope.internal != true && !regExpValidUrl.test($scope.linkAddress));
 			}	
 
-			var element = $rootScope.CKEDITOR.dom.element.createFromHtml(insert);
-
-			// insert anchor on the caret, but keep the old content
-			editor.insertElement(element);
-			editor.insertText(replacedContent.getText());
-
-
-			var range = editor.createRange();
-			range.moveToElementEditablePosition(element);
-
-			if (type=="image"){
-				var imageRangeChange=range.startContainer;
-				range.moveToElementEditablePosition(imageRangeChange, true);
+			//create and insert anchor/hyperlink element on the caret
+			if(validURL){
+				var element = $rootScope.CKEDITOR.dom.element.createFromHtml(insert);
+				editor.insertElement(element);
 			}
-			else {
-				range.select();
+
+			// keep the old content of the anchor
+			if(type == "anchor"){
+				editor.insertText(replacedContent.getText());
+			}
+
+			if (type == "image"){
+				// move cursor to current position
+				var range = editor.createRange();
+				var imageRangeChange = range.startContainer;
+				range.moveToElementEditablePosition(imageRangeChange, true);
 			}
 
 			$scope.focusEditor();
 			$scope.updateProjectDocument();
 		} else {
-				// if the field is empty, do not do anything or eventually throw an error
-				// console.log("error - anchor name field should not be empty");
-			}
+				// if the field is empty, do not do anything
+		}
 	}
 
 
     $scope.$watch('linkAnchor', function(newValue, oldValue) {
+    	var hasText = false;
+    	if(hyperlinkInputBox.value!=""){
+    			hasText = true;
+    	}
         if (newValue !== oldValue) {
 			$scope.linkAddress = newValue.target;
-			$scope.linkText = newValue.text;
+			$scope.internal = true;
+			
+			if(!hasText){
+				$scope.linkText = newValue.text;
+			}
+		} else { 
+			$scope.internal = false;
 		}
+
 		$scope.focusEditor();
 	});
 
@@ -1635,13 +1668,21 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						break;
 					}
 
+					var content = "";
+					var target = "";
 					if( element.getName() === "a" ){
-						var content = element.getFirst().$.data;
-						var target = element.getAttribute("href");
+						target = element.getAttribute("href");
 						if(target=="undefined")target="";
+
+						// fetching content of anchor
+						content = element.$.innerHTML;
+
 						document.getElementById("hyperlinkInputBox").value = content;
 						document.getElementById("hyperlinkTarget").value = target;
+
+						return false;
 					}
+					
 
 					for ( var x = 0; x < stylesets.length; x++ ) {
 						var styles = stylesets[x].styles;

@@ -1,0 +1,481 @@
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto/Roboto-Regular.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+}
+@font-face {
+  font-family: 'Roboto-Black';
+  src: url('../fonts/Roboto/Roboto-Black.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+}
+@font-face {
+	font-family: 'icomoon';
+	src:url('../fonts/icomoon.eot?-ryeo5j');
+	src:url('../fonts/icomoon.eot?#iefix-ryeo5j') format('embedded-opentype'),
+		url('../fonts/icomoon.ttf?-ryeo5j') format('truetype'),
+		url('../fonts/icomoon.woff?-ryeo5j') format('woff'),
+		url('../fonts/icomoon.svg?-ryeo5j#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class*="icon-"] {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-google-plus:before {
+	content: "\e600";
+}
+.icon-facebook:before {
+	content: "\e601";
+}
+.icon-twitter:before {
+	content: "\e602";
+}
+.icon-linkedin:before {
+	content: "\e603";
+}
+.socialicons {
+	text-align: center;
+}
+.btn {
+	padding:0;
+}
+.socialicon a, a.socialicon {
+	margin: 0 auto; 
+	padding-top: 8px;
+	padding-bottom: 8px;
+	padding-left: 10px;
+	padding-right: 10px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: #fff; 
+	font-size: 22px; 
+	color:#c6c6c6;
+	text-decoration: none;
+}
+
+.socialicon a:hover, a.socialicon:hover {
+	background-color: #fff265;
+	color: #666;
+}
+body { 
+  	width: 98vw;
+	height:98vh;
+	overflow-x: hidden;
+	font-family: 'Roboto', 'Helvetica', 'Arial';
+}
+p{
+	font-size:14px;
+}
+.page{
+	margin:0;
+	padding-top: 50px;
+	width:100vw;
+	height:100vh;
+	overflow-x: hidden;
+}
+nav {
+	background-color:#FFF;
+	color:#000;
+	padding-left: 35vw;
+	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
+} 
+ 
+.about-scripler{
+	color:#000;
+	font-weight: 700;
+}
+#scriplerTeam{
+	padding-bottom: 20px;
+	padding-top: 20px;
+}
+a.navbar-brand{
+	font-size: 1.2em; 
+
+}
+#brandlogo{
+	display:none;
+}
+#forgot-password{
+	float:left;
+	color: #000;
+	text-decoration: underline;
+	font-size: 1.1em;
+}
+
+#remember-me-box{
+	clear: both;
+
+}
+#remember-me-box>label{
+	margin-left: 4px;
+	float: left;
+	font-size:1.2em;
+	font-weight: 400;
+}
+#remember{
+	float: left
+}
+ 
+.sr-only{
+	color:#000; 
+}
+.colIco{
+	float: none;
+	display:block;
+	padding: 0;
+	margin:0;
+	margin-top:-15px;
+}
+.colIco:first-child{
+	margin-top:-10px;	
+}
+.colIco:last-child{
+	margin-bottom: -5px;	
+}
+.icon-bar{
+	color:#000!important;
+	z-index: 5!important;
+}
+.navbar-brand, ul.navList li>a{
+	font-size: 1.2em;
+	color:#000;
+}  
+.navbar-brand:hover{
+	color:#000;
+}
+ul.navList li>a:hover{
+	background-color: #fff;
+	color:#666;
+} 
+@media (min-width:1050px){	
+	#login-form {
+		margin-left: 150px;
+	}
+	.socialicons {
+		margin-top: 15px;
+		margin-left:-80px;
+	}
+}
+
+@media (min-width:850px){
+	body{
+		padding-top: 20px;
+	}
+	.menu-blog{
+		background-color:#000;
+	} 
+
+	#login-form {
+		margin-top: 10px;
+	}
+	li>a.blog-link{
+		font-size: 1.2em;
+		color: #fff56c !important;
+		position:fixed;
+		right:0;
+		text-decoration: none;
+		background-color: #000;
+		width:79px;
+		height: 50px;
+	}     
+	li>a.blog-link:hover{
+		background-color: #000 !important;
+		color:#FFF !important;
+	}
+	.menu-talk{
+		background-color:#000;
+	} 
+	.navpoint{
+		text-align: center;
+	}
+	a.navpoint.talk-link:hover{
+		background-color: #ccc !important;
+		color:#fff56c !important;
+	}
+	li>a.talk-link{
+		font-size: 1.2em;
+		color: #FFF !important;
+		position:fixed;
+		right:70px;
+		text-decoration: none;
+		background-color: #ccc;
+		width:79px;
+		height: 50px;
+	}     
+	li>a.talk-link:hover{
+		background-color: #fff !important;
+	}
+
+}
+
+#scripler{
+	color: #666;
+	padding-top: 80px;
+	background-color:#ececec;
+}
+#features{
+	background-color:#215660;
+}
+#about{
+	background-color:#fff56c;
+}
+h2.about{
+	padding-bottom: 0 !important
+}
+#contact{
+
+}
+h4{
+	font-size: 16px;
+}
+h3{
+	font-size:1.2em;
+	font-weight: 700;
+}
+h2{  
+	font-family: 'Roboto-Black';
+	padding-bottom: 20px;
+}
+img#scriplerLogo{
+	margin-bottom: 50px;
+}
+button#testTheAlpha{
+	background-color:#fff56c;
+	color:#000;
+	font-size: 1.5em;
+	font-weight: 700;
+	border:none;
+	padding:10px;
+	float:none;
+}
+ 
+a.testAlp:hover{
+	text-decoration: none;
+}
+a#signUp{
+	color:#000;
+	text-decoration: underline;
+}
+.bbb{
+	background-color:#000;
+}
+.testBtn{
+	margin:20px; 
+}
+.feats{
+	color: #fff56c;
+}
+.features{
+	display:block;
+}
+.whiteFeats{
+	color:#FFF;
+}
+#about{
+	color: #666;
+}
+a.person{
+	color:#000;
+	text-decoration:underline;
+	font-weight: 700;
+}
+.pers {
+	height: 12vh;
+}
+#contact{ 
+	color: #666;
+	padding-top: 0;
+}
+.cont{
+	padding-top: 50px;
+	height:100vh;
+	background-color:#fff;
+	position:absolute;	
+	display:block;
+	z-index: 5;
+}
+input#mce-EMAIL,input#mc-embedded-subscribe{
+	height: 32px;
+}
+input#mc-embedded-subscribe{
+	background-color:#fff56c;
+	color:#000;
+	font-size: 1em; 
+	border:none; 
+
+}
+iframe{ 
+	left:0px;
+	position:absolute;
+	z-index: 0;
+	width:99vw;
+	overflow-x: hidden;
+	height:100vh;
+}
+h2.con{
+	font-weight: 700;
+	padding:0;
+	padding-top: 20px;
+	margin:0;
+}
+h2.feat{
+	color: #fff56c;
+	padding-bottom: 20px !important;
+}
+
+#login
+{
+	width:100vw;
+	overflow-x:hidden;
+	background-color: #c6c6c6;
+}
+ 
+.row {
+	margin:0;
+}
+.email, .password {
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	border-radius: 1px;
+	-webkit-appearance: none;
+	border: none;
+	background: #f6f6f6;
+	font-size: 15px; 
+	height: 32px;
+	padding: 0 0 0 15px;
+	margin: 0 5px 0 0;
+	color: #818285;
+	font-family: 'Roboto', sans-serif; 
+	margin-bottom: 20px;
+}
+.loginBtn {
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	-webkit-appearance: none;
+	border-radius: 1px; 
+	background-color:#fff56c;
+	color: #231f20;
+	font-size: 1.2em;
+	font-weight: bold;  
+	cursor: pointer; 
+	text-align: center; 
+	height: 32px;
+	vertical-align: center; 
+	margin-bottom: 20px;
+}
+#login-extras{
+	font-size: 0.7em;
+}
+.login-main{
+	float: none;
+	
+}
+#remember{
+	margin:0;
+	padding:0; 
+	display: inline; 
+}
+#fgpass{
+	margin-bottom: 5px;
+}
+#remember-me-box{
+	margin-bottom: 5px;
+}
+.pull-right-on-big-screen{
+	float:right;
+	height: 100%;
+}
+.features{
+	height: 25vh; 
+}
+
+@media (max-width:850px){ 
+
+	.navbar-toggle {
+		position: fixed;
+		top:-2px;
+		right:-5px;
+		z-index: 50;
+		display: inline!important;
+	}
+	#navbar{
+		position: fixed;
+		top:42px; 
+		right: 30px;
+		background-color: #FFF;
+	}
+	#login{
+		display: none;
+		min-height: 100vh;
+	}
+	#login-form{
+		margin-top: 20vh;
+	}
+	.features{
+	height: 100%;
+	}
+	.features:last-child{
+		margin-bottom: 15px;
+	}
+	.pull-right-on-big-screen{
+		float: left;
+		height: 100%;
+	}
+	a.navbar-brand{
+		display: none;
+	}
+	a#forgot-password{
+		font-size: 1.5em;
+	}
+	#remember-me-box>label{
+		font-size: 1.5em;
+	}
+	nav.navbar {
+		position: fixed;
+		height: 0!important;
+		display: block;
+		box-shadow: none;
+		background-color: transparent!important;
+	}
+
+	#brandlogo{
+		display:inline-block;
+		margin-top:-10px;
+		margin-right:5px;
+		float:left;
+	}
+	.cont { 
+		position:relative;
+		height:100%;
+		padding-bottom: 20px;
+		padding-top: 20px;
+		}
+	iframe{
+		position:relative;
+		}
+	#scripler, #features, #about, #contact, #login{
+		padding-top: 20px;
+		height:100%;
+		padding-bottom: 50px;
+		}
+	form.login-form{
+		margin:0;
+	}
+
+}

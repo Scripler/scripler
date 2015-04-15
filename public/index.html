@@ -1,286 +1,230 @@
-<!DOCTYPE html>
-
-<html>
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
 <head>
-	<title>Scripler</title>
-
-	<meta charset="UTF-8">
-
-	<link rel="stylesheet" type="text/css" href="css/shared/default.css" />
-	<link rel="stylesheet" type="text/css" href="css/shared/fonts.css" />
-	<link rel="stylesheet" type="text/css" href="css/pages/frontpage.css" />
-	<link rel="stylesheet" type="text/css" href="css/modules/navigation.css" />
-
-	<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=AIzaSyBk6FHf_Xec1ykYuZoWjcicCwP-heTCL-w&sensor=true"></script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Scripler</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 </head>
 <body>
-
-	<nav class="menu-top">
-		<ul>
-			<!-- //ADD/FIX: Make a fallback if you haven't got Javascript -->
-			<li class="navpoint menu-create" data="scripler"><a href="#scripler">Scripler</a></li>
-			<!-- //FIX: If logged in go-to create page, else show create menupoint -->
-			<!--<li class="navpoint menu-create" data="create"><a href="#create">Create</a></li>-->
-			<!-- //FIX: If logged in go-to explore page, else show explore menupoint -->
-			<!--<li class="navpoint menu-create" data="explore">Explore</li>-->
-			<li class="navpoint menu-features" data="features"><a href="#features">Features</li>
-			<!--<li class="navpoint menu-pricing" data="pricing">Pricing</li>-->
-			<!--<li class="navpoint menu-learn" data="learn">Learn</li>-->
-			<li class="navpoint menu-about" data="about"><a href="#about">About</li>
-			<li class="navpoint menu-contact" data="contact"><a href="#contact">Contact</a></li>
-			<li class="navpoint menu-login" data="login"><a href="#login">Login</a></li>
-            <li class="menu-loggedin" style="display:none;"><a href="logout">Logout</a></li>
-			<li class="navpoint menu-blog" data="blog"><a href="http://blog.scripler.com/" class="blog-link">Blog</a></li>
-			<!--<li class="navbutton" id="showMenu"></li>-->
-		</ul>
-	</nav>
-
-	<section id="login" class="clearfix">
-		<article class="login-article">
-			<div class="login-wrap">
-                <div class="error-boxes">
-                    <div class="arrow-box first" id="invalid-box1" style="display:none;"></div>
-                    <div class="arrow-box second" id="invalid-box2" style="display:none;"></div>
+  <!--[if lt IE 8]>
+  <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+  <nav class="navbar navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <img src="img/burger.png" id="toggleNav">
+        </button>
+        <a class="navbar-brand" href="#scripler">Scripler</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="navList nav navbar-nav">
+          <li  class="navpoint menu-features text-center">
+            <a href="#features">Features</a>
+          </li>
+          <li class="navpoint menu-about text-center">
+            <a href="#about">About</a>
+          </li>
+          <li class="navpoint menu-contact text-center">
+            <a href="#contact">Contact</a>
+          </li>
+          <li class="menu-loggedin text-center" style="display:none;">
+            <a href="logout">Logout</a>
+          </li>
+          <li class="navpoint menu-login text-center" data="login">
+            <a href="#login">Login</a>
+          </li>
+          <li class="navpoint menu-blog text-center" >
+            <a href="http://blog.scripler.com/" class="navpoint blog-link">Blog</a>
+          </li>
+          <li class="navpoint menu-talk text-center" >
+            <a href="http://talk.scripler.com/" class="navpoint talk-link">Talk!</a>
+          </li>
+        </ul>
+        
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+    <div class="containerMain">
+      <div class="row " id="login">
+        <form id="login-form" class="center-block text-center col-xs-12 col-md-8 ">
+          <div class="login-group center-block text-center">
+            <div class="login-main center-block text-center col-xs-12 col-md-10">
+              <input type="email" value="" name="login-email" class="col-xs-12 col-md-4 required email" id="login-email" placeholder="Email Address">
+              <input type="password" value="" name="login-password" class=" col-xs-12 col-md-4 required password" id="login-password" placeholder="Password">
+              <input name="Login" type="submit" value="Login" class="btn loginBtn col-xs-12 col-md-2" id="login-button">
+            </div>
+            <div id="login-extras" class=" center-block text-center col-xs-12 col-md-2 ">
+              <div id="fgpass" ><a id="forgot-password" href="#">Forgot password?</a></div>
+              <div id="remember-me-box"><input type="checkbox" name="remember" id="remember"><label for="remember">Keep me logged in</label></div>
+            </div>
+          </div>
+        </form>
+        <div class="socialicons col-xs-12 col-md-2 clearfix text-center center-block">
+          <a class="socialicon" href="auth/facebook"><span class="icon-facebook"></span></a>
+          <a class="socialicon" href="auth/linkedin"><span class="icon-linkedin"></span></a>
+          <a class="socialicon"href="auth/google"><span class="icon-google-plus"></span></a>
+        </div>
+      </div>
+      
+      <div class="row page " id="scripler">
+        <div class="testMain col-xs-12 center-block ">
+          <img src="img/logo.png" id="scriplerLogo" class="center-block">
+          <h2 id="makeGreat" class="text-center">Make great ebooks</h2>
+          <h4 class="text-center">Scripler is an intuitive way to write and produce ebooks.</h4>
+          <h4 class="text-center">Your books will be beautiful, fully functional and ready for distribution.</h4>
+          <h4 class="text-center">Oh, and it’s free.</h4>
+          <div class="testBtn col-xs-12 text-center">
+            <div class="try-wrapper">
+              <a href="create/">
+                <button type="button" id="testTheAlpha" class="button col-xs-8 col-md-4">Test the alpha!</button>
+              </a>
+            </div>
+          </div>
+          <h4 class="text-center">Or <a href="#" id="signUp">sign up</a> for the newsletter..</h4>
+        </div>
+      </div>
+      <div class="row page" id="features">
+        <h2 class="col-xs-12 text-center feat">Features</h2>
+        <div class="col-xs-12 col-md-10 col-md-offset-1 ">
+          <div class="col-xs-12 col-md-6">
+            <div id="free" class="col-xs-12  pull-left features">
+              <img src="img/features/free.png" class="pull-left">
+              <h3 class="feats">It’s free</h3>
+              <p class="whiteFeats">With Scripler it‘s free to make ebooks. As in - it does not cost a thing. There are premium plans if you need more cloud storage, premium designs or if you want to make custom book-templates.</p>
+            </div>
+            <div id="functional" class="col-xs-12 pull-left features">
+              <img src="img/features/ebook.png" class="pull-left">
+              <h3 class="feats">Fully functional ebooks</h3>
+              <p class="whiteFeats">Scripler makes ebooks in EPUB format, the definitive international and open standard for ebooks. Easily insert frontmatter, backmatter and metadata. All elements are designed for the book-template you currently use.</p>
+            </div>
+            <div id="import" class="col-xs-12  pull-left features">
+              <img src="img/features/import.png" class="pull-left">
+              <h3 class="feats">Import</h3>
+              <p class="whiteFeats">Import your manuscript from Word. Just upload it and Scripler will convert it to a well-formatted book project, ready for polishing and final book production.</p>
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-6  ">
+            <div id="many" class="col-xs-12  pull-right features">
+              <img src="img/features/many.png" class="pull-right-on-big-screen">
+              <h3 class="feats">Make as many books you like</h3>
+              <p class="whiteFeats">No limit on the number of books you can make. Make 1000 books consisting only of a poem each. Make serial fiction and publish each chapter as an ebook or collect your creations in vast works of literature. Just experiment, go wild.</p>
+            </div>
+            <div id="rogd" class="col-xs-12  pull-right features">
+              <img src="img/features/togd.png" class="pull-right-on-big-screen">
+              <h3 class="feats">Great typography and design</h3>
+              <p class="whiteFeats">Make professionally designed typography with Scripler’s book-templates. You’ll have a wide selection of great fonts and full control of the typography. Easily insert images and figures.</p>
+            </div>
+            <div id="premium" class="col-xs-12  pull-right features">
+              <img src="img/features/premium.png" class="pull-right-on-big-screen">
+              <h3 class="feats">Premium subscription for heavy users and professionals</h3>
+              <p class="whiteFeats">As a premium subscriber you’ll have a wider range of professionally designed book-templates to choose from, more space for more books, as well as the ability to easily create and control your own custom book-templates.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row page" id="about">
+        <h2 class="col-xs-12 col-md-10 col-md-offset-1 text-center about about-scripler">About</h2>
+        <h3 class="col-xs-12 text-center" >Scripler will make the ebook revolution accessible to anyone who has something to say.</h3>
+        <h3 class="col-xs-12 text-center about-scripler" id="scriplerTeam" >The Scripler Team</h3>
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+          <div class="col-xs-12 col-md-6 pers">
+            <a class="person" href="mailto:david@scripler.com" class="email-text">David Walther Birk</a>, Project Lead<br />
+            Is actually an archaeologist!
+          </div>
+          <div class=" col-xs-12 col-md-6 pers">
+            <a class="person" href="mailto:morten@scripler.com" class="email-text">Morten Garbøl Franck</a>, Developer<br />
+            Is addicted to:<br />
+            <ul><li>Lists</li></ul>
+          </div>
+          <div class=" col-xs-12 col-md-6 pers">
+            <a class="person" href="mailto:sofie@scripler.com" class="email-text">Sofie Marie Ottsen</a>, Communications<br />
+            Plays the saxophone (really poorly).
+          </div>
+          <div class=" col-xs-12 col-md-6 pers">
+            <a class="person" href="mailto:ole@scripler.com" class="email-text">Ole Sandbæk Jørgensen</a>, Developer<br />
+            Fanatic movie watcher. As long as I got my specs on, aye.
+          </div>
+          <div class=" col-xs-12 col-md-6 pers">
+            <a  class="person" href="mailto:kaspar@scripler.com" class="email-text">Kaspar Sivertsen</a>, Graphic designer<br />
+            Has no special characteristics whatsoever.
+          </div>
+          <div class=" col-xs-12 col-md-6 pers">
+            <a  class="person" href="mailto:roxana@scripler.com" class="email-text">Roxana Dobre</a>, Developer<br />
+            Is addicted to cinnamon and collects lamb-toys.
+          </div>
+          <div class=" col-xs-12 col-md-6 pers">
+            <a class="person"  href="mailto:ioana@scripler.com" class="email-text"> Ioana Grozav</a>, Developer<br />
+            Enjoys arguing on politics.
+          </div>
+        </div>
+      </div>
+     
+      <div class="row page" id="contact">
+        <div class="col-xs-12 col-md-4 cont"  >
+          <h2 class="col-xs-12 text-center con"  >Contact</h2>
+          <h3  class="col-xs-12 text-center con">Ask us anything (about Scripler)</h3>
+          <p class="text-center"><a class="person" href="mailto:david@scripler.com">David Walther Birk,  </a>Project Leader </p>
+          <h3  class="col-xs-12 text-center con">Find us</h3>
+          <p class="text-center">Scripler</p>
+          <p class="text-center">Danneskiold-Samsøes Alle 41</p>
+          <p class="text-center">1434 København K</p>
+          <h3  class="col-xs-12 text-center con">Press and media</h3>
+          <a class="person text-center center-block" href="mailto:sofie@scripler.com"  >Sofie Marie Ottsen</a>
+          <h3  class="col-xs-12 text-center con">Stay informed</h3>
+          <p>Sign up for our newsletter and you'll get a selection of interesting news from the frontiers of digital publishing and updates on what we’re currently working on at Scripler.</p>
+          
+          <div id="mc_embed_signup">
+            <form action="//scripler.us6.list-manage.com/subscribe/post?u=1b5826d9bbcb3775e3f837180&amp;id=74f540769b" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+              <div id="mc_embed_signup_scroll">
+                <div class="mc-field-group">
+                  <input type="email" value="" name="EMAIL" class="required email col-xs-8 " id="mce-EMAIL" placeholder="Email Address">
+                  <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="col-xs-3 mc button">
                 </div>
-				<form id="login-form">
-					<div class="login-group">
-						<input type="email" value="" name="login-email" class="required email" id="login-email" placeholder="Email Address" />
-						<input type="password" value="" name="login-password" class="required password" id="login-password" placeholder="Password" />
-						<input name="Login" type="submit" value="Login" class="button login" id="login-button" />
-						<div id="login-extras">
-							<div><a id="forgot-password" href="#">Forgot password?</a></div>
-							<div class="clearfix" id="remember-me-box"><input type="checkbox" name="remember" id="remember" /><label for="remember">Keep me logged in</label></div>
-						</div>
-					</div>
-				</form>
-                <form id="password-reset-form" style="display:none;">
-                    <div class="login-group">
-                        <input type="password" value="" name="password1" class="required password" id="password1" placeholder="New password" />
-                        <input type="password" value="" name="password2" class="required password" id="password2" placeholder="Repeat password" />
-                        <input name="passsword-reset" type="submit" value="Change password" class="button" id="password-reset-button" />
-                    </div>
-                </form>
-                <p id="form-success" style="display:none;"></p>
-				<div class="socialicons clearfix">
-					<a class="socialicon" href="auth/facebook"><span class="icon-facebook"></span></a>
-					<a class="socialicon" href="auth/linkedin"><span class="icon-linkedin"></span></a>
-					<a class="socialicon"href="auth/google"><span class="icon-google-plus"></span></a>
-				</div>
-			 </div>
-		</article>
-	</section>
-
-	<section id="scripler" class="clearfix">
-		<article>
-				<div class="create_logo"><img src="images/logo.png" /></div>
-
-				<h2 class="create_subtitle">
-					Make great ebooks
-				</h2>
-				<div class="create_subtext">
-					Scripler is an intuitive way to write and produce ebooks.<br />
-					Your books will be beautiful, fully functional and ready for distribution.<br />
-					Oh, and it’s free.
-				</div>
-				<div class="try-wrapper">
-					<a href="create/"><button type="button" class="button try-button">Test the alpha!</button></a>
-				</div>
-				<div class="newsletter-signup-text create_subtext">
-					<p>Or <a href="#contact">sign up</a> for the newsletter.</p>
-				</div>
-		</article>
-	</section>
-
-	<section id="features" class="clearfix">
-		<article class="overflow">
-			<h1>Features</h1>
-
-			<div class="row">
-				<div class="hexagon-icon">
-					<img src="images/features/free.png" width="140" height="140" />
-				</div>
-				<div class="hexagon-info">
-					<div class="hexagon-title">It’s free</div>
-					<div class="hexagon-text">With Scripler it‘s free to make ebooks. As in - it does not cost a thing. There are premium plans if you need more cloud storage, premium designs or if you want to make custom book-templates.</div>
-				</div>
-				<div class="hexagon-icon right">
-					<img src="images/features/many.png" width="140" height="140" />
-				</div>
-				<div class="hexagon-info right">
-					<div class="hexagon-title">Make as many books you like</div>
-					<div class="hexagon-text">No limit on the number of books you can make. Make 1000 books consisting only of a poem each. Make serial fiction and publish each chapter as an ebook or collect your creations in vast works of literature. Just experiment, go wild.</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="hexagon-icon">
-					<img src="images/features/ebook.png" width="140" height="140" />
-				</div>
-				<div class="hexagon-info">
-					<div class="hexagon-title">Fully functional ebooks</div>
-					<div class="hexagon-text">Scripler makes ebooks in EPUB format, the definitive international and open standard for ebooks. Easily insert frontmatter, backmatter and metadata. All elements are designed for the book-template you currently use.</div>
-				</div>
-				<div class="hexagon-icon right">
-					<img src="images/features/togd.png" width="140" height="140" />
-				</div>
-				<div class="hexagon-info right">
-					<div class="hexagon-title">Great typography and design</div>
-					<div class="hexagon-text">Make professionally designed typography with Scripler’s book-templates. You’ll have a wide selection of great fonts and full control of the typography. Easily insert images and figures.</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="hexagon-icon">
-					<img src="images/features/import.png" width="140" height="140" />
-				</div>
-				<div class="hexagon-info">
-					<div class="hexagon-title">Import</div>
-					<div class="hexagon-text">Import your manuscript from Word. Just upload it and Scripler will convert it to a well-formatted book project, ready for polishing and final book production.</div>
-				</div>
-				<div class="hexagon-icon right">
-					<img src="images/features/premium.png" width="140" height="140" />
-				</div>
-				<div class="hexagon-info right">
-					<div class="hexagon-title">Premium subscription for heavy users and professionals</div>
-					<div class="hexagon-text">As a premium subscriber you’ll have a wider range of professionally designed book-templates to choose from, more space for more books, as well as the ability to easily create and control your own custom book-templates.</div>
-				</div>
-			</div>
-		</article>
-	</section>
-
-	<!--<section id="pricing" data-speed="100" data-type="background">
-		<article>
-		</article>
-	</section>-->
-
-	<!--<section id="learn" data-speed="100" data-type="background">
-		<article>
-		</article>
-	</section>-->
-
-	<section id="about" class="clearfix">
-		<article>
-			<div class="inner">
-				<h1>About</h1>
-				<div class="about-text">
-					Scripler will make the ebook revolution accessible to anyone who has something to say.
-				</div>
-
-				<h2>The Scripler Team</h2>
-				<div class="half">
-					<span>
-						<a href="mailto:david@scripler.com" class="email-text">David Walther Birk</a>, Project Lead<br />
-						Is actually an archaeologist!
-					</span>
-
-					<span class="reduced-padding">
-						<a href="mailto:morten@scripler.com" class="email-text">Morten Garbøl Franck</a>, Backend developer<br />
-						Is addicted to:<br />
-						<ul><li>Lists</li></ul>
-					</span>
-
-					<span>
-						<a href="mailto:sofie@scripler.com" class="email-text">Sofie Marie Ottsen</a>, Communications<br />
-						Plays the saxophone (really poorly).
-					</span>
-
-					<span>
-						<a href="mailto:ole@scripler.com" class="email-text">Ole Sandbæk Jørgensen</a>, Frontend developer<br />
-						Fanatic movie watcher. As long as I got my specs on, aye.
-					</span>
-				</div>
-				<div class="half">
-					<span>
-						<a href="mailto:kaspar@scripler.com" class="email-text">Kaspar Sivertsen</a>, Graphic designer<br />
-						Has no special characteristics whatsoever.
-					</span>
-
-					<span>
-						<a href="mailto:allan@scripler.com" class="email-text">Allan Mørk Christensen</a>, Backend developer<br />
-						Solves the Rubik’s Cube (very slowly).
-					</span>
-
-					<span>
-						<a href="mailto:kasper@scripler.com" class="email-text">Kasper Møller</a>, Communications<br />
-						Co-writes a blog about otters.
-					</span>
-
-					<span>
-						<a href="mailto:roxana@scripler.com" class="email-text">Roxana Dobre</a>, Frontend developer<br />
-						Is addicted to cinnamon and collects lamb-toys.
-					</span>
-				</div>
-			</div>
-		</article>
-	</section>
-
-	<section id="contact" class="clearfix">
-		<div id="map-canvas"></div>
-			<article>
-				<h1>Contact</h1>
-				<h2>Ask us anything (about Scripler)</h2>
-				<div>David Walther Birk<br />Project leader<br /><a href="mailto:david@scripler.com">david@scripler.com</a></div>
-
-				<h2>Find us</h2>
-				<div>Scripler<br />Laplandsgade 4, 1st floor<br />2300 København S<br />Denmark</div>
-
-				<h2>Press and media</h2>
-				<div class="clearfix">
-					<div class="half">Kasper Møller<br /><a href="mailto:kasper@scripler.com">kasper@scripler.com</a></div>
-					<div class="half">Sofie Marie Ottsen<br /><a href="mailto:sofie@scripler.com">sofie@scripler.com</a></div>
-				</div>
-
-				<h2>Stay informed</h2>
-				<div>
-					Sign up for our newsletter and you'll get a selection of interesting news from the frontiers of digital publishing and updates on what we’re currently working on at Scripler.
-				</div>
-
-				<!-- MailChimp -->
-				<div id="mc_embed_signup">
-					<form action="//scripler.us6.list-manage.com/subscribe/post?u=1b5826d9bbcb3775e3f837180&amp;id=74f540769b" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-						<div id="mc_embed_signup_scroll">
-
-							<div class="mc-field-group">
-								<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="Email Address">
-								<input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
-							</div>
-							<div id="mce-responses" class="clear">
-								<div class="response" id="mce-error-response" style="display:none"></div>
-								<div class="response" id="mce-success-response" style="display:none"></div>
-							</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-							<div style="position: absolute; left: -5000px;"><input type="text" name="b_1b5826d9bbcb3775e3f837180_74f540769b" tabindex="-1" value=""></div>
-							<div class="clear"></div>
-						</div>
-					</form>
-				</div>
-				<script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
-				<!-- MailChimp -->
-
-				<div class="socialicons-bottom clearfix">
-					<div class="socialicon"><a href="https://www.facebook.com/Scripler" target="_blank"><span class="icon-facebook"></span></a></div>
-					<div class="socialicon"><a href="https://twitter.com/Scriplerdk" target="_blank"><span class="icon-twitter"></span></a></div>
-					<div class="socialicon"><a href="https://plus.google.com/110745200191180687790/" target="_blank"><span class="icon-google-plus"></span></a></div>
-				</div>
-			</article>
-	</section>
-
-	<!-- JS Code -->
-	<!--[if lt IE 9]>
-		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	<![endif]-->
-	<!--[if gte IE 9]><!---->
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-	<!--<![endif]-->
-
-	<script src="js/frontpage.jquery.js"></script>
-	<script src="create/scripts/utils-shared.js"></script>
-
-	<script>
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-		ga('create', 'UA-41784294-1', 'scripler.com');
-		ga('send', 'pageview');
-	</script>
-</body>
-</html>
+                <div id="mce-responses" class="clear">
+                  <div class="response" id="mce-error-response" style="display:none"></div>
+                  <div class="response" id="mce-success-response" style="display:none"></div>
+                  </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                  <div style="position: absolute; left: -5000px;"><input type="text" name="b_1b5826d9bbcb3775e3f837180_74f540769b" tabindex="-1" value=""></div>
+                  <div class="clear"></div>
+                </div>
+              </form>
+            </div>
+            <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+            <div class="socialicons col-xs-12 clearfix text-center center-block">
+              <a class="socialicon" href="auth/facebook"><span class="icon-facebook"></span></a>
+              <a class="socialicon" href="auth/linkedin"><span class="icon-linkedin"></span></a>
+              <a class="socialicon"href="auth/google"><span class="icon-google-plus"></span></a>
+            </div>
+          
+        </div>
+        
+        <iframe id="map_canvas1" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3767.565717788916!2d12.60372839999965!3d55.68054211484804!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x465253256f012ff3%3A0x680b1b05dd2d97d5!2sDanneskiold-Sams%C3%B8es+All%C3%A9+41%2C+1434+K%C3%B8benhavn+K!5e1!3m2!1sen!2sdk!4v1427283539148"  style="pointer-events:none " frameborder="0" style="border:0"></iframe>
+        
+      </div>
+      </div> <!-- /container -->
+      <script src="js/vendor/jquery-1.11.2.min.js"></script>
+      <script src="js/vendor/bootstrap.min.js"></script>
+      <script src="js/frontpage.jquery.js"></script>
+      <script src="create/scripts/utils-shared.js"></script>
+      <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-41784294-1', 'scripler.com');
+      ga('send', 'pageview');
+      </script>
+    </body>
+  </html> 
+ 
