@@ -1540,9 +1540,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				if($scope.linkText)title=$scope.linkText;
 				insert = insert.replace('link_text', title);
 
-				// check if the link address is a valid URL
-				var myRegExp =/^((https?):\/\/)?([w|W]{3}\.)+[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
-				validURL = !($scope.internal != true && !myRegExp.test($scope.linkAddress));
+				var regExpValidUrl =/^((https?):\/\/)?([w|W]{3}\.)+[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
+				validURL = !($scope.internal != true && !regExpValidUrl.test($scope.linkAddress));
 			}	
 
 			//create and insert anchor/hyperlink element on the caret
@@ -1584,7 +1583,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		} else { 
 			$scope.internal = false;
 		}
-		
+
 		$scope.focusEditor();
 	});
 
