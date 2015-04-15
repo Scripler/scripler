@@ -1573,17 +1573,18 @@ function projectController( $scope, $location, userService, projectsService, $ht
     	var hasText = false;
     	if(hyperlinkInputBox.value!=""){
     			hasText = true;
-    		}
+    	}
         if (newValue !== oldValue) {
 			$scope.linkAddress = newValue.target;
 			$scope.internal = true;
-			if(!hasText)$scope.linkText = newValue.text;
-		} else $scope.internal = false;
-
+			
 			if(!hasText){
 				$scope.linkText = newValue.text;
 			}
+		} else { 
+			$scope.internal = false;
 		}
+		
 		$scope.focusEditor();
 	});
 
