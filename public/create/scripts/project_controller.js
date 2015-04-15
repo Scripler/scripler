@@ -85,6 +85,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				file: file
 			}).progress(function(evt) {
 				ngProgress.set(parseInt(100.0 * evt.loaded / evt.total) - 25);
+			}).error(function(data, status) {
+				if (status == 402) {
+					window.alert(data.errorMessage);
+				}
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
 				$scope.projectDocuments.push( data.document );
@@ -102,6 +106,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				file: file
 			}).progress(function(evt) {
 				ngProgress.set(parseInt(100.0 * evt.loaded / evt.total) - 25);
+			}).error(function(data, status) {
+				if (status == 402) {
+					window.alert(data.errorMessage);
+				}
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
 				if ( typeof type !== 'undefined' ) {
