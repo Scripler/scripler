@@ -1515,6 +1515,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		var editor = getEditor();
 		var selectedContentRequired = (type=="anchor" || type=="link"); 
 		var selectedContent = returnSelectedContent();
+		var validURL = true;
 
 		// if there is no selected content on the caret, take content from the anchor/hyperlink input box
 		if(selectedContent=="" && selectedContentRequired){
@@ -1536,13 +1537,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				var replacedContent = $rootScope.CKEDITOR.dom.element.createFromHtml(selectedContent);
 			}
 			else if(type=="link"){
-				if($scope.linkText )title=$scope.linkText;
+				if($scope.linkText)title=$scope.linkText;
 				insert = insert.replace('link_text', title);
+
+				// check if the link address is a valid URL
+				var myRegExp =/^((https?):\/\/)?([w|W]{3}\.)+[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
+				validURL = !($scope.internal != true && !myRegExp.test($scope.linkAddress));
 			}	
 
 			//create and insert anchor/hyperlink element on the caret
-			var element = $rootScope.CKEDITOR.dom.element.createFromHtml(insert);
-			editor.insertElement(element);
+			if(validURL){
+				var element = $rootScope.CKEDITOR.dom.element.createFromHtml(insert);
+				editor.insertElement(element);
+			}
 
 			// keep the old content of the anchor
 			if(type=="anchor")editor.insertText(replacedContent.getText());
@@ -1567,8 +1574,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
     	if(hyperlinkInputBox.value!="")hasText = true;
         if (newValue !== oldValue) {
 			$scope.linkAddress = newValue.target;
+			$scope.internal = true;
 			if(!hasText)$scope.linkText = newValue.text;
-		}
+		} else $scope.internal = false;
 		$scope.focusEditor();
 	});
 
