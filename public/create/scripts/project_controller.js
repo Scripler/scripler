@@ -1564,10 +1564,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
     $scope.$watch('linkAnchor', function(newValue, oldValue) {
     	var hasText = false;
-    	if(hyperlinkInputBox.value!="")hasText = true;
+    	if(hyperlinkInputBox.value!=""){
+    			hasText = true;
+    		}
         if (newValue !== oldValue) {
 			$scope.linkAddress = newValue.target;
-			if(!hasText)$scope.linkText = newValue.text;
+			if(!hasText){
+				$scope.linkText = newValue.text;
+			}
 		}
 		$scope.focusEditor();
 	});
