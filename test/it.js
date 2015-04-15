@@ -9,7 +9,8 @@ var assert = require("assert")
 	, url = require('url')
 	, path = require('path')
 	, moment = require('moment')
-	, utils = require('../public/create/scripts/utils-shared')
+	, shared_utils = require('../public/create/scripts/utils-shared')
+	, utils = require('../lib/utils')
 	, styleset_utils = require('../lib/styleset-utils')
 	, user_utils = require('../lib/user-utils')
 	, font_utils = require('../lib/font-utils')
@@ -826,7 +827,7 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.document.defaultStyleset, userStylesetId1);
 					assert.equal(res.body.document.text, text);
-					assert.equal(utils.containsModel(res.body.document.stylesets, userStylesetId1), false);
+					assert.equal(shared_utils.containsModel(res.body.document.stylesets, userStylesetId1), false);
 					done();
 				});
 		}),
@@ -902,9 +903,9 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.result.folders.length, 1);
 					assert.equal(res.body.result.folders[0]._id, childFolderId);
 					assert.equal(res.body.result.docs.length, 5);
-					assert.equal(utils.containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
-					assert.equal(utils.containsModel(res.body.result.docs, rootDocumentId), true);
-					assert.equal(utils.containsModel(res.body.result.docs, coverDocumentId), true);
+					assert.equal(shared_utils.containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
+					assert.equal(shared_utils.containsModel(res.body.result.docs, rootDocumentId), true);
+					assert.equal(shared_utils.containsModel(res.body.result.docs, coverDocumentId), true);
 					done();
 				});
 		}),
@@ -928,9 +929,9 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.result.folders.length, 0);
 					assert.equal(res.body.result.docs.length, 5);
-					assert.equal(utils.containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
-					assert.equal(utils.containsModel(res.body.result.docs, rootDocumentId), true);
-					assert.equal(utils.containsModel(res.body.result.docs, coverDocumentId), true);
+					assert.equal(shared_utils.containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
+					assert.equal(shared_utils.containsModel(res.body.result.docs, rootDocumentId), true);
+					assert.equal(shared_utils.containsModel(res.body.result.docs, coverDocumentId), true);
 					done();
 				});
 		}),
@@ -980,12 +981,12 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.result.folders.length, 1);
-					assert.equal(utils.containsModel(res.body.result.folders, childFolderId), true);
+					assert.equal(shared_utils.containsModel(res.body.result.folders, childFolderId), true);
 
 					assert.equal(res.body.result.docs.length, 5);
-					assert.equal(utils.containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
-					assert.equal(utils.containsModel(res.body.result.docs, rootDocumentId), true);
-					assert.equal(utils.containsModel(res.body.result.docs, coverDocumentId), true);
+					assert.equal(shared_utils.containsDocWithFolderId(res.body.result.docs, rootFolderId), true);
+					assert.equal(shared_utils.containsModel(res.body.result.docs, rootDocumentId), true);
+					assert.equal(shared_utils.containsModel(res.body.result.docs, coverDocumentId), true);
 					done();
 				});
 		}),
@@ -1349,9 +1350,9 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.document.members[0].userId, userId);
 					assert.equal(res.body.document.members[0].access[0], "admin");
 					assert.notEqual(res.body.document.defaultStyleset, userStylesetId4);
-					assert.equal(utils.containsModel(res.body.document.stylesets, userStylesetId4), false);
+					assert.equal(shared_utils.containsModel(res.body.document.stylesets, userStylesetId4), false);
 					documentStylesetId4 = res.body.document.defaultStyleset;
-					assert.equal(utils.containsModel(res.body.document.stylesets, documentStylesetId4), true);
+					assert.equal(shared_utils.containsModel(res.body.document.stylesets, documentStylesetId4), true);
 					jimboDocumentId = res.body.document._id;
 					jimboDocumentId && done();
 				});
@@ -1386,9 +1387,9 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.stylesets.length, 17);
 					// Currently document stylesets are returned before user stylesets but we should not rely on this => just check if the id exists *somewhere* in the list.
-					assert.equal(utils.containsModel(res.body.stylesets, userStylesetId1), true);
-					assert.equal(utils.containsModel(res.body.stylesets, userStylesetId4), false); // Copied to documentStylesetId4
-					assert.equal(utils.containsModel(res.body.stylesets, documentStylesetId4), true);
+					assert.equal(shared_utils.containsModel(res.body.stylesets, userStylesetId1), true);
+					assert.equal(shared_utils.containsModel(res.body.stylesets, userStylesetId4), false); // Copied to documentStylesetId4
+					assert.equal(shared_utils.containsModel(res.body.stylesets, documentStylesetId4), true);
 					assert.equal(styleset_utils.hasHiddenStyle(res.body.stylesets[0].styles, 'figcaption'), true);
 					assert.equal(styleset_utils.hasHiddenStyle(res.body.stylesets[0].styles, 'Body text'), false);
 					done();
@@ -2097,7 +2098,7 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.document.name, filename);
+					assert.equal(res.body.document.name, utils.getFilenameWithoutExtension(filename));
 					assert.equal(res.body.document.projectId, projectId);
 					//TODO: When we got a proper semi-automated docvert setup on both Windows and Unix, do assertion of imported text!
 					//assert.equal(res.body.document.text, '???');
@@ -2105,6 +2106,7 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.document.members[0].userId, userId);
 					assert.equal(res.body.document.members[0].access[0], "admin");
 					assert.equal(res.body.document.stylesets.indexOf(res.body.document.defaultStyleset) > -1, true);
+					assert.equal(res.body.document.text, '<h1 id="id_1">Heading1</h1><p>Hello</p><h2 id="id_2" otherattribute="hmm">Heading2</h2><p>You</p><h3 name="_toc13" id="_toc13">Heading3</h3><p>Little World</p>');
 					childDocumentId = res.body.document._id;
 					childDocumentId && done();
 				});

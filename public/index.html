@@ -22,35 +22,32 @@
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
-        <span class="colIco">_</span>
-        <span class="colIco">_</span>
-        <span class="colIco">_</span>
+        <img src="img/burger.png" id="toggleNav">
         </button>
-        <a class="navbar-brand" href="#scripler"><img src="img/logosmall.png" id="brandlogo">Scripler</a>
+        <a class="navbar-brand" href="#scripler">Scripler</a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="navList nav navbar-nav">
-          <li  class="navpoint menu-features">
+          <li  class="navpoint menu-features text-center">
             <a href="#features">Features</a>
           </li>
-          <li class="navpoint menu-about">
+          <li class="navpoint menu-about text-center">
             <a href="#about">About</a>
           </li>
-          <li class="navpoint menu-contact">
+          <li class="navpoint menu-contact text-center">
             <a href="#contact">Contact</a>
           </li>
-          <li class="menu-loggedin" style="display:none;">
+          <li class="menu-loggedin text-center" style="display:none;">
             <a href="logout">Logout</a>
           </li>
-          <li class="navpoint menu-login" data="login">
+          <li class="navpoint menu-login text-center" data="login">
             <a href="#login">Login</a>
           </li>
-
-          <li class="navpoint menu-blog" >
-             <a href="http://blog.scripler.com/" class="navpoint blog-link">Blog</a> 
+          <li class="navpoint menu-blog text-center" >
+            <a href="http://blog.scripler.com/" class="navpoint blog-link">Blog</a>
           </li>
-          <li class="navpoint menu-talk" >
-             <a href="http://talk.scripler.com/" class="navpoint talk-link">Talk</a> 
+          <li class="navpoint menu-talk text-center" >
+            <a href="http://talk.scripler.com/" class="navpoint talk-link">Talk!</a>
           </li>
         </ul>
         
@@ -58,7 +55,6 @@
       </div>
     </nav>
     <div class="containerMain">
-      <!-- Example row of columns -->
       <div class="row " id="login">
         <form id="login-form" class="center-block text-center col-xs-12 col-md-8 ">
           <div class="login-group center-block text-center">
@@ -82,7 +78,7 @@
       
       <div class="row page " id="scripler">
         <div class="testMain col-xs-12 center-block ">
-          <img src="img/logo.png" class="center-block">
+          <img src="img/logo.png" id="scriplerLogo" class="center-block">
           <h2 id="makeGreat" class="text-center">Make great ebooks</h2>
           <h4 class="text-center">Scripler is an intuitive way to write and produce ebooks.</h4>
           <h4 class="text-center">Your books will be beautiful, fully functional and ready for distribution.</h4>
@@ -98,8 +94,8 @@
         </div>
       </div>
       <div class="row page" id="features">
-        <h2 class="col-xs-12 text-center feats "  >Features</h2>
-        <div class="col-xs-12">
+        <h2 class="col-xs-12 text-center feat">Features</h2>
+        <div class="col-xs-12 col-md-10 col-md-offset-1 ">
           <div class="col-xs-12 col-md-6">
             <div id="free" class="col-xs-12  pull-left features">
               <img src="img/features/free.png" class="pull-left">
@@ -119,69 +115,68 @@
           </div>
           <div class="col-xs-12 col-md-6  ">
             <div id="many" class="col-xs-12  pull-right features">
-              <img src="img/features/many.png" class="pull-right">
+              <img src="img/features/many.png" class="pull-right-on-big-screen">
               <h3 class="feats">Make as many books you like</h3>
               <p class="whiteFeats">No limit on the number of books you can make. Make 1000 books consisting only of a poem each. Make serial fiction and publish each chapter as an ebook or collect your creations in vast works of literature. Just experiment, go wild.</p>
             </div>
             <div id="rogd" class="col-xs-12  pull-right features">
-              <img src="img/features/togd.png" class="pull-right">
+              <img src="img/features/togd.png" class="pull-right-on-big-screen">
               <h3 class="feats">Great typography and design</h3>
               <p class="whiteFeats">Make professionally designed typography with Scripler’s book-templates. You’ll have a wide selection of great fonts and full control of the typography. Easily insert images and figures.</p>
             </div>
             <div id="premium" class="col-xs-12  pull-right features">
-              <img src="img/features/premium.png" class="pull-right">
+              <img src="img/features/premium.png" class="pull-right-on-big-screen">
               <h3 class="feats">Premium subscription for heavy users and professionals</h3>
               <p class="whiteFeats">As a premium subscriber you’ll have a wider range of professionally designed book-templates to choose from, more space for more books, as well as the ability to easily create and control your own custom book-templates.</p>
             </div>
           </div>
         </div>
       </div>
+      
       <div class="row page" id="about">
-        <h2 class="col-xs-12 text-center about"  >About</h2>
+        <h2 class="col-xs-12 col-md-10 col-md-offset-1 text-center about about-scripler">About</h2>
         <h3 class="col-xs-12 text-center" >Scripler will make the ebook revolution accessible to anyone who has something to say.</h3>
-        <h2 class="col-xs-12 text-center" >The scripler team</h2>
-        <div class="col-xs-12">
-          <div class="col-xs-12 col-md-4 pers">
+        <h3 class="col-xs-12 text-center about-scripler" id="scriplerTeam" >The Scripler Team</h3>
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+          <div class="col-xs-12 col-md-6 pers">
             <a class="person" href="mailto:david@scripler.com" class="email-text">David Walther Birk</a>, Project Lead<br />
             Is actually an archaeologist!
           </div>
-          <div class=" col-xs-12 col-md-4 pers">
+          <div class=" col-xs-12 col-md-6 pers">
             <a class="person" href="mailto:morten@scripler.com" class="email-text">Morten Garbøl Franck</a>, Developer<br />
             Is addicted to:<br />
             <ul><li>Lists</li></ul>
           </div>
-          <div class=" col-xs-12 col-md-4 pers">
+          <div class=" col-xs-12 col-md-6 pers">
             <a class="person" href="mailto:sofie@scripler.com" class="email-text">Sofie Marie Ottsen</a>, Communications<br />
             Plays the saxophone (really poorly).
           </div>
-          <div class=" col-xs-12 col-md-4 pers">
+          <div class=" col-xs-12 col-md-6 pers">
             <a class="person" href="mailto:ole@scripler.com" class="email-text">Ole Sandbæk Jørgensen</a>, Developer<br />
             Fanatic movie watcher. As long as I got my specs on, aye.
           </div>
-          <div class=" col-xs-12 col-md-4 pers">
+          <div class=" col-xs-12 col-md-6 pers">
             <a  class="person" href="mailto:kaspar@scripler.com" class="email-text">Kaspar Sivertsen</a>, Graphic designer<br />
             Has no special characteristics whatsoever.
           </div>
-          <div class=" col-xs-12 col-md-4 pers">
+          <div class=" col-xs-12 col-md-6 pers">
             <a  class="person" href="mailto:roxana@scripler.com" class="email-text">Roxana Dobre</a>, Developer<br />
             Is addicted to cinnamon and collects lamb-toys.
           </div>
-          <div class=" col-xs-12 col-md-4 pers">
+          <div class=" col-xs-12 col-md-6 pers">
             <a class="person"  href="mailto:ioana@scripler.com" class="email-text"> Ioana Grozav</a>, Developer<br />
             Enjoys arguing on politics.
           </div>
         </div>
       </div>
+     
       <div class="row page" id="contact">
         <div class="col-xs-12 col-md-4 cont"  >
           <h2 class="col-xs-12 text-center con"  >Contact</h2>
           <h3  class="col-xs-12 text-center con">Ask us anything (about Scripler)</h3>
-          <p class="text-center">David Walther Birk </p>
-          <p class="text-center">Project leader</p>
-          <p class="text-center"><a class="person" href="mailto:david@scripler.com">david@scripler.com</a></p>
+          <p class="text-center"><a class="person" href="mailto:david@scripler.com">David Walther Birk,  </a>Project Leader </p>
           <h3  class="col-xs-12 text-center con">Find us</h3>
           <p class="text-center">Scripler</p>
-          <p class="text-center">Rainmaking Loft</p>
           <p class="text-center">Danneskiold-Samsøes Alle 41</p>
           <p class="text-center">1434 København K</p>
           <h3  class="col-xs-12 text-center con">Press and media</h3>
@@ -211,24 +206,25 @@
               <a class="socialicon" href="auth/linkedin"><span class="icon-linkedin"></span></a>
               <a class="socialicon"href="auth/google"><span class="icon-google-plus"></span></a>
             </div>
-            
-          </div>
-          
-          <iframe id="map_canvas1" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3767.565717788916!2d12.60372839999965!3d55.68054211484804!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x465253256f012ff3%3A0x680b1b05dd2d97d5!2sDanneskiold-Sams%C3%B8es+All%C3%A9+41%2C+1434+K%C3%B8benhavn+K!5e1!3m2!1sen!2sdk!4v1427283539148"  style="pointer-events:none " frameborder="0" style="border:0"></iframe>
           
         </div>
-        </div> <!-- /container -->
-        <script src="js/vendor/jquery-1.11.2.min.js"></script>
-        <script src="js/vendor/bootstrap.min.js"></script>
-        <script src="js/frontpage.jquery.js"></script>
-        <script src="create/scripts/utils-shared.js"></script>
-        <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-41784294-1', 'scripler.com');
-        ga('send', 'pageview');
-        </script>
-      </body>
-    </html>
+        
+        <iframe id="map_canvas1" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3767.565717788916!2d12.60372839999965!3d55.68054211484804!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x465253256f012ff3%3A0x680b1b05dd2d97d5!2sDanneskiold-Sams%C3%B8es+All%C3%A9+41%2C+1434+K%C3%B8benhavn+K!5e1!3m2!1sen!2sdk!4v1427283539148"  style="pointer-events:none " frameborder="0" style="border:0"></iframe>
+        
+      </div>
+      </div> <!-- /container -->
+      <script src="js/vendor/jquery-1.11.2.min.js"></script>
+      <script src="js/vendor/bootstrap.min.js"></script>
+      <script src="js/frontpage.jquery.js"></script>
+      <script src="create/scripts/utils-shared.js"></script>
+      <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-41784294-1', 'scripler.com');
+      ga('send', 'pageview');
+      </script>
+    </body>
+  </html> 
+ 
