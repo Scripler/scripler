@@ -15,6 +15,7 @@ var document_utils = require('../lib/document-utils');
 var Image = require('../models/image.js').Image;
 var User = require('../models/user.js').User;
 var fs = require('fs');
+var user_utils = require('../lib/user-utils');
 
 //Load a document by id
 exports.load = function (id) {
@@ -290,7 +291,9 @@ exports.upload = function (req, res, next) {
 						}
 						totalBytes += stats.size;
 						if (req.user.storageUsed + totalBytes > storageLimitBytes) {
-							return next({message: "User storage quota exceeded (" + (req.user.storageUsed + totalBytes) + " > " + storageLimitBytes + " bytes)", status: 402});
+							logger.error("User " + req.user._id + " tried to exceed storage quota (" + (req.user.storageUsed + totalBytes) + " > " + storageLimitBytes + " bytes)");
+							var errorMessageToUser = user_utils.getStorageLimitErrorMessage(req.user.level, conf.subscriptions[req.user.level].storage);
+							return next({message: errorMessageToUser, status: 402});
 						}
 
 						var image = new Image({
