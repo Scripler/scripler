@@ -84,8 +84,8 @@
 				</form>
 
 				<div class="project-options" data-ng-show="$index == selectedProjectOptions">
-					<div class="project-options-menupoint" data-ng-click="project.editingProjectTitle = true; hideProjectOptions();">rename</div>
-					<div class="project-options-menupoint" data-ng-click="copyProject(project); hideProjectOptions();">copy</div>
+					<div class="project-options-menupoint" data-ng-hide="project.archived" data-ng-click="project.editingProjectTitle = true; hideProjectOptions();">rename</div>
+					<div class="project-options-menupoint" data-ng-hide="project.archived" data-ng-click="copyProject(project); hideProjectOptions();">copy</div>
 					<div class="project-options-menupoint" data-ng-hide="project.archived" data-ng-click="archiveProject(project); hideProjectOptions();">archive</div>
 					<div class="project-options-menupoint" data-ng-show="project.archived" data-ng-click="unarchiveProject(project); hideProjectOptions();">unarchive</div>
 				</div>
