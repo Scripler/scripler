@@ -320,6 +320,35 @@ hr {
 	padding: 11.5px 20px 11.5px 20px;
 	text-align: center;
 }
-.feedback:hover {
-	color: #fff265;
+.projectTitleEditing .ng-invalid{
+	border-color: red !important;
+	border-width: 2px !important;
+	border-color: black;
+}
+.nameError::after{
+	content:'';
+	width: 0; 
+	height: 0; 
+	position: absolute; 
+	left: 0;
+	top:-10px;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 10px solid red;
+}
+.nameError{
+	background-color: red;
+	width: 100%; 
+	text-align: center;
+	font-size: 0.7em;
+	padding:3px;
+	color: #000;
+	z-index: 5101;
+	display:block;
+	position: absolute; 
+	top:110px;
+	left: 0;
+	overflow: visible;
+	overflow-y:visible;
+
 }

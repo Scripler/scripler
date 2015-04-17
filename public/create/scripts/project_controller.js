@@ -414,13 +414,22 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return deferred.promise;
 	};
 
+	$scope.storeTitle = function(projectDocument) {
+		$scope.storedTitle = projectDocument.name;
+	};
+
 	$scope.renameProjectDocument = function(projectDocument) {
-        if ($scope.user._id) {
-            $http.put('/document/' + projectDocument._id + '/rename', angular.toJson(projectDocument))
-                .success(function() {
+		if (!projectDocument.name) {
+			projectDocument.name = $scope.storedTitle;
+		}
+		if ($scope.user._id) {
+			$http.put('/document/' + projectDocument._id + '/rename', angular.toJson(projectDocument))
+				.success(function() {
 					if (projectDocument.editingNewProjectDocument) {
 						$scope.openProjectDocument(projectDocument);
 					}
+					projectDocument.editingProjectDocumentTitle = false;
+
 				});
 		} else {
 			//TODO save to localstorage
