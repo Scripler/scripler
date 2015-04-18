@@ -594,10 +594,7 @@ li.typo .style-copy-options p {
 .menu-box .option {
 	display: block;
 }
-.menu-box.left-menu-download {
-	text-align: center;
-}
-.menu-box.left-menu-download .download-icon {
+.menu-box .download-icon {
 	width: 50px;
 	height: auto;
 	margin: 0 5px;
