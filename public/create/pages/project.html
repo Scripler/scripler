@@ -294,10 +294,14 @@
 
 <div class="editor information clearfix" data-ng-class="{ 'menu-extended' : leftMenuShow || rightMenuShow }">
 	<p class="breadcrumb">
-		<a class="breadcrumb" data-ng-href="#/">Ebooks</a> / <span data-ng-bind="project.name"></span> / <span data-ng-bind="documentSelected.name"></span>
+		<a data-ng-href="#/">Ebooks</a> / <span data-ng-bind="project.name"></span> / <span data-ng-bind="documentSelected.name"></span>
 	</p>
 	<p class="savedstamp">
 		<span data-ng-bind="lastSaved"></span>
+	</p>
+
+	<p class="feedback" data-ng-click="openFeedback()">
+		Need help?
 	</p>
 </div>
 
@@ -316,9 +320,6 @@
 	<div class="menu-tab" data-ng-class="{ 'selectedTab' : rightMenuShowItem == 'publish' }" data-ng-click="showRightMenu('publish')">
 		<img src="pages/images/publish.svg">
 	</div>
-<!--	<div class="menu-tab feedback" data-ng-click="openFeedback()">
-		<img src="pages/images/feedback.svg" width="20" />
-	</div>-->
 </div>
 <div id="menu-right" class="menu-right" data-ng-class="{ 'open' : rightMenuShow }">
 	<div class="menu-item-right" data-ng-show="rightMenuShowItem == 'finalize'">
