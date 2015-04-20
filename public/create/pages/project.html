@@ -74,7 +74,6 @@
 
 				<div class="styleset-options" data-ng-show="$index == selectedStylesetOptions">
 					<div class="styleset-options-menupoint first" data-ng-click="styleset.editingStyleSetTitle = true; hideStylesetOptions();">Rename</div>
-					<!--<div class="styleset-options-menupoint" data-ng-click="archiveStyleset(styleset); hideStylesetOptions();">archive</div>-->
 					<div class="styleset-options-menupoint" data-ng-click="applyStylesetToDocument(styleset,true); hideStylesetOptions();">Apply to chapter</div>
 					<div class="styleset-options-menupoint" data-ng-click="applyStylesetToProject(styleset); hideStylesetOptions();">Apply to ebook</div>
 				</div>
@@ -163,58 +162,6 @@
 					<div class="menu-feature-title">Image</div>
 					<div>Upload and insert images. Supported formats: JPG, PNG and SVG. Max size: 10 MB. As a rule of thumb the image should be around 1600 pixels on the longest side.</div>
 				</div>
-				<!--<div class="left-menu-options margin-top">
-					<span class="button">
-						<a data-ng-click="alignImageLeft(); insertImageOption('')">
-							<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Left" />
-						</a>
-					</span>
-					<span class="button">
-						<a data-ng-click="alignImageCenter(); insertImageOption('')">
-							<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Center" />
-						</a>
-					</span>
-					<span class="button">
-						<a data-ng-click="alignImageRight(); insertImageOption('')">
-							<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Align Image Right" />
-						</a>
-					</span>
-					<span class="button">
-						<a data-ng-click="insertImageOption('turnImage')">
-							<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Turn Image" />
-						</a>
-					</span>
-					<span class="button">
-						<a data-ng-click="duplicateImage(); insertImageOption('')">
-							<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Duplicate Image" />
-						</a>
-					</span>
-					<span class="button">
-						<a data-ng-click="insertImageOption('resizeImage')">
-							<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Resize Image" />
-						</a>
-					</span>
-				</div>
-				<div class="left-menu-options-parameters margin-top">
-					<div data-ng-class="{ 'expanded' : activeImageOption === 'turnImage' }">
-						<span class="button">
-							<img src="/create/ckeditor/skins/scripler/icons/image.png" title="Resize Image Set Procentages" />
-						</span>
-						<span class="menu-box inputfield">
-							<input type="text" value="45" class="show-info">
-							<span class="extra-info">&deg;</span>
-						</span>
-					</div>
-					<div data-ng-class="{ 'expanded' : activeImageOption === 'resizeImage' }">
-						<span class="button">
-							<img src="/create/ckeditor/skins/scripler/icons/maximize.png" title="Resize Image Set Procentages" />
-						</span>
-						<span class="menu-box inputfield">
-							<input type="text" value="100" class="show-info">
-							<span class="extra-info">%</span>
-						</span>
-					</div>
-				</div>-->
 			</li>
 
 			<li data-ng-click="insertOptionChosen('showInsertPagebreakOptions');" class="insertOption first" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertPagebreakOptions' }">
@@ -232,14 +179,8 @@
 						<div class="menu-feature-title">Insert page break</div>
 						<div>Insert a soft page break at the cursor position.</div>
 					</div>
-					<!--<span class="button">
-						<a data-ng-click="insertPageBreakAvoid()">
-							<img src="/create/ckeditor/skins/scripler/icons/pagebreak.png" title="Avoid pagebreak" />
-						</a>
-					</span>-->
 				</div>
 			</li>
-			<!--<li class="insertOption"><img src="pages/images/insert_cover_button.png" width="80" height="80"></li>-->
 			<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertAnchorOptions' }">
 				<div class="left-menu-options">
 					<span class="menu-box">
@@ -259,9 +200,6 @@
 					</div>
 				</div>
 			</li>
-			<!--<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertBoxOptions'showInsertHyperlinkOptions }">
-				this is the options for insert hyperlink
-			</li>-->
 		</ul>
 	</div>
 	<div class="documents-options-bottom-buttons" data-ng-show="leftMenuShowItem == 'contents'">
