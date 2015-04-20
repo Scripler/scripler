@@ -316,17 +316,27 @@ hr {
 	padding-top: 5px;
 }
 
-.feedback {
+.top-btn{
 	position:absolute;
 	top:0;
-	right:0;
-	background:#c6c6c6;
 	font-size: 18px;
-	color: #fff;
 	cursor: pointer;
 	padding: 11.5px 20px 11.5px 20px;
 	text-align: center;
 }
+
+.feedback {
+	right:0;
+	background:#c6c6c6;
+	color: #fff;
+}
+
+.blog{
+	right:78px;
+	background:#000;
+	color: #fff56c;
+}
+
 .projectTitleEditing .ng-invalid{
 	border-color: red !important;
 	border-width: 2px !important;
