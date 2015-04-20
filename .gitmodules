@@ -6,4 +6,4 @@
 	url = https://github.com/Scripler/ckeditor-scripler.git
 [submodule "public/reader/epubjs"]
 	path = public/reader/epubjs
-	url = C:/Users/AllanMørk/Dropbox/GitHub/epub.js
+	url = https://github.com/Scripler/epub.js.git
