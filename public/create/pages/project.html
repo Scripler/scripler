@@ -443,8 +443,22 @@
 	<div class="menu-item-right" data-ng-show="rightMenuShowItem == 'publish'">
 		<ul>
 			<li class="menu-item-background">
-				<div class="menu-box label text-align-center">picture</div>
-				<div class="menu-box label text-align-center">{{ project.metadata.title }}</div>
+				<div class="menu-box label text-align-center">
+					<a data-ng-href="{{projectPublishLink}}" target="_blank">
+						picture
+					</a>
+				</div>
+				<div class="menu-box label text-align-center text-decoration-bold">
+					<a data-ng-href="{{projectPublishLink}}" target="_blank">
+						{{ project.metadata.title }}
+					</a>
+				</div>
+				<div class="menu-box label text-align-center">
+					<a data-ng-href="{{projectPublishLink}}" target="_blank">
+						View your book
+					</a>
+				</div>
+
 				<div class="menu-box label margin-top">Status</div>
 				<div class="menu-status" data-ng-hide="projectPublishStatus">Not published</div>
 				<div class="menu-status published" data-ng-show="projectPublishStatus">
