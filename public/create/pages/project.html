@@ -407,13 +407,13 @@
 				<div class="menu-box inputfield no-animation" data-ng-show="projectPublishStatus">
 					<input type="text" name="share_link" id="share_link" data-ng-value="projectPublishLink">
 				</div>
-				<div class="button margin-top" data-ng-click="publishPublishProject();" data-ng-hide="projectPublishStatus">
+				<div class="button margin-top" data-ng-click="publishProject();" data-ng-hide="projectPublishStatus">
 					Publish
 				</div>
-				<div class="button margin-top" data-ng-click="publishUpdateProject();" data-ng-show="projectPublishStatus">
+				<div class="button margin-top" data-ng-click="publishProject();" data-ng-show="projectPublishStatus">
 					Update
 				</div>
-				<div class="button revert margin-top" data-ng-click="publishUnpublishProject();" data-ng-show="projectPublishStatus">
+				<div class="button revert margin-top" data-ng-click="unpublishProject();" data-ng-show="projectPublishStatus">
 					Unpublish
 				</div>
 				<div class="menu-box label desc margin-top">

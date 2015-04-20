@@ -710,7 +710,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		});
 	};
 
-	$scope.publishPublishProject = function() {
+	$scope.publishProject = function() {
 		var deferred = $q.defer();
 		/*$http.put('/project/' + $scope.project._id + '/publish', {
 			'publishStatus': true
@@ -732,29 +732,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		return deferred.promise;
 	};
-	$scope.publishUpdateProject = function() {
-		var deferred = $q.defer();
-		/*$http.put('/project/' + $scope.project._id + '/publish', {
-			'publishStatus': true
-        }).success(function() {
-			deferred.resolve();
-		});*/
-
-		//Setting data for test
-		$scope.projectPublishStatus = true;
-
-		var now = new Date();
-		var hours = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();
-		var minutes = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
-		var seconds = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds();
-		$scope.projectPublishDate = now.getDate() + '/' + (now.getMonth()+1) + '/' + now.getFullYear() + ' ' + hours + ':' + minutes + ':' + seconds;
-		$scope.projectPublishLink = 'http://reader.scripler.com/ebook/fgT145Fhp/v2';
-
-		deferred.resolve();
-
-		return deferred.promise;
-	};
-	$scope.publishUnpublishProject = function() {
+	$scope.unpublishProject = function() {
 		var deferred = $q.defer();
 		/*$http.put('/project/' + $scope.project._id + '/publish', {
 			'publishStatus': false
