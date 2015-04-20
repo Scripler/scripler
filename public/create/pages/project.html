@@ -452,8 +452,8 @@
 					<div class="font-small font-italic">{{ projectPublishDate }}</div>
 				</div>
 				<div class="menu-box label margin-top" data-ng-show="projectPublishStatus">Shareable link</div>
-				<div class="menu-box inputfield" data-ng-show="projectPublishStatus">
-					<input type="text" name="share_link" id="share_link" data-ng-value="projectPublishLink" />
+				<div class="menu-box inputfield no-animation" data-ng-show="projectPublishStatus">
+					<input type="text" name="share_link" id="share_link" data-ng-value="projectPublishLink">
 				</div>
 				<div class="button margin-top" data-ng-click="publishPublishProject();" data-ng-hide="projectPublishStatus">
 					Publish
