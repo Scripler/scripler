@@ -65,6 +65,18 @@
 		return stylesetContents;
 	}
 
+	function getCombinedStylesetContents(stylesets, defaultStyleset) {
+		var combinedCSS = '';
+		for (var i = 0; i < stylesets.length; i++) {
+			if (defaultStyleset == stylesets[i]._id) {
+				combinedCSS += getStylesetContents(stylesets[i], true);
+			} else {
+				combinedCSS += getStylesetContents(stylesets[i], false);
+			}
+		}
+		return combinedCSS;
+	}
+
 	/**
 	 * Check if two Mongoose objects are idential based on _id.
 	 *
@@ -194,6 +206,7 @@
 
 	return {
 		getStylesetContents : getStylesetContents,
+		getCombinedStylesetContents: getCombinedStylesetContents,
 		mongooseEquals : mongooseEquals,
 		getMongooseId : getMongooseId,
 		containsModel : containsModel,

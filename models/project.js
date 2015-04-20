@@ -68,6 +68,14 @@ var ProjectSchema = new Schema({
 	},
 	archived: { type: Boolean, default: false},
 	deleted: { type: Boolean, default: false},
+	publish: {
+		url: {type: String},
+		image: {type: String},
+		title: {type: String},
+		description: {type: String},
+		created: { type: Date },
+		modified: { type: Date }
+	},
 	created: { type: Date, default: Date.now },
 	modified: { type: Date, default: Date.now },
 	images: [

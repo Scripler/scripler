@@ -4,13 +4,14 @@ var Document = require('../models/document.js').Document;
 var Styleset = require('../models/styleset.js').Styleset;
 var copyStyleset = require('../models/styleset.js').copy;
 var Style = require('../models/style.js').Style;
+var document_route = require('./document.js');
 var utils = require('../lib/utils');
+var utils_shared = require('../public/create/scripts/utils-shared');
 var extend = require('xtend');
 var sanitize = require('sanitize-filename');
 var conf = require('config');
 var path = require('path');
 var fs = require('fs');
-var rimraf = require('rimraf');
 var ncp = require('ncp').ncp;
 var epub3 = require('../lib/epub/epub3');
 var mkdirp = require('mkdirp');
@@ -23,6 +24,8 @@ var exec = require('child_process').exec;
 var logger = require('../lib/logger');
 var uuid_lib = require('node-uuid');
 var document_utils = require('../lib/document-utils');
+var webshot = require('webshot');
+var lwip = require('lwip');
 
 //Load project by id
 exports.load = function (id) {
@@ -34,8 +37,9 @@ exports.load = function (id) {
 			if (!project) {
 				return next({message: "Project not found", status: 404});
 			}
-			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToModel(req.user, project)) return next(403);
+			// Only check access if user is associated with request.
+			// Let missing authentication be handled in auth middleware
+			if (req.user && !utils.hasAccessToModel(req.user, project)) return next(403);
 
 			req.project = project;
 			return next();
@@ -481,6 +485,164 @@ exports.compile = function (req, res, next) {
 
 }
 
+exports.publish = function (req, res, next) {
+	var project = req.project;
+	var userEpubPath = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + req.user._id, project._id + '.epub');
+	var publishEpubPath = path.join(conf.resources.publishDir, req.project._id + '.epub');
+
+	utils.copyFile(userEpubPath, publishEpubPath, function(err) {
+		if (err) {
+			return next(err);
+		}
+		// Get title without whitespace
+		var epubName = (project.metadata.title || project.name).replace(/\s/g, "");
+
+		project.publish.url = conf.app.url_prefix + conf.publish.route + "/" + project.id + "/" + epubName;
+
+		// Only set created date initially - if already set, we are updating/republishing
+		if (!project.publish.created) {
+			project.publish.created = Date.now();
+		}
+		project.publish.modified = Date.now();
+		project.publish.title = req.project.metadata.title || req.project.name || '';
+		project.publish.description = project.metadata.description || '';
+
+		// Generate image
+		var imagePath = path.join(conf.resources.publishDir, req.project._id + '.jpg');
+		project.publish.image = conf.resources.publishUrl + "/" + project.id + ".jpg";
+		if (project.metadata.cover) {
+			//Cover image present, so resize it and use that
+			var srcImage = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project.id, conf.epub.imagesDir, project.metadata.cover.split('/')[1]);
+
+			lwip.open(srcImage, function(err, image){
+				if (err) {
+					return next(err);
+				}
+				var targetRatio = conf.publish.screenshot.height / conf.publish.screenshot.width;
+				var sourceRatio = image.height() / image.width();
+				var resizeRatio;
+				if (targetRatio > sourceRatio) {
+					// Source is wider in ratio, so resize after height. Some width will be cropped.
+					resizeRatio = conf.publish.screenshot.height / image.height();
+				} else {
+					// Source is higher in ratio, so resize after width. Some height will be cropped.
+					resizeRatio = conf.publish.screenshot.width / image.width();
+				}
+
+				image.resize(image.width() * resizeRatio, image.height() * resizeRatio, function(err, image){
+					if (err) {
+						return next(err);
+					}
+					image.crop(0, 0, conf.publish.screenshot.width, conf.publish.screenshot.height, function(err, image) {
+						if (err) {
+							return next(err);
+						}
+						image.writeFile(imagePath, 'jpg', function(err){
+							if (err) {
+								return next(err);
+							}
+							project.save(function (err) {
+								if (err) {
+									return next(err);
+								}
+								res.send({
+									project: project
+								});
+							});
+						});
+					});
+
+				});
+			});
+
+		} else {
+			// No cover image, so we will create a screenshot
+			// Load the first document used to generate sceenshot of
+			document_route.load(project.documents[0])(req, res, function (err) {
+
+				var document = req.document;
+				// Load the styles applied to that document
+				Styleset.find({"_id": {"$in": document.stylesets}}).populate('styles').exec(function (err, stylesets) {
+					if (err) {
+						return next(err);
+					}
+
+					var html = '<html><head><base href="' + conf.app.url_prefix + 'create/" />' +
+						'<link type="text/css" rel="stylesheet" href="stylesets/non-editable.css"><style>' +
+						utils_shared.getCombinedStylesetContents(stylesets, document.defaultStyleset) +
+						'</style></head><body id="scripler" class="styleset-' + document.defaultStyleset + '">' +
+						document.text +
+						'</body></html>';
+
+					logger.debug('Screenshot HTML: ' + html);
+					webshot(html, imagePath, {
+						siteType: 'html',
+						windowSize: {
+							width:  conf.publish.screenshot.width,
+							height: conf.publish.screenshot.height
+						},
+						defaultWhiteBackground: true,
+						zoomFactor: conf.publish.screenshot.zoom,
+						timeout: 5000 //ms
+					}, function (err) {
+						if (err) {
+							return next(err);
+						}
+						logger.debug("Webshot done");
+						project.save(function (err) {
+							if (err) {
+								return next(err);
+							}
+							res.send({
+								project: project
+							});
+						});
+					});
+				});
+			});
+		}
+	});
+}
+
+exports.unpublish = function (req, res, next) {
+	var project = req.project;
+	var publishEpubPath = path.join(conf.resources.publishDir, req.project._id + '.epub');
+
+	if (project.publish.url) {
+		// Delete the published epub
+		fs.unlink(publishEpubPath, function (err) {
+			if (err) {
+				return next(err);
+			}
+			//Set to unpublished in the database
+			project.publish.url = null;
+			project.save(function (err) {
+				if (err) {
+					return next(err);
+				}
+				res.send({project: project});
+			});
+		});
+	} else {
+		res.send({project: project});
+	}
+}
+
+exports.epubReader = function (req, res, next) {
+	var project = req.project;
+	if (project.publish.url) {
+		res.render('ebook', {
+			id: project.id,
+			title: project.publish.title,
+			description: project.publish.description,
+			image: project.publish.image,
+			url: project.publish.url,
+			env: env
+		});
+	} else {
+		res.redirect(conf.app.url_prefix + '?code=' + "301");//Non-published ebook
+	}
+}
 exports.downloadEpub = function (req, res, next) {
 	var userEpubFullPath = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + req.user._id, req.project._id + '.epub');
 	var userEpubFilename = (req.project.metadata.title || req.project.name) + ".epub";

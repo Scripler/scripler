@@ -62,8 +62,18 @@
 	"resources": {
 		"projectsDir": "/tmp/scripler/app/projects",
 		"usersDir": "/tmp/scripler/app/users",
+		"publishDir": "/tmp/scripler/app/published",
 		"projectsUrl": "http://scripler.com:3000/resources/projects",
-		"usersUrl": "http://scripler.com:3000/resources/users"
+		"usersUrl": "http://scripler.com:3000/resources/users",
+		"publishUrl": "http://scripler.com:3000/resources/published"
+	},
+	"publish": {
+		"route": "ebook",
+		"screenshot": {
+			"width": 150,
+			"height": 210,
+			"zoom": 0.25
+		}
 	},
 	"subscriptions": {
 		"free": {
