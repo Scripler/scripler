@@ -720,7 +720,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		//Setting data for test
 		$scope.projectPublishStatus = true;
-		$scope.projectPublishDate = new Date();
+
+		var now = new Date();
+		var hours = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();
+		var minutes = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
+		var seconds = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds();
+		$scope.projectPublishDate = now.getDate() + '/' + (now.getMonth()+1) + '/' + now.getFullYear() + ' ' + hours + ':' + minutes + ':' + seconds;
 		$scope.projectPublishLink = 'http://reader.scripler.com/ebook/fgT145Fhp';
 
 		deferred.resolve();
@@ -737,7 +742,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		//Setting data for test
 		$scope.projectPublishStatus = true;
-		$scope.projectPublishDate = new Date();
+
+		var now = new Date();
+		var hours = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();
+		var minutes = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
+		var seconds = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds();
+		$scope.projectPublishDate = now.getDate() + '/' + (now.getMonth()+1) + '/' + now.getFullYear() + ' ' + hours + ':' + minutes + ':' + seconds;
 		$scope.projectPublishLink = 'http://reader.scripler.com/ebook/fgT145Fhp/v2';
 
 		deferred.resolve();
