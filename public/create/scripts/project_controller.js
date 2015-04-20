@@ -1547,8 +1547,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				}
 				insert = insert.replace('link_text', title);
 
-				var regExpValidUrl = /^((https?):\/\/)?([w|W]{3}\.)+[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
-				validURL = !($scope.internal != true && !regExpValidUrl.test($scope.linkAddress));
+				var regExpValidUrl = /^((http?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
+
+				var isInternal = false;
+				var toc = $scope.toc;
+				toc.forEach(function(entry) {
+				    if($scope.linkAddress == entry.target)isInternal = true;
+				});
+
+				validURL = (regExpValidUrl.test($scope.linkAddress) || isInternal);
 			}	
 
 			//create and insert anchor/hyperlink element on the caret
@@ -1584,14 +1591,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
     	}
         if (newValue !== oldValue) {
 			$scope.linkAddress = newValue.target;
-			$scope.internal = true;
 			
 			if(!hasText){
 				$scope.linkText = newValue.text;
 			}
-		} else { 
-			$scope.internal = false;
-		}
+		} 
 
 		$scope.focusEditor();
 	});
