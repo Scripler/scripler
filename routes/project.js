@@ -4,9 +4,7 @@ var Document = require('../models/document.js').Document;
 var Styleset = require('../models/styleset.js').Styleset;
 var copyStyleset = require('../models/styleset.js').copy;
 var Style = require('../models/style.js').Style;
-var document_route = require('./document.js');
 var utils = require('../lib/utils');
-var utils_shared = require('../public/create/scripts/utils-shared');
 var extend = require('xtend');
 var sanitize = require('sanitize-filename');
 var conf = require('config');
@@ -24,8 +22,6 @@ var exec = require('child_process').exec;
 var logger = require('../lib/logger');
 var uuid_lib = require('node-uuid');
 var document_utils = require('../lib/document-utils');
-var webshot = require('webshot');
-var lwip = require('lwip');
 
 //Load project by id
 exports.load = function (id) {
@@ -495,9 +491,12 @@ exports.publish = function (req, res, next) {
 			return next(err);
 		}
 		// Get title without whitespace
-		var epubName = (project.metadata.title || project.name).replace(/\s/g, "");
-
-		project.publish.url = conf.app.url_prefix + conf.publish.route + "/" + project.id + "/" + epubName;
+		var epubName = utils.cleanUrlPart(project.metadata.title || project.name);
+		var epubAuthor = '';
+		if (project.metadata.authors && project.metadata.authors[0]) {
+			epubAuthor = utils.cleanUrlPart(project.metadata.authors[0]) + "-";
+		}
+		project.publish.url = conf.app.url_prefix + conf.publish.route + "/" + project.id + "/" + epubAuthor + epubName;
 
 		// Only set created date initially - if already set, we are updating/republishing
 		if (!project.publish.created) {
@@ -510,97 +509,20 @@ exports.publish = function (req, res, next) {
 		// Generate image
 		var imagePath = path.join(conf.resources.publishDir, req.project._id + '.jpg');
 		project.publish.image = conf.resources.publishUrl + "/" + project.id + ".jpg";
-		if (project.metadata.cover) {
-			//Cover image present, so resize it and use that
-			var srcImage = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project.id, conf.epub.imagesDir, project.metadata.cover.split('/')[1]);
 
-			lwip.open(srcImage, function(err, image){
+		utils.generatePreview(project, imagePath, function (err) {
+			if (err) {
+				return next(err);
+			}
+			project.save(function (err) {
 				if (err) {
 					return next(err);
 				}
-				var targetRatio = conf.publish.screenshot.height / conf.publish.screenshot.width;
-				var sourceRatio = image.height() / image.width();
-				var resizeRatio;
-				if (targetRatio > sourceRatio) {
-					// Source is wider in ratio, so resize after height. Some width will be cropped.
-					resizeRatio = conf.publish.screenshot.height / image.height();
-				} else {
-					// Source is higher in ratio, so resize after width. Some height will be cropped.
-					resizeRatio = conf.publish.screenshot.width / image.width();
-				}
-
-				image.resize(image.width() * resizeRatio, image.height() * resizeRatio, function(err, image){
-					if (err) {
-						return next(err);
-					}
-					image.crop(0, 0, conf.publish.screenshot.width, conf.publish.screenshot.height, function(err, image) {
-						if (err) {
-							return next(err);
-						}
-						image.writeFile(imagePath, 'jpg', function(err){
-							if (err) {
-								return next(err);
-							}
-							project.save(function (err) {
-								if (err) {
-									return next(err);
-								}
-								res.send({
-									project: project
-								});
-							});
-						});
-					});
-
+				res.send({
+					publish: project.publish
 				});
 			});
-
-		} else {
-			// No cover image, so we will create a screenshot
-			// Load the first document used to generate sceenshot of
-			document_route.load(project.documents[0])(req, res, function (err) {
-
-				var document = req.document;
-				// Load the styles applied to that document
-				Styleset.find({"_id": {"$in": document.stylesets}}).populate('styles').exec(function (err, stylesets) {
-					if (err) {
-						return next(err);
-					}
-
-					var html = '<html><head><base href="' + conf.app.url_prefix + 'create/" />' +
-						'<link type="text/css" rel="stylesheet" href="stylesets/non-editable.css"><style>' +
-						utils_shared.getCombinedStylesetContents(stylesets, document.defaultStyleset) +
-						'</style></head><body id="scripler" class="styleset-' + document.defaultStyleset + '">' +
-						document.text +
-						'</body></html>';
-
-					logger.debug('Screenshot HTML: ' + html);
-					webshot(html, imagePath, {
-						siteType: 'html',
-						windowSize: {
-							width:  conf.publish.screenshot.width,
-							height: conf.publish.screenshot.height
-						},
-						defaultWhiteBackground: true,
-						zoomFactor: conf.publish.screenshot.zoom,
-						timeout: 5000 //ms
-					}, function (err) {
-						if (err) {
-							return next(err);
-						}
-						logger.debug("Webshot done");
-						project.save(function (err) {
-							if (err) {
-								return next(err);
-							}
-							res.send({
-								project: project
-							});
-						});
-					});
-				});
-			});
-		}
+		});
 	});
 }
 
@@ -620,15 +542,16 @@ exports.unpublish = function (req, res, next) {
 				if (err) {
 					return next(err);
 				}
-				res.send({project: project});
+				res.send({publish: project.publish});
 			});
 		});
 	} else {
-		res.send({project: project});
+		logger.warn("Unpublish called for already unpublished project.");
+		res.send({publish: project.publish});
 	}
 }
 
-exports.epubReader = function (req, res, next) {
+exports.renderEpubReader = function (req, res, next) {
 	var project = req.project;
 	if (project.publish.url) {
 		res.render('ebook', {

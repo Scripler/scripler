@@ -676,8 +676,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			if (data) {
 				$http.post('/project/' + $scope.pid + '/publish')
 					.success(function(data, status) {
-						if (data && data.project) {
-							$scope.project.publish = data.project.publish;
+						if (data && data.publish) {
+							$scope.project.publish = data.publish;
 							// Force image reload by appending timestamp
 							$scope.project.publish.image = $scope.project.publish.image + '?' + new Date().getTime();
 						} else {
@@ -696,8 +696,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.unpublishEpub = function() {
 		$http.delete('/project/' + $scope.pid + '/publish')
 			.success(function(data, status) {
-				if (data && data.project) {
-					$scope.project.publish = data.project.publish;
+				if (data && data.publish) {
+					$scope.project.publish = data.publish;
 				} else {
 					console.log("Error unpublishing, status ok, but return value is: " + JSON.stringify(data));
 				}
