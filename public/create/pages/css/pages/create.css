@@ -323,17 +323,25 @@ hr {
 	cursor: pointer;
 	padding: 11.5px 20px 11.5px 20px;
 	text-align: center;
+	width:80px;
 }
 
 .feedback {
-	right:0;
+	right:78px;
 	background:#c6c6c6;
-	color: #fff;
 }
 
 .blog{
-	right:78px;
+	right:0;
 	background:#000;
+	
+}
+
+.feedback a{
+	color: #fff;
+}
+
+.blog a{
 	color: #fff56c;
 }
 
