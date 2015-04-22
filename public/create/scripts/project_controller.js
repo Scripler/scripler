@@ -1502,10 +1502,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 		iframeDoc.onselectionchange = OnChange;
         function OnChange () {
+        	var isHyperlink = iframeDoc.getSelection().anchorNode.parentElement.getAttribute("href")!=null;
             range = iframeDoc.getSelection().toString();
-           	document.getElementById("anchorInputBox").value = range;
-           	document.getElementById("hyperlinkInputBox").value = range;
-           	document.getElementById("hyperlinkTarget").value = "";
+            
+            if(!isHyperlink){
+            	document.getElementById("anchorInputBox").value = range;
+	        	document.getElementById("hyperlinkInputBox").value = range;
+	        	document.getElementById("hyperlinkTarget").value = "";
+	        }
 		}
 
         // onselectionchange doesn't work for Firefox, so instead we update with the old selectedContent returned by CKEditor
