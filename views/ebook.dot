@@ -52,7 +52,7 @@
 	<!-- Full Screen -->
 	<script src="../../reader/epubjs/reader/js/libs/screenfull.min.js"></script>
 	<!-- Highlights -->
-	<script src="../../reader/epubjs/reader/js/libs/jquery.highlight.js"></script>
+	<script src="../../reader/epubjs/libs/jquery/jquery.highlight.js"></script>
 	<script src="../../reader/epubjs/reader/js/hooks/extensions/highlight.js"></script>
 	[[??]]
 	<!-- zip -->
@@ -141,7 +141,7 @@
 	<div id="viewer"></div>
 	<div id="next" class="arrow">›</div>
 
-	<div id="loader"><img src="img/loader.gif"></div>
+	<div id="loader"><img src="../../reader/epubjs/img/loader.gif"></div>
 </div>
 <div class="overlay"></div>
 </body>
