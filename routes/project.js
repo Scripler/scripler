@@ -555,7 +555,7 @@ exports.renderEpubReader = function (req, res, next) {
 	var project = req.project;
 	if (project.publish.url) {
 		res.render('ebook', {
-			id: project.id,
+			epub: conf.resources.publishUrl + "/" + project.id + ".epub",
 			title: project.publish.title,
 			description: project.publish.description,
 			image: project.publish.image,

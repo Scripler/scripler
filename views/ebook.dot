@@ -32,7 +32,7 @@
 		"use strict";
 		document.onreadystatechange = function () {
 			if (document.readyState == "complete") {
-				window.Reader = ePubReader("../../resources/published/[[=model.id]].epub", {
+				window.Reader = ePubReader("[[=model.epub]]", {
 					reload: false,
 					sidebarReflow: true
 				});
