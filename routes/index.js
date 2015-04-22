@@ -8,7 +8,8 @@ var frontpage = require('./frontpage')
 	, image = require('./image')
 	, font = require('./font')
 	, payment = require('./payment')
-	, utils = require('../lib/utils');
+	, utils = require('../lib/utils')
+	, conf = require('config');
 
 module.exports = function (app, auth) {
 
@@ -97,7 +98,10 @@ module.exports = function (app, auth) {
 
 	/* API Output */
 	app.get('/project/:projectIdPopulatedFull/compile', auth.isLoggedIn(), project.compile);
+	app.post('/project/:projectId/publish', auth.isLoggedIn(), project.publish);
+	app.delete('/project/:projectId/publish', auth.isLoggedIn(), project.unpublish);
 	app.get('/project/:projectId/epub', auth.isLoggedIn(), project.downloadEpub);
+	app.get('/'+conf.publish.route+'/:projectId/*', project.renderEpubReader);
 
 	// API Parameters
 	app.param('projectId', function (req, res, next, id) {

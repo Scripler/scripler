@@ -412,7 +412,22 @@
 				<span class="menu-box label margin-top left-menu-download">
 					<img title="Download epub" class="download-icon" src="pages/images/compile_epub.png" data-ng-click="exportEpub()">
 				</span>
+
 			</li>
+			<!-- START placeholder gui for PUBLISH -->
+			<li class="outputOptionPublish">
+				<div class="menu-box label text-align-center" data-ng-show="!project.publish.url" data-ng-click="publishEpub()">Publish ebook</div>
+				<div class="menu-box label text-align-center" data-ng-show="project.publish.url" data-ng-click="publishEpub()">Re-publish ebook</div>
+				<div class="menu-box label text-align-center" data-ng-show="project.publish.url">
+					<div data-ng-click="unpublishEpub()">Unpublish ebook</div>
+					<div class="text-align-center"><img style="border: 1px solid black;" data-ng-src="{{project.publish.image}}" height="120" alt="Cover" /></div>
+					<a class="publishedUrl" data-ng-href="{{project.publish.url}}" data-ng-bind-html="project.publish.url"></a>
+				</div>
+				<div class="loading-animation" data-ng-show="projectPublishLoading">
+					<div class="loading-mask"></div>
+				</div>
+			</li>
+			<!-- END placeholder gui for PUBLISH -->
 			</ul>
 		</div>
 </div>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>Scripler - [[=model.title]]</title>
+	<meta name="description" content="[[=model.description]]">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimal-ui">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+
+	<!-- Twitter Card data -->
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:site" content="@Scriplerdk">
+	<meta name="twitter:title" content="Scripler - [[=model.title]]">
+	<meta name="twitter:description" content="[[=model.description]]">
+	<meta name="twitter:image" content="[[=model.image]]">
+
+	<!-- Open Graph data -->
+	<meta property="og:title" content="Scripler - [[=model.title]]" />
+	<meta property="og:type" content="book" />
+	<meta property="og:url" content="[[=model.url]]" />
+	<meta property="og:image" content="[[=model.image]]" />
+	<meta property="og:description" content="[[=model.description]]" />
+	<meta property="og:site_name" content="Scripler" />
+
+	<link rel="stylesheet" href="../../reader/epubjs/css/normalize.css">
+	<link rel="stylesheet" href="../../reader/epubjs/css/main.css">
+	<link rel="stylesheet" href="../../reader/epubjs/css/popup.css">
+	<script src="../../reader/epubjs/libs/jquery/jquery-2.1.0.min.js"></script>
+
+	<script>
+		"use strict";
+		document.onreadystatechange = function () {
+			if (document.readyState == "complete") {
+				window.Reader = ePubReader("../../resources/published/[[=model.id]].epub", {
+					reload: false,
+					sidebarReflow: true
+				});
+			}
+		};
+
+	</script>
+	[[? model.env == 'production' ]]
+	<!-- zip -->
+	<script src="../../reader/epubjs/reader/js/libs/zip.min.js"></script>
+	<!-- Render -->
+	<script src="../../reader/epubjs/reader/js/epub.min.js"></script>
+	<!-- Hooks -->
+	<script src="../../reader/epubjs/reader/js/hooks.min.js"></script>
+	<!-- Reader -->
+	<script src="../../reader/epubjs/reader/js/reader.min.js"></script>
+	<!-- Full Screen -->
+	<script src="../../reader/epubjs/reader/js/libs/screenfull.min.js"></script>
+	<!-- Highlights -->
+	<script src="../../reader/epubjs/reader/js/libs/jquery.highlight.js"></script>
+	<script src="../../reader/epubjs/reader/js/hooks/extensions/highlight.js"></script>
+	[[??]]
+	<!-- zip -->
+	<script src="../../reader/epubjs/libs/jszip/jszip.js"></script>
+	<script src="../../reader/epubjs/libs/jszip/mime-types.js"></script>
+
+	<!-- Render -->
+	<script src="../../reader/epubjs/libs/underscore/underscore.js"></script>
+	<script src="../../reader/epubjs/libs/rsvp/rsvp.js"></script>
+	<script src="../../reader/epubjs/libs/fileStorage/fileStorage.min.js"></script>
+
+	<script src="../../reader/epubjs/src/base.js"></script>
+	<script src="../../reader/epubjs/src/core.js"></script>
+	<script src="../../reader/epubjs/src/unarchiver.js"></script>
+	<script src="../../reader/epubjs/src/parser.js"></script>
+	<script src="../../reader/epubjs/src/hooks.js"></script>
+	<script src="../../reader/epubjs/src/book.js"></script>
+	<script src="../../reader/epubjs/src/chapter.js"></script>
+	<script src="../../reader/epubjs/src/renderer.js"></script>
+	<script src="../../reader/epubjs/src/replace.js"></script>
+	<script src="../../reader/epubjs/src/epubcfi.js"></script>
+	<script src="../../reader/epubjs/src/render_iframe.js"></script>
+	<script src="../../reader/epubjs/src/layout.js"></script>
+	<script src="../../reader/epubjs/src/pagination.js"></script>
+
+	<!-- Hooks -->
+	<script async src="../../reader/epubjs/hooks/default/transculsions.js"></script>
+	<script async src="../../reader/epubjs/hooks/default/endnotes.js"></script>
+	<script async src="../../reader/epubjs/hooks/default/smartimages.js"></script>
+	<script async src="../../reader/epubjs/hooks/default/mathml.js"></script>
+
+	<!-- Reader -->
+	<script src="../../reader/epubjs/reader_src/reader.js"></script>
+	<script src="../../reader/epubjs/reader_src/controllers/bookmarks_controller.js"></script>
+	<script src="../../reader/epubjs/reader_src/controllers/controls_controller.js"></script>
+	<script src="../../reader/epubjs/reader_src/controllers/meta_controller.js"></script>
+	<script src="../../reader/epubjs/reader_src/controllers/reader_controller.js"></script>
+	<script src="../../reader/epubjs/reader_src/controllers/settings_controller.js"></script>
+	<script src="../../reader/epubjs/reader_src/controllers/sidebar_controller.js"></script>
+	<script src="../../reader/epubjs/reader_src/controllers/toc_controller.js"></script>
+	<script src="../../reader/epubjs/reader_src/controllers/notes_controller.js"></script>
+
+	<!-- Full Screen -->
+	<script src="../../reader/epubjs/libs/screenfull.min.js"></script>
+
+	<!-- Highlights -->
+	<script src="../../reader/epubjs/libs/jquery/jquery.highlight.js"></script>
+	<script async src="../../reader/epubjs/hooks/extensions/highlight.js"></script>
+	[[?]]
+
+</head>
+<body>
+<div id="sidebar">
+	<div id="panels">
+
+		<a id="show-Toc" class="show_view icon-list-1 active" data-view="Toc">TOC</a>
+		<a id="show-Bookmarks" class="show_view icon-bookmark" data-view="Bookmarks">Bookmarks</a>
+
+	</div>
+	<div id="tocView" class="view">
+	</div>
+	<div id="bookmarksView" class="view">
+		<ul id="bookmarks"></ul>
+	</div>
+
+</div>
+<div id="main">
+
+	<div id="titlebar">
+		<div id="opener">
+			<a id="slider" class="icon-menu">Menu</a>
+		</div>
+		<div id="metainfo">
+			<span id="book-title"></span>
+			<span id="title-seperator">&nbsp;&nbsp;–&nbsp;&nbsp;</span>
+			<span id="chapter-title"></span>
+		</div>
+		<div id="title-controls">
+			<a id="bookmark" class="icon-bookmark-empty">Bookmark</a>
+			<a id="fullscreen" class="icon-resize-full">Fullscreen</a>
+		</div>
+	</div>
+
+	<div id="divider"></div>
+	<div id="prev" class="arrow">‹</div>
+	<div id="viewer"></div>
+	<div id="next" class="arrow">›</div>
+
+	<div id="loader"><img src="img/loader.gif"></div>
+</div>
+<div class="overlay"></div>
+</body>
+</html>

@@ -646,29 +646,75 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	};
 
-	$scope.exportEpub = function() {
+	$scope.compileEpub = function(cb) {
 		var getTocPromise = $scope.getToc();
 		var updateProjectDocumentPromise = $scope.updateProjectDocument();
 		var updateMetadataPromise = $scope.saveMetaData();
 
 		$q.all([getTocPromise, updateProjectDocumentPromise, updateMetadataPromise]).then(function () {
 			var setTocPromise = $scope.setToc();
-            setTocPromise.then(function() {
+			setTocPromise.then(function() {
 				$http.get('/project/' + $scope.pid + '/compile')
-                    .success(function(data, status) {
+					.success(function(data, status) {
 						if (data.url) {
-							window.location.href = "/project/" + $scope.pid + "/epub";
+							cb(data);
 						} else {
 							console.log("Error compiling, status ok, but return value is: " + JSON.stringify(data));
+							cb();
 						}
 					})
-                    .error(function(status) {
+					.error(function(status) {
 						console.log("Error compiling, status: " + status);
+						cb();
 					});
 			});
 		});
-
 	}
+
+	$scope.exportEpub = function(cb) {
+		$scope.compileEpub(function(data){
+			if (data) {
+				window.location.href = "/project/" + $scope.pid + "/epub";
+			}
+		});
+	};
+
+	$scope.publishEpub = function() {
+		$scope.projectPublishLoading = true;
+		$scope.compileEpub(function(data){
+			if (data) {
+				$http.post('/project/' + $scope.pid + '/publish')
+					.success(function(data, status) {
+						if (data && data.publish) {
+							$scope.project.publish = data.publish;
+							// Force image reload by appending timestamp
+							$scope.project.publish.image = $scope.project.publish.image + '?' + new Date().getTime();
+						} else {
+							console.log("Error publishing, status ok, but return value is: " + JSON.stringify(data));
+						}
+						$scope.projectPublishLoading = false;
+					})
+					.error(function(status) {
+						console.log("Error publishing, status: " + status);
+						$scope.projectPublishLoading = false;
+					});
+			}
+		});
+	}
+
+	$scope.unpublishEpub = function() {
+		$http.delete('/project/' + $scope.pid + '/publish')
+			.success(function(data, status) {
+				if (data && data.publish) {
+					$scope.project.publish = data.publish;
+				} else {
+					console.log("Error unpublishing, status ok, but return value is: " + JSON.stringify(data));
+				}
+			})
+			.error(function(status) {
+				console.log("Error unpublishing, status: " + status);
+			});
+	};
 
     $scope.openStylesets = function(projectDocument) {
 		var deferred = $q.defer();

@@ -10,7 +10,6 @@ var sanitize = require('sanitize-filename');
 var conf = require('config');
 var path = require('path');
 var fs = require('fs');
-var rimraf = require('rimraf');
 var ncp = require('ncp').ncp;
 var epub3 = require('../lib/epub/epub3');
 var mkdirp = require('mkdirp');
@@ -34,8 +33,9 @@ exports.load = function (id) {
 			if (!project) {
 				return next({message: "Project not found", status: 404});
 			}
-			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToModel(req.user, project)) return next(403);
+			// Only check access if user is associated with request.
+			// Let missing authentication be handled in auth middleware
+			if (req.user && !utils.hasAccessToModel(req.user, project)) return next(403);
 
 			req.project = project;
 			return next();
@@ -481,6 +481,91 @@ exports.compile = function (req, res, next) {
 
 }
 
+exports.publish = function (req, res, next) {
+	var project = req.project;
+	var userEpubPath = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + req.user._id, project._id + '.epub');
+	var publishEpubPath = path.join(conf.resources.publishDir, req.project._id + '.epub');
+
+	utils.copyFile(userEpubPath, publishEpubPath, function(err) {
+		if (err) {
+			return next(err);
+		}
+		// Get title without whitespace
+		var epubName = utils.cleanUrlPart(project.metadata.title || project.name);
+		var epubAuthor = '';
+		if (project.metadata.authors && project.metadata.authors[0]) {
+			epubAuthor = utils.cleanUrlPart(project.metadata.authors[0]) + "-";
+		}
+		project.publish.url = conf.app.url_prefix + conf.publish.route + "/" + project.id + "/" + epubAuthor + epubName;
+
+		// Only set created date initially - if already set, we are updating/republishing
+		if (!project.publish.created) {
+			project.publish.created = Date.now();
+		}
+		project.publish.modified = Date.now();
+		project.publish.title = req.project.metadata.title || req.project.name || '';
+		project.publish.description = project.metadata.description || '';
+
+		// Generate image
+		var imagePath = path.join(conf.resources.publishDir, req.project._id + '.jpg');
+		project.publish.image = conf.resources.publishUrl + "/" + project.id + ".jpg";
+
+		utils.generatePreview(project, imagePath, function (err) {
+			if (err) {
+				return next(err);
+			}
+			project.save(function (err) {
+				if (err) {
+					return next(err);
+				}
+				res.send({
+					publish: project.publish
+				});
+			});
+		});
+	});
+}
+
+exports.unpublish = function (req, res, next) {
+	var project = req.project;
+	var publishEpubPath = path.join(conf.resources.publishDir, req.project._id + '.epub');
+
+	if (project.publish.url) {
+		// Delete the published epub
+		fs.unlink(publishEpubPath, function (err) {
+			if (err) {
+				return next(err);
+			}
+			//Set to unpublished in the database
+			project.publish.url = null;
+			project.save(function (err) {
+				if (err) {
+					return next(err);
+				}
+				res.send({publish: project.publish});
+			});
+		});
+	} else {
+		logger.warn("Unpublish called for already unpublished project.");
+		res.send({publish: project.publish});
+	}
+}
+
+exports.renderEpubReader = function (req, res, next) {
+	var project = req.project;
+	if (project.publish.url) {
+		res.render('ebook', {
+			id: project.id,
+			title: project.publish.title,
+			description: project.publish.description,
+			image: project.publish.image,
+			url: project.publish.url,
+			env: env
+		});
+	} else {
+		res.redirect(conf.app.url_prefix + '?code=' + "301");//Non-published ebook
+	}
+}
 exports.downloadEpub = function (req, res, next) {
 	var userEpubFullPath = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + req.user._id, req.project._id + '.epub');
 	var userEpubFilename = (req.project.metadata.title || req.project.name) + ".epub";
