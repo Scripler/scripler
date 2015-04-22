@@ -66,7 +66,7 @@
 
 		<div class="section-projects">
 			<div class="project new" data-ng-click="addProject();"></div>
-			<div class="project clearfix" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index" data-ng-mouseenter="showProjectTitle($index)" data-ng-mouseleave="hideProjectTitle()">
+			<div class="project clearfix" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="!project && project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index" data-ng-mouseenter="showProjectTitle($index)" data-ng-mouseleave="hideProjectTitle()">
 				<a class="project-options-show" data-ng-class="{ 'open' : $index == selectedProjectOptions }" data-ng-click="showProjectOptions($index)">
 					<div class="arrow"></div>
 				</a>
@@ -83,10 +83,11 @@
 				</form>
 
 				<div class="project-options" data-ng-show="$index == selectedProjectOptions">
+					<div class="project-options-menupoint" data-ng-show="project.archived" data-ng-click="unarchiveProject(project); hideProjectOptions();">unarchive</div>
 					<div class="project-options-menupoint" data-ng-click="project.editingProjectTitle = true; hideProjectOptions();">rename</div>
 					<div class="project-options-menupoint" data-ng-click="copyProject(project); hideProjectOptions();">copy</div>
 					<div class="project-options-menupoint" data-ng-hide="project.archived" data-ng-click="archiveProject(project); hideProjectOptions();">archive</div>
-					<div class="project-options-menupoint" data-ng-show="project.archived" data-ng-click="unarchiveProject(project); hideProjectOptions();">unarchive</div>
+					<div class="project-options-menupoint" data-ng-show="project.archived" data-ng-click="deleteProject(project, $index); hideProjectOptions();">delete</div>
 				</div>
 			</div>
 

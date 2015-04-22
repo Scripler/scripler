@@ -146,6 +146,20 @@ function createController($scope, $http, projectsService, userService, $q, user,
 		}
 	};
 
+	$scope.deleteProject = function(project, index) {
+		if ( $scope.user || $scope.demoUser ) {
+			var deleteEbook = confirm("Are you sure? This cannot be undone!");
+			if (deleteEbook == true) {
+				$http.delete('/project/' + project._id)
+					.success( function() {
+						$scope.projects.splice(index, 1);
+					});
+			}
+		} else {
+			console.log("ERROR deleting project: this should not have happened: either a real user or a demo user should exist.");
+		}
+	};
+
 	$scope.unarchiveProject = function( project ) {
 		if ( $scope.user || $scope.demoUser ) {
 			$http.put('/project/' + project._id + '/unarchive')
