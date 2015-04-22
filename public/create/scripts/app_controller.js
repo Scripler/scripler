@@ -481,7 +481,7 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 
 							try {
 								if (headingsArray.indexOf(child.nodeName.toLowerCase()) > -1) {
-									child.id = Date.now() + i;
+									child.id = "id_" + Date.now() + i;
 								}
 							} catch (e) {
 								//anchor does not have getName method
