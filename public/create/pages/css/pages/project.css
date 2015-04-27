@@ -85,15 +85,13 @@
 	-moz-transform-style: preserve-3d;
 	transform-style: preserve-3d;
 }
-.menu-tab.feedback{
-	background: #c6c6c6;
-}
 .menu-tab img {
 	position: relative;
 	top: 50%;
 	-webkit-transform: translateY(-50%);
 	-ms-transform: translateY(-50%);
 	transform: translateY(-50%);
+	width: 20px;
 }
 
 .menu-item-left, .menu-item-right {
@@ -175,6 +173,30 @@
 .editor.menu-extended {
 	width: calc(100% - 640px);	
 }
+.editor.information .breadcrumb {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	float: left;
+}
+.editor.information .breadcrumb a {
+	color: #666;
+	text-decoration: underline;
+}
+.editor.information .savedstamp {
+	margin-top: 10px;
+	margin-bottom: 0.5em;
+	float: right;
+	text-align: right;
+}
+.editor.information .feedback {
+	position: absolute;
+	top: 33px;
+	right: 15px;
+	text-align: right;
+	z-index: 10;
+	cursor: pointer;
+	text-decoration: underline;
+}
 
 #cke_bodyeditor, .cke_inner, .cke_wysiwyg_frame {
 	width: 100% !important;
@@ -182,23 +204,12 @@
 }
 /* This should with time be fixed in the menubar plugin or how it works in ckeditor, a lot of styles are set on the elements */
 .cke_toolbox {
-	margin: 0 auto !important;
-	width: 225px !important;
-	padding: 2px 0 0 !important;
-	background: none !important;
+	margin: 0 0 0 -5px !important;
+	width: calc(100% - 100px) !important;
+	padding-left: 0 !important;
 }
 .cke_toolgroup {
 	margin: 0 2px 4px !important;
-}
-@media all and (min-width: 640px) {
-	.cke_toolbox {
-		width: 100% !important;
-	}
-}
-@media all and (min-width: 1120px) {
-	.cke_toolbox {
-		width: 520px !important;
-	}
 }
 
 .menu-left ul li div .document {
@@ -501,6 +512,20 @@ li.typo .style-copy-options p {
 	text-align: center;
 }
 
+.menu-status {
+	display: inline-block;
+	width: 100%;
+	padding: 5px;
+	background: #FF0500;
+	border: 1px solid #FF0500;
+	color: #fff;
+	text-align: center;
+}
+.menu-status.published {
+	background: #5cb85c;
+	border: 1px solid #5cb85c;
+}
+
 .menu-feature-title {
 	font-weight: bold;
 	line-height: 1.5em;
@@ -511,7 +536,6 @@ li.typo .style-copy-options p {
 	width: 100%;
 	padding: 5px 10px;
 	border: 1px solid #efefef;
-	cursor: pointer;
 }
 .menu-box.label {
 	position: relative;
@@ -535,6 +559,13 @@ li.typo .style-copy-options p {
 	-ms-transition: all 1s;
 	-webkit-transition: all 1s;
 	-o-transition: all 1s;
+}
+.menu-box.inputfield.no-animation {
+	transition: none 0s;
+	-moz-transition: none 0s;
+	-ms-transition: none 0s;
+	-webkit-transition: none 0s;
+	-o-transition: none 0s;
 }
 .menu-box.inputfield.textfield {
 	height: 64px;
@@ -580,10 +611,7 @@ li.typo .style-copy-options p {
 .menu-box .option {
 	display: block;
 }
-.menu-box.left-menu-download {
-	text-align: center;
-}
-.menu-box.left-menu-download .download-icon {
+.menu-box .download-icon {
 	width: 50px;
 	height: auto;
 	margin: 0 5px;
@@ -636,8 +664,8 @@ li.typo .style-copy-options p {
 .menu-right .insertOptionProperties.expanded {
 	margin: -1px 0 10px 10px;
 }
-.outputOptionProperties {
-	display: block;
+
+.menu-item-background {
 	position: relative;
 	margin: 0 0 0 10px;
 	padding: 16px;
@@ -645,24 +673,16 @@ li.typo .style-copy-options p {
 	border: 1px solid #e6e6e6;
 	box-shadow: 0px 5px 5px -5px #ccc;
 }
+.menu-item-background-none {
+	position: relative;
+	margin: 10px 0 0 10px;
+	padding: 0;
+}
 
 .outputOptionDownload {
-	margin: 10px 0 0 10px;
-}
-
-.publishedUrl {
-	font-size: 60%;
-	word-break: break-all;
-}
-
-.outputOptionPublish {
-	margin: 10px 0 0 10px;
-	display: block;
 	position: relative;
-	padding: 16px;
-	background: none #fefefe;
-	border: 1px solid #e6e6e6;
-	box-shadow: 0px 5px 5px -5px #ccc;
+	margin: 10px 0 0 10px;
+	padding: 0;
 }
 
 .loading-animation {
@@ -675,7 +695,6 @@ li.typo .style-copy-options p {
 	background: transparent url("../../../../images/scripler_is_working.gif") no-repeat center;
 
 }
-
 .loading-mask {
 	z-index: 100;
 	position: absolute;

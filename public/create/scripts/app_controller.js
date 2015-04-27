@@ -379,6 +379,17 @@ app.directive('blurOnEnter', function() {
 	}
 });
 
+app.directive('selectOnClick', function () {
+	return {
+	  restrict: 'AC',
+	  link: function (scope, element, attrs) {
+	    element.bind('click', function () {
+	      this.select();
+	    });
+	  }
+	}
+});
+
 app.directive('ckEditor', function($window, $rootScope, $timeout) {
 	return {
 		require: '?ngModel',

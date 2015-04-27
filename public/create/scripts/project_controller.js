@@ -51,6 +51,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			if (metadataChanged) {
 				$scope.saveMetaData();
 			}
+
 			$scope.projectDocuments = $scope.project.documents;
 
 			if ( $scope.projectDocuments.length == 0 ) {
@@ -75,6 +76,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.updateUser = function() {
 		userService.updateUser( $scope.user );
 	}
+
+	$scope.dateTimeNow = function() {
+		var now = new Date();
+		var hours = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();
+		var minutes = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
+		var seconds = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds();
+
+		return now.getDate() + '/' + (now.getMonth()+1) + '/' + now.getFullYear() + ' ' + hours + ':' + minutes + ':' + seconds;
+	};
 
 	$scope.onFileSelect = function($files) {
 		for (var i = 0; i < $files.length; i++) {
@@ -321,13 +331,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
         if ($scope.user._id) {
             $http.put(/document/ + document._id + '/update', angular.toJson(document))
                 .success(function() {
-					// TODO: what is the standard/easiest way of formatting dates in JavaScript? Use moment.js?
-					var now = new Date();
-					var hours = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();
-					var minutes = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
-					var seconds = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds();
-					//months are counted in js from 0-11 so for simplicity the month in the ui is given +1 
-					$scope.lastSaved = 'Last saved: ' + now.getDate() + '/' + (now.getMonth()+1) + '/' + now.getFullYear() + ' ' + hours + ':' + minutes + ':' + seconds;
+					$scope.lastSaved = 'Last saved: ' + $scope.dateTimeNow();
 					deferred.resolve();
 				});
 
@@ -695,12 +699,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						$scope.projectPublishLoading = false;
 					})
 					.error(function(status) {
-						console.log("Error publishing, status: " + status);
+						console.log("Error publishing, status: " + JSON.stringify(status));
 						$scope.projectPublishLoading = false;
 					});
 			}
 		});
-	}
+	};
 
 	$scope.unpublishEpub = function() {
 		$http.delete('/project/' + $scope.pid + '/publish')
