@@ -65,7 +65,8 @@
 
 				// Wait for the pageList to be ready and then show slider
 				book.pageListReady.then(function(pageList){
-					var currentPageNo = book.pagination.pageFromCfi(book.getCurrentLocationCfi());
+					var currentLocation = book.getCurrentLocationCfi();
+					var currentPageNo = currentLocation ? book.pagination.pageFromCfi(currentLocation) : 1;
 
 					controls.style.display = "block";
 					slider.setAttribute("type", "range");
