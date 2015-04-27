@@ -98,7 +98,7 @@ module.exports = function (app, auth) {
 
 	/* API Output */
 	app.get('/project/:projectIdPopulatedFull/compile', auth.isLoggedIn(), project.compile);
-	app.post('/project/:projectId/publish', auth.isLoggedIn(), project.publish);
+	app.post('/project/:projectIdPopulated/publish', auth.isLoggedIn(), project.publish);
 	app.delete('/project/:projectId/publish', auth.isLoggedIn(), project.unpublish);
 	app.get('/project/:projectId/epub', auth.isLoggedIn(), project.downloadEpub);
 	app.get('/'+conf.publish.route+'/:projectId/*', project.renderEpubReader);
