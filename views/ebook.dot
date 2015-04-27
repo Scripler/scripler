@@ -28,14 +28,79 @@
 	<link rel="stylesheet" href="../../reader/epubjs/css/popup.css">
 	<script src="../../reader/epubjs/libs/jquery/jquery-2.1.0.min.js"></script>
 
+	<style type="text/css">
+		#controls {
+			position: absolute;
+			bottom: 0px;
+			left: 50%;
+			width: 400px;
+			margin-left: -200px;
+			text-align: center;
+			display: none;
+		}
+
+		#controls > input[type=range] {
+			width: 400px;
+		}
+	</style>
+
 	<script>
 		"use strict";
 		document.onreadystatechange = function () {
 			if (document.readyState == "complete") {
 				window.Reader = ePubReader("[[=model.epub]]", {
-					reload: false,
-					sidebarReflow: true
+					sidebarReflow: true,
+					generatePagination: true
 				});
+				var book = window.Reader.book;
+
+				var controls = document.getElementById("controls");
+				var slider = document.createElement("input");
+				var pageList;
+				var slide = function(){
+					book.gotoPage(slider.value);
+				};
+				var throttledSlide = _.throttle(slide, 200);
+				var mouseDown = false;
+
+				// Wait for the pageList to be ready and then show slider
+				book.pageListReady.then(function(pageList){
+					var currentPageNo = book.pagination.pageFromCfi(book.getCurrentLocationCfi());
+
+					controls.style.display = "block";
+					slider.setAttribute("type", "range");
+					slider.setAttribute("min", book.pagination.firstPage);
+					slider.setAttribute("max", book.pagination.lastPage);
+					slider.setAttribute("step", 1);
+					slider.setAttribute("value", currentPageNo);
+
+					slider.addEventListener("change", throttledSlide, false);
+					slider.addEventListener("mousedown", function(){
+						mouseDown = true;
+					}, false);
+					slider.addEventListener("mouseup", function(){
+						mouseDown = false;
+					}, false);
+
+					controls.appendChild(slider);
+				});
+
+				book.on('book:pageChanged', function(location){
+					if(!mouseDown) {
+						slider.value = location.anchorPage;
+					}
+				});
+
+				book.on('renderer:resized', function(size){
+					book.generatePagination().then(function (pageList) {
+						var currentPageNo = book.pagination.pageFromCfi(book.getCurrentLocationCfi());
+						slider.setAttribute("min", book.pagination.firstPage);
+						slider.setAttribute("max", book.pagination.lastPage);
+						slider.value = currentPageNo;
+					});
+
+				});
+
 			}
 		};
 
@@ -102,6 +167,7 @@
 	<script src="../../reader/epubjs/libs/jquery/jquery.highlight.js"></script>
 	<script async src="../../reader/epubjs/hooks/extensions/highlight.js"></script>
 	[[?]]
+	<script src="../../reader/epubjs/libs/underscore/underscore.js"></script>
 
 </head>
 <body>
@@ -140,6 +206,8 @@
 	<div id="prev" class="arrow">‹</div>
 	<div id="viewer"></div>
 	<div id="next" class="arrow">›</div>
+
+	<div id="controls"></div>
 
 	<div id="loader"><img src="../../reader/epubjs/img/loader.gif"></div>
 </div>
