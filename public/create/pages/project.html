@@ -291,29 +291,6 @@
 			<li data-ng-click="finalizeOptionChosen('showFinalizeTocOptions');" class="insertOption first" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeTocOptions' }">
 				<img src="pages/images/insert_toc.png" alt="Generate Table of Contents" title="Generate Table of Contents" />
 			</li>
-			<li class="menu-item-background-none">
-				<span class="menu-box label text-align-center">Download ebook</span>
-				<span class="menu-box label text-align-center margin-top">
-					<img title="Download epub" class="download-icon" src="pages/images/compile_epub.png" data-ng-click="exportEpub()">
-				</span>
-
-			</li>
-			<!-- START placeholder gui for PUBLISH -->
-			<li class="outputOptionPublish">
-				<div class="menu-box label text-align-center" data-ng-show="!project.publish.url" data-ng-click="publishEpub()">Publish ebook</div>
-				<div class="menu-box label text-align-center" data-ng-show="project.publish.url" data-ng-click="publishEpub()">Re-publish ebook</div>
-				<div class="menu-box label text-align-center" data-ng-show="project.publish.url">
-					<div data-ng-click="unpublishEpub()">Unpublish ebook</div>
-					<div class="text-align-center"><img style="border: 1px solid black;" data-ng-src="{{project.publish.image}}" height="120" alt="Cover" /></div>
-					<a class="publishedUrl" data-ng-href="{{project.publish.url}}" data-ng-bind-html="project.publish.url"></a>
-				</div>
-				<div class="loading-animation" data-ng-show="projectPublishLoading">
-					<div class="loading-mask"></div>
-				</div>
-			</li>
-			<!-- END placeholder gui for PUBLISH -->
-			</ul>
-		</div>
 			<li data-ng-click="finalizeOptionChosen('showFinalizeColophonOptions');" class="insertOption" data-ng-class="{ 'expanded' : activeFinalizeOption === 'showFinalizeColophonOptions' }">
 				<img src="pages/images/insert_colophon.png" alt="Generate Colophon" title="Generate Colophon" />
 			</li>
@@ -345,76 +322,79 @@
 	</div>
 	<div class="menu-item-right" data-ng-show="rightMenuShowItem == 'output'">
 		<ul>
-		<li class="menu-item-background">
-			<span class="menu-box label">Title</span>
-			<span class="menu-box inputfield" data-ng-class="{ 'text-saved': metaTitleSaved }">
-				<input type="text" name="output_title" id="output_title" data-ng-model="project.metadata.title" data-ng-model-options="{ debounce: 2000 }"  />
-			</span>
-			<span class="menu-box label margin-top">Author</span>
-			<span class="menu-box inputfield" data-ng-class="{ 'text-saved': metaAuthorsSaved }">
-				<input type="text" name="output_author" id="output_author" data-ng-model="project.metadata.authors" data-ng-model-options="{ debounce: 2000 }" />
-			</span>
-			<span class="menu-box label margin-top">Language</span>
-			<span class="menu-box inputfield" data-ng-class="{ 'text-saved': metaLanguageSaved }">
-				<form class="angucomplete">
-					<div angucomplete-alt id="output_language" placeholder="Search Languages" pause="100" selected-object="selectedLanguage" local-data="languages" search-fields="description,subtag" title-field="description" minlength="1" match-class="angucomplete-highlight" initial-value="{{selectedLanguageName}}" field-required="true">
-					</div>
-				</form>
-			</span>
-			<span class="menu-box label margin-top">Description</span>
-			<span class="menu-box inputfield textfield" data-ng-class="{ 'text-saved': metaDescriptionSaved }">
-				<textarea name="output_description" id="output_description" data-ng-model="project.metadata.description" data-ng-model-options="{ debounce: 2000 }" /></textarea>
-			</span>
-			<span class="menu-box label margin-top">Unique identifier / ISBN</span>
-			<span class="menu-box inputfield" data-ng-class="{ 'text-saved': metaIsbnSaved }">
-				<input type="text" name="output_unique" id="output_unique" data-ng-model="project.metadata.isbn" data-ng-model-options="{ debounce: 2000 }" />
-			</span>
-		</li>
-		<li class="menu-item-background-none">
-			<span class="menu-box label text-align-center">Download ebook</span>
-			<span class="menu-box label text-align-center margin-top">
-				<img title="Download epub" class="download-icon" src="pages/images/compile_epub.png" data-ng-click="exportEpub()">
-			</span>
-		</li>
+			<li class="menu-item-background">
+				<span class="menu-box label">Title</span>
+				<span class="menu-box inputfield" data-ng-class="{ 'text-saved': metaTitleSaved }">
+					<input type="text" name="output_title" id="output_title" data-ng-model="project.metadata.title" data-ng-model-options="{ debounce: 2000 }"  />
+				</span>
+				<span class="menu-box label margin-top">Author</span>
+				<span class="menu-box inputfield" data-ng-class="{ 'text-saved': metaAuthorsSaved }">
+					<input type="text" name="output_author" id="output_author" data-ng-model="project.metadata.authors" data-ng-model-options="{ debounce: 2000 }" />
+				</span>
+				<span class="menu-box label margin-top">Language</span>
+				<span class="menu-box inputfield" data-ng-class="{ 'text-saved': metaLanguageSaved }">
+					<form class="angucomplete">
+						<div angucomplete-alt id="output_language" placeholder="Search Languages" pause="100" selected-object="selectedLanguage" local-data="languages" search-fields="description,subtag" title-field="description" minlength="1" match-class="angucomplete-highlight" initial-value="{{selectedLanguageName}}" field-required="true">
+						</div>
+					</form>
+				</span>
+				<span class="menu-box label margin-top">Description</span>
+				<span class="menu-box inputfield textfield" data-ng-class="{ 'text-saved': metaDescriptionSaved }">
+					<textarea name="output_description" id="output_description" data-ng-model="project.metadata.description" data-ng-model-options="{ debounce: 2000 }" /></textarea>
+				</span>
+				<span class="menu-box label margin-top">Unique identifier / ISBN</span>
+				<span class="menu-box inputfield" data-ng-class="{ 'text-saved': metaIsbnSaved }">
+					<input type="text" name="output_unique" id="output_unique" data-ng-model="project.metadata.isbn" data-ng-model-options="{ debounce: 2000 }" />
+				</span>
+			</li>
+			<li class="menu-item-background-none">
+				<span class="menu-box label text-align-center">Download ebook</span>
+				<span class="menu-box label text-align-center margin-top">
+					<img title="Download epub" class="download-icon" src="pages/images/compile_epub.png" data-ng-click="exportEpub()">
+				</span>
+			</li>
 		</ul>
 	</div>
 	<div class="menu-item-right" data-ng-show="rightMenuShowItem == 'publish'">
 		<ul>
 			<li class="menu-item-background">
-				<div class="menu-box label text-align-center">
-					<a data-ng-href="{{projectPublishLink}}" target="_blank">
-						picture
+				<div class="menu-box label text-align-center" data-ng-show="project.publish.url">
+					<a data-ng-href="{{project.publish.url}}" target="_blank">
+						<img style="border: 1px solid black;" data-ng-src="{{project.publish.image}}" height="120" alt="Cover" />
 					</a>
 				</div>
 				<div class="menu-box label text-align-center text-decoration-bold">
-					<a data-ng-href="{{projectPublishLink}}" target="_blank">
+					<a data-ng-href="{{project.publish.url}}" target="_blank">
 						{{ project.metadata.title }}
 					</a>
 				</div>
 				<div class="menu-box label text-align-center">
-					<a data-ng-href="{{projectPublishLink}}" target="_blank">
+					<a data-ng-href="{{project.publish.url}}" target="_blank">
 						View your book
 					</a>
 				</div>
 
 				<div class="menu-box label margin-top">Status</div>
-				<div class="menu-status" data-ng-hide="projectPublishStatus">Not published</div>
-				<div class="menu-status published" data-ng-show="projectPublishStatus">
+				<div class="menu-status" data-ng-hide="project.publish.url">Not published</div>
+				<div class="menu-status published" data-ng-show="project.publish.url">
 					<div>Published</div>
 					<div class="font-small font-italic">{{ projectPublishDate }}</div>
 				</div>
-				<div class="menu-box label margin-top" data-ng-show="projectPublishStatus">Shareable link</div>
-				<div class="menu-box inputfield no-animation" data-ng-show="projectPublishStatus">
-					<input type="text" name="share_link" id="share_link" data-ng-value="projectPublishLink">
+				<div class="menu-box label margin-top" data-ng-show="project.publish.url">Shareable link</div>
+				<div class="menu-box inputfield no-animation" data-ng-show="project.publish.url">
+					<input type="text" name="share_link" id="share_link" data-ng-value="project.publish.url" select-on-click>
 				</div>
-				<div class="button margin-top" data-ng-click="publishProject();" data-ng-hide="projectPublishStatus">
+				<div class="button margin-top" data-ng-click="publishEpub();" data-ng-show="!project.publish.url">
 					Publish
 				</div>
-				<div class="button margin-top" data-ng-click="publishProject();" data-ng-show="projectPublishStatus">
+				<div class="button margin-top" data-ng-click="publishEpub();" data-ng-show="project.publish.url">
 					Update
 				</div>
-				<div class="button revert margin-top" data-ng-click="unpublishProject();" data-ng-show="projectPublishStatus">
+				<div class="button revert margin-top" data-ng-click="unpublishEpub();" data-ng-show="project.publish.url">
 					Unpublish
+				</div>
+				<div class="loading-animation" data-ng-show="projectPublishLoading">
+					<div class="loading-mask"></div>
 				</div>
 				<div class="menu-box label desc margin-top">
 					<div class="menu-feature-title">Publish</div>
