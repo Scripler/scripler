@@ -52,13 +52,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				$scope.saveMetaData();
 			}
 
-			// Mockup of initial Publish state for project, will be part of project data I guess
-			//$scope.project.publish.status = false;
-			//$scope.project.publish.date = new Date();
-			$scope.projectPublishStatus = false;
-			$scope.projectPublishDate = new Date();
-			$scope.projectPublishLink = '';
-
 			$scope.projectDocuments = $scope.project.documents;
 
 			if ( $scope.projectDocuments.length == 0 ) {
@@ -706,46 +699,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						$scope.projectPublishLoading = false;
 					})
 					.error(function(status) {
-						console.log("Error publishing, status: " + status);
+						console.log("Error publishing, status: " + JSON.stringify(status));
 						$scope.projectPublishLoading = false;
 					});
 			}
 		});
-	};
-
-	$scope.publishProject = function() {
-		var deferred = $q.defer();
-		/*$http.put('/project/' + $scope.project._id + '/publish', {
-			'publishStatus': true
-        }).success(function() {
-			deferred.resolve();
-		});*/
-
-		//Setting data for test
-		$scope.projectPublishStatus = true;
-		$scope.projectPublishDate = $scope.dateTimeNow();
-		$scope.projectPublishLink = 'http://reader.scripler.com/ebook/fgT145Fhp';
-
-		deferred.resolve();
-
-		return deferred.promise;
-	};
-	$scope.unpublishProject = function() {
-		var deferred = $q.defer();
-		/*$http.put('/project/' + $scope.project._id + '/publish', {
-			'publishStatus': false
-        }).success(function() {
-			deferred.resolve();
-		});*/
-
-		//Setting data for test
-		$scope.projectPublishStatus = false;
-		$scope.projectPublishDate = '';
-		$scope.projectPublishLink = '';
-
-		deferred.resolve();
-
-		return deferred.promise;
 	};
 
 	$scope.unpublishEpub = function() {

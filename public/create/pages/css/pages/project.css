@@ -685,21 +685,6 @@ li.typo .style-copy-options p {
 	padding: 0;
 }
 
-.publishedUrl {
-	font-size: 60%;
-	word-break: break-all;
-}
-
-.outputOptionPublish {
-	margin: 10px 0 0 10px;
-	display: block;
-	position: relative;
-	padding: 16px;
-	background: none #fefefe;
-	border: 1px solid #e6e6e6;
-	box-shadow: 0px 5px 5px -5px #ccc;
-}
-
 .loading-animation {
 	z-index: 101;
 	position: absolute;
@@ -710,7 +695,6 @@ li.typo .style-copy-options p {
 	background: transparent url("../../../../images/scripler_is_working.gif") no-repeat center;
 
 }
-
 .loading-mask {
 	z-index: 100;
 	position: absolute;
