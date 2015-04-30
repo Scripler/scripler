@@ -69,7 +69,7 @@ exports.beforeRoutes = function (app, conf, mongoose) {
 			maxAge: conf.app.cookie_expire
 		},
 		store: new MongoStore({
-			db: mongoose.connection.db
+			mongooseConnection: mongoose.connection
 		})
 	}));
 	app.use(passport.initialize());

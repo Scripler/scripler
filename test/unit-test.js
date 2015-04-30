@@ -12,8 +12,7 @@ var epub = require('../lib/epub')
   , conf = require('config')
   , Document = require('../models/document.js').Document
   , TOCEntry = require('../models/project.js').TOCEntry
-  , Image = require('../models/image.js').Image
-  , _ = require("underscore");
+  , Image = require('../models/image.js').Image;
 
 describe('utils', function () {
 	it('replaceMap', function () {
