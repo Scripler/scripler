@@ -380,7 +380,7 @@
 				<div class="menu-status" data-ng-hide="project.publish.url">Not published</div>
 				<div class="menu-status published" data-ng-show="project.publish.url">
 					<div>Published</div>
-					<div class="font-small font-italic">{{ projectPublishDate }}</div>
+					<div class="font-small font-italic">{{ project.publish.modified || project.publish.created | date:'medium' }}</div>
 				</div>
 				<div class="menu-box label margin-top" data-ng-show="project.publish.url">Shareable link</div>
 				<div class="menu-box inputfield no-animation" data-ng-show="project.publish.url">
