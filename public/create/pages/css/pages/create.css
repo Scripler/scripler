@@ -50,18 +50,29 @@
 	width: 100px;
 	height: 129px;
 	float: left;
+	background-repeat: no-repeat; /* To avoid a black line under the project icon */
 }
 .project:hover, .project:focus {
-	background: url("../../images/ebook_hover.svg")
+	background: url("../../images/ebook_hover.svg");
+	background-repeat: no-repeat;
 }
 .project.new {
-	background: url("../../images/ebook_new.svg")
+	background: url("../../images/ebook_new.svg") /* If "no-repeat" is used here, the icon is not shown */
 }
 .project.new:hover, .project.new:focus {
 	background: url("../../images/ebook_new_hover.svg")
 }
 .project.archived {
-	background: url("../../images/ebook_archived.svg")
+	background: url("../../images/ebook_archived.svg");
+	background-repeat: no-repeat;
+}
+.project.upgrade {
+	background: url("../../images/ebook_new_upgrade.svg");
+	background-repeat: no-repeat;
+}
+.project.downgraded {
+	background: url("../../images/ebook_downgraded.svg");
+	background-repeat: no-repeat;
 }
 
 .project p {
@@ -142,6 +153,14 @@
 	height: 28px;
 	background: #fff;
 }
+.project-link.downgraded {
+	color: #fff;
+}
+.project-link.downgraded-helptext {
+	background: #000;
+	color: #fff;
+	font-size: 12px;
+}
 
 .filter-sort, .filter-search {
 	position: relative;
@@ -202,23 +221,26 @@ textarea#rename {
 }
 .logo-box {
 	text-align: center;
-	padding-top: 70px;
-	height: 276px;
+	padding: 70px 0 40px;
 }
 .logo {
 	width: 30%;
+	margin-top:-30px;
 }
 .readmore{
 	text-decoration: underline;
 	color:#999;
 }
 .uni-bottom-box {
-	position: absolute;
-	left: 0;
-	bottom: 0;
-	width: 100%;
-	background-color: #fff;
+	position: relative;
 	padding: 10px;
+	border-top:1px #fff solid;
+}
+.upgrade-bottom-box {
+	position: relative;
+	border-top: 2px solid #fff;
+	padding: 10px 0 0;
+	margin: 0 -16px;
 }
 .user-box {
 	padding: 6px;
@@ -228,7 +250,6 @@ textarea#rename {
 }
 .user-text {
 	float: left;
-	width: 225px;
 	color: #000;
 	padding-top: 5px;
 	padding-left: 10px;
@@ -322,4 +343,17 @@ hr {
 }
 .feedback:hover {
 	color: #fff265;
+}
+.upgrade-text {
+	color: #000;
+	text-align: center;
+}
+.upgrade-text span {
+	font-size: 16px;
+	padding: 0 5px;
+}
+.upgrade-text a {
+	color: #fff;
+	text-decoration: underline;
+	padding: 0 5px;
 }

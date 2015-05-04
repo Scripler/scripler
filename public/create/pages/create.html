@@ -11,7 +11,7 @@
 			<div class="logo-box">
 				<img class="logo" src="/images/logo.png">
 			</div>
-			<div class="uni-bottom-box" data-ng-show="user._id && !user.isDemo">
+			<div class="uni-bottom-box clearfix" data-ng-show="user._id && !user.isDemo">
 				<img class="user-image" src="pages/images/profilepicture.png" height="50" width="50">
 				<div class="user-text">
 					<div class="user-name" data-ng-bind-html="user.firstname + ' ' + user.lastname"></div>
@@ -20,6 +20,13 @@
 						<span>|</span>
 						<a href="/logout">Log out</a>
 					</div>
+				</div>
+			</div>
+			<div class="upgrade-bottom-box clearfix" data-ng-show="user._id && !user.isDemo && user.level == 'free'">
+				<div class="upgrade-text">
+					<span data-ng-bind-html="upgradeText[user.level]"></span>
+					<!-- TODO: insert real Upgrade link here when the Premium frontend has been implemented -->
+					<a href="/upgrade">Upgrade</a>
 				</div>
 			</div>
 		</div>
@@ -65,15 +72,21 @@
 		<div class="projects-title">Ebooks</div>
 
 		<div class="section-projects">
-			<div class="project new" data-ng-click="addProject();"></div>
-			<div class="project clearfix" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived }" data-ng-hide="!project && project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index" data-ng-mouseenter="showProjectTitle($index)" data-ng-mouseleave="hideProjectTitle()">
-				<a class="project-options-show" data-ng-class="{ 'open' : $index == selectedProjectOptions }" data-ng-click="showProjectOptions($index)">
+			<!-- TODO: insert real Upgrade link here when the Premium frontend has been implemented -->
+			<div data-ng-class="getNewProjectClass()" data-ng-click="addProject();"></div>
+			<div class="project clearfix" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived, 'downgraded' : !canLoadProject(project) }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index" data-ng-mouseenter="showProjectTitle($index)" data-ng-mouseleave="hideProjectTitle()">
+				<a data-ng-class="{ 'project-options-show' : canLoadProject(project)}" data-ng-class="{ 'open' : $index == selectedProjectOptions }" data-ng-click="showProjectOptions($index)">
 					<div class="arrow"></div>
 				</a>
 
-				<a data-ng-href="#/project?pid={{project._id}}" class="project-link" data-ng-hide="project.editingProjectTitle" data-ng-class="{ 'show-all' : $index == selectedProjectHover && !project.editingProjectTitle && $index != selectedProjectOptions && !project.archived }">
-					{{project.name}}
-				</a>
+				<div data-ng-hide="project.editingProjectTitle || (!canLoadProject(project) && $index == selectedProjectHover)" class="project-link" data-ng-class="{ 'show-all' : $index == selectedProjectHover && !project.editingProjectTitle && $index != selectedProjectOptions && !project.archived, 'downgraded' : !canLoadProject(project) }">
+					<a data-ng-if="!project.archived && canLoadProject(project)" data-ng-href="#/project?pid={{project._id}}">
+						{{project.name}}
+					</a>
+					<div data-ng-if="project.archived || !canLoadProject(project)">
+						{{project.name}}
+					</div>
+				</div>
 				<div class="project-link show-more" data-ng-hide="$index == selectedProjectHover || project.editingProjectTitle || project.name.length < 29">
 					(…)
 				</div>
@@ -82,12 +95,15 @@
 					<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!project.editingProjectTitle" blur-on-enter data-ng-blur="project.editingProjectTitle = false; renameProject(project);"></textarea>
 				</form>
 
-				<div class="project-options" data-ng-show="$index == selectedProjectOptions">
+				<div data-ng-class="{ 'project-options' : canLoadProject(project)}" data-ng-show="$index == selectedProjectOptions">
 					<div class="project-options-menupoint" data-ng-show="project.archived" data-ng-click="unarchiveProject(project); hideProjectOptions();">unarchive</div>
 					<div class="project-options-menupoint" data-ng-click="project.editingProjectTitle = true; hideProjectOptions();">rename</div>
 					<div class="project-options-menupoint" data-ng-click="copyProject(project); hideProjectOptions();">copy</div>
 					<div class="project-options-menupoint" data-ng-hide="project.archived" data-ng-click="archiveProject(project); hideProjectOptions();">archive</div>
 					<div class="project-options-menupoint" data-ng-show="project.archived" data-ng-click="deleteProject(project, $index); hideProjectOptions();">delete</div>
+				</div>
+				<div class="project-link downgraded-helptext" data-ng-hide="canLoadProject(project) || $index != selectedProjectHover">
+					Upgrade to Premium to unlock this book
 				</div>
 			</div>
 
