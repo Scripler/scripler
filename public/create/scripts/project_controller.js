@@ -69,10 +69,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}, 500);
 	}
 
-	$scope.openFeedback = function() {
-		userService.openFeedback( $scope.user );
-	}
-
 	$scope.updateUser = function() {
 		userService.updateUser( $scope.user );
 	}

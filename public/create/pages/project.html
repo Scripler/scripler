@@ -238,8 +238,10 @@
 		<span data-ng-bind="lastSaved"></span>
 	</p>
 
-	<p class="feedback" data-ng-click="openFeedback()">
-		Need help?
+	<p class="feedback">
+		<a href="http://talk.scripler.com/" target="_blank" class="link-underline">
+			Need help?
+		</a>
 	</p>
 </div>
 
@@ -358,27 +360,27 @@
 	<div class="menu-item-right" data-ng-show="rightMenuShowItem == 'publish'">
 		<ul>
 			<li class="menu-item-background">
-				<div class="menu-box label text-align-center" data-ng-show="project.publish.url">
+				<div class="text-align-center" data-ng-show="project.publish.image">
 					<a data-ng-href="{{project.publish.url}}" target="_blank">
 						<img style="border: 1px solid black;" data-ng-src="{{project.publish.image}}" height="120" alt="Cover" />
 					</a>
 				</div>
-				<div class="menu-box label text-align-center text-decoration-bold">
+				<div class="margin-top text-align-center text-decoration-bold">
 					<a data-ng-href="{{project.publish.url}}" target="_blank">
 						{{ project.metadata.title }}
 					</a>
 				</div>
-				<div class="menu-box label text-align-center">
-					<a data-ng-href="{{project.publish.url}}" target="_blank">
+				<div class="text-align-center" data-ng-show="project.publish.url">
+					<a data-ng-href="{{project.publish.url}}" target="_blank" class="link-underline">
 						View your book
 					</a>
 				</div>
 
-				<div class="menu-box label margin-top">Status</div>
+				<div class="margin-top">Status</div>
 				<div class="menu-status" data-ng-hide="project.publish.url">Not published</div>
 				<div class="menu-status published" data-ng-show="project.publish.url">
 					<div>Published</div>
-					<div class="font-small font-italic">{{ projectPublishDate }}</div>
+					<div class="font-small font-italic">{{ project.publish.modified || project.publish.created | date:'d/M/yyyy HH:mm:ss' }}</div>
 				</div>
 				<div class="menu-box label margin-top" data-ng-show="project.publish.url">Shareable link</div>
 				<div class="menu-box inputfield no-animation" data-ng-show="project.publish.url">
@@ -398,7 +400,7 @@
 				</div>
 				<div class="menu-box label desc margin-top">
 					<div class="menu-feature-title">Publish</div>
-					<div>Publish <strong><em>{{ project.metadata.title }}</em></strong> directly on the web. Anyone can read it. When published you can unpublish or update to the latest version.<br>To publish to ebook stores like the Amazon Kindle Store, <a href="http://talk.scripler.com/t/official-scripler-faq/109#q8" target="_blank">see this</a>.</div>
+					<div>Publish <strong><em>{{ project.metadata.title }}</em></strong> directly on the web. Anyone can read it. When published you can unpublish or update to the latest version.<br>To publish to ebook stores like the Amazon Kindle Store, <a href="http://talk.scripler.com/t/official-scripler-faq/109#q8" target="_blank" class="link-underline">see this</a>.</div>
 				</div>
 			</li>
 		</ul>
