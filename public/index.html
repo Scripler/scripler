@@ -21,33 +21,35 @@
     <div class="container">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <img src="img/burger.png" id="toggleNav">
+          <span class="sr-only">Toggle navigation</span>
+          <img src="images/burger.png" id="toggleNav">
         </button>
-        <a class="navbar-brand" href="#scripler">Scripler</a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="navList nav navbar-nav">
-          <li  class="navpoint menu-features text-center">
-            <a href="#features">Features</a>
+          <li class="navpoint menu-scripler text-center">
+            <a href="#scripler" data="scripler">Scripler</a>
+          </li>
+          <li class="navpoint menu-features text-center">
+            <a href="#features" data="features">Features</a>
           </li>
           <li class="navpoint menu-about text-center">
-            <a href="#about">About</a>
+            <a href="#about" data="about">About</a>
           </li>
           <li class="navpoint menu-contact text-center">
-            <a href="#contact">Contact</a>
+            <a href="#contact" data="contact">Contact</a>
           </li>
           <li class="menu-loggedin text-center" style="display:none;">
             <a href="logout">Logout</a>
           </li>
-          <li class="navpoint menu-login text-center" data="login">
-            <a href="#login">Login</a>
+          <li class="navpoint menu-login text-center">
+            <a href="#login" data="login">Login</a>
           </li>
-          <li class="navpoint menu-blog text-center" >
-            <a href="http://blog.scripler.com/" class="navpoint blog-link">Blog</a>
+          <li class="navpoint menu-blog text-center">
+            <a href="http://blog.scripler.com/" target="_blank" class="navpoint blog-link" data="blog">Blog</a>
           </li>
           <li class="navpoint menu-talk text-center" >
-            <a href="http://talk.scripler.com/" class="navpoint talk-link">Talk!</a>
+            <a href="http://talk.scripler.com/" target="_blank" class="navpoint talk-link" data="talk">Talk!</a>
           </li>
         </ul>
         

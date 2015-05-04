@@ -23,10 +23,8 @@ $(document).ready(function() {
         return ((elemBottom >= docViewTop) && (elemTop <= docViewBottom) && (elemBottom <= docViewBottom) && (elemTop >= docViewTop));
     }
 
-    $(".menu-top li.navpoint").on("click", function(event) {
-        if ($(this).attr("data") == "blog") {
-            //do nothing
-        } else {
+    $(".navbar-nav .navpoint a").on("click", function(event) {
+        if ($(this).attr("data") != "blog" && $(this).attr("data") != "talk") {
             event.preventDefault();
             if ($(this).attr("data") == "create") {
                 document.location.href = "/create";
