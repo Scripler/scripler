@@ -207,6 +207,7 @@
 	margin: 0 0 0 -5px !important;
 	width: calc(100% - 100px) !important;
 	padding-left: 0 !important;
+	float: left;
 }
 .cke_toolgroup {
 	margin: 0 2px 4px !important;
