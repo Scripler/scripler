@@ -1,8 +1,3 @@
-
-
-/* ==========================================================================
-   Author's custom styles
-   ========================================================================== */
 @font-face {
   font-family: 'Roboto';
   src: url('../fonts/Roboto/Roboto-Regular.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
@@ -73,44 +68,28 @@
 	background-color: #fff265;
 	color: #666;
 }
-body { 
-  	width: 98vw;
-	height:98vh;
-	overflow-x: hidden;
+body {
 	font-family: 'Roboto', 'Helvetica', 'Arial';
 }
-p{
+p {
 	font-size:14px;
 }
-.page{
-	margin:0;
-	padding-top: 50px;
-	width:100vw;
-	height:100vh;
-	overflow-x: hidden;
+.page {
+	margin: 0;
+	padding: 50px 0;
 }
 nav {
 	background-color:#FFF;
 	color:#000;
-	padding-left: 35vw;
 	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
 } 
  
 .about-scripler{
 	color:#000;
 	font-weight: 700;
+	padding: 20px 0;
 }
-#scriplerTeam{
-	padding-bottom: 20px;
-	padding-top: 20px;
-}
-a.navbar-brand{
-	font-size: 1.2em; 
 
-}
-#brandlogo{
-	display:none;
-}
 #forgot-password{
 	float:left;
 	color: #000;
@@ -120,7 +99,6 @@ a.navbar-brand{
 
 #remember-me-box{
 	clear: both;
-
 }
 #remember-me-box>label{
 	margin-left: 4px;
@@ -152,17 +130,16 @@ a.navbar-brand{
 	color:#000!important;
 	z-index: 5!important;
 }
-.navbar-brand, ul.navList li>a{
+
+ul.navList li>a{
 	font-size: 1.2em;
-	color:#000;
-}  
-.navbar-brand:hover{
 	color:#000;
 }
 ul.navList li>a:hover{
 	background-color: #fff;
 	color:#666;
 } 
+
 @media (min-width:1050px){	
 	#login-form {
 		margin-left: 150px;
@@ -252,22 +229,19 @@ h2{
 	font-family: 'Roboto-Black';
 	padding-bottom: 20px;
 }
-img#scriplerLogo{
+.scripler-logo{
 	margin-bottom: 50px;
 }
-button#testTheAlpha{
-	background-color:#fff56c;
-	color:#000;
+button.test-alpha {
+	background-color: #fff56c;
+	color: #000;
 	font-size: 1.5em;
 	font-weight: 700;
-	border:none;
-	padding:10px;
-	float:none;
+	border: none;
+	margin: 20px;
+	padding: 10px 25px;
 }
  
-a.testAlp:hover{
-	text-decoration: none;
-}
 a#signUp{
 	color:#000;
 	text-decoration: underline;

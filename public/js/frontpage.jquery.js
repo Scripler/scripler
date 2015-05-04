@@ -130,8 +130,6 @@ $(document).ready(function() {
             } else {
                 $("button.navbar-toggle").attr("aria-expanded", true);
             }
-
-            // console.log($("button.navbar-toggle").attr("aria-expanded"));
         });
 
     }
@@ -185,6 +183,11 @@ $(document).ready(function() {
         $("#password-reset-form").css("display", "none");
         $("#form-success").css("display", "none");
         resetLoginForm();
+    });
+    $(".menu-login").on("click", function(event) {
+        $(":animated").promise().done(function() {
+            $("#login-email").focus();
+        });
     });
 
     // Handle the password reset entry page
@@ -291,21 +294,6 @@ $(document).ready(function() {
         $("#invalid-box2").css("display", "none");
     }
 
-    $(".menu-login").on("click", function(event) {
-        $(":animated").promise().done(function() {
-            $("#login-email").focus();
-        });
-    });
-
-    $(".to-top").on("click", function(event) {
-        event.preventDefault();
-        var gotoPoint = "#scripler";
-
-        $('html, body').animate({
-            scrollTop: $(gotoPoint).offset().top
-        }, 800);
-    });
-
     function isValidPassword(password) {
         return password !== 'undefined' && password.length >= 6;
     }
@@ -323,8 +311,6 @@ $(document).ready(function() {
             }
         }
     }
-
-
 });
 
 /* Create HTML5 elements for IE */
