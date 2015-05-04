@@ -232,14 +232,6 @@
 		var sortedProjectIds = projectIds.sort();
 		var firstXProjectIds = sortedProjectIds.slice(0, maxNumberOfProjects[userLevel]);
 
-		/*
-		console.log('projectIdToCheck: ' + projectIdToCheck);
-		console.log('firstXProjectIds: ' + JSON.stringify(firstXProjectIds));
-		console.log('indexOf: ' + JSON.stringify(firstXProjectIds).indexOf(projectIdToCheck.toString()));
-		console.log('indexOf test #1: ' + ["888", "222"].indexOf(888));
-		console.log('indexOf test #2: ' + ["888", "222"].indexOf("888"));
-		*/
-
 		// TODO: implement not using indexOf(), since we want to compare values not references? (see http://stackoverflow.com/questions/19737408/mongoose-check-if-objectid-exists-in-an-array)
 		return JSON.stringify(firstXProjectIds).indexOf(projectIdToCheck.toString()) > -1;
 	}
