@@ -82,6 +82,9 @@ button label, .button label {
 button:hover, .button:hover {
 	border: 1px solid #000;
 }
+button.revert:hover, .button.revert:hover {
+	border: 1px solid #fff56c;
+}
 button:active, .button:active {
 	border: 1px solid #fefefe;
 }
