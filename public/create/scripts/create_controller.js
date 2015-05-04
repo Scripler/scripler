@@ -32,10 +32,6 @@ function createController($scope, $http, projectsService, userService, $q, user,
 		}
 	}
 
-	$scope.openFeedback = function() {
-		userService.openFeedback( $scope.user );
-	}
-
 	$scope.updateUser = function() {
 		$scope.saveSubmitted = true;
 
