@@ -194,8 +194,6 @@
 	right: 15px;
 	text-align: right;
 	z-index: 10;
-	cursor: pointer;
-	text-decoration: underline;
 }
 
 #cke_bodyeditor, .cke_inner, .cke_wysiwyg_frame {
@@ -548,6 +546,12 @@ li.typo .style-copy-options p {
 	background: #efefef;
 	padding: 10px;
 	color: #999;
+}
+.menu-box.label.desc a {
+	color: #999;
+}
+.menu-box.label.desc a:hover {
+	color: #666;
 }
 
 .menu-box.inputfield {
