@@ -134,6 +134,7 @@ nav {
 ul.navList li>a{
 	font-size: 1.2em;
 	color:#000;
+	padding: 14px 15px 0;
 }
 ul.navList li>a:hover{
 	background-color: #fff;
@@ -189,7 +190,7 @@ ul.navList li>a:hover{
 		font-size: 1.2em;
 		color: #FFF !important;
 		position:fixed;
-		right:70px;
+		right:78px;
 		text-decoration: none;
 		background-color: #ccc;
 		width:79px;
@@ -374,6 +375,16 @@ h2.feat{
 }
 .features{
 	height: 25vh; 
+}
+
+.navbar-collapse {
+	text-align: center;
+}
+.navbar-nav {
+  float: none;
+  margin: 0 auto;
+  padding: 0;
+  display: inline-block;
 }
 
 @media (max-width:850px){ 
