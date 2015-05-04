@@ -360,7 +360,7 @@
 	<div class="menu-item-right" data-ng-show="rightMenuShowItem == 'publish'">
 		<ul>
 			<li class="menu-item-background">
-				<div class="menu-box label text-align-center" data-ng-show="project.publish.url">
+				<div class="menu-box label text-align-center" data-ng-show="project.publish.image">
 					<a data-ng-href="{{project.publish.url}}" target="_blank">
 						<img style="border: 1px solid black;" data-ng-src="{{project.publish.image}}" height="120" alt="Cover" />
 					</a>
@@ -370,7 +370,7 @@
 						{{ project.metadata.title }}
 					</a>
 				</div>
-				<div class="menu-box label text-align-center">
+				<div class="menu-box label text-align-center" data-ng-show="project.publish.url">
 					<a data-ng-href="{{project.publish.url}}" target="_blank">
 						View your book
 					</a>
