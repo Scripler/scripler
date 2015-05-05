@@ -5,7 +5,7 @@
 		<div data-ng-hide="showSettings">
 			<div class="clearfix">
 				<a href="http://{{frontpage}}" target="_self" class="frontpage-link">
-					<span class="arrow-left"></span><span>Frontpage</span>
+					<span class="arrow-left"></span><span>Front page</span>
 				</a>
 			</div>
 			<div class="logo-box">
@@ -22,11 +22,13 @@
 					</div>
 				</div>
 			</div>
-			<div class="upgrade-bottom-box clearfix" data-ng-show="user._id && !user.isDemo && user.level == 'free'">
+			<div class="upgrade-bottom-box clearfix" data-ng-class="{ 'upgrade-bottom-box-premium': user.level == 'premium' }" data-ng-show="user._id && !user.isDemo">
 				<div class="upgrade-text">
-					<span data-ng-bind-html="upgradeText[user.level]"></span>
-					<!-- TODO: insert real Upgrade link here when the Premium frontend has been implemented -->
-					<a href="/upgrade">Upgrade</a>
+					<!-- TODO: is there an easier way to conditionally apply the appropriate "upgrade-text" class? -->
+					<span data-ng-bind-html="upgradeText[user.level]" data-ng-class="{ 'upgrade-text-free': user.level == 'free', 'upgrade-text-premium': user.level == 'premium' }"></span>
+					<!-- TODO: insert real Upgrade/Change links here when the Premium frontend has been implemented -->
+					<a ng-if="user.level == 'free'" href="/upgrade">Upgrade</a>
+					<a ng-if="user.level == 'premium'" href="/upgrade">Change</a>
 				</div>
 			</div>
 		</div>
