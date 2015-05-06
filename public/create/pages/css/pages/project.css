@@ -771,5 +771,9 @@ li.typo .style-copy-options p {
 	left: 0;
 	overflow: visible;
 	overflow-y:visible;
+}
 
+.urlError{
+	margin-left:10px;
+	width: 90%;
 }
