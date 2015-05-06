@@ -1615,7 +1615,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				    if($scope.linkAddress == entry.target)isInternal = true;
 				});
 
-				if($scope.linkAddress.substring(0,6)!="http://"){ 
+				if($scope.linkAddress!=undefined && $scope.linkAddress.substring(0,6)!="http://"){ 
 					insert = insert.replace($scope.linkAddress, "http://" + $scope.linkAddress);
 				}
 
