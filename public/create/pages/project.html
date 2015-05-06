@@ -134,15 +134,18 @@
 
 					<form name="insertHyperlinks" novalidate>
 						<span class="menu-box inputfield">
-							<input id="hyperlinkTarget" name="targetURL" type="text" data-ng-model="linkAddress" ng-pattern="/doc_.|^((http?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/" placeholder="Target" required>
+							<input id="hyperlinkTarget" name="targetURL" type="text" data-ng-model="linkAddress" ng-pattern="/doc_.|^((http?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/" placeholder="Target" ng-required="true" required>
 						</span>
 						<div role="alert">
 							<span class="nameError urlError" ng-show="insertHyperlinks.targetURL.$error.pattern && !insertHyperlinks.targetURL.$pristine">Not a valid URL!</span>
 							<span class="nameError urlError" ng-show="insertHyperlinks.targetURL.$error.required && insertHyperlinks.targetURL.$dirty && !insertHyperlinks.targetURL.$touched">URL target missing!</span>
 						</div>
 						<span class="menu-box inputfield margin-top">
-							<input id="hyperlinkInputBox" type="text" data-ng-model="linkText" placeholder="Text">
+							<input id="hyperlinkInputBox" name="textURL" type="text" data-ng-model="linkText" placeholder="Text" ng-minlength="1" ng-required="true" required>
 						</span>
+						<div role="alert">
+							<span class="nameError urlError" ng-show="insertHyperlinks.textURL.$error.required && insertHyperlinks.textURL.$dirty && !insertHyperlinks.textURL.$touched">Hyperlink text missing!</span>
+						</div>
 						<span class="menu-box inputfield margin-top">
 							<select data-ng-model="linkAnchor" data-ng-options="anchor.text for anchor in toc">
 								<option value="">Choose internal target</option>
