@@ -89,7 +89,7 @@
 						{{project.name}}
 					</div>
 				</div>
-				<div class="project-link show-more" data-ng-hide="$index == selectedProjectHover || project.editingProjectTitle || project.name.length < 29">
+				<div class="project-link show-more" data-ng-class="{ 'project-link downgraded-helptext': !canLoadProject(project) }" data-ng-hide="$index == selectedProjectHover || project.editingProjectTitle || project.name.length < 29">
 					(…)
 				</div>
 
