@@ -253,7 +253,7 @@ $(document).ready(function() {
                 } else if (user.isDemo) {
                     $("#login").animate({
                         "paddingBottom": "10",
-                        "paddingTop": "40"
+                        "paddingTop": "60"
                     }, 800);
                     $(".menu-login").css("display", "inline");
                 }
