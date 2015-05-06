@@ -20,10 +20,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		// TODO: how to handle error? (awaiting "Show error messages to the user" task)
 		console.log("ERROR: user is undefined!");
 	} else {
-		var projectPromise = projectsService.getProject( $scope.pid );
+		// If a user attempts to deep link into a project he/she cannot load
+		var canLoadProject = utilsService.canLoadProject(user.level, $scope.user.projects, $scope.pid);
+		if (!canLoadProject) {
+			$location.path('create/#/');
+		}
 
+		var projectPromise = projectsService.getProject( $scope.pid );
 		projectPromise.then( function( project ) {
 			$scope.project = project;
+
 			var metadataChanged = false;
 			if (!$scope.project.metadata.title) {
 				$scope.project.metadata.title = $scope.project.name;
