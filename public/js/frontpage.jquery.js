@@ -23,10 +23,8 @@ $(document).ready(function() {
         return ((elemBottom >= docViewTop) && (elemTop <= docViewBottom) && (elemBottom <= docViewBottom) && (elemTop >= docViewTop));
     }
 
-    $(".menu-top li.navpoint").on("click", function(event) {
-        if ($(this).attr("data") == "blog") {
-            //do nothing
-        } else {
+    $(".navbar-nav .navpoint a").on("click", function(event) {
+        if ($(this).attr("data") != "blog" && $(this).attr("data") != "talk") {
             event.preventDefault();
             if ($(this).attr("data") == "create") {
                 document.location.href = "/create";
@@ -132,8 +130,6 @@ $(document).ready(function() {
             } else {
                 $("button.navbar-toggle").attr("aria-expanded", true);
             }
-
-            // console.log($("button.navbar-toggle").attr("aria-expanded"));
         });
 
     }
@@ -187,6 +183,11 @@ $(document).ready(function() {
         $("#password-reset-form").css("display", "none");
         $("#form-success").css("display", "none");
         resetLoginForm();
+    });
+    $(".menu-login").on("click", function(event) {
+        $(":animated").promise().done(function() {
+            $("#login-email").focus();
+        });
     });
 
     // Handle the password reset entry page
@@ -252,7 +253,7 @@ $(document).ready(function() {
                 } else if (user.isDemo) {
                     $("#login").animate({
                         "paddingBottom": "10",
-                        "paddingTop": "40"
+                        "paddingTop": "60"
                     }, 800);
                     $(".menu-login").css("display", "inline");
                 }
@@ -293,21 +294,6 @@ $(document).ready(function() {
         $("#invalid-box2").css("display", "none");
     }
 
-    $(".menu-login").on("click", function(event) {
-        $(":animated").promise().done(function() {
-            $("#login-email").focus();
-        });
-    });
-
-    $(".to-top").on("click", function(event) {
-        event.preventDefault();
-        var gotoPoint = "#scripler";
-
-        $('html, body').animate({
-            scrollTop: $(gotoPoint).offset().top
-        }, 800);
-    });
-
     function isValidPassword(password) {
         return password !== 'undefined' && password.length >= 6;
     }
@@ -325,8 +311,6 @@ $(document).ready(function() {
             }
         }
     }
-
-
 });
 
 /* Create HTML5 elements for IE */

@@ -1,8 +1,3 @@
-
-
-/* ==========================================================================
-   Author's custom styles
-   ========================================================================== */
 @font-face {
   font-family: 'Roboto';
   src: url('../fonts/Roboto/Roboto-Regular.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
@@ -48,14 +43,9 @@
 .icon-linkedin:before {
 	content: "\e603";
 }
-.socialicons {
-	text-align: center;
-}
-.btn {
-	padding:0;
-}
-.socialicon a, a.socialicon {
-	margin: 0 auto; 
+
+a.socialicon {
+	margin: 0 5px;
 	padding-top: 8px;
 	padding-bottom: 8px;
 	padding-left: 10px;
@@ -65,52 +55,26 @@
 	border-radius: 50%;
 	background-color: #fff; 
 	font-size: 22px; 
-	color:#c6c6c6;
+	color: #c6c6c6;
 	text-decoration: none;
 }
-
 .socialicon a:hover, a.socialicon:hover {
 	background-color: #fff265;
 	color: #666;
 }
-body { 
-  	width: 98vw;
-	height:98vh;
-	overflow-x: hidden;
+
+body {
 	font-family: 'Roboto', 'Helvetica', 'Arial';
 }
-p{
+p {
 	font-size:14px;
 }
-.page{
-	margin:0;
-	padding-top: 50px;
-	width:100vw;
-	height:100vh;
-	overflow-x: hidden;
-}
 nav {
-	background-color:#FFF;
-	color:#000;
-	padding-left: 35vw;
+	background-color: #fff;
+	color: #000;
 	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
-} 
- 
-.about-scripler{
-	color:#000;
-	font-weight: 700;
 }
-#scriplerTeam{
-	padding-bottom: 20px;
-	padding-top: 20px;
-}
-a.navbar-brand{
-	font-size: 1.2em; 
 
-}
-#brandlogo{
-	display:none;
-}
 #forgot-password{
 	float:left;
 	color: #000;
@@ -120,7 +84,6 @@ a.navbar-brand{
 
 #remember-me-box{
 	clear: both;
-
 }
 #remember-me-box>label{
 	margin-left: 4px;
@@ -152,31 +115,24 @@ a.navbar-brand{
 	color:#000!important;
 	z-index: 5!important;
 }
-.navbar-brand, ul.navList li>a{
+
+ul.navList li>a{
 	font-size: 1.2em;
 	color:#000;
-}  
-.navbar-brand:hover{
-	color:#000;
+	padding: 14px 15px 0;
 }
 ul.navList li>a:hover{
 	background-color: #fff;
 	color:#666;
 } 
+
 @media (min-width:1050px){	
 	#login-form {
 		margin-left: 150px;
 	}
-	.socialicons {
-		margin-top: 15px;
-		margin-left:-80px;
-	}
 }
 
 @media (min-width:850px){
-	body{
-		padding-top: 20px;
-	}
 	.menu-blog{
 		background-color:#000;
 	} 
@@ -212,7 +168,7 @@ ul.navList li>a:hover{
 		font-size: 1.2em;
 		color: #FFF !important;
 		position:fixed;
-		right:70px;
+		right:78px;
 		text-decoration: none;
 		background-color: #ccc;
 		width:79px;
@@ -224,92 +180,99 @@ ul.navList li>a:hover{
 
 }
 
-#scripler{
-	color: #666;
-	padding-top: 80px;
-	background-color:#ececec;
+#scripler, #features, #about {
+	padding: 50px 20px 100px;
+	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* WebKit */
+	background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Firefox */
+	background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* IE10+ */
+	background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Opera */
+	background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
 }
-#features{
-	background-color:#215660;
-}
-#about{
-	background-color:#fff56c;
-}
-h2.about{
-	padding-bottom: 0 !important
-}
-#contact{
 
+@media (max-width:540px) {
+	#scripler, #features, #about {
+		padding: 20px 20px 40px;
+	}
 }
-h4{
-	font-size: 16px;
+
+#scripler {
+	background-color: #ececec;
+	color: #666;
 }
-h3{
-	font-size:1.2em;
-	font-weight: 700;
+#scripler .scripler-logo {
+	margin: 0 auto 50px;
 }
-h2{  
-	font-family: 'Roboto-Black';
-	padding-bottom: 20px;
-}
-img#scriplerLogo{
-	margin-bottom: 50px;
-}
-button#testTheAlpha{
-	background-color:#fff56c;
-	color:#000;
+#scripler .test-alpha {
+	background-color: #fff56c;
+	color: #000;
 	font-size: 1.5em;
 	font-weight: 700;
-	border:none;
-	padding:10px;
-	float:none;
+	border: none;
+	margin: 20px;
+	padding: 10px 25px;
 }
- 
-a.testAlp:hover{
-	text-decoration: none;
+
+#features {
+	background-color: #215660;
 }
+#features h2, #features h3 {
+	color: #fff56c;
+}
+#features p {
+	color: #fff;
+}
+
+#about {
+	background-color: #fff56c;
+	color: #666;
+}
+#about h2, #about h4.text-color-black {
+	color: #000;
+}
+#about h3 span {
+	font-size: 14px;
+}
+#about a {
+	color: #000;
+}
+
+#contact{ 
+	background-color: #fff;
+	color: #666;
+}
+#contact a {
+	color: #000;
+}
+#contact .left-column {
+	position: absolute;
+	left: 0;
+	background-color: #fff;
+	height: 100%;
+	min-height: 100vh;
+	padding: 50px 20px 100px;
+	z-index: 5;
+}
+#contact .left-column .row p {
+	margin: 0;
+}
+#contact iframe {
+	width: 100%;
+	height: 100%;
+	min-height: 100vh;
+	overflow: hidden;
+}
+
+@media (max-width:540px) {
+	#contact .left-column {
+		padding: 20px 20px 40px;
+	}
+}
+
 a#signUp{
 	color:#000;
 	text-decoration: underline;
 }
-.bbb{
-	background-color:#000;
-}
-.testBtn{
-	margin:20px; 
-}
-.feats{
-	color: #fff56c;
-}
-.features{
-	display:block;
-}
-.whiteFeats{
-	color:#FFF;
-}
-#about{
-	color: #666;
-}
-a.person{
-	color:#000;
-	text-decoration:underline;
-	font-weight: 700;
-}
-.pers {
-	height: 12vh;
-}
-#contact{ 
-	color: #666;
-	padding-top: 0;
-}
-.cont{
-	padding-top: 50px;
-	height:100vh;
-	background-color:#fff;
-	position:absolute;	
-	display:block;
-	z-index: 5;
-}
+
 input#mce-EMAIL,input#mc-embedded-subscribe{
 	height: 32px;
 }
@@ -320,35 +283,11 @@ input#mc-embedded-subscribe{
 	border:none; 
 
 }
-iframe{ 
-	left:0px;
-	position:absolute;
-	z-index: 0;
-	width:99vw;
-	overflow-x: hidden;
-	height:100vh;
-}
-h2.con{
-	font-weight: 700;
-	padding:0;
-	padding-top: 20px;
-	margin:0;
-}
-h2.feat{
-	color: #fff56c;
-	padding-bottom: 20px !important;
-}
 
-#login
-{
-	width:100vw;
-	overflow-x:hidden;
+#login {
 	background-color: #c6c6c6;
 }
- 
-.row {
-	margin:0;
-}
+
 .email, .password {
 	-moz-border-radius: 1px;
 	-webkit-border-radius: 1px;
@@ -364,10 +303,11 @@ h2.feat{
 	font-family: 'Roboto', sans-serif; 
 	margin-bottom: 20px;
 }
-.loginBtn {
+.login-button {
 	-moz-border-radius: 1px;
 	-webkit-border-radius: 1px;
 	-webkit-appearance: none;
+	border: 0;
 	border-radius: 1px; 
 	background-color:#fff56c;
 	color: #231f20;
@@ -384,7 +324,6 @@ h2.feat{
 }
 .login-main{
 	float: none;
-	
 }
 #remember{
 	margin:0;
@@ -401,8 +340,15 @@ h2.feat{
 	float:right;
 	height: 100%;
 }
-.features{
-	height: 25vh; 
+
+.navbar-collapse {
+	text-align: center;
+}
+.navbar-nav {
+  float: none;
+  margin: 0 auto;
+  padding: 0;
+  display: inline-block;
 }
 
 @media (max-width:850px){ 
@@ -427,16 +373,6 @@ h2.feat{
 	#login-form{
 		margin-top: 20vh;
 	}
-	.features{
-	height: 100%;
-	}
-	.features:last-child{
-		margin-bottom: 15px;
-	}
-	.pull-right-on-big-screen{
-		float: left;
-		height: 100%;
-	}
 	a.navbar-brand{
 		display: none;
 	}
@@ -454,26 +390,6 @@ h2.feat{
 		background-color: transparent!important;
 	}
 
-	#brandlogo{
-		display:inline-block;
-		margin-top:-10px;
-		margin-right:5px;
-		float:left;
-	}
-	.cont { 
-		position:relative;
-		height:100%;
-		padding-bottom: 20px;
-		padding-top: 20px;
-		}
-	iframe{
-		position:relative;
-		}
-	#scripler, #features, #about, #contact, #login{
-		padding-top: 20px;
-		height:100%;
-		padding-bottom: 50px;
-		}
 	form.login-form{
 		margin:0;
 	}
