@@ -229,6 +229,9 @@ ul.navList li>a:hover{
 #about h2, #about h4.text-color-black {
 	color: #000;
 }
+#about h3 span {
+	font-size: 14px;
+}
 #about a {
 	color: #000;
 }
