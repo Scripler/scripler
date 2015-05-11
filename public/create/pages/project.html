@@ -136,17 +136,17 @@
 						<span class="menu-box inputfield">
 							<!-- we are using the same regExp in two places: here and project_controller.js; 
 							we tried, but we couldn't refactor it into one variable only, so that's why we have to use it twice  -->
-							<input id="hyperlinkTarget" name="targetURL" type="text" data-ng-model="linkAddress" ng-pattern="/doc_.|^((http?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/" placeholder="Target" ng-required="true" required>
+							<input id="hyperlinkTarget" name="hyperlinkTarget" type="text" data-ng-model="linkAddress" ng-pattern="/doc_.|^((http?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/" placeholder="Target" ng-required="true" required>
 						</span>
 						<div role="alert">
-							<span class="nameError urlError" ng-show="insertHyperlinks.targetURL.$error.pattern && !insertHyperlinks.targetURL.$pristine">Not a valid URL!</span>
-							<span class="nameError urlError" ng-show="insertHyperlinks.targetURL.$error.required && !insertHyperlinks.targetURL.$pristine">URL target missing!</span>
+							<span class="nameError urlError" ng-show="insertHyperlinks.hyperlinkTarget.$error.pattern && !insertHyperlinks.hyperlinkTarget.$pristine">Not a valid URL!</span>
+							<span class="nameError urlError" ng-show="insertHyperlinks.hyperlinkTarget.$error.required && !insertHyperlinks.hyperlinkTarget.$pristine">URL target missing!</span>
 						</div>
 						<span class="menu-box inputfield margin-top">
-							<input id="hyperlinkInputBox" name="textURL" type="text" data-ng-model="linkText" placeholder="Text" ng-minlength="1" ng-required="true" required>
+							<input id="hyperlinkInputBox" name="hyperlinkInputBox" type="text" data-ng-model="linkText" placeholder="Text" ng-minlength="1" ng-required="true" required>
 						</span>
 						<div role="alert">
-							<span class="nameError urlError" ng-show="insertHyperlinks.textURL.$error.required && insertHyperlinks.textURL.$dirty">Hyperlink text missing!</span>
+							<span class="nameError urlError" ng-show="insertHyperlinks.hyperlinkInputBox.$error.require && insertHyperlinks.hyperlinkInputBox.$dirty">Hyperlink text missing!</span>
 						</div>
 						<span class="menu-box inputfield margin-top">
 							<select data-ng-model="linkAnchor" data-ng-options="anchor.text for anchor in toc">
