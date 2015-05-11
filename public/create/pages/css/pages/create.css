@@ -317,32 +317,37 @@ hr {
 }
 
 .btn-top{
-	position:absolute;
+	position:fixed;
 	top:0;
-	font-size: 18px;
+	font-size: 1.1em;
 	cursor: pointer;
-	padding: 11.5px 20px 11.5px 20px;
 	text-align: center;
 	width:80px;
-}
-
+}  
+.btn-top a{
+	display:block;
+	height:50px;
+	padding: 14px 20px 11.5px 20px;
+}   
 .feedback {
 	right:80px;
 	background:#c6c6c6;
 }
-
 .blog{
 	right:0;
 	background:#000;
-	
 }
-
 .feedback a{
 	color: #fff;
 }
-
+.feedback a:hover{
+	color:#fff56c;
+}
 .blog a{
 	color: #fff56c;
+}
+.blog a:hover{
+	color: #fff;
 }
 
 .projectTitleEditing .ng-invalid{
@@ -375,5 +380,5 @@ hr {
 	left: 0;
 	overflow: visible;
 	overflow-y:visible;
-
 }
+
