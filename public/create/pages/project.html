@@ -134,6 +134,8 @@
 
 					<form name="insertHyperlinks" novalidate>
 						<span class="menu-box inputfield">
+							<!-- we are using the same regExp in two places: here and project_controller.js; 
+							we tried, but we couldn't refactor it into one variable only, so that's why we have to use it twice  -->
 							<input id="hyperlinkTarget" name="targetURL" type="text" data-ng-model="linkAddress" ng-pattern="/doc_.|^((http?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/" placeholder="Target" ng-required="true" required>
 						</span>
 						<div role="alert">
