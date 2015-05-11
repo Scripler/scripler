@@ -139,7 +139,7 @@
 							regex in the JavaScript code (controller) (this trick: http://stackoverflow.com/questions/17384909/directive-to-dynamically-create-an-ng-pattern 
 							only worked partially: error message was not shown for URLs like "ydyfuyydufdf"), we should at least add a comment 
 							explaining that this regex is the same as the one being used in project_controller.js (https://github.com/Scripler/scripler/blob/beta1/public/create/scripts/project_controller.js#L1610). -->
-							<input id="hyperlinkTarget" name="hyperlinkTarget" type="text" data-ng-model="linkAddress" ng-pattern="/doc_.|^((http?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/" placeholder="Target" ng-required="true" required>
+							<input id="hyperlinkTarget" name="hyperlinkTarget" type="text" data-ng-model="linkAddress" ng-pattern="/doc_.|^((http?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{1,}\.[a-zA-Z]{1,}(\.[a-zA-Z]{2,})?$/" placeholder="Target" ng-required="true" required>
 						</span>
 						<div role="alert">
 							<span class="nameError urlError" ng-show="insertHyperlinks.hyperlinkTarget.$error.pattern && !insertHyperlinks.hyperlinkTarget.$pristine">Not a valid URL</span>
