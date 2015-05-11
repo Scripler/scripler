@@ -146,7 +146,7 @@
 							<input id="hyperlinkInputBox" name="hyperlinkInputBox" type="text" data-ng-model="linkText" placeholder="Text" required>
 						</span>
 						<div role="alert">
-							<span class="nameError urlError" ng-show="insertHyperlinks.hyperlinkInputBox.$error.require && insertHyperlinks.hyperlinkInputBox.$dirty">Hyperlink text missing</span>
+							<span class="nameError urlError" ng-show="insertHyperlinks.hyperlinkInputBox.$error.required && insertHyperlinks.hyperlinkInputBox.$dirty">Hyperlink text missing</span>
 						</div>
 						<span class="menu-box inputfield margin-top">
 							<select data-ng-model="linkAnchor" data-ng-options="anchor.text for anchor in toc">
