@@ -774,6 +774,5 @@ li.typo .style-copy-options p {
 }
 
 .urlError{
-	margin-left:10px;
-	width: 90%;
+	position: relative; 
 }
