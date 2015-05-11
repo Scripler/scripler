@@ -134,8 +134,11 @@
 
 					<form name="insertHyperlinks" novalidate>
 						<span class="menu-box inputfield">
-							<!-- we are using the same regExp in two places: here and project_controller.js; 
-							we tried, but we couldn't refactor it into one variable only, so that's why we have to use it twice  -->
+							<!-- Morten's comments: Since our experiments and a bit of Googling showed that it is 
+							apparently (https://github.com/angular/angular.js/issues/5226) not possible to store the 
+							regex in the JavaScript code (controller) (this trick: http://stackoverflow.com/questions/17384909/directive-to-dynamically-create-an-ng-pattern 
+							only worked partially: error message was not shown for URLs like "ydyfuyydufdf"), we should at least add a comment 
+							explaining that this regex is the same as the one being used in project_controller.js (https://github.com/Scripler/scripler/blob/beta1/public/create/scripts/project_controller.js#L1610). -->
 							<input id="hyperlinkTarget" name="hyperlinkTarget" type="text" data-ng-model="linkAddress" ng-pattern="/doc_.|^((http?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/" placeholder="Target" ng-required="true" required>
 						</span>
 						<div role="alert">
