@@ -139,14 +139,14 @@
 							<input id="hyperlinkTarget" name="hyperlinkTarget" type="text" data-ng-model="linkAddress" ng-pattern="/doc_.|^((http?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/" placeholder="Target" ng-required="true" required>
 						</span>
 						<div role="alert">
-							<span class="nameError urlError" ng-show="insertHyperlinks.hyperlinkTarget.$error.pattern && !insertHyperlinks.hyperlinkTarget.$pristine">Not a valid URL!</span>
-							<span class="nameError urlError" ng-show="insertHyperlinks.hyperlinkTarget.$error.required && !insertHyperlinks.hyperlinkTarget.$pristine">URL target missing!</span>
+							<span class="nameError urlError" ng-show="insertHyperlinks.hyperlinkTarget.$error.pattern && !insertHyperlinks.hyperlinkTarget.$pristine">Not a valid URL</span>
+							<span class="nameError urlError" ng-show="insertHyperlinks.hyperlinkTarget.$error.required && !insertHyperlinks.hyperlinkTarget.$pristine">URL target missing</span>
 						</div>
 						<span class="menu-box inputfield margin-top">
-							<input id="hyperlinkInputBox" name="hyperlinkInputBox" type="text" data-ng-model="linkText" placeholder="Text" ng-minlength="1" ng-required="true" required>
+							<input id="hyperlinkInputBox" name="hyperlinkInputBox" type="text" data-ng-model="linkText" placeholder="Text" required>
 						</span>
 						<div role="alert">
-							<span class="nameError urlError" ng-show="insertHyperlinks.hyperlinkInputBox.$error.require && insertHyperlinks.hyperlinkInputBox.$dirty">Hyperlink text missing!</span>
+							<span class="nameError urlError" ng-show="insertHyperlinks.hyperlinkInputBox.$error.require && insertHyperlinks.hyperlinkInputBox.$dirty">Hyperlink text missing</span>
 						</div>
 						<span class="menu-box inputfield margin-top">
 							<select data-ng-model="linkAnchor" data-ng-options="anchor.text for anchor in toc">
