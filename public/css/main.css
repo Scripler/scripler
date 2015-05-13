@@ -75,111 +75,6 @@ nav {
 	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
 }
 
-#forgot-password{
-	float:left;
-	color: #000;
-	text-decoration: underline;
-	font-size: 1.1em;
-}
-
-#remember-me-box{
-	clear: both;
-}
-#remember-me-box>label{
-	margin-left: 4px;
-	float: left;
-	font-size:1.2em;
-	font-weight: 400;
-}
-#remember{
-	float: left
-}
- 
-.sr-only{
-	color:#000; 
-}
-.colIco{
-	float: none;
-	display:block;
-	padding: 0;
-	margin:0;
-	margin-top:-15px;
-}
-.colIco:first-child{
-	margin-top:-10px;	
-}
-.colIco:last-child{
-	margin-bottom: -5px;	
-}
-.icon-bar{
-	color:#000!important;
-	z-index: 5!important;
-}
-
-ul.navList li>a{
-	font-size: 1.2em;
-	color:#000;
-	padding: 14px 15px 0;
-}
-ul.navList li>a:hover{
-	background-color: #fff;
-	color:#666;
-} 
-
-@media (min-width:1050px){	
-	#login-form {
-		margin-left: 150px;
-	}
-}
-
-@media (min-width:850px){
-	.menu-blog{
-		background-color:#000;
-	} 
-
-	#login-form {
-		margin-top: 10px;
-	}
-	li>a.blog-link{
-		font-size: 1.2em;
-		color: #fff56c !important;
-		position:fixed;
-		right:0;
-		text-decoration: none;
-		background-color: #000;
-		width:79px;
-		height: 50px;
-	}     
-	li>a.blog-link:hover{
-		background-color: #000 !important;
-		color:#FFF !important;
-	}
-	.menu-talk{
-		background-color:#000;
-	} 
-	.navpoint{
-		text-align: center;
-	}
-	a.navpoint.talk-link:hover{
-		background-color: #ccc !important;
-		color:#fff56c !important;
-	}
-	li>a.talk-link{
-		font-size: 1.2em;
-		color: #FFF !important;
-		position:fixed;
-		right:78px;
-		text-decoration: none;
-		background-color: #ccc;
-		width:79px;
-		height: 50px;
-	}     
-	li>a.talk-link:hover{
-		background-color: #fff !important;
-	}
-
-}
-
 #scripler, #features, #about {
 	padding: 50px 20px 100px;
 	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* WebKit */
@@ -187,12 +82,6 @@ ul.navList li>a:hover{
 	background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* IE10+ */
 	background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Opera */
 	background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
-}
-
-@media (max-width:540px) {
-	#scripler, #features, #about {
-		padding: 20px 20px 40px;
-	}
 }
 
 #scripler {
@@ -262,11 +151,56 @@ ul.navList li>a:hover{
 	overflow: hidden;
 }
 
-@media (max-width:540px) {
-	#contact .left-column {
-		padding: 20px 20px 40px;
-	}
+#forgot-password{
+	float:left;
+	color: #000;
+	text-decoration: underline;
+	font-size: 1.1em;
 }
+
+#remember-me-box{
+	clear: both;
+}
+#remember-me-box>label{
+	margin-left: 4px;
+	float: left;
+	font-size:1.2em;
+	font-weight: 400;
+}
+#remember{
+	float: left
+}
+ 
+.sr-only{
+	color:#000; 
+}
+.colIco{
+	float: none;
+	display:block;
+	padding: 0;
+	margin:0;
+	margin-top:-15px;
+}
+.colIco:first-child{
+	margin-top:-10px;	
+}
+.colIco:last-child{
+	margin-bottom: -5px;	
+}
+.icon-bar{
+	color:#000!important;
+	z-index: 5!important;
+}
+
+ul.navList li>a{
+	font-size: 1.2em;
+	color:#000;
+	padding: 14px 15px 0;
+}
+ul.navList li>a:hover{
+	background-color: #fff;
+	color:#666;
+} 
 
 a#signUp{
 	color:#000;
@@ -349,6 +283,70 @@ input#mc-embedded-subscribe{
   margin: 0 auto;
   padding: 0;
   display: inline-block;
+}
+
+@media (min-width:1050px){	
+	#login-form {
+		margin-left: 150px;
+	}
+}
+
+@media (min-width:850px){
+	.menu-blog{
+		background-color:#000;
+	} 
+
+	#login-form {
+		margin-top: 10px;
+	}
+	li>a.blog-link{
+		font-size: 1.2em;
+		color: #fff56c !important;
+		position:fixed;
+		right:0;
+		text-decoration: none;
+		background-color: #000;
+		width:79px;
+		height: 50px;
+	}     
+	li>a.blog-link:hover{
+		background-color: #000 !important;
+		color:#FFF !important;
+	}
+	.menu-talk{
+		background-color:#000;
+	} 
+	.navpoint{
+		text-align: center;
+	}
+	a.navpoint.talk-link:hover{
+		background-color: #ccc !important;
+		color:#fff56c !important;
+	}
+	li>a.talk-link{
+		font-size: 1.2em;
+		color: #FFF !important;
+		position:fixed;
+		right:78px;
+		text-decoration: none;
+		background-color: #ccc;
+		width:79px;
+		height: 50px;
+	}     
+	li>a.talk-link:hover{
+		background-color: #fff !important;
+	}
+
+}
+
+@media (max-width:540px) {
+	#scripler, #features, #about {
+		padding: 20px 20px 40px;
+	}
+
+	#contact .left-column {
+		padding: 20px 20px 40px;
+	}
 }
 
 @media (max-width:850px){ 
