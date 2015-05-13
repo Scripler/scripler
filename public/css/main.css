@@ -113,8 +113,20 @@ nav {
 #features h2, #features h3 {
 	color: #fff56c;
 }
+#features h3 {
+	font-size: 1.2em;
+	font-weight: 700;
+}
 #features p {
 	color: #fff;
+}
+#features .container{
+	width:960px;
+	padding:0;
+}
+#features .row .col-xs-12, #features .row .col-md-6{
+	padding-left:0;
+	padding-right:0;
 }
 
 #about {
@@ -299,6 +311,10 @@ input#mc-embedded-subscribe{
 @media (min-width:1050px){	
 	#login-form {
 		margin-left: 150px;
+	}
+
+	#features p {
+		max-width:425px;
 	}
 }
 
