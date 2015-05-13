@@ -44,6 +44,10 @@
 	content: "\e603";
 }
 
+#socialicons{
+	margin-top: 10px;
+}
+
 a.socialicon {
 	margin: 0 5px;
 	padding-top: 8px;
