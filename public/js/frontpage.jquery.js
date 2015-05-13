@@ -207,7 +207,6 @@ $(document).ready(function() {
         var token = args[2];
 
         // Switch login-article from login-form to password-reset-form, and display immediately
-        //$("#login").css("paddingBottom", 10);
         $("#login-form").css("display", "none");
         $("#password-reset-form").css("display", "block");
 
@@ -260,17 +259,12 @@ $(document).ready(function() {
                     $(".menu-login").css("display", "none");
                     $("#login").css("display", "none");
                 } else if (user.isDemo) {
-                    $("#login").animate({
-                        
-                    }, 800);
                     $(".menu-login").css("display", "inline");
                 }
             }
         },
         error: function(request, status, error) {
-            $("#login").animate({
-                
-            }, 800);
+    
         }
     });
 
