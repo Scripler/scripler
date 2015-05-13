@@ -230,6 +230,7 @@ input#mc-embedded-subscribe{
 
 #login {
 	background-color: #c6c6c6;
+	margin-top: 30px;
 }
 
 .email, .password {
