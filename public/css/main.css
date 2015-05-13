@@ -97,6 +97,7 @@ nav {
 #scripler {
 	background-color: #ececec;
 	color: #666;
+	padding-top: 100px;
 }
 #scripler .scripler-logo {
 	margin: 0 auto 50px;
@@ -247,7 +248,8 @@ input#mc-embedded-subscribe{
 
 #login {
 	background-color: #c6c6c6;
-	margin-top: 30px;
+	display:none;
+	padding-top:70px;
 }
 
 .email, .password {
