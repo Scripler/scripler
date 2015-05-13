@@ -44,6 +44,10 @@
 	content: "\e603";
 }
 
+#socialicons{
+	margin-top: 10px;
+}
+
 a.socialicon {
 	margin: 0 5px;
 	padding-top: 8px;
@@ -73,6 +77,101 @@ nav {
 	background-color: #fff;
 	color: #000;
 	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
+}
+
+.row{
+	margin-right: 0;
+	margin-left: 0;
+}
+
+#scripler, #features, #about {
+	padding: 50px 20px 100px;
+	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* WebKit */
+	background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Firefox */
+	background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* IE10+ */
+	background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Opera */
+	background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+	min-height:100vh;
+}
+
+#scripler {
+	background-color: #ececec;
+	color: #666;
+}
+#scripler .scripler-logo {
+	margin: 0 auto 50px;
+}
+#scripler .test-alpha {
+	background-color: #fff56c;
+	color: #000;
+	font-size: 1.5em;
+	font-weight: 700;
+	border: none;
+	margin: 20px;
+	padding: 10px 25px;
+}
+
+#features {
+	background-color: #215660;
+}
+#features h2, #features h3 {
+	color: #fff56c;
+}
+#features h3 {
+	font-size: 1.2em;
+	font-weight: 700;
+}
+#features p {
+	color: #fff;
+}
+#features .container{
+	width:960px;
+	padding:0;
+}
+#features .row .col-xs-12, #features .row .col-md-6{
+	padding-left:0;
+	padding-right:0;
+	max-width: 100%;
+}
+
+#about {
+	background-color: #fff56c;
+	color: #666;
+}
+#about h2, #about h4.text-color-black {
+	color: #000;
+}
+#about h3 span {
+	font-size: 14px;
+}
+#about a {
+	color: #000;
+}
+
+#contact{ 
+	background-color: #fff;
+	color: #666;
+}
+#contact a {
+	color: #000;
+}
+#contact .left-column {
+	position: absolute;
+	left: 0;
+	background-color: #fff;
+	height: 100%;
+	min-height: 100vh;
+	padding: 50px 20px 100px;
+	z-index: 5;
+}
+#contact .left-column .row p {
+	margin: 0;
+}
+#contact iframe {
+	width: 100%;
+	height: 100%;
+	min-height: 100vh;
+	overflow: hidden;
 }
 
 #forgot-password{
@@ -126,146 +225,8 @@ ul.navList li>a:hover{
 	color:#666;
 } 
 
-@media (min-width:1050px){	
-	#login-form {
-		margin-left: 150px;
-	}
-}
-
-@media (min-width:850px){
-	.menu-blog{
-		background-color:#000;
-	} 
-
-	#login-form {
-		margin-top: 10px;
-	}
-	li>a.blog-link{
-		font-size: 1.2em;
-		color: #fff56c !important;
-		position:fixed;
-		right:0;
-		text-decoration: none;
-		background-color: #000;
-		width:79px;
-		height: 50px;
-	}     
-	li>a.blog-link:hover{
-		background-color: #000 !important;
-		color:#FFF !important;
-	}
-	.menu-talk{
-		background-color:#000;
-	} 
-	.navpoint{
-		text-align: center;
-	}
-	a.navpoint.talk-link:hover{
-		background-color: #ccc !important;
-		color:#fff56c !important;
-	}
-	li>a.talk-link{
-		font-size: 1.2em;
-		color: #FFF !important;
-		position:fixed;
-		right:78px;
-		text-decoration: none;
-		background-color: #ccc;
-		width:79px;
-		height: 50px;
-	}     
-	li>a.talk-link:hover{
-		background-color: #fff !important;
-	}
-
-}
-
-#scripler, #features, #about {
-	padding: 50px 20px 100px;
-	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* WebKit */
-	background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Firefox */
-	background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* IE10+ */
-	background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Opera */
-	background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
-}
-
-@media (max-width:540px) {
-	#scripler, #features, #about {
-		padding: 20px 20px 40px;
-	}
-}
-
-#scripler {
-	background-color: #ececec;
-	color: #666;
-}
-#scripler .scripler-logo {
-	margin: 0 auto 50px;
-}
-#scripler .test-alpha {
-	background-color: #fff56c;
-	color: #000;
-	font-size: 1.5em;
-	font-weight: 700;
-	border: none;
-	margin: 20px;
-	padding: 10px 25px;
-}
-
-#features {
-	background-color: #215660;
-}
-#features h2, #features h3 {
-	color: #fff56c;
-}
-#features p {
-	color: #fff;
-}
-
-#about {
-	background-color: #fff56c;
-	color: #666;
-}
-#about h2, #about h4.text-color-black {
-	color: #000;
-}
-#about h3 span {
-	font-size: 14px;
-}
-#about a {
-	color: #000;
-}
-
-#contact{ 
-	background-color: #fff;
-	color: #666;
-}
-#contact a {
-	color: #000;
-}
-#contact .left-column {
-	position: absolute;
-	left: 0;
-	background-color: #fff;
-	height: 100%;
-	min-height: 100vh;
-	padding: 50px 20px 100px;
-	z-index: 5;
-}
-#contact .left-column .row p {
-	margin: 0;
-}
-#contact iframe {
-	width: 100%;
-	height: 100%;
-	min-height: 100vh;
-	overflow: hidden;
-}
-
-@media (max-width:540px) {
-	#contact .left-column {
-		padding: 20px 20px 40px;
-	}
+.nav>li>a:hover, .nav>li>a:focus {
+    background-color: transparent;
 }
 
 a#signUp{
@@ -286,6 +247,7 @@ input#mc-embedded-subscribe{
 
 #login {
 	background-color: #c6c6c6;
+	margin-top: 30px;
 }
 
 .email, .password {
@@ -351,7 +313,80 @@ input#mc-embedded-subscribe{
   display: inline-block;
 }
 
-@media (max-width:850px){ 
+@media (min-width:1050px){	
+	#login-form {
+		margin-left: 150px;
+	}
+
+	#features p {
+		max-width:425px;
+	}
+}
+
+@media (min-width:850px){
+	html{
+		overflow-x: hidden;
+	}
+
+	#features .row .col-xs-12, #features .row .col-md-6{
+		max-width: 90%;
+	}
+
+	.menu-blog{
+		background-color:#000;
+	} 
+
+	#login-form {
+		margin-top: 10px;
+	}
+	li>a.blog-link{
+		font-size: 1.2em;
+		color: #fff56c !important;
+		position:fixed;
+		right:0;
+		text-decoration: none;
+		background-color: #000;
+		width:79px;
+		height: 50px;
+	}     
+	li>a.blog-link:hover{
+		background-color: #000 !important;
+		color:#FFF !important;
+	}
+	.menu-talk{
+		background-color:#000;
+	} 
+	.navpoint{
+		text-align: center;
+	}
+	a.navpoint.talk-link:hover{
+		background-color: #ccc !important;
+		color:#fff56c !important;
+	}
+	li>a.talk-link{
+		font-size: 1.2em;
+		color: #FFF !important;
+		position:fixed;
+		right:78px;
+		text-decoration: none;
+		background-color: #ccc;
+		width:79px;
+		height: 50px;
+	}     
+	li>a.talk-link:hover{
+		background-color: #fff !important;
+	}
+
+}
+
+@media (max-width:850px){
+	html{
+		overflow-x: hidden;
+	}
+
+	#features .row .col-xs-12, #features .row .col-md-6{
+		max-width: 75%;
+	}
 
 	.navbar-toggle {
 		position: fixed;
@@ -366,12 +401,8 @@ input#mc-embedded-subscribe{
 		right: 30px;
 		background-color: #FFF;
 	}
-	#login{
-		display: none;
-		min-height: 100vh;
-	}
-	#login-form{
-		margin-top: 20vh;
+	.navbar-header img, .navbar{
+		margin-top: -20px;
 	}
 	a.navbar-brand{
 		display: none;
@@ -394,4 +425,14 @@ input#mc-embedded-subscribe{
 		margin:0;
 	}
 
+}
+
+@media (max-width:540px) {
+	#scripler, #features, #about {
+		padding: 20px 20px 40px;
+	}
+
+	#contact .left-column {
+		padding: 20px 20px 40px;
+	}
 }
