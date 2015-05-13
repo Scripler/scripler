@@ -397,12 +397,8 @@ input#mc-embedded-subscribe{
 		right: 30px;
 		background-color: #FFF;
 	}
-	#login{
-		display: none;
-		min-height: 100vh;
-	}
-	#login-form{
-		margin-top: 20vh;
+	.navbar-header img, .navbar{
+		margin-top: -20px;
 	}
 	a.navbar-brand{
 		display: none;
