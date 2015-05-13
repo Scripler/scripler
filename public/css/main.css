@@ -127,6 +127,7 @@ nav {
 #features .row .col-xs-12, #features .row .col-md-6{
 	padding-left:0;
 	padding-right:0;
+	max-width: 100%;
 }
 
 #about {
@@ -319,6 +320,14 @@ input#mc-embedded-subscribe{
 }
 
 @media (min-width:850px){
+	html{
+		overflow-x: hidden;
+	}
+
+	#features .row .col-xs-12, #features .row .col-md-6{
+		max-width: 90%;
+	}
+
 	.menu-blog{
 		background-color:#000;
 	} 
@@ -366,17 +375,14 @@ input#mc-embedded-subscribe{
 
 }
 
-@media (max-width:540px) {
-	#scripler, #features, #about {
-		padding: 20px 20px 40px;
+@media (max-width:850px){
+	html{
+		overflow-x: hidden;
 	}
 
-	#contact .left-column {
-		padding: 20px 20px 40px;
+	#features .row .col-xs-12, #features .row .col-md-6{
+		max-width: 75%;
 	}
-}
-
-@media (max-width:850px){ 
 
 	.navbar-toggle {
 		position: fixed;
@@ -419,4 +425,14 @@ input#mc-embedded-subscribe{
 		margin:0;
 	}
 
+}
+
+@media (max-width:540px) {
+	#scripler, #features, #about {
+		padding: 20px 20px 40px;
+	}
+
+	#contact .left-column {
+		padding: 20px 20px 40px;
+	}
 }
