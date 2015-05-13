@@ -87,7 +87,7 @@ nav {
 	background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* IE10+ */
 	background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Opera */
 	background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
-	height:100vh;
+	min-height:100vh;
 }
 
 #scripler {
