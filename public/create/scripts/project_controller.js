@@ -206,15 +206,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 
     $scope.move = function(array, from, to) {
-        if (to === from) return;
+		if (to === from) return;
 
         var target = array[from];
-	  var increment = to < from ? -1 : 1;
+		var increment = to < from ? -1 : 1;
 
         for (var k = from; k != to; k += increment) {
-	    array[k] = array[k + increment];
-	  }
-	  array[to] = target;
+			array[k] = array[k + increment];
+	  	}
+
+		array[to] = target;
 	}
 
 
@@ -267,7 +268,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
                             if ($scope.projectDocuments[i].type == 'cover') coverExists = true;
                             else if ($scope.projectDocuments[i].type == 'toc') tocExists = true;
                             else if ($scope.projectDocuments[i].type == 'titlepage') titlePageExists = true;
-						    }
+						}
 
 						if (type == 'cover') {
                             $scope.projectDocuments.unshift(data.document);
@@ -277,7 +278,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
                             $scope.rearrange($scope.projectDocuments);
                         } else if (type == 'toc') {
                             $scope.projectDocuments.unshift(data.document);
-                            $scope.rearrange($scope.projectDocuments);
                             if (coverExists && titlePageExists) {
 								$scope.move($scope.projectDocuments, 0, 2);
                             } else if (coverExists && !titlePageExists) {
@@ -285,12 +285,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
                             } else if (!coverExists && titlePageExists) {
 								$scope.move($scope.projectDocuments, 0, 1);
 							}
+							$scope.rearrange($scope.projectDocuments);
                         } else if (type == 'titlepage') {
                             $scope.projectDocuments.unshift(data.document);
-                            $scope.rearrange($scope.projectDocuments);
                             if (coverExists) {
 								$scope.move($scope.projectDocuments, 0, 1);
 							}
+							$scope.rearrange($scope.projectDocuments);
 						}
 
 						$scope.openProjectDocument( data.document );
