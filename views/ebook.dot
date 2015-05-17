@@ -29,18 +29,29 @@
 	<script src="../../reader/epubjs/libs/jquery/jquery-2.1.0.min.js"></script>
 
 	<style type="text/css">
-		#controls {
-			position: absolute;
-			bottom: 0px;
-			left: 50%;
-			width: 400px;
-			margin-left: -200px;
+		#scripler {
+			position: fixed;
 			text-align: center;
-			display: none;
+			bottom: 15px;
+			left: 0;
+			right: 0;
+			z-index: 2;
 		}
-
-		#controls > input[type=range] {
-			width: 400px;
+		#scripler a {
+			text-decoration: none;
+			margin: auto;
+			border: 1px solid #fff56c;
+			background-color: #fffef2;
+			padding: 7px;
+			text-align: center;
+			color: black;
+		}
+		#titlebar {
+			height: 10px;
+		}
+		#viewer, #divider {
+			top: auto;
+			height:  calc(100% - 90px);
 		}
 	</style>
 
@@ -159,6 +170,8 @@
 	<div id="next" class="arrow">›</div>
 
 	<div id="loader"><img src="../../reader/epubjs/img/loader.gif"></div>
+
+	<div id="scripler"><a href="http://scripler.com" target="_blank">Write your own ebook with Scripler</a></div>
 </div>
 <div class="overlay"></div>
 </body>
