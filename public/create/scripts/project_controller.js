@@ -1267,6 +1267,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		styleset.css = stylesetCSS;
 	}
 
+	$scope.selectedStyleset = -1;
+	$scope.showStyleset = function($index) {
+		if ($index != $scope.selectedStyleset) {
+			$scope.selectedStyleset = $index;
+		}
+		else {
+			$scope.hideStylesetOptions();
+		}
+	};
+	$scope.hideStyleset = function() {
+		$scope.selectedStyleset = -1;
+	};
+
 	$scope.selectedStylesetOptions = -1;
 	$scope.showStylesetOptions = function($index) {
 		if ($index != $scope.selectedStylesetOptions) {
@@ -1829,7 +1842,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				// The container for all the stylesets, which is the scrolling container
 				var stylesetsContainer = document.getElementById('menu-left-design');
 
-				var alreadyExpanded = angular.element(stylesetNode).scope().typoChildrenVisible;
+//				var alreadyExpanded = angular.element(stylesetNode).scope().selectedStyleset;
+				var alreadyExpanded = true;
 				var animationTime = 700;
 
 				// If the styleset is already expanded, we don't wait additional time before setting the selected style in the angular scope.
@@ -1840,7 +1854,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 				// Update angular scope after the animation is done
 				setTimeout(function () {
-					angular.element(stylesetNode).scope().typoChildrenVisible = true;
+					$scope.showStyleset($scope.selectedStyle._id);
+//					angular.element(stylesetNode).scope().selectedStyleset = $scope.selectedStyle._id;
 					if ( !$scope.$$phase ) {
 						$scope.$apply();
 					}
