@@ -26,10 +26,10 @@ $(document).ready(function() {
     $( ".menu-login" ).click(function() {
         if (!isScrolledIntoView($("#login"))) {
             $("#login").slideToggle();
-                $('html, body').stop(true, true).animate({
-                    scrollTop: $("#login").offset().top
-                }, 800);
-            }
+            $('html, body').stop(true, true).animate({
+                scrollTop: $("#login").offset().top
+            }, 800);
+        }
         $("#login").slideToggle();
     });
 
