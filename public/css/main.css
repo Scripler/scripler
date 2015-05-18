@@ -316,7 +316,7 @@ input#mc-embedded-subscribe{
 }
 
 @media (min-width:1050px){	
-	#login-form {
+	#login-wrapper {
 		margin-left: 150px;
 	}
 
@@ -338,7 +338,7 @@ input#mc-embedded-subscribe{
 		background-color:#000;
 	} 
 
-	#login-form {
+	#login-wrapper {
 		margin-top: 10px;
 	}
 	li>a.blog-link{
@@ -423,10 +423,13 @@ input#mc-embedded-subscribe{
 		background-color: transparent!important;
 	}
 
-	form.login-form{
+	#login-wrapper {
 		margin:0;
 	}
 
+	#socialicons {
+		margin-bottom:20px;
+	}
 }
 
 @media (max-width:700px) {
@@ -443,9 +446,64 @@ input#mc-embedded-subscribe{
 	#contact .left-column {
 		padding: 20px 20px 40px;
 	}
+<<<<<<< HEAD
 
 	#features .row .col-xs-12, #features .row .col-md-6{
 		max-width: 54%;
 	}
 }
 
+=======
+}
+
+.login-main input {
+	width: 100%;
+}
+
+.arrow-box {
+	position: absolute;
+	background: #FF0500;
+	border: 2px solid #fff;
+	padding-top: 5px;
+	height: 32px;
+	width: 200px;
+	color: #fff;
+	text-align: center;
+	top: 45px;
+	left: calc(50% - 100px);
+	z-index: 2;
+}
+
+
+.arrow-box:after, .arrow-box:before {
+	bottom: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+.arrow-box:after {
+	border-color: rgba(213, 0, 0, 0);
+	border-bottom-color: #FF0500;
+	border-width: 10px;
+	margin-left: -10px;
+}
+.arrow-box:before {
+	border-color: rgba(194, 225, 245, 0);
+	border-bottom-color: #fff;
+	border-width: 13px;
+	margin-left: -13px;
+}
+
+#form-success {
+	line-height: 1em;
+	text-align: left;
+}
+
+#form-success-text {
+	height: 52px;
+}
+>>>>>>> 34e7a1eb09de9adeaa5be03dacfd0cf07c78a422
