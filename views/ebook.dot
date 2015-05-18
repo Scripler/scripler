@@ -41,10 +41,11 @@
 			text-decoration: none;
 			margin: auto;
 			border: 1px solid #fff56c;
-			background-color: #fffef2;
-			padding: 7px;
+			padding: 3px 10px 3px 10px;
 			text-align: center;
-			color: black;
+			color: #999;
+			font-size: 80%;
+			font-family: Roboto;
 		}
 		#titlebar {
 			height: 10px;
