@@ -65,20 +65,50 @@
     </div>
   </nav>
   <div>
-    <div class="row " id="login">
-        <form id="login-form" class="center-block text-center col-xs-12 col-md-8 ">
-            <div class="login-group center-block text-center">
-                <div class="login-main center-block text-center col-xs-12 col-md-10">
-                    <input type="email" value="" name="login-email" class="col-xs-12 col-md-4 required email" id="login-email" placeholder="Email Address">
-                    <input type="password" value="" name="login-password" class=" col-xs-12 col-md-4 required password" id="login-password" placeholder="Password">
-                    <input name="Login" type="submit" value="Login" class="login-button col-xs-12 col-md-2" id="login-button">
+    <div class="row center-block text-center" id="login">
+        <div id="login-wrapper" class="center-block col-xs-12 col-md-8 ">
+            <form id="login-form" >
+                <div class="login-main center-block col-xs-12 col-md-10">
+                    <div class="col-xs-12 col-md-4">
+                        <input type="email" value="" name="login-email" class="required email" id="login-email" placeholder="Email Address">
+                        <div class="arrow-box" id="invalid-box1" style="display:none;"></div>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <input type="password" value="" name="login-password" class="required password" id="login-password" placeholder="Password">
+                        <div class="arrow-box" id="invalid-box2" style="display:none;"></div>
+                    </div>
+                    <div class="col-xs-12 col-md-2">
+                        <input name="Login" type="submit" value="Login" class="login-button" id="login-button">
+                        <div class="arrow-box" id="invalid-box3" style="display:none;"></div>
+                    </div>
                 </div>
-                <div id="login-extras" class=" center-block text-center col-xs-12 col-md-2 ">
+                <div id="login-extras" class="center-block col-xs-12 col-md-2 ">
                     <div id="fgpass" ><a id="forgot-password" href="#">Forgot password?</a></div>
                     <div id="remember-me-box"><input type="checkbox" name="remember" id="remember"><label for="remember">Keep me logged in</label></div>
                 </div>
+            </form>
+            <form id="password-reset-form" style="display:none;">
+                <div class="login-main center-block col-xs-12 col-md-12">
+                    <div class="col-xs-12 col-md-3"></div>
+                    <div class="col-xs-12 col-md-3">
+                        <input type="password" value="" name="password1" class="required password" id="password1" placeholder="New password" />
+                        <div class="arrow-box" id="invalid-box4" style="display:none;"></div>
+                    </div>
+                    <div class="col-xs-12 col-md-3">
+                        <input type="password" value="" name="password2" class="required password" id="password2" placeholder="Repeat password" />
+                        <div class="arrow-box" id="invalid-box5" style="display:none;"></div>
+                    </div>
+                    <div class="col-xs-12 col-md-3">
+                        <input name="passsword-reset" type="submit" value="Change password" class="login-button" id="password-reset-button" />
+                        <div class="arrow-box" id="invalid-box6" style="display:none;"></div>
+                    </div>
+                </div>
+            </form>
+            <div id="form-success" class="center-block col-xs-12 col-md-10 " style="display:none;">
+                <div class="col-xs-12 col-md-5"></div>
+                <div class="col-xs-12 col-md-7" id="form-success-text"></div>
             </div>
-        </form>
+        </div>
         <div id="socialicons" class="col-xs-12 col-md-2 clearfix">
             <a class="socialicon" href="auth/facebook"><span class="icon-facebook"></span></a>
             <a class="socialicon" href="auth/linkedin"><span class="icon-linkedin"></span></a>
