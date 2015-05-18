@@ -33,6 +33,14 @@ $(document).ready(function() {
         $("#login").slideToggle();
     });
 
+    $( "#signUp" ).click(function() {
+        if (!isScrolledIntoView($("#contact"))) {
+                $('html, body').stop(true, true).animate({
+                    scrollTop: $("#contact").offset().top
+                }, 800);
+            }
+    });
+
     $(".navbar-nav .navpoint a").on("click", function(event) {
         if ($(this).attr("data") != "blog" && $(this).attr("data") != "talk" && $(this).attr("data") != "login") {
             event.preventDefault();
