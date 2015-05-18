@@ -132,25 +132,21 @@
 			<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
 				<div class="left-menu-options">
 
-					<form name="insertHyperlinks" novalidate>
+					<form name="insertHyperlinks" class="insertHyperlinks" novalidate>
 						<span class="menu-box inputfield">
 							<!-- Morten's comments: Since our experiments and a bit of Googling showed that it is 
 							apparently (https://github.com/angular/angular.js/issues/5226) not possible to store the 
 							regex in the JavaScript code (controller) (this trick: http://stackoverflow.com/questions/17384909/directive-to-dynamically-create-an-ng-pattern 
 							only worked partially: error message was not shown for URLs like "ydyfuyydufdf"), we should at least add a comment 
 							explaining that this regex is the same as the one being used in project_controller.js (https://github.com/Scripler/scripler/blob/beta1/public/create/scripts/project_controller.js#L1610). -->
-							<input id="hyperlinkTarget" name="hyperlinkTarget" type="text" data-ng-model="linkAddress" ng-pattern="/doc_.|^((http?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{1,}\.[a-zA-Z]{1,}(\.[a-zA-Z]{2,})?$/" placeholder="Target" ng-required="true" required>
+							<input id="hyperlinkTarget" name="hyperlinkTarget" type="text" data-ng-model="linkAddress" ng-pattern="/doc_.|^((http?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{1,}\.[a-zA-Z]{1,}(\.[a-zA-Z]{2,})?$/" placeholder="Target" required>
 						</span>
 						<div role="alert">
-							<span class="nameError urlError" ng-show="insertHyperlinks.hyperlinkTarget.$error.pattern && !insertHyperlinks.hyperlinkTarget.$pristine">Not a valid URL</span>
-							<span class="nameError urlError" ng-show="insertHyperlinks.hyperlinkTarget.$error.required && !insertHyperlinks.hyperlinkTarget.$pristine">URL target missing</span>
+							<span class="nameError urlError" ng-show="(insertHyperlinks.hyperlinkTarget.$error.pattern && !insertHyperlinks.hyperlinkTarget.$untouched) || (insertHyperlinks.hyperlinkTarget.$error.required && insertHyperlinks.$submitted)">Not a valid URL</span>
 						</div>
 						<span class="menu-box inputfield margin-top">
 							<input id="hyperlinkInputBox" name="hyperlinkInputBox" type="text" data-ng-model="linkText" placeholder="Text" required>
 						</span>
-						<div role="alert">
-							<span class="nameError urlError" ng-show="insertHyperlinks.hyperlinkInputBox.$error.required && insertHyperlinks.hyperlinkInputBox.$dirty">Hyperlink text missing</span>
-						</div>
 						<span class="menu-box inputfield margin-top">
 							<select data-ng-model="linkAnchor" data-ng-options="anchor.text for anchor in toc">
 								<option value="">Choose internal target</option>

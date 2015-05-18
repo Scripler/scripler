@@ -1588,9 +1588,15 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}		
 		}
 
+		// if no hyperlink text is provided, take the targetURL as the text
+		if(selectedContent == ""){
+			selectedContent = $scope.linkAddress; 
+		}
+
+
 		// defaulting the title/name of the anchor and the text of the hyperlink to the selected content
 		var title = selectedContent;
-		
+
 		// if the anchor/hyperlink input field is not empty, then add the element
 		if(!selectedContentRequired || selectedContent!=""){
 			if(type == "anchor"){
@@ -1615,7 +1621,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				    if($scope.linkAddress == entry.target)isInternal = true;
 				});
 
-				if($scope.linkAddress!=undefined && $scope.linkAddress.substring(0,6)!="http://"){ 
+				if($scope.linkAddress!=undefined && $scope.linkAddress.substring(0,4)!="http"){ 
 					insert = insert.replace($scope.linkAddress, "http://" + $scope.linkAddress);
 				}
 
