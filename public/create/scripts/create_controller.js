@@ -158,6 +158,7 @@ function createController($scope, $http, projectsService, userService, $q, user,
 	$scope.storeTitle = function(project){
 		$scope.projectStoredName = project.name;
 	}
+
 	$scope.renameProject = function( project ) {
 		if (project.name===undefined){
 			project.name = $scope.projectStoredName;
@@ -178,16 +179,4 @@ function createController($scope, $http, projectsService, userService, $q, user,
 			console.log("ERROR renaming project: this should not have happened: either a real user or a demo user should exist.");
 		}
 	};
-
-	$scope.copyProject = function( project ) {
-		if ( $scope.user || $scope.demoUser ) {
-			$http.post('/project/' + project._id + '/copy')
-				.success( function( data ) {
-					$scope.projects.push( data.project );
-				});
-		} else {
-			console.log("ERROR copying project: this should not have happened: either a real user or a demo user should exist.");
-		}
-	};
-
 };
