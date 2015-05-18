@@ -315,6 +315,57 @@ input#mc-embedded-subscribe{
   display: inline-block;
 }
 
+.login-main input {
+	width: 100%;
+}
+
+.arrow-box {
+	position: absolute;
+	background: #FF0500;
+	border: 2px solid #fff;
+	padding-top: 5px;
+	height: 32px;
+	width: 200px;
+	color: #fff;
+	text-align: center;
+	top: 45px;
+	left: calc(50% - 100px);
+	z-index: 2;
+}
+
+
+.arrow-box:after, .arrow-box:before {
+	bottom: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+.arrow-box:after {
+	border-color: rgba(213, 0, 0, 0);
+	border-bottom-color: #FF0500;
+	border-width: 10px;
+	margin-left: -10px;
+}
+.arrow-box:before {
+	border-color: rgba(194, 225, 245, 0);
+	border-bottom-color: #fff;
+	border-width: 13px;
+	margin-left: -13px;
+}
+
+#form-success {
+	line-height: 1em;
+	text-align: left;
+}
+
+#form-success-text {
+	height: 52px;
+}
+
 @media (min-width:1050px){	
 	#login-wrapper {
 		margin-left: 150px;
@@ -432,7 +483,13 @@ input#mc-embedded-subscribe{
 	}
 }
 
-@media (max-width:540px) {
+@media (max-width:700px) {
+	#features .row .col-xs-12, #features .row .col-md-6{
+		max-width: 65%;
+	}
+}
+
+@media (max-width:560px) {
 	#scripler, #features, #about {
 		padding: 20px 20px 40px;
 	}
@@ -440,55 +497,11 @@ input#mc-embedded-subscribe{
 	#contact .left-column {
 		padding: 20px 20px 40px;
 	}
-}
 
-.login-main input {
-	width: 100%;
-}
-
-.arrow-box {
-	position: absolute;
-	background: #FF0500;
-	border: 2px solid #fff;
-	padding-top: 5px;
-	height: 32px;
-	width: 200px;
-	color: #fff;
-	text-align: center;
-	top: 45px;
-	left: calc(50% - 100px);
-	z-index: 2;
+	#features .row .col-xs-12, #features .row .col-md-6{
+		max-width: 54%;
+	}
 }
 
 
-.arrow-box:after, .arrow-box:before {
-	bottom: 100%;
-	left: 50%;
-	border: solid transparent;
-	content: " ";
-	height: 0;
-	width: 0;
-	position: absolute;
-	pointer-events: none;
-}
-.arrow-box:after {
-	border-color: rgba(213, 0, 0, 0);
-	border-bottom-color: #FF0500;
-	border-width: 10px;
-	margin-left: -10px;
-}
-.arrow-box:before {
-	border-color: rgba(194, 225, 245, 0);
-	border-bottom-color: #fff;
-	border-width: 13px;
-	margin-left: -13px;
-}
 
-#form-success {
-	line-height: 1em;
-	text-align: left;
-}
-
-#form-success-text {
-	height: 52px;
-}

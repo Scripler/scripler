@@ -25,12 +25,20 @@ $(document).ready(function() {
 
     $( ".menu-login" ).click(function() {
         if (!isScrolledIntoView($("#login"))) {
+            $("#login").slideToggle();
             $('html, body').stop(true, true).animate({
                 scrollTop: $("#login").offset().top
             }, 800);
-            $("#login").slideToggle();
         }
         $("#login").slideToggle();
+    });
+
+    $( "#signUp" ).click(function() {
+        if (!isScrolledIntoView($("#contact"))) {
+                $('html, body').stop(true, true).animate({
+                    scrollTop: $("#contact").offset().top
+                }, 800);
+            }
     });
 
     $(".navbar-nav .navpoint a").on("click", function(event) {
