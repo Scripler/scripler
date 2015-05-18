@@ -429,7 +429,13 @@ input#mc-embedded-subscribe{
 
 }
 
-@media (max-width:540px) {
+@media (max-width:700px) {
+	#features .row .col-xs-12, #features .row .col-md-6{
+		max-width: 65%;
+	}
+}
+
+@media (max-width:560px) {
 	#scripler, #features, #about {
 		padding: 20px 20px 40px;
 	}
@@ -437,4 +443,9 @@ input#mc-embedded-subscribe{
 	#contact .left-column {
 		padding: 20px 20px 40px;
 	}
+
+	#features .row .col-xs-12, #features .row .col-md-6{
+		max-width: 54%;
+	}
 }
+
