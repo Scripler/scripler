@@ -12,6 +12,9 @@ var conf = require('config');
 var logger = require('../lib/logger');
 var styleset_utils = require('../lib/styleset-utils');
 var document_utils = require('../lib/document-utils');
+var Image = require('../models/image.js').Image;
+var User = require('../models/user.js').User;
+var fs = require('fs');
 
 //Load a document by id
 exports.load = function (id) {
@@ -228,6 +231,7 @@ exports.rearrange = function (req, res, next) {
 
 exports.upload = function (req, res, next) {
 	var files = req.files.file;
+	var project = req.project;
 	// If only a single file was uploaded, *files* is not an array.
 	// In that case, we make it an array, to handle single- ang multi-fileuploads the same way.
 	if (!(files instanceof Array)) {
@@ -237,13 +241,13 @@ exports.upload = function (req, res, next) {
 	var importedHtml = '';
 	var user = req.user;
 	var name;
-	var userDir = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + user._id);
-	var userUrl = conf.resources.usersUrl + '/' + user._id;
+	var imagesDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project.id, conf.epub.imagesDir);
+	var imagesUrl = conf.resources.projectsUrl + '/' + conf.epub.projectDirPrefix + project.id + '/' + conf.epub.imagesDir;
 	for (var i = 0; i < files.length; i++) {
 		var file = files[i];
 		name = file.name;
 		logger.info('Uploaded file ' + file.name + ' to ' + file.path + ' (' + file.size + ')');
-		docConverter.execute(userDir, file.path, function (err, html) {
+		docConverter.execute(imagesDir, file.path, function (err, html) {
 			if (err) {
 				return next(new Error(err));
 			}
@@ -251,12 +255,95 @@ exports.upload = function (req, res, next) {
 			importedHtml = importedHtml + html;
 			if (completedFiles == files.length) {
 				// All file imported
+				var totalBytes = 0;
+				var storageLimitBytes = 0;
+				if (conf.subscriptions[req.user.level] && conf.subscriptions[req.user.level].storage) {
+					storageLimitBytes = conf.subscriptions[req.user.level].storage;
+				}
 				// Update all img links to match the upload location
-				importedHtml = importedHtml.replace(/(<img[^>]*src=")([^"]+")/g, '$1' + userUrl + '/$2');
-				importedHtml = importedHtml.replace(/(<img[^>]*src=")[^"]+ObjectReplacements[^"]+/g, '$1http://scripler.com/images/broken_file.png');
-				req.body.name = name;
-				req.body.text = importedHtml;
-				return create(req, res, next);
+				importedHtml = importedHtml.replace(/(<img[^>]*src=")([^"]+")/g, '$1' + imagesUrl + '/$2');
+				importedHtml = importedHtml.replace(/(<img[^>]*src=")[^"]+ObjectReplacements[^"]+/g, '$1http://scripler.com/create/pages/images/broken_file.png');
+
+				// Add proper ToC id's to all heading
+				var prefix = 'id_';
+				var index = 1;
+				importedHtml = importedHtml.replace(/(<h\d(?![^>]*id=))/g, function (_, group) {
+					return group + ' id="'+prefix + index++ +'"';
+				});
+
+				// Find all images, check their filessizes, and create their image objects in the database
+				var regex = new RegExp('<img[^>]*src="'+imagesUrl+'/([^"]+)"', 'g');
+				var match;
+				var imageFileNames = [];
+				while (match = regex.exec(importedHtml)) {
+					// If not a duplicate, add to array of images we should handle
+					if(imageFileNames.indexOf(match[1]) < 0) {
+						imageFileNames.push(match[1]);
+					}
+				}
+				async.each(imageFileNames, function(imageFileName, callback){
+
+					var absolutePath = path.join(imagesDir, imageFileName);
+					var fileExtension = utils.getFileExtension(imageFileName);
+					var mediaType = utils.getMediaType(fileExtension);
+
+					fs.stat(absolutePath, function(err,stats){
+						if (err) {
+							return callback(err);
+						}
+						totalBytes += stats.size;
+						if (req.user.storageUsed + totalBytes > storageLimitBytes) {
+							return next({message: "User storage quota exceeded (" + (req.user.storageUsed + totalBytes) + " > " + storageLimitBytes + " bytes)", status: 402});
+						}
+
+						var image = new Image({
+							projectId: project._id,
+							members: [
+								{userId: req.user._id, access: ["admin"]}
+							],
+							fileExtension: fileExtension,
+							mediaType: mediaType
+						});
+						var imageNameWithoutExtension = utils.cleanFilename(utils.getFilenameWithoutExtension(imageFileName));
+						var finalName = imageNameWithoutExtension + '-' + image._id + '.'  + fileExtension;
+						image.name = finalName;
+
+						importedHtml = importedHtml.replace(new RegExp('(<img[^>]*src="'+imagesUrl+'/)('+imageFileName+')', 'g'), '$1' + finalName );
+
+						// Rename from old filename to new filename.
+						fs.rename(absolutePath, path.join(imagesDir, finalName));
+
+						image.save(function (err) {
+							if (err) {
+								return callback(err);
+							}
+							project.images.addToSet(image);
+							callback();
+						});
+					});
+
+				}, function (err){
+					if (err) {
+						return next(err);
+					}
+					// If any images where uploaded, add to user stoage
+					if (totalBytes > 0) {
+						// Image(s) was correctly uploaded and stored on project.
+						// As a background task update the users storageUsed value.
+						// Don't wait for it - customer will just be happy if it fails.
+						User.update({_id: req.user._id}, {$inc: {storageUsed: totalBytes}}, function (err, numAffected) {
+							if (err) {
+								logger.error("Could not update users storageUsed value: " + err, req.user);
+							}
+						});
+					}
+
+					// Create will save the other changes to project so no need to save project before calling create.
+					req.body.name = utils.getFilenameWithoutExtension(name);
+					req.body.text = importedHtml;
+					return create(req, res, next);
+				});
+
 			}
 		});
 	}
@@ -264,7 +351,7 @@ exports.upload = function (req, res, next) {
 
 exports.applyStyleset = function (req, res, next) {
 	var stylesetToApply = req.styleset;
-	document_utils.applyStylesetToDocument(req.document, stylesetToApply, req.user.level, function(err, populatedStyleset) {
+	document_utils.applyStylesetToDocument(req.document, stylesetToApply, false, req.user.level, function(err, populatedStyleset) {
 		if (err) {
 			return next(err);
 		} else if (!populatedStyleset) {

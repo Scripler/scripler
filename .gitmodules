@@ -4,3 +4,6 @@
 [submodule "public/create/ckeditor"]
 	path = public/create/ckeditor
 	url = https://github.com/Scripler/ckeditor-scripler.git
+[submodule "public/reader/epubjs"]
+	path = public/reader/epubjs
+	url = https://github.com/Scripler/epub.js.git

@@ -91,6 +91,7 @@
 	-webkit-transform: translateY(-50%);
 	-ms-transform: translateY(-50%);
 	transform: translateY(-50%);
+	width: 20px;
 }
 
 .menu-item-left, .menu-item-right {
@@ -172,6 +173,28 @@
 .editor.menu-extended {
 	width: calc(100% - 640px);	
 }
+.editor.information .breadcrumb {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	float: left;
+}
+.editor.information .breadcrumb a {
+	color: #666;
+	text-decoration: underline;
+}
+.editor.information .savedstamp {
+	margin-top: 10px;
+	margin-bottom: 0.5em;
+	float: right;
+	text-align: right;
+}
+.editor.information .feedback {
+	position: absolute;
+	top: 33px;
+	right: 15px;
+	text-align: right;
+	z-index: 10;
+}
 
 #cke_bodyeditor, .cke_inner, .cke_wysiwyg_frame {
 	width: 100% !important;
@@ -179,23 +202,13 @@
 }
 /* This should with time be fixed in the menubar plugin or how it works in ckeditor, a lot of styles are set on the elements */
 .cke_toolbox {
-	margin: 0 auto !important;
-	width: 225px !important;
-	padding: 2px 0 0 !important;
-	background: none !important;
+	margin: 0 0 0 -5px !important;
+	width: calc(100% - 100px) !important;
+	padding-left: 0 !important;
+	float: left;
 }
 .cke_toolgroup {
 	margin: 0 2px 4px !important;
-}
-@media all and (min-width: 640px) {
-	.cke_toolbox {
-		width: 100% !important;
-	}
-}
-@media all and (min-width: 1120px) {
-	.cke_toolbox {
-		width: 450px !important;
-	}
 }
 
 .menu-left ul li div .document {
@@ -307,14 +320,18 @@
 }
 textarea.renameProjectDocument, textarea.renameStyleset, textarea.renameStyle {
 	width: 100%;
-	height: 64px;
+	
 	border: 1px solid #ffff99;
 	padding: 5px;
 	resize: none;
 	outline: none;
 	overflow: hidden;
 }
-
+textarea.renameProjectDocument{
+	word-break: break-all;
+	height: 60px !important;
+	margin-top:30px;
+}
 .animate-enter, .animate-leave {
 	-webkit-transition: all 0.5s ease-in-out;
 	-moz-transition: all 0.5s ease-in-out;
@@ -493,117 +510,75 @@ li.typo .style-copy-options p {
 	display: block;
 	text-align: center;
 }
-.left-menu-button, .right-menu-button {
+
+.menu-status {
 	display: inline-block;
 	width: 100%;
 	padding: 5px;
-	background: #fff56c;
-	border: 1px solid #fff56c;
+	background: #FF0500;
+	border: 1px solid #FF0500;
+	color: #fff;
 	text-align: center;
-	cursor: pointer;
 }
-.left-menu-button label, .right-menu-button label {
-	color: #000;
-	cursor: pointer;
+.menu-status.published {
+	background: #5cb85c;
+	border: 1px solid #5cb85c;
 }
-.left-menu-button:hover, .right-menu-button:hover {
-	border: 1px solid #000;
-}
-.left-menu-button:active, .right-menu-button:active {
-	border: 1px solid #fefefe;
-}
-.left-menu-button:hover label, .right-menu-button:hover label, .left-menu-button:active label, .right-menu-button:active label {
-	color: #666;
-}
-.right-menu-feature-title {
-	display: block;
+
+.menu-feature-title {
 	font-weight: bold;
 	line-height: 1.5em;
 }
-.right-menu-feature-text {
-	display: block;
-}
+
 .menu-box {
 	display: inline-block;
 	width: 100%;
 	padding: 5px 10px;
 	border: 1px solid #efefef;
-	cursor: pointer;
 }
-.menu-box.center-text {
-	text-align: center;
-}
-.left-menu-parameter-margin, .right-menu-parameter-margin {
-	margin-top: 10px;
-}
-
 .menu-box.label {
 	position: relative;
 	display: block;
 	border: 0;
 	padding: 5px 0;
 }
+.menu-box.label.desc {
+	background: #efefef;
+	padding: 10px;
+	color: #999;
+}
+.menu-box.label.desc a {
+	color: #999;
+}
+.menu-box.label.desc a:hover {
+	color: #666;
+}
 
 .menu-box.inputfield {
-	position: relative;
-	width: calc(100% - 36px);
-	padding: 0;
-	transition: all 1s;
-	-moz-transition: all 1s;
-	-ms-transition: all 1s;
-	-webkit-transition: all 1s;
-	-o-transition: all 1s;
-}
-/*left*/
-.menu-box.inputfield.full-size {
 	position: relative;
 	width: 100%;
 	height: 32px;
 	padding: 0;
-}
-.menu-box.inputfield.full-size-text {
-	position: relative;
-	width: 100%;
-	height: 64px;
-	padding: 0;
-}
-.menu-box.inputfield.text-saved {
-	border-color: yellow;
-	height: 56px;
-}
-.menu-box.inputfield.full-size-text.text-saved {
-	position: relative;
-	width: 100%;
-	height: 92px;
-	padding: 0;
-}
-.menu-box .statusfield {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	margin: 0 auto;
-	z-index: 1;
-	width: auto;
-	height: 28px;
-	color: black;
-	padding: 5px;
 	transition: all 1s;
 	-moz-transition: all 1s;
 	-ms-transition: all 1s;
 	-webkit-transition: all 1s;
 	-o-transition: all 1s;
 }
-.menu-box .statusfield.text-saved {
-	background: none yellow;
-	top: 28px;
+.menu-box.inputfield.no-animation {
+	transition: none 0s;
+	-moz-transition: none 0s;
+	-ms-transition: none 0s;
+	-webkit-transition: none 0s;
+	-o-transition: none 0s;
 }
-.menu-box.inputfield.full-size-text .statusfield {
-	top: 34px;
+.menu-box.inputfield.textfield {
+	height: 64px;
 }
-.menu-box.inputfield.full-size-text .statusfield.text-saved  {
-	top: 62px;
+.menu-box.inputfield.text-saved {
+	border-color: yellow;
 }
+
 .menu-box.inputfield input, .menu-box.inputfield select {
 	position: absolute;
 	top: 0;
@@ -641,10 +616,7 @@ li.typo .style-copy-options p {
 .menu-box .option {
 	display: block;
 }
-.menu-box.left-menu-download {
-	text-align: center;
-}
-.menu-box.left-menu-download .download-icon {
+.menu-box .download-icon {
 	width: 50px;
 	height: auto;
 	margin: 0 5px;
@@ -697,8 +669,8 @@ li.typo .style-copy-options p {
 .menu-right .insertOptionProperties.expanded {
 	margin: -1px 0 10px 10px;
 }
-.outputOptionProperties {
-	display: block;
+
+.menu-item-background {
 	position: relative;
 	margin: 0 0 0 10px;
 	padding: 16px;
@@ -706,8 +678,40 @@ li.typo .style-copy-options p {
 	border: 1px solid #e6e6e6;
 	box-shadow: 0px 5px 5px -5px #ccc;
 }
-.outputOptionDownload {
+.menu-item-background-none {
+	position: relative;
 	margin: 10px 0 0 10px;
+	padding: 0;
+}
+
+.outputOptionDownload {
+	position: relative;
+	margin: 10px 0 0 10px;
+	padding: 0;
+}
+
+.loading-animation {
+	z-index: 101;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: transparent url("../../../../images/scripler_is_working.gif") no-repeat center;
+
+}
+.loading-mask {
+	z-index: 100;
+	position: absolute;
+	top: 0;
+	left: 0;
+	-moz-opacity: 0.7;
+	opacity: .70;
+	filter: alpha(opacity=70);
+	background-color: #eee;
+	width: 100%;
+	height: 100%;
+	zoom: 1;
 }
 
 .not-selectable {
@@ -737,4 +741,35 @@ li.typo .style-copy-options p {
 #anchorInputBox{
 	border: none;
 	background: #fff;
+}
+.documentTitleEdit .ng-invalid{
+	border-color: red !important;
+	border-width: 2px !important;
+	border-color: black;
+}
+.nameError::before{
+	content:'';
+	width: 0; 
+	height: 0; 
+	position: absolute; 
+	left: 0;
+	top:-10px;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 10px solid red;
+}
+.nameError{
+	background-color: red;
+	width: 100%; 
+	text-align: center;
+	font-size: 0.7em;
+	padding:3px;
+	color: #000;
+	z-index: 5101;
+	display:block;
+	position: absolute; 
+	left: 0;
+	overflow: visible;
+	overflow-y:visible;
+
 }

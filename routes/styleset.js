@@ -9,7 +9,7 @@ var async = require('async');
 exports.load = function (id) {
 	return function (req, res, next) {
 		var idCopy = id || req.body.stylesetId;
-		Styleset.findOne({"_id": idCopy, "deleted": false}).populate({path: 'styles'}).exec(function (err, styleset) {
+		Styleset.findOne({"_id": idCopy, "deleted": false}).exec(function (err, styleset) {
 			if (err) return next(err);
 			if (!styleset) {
 				return next({message: "Styleset not found", status: 404});
@@ -25,13 +25,6 @@ exports.load = function (id) {
 exports.loadPopulated = function (id) {
 	return function (req, res, next) {
 		var idCopy = id || req.body.stylesetId;
-		/*
-		 Don't use "match" to in populate() below if you plan on later saving the object - this will throw the following error:
-
-		 	"For your own good, using `document.save()` to update an array which was selected using an $elemMatch projection OR populated using skip, limit, query conditions, or exclusion of the _id field when the operation results in a $pop or $set of the entire array is not supported. The following path(s) would have been modified unsafely..."
-
-		 This makes sense: how should Mongoose know what to do when we have filtered out some of the styles and then try to save only some of them?
-		 */
 		Styleset.findOne({"_id": idCopy, "deleted": false}).populate({path: 'styles'}).exec(function (err, styleset) {
 			if (err) return next(err);
 			if (!styleset) {
