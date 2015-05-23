@@ -1589,6 +1589,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			}		
 		}
 
+		// if no hyperlink text is provided, take the targetURL as the text
+		if(selectedContent == ""){
+			selectedContent = $scope.linkAddress; 
+		}
+
+
 		// defaulting the title/name of the anchor and the text of the hyperlink to the selected content
 		var title = selectedContent;
 
@@ -1608,13 +1614,17 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				}
 				insert = insert.replace('link_text', title);
 
-				var regExpValidUrl = /^((http?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
+				var regExpValidUrl = /^((http?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{1,}\.[a-zA-Z]{1,}(\.[a-zA-Z]{2,})?$/;
 
 				var isInternal = false;
 				var toc = $scope.toc;
 				toc.forEach(function(entry) {
 					if($scope.linkAddress == entry.target)isInternal = true;
 				});
+
+				if($scope.linkAddress!=undefined && $scope.linkAddress.substring(0,4)!="http"){ 
+					insert = insert.replace($scope.linkAddress, "http://" + $scope.linkAddress);
+				}
 
 				validURL = (regExpValidUrl.test($scope.linkAddress) || isInternal);
 			}	

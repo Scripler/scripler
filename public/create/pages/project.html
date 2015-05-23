@@ -131,20 +131,32 @@
 			</li>-->
 			<li class="insertOptionProperties" data-ng-class="{ 'expanded' : activeInsertOption === 'showInsertHyperlinkOptions' }">
 				<div class="left-menu-options">
-					<span class="menu-box inputfield">
-						<input id="hyperlinkTarget" type="text" data-ng-model="linkAddress" placeholder="Target">
-					</span>
-					<span class="menu-box inputfield margin-top">
-					<input id="hyperlinkInputBox" type="text" data-ng-model="linkText" placeholder="Text">
-					</span>
-					<span class="menu-box inputfield margin-top">
-						<select data-ng-model="linkAnchor" data-ng-options="anchor.text for anchor in toc">
-							<option value="">Choose internal target</option>
-						</select>
-					</span>
-					<div class="button margin-top" data-ng-click="insertNewLink();">
-						Insert hyperlink
-					</div>
+
+					<form name="insertHyperlinks" class="insertHyperlinks" novalidate>
+						<span class="menu-box inputfield">
+							<!-- Morten's comments: Since our experiments and a bit of Googling showed that it is 
+							apparently (https://github.com/angular/angular.js/issues/5226) not possible to store the 
+							regex in the JavaScript code (controller) (this trick: http://stackoverflow.com/questions/17384909/directive-to-dynamically-create-an-ng-pattern 
+							only worked partially: error message was not shown for URLs like "ydyfuyydufdf"), we should at least add a comment 
+							explaining that this regex is the same as the one being used in project_controller.js (https://github.com/Scripler/scripler/blob/beta1/public/create/scripts/project_controller.js#L1610). -->
+							<input id="hyperlinkTarget" name="hyperlinkTarget" type="text" data-ng-model="linkAddress" ng-pattern="/doc_.|^((http?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{1,}\.[a-zA-Z]{1,}(\.[a-zA-Z]{2,})?$/" placeholder="Target" required>
+						</span>
+						<div role="alert">
+							<span class="nameError urlError" ng-show="(insertHyperlinks.hyperlinkTarget.$error.pattern && !insertHyperlinks.hyperlinkTarget.$untouched) || (insertHyperlinks.hyperlinkTarget.$error.required && insertHyperlinks.$submitted)">Not a valid URL</span>
+						</div>
+						<span class="menu-box inputfield margin-top">
+							<input id="hyperlinkInputBox" name="hyperlinkInputBox" type="text" data-ng-model="linkText" placeholder="Text" required>
+						</span>
+						<span class="menu-box inputfield margin-top">
+							<select data-ng-model="linkAnchor" data-ng-options="anchor.text for anchor in toc">
+								<option value="">Choose internal target</option>
+							</select>
+						</span>
+						<div class="button margin-top" data-ng-click="insertNewLink();">
+							Insert hyperlink
+						</div>
+					</form>
+
 					<div class="menu-box label desc margin-top">
 						<div class="menu-feature-title">Hyperlink</div>
 						<div>Create or edit hyperlinks. You can link to any web address or anchors inside this book. Use the drop-down box to select internal anchors.</div>
