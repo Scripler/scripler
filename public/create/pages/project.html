@@ -60,6 +60,7 @@
 		</div>
 		<ul>
 			<li data-ng-repeat="styleset in stylesets track by $index" id="{{styleset._id}}" class="typo" data-ng-class="{ 'open' : styleset._id == selectedStyleset }" data-ng-hide="styleset.archived || styleset.hidden">
+
 				<a class="styleset-options-show" data-ng-click="showStyleset(styleset._id); showStylesetOptions($index);" data-ng-class="{ 'open' : $index == selectedStylesetOptions }">
 					<div class="arrow"></div>
 				</a>
@@ -78,7 +79,7 @@
 					<div class="styleset-options-menupoint" data-ng-click="applyStylesetToProject(styleset); hideStylesetOptions();">Apply to ebook</div>
 				</div>
 
-				<ul data-ng-show="styleset._id == selectedStyleset || isDefaultStyleset(styleset)" class="typo-children">
+				<ul data-ng-show="styleset._id == selectedStyleset" class="typo-children">
 					<li data-ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" data-ng-hide="style.archived || style.hidden" data-ng-selected="selectedStyle._id === style._id" class="typo-children-style" data-ng-class="{ selected : selectedStyle._id === style._id }">
 						<a class="style-options-show" data-ng-click="showStylesetChildOptions($parent.$index, $index)" data-ng-class="{ 'open' : $parent.$index == selectedStylesetParentOptions && $index == selectedStylesetChildOptions }">
 							<div class="arrow"></div>
