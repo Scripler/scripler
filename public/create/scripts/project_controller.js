@@ -1264,12 +1264,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.selectedStyleset = -1;
-	$scope.showStyleset = function($index) {
-		if ($index != $scope.selectedStyleset) {
+	$scope.showStyleset = function($index, preserve) {
+		if ($index != $scope.selectedStyleset || preserve) {
 			$scope.selectedStyleset = $index;
 		}
 		else {
-			$scope.hideStylesetOptions();
+			$scope.hideStyleset();
 		}
 	};
 	$scope.hideStyleset = function() {
@@ -1294,8 +1294,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.selectedStylesetChildOptions = -1;
 	$scope.showStylesetChildOptions = function ($parentIndex, $index) {
 		if ($parentIndex != $scope.selectedStylesetParentOptions || $index != $scope.selectedStylesetChildOptions) {
-			$scope.selectedStylesetParentOptions  = $parentIndex;
-			$scope.selectedStylesetChildOptions  = $index;
+			$scope.showStyleset($parentIndex, true);
+			$scope.selectedStylesetParentOptions = $parentIndex;
+			$scope.selectedStylesetChildOptions = $index;
 			$scope.hideStylesetOptions();
 		}
 		else {
@@ -1850,7 +1851,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 				// Update angular scope after the animation is done
 				setTimeout(function () {
-					$scope.showStyleset($scope.selectedStyle._id);
+					$scope.showStyleset(stylesetNode.id, true);
 //					angular.element(stylesetNode).scope().selectedStyleset = $scope.selectedStyle._id;
 					if ( !$scope.$$phase ) {
 						$scope.$apply();
