@@ -851,26 +851,24 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.applyStyle = function(styleset, style) {
-		var styleIndex = styleset.styles.indexOf(style);
-
-		var editor = getEditor();
-
-		var isDefault = styleset._id === $scope.documentSelected.defaultStyleset;
+		var styleIndex = styleset.styles.indexOf(style),
+			editor = getEditor(),
+			isDefault = styleset._id === $scope.documentSelected.defaultStyleset;
 
 		//when applying styleset to document, the styles get copied to new (document) styleset
 		if (style._id != styleset.styles[styleIndex]._id) {
 			style = styleset.styles[styleIndex];
 		}
 
-		var selection = $rootScope.ck.getSelection();
-		var selectedRanges = selection.getRanges();
-		var selectionLength = selection.getSelectedText().length;
-		var tag = selection.getStartElement().getName();
-		var bookmarks = selectedRanges.createBookmarks2(false);
+		var selection = $rootScope.ck.getSelection(),
+			selectedRanges = selection.getRanges(),
+			selectionLength = selection.getSelectedText().length,
+			tag = selection.getStartElement().getName(),
+			bookmarks = selectedRanges.createBookmarks2(false),
 
-		var lineHeight = style.css['line-height'];
-		var margin = style.css['margin'];
-		var padding = style.css['padding'];
+			lineHeight = style.css['line-height'],
+			margin = style.css['margin'],
+			padding = style.css['padding'];
 
 		//character style code commented out for now
 		/*if ( typeof lineHeight == 'undefined' &&
