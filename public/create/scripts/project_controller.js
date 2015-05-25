@@ -851,26 +851,24 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 	$scope.applyStyle = function(styleset, style) {
-		var styleIndex = styleset.styles.indexOf(style);
-
-		var editor = getEditor();
-
-		var isDefault = styleset._id === $scope.documentSelected.defaultStyleset;
+		var styleIndex = styleset.styles.indexOf(style),
+			editor = getEditor(),
+			isDefault = styleset._id === $scope.documentSelected.defaultStyleset;
 
 		//when applying styleset to document, the styles get copied to new (document) styleset
 		if (style._id != styleset.styles[styleIndex]._id) {
 			style = styleset.styles[styleIndex];
 		}
 
-		var selection = $rootScope.ck.getSelection();
-		var selectedRanges = selection.getRanges();
-		var selectionLength = selection.getSelectedText().length;
-		var tag = selection.getStartElement().getName();
-		var bookmarks = selectedRanges.createBookmarks2(false);
+		var selection = $rootScope.ck.getSelection(),
+			selectedRanges = selection.getRanges(),
+			selectionLength = selection.getSelectedText().length,
+			tag = selection.getStartElement().getName(),
+			bookmarks = selectedRanges.createBookmarks2(false),
 
-		var lineHeight = style.css['line-height'];
-		var margin = style.css['margin'];
-		var padding = style.css['padding'];
+			lineHeight = style.css['line-height'],
+			margin = style.css['margin'],
+			padding = style.css['padding'];
 
 		//character style code commented out for now
 		/*if ( typeof lineHeight == 'undefined' &&
@@ -1187,10 +1185,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.copyCSS = false;
 	}
 
-	$scope.isDefaultStyleset = function(styleset) {
-		return styleset._id === $scope.documentSelected.defaultStyleset;
-	}
-
 	$scope.saveAsBlockStyle = function(styleset, style) {
 		var index = styleset.styles.indexOf(style);
 		var newStyle = angular.copy(style);
@@ -1267,6 +1261,19 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		styleset.css = stylesetCSS;
 	}
 
+	$scope.selectedStyleset = -1;
+	$scope.showStyleset = function($index, preserve) {
+		if ($index != $scope.selectedStyleset || preserve) {
+			$scope.selectedStyleset = $index;
+		}
+		else {
+			$scope.hideStyleset();
+		}
+	};
+	$scope.hideStyleset = function() {
+		$scope.selectedStyleset = -1;
+	};
+
 	$scope.selectedStylesetOptions = -1;
 	$scope.showStylesetOptions = function($index) {
 		if ($index != $scope.selectedStylesetOptions) {
@@ -1285,8 +1292,8 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	$scope.selectedStylesetChildOptions = -1;
 	$scope.showStylesetChildOptions = function ($parentIndex, $index) {
 		if ($parentIndex != $scope.selectedStylesetParentOptions || $index != $scope.selectedStylesetChildOptions) {
-			$scope.selectedStylesetParentOptions  = $parentIndex;
-			$scope.selectedStylesetChildOptions  = $index;
+			$scope.selectedStylesetParentOptions = $parentIndex;
+			$scope.selectedStylesetChildOptions = $index;
 			$scope.hideStylesetOptions();
 		}
 		else {
@@ -1829,7 +1836,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				// The container for all the stylesets, which is the scrolling container
 				var stylesetsContainer = document.getElementById('menu-left-design');
 
-				var alreadyExpanded = angular.element(stylesetNode).scope().typoChildrenVisible;
+				var alreadyExpanded = angular.element(stylesetNode).scope().selectedStyleset;
 				var animationTime = 700;
 
 				// If the styleset is already expanded, we don't wait additional time before setting the selected style in the angular scope.
@@ -1840,7 +1847,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 				// Update angular scope after the animation is done
 				setTimeout(function () {
-					angular.element(stylesetNode).scope().typoChildrenVisible = true;
+					$scope.showStyleset(stylesetNode.id, true);
 					if ( !$scope.$$phase ) {
 						$scope.$apply();
 					}
