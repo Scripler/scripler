@@ -23,58 +23,44 @@ var logger = require('../lib/logger');
 var uuid_lib = require('node-uuid');
 var document_utils = require('../lib/document-utils');
 
-//Load project by id
-exports.load = function (id) {
+function genericLoad(id, populateObject, checkAccess) {
 	return function (req, res, next) {
-		// Avoiding global scope!
 		var idCopy = id || req.body.projectId;
-		Project.findOne({"_id": idCopy, "deleted": false}).exec(function (err, project) {
+		var query = Project.findOne({"_id": idCopy, "deleted": false});
+		if (populateObject) {
+			query.populate(populateObject);
+		}
+		query.exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
 			}
-			// Only check access if user is associated with request.
-			// Let missing authentication be handled in auth middleware
-			if (req.user && !utils.hasAccessToModel(req.user, project)) return next(403);
+			if (checkAccess) {
+				if (!req.user) return next();//Let missing authentication be handled in auth middleware
+				if (!utils.hasAccessToModel(req.user, project)) return next(403);
+			}
 
 			req.project = project;
 			return next();
 		});
 	}
+}
+
+//Load project by id
+exports.loadNoAccessCheck = function (id) {
+	return genericLoad(id, null, false);
+}
+
+exports.load = function (id) {
+	return genericLoad(id, null, true);
 }
 
 exports.loadPopulated = function (id) {
-	return function (req, res, next) {
-		var idCopy = id || req.body.projectId;
-		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', select: 'name folderId modified archived stylesets defaultStyleset members type'}).exec(function (err, project) {
-			if (err) return next(err);
-			if (!project) {
-				return next({message: "Project not found", status: 404});
-			}
-			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToModel(req.user, project)) return next(403);
-
-			req.project = project;
-			return next();
-		});
-	}
+	return genericLoad(id, {path: 'documents', select: 'name folderId modified archived stylesets defaultStyleset members type'}, true);
 }
 
 exports.loadPopulatedFull = function (id) {
-	return function (req, res, next) {
-		var idCopy = id || req.body.projectId;
-		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', match: {archived: false}, select: 'name folderId modified archived stylesets defaultStyleset members type text'}).exec(function (err, project) {
-			if (err) return next(err);
-			if (!project) {
-				return next({message: "Project not found", status: 404});
-			}
-			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToModel(req.user, project)) return next(403);
-
-			req.project = project;
-			return next();
-		});
-	}
+	return genericLoad(id, {path: 'documents', match: {archived: false}, select: 'name folderId modified archived stylesets defaultStyleset members type text'}, true);
 }
 
 var list = exports.list = function (req, res, next) {
