@@ -23,12 +23,12 @@ var logger = require('../lib/logger');
 var uuid_lib = require('node-uuid');
 var document_utils = require('../lib/document-utils');
 
-function genericLoad(id, populate, checkAccess) {
+function genericLoad(id, populateObject, checkAccess) {
 	return function (req, res, next) {
 		var idCopy = id || req.body.projectId;
 		var query = Project.findOne({"_id": idCopy, "deleted": false});
-		if (populate) {
-			query.populate(populate);
+		if (populateObject) {
+			query.populate(populateObject);
 		}
 		query.exec(function (err, project) {
 			if (err) return next(err);
