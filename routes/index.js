@@ -102,12 +102,15 @@ module.exports = function (app, auth) {
 	app.post('/project/:projectIdPopulated/publish', auth.isLoggedIn(), project.publish);
 	app.delete('/project/:projectId/publish', auth.isLoggedIn(), project.unpublish);
 	app.get('/project/:projectId/epub', auth.isLoggedIn(), project.downloadEpub);
-	app.get('/'+conf.publish.route+'/:projectId/*', project.renderEpubReader);
+	app.get('/'+conf.publish.route+'/:projectIdNoAccessCheck/*', project.renderEpubReader);
 	app.get('/server/status', server.status);
 
 	// API Parameters
 	app.param('projectId', function (req, res, next, id) {
 		return project.load(id)(req, res, next);
+	});
+	app.param('projectIdNoAccessCheck', function (req, res, next, id) {
+		return project.loadNoAccessCheck(id)(req, res, next);
 	});
 	app.param('projectIdPopulated', function (req, res, next, id) {
 		return project.loadPopulated(id)(req, res, next);
