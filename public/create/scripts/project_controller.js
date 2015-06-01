@@ -1621,7 +1621,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				}
 				insert = insert.replace('link_text', title);
 
-				var regExpValidUrl = /^((http?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{1,}\.[a-zA-Z]{1,}(\.[a-zA-Z]{2,})?$/;
+				var regExpValidUrl = /^((https*?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{1,}\.[a-zA-Z]{1,}(\.[a-zA-Z]{2,})?$/;
 
 				var isInternal = false;
 				var toc = $scope.toc;
