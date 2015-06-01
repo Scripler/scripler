@@ -775,3 +775,8 @@ li.typo .style-copy-options p {
 .urlError{
 	position: relative; 
 }
+
+input[type="submit"]{
+	font-family: 'Roboto', Arial, sans-serif;
+  	font-size: 100%;
+}

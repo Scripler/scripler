@@ -1640,6 +1640,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			if(validURL){
 				var element = $rootScope.CKEDITOR.dom.element.createFromHtml(insert);
 				editor.insertElement(element);
+				$scope.insertHyperlinks.$setUntouched();
 			}
 
 			// keep the old content of the anchor

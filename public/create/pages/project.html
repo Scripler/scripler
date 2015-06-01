@@ -143,7 +143,7 @@
 							<input id="hyperlinkTarget" name="hyperlinkTarget" type="text" data-ng-model="linkAddress" ng-pattern="/doc_.|^((https*?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{1,}\.[a-zA-Z]{1,}(\.[a-zA-Z]{2,})?$/" placeholder="Target" required>
 						</span>
 						<div role="alert">
-							<span class="nameError urlError" ng-show="(insertHyperlinks.hyperlinkTarget.$error.pattern && !insertHyperlinks.hyperlinkTarget.$untouched) || (insertHyperlinks.hyperlinkTarget.$error.required && insertHyperlinks.$submitted)">Not a valid URL</span>
+							<span class="nameError urlError" ng-show="insertHyperlinks.$submitted && insertHyperlinks.hyperlinkTarget.$error.pattern && !insertHyperlinks.hyperlinkTarget.$untouched">Not a valid URL</span>
 						</div>
 						<span class="menu-box inputfield margin-top">
 							<input id="hyperlinkInputBox" name="hyperlinkInputBox" type="text" data-ng-model="linkText" placeholder="Text" required>
@@ -153,9 +153,7 @@
 								<option value="">Choose internal target</option>
 							</select>
 						</span>
-						<div class="button margin-top" data-ng-click="insertNewLink();">
-							Insert hyperlink
-						</div>
+						<input type="submit" value="Insert hyperlink" class="button margin-top" data-ng-click="insertNewLink();">
 					</form>
 
 					<div class="menu-box label desc margin-top">
