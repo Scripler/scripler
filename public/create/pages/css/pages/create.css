@@ -408,6 +408,16 @@ hr {
 	background: #fff;
 }
 
+#continueFree:hover{
+	color:#fff;
+	background: #000;
+}
+
+#continueFree:active{
+	color:#000;
+	background: #fff;
+}
+
 #upgradePremium{
 	position: absolute;
 	bottom:20px;
@@ -415,6 +425,16 @@ hr {
 	width:350px;
 	background: #fff56c;
 	color: #e98f2c;
+}
+
+#upgradePremium:hover{
+	color: #fff56c;
+	background: #e98f2c;
+}
+
+#upgradePremium:active{
+	color: #e98f2c;
+	background: #fff56c;
 }
 
 .planChoice{
