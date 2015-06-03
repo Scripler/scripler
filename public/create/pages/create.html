@@ -11,6 +11,28 @@
 <link rel="stylesheet" type="text/css" href="pages/css/pages/create.css" />
 
 <div class="wrapper-create">
+	 <!-- modal windows -->
+	 <div bn-modals ng-show="subview" class="m-modals" ng-switch="subview">
+	 	 <!-- BEGIN: Free / Premium Modal. -->
+        <div ng-switch-when="confirm" ng-controller="UpgradeModalController" class="modal">
+            	<div class="planChoice" id="freePlan">
+            		<h1>Free</h1>
+            		<p>5 Ebook projects</p>
+					<p>3 Ebook design templates</p>
+					<p>Scripler watermark</p>
+                	<a class="modalButtons" id="continueFree" ng-click="continueFree()">{{ continueFreeText }}</a>
+                </div>
+                <div class="planChoice" id="premiumPlan">
+                	<h1>Premium</h1>
+                	<p>20 Ebook projects</p>
+                	<p>17 Ebook design templates</p>
+                	<p>Create custom design templates</p>
+                	<a class="modalButtons" id="upgradePremium" ng-click="upgradePremium()">{{ upgradePremiumText }}</a>
+            	</div>
+        </div>
+        <!-- END: Free / Premium Modal. -->
+	 </div>
+
 	<section class="section-unisquare" data-ng-class="{ 'white-bg' : showSettings}">
 		<div data-ng-hide="showSettings">
 			<div class="clearfix">
@@ -31,6 +53,10 @@
 						<a href="/logout">Log out</a>
 					</div>
 				</div>
+
+				<!-- upgrade button -->
+	            <a ng-click="upgrade()" id="upgradeButton">Upgrade</a>
+
 			</div>
 		</div>
 		<div class="user-settings" data-ng-show="showSettings && !user.isDemo">
