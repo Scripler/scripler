@@ -502,12 +502,3 @@ div.m-modals.ng-hide > .modal.ng-enter {
 div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 	top: 200px ;
 }
-
-a.jump {
-	color: #999999 ;
-}
-
-a.jump:hover {
-	background-color: gold ;
-	color: #000000 ;
-}
