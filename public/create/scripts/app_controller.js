@@ -560,7 +560,7 @@ app.controller("UpgradeModalController",
 
         // setup defaults using the modal params.
         $scope.continueFreeText = ( params.continueFree || "Continue Free" );
-        $scope.upgradePremiumText = ( params.upgradePremium || "Upgrade to Premium" );
+        $scope.upgradePremiumText = ( params.upgradePremium || "Upgrade" );
 
         // wire the modal buttons into modal resolution actions.
         $scope.continueFree = modals.resolve;
