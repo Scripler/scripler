@@ -480,7 +480,6 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 				var length = Math.min(text1.length, text2.length, 100);
 				text1 = text1.substring(0, length);
 				text2 = text2.substring(0, length);
-				console.log("'" + text1 + "' == '" + text2 + "'");
 				return text1 == text2;
 			}
 
