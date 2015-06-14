@@ -495,7 +495,6 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 			}
 
 			ck.on('paste', function(event) {
-				console.log(event.data);
 				// Check if the copied text is the same as the latest internal copy.
 				if (copiedTextEquals($rootScope.copiedText, event.data.dataValue)) {
 					event.stop();
