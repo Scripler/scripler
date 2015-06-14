@@ -487,7 +487,6 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 				text2 = cleanWhitespace(htmlUnescape(text2)).trim();
 
 				// Find a common length to compare - CK's getSelectedText tend to cut off text.
-				// Comparing string over 100 charchters should be unnecesarry
 				var length = Math.min(text1.length, text2.length);
 				text1 = text1.substring(0, length);
 				text2 = text2.substring(0, length);
