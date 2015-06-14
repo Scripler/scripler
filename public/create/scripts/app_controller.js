@@ -463,27 +463,39 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 				}
 			}
 
-			function nbspToSpace(string) {
-				return string.replace(/&nbsp;|\s+/g, ' ');
+			function htmlUnescape(value){
+				return String(value)
+					.replace(/&quot;/g, '"')
+					.replace(/&#39;/g, "'")
+					.replace(/&lt;/g, '<')
+					.replace(/&gt;/g, '>')
+					.replace(/<br\s*\/?>|<\/?p>|&nbsp;/g, ' ')
+					.replace(/&amp;/g, '&');
+			}
+
+			function cleanWhitespace(string) {
+				return string.replace(/\s+/g, ' ');
 			}
 
 			function copiedTextEquals(text1, text2) {
 				if (!text1 || !text2) {
 					return false;
 				}
-				// nbspToSpace since systems can differ in whether space og nbsp is used.
-				text1 = nbspToSpace(text1);
-				text2 = nbspToSpace(text2);
+				// cleanWhitespace, since types of whitespace may differ (non-breaking, linebreak, duplicate, etc)
+				// htmlUnescape, since pasted plain text contains encoded html-entites, <p>- and <br>-tags.
+				text1 = cleanWhitespace(text1).trim();
+				text2 = cleanWhitespace(htmlUnescape(text2)).trim();
 
 				// Find a common length to compare - CK's getSelectedText tend to cut off text.
 				// Comparing string over 100 charchters should be unnecesarry
-				var length = Math.min(text1.length, text2.length, 100);
+				var length = Math.min(text1.length, text2.length);
 				text1 = text1.substring(0, length);
 				text2 = text2.substring(0, length);
 				return text1 == text2;
 			}
 
 			ck.on('paste', function(event) {
+				console.log(event.data);
 				// Check if the copied text is the same as the latest internal copy.
 				if (copiedTextEquals($rootScope.copiedText, event.data.dataValue)) {
 					event.stop();
