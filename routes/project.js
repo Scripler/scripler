@@ -10,6 +10,7 @@ var sanitize = require('sanitize-filename');
 var conf = require('config');
 var path = require('path');
 var fs = require('fs');
+var rimraf = require('rimraf');
 var ncp = require('ncp').ncp;
 var epub3 = require('../lib/epub/epub3');
 var mkdirp = require('mkdirp');
@@ -22,23 +23,23 @@ var exec = require('child_process').exec;
 var logger = require('../lib/logger');
 var uuid_lib = require('node-uuid');
 var document_utils = require('../lib/document-utils');
+var utils_shared = require('../public/create/scripts/utils-shared');
 
-function genericLoad(id, populateObject, checkAccess) {
+var premiumMessage = "User not allowed to load project: user is not premium/professional or user is trying to access a 'locked' project.";
+
+// Load project by id
+exports.load = function (id) {
 	return function (req, res, next) {
+		// Avoiding global scope!
 		var idCopy = id || req.body.projectId;
-		var query = Project.findOne({"_id": idCopy, "deleted": false});
-		if (populateObject) {
-			query.populate(populateObject);
-		}
-		query.exec(function (err, project) {
+		Project.findOne({"_id": idCopy, "deleted": false}).exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
 			}
-			if (checkAccess) {
-				if (!req.user) return next();//Let missing authentication be handled in auth middleware
-				if (!utils.hasAccessToModel(req.user, project)) return next(403);
-			}
+			if (!req.user) return next(); //Let missing authentication be handled in auth middleware
+			if (!utils.hasAccessToModel(req.user, project)) return next(403);
+			if (!utils_shared.canLoadProject(req.user.level, req.user.projects, idCopy)) return next(596, premiumMessage);
 
 			req.project = project;
 			return next();
@@ -46,25 +47,65 @@ function genericLoad(id, populateObject, checkAccess) {
 	}
 }
 
-//Load project by id
-exports.loadNoAccessCheck = function (id) {
-	return genericLoad(id, null, false);
-}
+// Load project by id without performing premium check: it must e.g. be possible for free users to archive and delete their projects.
+exports.loadWithoutPremiumCheck = function (id) {
+	return function (req, res, next) {
+		// Avoiding global scope!
+		var idCopy = id || req.body.projectId;
+		Project.findOne({"_id": idCopy, "deleted": false})
+			.populate({path: 'images'})
+			.exec(function (err, project) {
+			if (err) return next(err);
+			if (!project) {
+				return next({message: "Project not found", status: 404});
+			}
+			if (!req.user) return next(); //Let missing authentication be handled in auth middleware
+			if (!utils.hasAccessToModel(req.user, project)) return next(403);
 
-exports.load = function (id) {
-	return genericLoad(id, null, true);
+			req.project = project;
+			return next();
+		});
+	}
 }
 
 exports.loadPopulated = function (id) {
-	return genericLoad(id, {path: 'documents', select: 'name folderId modified archived stylesets defaultStyleset members type'}, true);
+	return function (req, res, next) {
+		var idCopy = id || req.body.projectId;
+		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', select: 'name folderId modified archived stylesets defaultStyleset members type', match: {"deleted": false}}).exec(function (err, project) {
+			if (err) return next(err);
+			if (!project) {
+				return next({message: "Project not found", status: 404});
+			}
+			if (!req.user) return next();//Let missing authentication be handled in auth middleware
+			if (!utils.hasAccessToModel(req.user, project)) return next(403);
+			if (!utils_shared.canLoadProject(req.user.level, req.user.projects, idCopy)) return next(596, premiumMessage);
+
+			req.project = project;
+			return next();
+		});
+	}
 }
 
 exports.loadPopulatedFull = function (id) {
-	return genericLoad(id, {path: 'documents', match: {archived: false}, select: 'name folderId modified archived stylesets defaultStyleset members type text'}, true);
+	return function (req, res, next) {
+		var idCopy = id || req.body.projectId;
+		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', match: {archived: false}, select: 'name folderId modified archived stylesets defaultStyleset members type text'}).exec(function (err, project) {
+			if (err) return next(err);
+			if (!project) {
+				return next({message: "Project not found", status: 404});
+			}
+			if (!req.user) return next();//Let missing authentication be handled in auth middleware
+			if (!utils.hasAccessToModel(req.user, project)) return next(403);
+			if (!utils_shared.canLoadProject(req.user.level, req.user.projects, idCopy)) return next(596, premiumMessage);
+
+			req.project = project;
+			return next();
+		});
+	}
 }
 
 var list = exports.list = function (req, res, next) {
-	User.findOne({"_id": req.user._id}).populate('projects').exec(function (err, user) {
+	User.findOne({"_id": req.user._id}).populate({path: 'projects', match: {"deleted": false}}).exec(function (err, user) {
 		if (err) {
 			return next(err);
 		}
@@ -74,6 +115,8 @@ var list = exports.list = function (req, res, next) {
 };
 
 exports.create = function (req, res, next) {
+	if (!utils_shared.canCreateProject(req.user.level, req.user.projects)) return next(596, premiumMessage);
+
 	var project = new Project({
 		name: req.body.name,
 		members: [
@@ -123,11 +166,9 @@ exports.rename = function (req, res, next) {
 
 exports.archive = function (req, res, next) {
 	var project = req.project;
+
+	// We only archive the project, and not also its documents, stylesets and styles, since the frontend prevents the user from accessing these
 	project.archived = true;
-
-	// TODO: also archive the project's documents?
-	// TODO: also archive the stylesets and styles of the documents of the project since these are copies?
-
 	project.save(function (err) {
 		if (err) {
 			return next(err);
@@ -138,21 +179,14 @@ exports.archive = function (req, res, next) {
 
 exports.unarchive = function (req, res, next) {
 	var project = req.project;
+
+	// Simply unarchive the project, since Project.archive() only archived the project.
 	project.archived = false;
-
-	// TODO: also unarchive the project's documents?
-	// TODO: also unarchive the stylesets and styles of the documents of the project since these are copies?
-
 	project.save(function (err) {
 		if (err) {
 			return next(err);
 		}
 
-		// TODO: don't add the members since we didn't remove them while archiving?
-		var membersArray = [];
-		for (var i = 0; i < project.members.length; i++) {
-			membersArray.push(project.members[i].userId);
-		}
 		res.send({project: project});
 	});
 }
@@ -160,45 +194,190 @@ exports.unarchive = function (req, res, next) {
 exports.delete = function (req, res, next) {
 	var project = req.project;
 
-	User.update({"projects": project._id}, {"$pull": {"projects": project._id}}, {multi: true}, function (err, numberAffected, raw) {
+	// "Delete" project from user
+	// TODO: when we implement collaboration, allow multiple user objects to be updated below, because multiple users will "have" the same project.
+	User.findOneAndUpdate({"_id": req.user._id}, {"$pull": {"projects": project._id}, "$push": {"deletedProjects": project._id}}, function (err, user) {
 		if (err) {
 			return next(err);
 		}
 
-		req.user.deletedProjects.push(project);
-		req.user.save();
+		logger.info('Deleted project ' + project.name + ' from user');
 
-		// TODO: also delete the stylesets and styles of the documents of the project since these are copies?
+		Document.find({projectId: project._id}).populate({"path": "stylesets"}).exec(function (err, documents) {
+			var deleteDocument = function (document, documentCallback) {
+				if (!document_utils.canDeleteDocumentOfType(user.level, document.type)) {
+					return documentCallback("Free users are not allowed to delete the \"made with scripler\" document");
+				}
 
-		// "Delete" documents
-		Document.find({projectId: project._id}, function (err, documents) {
-			var numberOfDocumentsToBeDeleted = documents.length;
-			if (numberOfDocumentsToBeDeleted == 0) {
-				res.send({});
-			} else {
-				documents.forEach(function (document) {
-					Project.update({"documents": document._id}, {"$pull": {"documents": document._id}}, {multi: true}, function (err, numberAffected, raw) {
+				// "Delete" documents from project
+				Project.findOneAndUpdate({"_id": project._id}, {"$pull": {"documents": document._id}, "$push": {"deletedDocuments": document._id}}, function (err, project) {
+					if (err) {
+						return documentCallback(err);
+					}
+
+					logger.debug('Deleted document ' + document.name + ' from project ' + project.name);
+
+					document.deleted = true;
+					document.save(function (err) {
 						if (err) {
-							return next(err);
+							return documentCallback(err);
 						}
 
-						document.deleted = true;
-						document.save(function (err) {
+						logger.debug('Marked document ' + document.name + ' as deleted');
+
+						// "Delete" stylesets from document
+						var deleteStyleset = function (styleset, stylesetCallback) {
+							Document.findOneAndUpdate({"_id": document._id}, {"$pull": {"stylesets": styleset._id}, "$push": {"deletedStylesets": styleset._id}}, function (err, document) {
+								if (err) {
+									return stylesetCallback(err);
+								}
+
+								logger.debug('Deleted styleset ' + styleset.name + ' from document ' + document.name);
+
+								styleset.deleted = true;
+								styleset.save(function (err) {
+									if (err) {
+										return stylesetCallback(err);
+									}
+
+									logger.debug('Marked styleset ' + styleset.name + ' as deleted');
+
+									// "Delete" styles from styleset
+									var deleteStyle = function (style, styleCallback) {
+										Styleset.findOneAndUpdate({"_id": styleset._id}, {"$pull": {"styles": style._id}, "$push": {"deletedStyles": style._id}}, function (err, styleset) {
+											if (err) {
+												return styleCallback(err);
+											}
+
+											logger.debug('Deleted style ' + style.name + ' from styleset ' + styleset.name);
+
+											style.deleted = true;
+											style.save(function (err) {
+												if (err) {
+													return styleCallback(err);
+												}
+
+												logger.debug('Marked style ' + style.name + ' as deleted');
+												return styleCallback();
+											});
+										});
+									};
+
+									logger.debug('Styleset ' + styleset.name + ' has ' + styleset.styles.length + ' styles');
+
+									Styleset.findOne({"_id": styleset._id}).populate({"path": "styles"}).exec(function (err, populatedStyleset) {
+										if (err) {
+											return stylesetCallback(err);
+										}
+
+										async.each(populatedStyleset.styles, deleteStyle, function (err) {
+											if (err) {
+												return stylesetCallback(err);
+											}
+
+											logger.debug("Deleted ALL styles from styleset " + populatedStyleset.name)
+											return stylesetCallback();
+										});
+									});
+								});
+							});
+
+						};
+
+						logger.debug('Document ' + document.name + ' has ' + document.stylesets.length + ' stylesets');
+
+						async.each(document.stylesets, deleteStyleset, function (err) {
+							if (err) {
+								return documentCallback(err);
+							}
+
+							logger.debug("Deleted ALL stylesets from document " + document.name);
+							return documentCallback();
+						});
+					});
+				});
+			};
+
+			async.each(documents, deleteDocument, function (err) {
+				if (err) {
+					return next(err);
+				}
+
+				logger.debug("Deleted ALL documents from project " + project.name);
+
+				var totalImageBytesDeleted = 0;
+
+				var deleteImage = function(image, imageCallback) {
+					Project.findOneAndUpdate({"_id": project._id}, {"$pull": {"images": image._id}, "$push": {"deletedImages": image._id}}, function (err, project) {
+						if (err) {
+							return imageCallback(err);
+						}
+
+						logger.debug('Deleted image ' + image.name + ' from project ' + project.name);
+
+						// Physically delete image, c.f. comment in #923
+						var projectDir = path.join(conf.resources.projectsDir, conf.epub.projectDirPrefix + project._id);
+						var imagesSourceDir = path.join(projectDir, conf.epub.imagesDir);
+						var imageFilename = path.join(imagesSourceDir, image.name);
+
+						fs.stat(imageFilename, function (err, stats) {
+							if (err) {
+								return imageCallback(err);
+							}
+
+							// Decrease user's limit
+							totalImageBytesDeleted += stats["size"];
+
+							fs.unlink(imageFilename, function (err) {
+								if (err) {
+									return imageCallback(err);
+								}
+
+								logger.debug('Physically deleted image ' + imageFilename);
+
+								image.deleted = true;
+								image.save(function (err) {
+									if (err) {
+										return imageCallback(err);
+									}
+
+									logger.debug('Marked image ' + image.name + ' as deleted');
+									return imageCallback();
+								});
+							});
+						});
+					});
+				};
+
+				async.each(project.images, deleteImage, function (err) {
+					if (err) {
+						return next(err);
+					}
+
+					logger.debug("Deleted ALL images from project " + project.name);
+
+					user.storageUsed -= totalImageBytesDeleted;
+					user.save(function (err) {
+						if (err) {
+							return imageCallback(err);
+						}
+
+						// Don't use 2's complement since our config storage sizes are not
+						logger.info('Decreased user\'s used storage. User now uses ' + user.storageUsed/1000000 + '/' + conf.subscriptions[user.level].storage/1000000 + ' MB.');
+
+						project.deleted = true;
+						project.save(function (err) {
 							if (err) {
 								return next(err);
 							}
 
-							project.deletedDocuments.push(document);
-							numberOfDocumentsToBeDeleted--;
-							if (numberOfDocumentsToBeDeleted == 0) {
-								project.deleted = true;
-								project.save();
-								res.send({});
-							}
+							logger.info("Finished deleting project " + project.name);
+
+							res.send({});
 						});
 					});
 				});
-			}
+			});
 		});
 	});
 }
@@ -467,91 +646,6 @@ exports.compile = function (req, res, next) {
 
 }
 
-exports.publish = function (req, res, next) {
-	var project = req.project;
-	var userEpubPath = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + req.user._id, project._id + '.epub');
-	var publishEpubPath = path.join(conf.resources.publishDir, req.project._id + '.epub');
-
-	utils.copyFile(userEpubPath, publishEpubPath, function(err) {
-		if (err) {
-			return next(err);
-		}
-		// Get title without whitespace
-		var epubName = utils.cleanUrlPart(project.metadata.title || project.name);
-		var epubAuthor = '';
-		if (project.metadata.authors && project.metadata.authors[0]) {
-			epubAuthor = utils.cleanUrlPart(project.metadata.authors[0]) + "-";
-		}
-		project.publish.url = conf.app.url_prefix + conf.publish.route + "/" + project.id + "/" + epubAuthor + epubName;
-
-		// Only set created date initially - if already set, we are updating/republishing
-		if (!project.publish.created) {
-			project.publish.created = Date.now();
-		}
-		project.publish.modified = Date.now();
-		project.publish.title = req.project.metadata.title || req.project.name || '';
-		project.publish.description = project.metadata.description || '';
-
-		// Generate image
-		var imagePath = path.join(conf.resources.publishDir, req.project._id + '.jpg');
-		project.publish.image = conf.resources.publishUrl + "/" + project.id + ".jpg";
-
-		utils.generatePreview(project, imagePath, function (err) {
-			if (err) {
-				return next(err);
-			}
-			project.save(function (err) {
-				if (err) {
-					return next(err);
-				}
-				res.send({
-					publish: project.publish
-				});
-			});
-		});
-	});
-}
-
-exports.unpublish = function (req, res, next) {
-	var project = req.project;
-	var publishEpubPath = path.join(conf.resources.publishDir, req.project._id + '.epub');
-
-	if (project.publish.url) {
-		// Delete the published epub
-		fs.unlink(publishEpubPath, function (err) {
-			if (err) {
-				return next(err);
-			}
-			//Set to unpublished in the database
-			project.publish.url = null;
-			project.save(function (err) {
-				if (err) {
-					return next(err);
-				}
-				res.send({publish: project.publish});
-			});
-		});
-	} else {
-		logger.warn("Unpublish called for already unpublished project.");
-		res.send({publish: project.publish});
-	}
-}
-
-exports.renderEpubReader = function (req, res, next) {
-	var project = req.project;
-	if (project.publish.url) {
-		res.render('ebook', {
-			epub: conf.resources.publishUrl + "/" + project.id + ".epub",
-			title: project.publish.title,
-			description: project.publish.description,
-			image: project.publish.image,
-			url: project.publish.url,
-			env: env
-		});
-	} else {
-		res.redirect(conf.app.url_prefix + '?code=' + "301");//Non-published ebook
-	}
-}
 exports.downloadEpub = function (req, res, next) {
 	var userEpubFullPath = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + req.user._id, req.project._id + '.epub');
 	var userEpubFilename = (req.project.metadata.title || req.project.name) + ".epub";
