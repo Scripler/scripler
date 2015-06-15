@@ -1,8 +1,3 @@
-
-
-/* ==========================================================================
-   Author's custom styles
-   ========================================================================== */
 @font-face {
   font-family: 'Roboto';
   src: url('../fonts/Roboto/Roboto-Regular.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
@@ -48,14 +43,13 @@
 .icon-linkedin:before {
 	content: "\e603";
 }
-.socialicons {
-	text-align: center;
+
+#socialicons{
+	margin-top: 10px;
 }
-.btn {
-	padding:0;
-}
-.socialicon a, a.socialicon {
-	margin: 0 auto; 
+
+a.socialicon {
+	margin: 0 5px;
 	padding-top: 8px;
 	padding-bottom: 8px;
 	padding-left: 10px;
@@ -65,52 +59,122 @@
 	border-radius: 50%;
 	background-color: #fff; 
 	font-size: 22px; 
-	color:#c6c6c6;
+	color: #c6c6c6;
 	text-decoration: none;
 }
-
 .socialicon a:hover, a.socialicon:hover {
 	background-color: #fff265;
 	color: #666;
 }
-body { 
-  	width: 98vw;
-	height:98vh;
-	overflow-x: hidden;
+
+body {
 	font-family: 'Roboto', 'Helvetica', 'Arial';
 }
-p{
+p {
 	font-size:14px;
 }
-.page{
-	margin:0;
-	padding-top: 50px;
-	width:100vw;
-	height:100vh;
-	overflow-x: hidden;
-}
 nav {
-	background-color:#FFF;
-	color:#000;
-	padding-left: 35vw;
+	background-color: #fff;
+	color: #000;
 	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
-} 
- 
-.about-scripler{
-	color:#000;
+}
+
+.row{
+	margin-right: 0;
+	margin-left: 0;
+}
+
+#scripler, #features, #about {
+	padding: 50px 20px 100px;
+	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* WebKit */
+	background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Firefox */
+	background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* IE10+ */
+	background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Opera */
+	background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+	min-height:100vh;
+}
+
+#scripler {
+	background-color: #ececec;
+	color: #666;
+	padding-top: 100px;
+}
+#scripler .scripler-logo {
+	margin: 0 auto 50px;
+}
+#scripler .test-alpha {
+	background-color: #fff56c;
+	color: #000;
+	font-size: 1.5em;
+	font-weight: 700;
+	border: none;
+	margin: 20px;
+	padding: 10px 25px;
+}
+
+#features {
+	background-color: #215660;
+}
+#features h2, #features h3 {
+	color: #fff56c;
+}
+#features h3 {
+	font-size: 1.2em;
 	font-weight: 700;
 }
-#scriplerTeam{
-	padding-bottom: 20px;
-	padding-top: 20px;
+#features p {
+	color: #fff;
 }
-a.navbar-brand{
-	font-size: 1.2em; 
+#features .container{
+	width:960px;
+	padding:0;
+}
+#features .row .col-xs-12, #features .row .col-md-6{
+	padding-left:0;
+	padding-right:0;
+	max-width: 100%;
+}
 
+#about {
+	background-color: #fff56c;
+	color: #666;
 }
-#brandlogo{
-	display:none;
+#about h2, #about h4.text-color-black {
+	color: #000;
 }
+#about h3 span {
+	font-size: 14px;
+}
+#about a {
+	color: #000;
+}
+
+#contact{ 
+	background-color: #fff;
+	color: #666;
+}
+#contact a {
+	color: #000;
+}
+#contact .left-column {
+	position: absolute;
+	left: 0;
+	background-color: #fff;
+	height: 100%;
+	min-height: 100vh;
+	padding: 50px 20px 100px;
+	z-index: 5;
+}
+#contact .left-column .row p {
+	margin: 0;
+}
+#contact iframe {
+	width: 100%;
+	height: 100%;
+	min-height: 100vh;
+	overflow: hidden;
+}
+
 #forgot-password{
 	float:left;
 	color: #000;
@@ -120,7 +184,6 @@ a.navbar-brand{
 
 #remember-me-box{
 	clear: both;
-
 }
 #remember-me-box>label{
 	margin-left: 4px;
@@ -152,36 +215,189 @@ a.navbar-brand{
 	color:#000!important;
 	z-index: 5!important;
 }
-.navbar-brand, ul.navList li>a{
+
+ul.navList li>a{
 	font-size: 1.2em;
 	color:#000;
-}  
-.navbar-brand:hover{
-	color:#000;
+	padding: 14px 15px 0;
 }
 ul.navList li>a:hover{
 	background-color: #fff;
 	color:#666;
 } 
+
+.nav>li>a:hover, .nav>li>a:focus {
+    background-color: transparent;
+}
+
+.nav .blog-link:hover, .nav .blog-link:focus{
+	background-color: #000;
+}
+
+.nav .talk-link:hover, .nav .talk-link:focus{
+	background-color: #ccc;
+}
+
+a#signUp{
+	color:#000;
+	text-decoration: underline;
+}
+
+input#mce-EMAIL,input#mc-embedded-subscribe{
+	height: 32px;
+}
+input#mc-embedded-subscribe{
+	background-color:#fff56c;
+	color:#000;
+	font-size: 1em; 
+	border:none; 
+
+}
+
+#login {
+	background-color: #c6c6c6;
+	display:none;
+	padding-top:70px;
+}
+
+.email, .password {
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	border-radius: 1px;
+	-webkit-appearance: none;
+	border: none;
+	background: #f6f6f6;
+	font-size: 15px; 
+	height: 32px;
+	padding: 0 0 0 15px;
+	margin: 0 5px 0 0;
+	color: #818285;
+	font-family: 'Roboto', sans-serif; 
+	margin-bottom: 20px;
+}
+.login-button {
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	-webkit-appearance: none;
+	border: 0;
+	border-radius: 1px; 
+	background-color:#fff56c;
+	color: #231f20;
+	font-size: 1.2em;
+	font-weight: bold;  
+	cursor: pointer; 
+	text-align: center; 
+	height: 32px;
+	vertical-align: center; 
+	margin-bottom: 20px;
+}
+#login-extras{
+	font-size: 0.7em;
+}
+.login-main{
+	float: none;
+}
+#remember{
+	margin:0;
+	padding:0; 
+	display: inline; 
+}
+#fgpass{
+	margin-bottom: 5px;
+}
+#remember-me-box{
+	margin-bottom: 5px;
+}
+.pull-right-on-big-screen{
+	float:right;
+	height: 100%;
+}
+
+.navbar-collapse {
+	text-align: center;
+}
+.navbar-nav {
+  float: none;
+  margin: 0 auto;
+  padding: 0;
+  display: inline-block;
+}
+
+.login-main input {
+	width: 100%;
+}
+
+.arrow-box {
+	position: absolute;
+	background: #FF0500;
+	border: 2px solid #fff;
+	padding-top: 5px;
+	height: 32px;
+	width: 200px;
+	color: #fff;
+	text-align: center;
+	top: 45px;
+	left: calc(50% - 100px);
+	z-index: 2;
+}
+
+
+.arrow-box:after, .arrow-box:before {
+	bottom: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+.arrow-box:after {
+	border-color: rgba(213, 0, 0, 0);
+	border-bottom-color: #FF0500;
+	border-width: 10px;
+	margin-left: -10px;
+}
+.arrow-box:before {
+	border-color: rgba(194, 225, 245, 0);
+	border-bottom-color: #fff;
+	border-width: 13px;
+	margin-left: -13px;
+}
+
+#form-success {
+	line-height: 1em;
+	text-align: left;
+}
+
+#form-success-text {
+	height: 52px;
+}
+
 @media (min-width:1050px){	
-	#login-form {
+	#login-wrapper {
 		margin-left: 150px;
 	}
-	.socialicons {
-		margin-top: 15px;
-		margin-left:-80px;
+
+	#features p {
+		max-width:425px;
 	}
 }
 
 @media (min-width:850px){
-	body{
-		padding-top: 20px;
+	html{
+		overflow-x: hidden;
 	}
+
+	#features .row .col-xs-12, #features .row .col-md-6{
+		max-width: 90%;
+	}
+
 	.menu-blog{
 		background-color:#000;
 	} 
 
-	#login-form {
+	#login-wrapper {
 		margin-top: 10px;
 	}
 	li>a.blog-link{
@@ -212,7 +428,7 @@ ul.navList li>a:hover{
 		font-size: 1.2em;
 		color: #FFF !important;
 		position:fixed;
-		right:70px;
+		right:78px;
 		text-decoration: none;
 		background-color: #ccc;
 		width:79px;
@@ -224,188 +440,14 @@ ul.navList li>a:hover{
 
 }
 
-#scripler{
-	color: #666;
-	padding-top: 80px;
-	background-color:#ececec;
-}
-#features{
-	background-color:#215660;
-}
-#about{
-	background-color:#fff56c;
-}
-h2.about{
-	padding-bottom: 0 !important
-}
-#contact{
+@media (max-width:850px){
+	html{
+		overflow-x: hidden;
+	}
 
-}
-h4{
-	font-size: 16px;
-}
-h3{
-	font-size:1.2em;
-	font-weight: 700;
-}
-h2{  
-	font-family: 'Roboto-Black';
-	padding-bottom: 20px;
-}
-img#scriplerLogo{
-	margin-bottom: 50px;
-}
-button#testTheAlpha{
-	background-color:#fff56c;
-	color:#000;
-	font-size: 1.5em;
-	font-weight: 700;
-	border:none;
-	padding:10px;
-	float:none;
-}
- 
-a.testAlp:hover{
-	text-decoration: none;
-}
-a#signUp{
-	color:#000;
-	text-decoration: underline;
-}
-.bbb{
-	background-color:#000;
-}
-.testBtn{
-	margin:20px; 
-}
-.feats{
-	color: #fff56c;
-}
-.features{
-	display:block;
-}
-.whiteFeats{
-	color:#FFF;
-}
-#about{
-	color: #666;
-}
-a.person{
-	color:#000;
-	text-decoration:underline;
-	font-weight: 700;
-}
-.pers {
-	height: 12vh;
-}
-#contact{ 
-	color: #666;
-	padding-top: 0;
-}
-.cont{
-	padding-top: 50px;
-	height:100vh;
-	background-color:#fff;
-	position:absolute;	
-	display:block;
-	z-index: 5;
-}
-input#mce-EMAIL,input#mc-embedded-subscribe{
-	height: 32px;
-}
-input#mc-embedded-subscribe{
-	background-color:#fff56c;
-	color:#000;
-	font-size: 1em; 
-	border:none; 
-
-}
-iframe{ 
-	left:0px;
-	position:absolute;
-	z-index: 0;
-	width:99vw;
-	overflow-x: hidden;
-	height:100vh;
-}
-h2.con{
-	font-weight: 700;
-	padding:0;
-	padding-top: 20px;
-	margin:0;
-}
-h2.feat{
-	color: #fff56c;
-	padding-bottom: 20px !important;
-}
-
-#login
-{
-	width:100vw;
-	overflow-x:hidden;
-	background-color: #c6c6c6;
-}
- 
-.row {
-	margin:0;
-}
-.email, .password {
-	-moz-border-radius: 1px;
-	-webkit-border-radius: 1px;
-	border-radius: 1px;
-	-webkit-appearance: none;
-	border: none;
-	background: #f6f6f6;
-	font-size: 15px; 
-	height: 32px;
-	padding: 0 0 0 15px;
-	margin: 0 5px 0 0;
-	color: #818285;
-	font-family: 'Roboto', sans-serif; 
-	margin-bottom: 20px;
-}
-.loginBtn {
-	-moz-border-radius: 1px;
-	-webkit-border-radius: 1px;
-	-webkit-appearance: none;
-	border-radius: 1px; 
-	background-color:#fff56c;
-	color: #231f20;
-	font-size: 1.2em;
-	font-weight: bold;  
-	cursor: pointer; 
-	text-align: center; 
-	height: 32px;
-	vertical-align: center; 
-	margin-bottom: 20px;
-}
-#login-extras{
-	font-size: 0.7em;
-}
-.login-main{
-	float: none;
-	
-}
-#remember{
-	margin:0;
-	padding:0; 
-	display: inline; 
-}
-#fgpass{
-	margin-bottom: 5px;
-}
-#remember-me-box{
-	margin-bottom: 5px;
-}
-.pull-right-on-big-screen{
-	float:right;
-	height: 100%;
-}
-.features{
-	height: 25vh; 
-}
-
-@media (max-width:850px){ 
+	#features .row .col-xs-12, #features .row .col-md-6{
+		max-width: 75%;
+	}
 
 	.navbar-toggle {
 		position: fixed;
@@ -420,22 +462,8 @@ h2.feat{
 		right: 30px;
 		background-color: #FFF;
 	}
-	#login{
-		display: none;
-		min-height: 100vh;
-	}
-	#login-form{
-		margin-top: 20vh;
-	}
-	.features{
-	height: 100%;
-	}
-	.features:last-child{
-		margin-bottom: 15px;
-	}
-	.pull-right-on-big-screen{
-		float: left;
-		height: 100%;
+	.navbar-header img, .navbar{
+		margin-top: -20px;
 	}
 	a.navbar-brand{
 		display: none;
@@ -454,28 +482,34 @@ h2.feat{
 		background-color: transparent!important;
 	}
 
-	#brandlogo{
-		display:inline-block;
-		margin-top:-10px;
-		margin-right:5px;
-		float:left;
-	}
-	.cont { 
-		position:relative;
-		height:100%;
-		padding-bottom: 20px;
-		padding-top: 20px;
-		}
-	iframe{
-		position:relative;
-		}
-	#scripler, #features, #about, #contact, #login{
-		padding-top: 20px;
-		height:100%;
-		padding-bottom: 50px;
-		}
-	form.login-form{
+	#login-wrapper {
 		margin:0;
 	}
 
+	#socialicons {
+		margin-bottom:20px;
+	}
 }
+
+@media (max-width:700px) {
+	#features .row .col-xs-12, #features .row .col-md-6{
+		max-width: 65%;
+	}
+}
+
+@media (max-width:560px) {
+	#scripler, #features, #about {
+		padding: 20px 20px 40px;
+	}
+
+	#contact .left-column {
+		padding: 20px 20px 40px;
+	}
+
+	#features .row .col-xs-12, #features .row .col-md-6{
+		max-width: 54%;
+	}
+}
+
+
+

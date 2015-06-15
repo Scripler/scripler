@@ -146,6 +146,10 @@
 	min-height: 90px;
 	height: auto;
 	z-index: 15;
+	width: 85px;
+	margin: 0 0 0 -6px;
+	border: 5px solid #000;
+	border-top: 0;
 }
 .project-link.show-more {
 	top: inherit;
@@ -333,19 +337,91 @@ hr {
 	padding-top: 5px;
 }
 
-.feedback {
-	position:absolute;
+.btn-top{
+	position:fixed;
 	top:0;
-	right:0;
-	background:#c6c6c6;
-	font-size: 18px;
-	color: #fff;
+	font-size: 1.1em;
 	cursor: pointer;
-	padding: 11.5px 20px 11.5px 20px;
 	text-align: center;
+	width:80px;
+}  
+.btn-top a{
+	display:block;
+	height:50px;
+	padding: 14px 20px 11.5px 20px;
+}   
+.feedback {
+	right:80px;
+	background:#c6c6c6;
 }
-.feedback:hover {
-	color: #fff265;
+.blog{
+	right:0;
+	background:#000;
+}
+.feedback a{
+	color: #fff;
+}
+.feedback a:hover{
+	color:#fff56c;
+}
+.blog a{
+	color: #fff56c;
+}
+.blog a:hover{
+	color: #fff;
+}
+
+.projectTitleEditing .ng-invalid{
+	border-color: red !important;
+	border-width: 2px !important;
+	border-color: black;
+}
+.nameError::after{
+	content:'';
+	width: 0; 
+	height: 0; 
+	position: absolute; 
+	left: 0;
+	top:-10px;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 10px solid red;
+}
+.nameError{
+	background-color: red;
+	width: 100%; 
+	text-align: center;
+	font-size: 0.7em;
+	padding:3px;
+	color: #000;
+	z-index: 5101;
+	display:block;
+	position: absolute; 
+	top:110px;
+	left: 0;
+	overflow: visible;
+	overflow-y:visible;
+}
+
+#upgradeButton, #changeButton{
+	cursor: pointer;
+}
+
+.modalButtons{
+	cursor: pointer;
+	margin-right: 10px;
+	padding:5px;
+	text-align: center;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+#continueFree{
+	position: absolute;
+	bottom:20px;
+	left:20px;
+	width:350px;
+	background: #fff;
 }
 .upgrade-text {
 	color: #000;
@@ -365,4 +441,119 @@ hr {
 }
 .upgrade-text-premium {
 	color: #fff;
+}
+
+#continueFree:hover{
+	color:#fff;
+	background: #000;
+}
+
+#continueFree:active{
+	color:#000;
+	background: #fff;
+}
+
+#upgradePremium{
+	position: absolute;
+	bottom:20px;
+	right:16px;
+	width:350px;
+	background: #fff56c;
+	color: #e98f2c;
+}
+
+#upgradePremium:hover{
+	color: #fff56c;
+	background: #e98f2c;
+}
+
+#upgradePremium:active{
+	color: #e98f2c;
+	background: #fff56c;
+}
+
+.planChoice{
+	width:350px;
+	height:240px;
+	display:inline-block;
+	padding-left:25px;
+}
+
+.planChoice p{
+	font-weight: bold;
+	line-height: .7;
+}
+
+#freePlan{
+	background: #d6d6d6;
+	margin-right:50px;
+	border:4px #fff solid;
+	color: #000;
+}
+
+#premiumPlan{
+	background: #f2d32c;
+	border:4px #fff56c solid;
+	color: #e98f2c;
+}
+
+#premiumPlan h1{
+	color: #fff56c;
+}
+
+#price{
+	position: absolute;
+	right: 45px;
+	top: 35px;
+	color: #fff;
+	text-align: right;
+}
+
+#price p{
+	font-size:32px;
+}
+
+#price span{
+	font-size:12px;
+	color:#fff;
+}
+
+div.m-modals {
+	background-color: rgba( 0, 0, 0, 0.8 ) ;
+	bottom: 0px ;
+	left: 0px ;
+	position: fixed ;
+	right: 0px ;
+	top: 0px ;
+	z-index:9999;
+}
+
+div.m-modals.ng-hide {
+	background-color: rgba( 0, 0, 0, 0 );
+}
+
+div.m-modals.ng-hide-add.ng-hide-add-active,
+div.m-modals.ng-hide-remove.ng-hide-remove-active {
+	transition: 250ms ease all ;
+}
+
+div.m-modals > .modal {
+	border-radius: 3px 3px 3px 3px ;
+	box-sizing: border-box ;
+		-moz-box-sizing: border-box ;
+	padding: 20px 20px 20px 20px ;
+	position: fixed ;
+	left: 50% ;
+	margin-left: -400px ;
+	top: 150px ;
+	width: 800px;
+}
+
+div.m-modals.ng-hide > .modal.ng-enter {
+	top: -200px ;
+	transition: 250ms ease top ;
+}
+
+div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
+	top: 200px ;
 }

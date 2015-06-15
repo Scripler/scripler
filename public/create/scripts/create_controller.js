@@ -39,10 +39,6 @@ function createController($scope, $http, projectsService, userService, $q, user,
 		}
 	}
 
-	$scope.openFeedback = function() {
-		userService.openFeedback( $scope.user );
-	}
-
 	$scope.updateUser = function() {
 		$scope.saveSubmitted = true;
 
@@ -141,8 +137,10 @@ function createController($scope, $http, projectsService, userService, $q, user,
 	};
 
 	$scope.selectedProjectHover = -1;
-    $scope.showProjectTitle = function(index) {
-        $scope.selectedProjectHover = index;
+    $scope.showProjectTitle = function(index, status) {
+		if (!status) {
+	        $scope.selectedProjectHover = index;
+		}
     };
 
     $scope.hideProjectTitle = function() {
@@ -200,7 +198,14 @@ function createController($scope, $http, projectsService, userService, $q, user,
 		}
 	};
 
+	$scope.storeTitle = function(project){
+		$scope.projectStoredName = project.name;
+	}
+
 	$scope.renameProject = function( project ) {
+		if (project.name===undefined){
+			project.name = $scope.projectStoredName;
+		}
 		if ( $scope.user || $scope.demoUser ) {
 			$http.put('/project/' + project._id + '/rename', angular.toJson( project ) )
 				.success( function() {
@@ -217,16 +222,4 @@ function createController($scope, $http, projectsService, userService, $q, user,
 			console.log("ERROR renaming project: this should not have happened: either a real user or a demo user should exist.");
 		}
 	};
-
-	$scope.copyProject = function( project ) {
-		if ( $scope.user || $scope.demoUser ) {
-			$http.post('/project/' + project._id + '/copy')
-				.success( function( data ) {
-					$scope.projects.push( data.project );
-				});
-		} else {
-			console.log("ERROR copying project: this should not have happened: either a real user or a demo user should exist.");
-		}
-	};
-
 };

@@ -70,12 +70,20 @@ button.secondary, .button.secondary {
 	background: #c6c6c6;
 	border: 1px solid #c6c6c6;
 }
+button.revert, .button.revert {
+	background: #000;
+	border: 1px solid #000;
+	color: #fff56c;
+}
 button label, .button label {
 	color: #000;
 	cursor: pointer;
 }
 button:hover, .button:hover {
 	border: 1px solid #000;
+}
+button.revert:hover, .button.revert:hover {
+	border: 1px solid #fff56c;
 }
 button:active, .button:active {
 	border: 1px solid #fefefe;
@@ -112,27 +120,18 @@ a {
 	color: #000;
 	text-decoration: none;
 }
-
-a.breadcrumb {
+a:hover {
 	color: #666;
+}
+a.link-underline {
 	text-decoration: underline;
 }
 
-p.breadcrumb {
-	margin-top: 10px;
-	margin-bottom: 10px;
-	float: left;
+.font-small {
+	font-size: 0.75em;
 }
-
-p.savedstamp {
-	margin-top: 10px;
-	margin-bottom: 0.5em;
-	float: right;
-	text-align: right;
-}
-
-a:hover {
-	color: #666;
+.font-italic {
+	font-style: italic;
 }
 
 .container {

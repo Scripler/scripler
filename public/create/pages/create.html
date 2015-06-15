@@ -1,6 +1,37 @@
+<!-- Google Tag Manager -->
+	<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-T9G76C"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+	'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-T9G76C');</script>
+<!-- End Google Tag Manager -->
+
 <link rel="stylesheet" type="text/css" href="pages/css/pages/create.css" />
 
 <div class="wrapper-create">
+	 <!-- modal windows -->
+	 <div bn-modals ng-show="subview" class="m-modals" ng-switch="subview">
+	 	 <!-- BEGIN: Free / Premium Modal. -->
+        <div ng-switch-when="confirm" ng-controller="UpgradeModalController" class="modal">
+            	<div class="planChoice" id="freePlan">
+            		<h1>Free</h1>
+            		<p>5 Ebook projects</p>
+					<p>3 Ebook design templates</p>
+                	<a class="modalButtons" id="continueFree" ng-click="continueFree()">{{ continueFreeText }}</a>
+                </div>
+                <div class="planChoice" id="premiumPlan">
+                	<h1>Premium</h1>
+                	<p>20 Ebook projects</p>
+                	<p>17 Ebook design templates</p>
+                	<div id="price"><p>€14.00<br><span>MONTH</span></p></div>
+                	<a class="modalButtons" id="upgradePremium" ng-click="upgradePremium()">{{ upgradePremiumText }}</a>
+            	</div>
+        </div>
+        <!-- END: Free / Premium Modal. -->
+	 </div>
+
 	<section class="section-unisquare" data-ng-class="{ 'white-bg' : showSettings}">
 		<div data-ng-hide="showSettings">
 			<div class="clearfix">
@@ -21,14 +52,15 @@
 						<a href="/logout">Log out</a>
 					</div>
 				</div>
+
 			</div>
 			<div class="upgrade-bottom-box clearfix" data-ng-class="{ 'upgrade-bottom-box-premium': user.level == 'premium' }" data-ng-show="user._id && !user.isDemo">
 				<div class="upgrade-text">
 					<!-- TODO: is there an easier way to conditionally apply the appropriate "upgrade-text" class? -->
 					<span data-ng-bind-html="upgradeText[user.level]" data-ng-class="{ 'upgrade-text-free': user.level == 'free', 'upgrade-text-premium': user.level == 'premium' }"></span>
 					<!-- TODO: insert real Upgrade/Change links here when the Premium frontend has been implemented -->
-					<a ng-if="user.level == 'free'" href="/upgrade">Upgrade</a>
-					<a ng-if="user.level == 'premium'" href="/upgrade">Change</a>
+					<a id="updateButton" ng-click="upgrade()" ng-if="user.level == 'free'">Upgrade</a>
+					<a id="changeButton" ng-click="upgrade()" ng-if="user.level == 'premium'">Change</a>
 				</div>
 			</div>
 		</div>
@@ -93,14 +125,14 @@
 					(…)
 				</div>
 
-				<form data-ng-show="project.editingProjectTitle">
-					<textarea id="rename" data-ng-model="project.name" placeholder="project title" focus-on="!!project.editingProjectTitle" blur-on-enter data-ng-blur="project.editingProjectTitle = false; renameProject(project);"></textarea>
+				<form name="project{{$index}}" class="projectTitleEditing" data-ng-show="project.editingProjectTitle">
+					<textarea id="rename" name="projectTitleEdit" data-ng-model="project.name" placeholder="project title" focus-on="!!project.editingProjectTitle" blur-on-enter data-ng-focus="storeTitle(project)" data-ng-blur="project.editingProjectTitle = false; renameProject(project);" required></textarea>
+					<div class="nameError" ng-show="project{{$index}}.projectTitleEdit.$error.required">The title is required!</div> 
 				</form>
 
 				<div data-ng-class="{ 'project-options' : canLoadProject(project)}" data-ng-show="$index == selectedProjectOptions">
 					<div class="project-options-menupoint" data-ng-show="project.archived" data-ng-click="unarchiveProject(project); hideProjectOptions();">unarchive</div>
-					<div class="project-options-menupoint" data-ng-click="project.editingProjectTitle = true; hideProjectOptions();">rename</div>
-					<div class="project-options-menupoint" data-ng-click="copyProject(project); hideProjectOptions();">copy</div>
+					<div class="project-options-menupoint" data-ng-hide="project.archived" data-ng-click="project.editingProjectTitle = true; hideProjectOptions();">rename</div>
 					<div class="project-options-menupoint" data-ng-hide="project.archived" data-ng-click="archiveProject(project); hideProjectOptions();">archive</div>
 					<div class="project-options-menupoint" data-ng-show="project.archived" data-ng-click="deleteProject(project, $index); hideProjectOptions();">delete</div>
 				</div>
@@ -109,8 +141,11 @@
 				</div>
 			</div>
 
-			<div class="feedback" data-ng-click="openFeedback()">
-				Talk!
+			<div class="btn-top blog">
+				<a target="_blank" href="http://blog.scripler.com/">Blog</a>
+			</div>
+			<div class="btn-top feedback">
+				<a target="_blank" href="http://talk.scripler.com/">Talk!</a>
 			</div>
 		</div>
 	</section>

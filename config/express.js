@@ -10,7 +10,8 @@ var express = require('express')
 	, methodOverride = require('method-override')
 	, cookieParser = require('cookie-parser')
 	, bodyParser = require('body-parser')
-	, multipart = require('connect-multiparty');
+	, multipart = require('connect-multiparty')
+	, dot = require('express-dot-engine');
 
 
 var allowCrossDomain = function (req, res, next) {
@@ -47,6 +48,9 @@ exports.beforeRoutes = function (app, conf, mongoose) {
 	app.use(expressLogger('short', {stream: {write: function (msg) {
 		logger.info(msg.trim());
 	}}}));
+	app.engine('dot', dot.__express);
+	app.set('views', path.join(__dirname, '../views'));
+	app.set('view engine', 'dot');
 	// TODO: create a separate configuration value for this?
 	app.use(bodyParser.json({limit: conf.import.uploadLimit }));
 	app.use(bodyParser.urlencoded({ limit: conf.import.uploadLimit, extended: false }));
@@ -65,7 +69,7 @@ exports.beforeRoutes = function (app, conf, mongoose) {
 			maxAge: conf.app.cookie_expire
 		},
 		store: new MongoStore({
-			db: mongoose.connection.db
+			mongooseConnection: mongoose.connection
 		})
 	}));
 	app.use(passport.initialize());

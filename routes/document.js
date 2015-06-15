@@ -277,7 +277,10 @@ exports.upload = function (req, res, next) {
 				var match;
 				var imageFileNames = [];
 				while (match = regex.exec(importedHtml)) {
-					imageFileNames.push(match[1]);
+					// If not a duplicate, add to array of images we should handle
+					if(imageFileNames.indexOf(match[1]) < 0) {
+						imageFileNames.push(match[1]);
+					}
 				}
 				async.each(imageFileNames, function(imageFileName, callback){
 
@@ -308,7 +311,7 @@ exports.upload = function (req, res, next) {
 						var finalName = imageNameWithoutExtension + '-' + image._id + '.'  + fileExtension;
 						image.name = finalName;
 
-						importedHtml = importedHtml.replace(new RegExp('(<img[^>]*src="'+imagesUrl+'/)('+imageFileName+')'), '$1' + finalName );
+						importedHtml = importedHtml.replace(new RegExp('(<img[^>]*src="'+imagesUrl+'/)('+imageFileName+')', 'g'), '$1' + finalName );
 
 						// Rename from old filename to new filename.
 						fs.rename(absolutePath, path.join(imagesDir, finalName));

@@ -23,10 +23,26 @@ $(document).ready(function() {
         return ((elemBottom >= docViewTop) && (elemTop <= docViewBottom) && (elemBottom <= docViewBottom) && (elemTop >= docViewTop));
     }
 
-    $(".menu-top li.navpoint").on("click", function(event) {
-        if ($(this).attr("data") == "blog") {
-            //do nothing
-        } else {
+    $( ".menu-login" ).click(function() {
+        if (!isScrolledIntoView($("#login"))) {
+            $("#login").slideToggle();
+            $('html, body').stop(true, true).animate({
+                scrollTop: $("#login").offset().top
+            }, 800);
+        }
+        $("#login").slideToggle();
+    });
+
+    $( "#signUp" ).click(function() {
+        if (!isScrolledIntoView($("#contact"))) {
+                $('html, body').stop(true, true).animate({
+                    scrollTop: $("#contact").offset().top
+                }, 800);
+            }
+    });
+
+    $(".navbar-nav .navpoint a").on("click", function(event) {
+        if ($(this).attr("data") != "blog" && $(this).attr("data") != "talk" && $(this).attr("data") != "login") {
             event.preventDefault();
             if ($(this).attr("data") == "create") {
                 document.location.href = "/create";
@@ -66,7 +82,7 @@ $(document).ready(function() {
 
         if (forgotPassword) {
             if (!utils.isValidEmail(email)) {
-                invalidBox1(240, "Invalid email address");
+                invalidBox(1, "Invalid email address");
                 formOk = false;
             }
             if (formOk) {
@@ -81,17 +97,17 @@ $(document).ready(function() {
                         formSuccess("If you entered your correct email address, an email has been sent to you. By using the link in this email you can change your password.");
                     },
                     error: function(xhr, textStatus, error) {
-                        invalidBox1(450, "Error");
+                        invalidBox(3, "Error");
                     }
                 });
             }
         } else {
             if (!utils.isValidEmail(email)) {
-                invalidBox1(0, "Invalid email address");
+                invalidBox(1, "Invalid email address");
                 formOk = false;
             }
             if (!isValidPassword(password)) {
-                invalidBox2(259, "Six characters minimum");
+                invalidBox(2, "Six characters minimum");
                 formOk = false;
             }
 
@@ -111,7 +127,7 @@ $(document).ready(function() {
                     },
                     error: function(xhr, textStatus, error) {
                         console.log("Login failed: " + error);
-                        invalidBox1(455, "Login failed");
+                        invalidBox(3, "Login failed");
                     }
                 });
             }
@@ -119,7 +135,6 @@ $(document).ready(function() {
     });
     if (documentwidth < 850) {
         $('li.menu-login>a').click(function() {
-            $('#login').css("display", "block");
             $('#login').css("z-index", "10");
         });
         $('li.navpoint>a').click(function() {
@@ -132,47 +147,44 @@ $(document).ready(function() {
             } else {
                 $("button.navbar-toggle").attr("aria-expanded", true);
             }
-
-            // console.log($("button.navbar-toggle").attr("aria-expanded"));
         });
 
     }
     var forgotPassword = false;
-    var passwordWidth = $("#login-password").outerWidth(true);
     $("#forgot-password").on("click", function(event) {
         hideInvalidBoxes();
         var animationTime = 400;
-        var emailExtraWidth = 50;
+        var passwordWidth = $("#login-password").parent().outerWidth(true);
         if (!forgotPassword) {
-            var newMargin = passwordWidth - emailExtraWidth;
-            $("#login-password").animate({
+            $("#login-password").parent().animate({
                 "width": 0,
                 "padding": 0,
-                "margin": 0
-            }, animationTime);
-            //$("#login-email").animate({ "width": "+=" + emailExtraWidth }, animationTime);
-            if (documentwidth > 850) {
-                $("#login-form").animate({
-                    "marginLeft": newMargin
-                }, animationTime);
-
-            }
-            $("#remember-me-box").fadeOut(animationTime);
-            setTimeout(function() {
+                "margin": 0,
+                "opacity": 0
+            }, animationTime, function () {
+                // After animation compleation
                 $("#login-button").prop("value", "Reset password");
                 $("#login-button").css("fontSize", "80%");
                 $("#forgot-password").text("Cancel");
-            }, animationTime);
+                $("#remember-me-box").hide();
+                $(this).hide();
+            });
+            if (documentwidth > 1050) {
+                $("#login-wrapper").animate({
+                    "left": passwordWidth
+                }, animationTime);
+            }
+            forgotPassword = true;
         } else {
             resetLoginForm();
         }
-        forgotPassword = !forgotPassword;
     });
 
     function resetLoginForm() {
-        $("#login-password").removeAttr("style");
+        $("#login-password").parent().removeAttr("style");
         $("#login-email").removeAttr("style");
         $("#login-form").removeAttr("style");
+        $("#login-wrapper").removeAttr("style");
         $("#remember-me-box").removeAttr("style");
         $("#login-button").removeAttr("style");
         $("#login-button").prop("value", "Login");
@@ -188,6 +200,11 @@ $(document).ready(function() {
         $("#form-success").css("display", "none");
         resetLoginForm();
     });
+    $(".menu-login").on("click", function(event) {
+        $(":animated").promise().done(function() {
+            $("#login-email").focus();
+        });
+    });
 
     // Handle the password reset entry page
     if (location.hash && location.hash.indexOf("#password-reset") === 0) {
@@ -196,9 +213,8 @@ $(document).ready(function() {
         var token = args[2];
 
         // Switch login-article from login-form to password-reset-form, and display immediately
-        //$("#login").css("paddingBottom", 10);
-        $("#login").css("paddingTop", 70);
         $("#login-form").css("display", "none");
+        $("#login").css("display", "block");
         $("#password-reset-form").css("display", "block");
 
         $("#password-reset-button").on("click", function(event) {
@@ -220,14 +236,14 @@ $(document).ready(function() {
                         },
                         error: function(xhr, textStatus, error) {
                             console.log("Failed password change: " + error);
-                            invalidBox1(480, "Error");
+                            invalidBox(6, "Error");
                         }
                     });
                 } else {
-                    invalidBox1(0, "Six characters minimum");
+                    invalidBox(4, "Six characters minimum");
                 }
             } else {
-                invalidBox1(259, "Passwords do not match");
+                invalidBox(5, "Passwords do not match");
             }
         });
     }
@@ -250,63 +266,34 @@ $(document).ready(function() {
                     $(".menu-login").css("display", "none");
                     $("#login").css("display", "none");
                 } else if (user.isDemo) {
-                    $("#login").animate({
-                        "paddingBottom": "10",
-                        "paddingTop": "40"
-                    }, 800);
                     $(".menu-login").css("display", "inline");
                 }
             }
         },
         error: function(request, status, error) {
-            $("#login").animate({
-                "paddingBottom": "10",
-                "paddingTop": "40"
-            }, 800);
+    
         }
     });
 
     function formSuccess(message) {
-        var p = $("#form-success");
-        p.text(message);
-        p.css("display", "block");
+        resetLoginForm();
+        $("#form-success-text").text(message);
+        $("#form-success").css("display", "block");
         $("#login-form").css("display", "none");
         $("#password-reset-form").css("display", "none");
     }
 
-    function invalidBox1(left, message) {
-        var box = $("#invalid-box1");
+    function invalidBox(boxNum, message) {
+        var box = $("#invalid-box" + boxNum);
         box.css("display", "block");
-        box.css("margin-left", left + "px");
-        box.text(message);
-    }
-
-    function invalidBox2(left, message) {
-        var box = $("#invalid-box2");
-        box.css("display", "block");
-        box.css("margin-left", left + "px");
         box.text(message);
     }
 
     function hideInvalidBoxes() {
-        $("#invalid-box1").css("display", "none");
-        $("#invalid-box2").css("display", "none");
+        for(i = 1; i <= 6; i++){
+            $("#invalid-box"+i).css("display", "none");
+        }
     }
-
-    $(".menu-login").on("click", function(event) {
-        $(":animated").promise().done(function() {
-            $("#login-email").focus();
-        });
-    });
-
-    $(".to-top").on("click", function(event) {
-        event.preventDefault();
-        var gotoPoint = "#scripler";
-
-        $('html, body').animate({
-            scrollTop: $(gotoPoint).offset().top
-        }, 800);
-    });
 
     function isValidPassword(password) {
         return password !== 'undefined' && password.length >= 6;
@@ -325,8 +312,6 @@ $(document).ready(function() {
             }
         }
     }
-
-
 });
 
 /* Create HTML5 elements for IE */
