@@ -10,7 +10,8 @@ var ImageSchema = new Schema({
 	projectId: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
 	members: [MemberSchema],
 	fileExtension: { type: String, required: true },
-	mediaType: { type: String, required: true }
+	mediaType: { type: String, required: true },
+	deleted: { type: Boolean, default: false }
 });
 
 exports.Image = mongoose.model('Image', ImageSchema);

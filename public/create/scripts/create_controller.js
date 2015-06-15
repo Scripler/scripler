@@ -1,6 +1,13 @@
 'use strict'
 
 function createController($scope, $http, projectsService, userService, $q, user, $location, utilsService) {
+
+	// TODO: is this the best location for a "constant" like this?
+	$scope.upgradeText = {
+		'free': 'Free subscription',
+		'premium': 'Premium subscription'
+	};
+
 	$scope.user = user;
 	$scope.showProjectOptions = false;
 	$scope.frontpage = $location.host();
@@ -66,6 +73,11 @@ function createController($scope, $http, projectsService, userService, $q, user,
 	};
 
 	$scope.addProject = function() {
+		// Ensure function does nothing if the user is not allowed to create a project
+		// (the backend also checks this, so this is just to avoid calling the backend)
+		var canCreateProject = utilsService.canCreateProject($scope.user.level, $scope.projects);
+		if (!canCreateProject) return;
+
 		var order = null;
 		if ($scope.projects) {
 			order = $scope.projects.length + 1;
@@ -119,6 +131,7 @@ function createController($scope, $http, projectsService, userService, $q, user,
 			$scope.hideProjectOptions();
 		}
 	};
+
 	$scope.hideProjectOptions = function () {
 		$scope.selectedProjectOptions = -1;
 	};
@@ -129,9 +142,25 @@ function createController($scope, $http, projectsService, userService, $q, user,
 	        $scope.selectedProjectHover = index;
 		}
     };
+
     $scope.hideProjectTitle = function() {
         $scope.selectedProjectHover = -1;
     };
+
+	$scope.getNewProjectClass = function() {
+		var canCreateProject = utilsService.canCreateProject(user.level, $scope.projects);
+		var newProjectClass = canCreateProject ? 'project new' : 'project upgrade';
+		return newProjectClass;
+	};
+
+	$scope.canLoadProject = function(project) {
+		// TODO: is there a more elegant way to get a specific object attribute from an array of objects?
+		var projectIds = [];
+		for (var i=0; i<$scope.projects.length; i++) {
+			projectIds[i] = $scope.projects[i]._id;
+		}
+		return utilsService.canLoadProject(user.level, projectIds, project._id);
+	};
 
 	$scope.archiveProject = function(project) {
 		if ( $scope.user || $scope.demoUser ) {
@@ -141,6 +170,20 @@ function createController($scope, $http, projectsService, userService, $q, user,
 				});
 		} else {
 			console.log("ERROR archiving project: this should not have happened: either a real user or a demo user should exist.");
+		}
+	};
+
+	$scope.deleteProject = function(project, index) {
+		if ( $scope.user || $scope.demoUser ) {
+			var deleteEbook = confirm("Are you sure? This cannot be undone!");
+			if (deleteEbook == true) {
+				$http.delete('/project/' + project._id)
+					.success( function() {
+						$scope.projects.splice(index, 1);
+					});
+			}
+		} else {
+			console.log("ERROR deleting project: this should not have happened: either a real user or a demo user should exist.");
 		}
 	};
 

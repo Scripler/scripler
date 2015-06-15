@@ -204,6 +204,50 @@
 		return text;
 	}
 
+	var maxNumberOfProjects = {
+		"free": 5,
+		"premium": 500,
+		"professional": 5000
+	};
+
+	/**
+	 * Can a user with "userLevel" and "projectIds" create a new project?
+	 *
+	 * @param userLevel
+	 * @param projectIds
+	 * @returns {boolean}
+	 */
+	function canCreateProject(userLevel, projectIds) {
+		if (!userLevel) return false;
+		if (!maxNumberOfProjects[userLevel]) return false;
+		if (!projectIds) return true;
+		if (projectIds.length < maxNumberOfProjects[userLevel]) return true;
+		return false;
+	}
+
+	/**
+	 * Is a user with "userLevel" and "projectIds" allowed to load "projectIdToCheck"?
+	 *
+	 * @param userLevel
+	 * @param projectIds
+	 * @param projectIdToCheck
+	 * @returns {boolean}
+	 */
+	function canLoadProject(userLevel, projectIds, projectIdToCheck) {
+		if (!userLevel) return false;
+		if (!maxNumberOfProjects[userLevel]) return false;
+
+		// The user is allowed to load any of his/her projects, if he/she has fewer than the max
+		if (projectIds && projectIds.length <= maxNumberOfProjects[userLevel] && projectIds.indexOf(projectIdToCheck) > -1) return true;
+
+		// Since the first four bytes of a Mongo id represents a creation timestamp, we can use this to sort by date.
+		var sortedProjectIds = projectIds.sort();
+		var firstXProjectIds = sortedProjectIds.slice(0, maxNumberOfProjects[userLevel]);
+
+		// TODO: implement not using indexOf(), since we want to compare values not references? (see http://stackoverflow.com/questions/19737408/mongoose-check-if-objectid-exists-in-an-array)
+		return JSON.stringify(firstXProjectIds).indexOf(projectIdToCheck.toString()) > -1;
+	}
+
 	return {
 		getStylesetContents : getStylesetContents,
 		getCombinedStylesetContents: getCombinedStylesetContents,
@@ -213,7 +257,9 @@
 		containsDocWithFolderId: containsDocWithFolderId,
 		isValidEmail: isValidEmail,
 		getNameParts: getNameParts,
-		createRandomString : createRandomString
+		createRandomString : createRandomString,
+		canCreateProject : canCreateProject,
+		canLoadProject: canLoadProject
 	}
 
 }()))

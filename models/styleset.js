@@ -12,7 +12,6 @@ var StylesetSchema = new Schema({
 	// TODO: Embed Style instead of referencing? A style must always only be part of one styleset (copies are made at relevant times) so it seems like an obvious way to implement it.
 	// See also TODO in routes/Styleset.update()
 	styles: [ { type: Schema.Types.ObjectId, ref: 'Style' }],
-	// Currently not used: not possible to delete a style
 	deletedStyles: [ { type: Schema.Types.ObjectId, ref: 'Style' }],
 	members: [MemberSchema],
 	archived: { type: Boolean, default: false },
