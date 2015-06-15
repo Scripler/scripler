@@ -59,8 +59,8 @@
 					<!-- TODO: is there an easier way to conditionally apply the appropriate "upgrade-text" class? -->
 					<span data-ng-bind-html="upgradeText[user.level]" data-ng-class="{ 'upgrade-text-free': user.level == 'free', 'upgrade-text-premium': user.level == 'premium' }"></span>
 					<!-- TODO: insert real Upgrade/Change links here when the Premium frontend has been implemented -->
-					<a id="updateButton" ng-click="upgrade()" ng-if="user.level == 'free'">Upgrade</a>
-					<a id="changeButton" ng-click="upgrade()" ng-if="user.level == 'premium'">Change</a>
+					<a id="upgradeButton" ng-click="upgrade()" ng-if="user.level == 'free'">Upgrade</a>
+					<a id="upgradeButton" ng-click="upgrade()" ng-if="user.level == 'premium'">Change</a>
 				</div>
 			</div>
 		</div>
