@@ -2,8 +2,8 @@
 
 var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'ngAnimate', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload', 'angucomplete-alt', 'ngProgress', 'utilsSharedModule' ] );
 
-app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope', 'utilsService',
-	function( $http, $scope, userService, $rootScope, utilsService) {
+app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope', 'utilsService', 'modals',
+	function( $http, $scope, userService, $rootScope, utilsService, modals) {
 		$scope.errors = {};
 		$scope.errors.name = 'Name is empty';
 		$scope.errors.email = 'Email is invalid';
@@ -14,6 +14,22 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		$scope.EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		$scope.showRegistrationInfoBar = true;
 		$scope.user = {};
+
+		// opens the modal
+	    $scope.upgrade = function() {
+			// the .open() method returns a promise that will be either
+		    // resolved or rejected when the modal window is closed.
+		    var promise = modals.open("confirm");
+
+		    promise.then(
+			        function handleResolve( response ) {
+			            console.log( "Resolved." );
+					},
+			        function handleReject( error ) {
+			            console.warn( "Rejected!" );
+			        }
+		        );
+	    };
 
 
 		$scope.$onRootScope('user:updated', function(event, user) {
@@ -533,25 +549,7 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 
 /***** modal controller *****/
 
-app.controller("appController",
-    function( $scope, modals ) {
-		// opens the modal
-	    $scope.upgrade = function() {
-			// the .open() method returns a promise that will be either
-		    // resolved or rejected when the modal window is closed.
-		    var promise = modals.open("confirm");
 
-		    promise.then(
-			        function handleResolve( response ) {
-			            console.log( "Resolved." );
-					},
-			        function handleReject( error ) {
-			            console.warn( "Rejected!" );
-			        }
-		        );
-	    };
-    }
-);
 
 // controlls the Upgrade modal window
 app.controller("UpgradeModalController",
