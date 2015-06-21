@@ -115,6 +115,7 @@
 		"uploadLimit": 524288000//500 MB (Nginx can have lower limits, and differentiate between routes)
 	},
 	"user": {
-		"defaultStylesetName": "book-bw"
+		"defaultStylesetName": "book-bw",
+		"freePremiumMonths": 3
 	}
 }

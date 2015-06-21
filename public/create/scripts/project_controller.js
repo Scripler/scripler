@@ -1705,6 +1705,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		$scope.focusEditor();
 	});
 
+	$scope.$onRootScope('user:registered', function( event, user ) {
+		if ( user._id ) {
+			$scope.user = user;
+			userService.setUser(user);
+		}
+	});
+
 	function getEditor(scope) {
 		return $rootScope.CKEDITOR.instances.bodyeditor;
 	}
