@@ -56,7 +56,7 @@ describe('Scripler - Payment', function () {
 					userStylesetId2 = res.body.user.stylesets[1]; // book-color - Free
 					userStylesetId3 = res.body.user.stylesets[2]; // draft-bw - Premium
 					userStylesetId4 = res.body.user.stylesets[3]; // draft-color - Premium
-					defaultUserStyleset = res.body.user.stylesets[15]; // simple-bw
+					defaultUserStyleset = res.body.user.stylesets[0]; // book-bw
 					done();
 				});
 		}),
@@ -114,7 +114,7 @@ describe('Scripler - Payment', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.stylesets.length, 17);
-					assert.equal(res.body.stylesets[0]._id, userStylesetId1);
+					assert.notEqual(res.body.stylesets[0]._id, userStylesetId1);//This default styleste, book-bw, has no been applied to document, so it got a new id.
 					assert.equal(res.body.stylesets[1]._id, userStylesetId2);
 					assert.equal(res.body.stylesets[2]._id, userStylesetId3);
 					assert.equal(res.body.stylesets[3]._id, userStylesetId4);

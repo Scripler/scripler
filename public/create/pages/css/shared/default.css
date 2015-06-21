@@ -564,3 +564,10 @@ textarea {
 	text-decoration: underline;
 	color:#999;
 }
+
+.no-select {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}

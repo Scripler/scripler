@@ -869,6 +869,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			editor = getEditor(),
 			isDefault = styleset._id === $scope.documentSelected.defaultStyleset;
 
+		if (!$scope.isAccessibleStyleset(styleset)) {
+			// User has no access to apply styleset
+			return;
+		}
+
 		//when applying styleset to document, the styles get copied to new (document) styleset
 		if (style._id != styleset.styles[styleIndex]._id) {
 			style = styleset.styles[styleIndex];
@@ -1527,6 +1532,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		} else {
 			$scope.showLeftMenu('contents', true);
 		}
+	}
+
+	$scope.isAccessibleStyleset = function(styleset) {
+		return $scope.isPremiumUser() || styleset.accessLevels.indexOf($scope.user.level) > -1 || styleset.accessPayment;
+	}
+
+	$scope.isPremiumUser = function() {
+		return $scope.user.level && $scope.user.level != 'free';
 	}
 
 	function generateColophonHtml() {
