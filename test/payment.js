@@ -114,7 +114,7 @@ describe('Scripler - Payment', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.stylesets.length, 17);
-					assert.notEqual(res.body.stylesets[0]._id, userStylesetId1);//This default styleste, book-bw, has no been applied to document, so it got a new id.
+					assert.notEqual(res.body.stylesets[0]._id, userStylesetId1);//This default styleset, book-bw, has now been applied to document, so it got a new id.
 					assert.equal(res.body.stylesets[1]._id, userStylesetId2);
 					assert.equal(res.body.stylesets[2]._id, userStylesetId3);
 					assert.equal(res.body.stylesets[3]._id, userStylesetId4);

@@ -869,7 +869,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			editor = getEditor(),
 			isDefault = styleset._id === $scope.documentSelected.defaultStyleset;
 
-		if (!$scope.isAccessibleStyleset(styleset)) {
+		if (!$scope.isStylesetAccessible(styleset)) {
 			// User has no access to apply styleset
 			return;
 		}
@@ -1534,7 +1534,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
-	$scope.isAccessibleStyleset = function(styleset) {
+	$scope.isStylesetAccessible = function(styleset) {
 		return $scope.isPremiumUser() || styleset.accessLevels.indexOf($scope.user.level) > -1 || styleset.accessPayment;
 	}
 
