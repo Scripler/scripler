@@ -869,6 +869,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			editor = getEditor(),
 			isDefault = styleset._id === $scope.documentSelected.defaultStyleset;
 
+		if (!$scope.isStylesetAccessible(styleset)) {
+			// User has no access to apply styleset
+			return;
+		}
+
 		//when applying styleset to document, the styles get copied to new (document) styleset
 		if (style._id != styleset.styles[styleIndex]._id) {
 			style = styleset.styles[styleIndex];
@@ -1529,6 +1534,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
+	$scope.isStylesetAccessible = function(styleset) {
+		return $scope.isPremiumUser() || styleset.accessLevels.indexOf($scope.user.level) > -1 || styleset.accessPayment;
+	}
+
+	$scope.isPremiumUser = function() {
+		return $scope.user.level && $scope.user.level != 'free';
+	}
+
 	function generateColophonHtml() {
 		var title = '<h4 class="right">' + $scope.project.name + '</h4>';
 		var author = '<p class="colophon">' + $scope.user.firstname + ' ' + $scope.user.lastname + '</p>'
@@ -1690,6 +1703,13 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		} 
 
 		$scope.focusEditor();
+	});
+
+	$scope.$onRootScope('user:registered', function( event, user ) {
+		if ( user._id ) {
+			$scope.user = user;
+			userService.setUser(user);
+		}
 	});
 
 	function getEditor(scope) {

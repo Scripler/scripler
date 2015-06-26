@@ -161,7 +161,7 @@ describe('Scripler RESTful API', function () {
 					userStylesetId2 = res.body.user.stylesets[1]; // book-color
 					userStylesetId3 = res.body.user.stylesets[2]; // draft-bw
 					userStylesetId4 = res.body.user.stylesets[3]; // draft-color  
-					defaultUserStyleset = res.body.user.stylesets[15]; // simple-bw
+					defaultUserStyleset = res.body.user.stylesets[0]; // book-bw
                     done();
 				});
 		}),
