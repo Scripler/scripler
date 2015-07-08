@@ -17,15 +17,15 @@
 		<div ng-switch-when="upgrade" ng-controller="UpgradeModalController" class="modal">
 			<div class="planChoice" id="freePlan">
 				<h1>Free</h1>
-				<p>5 ebook projects</p>
-				<p>3 ebook design templates</p>
+				<p>{{ freeNumberOfEbooks }} ebook projects</p>
+				<p>{{ freeNumberOfDesigns }} ebook design templates</p>
 				<a class="modalButtons" id="useFree" ng-click="useFree()">{{ useFreeText }}</a>
 			</div>
 			<div class="planChoice" id="premiumPlan">
 				<h1>Premium</h1>
-				<p>20 ebook projects</p>
-				<p>17 ebook design templates</p>
-				<div id="price"><p>€14.00<br><span>MONTH</span></p></div>
+				<p>{{ premiumNumberOfEbooks }} ebook projects</p>
+				<p>{{ premiumNumberOfDesigns }} ebook design templates</p>
+				<div id="price"><p>€{{ premiumMonthlyPrice }}<br><span>MONTH</span></p></div>
 				<a class="modalButtons" id="usePremium" ng-click="usePremium()">{{ usePremiumText }}</a>
 			</div>
 		</div>
@@ -35,7 +35,6 @@
 		<div ng-switch-when="payment" ng-controller="PaymentModalController" class="modal">
 			<div class="upgradePayment" id="upgradePayment">
 				<form name="upgradePaymentForm" ng-submit="paymentUpgrade()" novalidate>
-				<!-- <form name="upgradePaymentForm" ng-init="setFormScope(this)" ng-submit="paymentUpgrade()" novalidate> -->
 					<h1>Upgrade to Premium</h1>
 					<p>Your card will be charged €14.00/month.</p>
 					<span><p>Card number</p></span>
@@ -56,7 +55,6 @@
 					<p>
 						<a class="paymentButtons" id="paymentCancel" ng-click="paymentCancel()">Cancel</a>
 						<a class="paymentButtons" id="paymentUpgrade" ng-click="paymentUpgrade()">Upgrade</a>
-						<!-- <input id="paymentUpgrade" class="button" type="submit" value="Upgrade" /> -->
 					</p>
 				</form>
 			</div>

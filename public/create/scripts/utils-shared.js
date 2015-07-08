@@ -204,6 +204,7 @@
 		return text;
 	}
 
+	// TODO: should this be duplicated in config/<env>.json because we want to be able to change it without making a release?
 	var subscriptions = {
 		"free": {
 			"maxNumberOfProjects": 5,
@@ -215,14 +216,8 @@
 			"monthlyPrice": "14.00"
 		},
 		"professional": {
-			"maxNumberOfProjects": 500 // TODO: use value from utils-shared
+			"maxNumberOfProjects": 500
 		}
-	};
-
-	var maxNumberOfProjects = {
-		"free": 5,
-		"premium": 20,
-		"professional": 500
 	};
 
 	/**
@@ -232,12 +227,11 @@
 	 * @param projectIds
 	 * @returns {boolean}
 	 */
-	// TODO: rewrite to use "subscriptions" var
 	function canCreateProject(userLevel, projectIds) {
 		if (!userLevel) return false;
-		if (!maxNumberOfProjects[userLevel]) return false;
+		if (!subscriptions[userLevel]) return false;
 		if (!projectIds) return true;
-		if (projectIds.length < maxNumberOfProjects[userLevel]) return true;
+		if (projectIds.length < subscriptions[userLevel].maxNumberOfProjects) return true;
 		return false;
 	}
 
@@ -249,17 +243,18 @@
 	 * @param projectIdToCheck
 	 * @returns {boolean}
 	 */
-	// TODO: rewrite to use "subscriptions" var
 	function canLoadProject(userLevel, projectIds, projectIdToCheck) {
 		if (!userLevel) return false;
-		if (!maxNumberOfProjects[userLevel]) return false;
+		if (!subscriptions[userLevel]) return false;
+
+		var maxNumberOfProjects = subscriptions[userLevel].maxNumberOfProjects;
 
 		// The user is allowed to load any of his/her projects, if he/she has fewer than the max
-		if (projectIds && projectIds.length <= maxNumberOfProjects[userLevel] && projectIds.indexOf(projectIdToCheck) > -1) return true;
+		if (projectIds && projectIds.length <= maxNumberOfProjects && projectIds.indexOf(projectIdToCheck) > -1) return true;
 
 		// Since the first four bytes of a Mongo id represents a creation timestamp, we can use this to sort by date.
 		var sortedProjectIds = projectIds.sort();
-		var firstXProjectIds = sortedProjectIds.slice(0, maxNumberOfProjects[userLevel]);
+		var firstXProjectIds = sortedProjectIds.slice(0, maxNumberOfProjects);
 
 		// TODO: implement not using indexOf(), since we want to compare values not references? (see http://stackoverflow.com/questions/19737408/mongoose-check-if-objectid-exists-in-an-array)
 		return JSON.stringify(firstXProjectIds).indexOf(projectIdToCheck.toString()) > -1;

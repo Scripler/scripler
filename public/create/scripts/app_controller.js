@@ -23,19 +23,16 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 
 		    upgradePromise.then(
 			        function handleResolve(response) {
-			            console.log( "Upgrade Resolved." );
-
 						if (response) {
 							if (response == 'premium') {
+								// TODO: should we just create one token when the page loads that can be used for both payment and downgrade?
 								paymentService.setClient($window.braintree, function (err) {
 									if (err) {
-										console.log(err);
+										alert("An error occurred connecting to the payment gateway: " + JSON.stringify(err));
 									} else {
 										paymentService.cancelSubscription($scope.user, function (err) {
 											if (err) {
-												console.log(err);
-												// TODO: implement real error message design
-												alert("Something went wrong cancelling your subscription: ...");
+												alert("An error occurred cancelling your subscription: " + JSON.stringify(err));
 											} else {
 												// TODO: get the date on which the user's premium subscription ends
 												// The user's level will not be changed until we receive cancellation confirmation from Braintree
@@ -51,27 +48,22 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 
 								paymentPromise.then(
 									function handleResolve(response) {
-										console.log( "Payment Resolved." );
-										//console.log(response);
 										paymentService.setClient($window.braintree, function (err) {
 											if (err) {
-												console.log(err);
+												alert("An error occurred connecting to the payment gateway: " + JSON.stringify(err));
 											} else {
 												var paymentCardNumber = response.cardNumber;
 												var expirationDate = response.expirationDate;
 												var cvv = response.cvv;
 												paymentService.createSubscription(paymentCardNumber, expirationDate, cvv, function (err, data) {
 													if (err) {
-														console.log(err);
-														// TODO: implement real error message design
 														// TODO: Inform the user that no money has been charged - or what?
-														alert("Something went wrong creating your subscription: ...");
+														alert("An error occurred creating your subscription: " + JSON.stringify(err));
 													}
 													if (data) {
 														$scope.user.level = data.user.level;
 													} else {
-														var errorMessage = "Something went wrong creating your subscription";
-														console.log(errorMessage);
+														var errorMessage = "An error occurred creating your subscription";
 														alert(errorMessage);
 													}
 												});
@@ -79,19 +71,18 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 										});
 									},
 									function handleReject(error) {
-										console.warn( "Payment Rejected!" );
-										//deferred.reject();
+										if (error) alert("An error occurred closing the payment window: " + JSON.stringify(error));
 									}
 								);
 							} else {
-								console.log("ERROR: upgrade modal promise did not contain either a 'free' or 'premium' value");
+								alert("ERROR: upgrade modal promise did not contain either a 'free' or 'premium' value");
 							}
 						} else {
-							console.log("ERROR: not able to get response from upgrade modal promise");
+							alert("ERROR: not able to get response from upgrade modal promise");
 						}
 					},
 			        function handleReject(error) {
-			            console.warn( "Upgrade Rejected!" );
+						if (error) alert("An error occurred closing the upgrade window: " + JSON.stringify(error));
 			        }
 		        );
 	    };
@@ -119,8 +110,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 
 				$scope.registerUser($scope.demoUser, function (err, user) {
 					if (err) {
-						// TODO: show "something went wrong" error to the user
-						console.log("ERROR registering demo user: " + JSON.stringify(err));
+						alert("ERROR registering demo user: " + JSON.stringify(err));
 					} else {
 						// TODO: emit 'user:registered' event when a demo user registers?
 						$rootScope.$emit('user:registered', user);
@@ -375,19 +365,14 @@ app.service('paymentService', function($http, $q) {
 						});
 						return next(null, data);
 					} else {
-						var errorMessage = "Unable to get payment token (empty)";
-						console.log(errorMessage);
-						console.log(data);
 						if (next) {
-							return next(errorMessage, data);
+							return next("An error occurred connecting to the payment gateway: unable to get payment token (empty)", data);
 						}
 					}
 				})
 				.error(function(data) {
-					console.log("Unable to get payment token: ");
-					console.log(data);
 					if (next) {
-						return next(data);
+						return next("An error occurred connecting to the payment gateway: unable to get payment token: " + JSON.stringify(data));
 					}
 				});
 		},
@@ -681,25 +666,27 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 });
 
 
-/***** modal controller *****/
-
-
+/*****
+ *
+ * Modal controller, service and directive
+ * Copied from http://www.bennadel.com/blog/2806-creating-a-simple-modal-system-in-angularjs.htm
+ *
+ * *****/
 
 // controls the Upgrade modal window
-app.controller("UpgradeModalController",
-	function( $scope, modals ) {
+app.controller("UpgradeModalController", [ '$scope', 'modals', 'utilsService',
+	function( $scope, modals, utilsService ) {
         var params = modals.params();
 
-		// TODO: use isPremium() function from projectController, once "premium-logic" branch has been merged in
+		$scope.freeNumberOfEbooks = utilsService.subscriptions.free.maxNumberOfProjects;
+		$scope.freeNumberOfDesigns = utilsService.subscriptions.free.maxNumberOfDesigns;
 
-		//$scope.upgrade.free.ebooks = utilsService.subscriptions.free.maxNumberOfProjects;
-		//$scope.upgrade.free.designs = utilsService.subscriptions.free.maxNumberOfDesigns;
-
-		//$scope.upgrade.premium.ebooks = utilsService.subscriptions.premium.maxNumberOfProjects;
-		//$scope.upgrade.premium.designs = utilsService.subscriptions.premium.maxNumberOfDesigns;
-		//$scope.upgrade.premium.monthly_price = utilsService.subscriptions.premium.monthlyPrice;
+		$scope.premiumNumberOfEbooks = utilsService.subscriptions.premium.maxNumberOfProjects;
+		$scope.premiumNumberOfDesigns = utilsService.subscriptions.premium.maxNumberOfDesigns;
+		$scope.premiumMonthlyPrice = utilsService.subscriptions.premium.monthlyPrice;
 
         // setup defaults using the modal params.
+		// TODO: use isPremium() function from projectController, once "premium-logic" branch has been merged in
         $scope.useFreeText = ( params.useFree || ($scope.user.level && $scope.user.level == 'free' ? "Continue as free" : 'Downgrade to free') );
         $scope.usePremiumText = ( params.usePremium || ($scope.user.level && $scope.user.level == 'premium' ? "Continue as Premium" : "Upgrade to Premium") );
 
@@ -722,7 +709,7 @@ app.controller("UpgradeModalController",
         // wire the modal buttons into modal resolution actions.
 		//$scope.useFree = ( params.useFree || ($scope.user.level && $scope.user.level == 'premium' ? modals.resolve : modals.reject) );
         //$scope.usePremium = ( params.usePremium || ($scope.user.level && $scope.user.level == 'free' ? modals.resolve : modals.reject) );
-    }
+    }]
 );
 
 // controls the Payment modal window
@@ -790,7 +777,7 @@ app.service("modals",
             // reference to the DOM, we are going to use events to communicate
             // with a directive that will help manage the DOM elements that
             // render the modal windows.
-            
+
             // NOTE: We could have accomplished this with a $watch() binding in
             // the directive; but, that would have been a poor choice since it
             // would require a chronic watching of acute application events.
@@ -846,7 +833,7 @@ app.service("modals",
 );
 
 
-// Manages the views that are required to render the modal windows. 
+// Manages the views that are required to render the modal windows.
 // It doesn't actually define the modals in anyway - it simply decides which DOM sub-tree
 // should be linked. The means by which the modal window is defined is entirely up to the developer.
 app.directive("bnModals",
