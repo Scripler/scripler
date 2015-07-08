@@ -221,7 +221,7 @@ exports.create_subscription = function (req, res, next) {
 						logger.error("CRITICAL! Could not update subscription information on user " + user.id + ", for subscription id " + subscriptionId + ". Error: " + JSON.stringify(err));
 						return next(err);
 					};
-					res.send({});
+					res.send({user: utils.cleanUserObject(user)});
 				});
 			} else {
 				return next(result);
@@ -272,7 +272,7 @@ exports.create_subscription = function (req, res, next) {
 		};
 		gateway.customer.create(customerRequest, function (err, result) {
 			if (err) {
-				return next("Could not create Braitree customer: " + err.name);
+				return next("Could not create Braintree customer: " + err.name);
 			}
 			if (result.success) {
 				user.payment.customerId = result.customer.id;

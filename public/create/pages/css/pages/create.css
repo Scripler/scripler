@@ -416,7 +416,7 @@ hr {
 	font-size: 18px;
 }
 
-#continueFree{
+#useFree{
 	position: absolute;
 	bottom:20px;
 	left:20px;
@@ -443,17 +443,17 @@ hr {
 	color: #fff;
 }
 
-#continueFree:hover{
+#useFree:hover{
 	color:#fff;
 	background: #000;
 }
 
-#continueFree:active{
+#useFree:active{
 	color:#000;
 	background: #fff;
 }
 
-#upgradePremium{
+#usePremium{
 	position: absolute;
 	bottom:20px;
 	right:16px;
@@ -462,12 +462,12 @@ hr {
 	color: #e98f2c;
 }
 
-#upgradePremium:hover{
+#usePremium:hover{
 	color: #fff56c;
 	background: #e98f2c;
 }
 
-#upgradePremium:active{
+#usePremium:active{
 	color: #e98f2c;
 	background: #fff56c;
 }
@@ -516,6 +516,36 @@ hr {
 #price span{
 	font-size:12px;
 	color:#fff;
+}
+
+
+.upgradePayment{
+	width:400px;
+	height:400px;
+	display:inline-block;
+	padding-left:25px;
+	background: #f2f2f2;
+	margin-right:50px;
+	border:4px #fff solid;
+	color: #000;
+}
+
+.paymentButtons{
+	cursor: pointer;
+	margin-right: 10px;
+	padding:10px;
+	width: 150px;
+	text-align: center;
+	font-size: 18px;
+	color: #ffffff;
+}
+
+.paymentButtons#paymentCancel{
+	background: #cccccc;
+}
+
+.paymentButtons#paymentUpgrade{
+	background: #8CC63F;
 }
 
 div.m-modals {

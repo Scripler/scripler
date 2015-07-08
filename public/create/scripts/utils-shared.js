@@ -204,10 +204,25 @@
 		return text;
 	}
 
+	var subscriptions = {
+		"free": {
+			"maxNumberOfProjects": 5,
+			"maxNumberOfDesigns": 3
+		},
+		"premium": {
+			"maxNumberOfProjects": 20,
+			"maxNumberOfDesigns": 17,
+			"monthlyPrice": "14.00"
+		},
+		"professional": {
+			"maxNumberOfProjects": 500 // TODO: use value from utils-shared
+		}
+	};
+
 	var maxNumberOfProjects = {
 		"free": 5,
-		"premium": 500,
-		"professional": 5000
+		"premium": 20,
+		"professional": 500
 	};
 
 	/**
@@ -217,6 +232,7 @@
 	 * @param projectIds
 	 * @returns {boolean}
 	 */
+	// TODO: rewrite to use "subscriptions" var
 	function canCreateProject(userLevel, projectIds) {
 		if (!userLevel) return false;
 		if (!maxNumberOfProjects[userLevel]) return false;
@@ -233,6 +249,7 @@
 	 * @param projectIdToCheck
 	 * @returns {boolean}
 	 */
+	// TODO: rewrite to use "subscriptions" var
 	function canLoadProject(userLevel, projectIds, projectIdToCheck) {
 		if (!userLevel) return false;
 		if (!maxNumberOfProjects[userLevel]) return false;
@@ -259,7 +276,8 @@
 		getNameParts: getNameParts,
 		createRandomString : createRandomString,
 		canCreateProject : canCreateProject,
-		canLoadProject: canLoadProject
+		canLoadProject: canLoadProject,
+		subscriptions: subscriptions
 	}
 
 }()))
