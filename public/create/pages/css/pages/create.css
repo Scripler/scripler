@@ -7,16 +7,15 @@
 .section-unisquare {
 	position: fixed;
 	padding: 16px;
-	width: 300px;
+	width: 327px;
 /*	height: 300px !important;*/
 	border: 2px solid #fff;
 	background: #c6c6c6;
-	box-shadow: 0px 5px 5px -5px #ccc;
-	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* WebKit */
-	background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* Firefox */
-	background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* IE10+ */
-	background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* Opera */
-	background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%);
+	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.5) 100%); /* WebKit */
+	background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.5) 100%); /* Firefox */
+	background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.5) 100%); /* IE10+ */
+	background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.5) 100%); /* Opera */
+	background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.5) 100%);
 }
 .section-unisquare.white-bg {
 	background-color: #fff;
@@ -28,7 +27,7 @@
 	width: -moz-calc(100% - 360px) !important;
 	width: calc(100% - 360px) !important;
 	height: 100%;
-	margin: 0 0 0 325px !important;
+	margin: 0 0 0 350px !important;
 	overflow: auto;
 }
 
@@ -45,23 +44,23 @@
 
 .project {
 	position: relative;
-	background: url("../../images/ebook.svg");
+	background: url("../../images/ebook.png");
 	margin: 0 15px 15px 0;
 	width: 100px;
 	height: 129px;
 	float: left;
 }
 .project:hover, .project:focus {
-	background: url("../../images/ebook_hover.svg")
+	background: url("../../images/ebook_hover.png")
 }
 .project.new {
-	background: url("../../images/ebook_new.svg")
+	background: url("../../images/ebook_new.png")
 }
 .project.new:hover, .project.new:focus {
-	background: url("../../images/ebook_new_hover.svg")
+	background: url("../../images/ebook_new_hover.png")
 }
 .project.archived {
-	background: url("../../images/ebook_archived.svg")
+	background: url("../../images/ebook_archived.png")
 }
 
 .project p {
@@ -123,7 +122,7 @@
 	top: 20px;
 	left: 6px;
 	overflow: hidden;
-	width: 74px;
+	width: 73px;
 	height: 90px;
 	padding: 5px;
 	text-align: center;
@@ -132,7 +131,7 @@
 .project-link.show-all {
 	background: none #fff;
 	overflow: visible;
-	min-height: 90px;
+	min-height: 95px;
 	height: auto;
 	z-index: 15;
 	width: 85px;
@@ -142,7 +141,7 @@
 }
 .project-link.show-more {
 	top: inherit;
-	bottom: 18px;
+	bottom: 19px;
 	height: 28px;
 	background: #fff;
 }
@@ -191,9 +190,11 @@ textarea#rename {
 .frontpage-link {
 	color: #fff;
 }
+.frontpage-link:hover span {
+	text-decoration: underline;
+}
 .frontpage-link span {
 	float: left;
-	margin-right: 5px;
 }
 .frontpage-link:hover .arrow-left {
 	border-right: 5px solid #666;
@@ -209,11 +210,11 @@ textarea#rename {
 }
 .logo-box {
 	text-align: center;
-	padding-top: 70px;
+	padding-top: 60px;
 	height: 276px;
 }
 .logo {
-	width: 30%;
+	width: 37%;
 }
 .readmore{
 	text-decoration: underline;
@@ -253,8 +254,7 @@ textarea#rename {
 	text-decoration: underline;
 }
 .user-links a, span {
-	font-size: 80%;
-	color: #666;
+	font-size: 100%;
 }
 .user-links a:hover {
 	color: #000;
