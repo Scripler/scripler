@@ -112,7 +112,7 @@ h1 {
 	margin: 0.8em 0 0.4em 0;
 }
 h2 {
-	font-size: 1.25em;
+	font-size: 1.75em;
 	margin: 0.8em 0 0.4em 0;
 }
 
@@ -121,8 +121,10 @@ a {
 	text-decoration: none;
 }
 a:hover {
-	color: #666;
+	color: #000;
+	text-decoration: underline;
 }
+
 a.link-underline {
 	text-decoration: underline;
 }
