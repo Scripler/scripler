@@ -106,14 +106,18 @@ button:hover label, button:active label, .button:hover label, .button:active lab
 	margin-right: 10px;
 }
 
+.no-top-margin {
+	margin-top: 0;
+}
+
 /* General Styling */
 h1 {
 	font-size: 2.25em;
 	margin: 0.8em 0 0.4em 0;
 }
 h2 {
-	font-size: 1.75em;
-	margin: 0.8em 0 0.4em 0;
+	font-size: 2em;
+	margin: 0.8em 0 0.2em 0;
 }
 
 a {
@@ -246,7 +250,6 @@ input.has-error {
 	border: 1px solid #ff0000;
 }
 input:focus {
-	border-color: #ffff99;
 	outline: none;
 }
 textarea {

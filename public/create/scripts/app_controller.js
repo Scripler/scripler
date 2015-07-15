@@ -687,7 +687,7 @@ app.controller("UpgradeModalController", [ '$scope', 'modals', 'utilsService',
 
         // setup defaults using the modal params.
 		// TODO: use isPremium() function from projectController, once "premium-logic" branch has been merged in
-        $scope.useFreeText = ( params.useFree || ($scope.user.level && $scope.user.level == 'free' ? "Continue as free" : 'Downgrade to free') );
+        $scope.useFreeText = ( params.useFree || ($scope.user.level && $scope.user.level == 'free' ? "Continue as Free" : 'Downgrade to Free') );
         $scope.usePremiumText = ( params.usePremium || ($scope.user.level && $scope.user.level == 'premium' ? "Continue as Premium" : "Upgrade to Premium") );
 
 		$scope.useFree = function() {
