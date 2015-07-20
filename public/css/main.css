@@ -49,21 +49,20 @@
 }
 
 a.socialicon {
-	margin: 0 5px;
+	margin: 0 10px 0 0;
 	padding-top: 8px;
 	padding-bottom: 8px;
 	padding-left: 10px;
 	padding-right: 10px;
 	width: 40px;
 	height: 40px;
-	border-radius: 50%;
 	background-color: #fff; 
 	font-size: 22px; 
 	color: #c6c6c6;
 	text-decoration: none;
 }
 .socialicon a:hover, a.socialicon:hover {
-	background-color: #fff265;
+	background-color: #f3f3f3;
 	color: #666;
 }
 
@@ -76,7 +75,7 @@ p {
 nav {
 	background-color: #fff;
 	color: #000;
-	box-shadow: 0 8px 50px -6px rgba(255,245,108,0.5);
+	box-shadow: 0 10px 75px 20px rgba(255,245,108,0.5);
 }
 
 .row{
@@ -84,7 +83,7 @@ nav {
 	margin-left: 0;
 }
 
-#scripler, #features, #about {
+#scripler, #features, #about, #contact {
 	padding: 50px 20px 100px;
 	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* WebKit */
 	background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); /* Firefox */
@@ -96,20 +95,26 @@ nav {
 
 #scripler {
 	background-color: #ececec;
-	color: #666;
-	padding-top: 100px;
+	padding-top: 70px;
 }
+
+#scripler .container{
+	padding:0;
+	width:1040px;
+}
+
 #scripler .scripler-logo {
-	margin: 0 auto 50px;
+	margin: 0 auto 20px;
+	width: 80px;
 }
 #scripler .test-alpha {
 	background-color: #fff56c;
 	color: #000;
-	font-size: 1.5em;
-	font-weight: 700;
+	font-size: 2.5em;
+	font-weight: 900;
 	border: none;
-	margin: 20px;
-	padding: 10px 25px;
+	margin: 15px;
+	padding: 10px 40px;
 }
 
 #features {
@@ -126,7 +131,7 @@ nav {
 	color: #fff;
 }
 #features .container{
-	width:960px;
+	width:1040px;
 	padding:0;
 }
 #features .row .col-xs-12, #features .row .col-md-6{
@@ -135,12 +140,92 @@ nav {
 	max-width: 100%;
 }
 
+#pricing {
+	background-color: #000;
+	padding: 50px 20px 100px;
+	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%); /* WebKit */
+	background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%); /* Firefox */
+	background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%); /* IE10+ */
+	background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%); /* Opera */
+	background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+	min-height:100vh;
+}
+
+
+.planChoice{
+	width:400px;
+	height:200px;
+	display:inline-block;
+	padding-left:25px;
+}
+
+.planChoice p{
+	font-size: 20px;
+	line-height: 1;
+}
+
+#freePlan{
+	background: #d6d6d6;
+	margin-right:100px;
+	margin-top: 50px;
+	border:4px #fff solid;
+	color: #000;
+	float: left;
+}
+
+#premiumPlan{
+	background: #f2d32c;
+	border:4px #fff56c solid;
+	margin-top: 50px;
+	color: #e98f2c;
+}
+
+#premiumPlan h2{
+	color: #fff56c;
+}
+
+#premiumPlan h3{
+	color: #fff56c;
+	text-align: right;
+	margin-right: 25px;
+}
+
+#price{
+	position: absolute;
+	right: 45px;
+	top: 35px;
+	color: #fff56c;
+	text-align: right;
+}
+
+#pricing .container{
+	padding:0;
+	width:1040px;
+}
+
+#price p{
+	font-size:32px;
+	padding-right: 10px;
+}
+
+#price span{
+	font-size:12px;
+	color:#fff56c;
+}
+
+
 #about {
 	background-color: #fff56c;
-	color: #666;
 }
+
+#about .container{
+	padding:0;
+	width:1040px;
+}
+
 #about h2, #about h4.text-color-black {
 	color: #000;
+	font-weight: 900;
 }
 #about h3 span {
 	font-size: 14px;
@@ -150,29 +235,35 @@ nav {
 }
 
 #contact{ 
-	background-color: #fff;
-	color: #666;
+	background-image: url('../images/map.png');
 }
+
+#contact .container{
+	padding:0;
+	width:1040px;
+}
+
+#contact h2 {
+	font-size: 1.8em;
+	padding-left: 25px;
+	color: #000;
+	line-height: 0.7em;
+	font-weight: 700;
+}
+
+#contact h3 {
+	font-size: 1.8em;
+	color: #000;
+	line-height: 0.7em;
+	font-weight: 700;
+}
+
+#contact h4 {
+	line-height: 1.5em;
+}
+
 #contact a {
 	color: #000;
-}
-#contact .left-column {
-	position: absolute;
-	left: 0;
-	background-color: #fff;
-	height: 100%;
-	min-height: 100vh;
-	padding: 50px 20px 100px;
-	z-index: 5;
-}
-#contact .left-column .row p {
-	margin: 0;
-}
-#contact iframe {
-	width: 100%;
-	height: 100%;
-	min-height: 100vh;
-	overflow: hidden;
 }
 
 #forgot-password{
@@ -219,7 +310,6 @@ nav {
 ul.navList li>a{
 	font-size: 1.2em;
 	color:#000;
-	padding: 14px 15px 0;
 }
 ul.navList li>a:hover{
 	background-color: #fff;
@@ -244,12 +334,13 @@ a#signUp{
 }
 
 input#mce-EMAIL,input#mc-embedded-subscribe{
-	height: 32px;
+	height: 42px;
 }
 input#mc-embedded-subscribe{
 	background-color:#fff56c;
 	color:#000;
-	font-size: 1em; 
+	font-size: 1.2em;
+	font-weight: 900;
 	border:none; 
 
 }
@@ -261,16 +352,14 @@ input#mc-embedded-subscribe{
 }
 
 .email, .password {
-	-moz-border-radius: 1px;
-	-webkit-border-radius: 1px;
-	border-radius: 1px;
 	-webkit-appearance: none;
+	outline: none;
 	border: none;
-	background: #f6f6f6;
-	font-size: 15px; 
+	background: #f3f3f3;
+	font-size: 1.2em; 
 	height: 32px;
 	padding: 0 0 0 15px;
-	margin: 0 5px 0 0;
+	margin: 0 10px 0 0;
 	color: #818285;
 	font-family: 'Roboto', sans-serif; 
 	margin-bottom: 20px;
@@ -314,7 +403,7 @@ input#mc-embedded-subscribe{
 }
 
 .navbar-collapse {
-	text-align: center;
+	text-align: left;
 }
 .navbar-nav {
   float: none;
