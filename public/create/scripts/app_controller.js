@@ -31,13 +31,21 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 										alert("An error occurred connecting to the payment gateway: " + JSON.stringify(err));
 									} else {
 										paymentService.cancelSubscription($scope.user, function (err) {
-											if (err) {
-												alert("An error occurred cancelling your subscription: " + JSON.stringify(err));
-											} else {
-												// TODO: get the date on which the user's premium subscription ends
-												// The user's level will not be changed until we receive cancellation confirmation from Braintree
-												alert("Your subscription has now been cancelled. You will remain Premium until the end of your current billing period ends.");
-											}
+											var confirmationPromise = modals.open("confirmation");
+											confirmationPromise.then(
+												function handleResolve(response) {
+													if (err) {
+														alert("An error occurred cancelling your subscription: " + JSON.stringify(err));
+													} else {
+														// TODO: get the date on which the user's premium subscription ends
+														// The user's level will not be changed until we receive cancellation confirmation from Braintree
+														alert("Your subscription has now been cancelled. You will remain Premium until the end of your current billing period ends.");
+													}
+												},
+												function handleReject(error) {
+													if (error) alert("An error occurred closing the confirmation window: " + JSON.stringify(error));
+												}
+											);
 										});
 									}
 								});
@@ -56,16 +64,26 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 												var expirationDate = response.expirationDate;
 												var cvv = response.cvv;
 												paymentService.createSubscription(paymentCardNumber, expirationDate, cvv, function (err, data) {
-													if (err) {
-														// TODO: Inform the user that no money has been charged - or what?
-														alert("An error occurred creating your subscription: " + JSON.stringify(err));
-													}
 													if (data) {
 														$scope.user.level = data.user.level;
 													} else {
 														var errorMessage = "An error occurred creating your subscription";
 														alert(errorMessage);
 													}
+
+													var confirmationPromise = modals.open("confirmation");
+													confirmationPromise.then(
+														function handleResolve(response) {
+															if (err) {
+																// TODO: Inform the user that no money has been charged - or what?
+																alert("An error occurred creating your subscription: " + JSON.stringify(err));
+															}
+
+														},
+														function handleReject(error) {
+															if (error) alert("An error occurred closing the confirmation window: " + JSON.stringify(error));
+														}
+													);
 												});
 											}
 										});
@@ -729,6 +747,16 @@ app.controller("PaymentModalController",
 
 		$scope.paymentCancel = modals.reject;
 	}
+);
+
+app.controller("UpgradeDowngradeConfirmationController", [ '$scope', 'modals',
+	function( $scope, modals ) {
+		// TODO: for downgrade, add info about when the user loses premium access.
+		$scope.upgradeDowngradeConfirmationMessage = $scope.user.level && $scope.user.level == 'free' ? "Your account has now been downgraded" : 'Your payment has been received and your subscription created. You will receive a confirmation email shortly.';
+
+		$scope.confirmationClose = modals.resolve;
+		$scope.confirmationClose = modals.reject;
+	}]
 );
 
 // manages the modals within the application
