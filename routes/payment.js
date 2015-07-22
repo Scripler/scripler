@@ -291,7 +291,14 @@ exports.cancel_subscription = function (req, res, next) {
 		gateway.subscription.cancel(user.payment.subscriptionId, function (err, result) {
 			if (result.success) {
 				// All good. We will notify the customer by email when we get the cancellation confirmation from Braintree through webhook.
-				res.send({});
+				user.payment.cancelled = true;
+				user.save(function (err) {
+					if (err) {
+						return next(err);
+					} else {
+						res.send({user: utils.cleanUserObject(user)});
+					}
+				})
 			} else {
 				return next( {message: result.message, status: 591} );
 			}

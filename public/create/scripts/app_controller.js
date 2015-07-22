@@ -30,17 +30,17 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 									if (err) {
 										alert("An error occurred connecting to the payment gateway: " + JSON.stringify(err));
 									} else {
-										paymentService.cancelSubscription($scope.user, function (err) {
+										paymentService.cancelSubscription($scope.user, function (err, data) {
+											if (data) {
+												$scope.user.payment.cancelled = data.user.payment.cancelled;
+											} else {
+												alert("An error occurred cancelling your subscription: " + JSON.stringify(err));
+											}
+
 											var confirmationPromise = modals.open("confirmation");
 											confirmationPromise.then(
 												function handleResolve(response) {
-													if (err) {
-														alert("An error occurred cancelling your subscription: " + JSON.stringify(err));
-													} else {
-														// TODO: get the date on which the user's premium subscription ends
-														// The user's level will not be changed until we receive cancellation confirmation from Braintree
-														alert("Your subscription has now been cancelled. You will remain Premium until the end of your current billing period ends.");
-													}
+
 												},
 												function handleReject(error) {
 													if (error) alert("An error occurred closing the confirmation window: " + JSON.stringify(error));
@@ -414,9 +414,9 @@ app.service('paymentService', function($http, $q) {
 		},
 		cancelSubscription: function(user, next) {
 			$http.delete('/payment/subscription', user)
-				.success( function() {
+				.success( function(data) {
 					if (next) {
-						return next();
+						return next(null, data);
 					}
 				})
 				.error(function(data) {
@@ -751,11 +751,18 @@ app.controller("PaymentModalController",
 
 app.controller("UpgradeDowngradeConfirmationController", [ '$scope', 'modals',
 	function( $scope, modals ) {
-		// TODO: for downgrade, add info about when the user loses premium access.
-		$scope.upgradeDowngradeConfirmationMessage = $scope.user.level && $scope.user.level == 'free' ? "Your account has now been downgraded" : 'Your payment has been received and your subscription created. You will receive a confirmation email shortly.';
+		if ($scope.user.level == 'premium' && !$scope.user.payment.cancelled) {
+			$scope.upgradeDowngradeConfirmationMessage = 'Your payment has been received and your subscription created. You will receive a confirmation email shortly.';
+		} else if ($scope.user.level != 'free' && $scope.user.payment.cancelled) { // User's level does not change until the subscription has expired so level is not 'free' yet
+			// TODO: get the date on which the user's premium subscription expires
+			$scope.upgradeDowngradeConfirmationMessage = "Your subscription has now been cancelled. You will remain Premium until your subscription expires.";
+		} else {
+			console.log('ERROR in UpgradeDowngradeConfirmationController: user\'s level was not "premium" or "subscriptionHasBeenCancelled" was not set');
+		}
+
+		//$scope.upgradeDowngradeConfirmationMessage = $scope.user.level && $scope.user.level == 'free' ? "Your account has now been downgraded" : 'Your payment has been received and your subscription created. You will receive a confirmation email shortly.';
 
 		$scope.confirmationClose = modals.resolve;
-		$scope.confirmationClose = modals.reject;
 	}]
 );
 

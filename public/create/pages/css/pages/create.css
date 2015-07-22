@@ -443,6 +443,10 @@ hr {
 .upgrade-text-premium {
 	color: #fff;
 }
+.upgrade-text .upgrade-text-being-downgraded {
+	text-decoration: none;
+	color: #fff;
+}
 
 #useFree:hover{
 	color:#c6c6c6;

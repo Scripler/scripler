@@ -101,7 +101,8 @@
 					<!-- TODO: is there an easier way to conditionally apply the appropriate "upgrade-text" class? -->
 					<span data-ng-bind-html="upgradeText[user.level]" data-ng-class="{ 'upgrade-text-free': user.level == 'free', 'upgrade-text-premium': user.level == 'premium' }"></span>
 					<a id="upgradeButton" ng-click="upgrade()" ng-if="user.level == 'free'">Upgrade</a>
-					<a id="upgradeButton" ng-click="upgrade()" ng-if="user.level == 'premium'">Change</a>
+					<a id="upgradeButton" ng-click="upgrade()" ng-if="user.level != 'free' && !user.payment.cancelled">Change</a>
+					<div ng-if="user.level != 'free' && user.payment.cancelled" class="upgrade-text-being-downgraded">Being downgraded...</div>
 				</div>
 			</div>
 		</div>
