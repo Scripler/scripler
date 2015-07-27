@@ -159,8 +159,57 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 					} else {
 						$rootScope.$emit('user:registered', $scope.user);
 						$scope.registrationText = 'Good job! We\'ve emailed you a confirmation link. You can keep writing, though...';
+						$scope.registrationSubmitted = false;
 					}
 				});
+			}
+		}
+
+		$scope.submitLogin = function() {
+			$scope.registrationSubmitted = true;
+			$scope.loginForm.$pristine = false;
+			$scope.loginForm.email.$pristine = false;
+			$scope.loginForm.password.$pristine = false;
+			$scope.loginForm.email.$invalid = false;
+			$scope.loginForm.$invalid = false;
+
+			if ($scope.forgotPassword) {
+				if ($scope.loginForm.email.$valid) {
+
+					$http.post('/user/password-reset',{
+							"email": $scope.login.email
+						})
+						.success(function(data) {
+							console.log("ALL GOOD!");
+							console.log(data);
+							// TODO: Tell the user to check his email
+							//$scope.loginInfo = 'If you entered your correct email address, an email has been sent to you. By using the link in this email you can change your password.';
+						})
+						.error(function(data) {
+							$scope.errors.email = 'Could not reset password';
+							$scope.loginForm.email.$invalid = true;
+							$scope.loginForm.$invalid = true;
+						});
+				}
+			} else {
+				if ($scope.loginForm.$valid) {
+
+					$http.post('/user/login',{
+							"email": $scope.login.email,
+							"password": $scope.login.password+'lll',
+							"remember": $scope.login.remember
+						})
+						.success(function(data) {
+							console.log("ALL GOOD!");
+							console.log(data);
+						})
+						.error(function(data) {
+							$scope.errors.email = 'Could not login user';
+							$scope.loginForm.email.$invalid = true;
+							$scope.loginForm.$invalid = true;
+						});
+
+				}
 			}
 		}
 }]);

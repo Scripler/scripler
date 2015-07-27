@@ -288,15 +288,118 @@ textarea {
 }
 
 
+/*registration modal styling*/
+#registrationModalOverlay {
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	position:fixed;
+	opacity: 0.5;
+	background: black;
+	pointer-events: none;
+	z-index: 40;
+}
+#registrationModal  {
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	position:fixed;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	z-index: 40;
+}
+
+#registrationModal .registration-container {
+	width: 340px;
+	position: relative;
+	margin-top: 200px;
+	background-color:#F2F2F2;
+	color: black;
+}
+
+@media all and (max-height: 600px) {
+	#registrationModal .registration-container {
+		margin: auto;
+	}
+}
+
+#registrationModal .error-box {
+	margin: -35px 0;
+}
+
+#registrationModal .registration-form {
+	width: 100%;
+	margin-top: 5px;
+}
+
+#registrationModal .registration-form > form {
+	padding: 5px;
+}
+
+#registrationModal .registration-form > form > input {
+	margin-bottom: 5px;
+	border: 1px solid #c6c6c6;
+	width: 100%;
+}
+
+#registrationModal .tabs {
+	width: 100%;
+}
+
+#registrationModal .tabs div {
+	background-color:white;
+	width: 50%;
+	float:left;
+	padding: 10px 0 10px 20px;
+	cursor: pointer;
+}
+
+#registrationModal .tabs div.active {
+	background-color:#F2F2F2;
+	font-weight: bold;
+}
+
+#registrationModal .tab-content {
+	padding: 10px;
+}
+
+#registrationModal .extra-bar {
+	height: 40px;
+	margin: 5px 0 5px 0;
+}
+
+#registrationModal .registration-social {
+	float: left;
+}
+
+#registrationModal .remember-password {
+	float: right;
+}
+
+#registrationModal hr {
+	border-top: 1px solid #CCCCCC;
+	clear: both;
+}
+
+.cancel-button {
+	background-color: #CCCCCC;
+	color: white;
+	border: 1px solid #cccccc;
+}
+
 /*registration styling*/
 .registration {
 	background-color: #c6c6c6;
 	position: absolute;
 	width: 100%;
 	padding: 20px;
-	z-index: 2;
+	z-index: 30;
 	bottom: 0;
 }
+
 .registration.activation {
 	background-color: #5cb85c;
 	color: white;
@@ -308,7 +411,6 @@ textarea {
 .registration-form {
 	position: relative;
 	float: left;
-	min-width: 692px;
 }
 .registration-form.explanation {
 	margin: 0 0 10px;
@@ -320,12 +422,12 @@ textarea {
 }
 .activation .registration-form {
 	float: none;
-	min-width: 0;
 	text-align: center;
 }
 .activation .registration-form.explanation {
 	margin: 0;
 }
+
 @media all and (min-width: 1220px) {
 	.registration-text {
 		float: left;
@@ -335,7 +437,6 @@ textarea {
 	.registration-form {
 		position: relative;
 		float: left;
-		min-width: 0;
 	}
 	.registration-form.explanation {
 		margin: 0;
@@ -536,6 +637,7 @@ textarea {
 	margin-left: -125px;
 	z-index: 20;
 }
+
 .notifications.activation {
 	bottom: 110px;
 }
