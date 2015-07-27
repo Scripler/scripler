@@ -43,7 +43,10 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 											title: title,
 											text: text,
 											type: type,
-											confirmButtonText: confirmButtonText
+											confirmButtonText: confirmButtonText,
+											allowEscapeKey: true,
+											confirmButtonColor: "#fff56c",
+											cancelButtonColor: "#f3f3f3"
 										});
 									} else {
 										if (err) {
@@ -51,7 +54,10 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 												title: title,
 												text: text,
 												type: type,
-												confirmButtonText: confirmButtonText
+												confirmButtonText: confirmButtonText,
+												allowEscapeKey: true,
+												confirmButtonColor: "#fff56c",
+												cancelButtonColor: "#f3f3f3"
 											});
 										} else {
 											paymentService.cancelSubscription($scope.user, function (err, data) {
@@ -61,7 +67,10 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 														title: title,
 														text: text,
 														type: type,
-														confirmButtonText: confirmButtonText
+														confirmButtonText: confirmButtonText,
+														allowEscapeKey: true,
+														confirmButtonColor: "#fff56c",
+														cancelButtonColor: "#f3f3f3"
 													});
 												} else {
 													if (data && data.user.level != 'free' && data.user.payment.cancelled) {
@@ -71,14 +80,20 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 															// TODO: get the date on which the user's premium subscription expires
 															text: "Your subscription has now been cancelled. You will remain Premium until your subscription expires.",
 															type: "success",
-															confirmButtonText: confirmButtonText
+															confirmButtonText: confirmButtonText,
+															allowEscapeKey: true,
+															confirmButtonColor: "#fff56c",
+															cancelButtonColor: "#f3f3f3"
 														});
 													} else {
 														swal({
 															title: title,
 															text: text,
 															type: type,
-															confirmButtonText: confirmButtonText
+															confirmButtonText: confirmButtonText,
+															allowEscapeKey: true,
+															confirmButtonColor: "#fff56c",
+															cancelButtonColor: "#f3f3f3"
 														});
 													}
 												}
@@ -102,7 +117,10 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 													title: title,
 													text: text,
 													type: type,
-													confirmButtonText: confirmButtonText
+													confirmButtonText: confirmButtonText,
+													allowEscapeKey: true,
+													confirmButtonColor: "#fff56c",
+													cancelButtonColor: "#f3f3f3"
 												});
 											} else {
 												var paymentCardNumber = response.cardNumber;
@@ -115,7 +133,10 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 															title: title,
 															text: text,
 															type: type,
-															confirmButtonText: confirmButtonText
+															confirmButtonText: confirmButtonText,
+															allowEscapeKey: true,
+															confirmButtonColor: "#fff56c",
+															cancelButtonColor: "#f3f3f3"
 														});
 													} else {
 														if (data && data.user.level == 'premium' && !data.user.payment.cancelled) {
@@ -124,14 +145,20 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 																title: "Subscription created",
 																text: "Your payment has been received and your subscription created. You will receive a confirmation email shortly.",
 																type: "success",
-																confirmButtonText: confirmButtonText
+																confirmButtonText: confirmButtonText,
+																allowEscapeKey: true,
+																confirmButtonColor: "#fff56c",
+																cancelButtonColor: "#f3f3f3"
 															});
 														} else {
 															swal({
 																title: title,
 																text: text,
 																type: type,
-																confirmButtonText: confirmButtonText
+																confirmButtonText: confirmButtonText,
+																allowEscapeKey: true,
+																confirmButtonColor: "#fff56c",
+																cancelButtonColor: "#f3f3f3"
 															});
 														}
 													}
