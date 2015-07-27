@@ -38,6 +38,7 @@ mongoose.connect(conf.db.uri, function(err) {
 				logger.info("Handling: " + user.id);
 				var oldEndDay = user.payment.endDate;
 				user.payment.endDate = null;
+				user.payment.cancelled = null;
 				user.level = 'free';
 				user.save(function (err, user) {
 					if (err) {

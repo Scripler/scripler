@@ -2,8 +2,8 @@
 
 var app = angular.module( 'scriplerApp', [ 'ngRoute', 'ngSanitize', 'ngAnimate', 'LocalStorageModule', 'html5.sortable', 'angularFileUpload', 'angucomplete-alt', 'ngProgress', 'utilsSharedModule' ] );
 
-app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope', 'utilsService', 'modals',
-	function( $http, $scope, userService, $rootScope, utilsService, modals) {
+app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope', 'utilsService', 'modals', 'paymentService', '$window',
+	function( $http, $scope, userService, $rootScope, utilsService, modals, paymentService, $window) {
 		$scope.errors = {};
 		$scope.errors.name = 'Name is empty';
 		$scope.errors.email = 'Email is invalid';
@@ -15,22 +15,146 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		$scope.showRegistrationInfoBar = true;
 		$scope.user = {};
 
-		// opens the modal
+		// sweetAlert
+		var swal = $window.swal;
+
+		// Opens the Upgrade modal
 	    $scope.upgrade = function() {
 			// the .open() method returns a promise that will be either
 		    // resolved or rejected when the modal window is closed.
-		    var promise = modals.open("confirm");
+		    var upgradePromise = modals.open("upgrade");
 
-		    promise.then(
-			        function handleResolve( response ) {
-			            console.log( "Resolved." );
+		    upgradePromise.then(
+			        function handleResolve(response) {
+						if (response) {
+							var title;
+							var text;
+							var type = "error";
+							var confirmButtonText = "OK";
+
+							if (response == 'premium') {
+								// TODO: should we just create one token when the page loads that can be used for both payment and downgrade?
+								paymentService.setClient($window.braintree, function (err) {
+									title = "Could not cancel subscription";
+
+									if (err) {
+										text = err.errorMessage;
+										swal({
+											title: title,
+											text: text,
+											type: type,
+											confirmButtonText: confirmButtonText
+										});
+									} else {
+										if (err) {
+											swal({
+												title: title,
+												text: text,
+												type: type,
+												confirmButtonText: confirmButtonText
+											});
+										} else {
+											paymentService.cancelSubscription($scope.user, function (err, data) {
+												if (err) {
+													text = err.errorMessage;
+													swal({
+														title: title,
+														text: text,
+														type: type,
+														confirmButtonText: confirmButtonText
+													});
+												} else {
+													if (data && data.user.level != 'free' && data.user.payment.cancelled) {
+														$scope.user.payment.cancelled = data.user.payment.cancelled;
+														swal({
+															title: "Subscription cancelled",
+															// TODO: get the date on which the user's premium subscription expires
+															text: "Your subscription has now been cancelled. You will remain Premium until your subscription expires.",
+															type: "success",
+															confirmButtonText: confirmButtonText
+														});
+													} else {
+														swal({
+															title: title,
+															text: text,
+															type: type,
+															confirmButtonText: confirmButtonText
+														});
+													}
+												}
+											});
+										}
+									}
+								});
+							} else if (response == 'free') {
+								// the .open() method returns a promise that will be either
+								// resolved or rejected when the modal window is closed.
+								var paymentPromise = modals.open("payment");
+
+								paymentPromise.then(
+									function handleResolve(response) {
+										paymentService.setClient($window.braintree, function (err) {
+											title = "Could not create subscription";
+
+											if (err) {
+												text = err.errorMessage;
+												swal({
+													title: title,
+													text: text,
+													type: type,
+													confirmButtonText: confirmButtonText
+												});
+											} else {
+												var paymentCardNumber = response.cardNumber;
+												var expirationDate = response.expirationDate;
+												var cvv = response.cvv;
+												paymentService.createSubscription(paymentCardNumber, expirationDate, cvv, function (err, data) {
+													if (err) {
+														text = err.errorMessage;
+														swal({
+															title: title,
+															text: text,
+															type: type,
+															confirmButtonText: confirmButtonText
+														});
+													} else {
+														if (data && data.user.level == 'premium' && !data.user.payment.cancelled) {
+															$scope.user.level = data.user.level;
+															swal({
+																title: "Subscription created",
+																text: "Your payment has been received and your subscription created. You will receive a confirmation email shortly.",
+																type: "success",
+																confirmButtonText: confirmButtonText
+															});
+														} else {
+															swal({
+																title: title,
+																text: text,
+																type: type,
+																confirmButtonText: confirmButtonText
+															});
+														}
+													}
+												});
+											}
+										});
+									},
+									function handleReject(error) {
+										if (error) console.log("An error occurred closing the payment window: " + JSON.stringify(error));
+									}
+								);
+							} else {
+								console.log("Upgrade modal promise did not contain either a 'free' or 'premium' value");
+							}
+						} else {
+							console.log("Unable to get response from upgrade modal promise");
+						}
 					},
-			        function handleReject( error ) {
-			            console.warn( "Rejected!" );
+			        function handleReject(error) {
+						if (error) console.log("An error occurred closing the upgrade window: " + JSON.stringify(error));
 			        }
 		        );
 	    };
-
 
 		$scope.$onRootScope('user:updated', function(event, user) {
 			if (user.isDemo) {
@@ -53,13 +177,12 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 					isDemo: true
 				};
 
-				$scope.registerUser($scope.demoUser, function (err) {
+				$scope.registerUser($scope.demoUser, function (err, user) {
 					if (err) {
-						// TODO: show "something went wrong" error to the user
-						console.log("ERROR registering demo user: " + JSON.stringify(err));
+						alert("ERROR registering demo user: " + JSON.stringify(err));
 					} else {
 						// TODO: emit 'user:registered' event when a demo user registers?
-						//$rootScope.$emit('user:registered', $scope.demoUser);
+						$rootScope.$emit('user:registered', user);
 					}
 				});
 		});
@@ -123,7 +246,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				.success(function(data) {
 					$http.post('/user/login/', angular.toJson(user))
 						.success(function(data) {
-							next();
+							next(null, data.user);
 						});
 				})
 				.error(function(data) {
@@ -336,6 +459,65 @@ app.service('userService', function($rootScope, $http) {
 				url = hostname+'/session/sso?return_path='+encodeURIComponent(path);
 			}
 			window.open(url);
+		}
+	};
+});
+
+app.service('paymentService', function($http, $q) {
+	var client;
+
+	return {
+		setClient: function($braintree, next) {
+			$http.get('/payment/token')
+				.success( function(data) {
+					if (data && data.token) {
+						//var client = new braintree.api.Client({clientToken: data.token});
+						client = new $braintree.api.Client({
+							clientToken: data.token
+						});
+						return next(null, data);
+					} else {
+						if (next) {
+							return next("An error occurred connecting to the payment gateway: unable to get payment token (empty)", data);
+						}
+					}
+				})
+				.error(function(data) {
+					if (next) {
+						return next("An error occurred connecting to the payment gateway: unable to get payment token: " + JSON.stringify(data));
+					}
+				});
+		},
+		createSubscription: function(cardNumber, expirationDate, cvv, next) {
+			client.tokenizeCard({number: cardNumber, expirationDate: expirationDate, cvv: cvv}, function (err, nonce) {
+				if (err) return next(err);
+
+				var nonceData = { "payment_method_nonce": nonce	};
+				$http.post('/payment/subscription', nonceData)
+					.success( function(data) {
+						if (next) {
+							return next(null, data);
+						}
+					})
+					.error(function(data) {
+						if (next) {
+							return next(data);
+						}
+					});
+			});
+		},
+		cancelSubscription: function(user, next) {
+			$http.delete('/payment/subscription', user)
+				.success( function(data) {
+					if (next) {
+						return next(null, data);
+					}
+				})
+				.error(function(data) {
+					if (next) {
+						return next(data);
+					}
+				});
 		}
 	};
 });
@@ -596,23 +778,69 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 });
 
 
-/***** modal controller *****/
+/*****
+ *
+ * Modal controller, service and directive
+ * Based on http://www.bennadel.com/blog/2806-creating-a-simple-modal-system-in-angularjs.htm
+ *
+ * *****/
 
-
-
-// controlls the Upgrade modal window
-app.controller("UpgradeModalController",
-    function( $scope, modals ) {
+// controls the Upgrade modal window
+app.controller("UpgradeModalController", [ '$scope', 'modals', 'utilsService',
+	function( $scope, modals, utilsService ) {
         var params = modals.params();
 
+		$scope.freeNumberOfEbooks = utilsService.subscriptions.free.maxNumberOfProjects;
+		$scope.freeNumberOfDesigns = utilsService.subscriptions.free.maxNumberOfDesigns;
+
+		$scope.premiumNumberOfEbooks = utilsService.subscriptions.premium.maxNumberOfProjects;
+		$scope.premiumNumberOfDesigns = utilsService.subscriptions.premium.maxNumberOfDesigns;
+		$scope.premiumMonthlyPrice = utilsService.subscriptions.premium.monthlyPrice;
+
         // setup defaults using the modal params.
-        $scope.continueFreeText = ( params.continueFree || "Continue Free" );
-        $scope.upgradePremiumText = ( params.upgradePremium || "Upgrade" );
+		// TODO: use isPremium() function from projectController, once "premium-logic" branch has been merged in
+        $scope.useFreeText = ( params.useFree || ($scope.user.level && $scope.user.level == 'free' ? "Continue as Free" : 'Downgrade to Free') );
+        $scope.usePremiumText = ( params.usePremium || ($scope.user.level && $scope.user.level == 'premium' ? "Continue as Premium" : "Upgrade to Premium") );
+
+		$scope.useFree = function() {
+			if (params.useFree || ($scope.user.level && $scope.user.level == 'premium')) {
+				modals.resolve($scope.user.level);
+			} else {
+				modals.reject();
+			}
+		};
+
+		$scope.usePremium = function() {
+			if (params.usePremium || ($scope.user.level && $scope.user.level == 'free')) {
+				modals.resolve($scope.user.level);
+			} else {
+				modals.reject();
+			}
+		};
 
         // wire the modal buttons into modal resolution actions.
-        $scope.continueFree = modals.resolve;
-        $scope.upgradePremium = modals.reject;
-    }
+		//$scope.useFree = ( params.useFree || ($scope.user.level && $scope.user.level == 'premium' ? modals.resolve : modals.reject) );
+        //$scope.usePremium = ( params.usePremium || ($scope.user.level && $scope.user.level == 'free' ? modals.resolve : modals.reject) );
+    }]
+);
+
+// controls the Payment modal window
+app.controller("PaymentModalController",
+	function( $scope, modals ) {
+		var params = modals.params();
+
+		// wire the modal buttons into modal resolution actions.
+		// TODO: implement real validation of card number, expire date and cvv
+		$scope.paymentUpgrade = function() {
+			if (!$scope.payment.cardNumber) {
+				alert("Please enter a valid card number");
+			}
+
+			modals.resolve($scope.payment);
+		};
+
+		$scope.paymentCancel = modals.reject;
+	}
 );
 
 // manages the modals within the application
@@ -661,7 +889,7 @@ app.service("modals",
             // reference to the DOM, we are going to use events to communicate
             // with a directive that will help manage the DOM elements that
             // render the modal windows.
-            
+
             // NOTE: We could have accomplished this with a $watch() binding in
             // the directive; but, that would have been a poor choice since it
             // would require a chronic watching of acute application events.
@@ -717,7 +945,7 @@ app.service("modals",
 );
 
 
-// Manages the views that are required to render the modal windows. 
+// Manages the views that are required to render the modal windows.
 // It doesn't actually define the modals in anyway - it simply decides which DOM sub-tree
 // should be linked. The means by which the modal window is defined is entirely up to the developer.
 app.directive("bnModals",

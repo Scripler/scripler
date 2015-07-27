@@ -148,18 +148,26 @@ function createController($scope, $http, projectsService, userService, $q, user,
     };
 
 	$scope.getNewProjectClass = function() {
-		var canCreateProject = utilsService.canCreateProject(user.level, $scope.projects);
-		var newProjectClass = canCreateProject ? 'project new' : 'project upgrade';
-		return newProjectClass;
+		if ($scope.user) {
+			var canCreateProject = utilsService.canCreateProject($scope.user.level, $scope.projects);
+			var newProjectClass = canCreateProject ? 'project new' : 'project upgrade';
+			return newProjectClass;
+		} else {
+			return 'project new';
+		}
 	};
 
 	$scope.canLoadProject = function(project) {
-		// TODO: is there a more elegant way to get a specific object attribute from an array of objects?
-		var projectIds = [];
-		for (var i=0; i<$scope.projects.length; i++) {
-			projectIds[i] = $scope.projects[i]._id;
+		var canLoadProject = false;
+		if ($scope.user) {
+			// TODO: is there a more elegant way to get a specific object attribute from an array of objects?
+			var projectIds = [];
+			for (var i=0; i<$scope.projects.length; i++) {
+				projectIds[i] = $scope.projects[i]._id;
+			}
+			canLoadProject = utilsService.canLoadProject($scope.user.level, projectIds, project._id);
 		}
-		return utilsService.canLoadProject(user.level, projectIds, project._id);
+		return canLoadProject;
 	};
 
 	$scope.archiveProject = function(project) {

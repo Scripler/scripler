@@ -48,7 +48,8 @@ var UserSchema = new Schema({
 			date: { type: Date, default: Date.now },
 			type: { type: String, enum: ['recurring', 'single'] },
 			description: { type: String}
-		}]
+		}],
+		cancelled: { type: Boolean, default: false }
 	}
 });
 

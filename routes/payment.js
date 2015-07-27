@@ -221,7 +221,7 @@ exports.create_subscription = function (req, res, next) {
 						logger.error("CRITICAL! Could not update subscription information on user " + user.id + ", for subscription id " + subscriptionId + ". Error: " + JSON.stringify(err));
 						return next(err);
 					};
-					res.send({});
+					res.send({user: utils.cleanUserObject(user)});
 				});
 			} else {
 				return next(result);
@@ -272,7 +272,7 @@ exports.create_subscription = function (req, res, next) {
 		};
 		gateway.customer.create(customerRequest, function (err, result) {
 			if (err) {
-				return next("Could not create Braitree customer: " + err.name);
+				return next("Could not create Braintree customer: " + err.name);
 			}
 			if (result.success) {
 				user.payment.customerId = result.customer.id;
@@ -291,7 +291,14 @@ exports.cancel_subscription = function (req, res, next) {
 		gateway.subscription.cancel(user.payment.subscriptionId, function (err, result) {
 			if (result.success) {
 				// All good. We will notify the customer by email when we get the cancellation confirmation from Braintree through webhook.
-				res.send({});
+				user.payment.cancelled = true;
+				user.save(function (err) {
+					if (err) {
+						return next(err);
+					} else {
+						res.send({user: utils.cleanUserObject(user)});
+					}
+				})
 			} else {
 				return next( {message: result.message, status: 591} );
 			}
