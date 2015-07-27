@@ -27,42 +27,63 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		    upgradePromise.then(
 			        function handleResolve(response) {
 						if (response) {
+							var title;
+							var text;
+							var type = "error";
+							var confirmButtonText = "OK";
+
 							if (response == 'premium') {
 								// TODO: should we just create one token when the page loads that can be used for both payment and downgrade?
 								paymentService.setClient($window.braintree, function (err) {
+									title = "Could not cancel subscription";
+
 									if (err) {
+										text = err.errorMessage;
 										swal({
-											title: "Could not cancel subscription",
-											text: err.errorMessage,
-											type: "error",
-											confirmButtonText: "OK"
+											title: title,
+											text: text,
+											type: type,
+											confirmButtonText: confirmButtonText
 										});
 									} else {
-										paymentService.cancelSubscription($scope.user, function (err, data) {
-											if (err) {
-												swal({
-													title: "Could not cancel subscription",
-													text: err.errorMessage,
-													type: "error",
-													confirmButtonText: "OK"
-												});
-											} else {
-												if (data) {
-													$scope.user.payment.cancelled = data.user.payment.cancelled;
-												}
-
-												var confirmationPromise = modals.open("confirmation");
-												confirmationPromise.then(
-													function handleResolve(response) {
-													},
-													function handleReject(error) {
-														if (error) console.log("An error occurred closing the confirmation window: " + JSON.stringify(error));
+										if (err) {
+											swal({
+												title: title,
+												text: text,
+												type: type,
+												confirmButtonText: confirmButtonText
+											});
+										} else {
+											paymentService.cancelSubscription($scope.user, function (err, data) {
+												if (err) {
+													text = err.errorMessage;
+													swal({
+														title: title,
+														text: text,
+														type: type,
+														confirmButtonText: confirmButtonText
+													});
+												} else {
+													if (data && data.user.level != 'free' && data.user.payment.cancelled) {
+														$scope.user.payment.cancelled = data.user.payment.cancelled;
+														swal({
+															title: "Subscription cancelled",
+															// TODO: get the date on which the user's premium subscription expires
+															text: "Your subscription has now been cancelled. You will remain Premium until your subscription expires.",
+															type: "success",
+															confirmButtonText: confirmButtonText
+														});
+													} else {
+														swal({
+															title: title,
+															text: text,
+															type: type,
+															confirmButtonText: confirmButtonText
+														});
 													}
-												);
-
-											}
-
-										});
+												}
+											});
+										}
 									}
 								});
 							} else if (response == 'free') {
@@ -73,12 +94,15 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 								paymentPromise.then(
 									function handleResolve(response) {
 										paymentService.setClient($window.braintree, function (err) {
+											title = "Could not create subscription";
+
 											if (err) {
+												text = err.errorMessage;
 												swal({
-													title: "Could not create subscription",
-													text: err.errorMessage,
-													type: "error",
-													confirmButtonText: "OK"
+													title: title,
+													text: text,
+													type: type,
+													confirmButtonText: confirmButtonText
 												});
 											} else {
 												var paymentCardNumber = response.cardNumber;
@@ -86,27 +110,31 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 												var cvv = response.cvv;
 												paymentService.createSubscription(paymentCardNumber, expirationDate, cvv, function (err, data) {
 													if (err) {
+														text = err.errorMessage;
 														swal({
-															title: "Could not create subscription",
-															text: err.errorMessage,
-															type: "error",
-															confirmButtonText: "OK"
+															title: title,
+															text: text,
+															type: type,
+															confirmButtonText: confirmButtonText
 														});
 													} else {
-														if (data) {
+														if (data && data.user.level == 'premium' && !data.user.payment.cancelled) {
 															$scope.user.level = data.user.level;
+															swal({
+																title: "Subscription created",
+																text: "Your payment has been received and your subscription created. You will receive a confirmation email shortly.",
+																type: "success",
+																confirmButtonText: confirmButtonText
+															});
+														} else {
+															swal({
+																title: title,
+																text: text,
+																type: type,
+																confirmButtonText: confirmButtonText
+															});
 														}
-
-														var confirmationPromise = modals.open("confirmation");
-														confirmationPromise.then(
-															function handleResolve(response) {
-															},
-															function handleReject(error) {
-																if (error) console.log("An error occurred closing the confirmation window: " + JSON.stringify(error));
-															}
-														);
 													}
-
 												});
 											}
 										});
@@ -770,23 +798,6 @@ app.controller("PaymentModalController",
 
 		$scope.paymentCancel = modals.reject;
 	}
-);
-
-app.controller("UpgradeDowngradeConfirmationController", [ '$scope', 'modals',
-	function( $scope, modals ) {
-		if ($scope.user.level == 'premium' && !$scope.user.payment.cancelled) {
-			$scope.upgradeDowngradeConfirmationMessage = 'Your payment has been received and your subscription created. You will receive a confirmation email shortly.';
-		} else if ($scope.user.level != 'free' && $scope.user.payment.cancelled) { // User's level does not change until the subscription has expired so level is not 'free' yet
-			// TODO: get the date on which the user's premium subscription expires
-			$scope.upgradeDowngradeConfirmationMessage = "Your subscription has now been cancelled. You will remain Premium until your subscription expires.";
-		} else {
-			console.log('ERROR in UpgradeDowngradeConfirmationController: user\'s level was not "premium" or the "cancelled" flag was not set');
-		}
-
-		//$scope.upgradeDowngradeConfirmationMessage = $scope.user.level && $scope.user.level == 'free' ? "Your account has now been downgraded" : 'Your payment has been received and your subscription created. You will receive a confirmation email shortly.';
-
-		$scope.confirmationClose = modals.resolve;
-	}]
 );
 
 // manages the modals within the application
