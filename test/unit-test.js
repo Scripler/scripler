@@ -99,7 +99,7 @@ describe('shared_utils', function () {
 		result = shared_utils.canCreateProject("free", []);
 		assert.equal(true, result);
 
-		result = shared_utils.canCreateProject("free", ["111", "222", "333", "444"]);
+		result = shared_utils.canCreateProject("free", ["111", "222"]);
 		assert.equal(true, result);
 
 		result = shared_utils.canCreateProject("free", ["111", "222", "333", "444", "555"]);
@@ -115,23 +115,23 @@ describe('shared_utils', function () {
 		result = shared_utils.canLoadProject("premiummy", ["111", "222", "333", "444", "555"], "222");
 		assert.equal(false, result);
 
-		result = shared_utils.canLoadProject("free", ["111", "222", "333", "444", "555"], "222");
+		result = shared_utils.canLoadProject("free", ["111", "222", "333"], "222");
 		assert.equal(true, result);
 
 		result = shared_utils.canLoadProject("free", ["111", "222", "333", "444", "555", "666"], "666");
 		assert.equal(false, result);
 
-		result = shared_utils.canLoadProject("free", ["111", "222", "333", "444", "555"], "666");
+		result = shared_utils.canLoadProject("free", ["111", "222", "333"], "666");
 		assert.equal(false, result);
 
 		result = shared_utils.canLoadProject("free", [], "666");
 		assert.equal(false, result);
 
-		result = shared_utils.canLoadProject("free", ["51f782eced72a29c19000004", "51f78a9d0f9ea7e81c000005", "5249b768606c41b815000008", "5316f7783527c1f021000004", "5336f2756dde8c0804000004"], "5316f7783527c1f021000004");
+		result = shared_utils.canLoadProject("free", ["5316f7783527c1f021000004", "5336f2756dde8c0804000004"], "5316f7783527c1f021000004");
 		assert.equal(true, result);
 
 		result = shared_utils.canLoadProject("free", ["51f782eced72a29c19000004", "51f78a9d0f9ea7e81c000005", "5249b768606c41b815000008", "5316f7783527c1f021000004", "5336f2756dde8c0804000004", "5336ef0cd075d6c820000005"], "5336ef0cd075d6c820000005");
-		assert.equal(true, result);
+		assert.equal(false, result);
 
 		result = shared_utils.canLoadProject("free", ["51f782eced72a29c19000004", "51f78a9d0f9ea7e81c000005", "5249b768606c41b815000008", "5316f7783527c1f021000004", "5336f2756dde8c0804000004", "5336ef0cd075d6c820000005"], "5336f2756dde8c0804000004");
 		assert.equal(false, result);

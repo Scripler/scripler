@@ -1936,6 +1936,10 @@ describe('Scripler RESTful API', function () {
 			var srcImagesDir = path.join('test', 'resources', 'images');
 			var srcImage = path.join(srcImagesDir, imageName);
 
+			// HACK! Use the value from when the test was written to get the "Payment required" error (402) and not "not able to load project" (596)
+			// TODO: this should be fixed/improved, ideally by being able to inject subscription values into "shared_utils" for "dev", "test" and "prod".
+			shared_utils.subscriptions["free"].maxNumberOfProjects = 5;
+
 			request(host)
 				.post('/image/' + projectId + '/upload')
 				.set('cookie', cookie)
