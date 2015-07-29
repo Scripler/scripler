@@ -207,16 +207,16 @@
 	// TODO: should this be duplicated in config/<env>.json because we want to be able to change it without making a release?
 	var subscriptions = {
 		"free": {
-			"maxNumberOfProjects": 5,
+			"maxNumberOfProjects": 3,
 			"maxNumberOfDesigns": 3
 		},
 		"premium": {
-			"maxNumberOfProjects": 20,
+			"maxNumberOfProjects": 10,
 			"maxNumberOfDesigns": 17,
-			"monthlyPrice": "14.00"
+			"monthlyPrice": "9.99"
 		},
 		"professional": {
-			"maxNumberOfProjects": 500
+			"maxNumberOfProjects": 100
 		}
 	};
 

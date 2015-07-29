@@ -774,17 +774,15 @@ app.controller("UpgradeModalController", [ '$scope', 'modals', 'utilsService',
 				modals.reject();
 			}
 		};
-
-        // wire the modal buttons into modal resolution actions.
-		//$scope.useFree = ( params.useFree || ($scope.user.level && $scope.user.level == 'premium' ? modals.resolve : modals.reject) );
-        //$scope.usePremium = ( params.usePremium || ($scope.user.level && $scope.user.level == 'free' ? modals.resolve : modals.reject) );
     }]
 );
 
 // controls the Payment modal window
-app.controller("PaymentModalController",
-	function( $scope, modals ) {
+app.controller("PaymentModalController", [ '$scope', 'modals', 'utilsService',
+	function( $scope, modals, utilsService ) {
 		var params = modals.params();
+
+		$scope.premiumMonthlyPrice = utilsService.subscriptions.premium.monthlyPrice;
 
 		// wire the modal buttons into modal resolution actions.
 		// TODO: implement real validation of card number, expire date and cvv
@@ -797,7 +795,7 @@ app.controller("PaymentModalController",
 		};
 
 		$scope.paymentCancel = modals.reject;
-	}
+	}]
 );
 
 // manages the modals within the application
