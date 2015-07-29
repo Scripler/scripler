@@ -41,7 +41,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 										text = err.errorMessage;
 										swal({
 											title: title,
-											text: text,
+											html: text,
 											type: type,
 											confirmButtonText: confirmButtonText
 										});
@@ -49,7 +49,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 										if (err) {
 											swal({
 												title: title,
-												text: text,
+												html: text,
 												type: type,
 												confirmButtonText: confirmButtonText
 											});
@@ -59,7 +59,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 													text = err.errorMessage;
 													swal({
 														title: title,
-														text: text,
+														html: text,
 														type: type,
 														confirmButtonText: confirmButtonText
 													});
@@ -69,14 +69,14 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 														swal({
 															title: "Subscription cancelled",
 															// TODO: get the date on which the user's premium subscription expires
-															text: "Your subscription has now been cancelled. You will remain Premium until your subscription expires.",
+															html: "Your subscription has now been cancelled. You will remain Premium until your subscription expires.",
 															type: "success",
 															confirmButtonText: confirmButtonText
 														});
 													} else {
 														swal({
 															title: title,
-															text: text,
+															html: text,
 															type: type,
 															confirmButtonText: confirmButtonText
 														});
@@ -100,7 +100,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 												text = err.errorMessage;
 												swal({
 													title: title,
-													text: text,
+													html: text,
 													type: type,
 													confirmButtonText: confirmButtonText
 												});
@@ -113,7 +113,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 														text = err.errorMessage;
 														swal({
 															title: title,
-															text: text,
+															html: text,
 															type: type,
 															confirmButtonText: confirmButtonText
 														});
@@ -122,14 +122,14 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 															$scope.user.level = data.user.level;
 															swal({
 																title: "Subscription created",
-																text: "Your payment has been received and your subscription created. You will receive a confirmation email shortly.",
+																html: "Your payment has been received and your subscription created. You will receive a confirmation email shortly.",
 																type: "success",
 																confirmButtonText: confirmButtonText
 															});
 														} else {
 															swal({
 																title: title,
-																text: text,
+																html: text,
 																type: type,
 																confirmButtonText: confirmButtonText
 															});
