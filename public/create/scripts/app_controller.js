@@ -46,44 +46,36 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 											confirmButtonText: confirmButtonText
 										});
 									} else {
-										if (err) {
-											swal({
-												title: title,
-												html: text,
-												type: type,
-												confirmButtonText: confirmButtonText
-											});
-										} else {
-											paymentService.cancelSubscription($scope.user, function (err, data) {
-												if (err) {
-													text = err.errorMessage;
+										paymentService.cancelSubscription($scope.user, function (err, data) {
+											if (err) {
+												text = err.errorMessage;
+												swal({
+													title: title,
+													html: text,
+													type: type,
+													confirmButtonText: confirmButtonText
+												});
+											} else {
+												if (data && data.user.level != 'free' && data.user.payment.cancelled) {
+													$scope.user.payment.cancelled = data.user.payment.cancelled;
+													swal({
+														title: "Subscription cancelled",
+														// TODO: get the date on which the user's premium subscription expires
+														html: "Your subscription has now been cancelled. You will remain Premium until your subscription expires.",
+														type: "success",
+														confirmButtonText: confirmButtonText
+													});
+												} else {
 													swal({
 														title: title,
 														html: text,
 														type: type,
 														confirmButtonText: confirmButtonText
 													});
-												} else {
-													if (data && data.user.level != 'free' && data.user.payment.cancelled) {
-														$scope.user.payment.cancelled = data.user.payment.cancelled;
-														swal({
-															title: "Subscription cancelled",
-															// TODO: get the date on which the user's premium subscription expires
-															html: "Your subscription has now been cancelled. You will remain Premium until your subscription expires.",
-															type: "success",
-															confirmButtonText: confirmButtonText
-														});
-													} else {
-														swal({
-															title: title,
-															html: text,
-															type: type,
-															confirmButtonText: confirmButtonText
-														});
-													}
 												}
-											});
-										}
+											}
+										});
+
 									}
 								});
 							} else if (response == 'free') {
