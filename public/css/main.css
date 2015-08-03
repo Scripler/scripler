@@ -427,6 +427,9 @@ input#mc-embedded-subscribe{
 	font-size: 0.7em;
     padding-left: 10px;
 }
+
+@media (max-width:850px){#login-extras{padding-left:0;}}
+
 .login-main{
 	float: none;
 }
