@@ -993,6 +993,127 @@ app.directive('paymentInput', function($timeout, $parse) {
 		});
 	};
 
+	function restrictExpiry(e) {
+		var $target, digit, value;
+		$target = e.currentTarget;
+		digit = String.fromCharCode(e.which);
+		if (!/^\d+$/.test(digit)) {
+			return;
+		}
+		if (hasTextSelected($target)) {
+			return;
+		}
+		value = $target.value + digit;
+		value = value.replace(/\D/g, '');
+		if (value.length > 6) {
+			return false;
+		}
+	};
+
+	function formatExpiry(e) {
+		var $target, digit, val;
+		digit = String.fromCharCode(e.which);
+		if (!/^\d+$/.test(digit)) {
+			return;
+		}
+		$target = e.currentTarget;
+		val = $target.value + digit;
+		if (/^\d$/.test(val) && (val !== '0' && val !== '1')) {
+			e.preventDefault();
+			return setTimeout(function() {
+				$target.value = "0" + val + " / ";
+				return;
+			});
+		} else if (/^\d\d$/.test(val)) {
+			e.preventDefault();
+			return setTimeout(function() {
+				$target.value = "" + val + " / ";
+				return;
+			});
+		}
+	};
+
+	function formatForwardSlashAndSpace(e) {
+		var $target, val, which;
+		which = String.fromCharCode(e.which);
+		if (!(which === '/' || which === ' ')) {
+			return;
+		}
+		$target = e.currentTarget;
+		val = $target.value;
+		if (/^\d$/.test(val) && val !== '0') {
+			$target.value = "0" + val + " / ";
+			return;
+		}
+	};
+
+	function formatForwardExpiry(e) {
+		var $target, digit, val;
+		digit = String.fromCharCode(e.which);
+		if (!/^\d+$/.test(digit)) {
+			return;
+		}
+		$target = e.currentTarget;
+		val = $target.value;
+		if (/^\d\d$/.test(val)) {
+			$target.value = "" + val + " / ";
+			return;
+		}
+	};
+
+	function formatBackExpiry(e) {
+		var $target, value;
+		$target = e.currentTarget;
+		value = $target.value;
+		if (e.which !== 8) {
+			return;
+		}
+		if (($target.selectionStart != null) && $target.selectionStart !== value.length) {
+			return;
+		}
+		if (/\d\s\/\s$/.test(value)) {
+			e.preventDefault();
+			return setTimeout(function() {
+				$target.value = value.replace(/\d\s\/\s$/, '');
+				return;
+			});
+		}
+	};
+
+	function formatExpiryValue(expiry) {
+		var mon, parts, sep, year;
+		parts = expiry.match(/^\D*(\d{1,2})(\D+)?(\d{1,4})?/);
+		if (!parts) {
+			return '';
+		}
+		mon = parts[1] || '';
+		sep = parts[2] || '';
+		year = parts[3] || '';
+		if (year.length > 0) {
+			sep = ' / ';
+		} else if (sep === ' /') {
+			mon = mon.substring(0, 1);
+			sep = '';
+		} else if (mon.length === 2 || sep.length > 0) {
+			sep = ' / ';
+		} else if (mon.length === 1 && (mon !== '0' && mon !== '1')) {
+			mon = "0" + mon;
+			sep = ' / ';
+		}
+		return mon + sep + year;
+	};
+
+	function reFormatExpiry(e) {
+		return setTimeout(function() {
+			var $target, value;
+			$target = e.target;
+			value = $target.value;
+			value = formatExpiryValue(value);
+			$target.value = value;
+			return;
+		});
+	};
+
 	// TODO: remove if below "link" implementation works
 	function validate(event, paymentInput) {
 		console.log(event);
@@ -1006,9 +1127,6 @@ app.directive('paymentInput', function($timeout, $parse) {
 	return {
 		link: function( scope, element, attrs ) {
 			if (element[0].id == 'paymentCardNumber') {
-
-				// TODO: use bind() or on()? And on element or element[0]? Should be element[0] but it throws a "element[0].bind/on is not a function"
-
 				element.on('keypress', function(event) {
 					restrictNumeric(event);
 				});
@@ -1019,7 +1137,7 @@ app.directive('paymentInput', function($timeout, $parse) {
 					formatCardNumber(event);
 				});
 				element.on('keydown', function(event) {
-					// TODO: this function eats digits because e.which === 8
+					// TODO: this function eats digits because e.which === 8 (keycode for backspace)
 					//formatBackCardNumber(event);
 				});
 				element.on('paste', function(event) {
@@ -1032,6 +1150,30 @@ app.directive('paymentInput', function($timeout, $parse) {
 					reFormatCardNumber(event);
 				});
 			} else if (element[0].id == 'paymentExpirationDate') {
+				element.on('keypress', function(event) {
+					restrictNumeric(event);
+				});
+				element.on('keypress', function(event) {
+					restrictExpiry(event);
+				});
+				element.on('keypress', function(event) {
+					formatExpiry(event);
+				});
+				element.on('keypress', function(event) {
+					formatForwardSlashAndSpace(event);
+				});
+				element.on('keypress', function(event) {
+					formatForwardExpiry(event);
+				});
+				element.on('keydown', function(event) {
+					formatBackExpiry(event);
+				});
+				element.on('change', function(event) {
+					reFormatExpiry(event);
+				});
+				element.on('input', function(event) {
+					reFormatExpiry(event);
+				});
 
 			} else if (element[0].id == 'paymentCvv') {
 
