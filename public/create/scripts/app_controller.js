@@ -27,33 +27,39 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		    upgradePromise.then(
 			        function handleResolve(response) {
 						if (response) {
-							var title;
-							var text;
-							var type = "error";
-							var confirmButtonText = "OK";
+							var alertTitle;
+							var alertHtml;
+							var alertType = "error";
+							var alertConfirmButtonText = "OK";
 
 							if (response == 'premium') {
 								// TODO: should we just create one token when the page loads that can be used for both payment and downgrade?
 								paymentService.setClient($window.braintree, function (err) {
-									title = "Could not cancel subscription";
+									alertTitle = "Could not cancel subscription";
 
 									if (err) {
-										text = err.errorMessage;
+										alertHtml = err.errorMessage;
 										swal({
-											title: title,
-											html: text,
-											type: type,
-											confirmButtonText: confirmButtonText
+											title: alertTitle,
+											html: alertHtml,
+											type: alertType,
+											confirmButtonText: alertConfirmButtonText,
+											allowEscapeKey: true,
+											confirmButtonColor: "#fff56c",
+											cancelButtonColor: "#f3f3f3"
 										});
 									} else {
 										paymentService.cancelSubscription($scope.user, function (err, data) {
 											if (err) {
-												text = err.errorMessage;
+												alertHtml = err.errorMessage;
 												swal({
-													title: title,
-													html: text,
-													type: type,
-													confirmButtonText: confirmButtonText
+													title: alertTitle,
+													html: alertHtml,
+													type: alertType,
+													confirmButtonText: alertConfirmButtonText,
+													allowEscapeKey: true,
+													confirmButtonColor: "#fff56c",
+													cancelButtonColor: "#f3f3f3"
 												});
 											} else {
 												if (data && data.user.level != 'free' && data.user.payment.cancelled) {
@@ -63,14 +69,17 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 														// TODO: get the date on which the user's premium subscription expires
 														html: "Your subscription has now been cancelled. You will remain Premium until your subscription expires.",
 														type: "success",
-														confirmButtonText: confirmButtonText
+														confirmButtonText: alertConfirmButtonText
 													});
 												} else {
 													swal({
-														title: title,
-														html: text,
-														type: type,
-														confirmButtonText: confirmButtonText
+														title: alertTitle,
+														html: alertHtml,
+														type: alertType,
+														confirmButtonText: alertConfirmButtonText,
+														allowEscapeKey: true,
+														confirmButtonColor: "#fff56c",
+														cancelButtonColor: "#f3f3f3"
 													});
 												}
 											}
@@ -86,15 +95,18 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 								paymentPromise.then(
 									function handleResolve(response) {
 										paymentService.setClient($window.braintree, function (err) {
-											title = "Could not create subscription";
+											alertTitle = "Could not create subscription";
 
 											if (err) {
-												text = err.errorMessage;
+												alertHtml = err.errorMessage;
 												swal({
-													title: title,
-													html: text,
-													type: type,
-													confirmButtonText: confirmButtonText
+													title: alertTitle,
+													html: alertHtml,
+													type: alertType,
+													confirmButtonText: alertConfirmButtonText,
+													allowEscapeKey: true,
+													confirmButtonColor: "#fff56c",
+													cancelButtonColor: "#f3f3f3"
 												});
 											} else {
 												var paymentCardNumber = response.cardNumber;
@@ -102,12 +114,15 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 												var cvv = response.cvv;
 												paymentService.createSubscription(paymentCardNumber, expirationDate, cvv, function (err, data) {
 													if (err) {
-														text = err.errorMessage;
+														alertHtml = err.errorMessage;
 														swal({
-															title: title,
-															html: text,
-															type: type,
-															confirmButtonText: confirmButtonText
+															title: alertTitle,
+															html: alertHtml,
+															type: alertType,
+															confirmButtonText: alertConfirmButtonText,
+															allowEscapeKey: true,
+															confirmButtonColor: "#fff56c",
+															cancelButtonColor: "#f3f3f3"
 														});
 													} else {
 														if (data && data.user.level == 'premium' && !data.user.payment.cancelled) {
@@ -116,14 +131,20 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 																title: "Subscription created",
 																html: "Your payment has been received and your subscription created. You will receive a confirmation email shortly.",
 																type: "success",
-																confirmButtonText: confirmButtonText
+																confirmButtonText: alertConfirmButtonText,
+																allowEscapeKey: true,
+																confirmButtonColor: "#fff56c",
+																cancelButtonColor: "#f3f3f3"
 															});
 														} else {
 															swal({
-																title: title,
-																html: text,
-																type: type,
-																confirmButtonText: confirmButtonText
+																title: alertTitle,
+																html: alertHtml,
+																type: alertType,
+																confirmButtonText: alertConfirmButtonText,
+																allowEscapeKey: true,
+																confirmButtonColor: "#fff56c",
+																cancelButtonColor: "#f3f3f3"
 															});
 														}
 													}
@@ -726,6 +747,299 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 	};
 });
 
+app.directive('paymentInput', function($timeout, $parse) {
+	var defaultFormat = /(\d{1,4})/g;
+
+	var cards = [
+		{
+			type: 'visaelectron',
+			pattern: /^4(026|17500|405|508|844|91[37])/,
+			format: defaultFormat,
+			length: [16],
+			cvcLength: [3],
+			luhn: true
+		}, {
+			type: 'maestro',
+			pattern: /^(5(018|0[23]|[68])|6(39|7))/,
+			format: defaultFormat,
+			length: [12, 13, 14, 15, 16, 17, 18, 19],
+			cvcLength: [3],
+			luhn: true
+		}, {
+			type: 'forbrugsforeningen',
+			pattern: /^600/,
+			format: defaultFormat,
+			length: [16],
+			cvcLength: [3],
+			luhn: true
+		}, {
+			type: 'dankort',
+			pattern: /^5019/,
+			format: defaultFormat,
+			length: [16],
+			cvcLength: [3],
+			luhn: true
+		}, {
+			type: 'visa',
+			pattern: /^4/,
+			format: defaultFormat,
+			length: [13, 16],
+			cvcLength: [3],
+			luhn: true
+		}, {
+			type: 'mastercard',
+			pattern: /^5[0-5]/,
+			format: defaultFormat,
+			length: [16],
+			cvcLength: [3],
+			luhn: true
+		}, {
+			type: 'amex',
+			pattern: /^3[47]/,
+			format: /(\d{1,4})(\d{1,6})?(\d{1,5})?/,
+			length: [15],
+			cvcLength: [3, 4],
+			luhn: true
+		}, {
+			type: 'dinersclub',
+			pattern: /^3[0689]/,
+			format: defaultFormat,
+			length: [14],
+			cvcLength: [3],
+			luhn: true
+		}, {
+			type: 'discover',
+			pattern: /^6([045]|22)/,
+			format: defaultFormat,
+			length: [16],
+			cvcLength: [3],
+			luhn: true
+		}, {
+			type: 'unionpay',
+			pattern: /^(62|88)/,
+			format: defaultFormat,
+			length: [16, 17, 18, 19],
+			cvcLength: [3],
+			luhn: false
+		}, {
+			type: 'jcb',
+			pattern: /^35/,
+			format: defaultFormat,
+			length: [16],
+			cvcLength: [3],
+			luhn: true
+		}
+	];
+
+	function restrictNumeric(e) {
+		var input;
+		if (e.metaKey || e.ctrlKey) {
+			return true;
+		}
+		if (e.which === 32) {
+			return false;
+		}
+		if (e.which === 0) {
+			return true;
+		}
+		if (e.which < 33) {
+			return true;
+		}
+		input = String.fromCharCode(e.which);
+		return !!/[\d\s]/.test(input);
+	};
+
+	function hasTextSelected($target) {
+		var _ref;
+		if (($target.selectionStart != null) && $target.selectionStart !== $target.selectionEnd) {
+			return true;
+		}
+		if ((typeof document !== "undefined" && document !== null ? (_ref = document.selection) != null ? _ref.createRange : void 0 : void 0) != null) {
+			if (document.selection.createRange().text) {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	function cardFromNumber(num) {
+		var card, _i, _len;
+		num = (num + '').replace(/\D/g, '');
+		for (_i = 0, _len = cards.length; _i < _len; _i++) {
+			card = cards[_i];
+			if (card.pattern.test(num)) {
+				return card;
+			}
+		}
+	};
+
+	function restrictCardNumber(e) {
+		var $target, card, digit, value;
+		$target = e.currentTarget;
+		digit = String.fromCharCode(e.which);
+		if (!/^\d+$/.test(digit)) {
+			return;
+		}
+		if (hasTextSelected($target)) {
+			return;
+		}
+		value = ($target.value + digit).replace(/\D/g, '');
+		card = cardFromNumber(value);
+		if (card) {
+			return value.length <= card.length[card.length.length - 1];
+		} else {
+			return value.length <= 16;
+		}
+	};
+
+	function formatCardNumberValue(num) {
+		var card, groups, upperLength, _ref;
+		num = num.replace(/\D/g, '');
+		card = cardFromNumber(num);
+		if (!card) {
+			return num;
+		}
+		upperLength = card.length[card.length.length - 1];
+		num = num.slice(0, upperLength);
+		if (card.format.global) {
+			return (_ref = num.match(card.format)) != null ? _ref.join(' ') : void 0;
+		} else {
+			groups = card.format.exec(num);
+			if (groups == null) {
+				return;
+			}
+			groups.shift();
+			// TODO: fix
+			groups = $.grep(groups, function(n) {
+				return n;
+			});
+			return groups.join(' ');
+		}
+	};
+
+	function formatCardNumber(e) {
+		var $target, card, digit, length, re, upperLength, value;
+		digit = String.fromCharCode(e.which);
+		if (!/^\d+$/.test(digit)) {
+			return;
+		}
+		$target = e.currentTarget;
+		value = $target.value;
+		card = cardFromNumber(value + digit);
+		length = (value.replace(/\D/g, '') + digit).length;
+		upperLength = 16;
+		if (card) {
+			upperLength = card.length[card.length.length - 1];
+		}
+		if (length >= upperLength) {
+			return;
+		}
+		if (($target.selectionStart != null) && $target.selectionStart !== value.length) {
+			return;
+		}
+		if (card && card.type === 'amex') {
+			re = /^(\d{4}|\d{4}\s\d{6})$/;
+		} else {
+			re = /(?:^|\s)(\d{4})$/;
+		}
+		if (re.test(value)) {
+			e.preventDefault();
+			return setTimeout(function() {
+				$target.value = value + ' ' + digit;
+				return;
+			});
+		} else if (re.test(value + digit)) {
+			e.preventDefault();
+			return setTimeout(function() {
+				$target.value = value + digit + ' ';
+				return;
+			});
+		}
+	};
+
+	function formatBackCardNumber(e) {
+		var $target, value;
+		$target = e.currentTarget;
+		value = $target.value;
+		if (e.which !== 8) {
+			return;
+		}
+		if (($target.selectionStart != null) && $target.selectionStart !== value.length) {
+			return;
+		}
+		if (/\d\s$/.test(value)) {
+			e.preventDefault();
+			return setTimeout(function() {
+				$target.value = value.replace(/\d\s$/, '');
+				return;
+			});
+		} else if (/\s\d?$/.test(value)) {
+			e.preventDefault();
+			return setTimeout(function() {
+				$target.value = value.replace(/\d$/, '');
+				return;
+			});
+		}
+	};
+
+	function reFormatCardNumber(e) {
+		return setTimeout(function() {
+			var $target, value;
+			$target = e.target;
+			value = $target.value;
+			value = formatCardNumberValue(value);
+			$target.value = value;
+			return;
+		});
+	};
+
+	// TODO: remove if below "link" implementation works
+	function validate(event, paymentInput) {
+		console.log(event);
+		console.log(paymentInput);
+
+		formatCardNumber(event);
+		//formatCardNumber(paymentInput.expirationDate);
+		//formatCardNumber(paymentInput.cvv);
+	}
+
+	return {
+		link: function( scope, element, attrs ) {
+			if (element[0].id == 'paymentCardNumber') {
+
+				// TODO: use bind() or on()? And on element or element[0]? Should be element[0] but it throws a "element[0].bind/on is not a function"
+
+				element.on('keypress', function(event) {
+					restrictNumeric(event);
+				});
+				element.on('keypress', function(event) {
+					restrictCardNumber(event);
+				});
+				element.on('keypress', function(event) {
+					formatCardNumber(event);
+				});
+				element.on('keydown', function(event) {
+					// TODO: this function eats digits because e.which === 8
+					//formatBackCardNumber(event);
+				});
+				element.on('paste', function(event) {
+					reFormatCardNumber(event);
+				});
+				element.on('change', function(event) {
+					reFormatCardNumber(event);
+				});
+				element.on('input', function(event) {
+					reFormatCardNumber(event);
+				});
+			} else if (element[0].id == 'paymentExpirationDate') {
+
+			} else if (element[0].id == 'paymentCvv') {
+
+			}
+		}
+	};
+});
+
 
 /*****
  *
@@ -772,20 +1086,10 @@ app.controller("UpgradeModalController", [ '$scope', 'modals', 'utilsService',
 // controls the Payment modal window
 app.controller("PaymentModalController", [ '$scope', 'modals', 'utilsService',
 	function( $scope, modals, utilsService ) {
-		var params = modals.params();
-
 		$scope.premiumMonthlyPrice = utilsService.subscriptions.premium.monthlyPrice;
-
-		// wire the modal buttons into modal resolution actions.
-		// TODO: implement real validation of card number, expire date and cvv
 		$scope.paymentUpgrade = function() {
-			if (!$scope.payment.cardNumber) {
-				alert("Please enter a valid card number");
-			}
-
 			modals.resolve($scope.payment);
 		};
-
 		$scope.paymentCancel = modals.reject;
 	}]
 );

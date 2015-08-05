@@ -45,16 +45,16 @@
 					<br>
 					<span><p class="top-text-card">Card number</p></span>
 					<p class="card-number">
-						<input class="inputCardNumber" id="paymentCardNumber" ng-model="payment.cardNumber" type="tel" placeholder="•••• •••• •••• ••••" autocompletetype="cc-number" required="required" />
+						<input class="paymentCardNumber" id="paymentCardNumber" ng-model="payment.cardNumber" type="tel" placeholder="•••• •••• •••• ••••" autocompletetype="cc-number" required="required" payment-input />
 					</p>
 					<span>
 						<div class="paymentAir" id="paymentAir">
 							<p class="top-text-expires-cvc">Expires</p>
-							<input class="inputExpiresCVC" id="paymentExpirationDate" ng-model="payment.expirationDate" type="tel" placeholder="MM / YY" autocompletetype="cc-exp" required="required" />
+							<input class="paymentExpiresCVC" id="paymentExpirationDate" ng-model="payment.expirationDate" type="tel" placeholder="MM / YY" autocompletetype="cc-exp" required="required" payment-input />
 						</div>
 						<div class="paymentAir" id="paymentAir">
 							<p class="top-text-expires-cvc">CVC/CVV&emsp;<a href=""><img src="pages/images/questionmark_icon.png"></a></p>
-							<input class="inputExpiresCVC" id="paymentCvv" ng-model="payment.cvv" type="tel" placeholder="CVC" autocompletetype="cc-cvc" required="required" />
+							<input class="paymentExpiresCVC" id="paymentCvv" ng-model="payment.cvv" type="tel" placeholder="CVC" autocompletetype="cc-cvc" required="required" payment-input />
 						</div>
 					</span>
 					<p>

@@ -45,19 +45,16 @@
 }
 
 #socialicons{
-	margin-top: 10px;
+	margin-top: 13px;
 }
 
 a.socialicon {
 	margin: 0 10px 0 0;
-	padding-top: 8px;
-	padding-bottom: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
+	padding: 6px;
 	width: 40px;
 	height: 40px;
 	background-color: #fff; 
-	font-size: 22px; 
+	font-size: 18px; 
 	color: #c6c6c6;
 	text-decoration: none;
 }
@@ -100,8 +97,12 @@ nav {
 
 #scripler .container{
 	padding:0;
-	width:1040px;
 }
+
+@media (min-width: 1200px) {#scripler .container{width:74%}}
+@media (min-width: 992px) {#scripler .container{width:74%}}
+@media (min-width: 850px) {#scripler .container{width:74%}}
+@media (max-width: 850px) {#scripler .container{width:90%}}
 
 #scripler .scripler-logo {
 	margin: 0 auto 20px;
@@ -110,10 +111,10 @@ nav {
 #scripler .test-alpha {
 	background-color: #fff56c;
 	color: #000;
-	font-size: 2.5em;
+	font-size: 1.8em;
 	font-weight: 900;
 	border: none;
-	margin: 15px;
+	margin-bottom: 15px;
 	padding: 10px 40px;
 }
 
@@ -129,11 +130,29 @@ nav {
 }
 #features p {
 	color: #fff;
+	padding-left: 140px;
 }
 #features .container{
 	width:1040px;
 	padding:0;
 }
+
+@media (max-width: 850px) {#features .container{width:90%;}}
+
+.features-right{
+	float: right;
+	padding-right: 50px;
+}
+
+@media (max-width: 850px) {.features-right{padding-right:0;float:left;}}
+
+.features-left{
+	float: left;
+	padding-left: 50px;
+}
+
+@media (max-width: 850px) {.features-left{padding-left:0;}}
+
 #features .row .col-xs-12, #features .row .col-md-6{
 	padding-left:0;
 	padding-right:0;
@@ -158,6 +177,8 @@ nav {
 	display:inline-block;
 	padding-left:25px;
 }
+
+@media (max-width: 850px) {.planChoice{width:320px;}}
 
 .planChoice p{
 	font-size: 20px;
@@ -203,6 +224,8 @@ nav {
 	width:1040px;
 }
 
+@media (max-width: 850px) {#pricing .container{width:90%;}}
+
 #price p{
 	font-size:32px;
 	padding-right: 10px;
@@ -222,6 +245,8 @@ nav {
 	padding:0;
 	width:1040px;
 }
+
+@media (max-width: 850px) {#about .container{width:90%;}}
 
 #about h2, #about h4.text-color-black {
 	color: #000;
@@ -243,9 +268,10 @@ nav {
 	width:1040px;
 }
 
+@media (max-width: 850px) {#contact .container{width:90%;}}
+
 #contact h2 {
-	font-size: 1.8em;
-	padding-left: 25px;
+	font-size: 1.6em;
 	color: #000;
 	line-height: 0.7em;
 	font-weight: 700;
@@ -311,9 +337,25 @@ ul.navList li>a{
 	font-size: 1.2em;
 	color:#000;
 }
+
+.hide{
+	visibility: visible;
+} 
+
+@media (max-width:850px){.hide{visibility:hidden;display:none;}}
+@media (min-width:851px){.hide{visibility: visible;}}
+
+.hide-logo{
+	visibility: hidden;
+} 
+
+@media (max-width:850px){.hide-logo{visibility: visible;}}
+@media (min-width:851px){.hide-logo{visibility: hidden;display:none;}}
+
+
 ul.navList li>a:hover{
 	background-color: #fff;
-	color:#666;
+	color: #666;
 } 
 
 .nav>li>a:hover, .nav>li>a:focus {
@@ -321,11 +363,11 @@ ul.navList li>a:hover{
 }
 
 .nav .blog-link:hover, .nav .blog-link:focus{
-	background-color: #000;
+	color: #666;
 }
 
 .nav .talk-link:hover, .nav .talk-link:focus{
-	background-color: #ccc;
+	color: #666;
 }
 
 a#signUp{
@@ -341,14 +383,15 @@ input#mc-embedded-subscribe{
 	color:#000;
 	font-size: 1.2em;
 	font-weight: 900;
-	border:none; 
-
+	border:none;
+	padding: 0;
 }
 
 #login {
-	background-color: #c6c6c6;
+	background-color: #cccccc;
 	display:none;
-	padding-top:70px;
+	padding-top:62px;
+	padding-left:22px;
 }
 
 .email, .password {
@@ -382,12 +425,16 @@ input#mc-embedded-subscribe{
 }
 #login-extras{
 	font-size: 0.7em;
+    padding-left: 10px;
 }
+
+@media (max-width:850px){#login-extras{padding-left:0;}}
+
 .login-main{
 	float: none;
 }
 #remember{
-	margin:0;
+	margin:3px;
 	padding:0; 
 	display: inline; 
 }
@@ -396,10 +443,6 @@ input#mc-embedded-subscribe{
 }
 #remember-me-box{
 	margin-bottom: 5px;
-}
-.pull-right-on-big-screen{
-	float:right;
-	height: 100%;
 }
 
 .navbar-collapse {
@@ -413,7 +456,7 @@ input#mc-embedded-subscribe{
 }
 
 .login-main input {
-	width: 100%;
+	width: 95%;
 }
 
 .arrow-box {
@@ -465,7 +508,7 @@ input#mc-embedded-subscribe{
 
 @media (min-width:1050px){	
 	#login-wrapper {
-		margin-left: 150px;
+		margin-left: 90px;
 	}
 
 	#features p {
@@ -540,22 +583,27 @@ input#mc-embedded-subscribe{
 
 	.navbar-toggle {
 		position: fixed;
-		top:-2px;
+		top:6px;
 		right:-5px;
 		z-index: 50;
 		display: inline!important;
 	}
 	#navbar{
 		position: fixed;
-		top:42px; 
-		right: 30px;
+		top:0; 
+		right: 0;
 		background-color: #FFF;
+		width: 100%;
+		text-align: left;
+		min-height: 100vh;
+		padding-top: 50px;
 	}
 	.navbar-header img, .navbar{
 		margin-top: -20px;
 	}
 	a.navbar-brand{
 		display: none;
+		visibility: hidden;
 	}
 	a#forgot-password{
 		font-size: 1.5em;
@@ -588,7 +636,7 @@ input#mc-embedded-subscribe{
 
 @media (max-width:560px) {
 	#scripler, #features, #about {
-		padding: 20px 20px 40px;
+		padding: 20px 20px 70px;
 	}
 
 	#contact .left-column {
@@ -596,7 +644,7 @@ input#mc-embedded-subscribe{
 	}
 
 	#features .row .col-xs-12, #features .row .col-md-6{
-		max-width: 54%;
+		max-width: 33%;
 	}
 }
 

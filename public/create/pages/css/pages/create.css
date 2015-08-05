@@ -556,14 +556,14 @@ hr {
 	margin-top: 0;
 }
 
-.inputCardNumber{
+.paymentCardNumber{
 	width: 342px;
 	padding: 10px;
 	font-size: 1.2em;
 	font-family: 'Roboto', Arial, sans-serif;
 }
 
-.inputExpiresCVC{
+.paymentExpiresCVC{
 	width: 161px;
 	padding: 10px;
 	font-size: 1.2em;
