@@ -1114,6 +1114,31 @@ app.directive('paymentInput', function($timeout, $parse) {
 		});
 	};
 
+	function restrictCVC(e) {
+		var $target, digit, val;
+		$target = e.currentTarget;
+		digit = String.fromCharCode(e.which);
+		if (!/^\d+$/.test(digit)) {
+			return;
+		}
+		if (hasTextSelected($target)) {
+			return;
+		}
+		val = $target.value + digit;
+		return val.length <= 4;
+	};
+
+	function reFormatCVC(e) {
+		return setTimeout(function() {
+			var $target, value;
+			$target = e.target;
+			value = $target.value;
+			value = value.replace(/\D/g, '').slice(0, 4);
+			$target.value = value;
+			return;
+		});
+	};
+
 	// TODO: remove if below "link" implementation works
 	function validate(event, paymentInput) {
 		console.log(event);
@@ -1176,7 +1201,21 @@ app.directive('paymentInput', function($timeout, $parse) {
 				});
 
 			} else if (element[0].id == 'paymentCvv') {
-
+				element.on('keypress', function(event) {
+					restrictNumeric(event);
+				});
+				element.on('keypress', function(event) {
+					restrictCVC(event);
+				});
+				element.on('paste', function(event) {
+					reFormatCVC(event);
+				});
+				element.on('change', function(event) {
+					reFormatCVC(event);
+				});
+				element.on('input', function(event) {
+					reFormatCVC(event);
+				});
 			}
 		}
 	};
