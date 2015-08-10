@@ -118,6 +118,10 @@ nav {
 	padding: 10px 40px;
 }
 
+#scripler h1 span {
+	color: #fff;
+}
+
 #features {
 	background-color: #215660;
 }
@@ -172,7 +176,7 @@ nav {
 
 
 .planChoice{
-	width:400px;
+	width:320px;
 	height:200px;
 	display:inline-block;
 	padding-left:25px;
@@ -187,7 +191,7 @@ nav {
 
 #freePlan{
 	background: #d6d6d6;
-	margin-right:100px;
+	margin-right:20px;
 	margin-top: 50px;
 	border:4px #fff solid;
 	color: #000;
@@ -197,9 +201,13 @@ nav {
 #premiumPlan{
 	background: #f2d32c;
 	border:4px #fff56c solid;
+	margin-left:20px;
 	margin-top: 50px;
 	color: #e98f2c;
+	float: left;
 }
+
+@media (max-width: 850px) {#premiumPlan{margin-left:0}}
 
 #premiumPlan h2{
 	color: #fff56c;
@@ -207,6 +215,29 @@ nav {
 
 #premiumPlan h3{
 	color: #fff56c;
+	text-align: right;
+	margin-right: 25px;
+}
+
+#proPlan{
+	background: #0000AF;
+	margin-top: 50px;
+	border:4px #383838 solid;
+	color: #C6C6C6;
+	float: right;
+}
+
+@media (max-width: 850px) {#proPlan{float:left;}}
+
+#proPlan h2{
+	color: #fff;
+	font-weight: 900;
+}
+
+#proPlan a{
+	color: #fff;
+	font-size: 20px;
+	line-height: 1;
 	text-align: right;
 	margin-right: 25px;
 }
