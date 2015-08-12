@@ -570,6 +570,20 @@ hr {
 	font-family: 'Roboto', Arial, sans-serif;
 }
 
+.paymentItem:focus{
+	border-color: #0080CC;
+}
+
+.paymentItemValid{
+	border-color: #2ecc71;
+}
+
+.paymentItemValid:focus{
+	border-color: #2ecc71;
+	box-shadow: 0 0 .1875em #2ecc71;
+	border-width: 2px;
+}
+
 .secure-image{
 	float: right;
 	margin-right: 25px;

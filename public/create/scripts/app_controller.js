@@ -92,6 +92,8 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 								// resolved or rejected when the modal window is closed.
 								var paymentPromise = modals.open("payment");
 
+								$scope.payment = {};
+
 								paymentPromise.then(
 									function handleResolve(response) {
 										paymentService.setClient($window.braintree, function (err) {
@@ -298,13 +300,38 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 					}
 				});
 			}
-		}
+		},
 
 		/*
-		$scope.setFormScope= function(scope){
-			this.upgradePaymentFormScope = scope;
-		}
+		$scope.getPaymentCardNumberValid = function() {
+			return $scope.payment.cardNumberValid;
+		},
 		*/
+
+		$scope.setPaymentCardNumberValid = function(valid) {
+			$scope.payment.cardNumberValid = valid;
+			//$scope.$apply();
+		},
+
+		/*
+		$scope.getPaymentExpirationDateValid = function() {
+			return $scope.payment.expirationDateValid;
+		},
+		*/
+
+		$scope.setPaymentExpirationDateValid = function(valid) {
+			$scope.payment.expirationDateValid = valid;
+		},
+
+		/*
+		$scope.getPaymentCvvValid = function() {
+			return $scope.payment.cvvValid;
+		},
+		*/
+
+		$scope.setPaymentCvvValid = function(valid) {
+			$scope.payment.cvvValid = valid;
+		}
 }]);
 
 app.config( function($routeProvider, $httpProvider, $provide) {
@@ -750,6 +777,41 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 app.directive('paymentInput', function($timeout, $parse) {
 	var defaultFormat = /(\d{1,4})/g;
 
+	function hasTextSelected($target) {
+		var _ref;
+		if (($target.selectionStart != null) && $target.selectionStart !== $target.selectionEnd) {
+			return true;
+		}
+		if ((typeof document !== "undefined" && document !== null ? (_ref = document.selection) != null ? _ref.createRange : void 0 : void 0) != null) {
+			if (document.selection.createRange().text) {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	function restrictNumeric(e) {
+		var input;
+		if (e.metaKey || e.ctrlKey) {
+			return true;
+		}
+		if (e.which === 32) {
+			return false;
+		}
+		if (e.which === 0) {
+			return true;
+		}
+		if (e.which < 33) {
+			return true;
+		}
+		input = String.fromCharCode(e.which);
+		return !!/[\d\s]/.test(input);
+	};
+
+	// -----------------------------------------------------------------
+	// Card number validation
+	// -----------------------------------------------------------------
+
 	var cards = [
 		{
 			type: 'visaelectron',
@@ -831,37 +893,6 @@ app.directive('paymentInput', function($timeout, $parse) {
 		}
 	];
 
-	function restrictNumeric(e) {
-		var input;
-		if (e.metaKey || e.ctrlKey) {
-			return true;
-		}
-		if (e.which === 32) {
-			return false;
-		}
-		if (e.which === 0) {
-			return true;
-		}
-		if (e.which < 33) {
-			return true;
-		}
-		input = String.fromCharCode(e.which);
-		return !!/[\d\s]/.test(input);
-	};
-
-	function hasTextSelected($target) {
-		var _ref;
-		if (($target.selectionStart != null) && $target.selectionStart !== $target.selectionEnd) {
-			return true;
-		}
-		if ((typeof document !== "undefined" && document !== null ? (_ref = document.selection) != null ? _ref.createRange : void 0 : void 0) != null) {
-			if (document.selection.createRange().text) {
-				return true;
-			}
-		}
-		return false;
-	};
-
 	function cardFromNumber(num) {
 		var card, _i, _len;
 		num = (num + '').replace(/\D/g, '');
@@ -887,9 +918,12 @@ app.directive('paymentInput', function($timeout, $parse) {
 		card = cardFromNumber(value);
 		if (card) {
 			return value.length <= card.length[card.length.length - 1];
-		} else {
+		}
+		/*
+		else {
 			return value.length <= 16;
 		}
+		*/
 	};
 
 	function formatCardNumberValue(num) {
@@ -946,13 +980,13 @@ app.directive('paymentInput', function($timeout, $parse) {
 			e.preventDefault();
 			return setTimeout(function() {
 				$target.value = value + ' ' + digit;
-				return;
+				return true;
 			});
 		} else if (re.test(value + digit)) {
 			e.preventDefault();
 			return setTimeout(function() {
 				$target.value = value + digit + ' ';
-				return;
+				return true;
 			});
 		}
 	};
@@ -971,13 +1005,15 @@ app.directive('paymentInput', function($timeout, $parse) {
 			e.preventDefault();
 			return setTimeout(function() {
 				$target.value = value.replace(/\d\s$/, '');
-				return;
+				// TODO: $target.value = value.replace(/\d\s$/, '');
+				return true;
 			});
 		} else if (/\s\d?$/.test(value)) {
 			e.preventDefault();
 			return setTimeout(function() {
 				$target.value = value.replace(/\d$/, '');
-				return;
+				// TODO: $target.value = value.replace(/\d$/, '');
+				return true;
 			});
 		}
 	};
@@ -989,9 +1025,46 @@ app.directive('paymentInput', function($timeout, $parse) {
 			value = $target.value;
 			value = formatCardNumberValue(value);
 			$target.value = value;
-			return;
+			// TODO: return $target.value = value;
+			return true;
 		});
 	};
+
+	function luhnCheck(num) {
+		var digit, digits, odd, sum, _i, _len;
+		odd = true;
+		sum = 0;
+		digits = (num + '').split('').reverse();
+		for (_i = 0, _len = digits.length; _i < _len; _i++) {
+			digit = digits[_i];
+			digit = parseInt(digit, 10);
+			if ((odd = !odd)) {
+				digit *= 2;
+			}
+			if (digit > 9) {
+				digit -= 9;
+			}
+			sum += digit;
+		}
+		return sum % 10 === 0;
+	};
+
+	function validateCardNumber(num) {
+		var card, _ref;
+		num = (num + '').replace(/\s+|-/g, '');
+		if (!/^\d+$/.test(num)) {
+			return false;
+		}
+		card = cardFromNumber(num);
+		if (!card) {
+			return false;
+		}
+		return (_ref = num.length, __indexOf.call(card.length, _ref) >= 0) && (card.luhn === false || luhnCheck(num));
+	};
+
+	// -----------------------------------------------------------------
+	// Expiration date validation
+	// -----------------------------------------------------------------
 
 	function restrictExpiry(e) {
 		var $target, digit, value;
@@ -1008,6 +1081,7 @@ app.directive('paymentInput', function($timeout, $parse) {
 		if (value.length > 6) {
 			return false;
 		}
+		//return true;
 	};
 
 	function formatExpiry(e) {
@@ -1018,17 +1092,19 @@ app.directive('paymentInput', function($timeout, $parse) {
 		}
 		$target = e.currentTarget;
 		val = $target.value + digit;
+		// Exactly one digit that is not 0 or 1 => prefix digit with "0" and postfix with " / "
 		if (/^\d$/.test(val) && (val !== '0' && val !== '1')) {
 			e.preventDefault();
 			return setTimeout(function() {
-				$target.value = "0" + val + " / ";
-				return;
+				return $target.value = "0" + val + " / ";
+				//return true;
 			});
+		// Exactly two digits
 		} else if (/^\d\d$/.test(val)) {
 			e.preventDefault();
 			return setTimeout(function() {
-				$target.value = "" + val + " / ";
-				return;
+				return $target.value = "" + val + " / ";
+				//return true;
 			});
 		}
 	};
@@ -1042,8 +1118,8 @@ app.directive('paymentInput', function($timeout, $parse) {
 		$target = e.currentTarget;
 		val = $target.value;
 		if (/^\d$/.test(val) && val !== '0') {
-			$target.value = "0" + val + " / ";
-			return;
+			return $target.value = "0" + val + " / ";
+			//return true;
 		}
 	};
 
@@ -1056,8 +1132,8 @@ app.directive('paymentInput', function($timeout, $parse) {
 		$target = e.currentTarget;
 		val = $target.value;
 		if (/^\d\d$/.test(val)) {
-			$target.value = "" + val + " / ";
-			return;
+			return $target.value = "" + val + " / ";
+			//return true;
 		}
 	};
 
@@ -1074,8 +1150,8 @@ app.directive('paymentInput', function($timeout, $parse) {
 		if (/\d\s\/\s$/.test(value)) {
 			e.preventDefault();
 			return setTimeout(function() {
-				$target.value = value.replace(/\d\s\/\s$/, '');
-				return;
+				return $target.value = value.replace(/\d\s\/\s$/, '');
+				//return true;
 			});
 		}
 	};
@@ -1109,10 +1185,14 @@ app.directive('paymentInput', function($timeout, $parse) {
 			$target = e.target;
 			value = $target.value;
 			value = formatExpiryValue(value);
-			$target.value = value;
-			return;
+			return $target.value = value;
+			//return true;
 		});
 	};
+
+	// -----------------------------------------------------------------
+	// CVC/CVV validation
+	// -----------------------------------------------------------------
 
 	function restrictCVC(e) {
 		var $target, digit, val;
@@ -1135,85 +1215,146 @@ app.directive('paymentInput', function($timeout, $parse) {
 			value = $target.value;
 			value = value.replace(/\D/g, '').slice(0, 4);
 			$target.value = value;
-			return;
+			return true;
 		});
 	};
 
-	// TODO: remove if below "link" implementation works
-	function validate(event, paymentInput) {
-		console.log(event);
-		console.log(paymentInput);
-
-		formatCardNumber(event);
-		//formatCardNumber(paymentInput.expirationDate);
-		//formatCardNumber(paymentInput.cvv);
-	}
-
 	return {
+		scope: true,
+		/*
+		scope: {
+			model: "=ngModel",
+			templateUrl: "="
+		},
+		*/
 		link: function( scope, element, attrs ) {
 			if (element[0].id == 'paymentCardNumber') {
 				element.on('keypress', function(event) {
-					restrictNumeric(event);
+					var valid = restrictNumeric(event);
+					// TODO: comment out: the card number is not valid just because a numeric was entered?
+					scope.setPaymentCardNumberValid(valid);
 				});
 				element.on('keypress', function(event) {
-					restrictCardNumber(event);
+					var valid = restrictCardNumber(event);
+					scope.setPaymentCardNumberValid(valid);
 				});
 				element.on('keypress', function(event) {
-					formatCardNumber(event);
+					var valid = formatCardNumber(event);
+					//scope.setPaymentCardNumberValid(valid);
+				});
+				element.on('keydown', function(event) {
+					// TODO: this function eats digits because e.which === 8 (keycode for backspace) - UPDATE: works now?????
+					var valid = formatBackCardNumber(event);
+					scope.setPaymentCardNumberValid(valid);
+				});
+				element.on('paste', function(event) {
+					var valid = reFormatCardNumber(event);
+					// TODO: re-introduce when "reFormatCardNumber" returns value instead of true
+					//scope.setPaymentCardNumberValid(valid);
+				});
+				element.on('change', function(event) {
+					var valid = reFormatCardNumber(event);
+					// TODO: re-introduce when "reFormatCardNumber" returns value instead of true
+					//scope.setPaymentCardNumberValid(valid);
+				});
+				element.on('input', function(event) {
+					var valid = reFormatCardNumber(event);
+					// TODO: re-introduce when "reFormatCardNumber" returns value instead of true
+					//scope.setPaymentCardNumberValid(valid);
+				});
+			} else if (element[0].id == 'paymentExpirationDate') {
+				// TODO: also listen on "keyup"? Seems to handle the "on blur" scenario
+
+				/*
+				var validateExpirationDate = function(event) {
+					var restrictNumericValid = restrictNumeric(event);
+					var restrictExpiryValid = restrictExpiry(event);
+					var formatExpiryValid = formatExpiry(event);
+					var formatForwardSlashAndSpaceValid = formatForwardSlashAndSpace(event);
+					var formatForwardExpiryValid = formatForwardExpiry(event);
+					var formatBackExpiryValid = formatBackExpiry(event);
+					var reformatExpiryValid = reFormatExpiry(event);
+
+					return restrictNumericValid && restrictExpiryValid && formatExpiryValid && formatForwardSlashAndSpaceValid && formatForwardExpiryValid && formatBackExpiryValid && reformatExpiryValid;
+				};
+				*/
+
+				// TODO: save each validation result on a scope variable and set the total result equal to the full (ANDed) result
+				// TODO: Just have one handler per event type and call all required validation functions in that handler (instead of multiple handlers per event type)?
+
+				element.on('keypress', function(event) {
+					var restrictNumericValid = restrictNumeric(event);
+					scope.setPaymentExpirationDateRestrictNumericValid(restrictNumericValid);
+					// TODO: var valid = restrictNumericValid && scope.getPaymentExpirationDateRestrictExpiry() && ...;
+					//var valid = validateExpirationDate(event);
+					scope.setPaymentExpirationDateValid(valid);
+				});
+				element.on('keypress', function(event) {
+					var restrictExpiryValid = restrictExpiry(event);
+					//var valid = validateExpirationDate(event);
+					//scope.setPaymentExpirationDateValid(valid);
+				});
+				element.on('keypress', function(event) {
+					var formatExpiryValid = formatExpiry(event);
+					//var valid = validateExpirationDate(event);
+					//scope.setPaymentExpirationDateValid(valid);
+				});
+				element.on('keypress', function(event) {
+					var formatForwardSlashAndSpaceValid = formatForwardSlashAndSpace(event);
+					//var valid = validateExpirationDate(event);
+					//scope.setPaymentExpirationDateValid(valid);
+				});
+				element.on('keypress', function(event) {
+					var formatForwardExpiryValid = formatForwardExpiry(event);
+					//var valid = validateExpirationDate(event);
+					//scope.setPaymentExpirationDateValid(valid);
 				});
 				element.on('keydown', function(event) {
 					// TODO: this function eats digits because e.which === 8 (keycode for backspace)
-					//formatBackCardNumber(event);
-				});
-				element.on('paste', function(event) {
-					reFormatCardNumber(event);
-				});
-				element.on('change', function(event) {
-					reFormatCardNumber(event);
-				});
-				element.on('input', function(event) {
-					reFormatCardNumber(event);
-				});
-			} else if (element[0].id == 'paymentExpirationDate') {
-				element.on('keypress', function(event) {
-					restrictNumeric(event);
-				});
-				element.on('keypress', function(event) {
-					restrictExpiry(event);
-				});
-				element.on('keypress', function(event) {
-					formatExpiry(event);
-				});
-				element.on('keypress', function(event) {
-					formatForwardSlashAndSpace(event);
-				});
-				element.on('keypress', function(event) {
-					formatForwardExpiry(event);
-				});
-				element.on('keydown', function(event) {
-					formatBackExpiry(event);
+					var formatBackExpiryValid = formatBackExpiry(event);
+					//var valid = validateExpirationDate(event);
+					//scope.setPaymentExpirationDateValid(valid);
 				});
 				element.on('change', function(event) {
-					reFormatExpiry(event);
+					var reformatExpiryValid = reFormatExpiry(event);
+					//var valid = validateExpirationDate(event);
+					//scope.setPaymentExpirationDateValid(valid);
 				});
 				element.on('input', function(event) {
-					reFormatExpiry(event);
+					var reformatExpiryValid = reFormatExpiry(event);
+					//var valid = validateExpirationDate(event);
+					//scope.setPaymentExpirationDateValid(valid);
+				});
+
+				// -------- Functions below are NOT in payment prototype --------
+
+				element.on('keyup', function(event) {
+					var reformatExpiryValid = reFormatExpiry(event);
+					//var valid = validateExpirationDate(event);
+					scope.setPaymentExpirationDateValid(valid);
 				});
 
 			} else if (element[0].id == 'paymentCvv') {
+				// TODO: also listen on "keyup"? Seems to handle the "on blur" scenario
+
 				element.on('keypress', function(event) {
-					restrictNumeric(event);
+					var valid = restrictNumeric(event);
+					scope.setPaymentCvvValid(valid);
 				});
 				element.on('keypress', function(event) {
-					restrictCVC(event);
+					var valid = restrictCVC(event);
+					scope.setPaymentCvvValid(valid);
 				});
 				element.on('paste', function(event) {
+					// TODO: can we set "payment.cardNumberValid" here, since function doesn't return a value? Pass "scope" to function and call "setPaymentCardNumberValid" inside function?
 					reFormatCVC(event);
 				});
 				element.on('change', function(event) {
+					// TODO: can we set "payment.cardNumberValid" here, since function doesn't return a value? Pass "scope" to function and call "setPaymentCardNumberValid" inside function?
 					reFormatCVC(event);
 				});
 				element.on('input', function(event) {
+					// TODO: can we set "payment.cardNumberValid" here, since function doesn't return a value? Pass "scope" to function and call "setPaymentCardNumberValid" inside function?
 					reFormatCVC(event);
 				});
 			}
