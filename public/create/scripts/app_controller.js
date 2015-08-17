@@ -111,8 +111,8 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 													cancelButtonColor: "#f3f3f3"
 												});
 											} else {
-												var paymentCardNumber = response.cardNumber;
-												var expirationDate = response.expirationDate;
+												var paymentCardNumber = response.cardNumber.replace(/\s/g, '');
+												var expirationDate = response.expirationDate.replace(/\s/g, '');
 												var cvv = response.cvv;
 												paymentService.createSubscription(paymentCardNumber, expirationDate, cvv, function (err, data) {
 													if (err) {
