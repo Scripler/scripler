@@ -15,23 +15,33 @@
 	 <!-- modal windows -->
 	<div bn-modals ng-show="subview" class="m-modals" ng-switch="subview">
 
-		<!-- BEGIN: Free / Premium Modal. -->
-		<div ng-switch-when="upgrade" ng-controller="UpgradeModalController" class="modal">
+		<!-- BEGIN: Free / Premium / Pro Modal. -->
+		<div ng-switch-when="upgrade" ng-controller="UpgradeModalController" class="modalPlan">
+			
 			<div class="planChoice" id="freePlan">
 				<h1>Free</h1>
 				<p>{{ freeNumberOfEbooks }} ebook projects</p>
 				<p>{{ freeNumberOfDesigns }} ebook design templates</p>
 				<a class="modalButtons" id="useFree" ng-click="useFree()">{{ useFreeText }}</a>
 			</div>
+
 			<div class="planChoice" id="premiumPlan">
 				<h1>Premium</h1>
 				<p>{{ premiumNumberOfEbooks }} ebook projects</p>
 				<p>{{ premiumNumberOfDesigns }} ebook design templates</p>
-				<div id="price"><p>${{ premiumMonthlyPrice }}<br><span>MONTH</span></p></div>
+				<h2>${{ premiumMonthlyPrice }}/month</h2>
 				<a class="modalButtons" id="usePremium" ng-click="usePremium()">{{ usePremiumText }}</a>
 			</div>
+			
+			<div class="planChoice" id="proPlan">
+				<h1>Professional</h1>
+				<p>Need more than 10 books?</p>
+            	<p>&nbsp;</p>
+            	<a href="mailto:info@scripler.com" class="modalButtons" id="usePro">Contact us</a>
+			</div>
+
 		</div>
-		<!-- END: Free / Premium Modal. -->
+		<!-- END: Free / Premium / Pro Modal. -->
 
 		<!-- BEGIN: Payment Modal. -->
 		<div ng-switch-when="payment" ng-controller="PaymentModalController" class="modal">

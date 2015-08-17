@@ -461,7 +461,7 @@ hr {
 #usePremium{
 	position: absolute;
 	bottom:20px;
-	right:16px;
+	right:420px;
 	width:350px;
 	background: #fff56c;
 	color: #e98f2c;
@@ -475,6 +475,25 @@ hr {
 #usePremium:active{
 	color: #e98f2c;
 	background: #fff56c;
+}
+
+#usePro{
+	position: absolute;
+	bottom:20px;
+	right:10px;
+	width:350px;
+	background: #9D9DFF;
+	color: #00006B;
+}
+
+#usePro:hover{
+	color: #000;
+	background: #9D9DFF;
+}
+
+#usePro:active{
+	color: #000;
+	background: #9D9DFF;
 }
 
 .planChoice{
@@ -494,6 +513,12 @@ hr {
 	margin-right:50px;
 	border:4px #fff solid;
 	color: #000;
+	float: left;
+}
+
+#freePlan h1{
+	font-weight: 400;
+	margin: 0.6em 0 0.4em 0;
 }
 
 #premiumPlan{
@@ -504,6 +529,29 @@ hr {
 
 #premiumPlan h1{
 	color: #fff56c;
+	font-weight: 400;
+	margin: 0.6em 0 0.4em 0;
+}
+
+#premiumPlan h2{
+	color: #fff56c;
+	font-weight: 400;
+	text-align: right;
+    margin-right: 25px;
+    font-size: 27px;
+}
+
+#proPlan{
+	background: #00006B;
+	border:4px #9D9DFF solid;
+	color: #C6C6C6;
+	float: right;
+}
+
+#proPlan h1{
+	color: #fff;
+	font-weight: 400;
+	margin: 0.6em 0 0.4em 0;
 }
 
 #price{
@@ -640,6 +688,18 @@ div.m-modals.ng-hide {
 div.m-modals.ng-hide-add.ng-hide-add-active,
 div.m-modals.ng-hide-remove.ng-hide-remove-active {
 	transition: 250ms ease all ;
+}
+
+div.m-modals > .modalPlan {
+	border-radius: 3px 3px 3px 3px ;
+	box-sizing: border-box ;
+		-moz-box-sizing: border-box ;
+	padding: 20px 20px 20px 20px ;
+	position: fixed ;
+	left: 50% ;
+	margin-left: -600px ;
+	top: 200px ;
+	width: 1200px;
 }
 
 div.m-modals > .modal {

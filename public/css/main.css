@@ -192,7 +192,7 @@ nav {
 #freePlan{
 	background: #d6d6d6;
 	margin-right:20px;
-	margin-top: 50px;
+	margin-top: 100px;
 	border:4px #fff solid;
 	color: #000;
 	float: left;
@@ -202,7 +202,7 @@ nav {
 	background: #f2d32c;
 	border:4px #fff56c solid;
 	margin-left:20px;
-	margin-top: 50px;
+	margin-top: 100px;
 	color: #e98f2c;
 	float: left;
 }
@@ -220,9 +220,9 @@ nav {
 }
 
 #proPlan{
-	background: #0000AF;
-	margin-top: 50px;
-	border:4px #383838 solid;
+	background: #00006B;
+	margin-top: 100px;
+	border:4px #9D9DFF solid;
 	color: #C6C6C6;
 	float: right;
 }
@@ -238,7 +238,6 @@ nav {
 	color: #fff;
 	font-size: 20px;
 	line-height: 1;
-	text-align: right;
 	margin-right: 25px;
 }
 
