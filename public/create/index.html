@@ -57,59 +57,72 @@
 
 	<!-- modal windows -->
 	<div bn-modals ng-show="subview" class="m-modals" ng-switch="subview">
-		<!-- BEGIN: Free / Premium Modal. -->
-		<div ng-switch-when="upgrade" ng-controller="UpgradeModalController" class="modal">
+		<!-- BEGIN: Free / Premium / Pro Modal. -->
+		<div ng-switch-when="upgrade" ng-controller="UpgradeModalController" class="modalPlan">
+
 			<div class="planChoice" id="freePlan">
 				<h1>Free</h1>
 				<p>{{ freeNumberOfEbooks }} ebook projects</p>
 				<p>{{ freeNumberOfDesigns }} ebook design templates</p>
 				<a class="modalButtons" id="useFree" ng-click="useFree()">{{ useFreeText }}</a>
 			</div>
+
 			<div class="planChoice" id="premiumPlan">
 				<h1>Premium</h1>
 				<p>{{ premiumNumberOfEbooks }} ebook projects</p>
 				<p>{{ premiumNumberOfDesigns }} ebook design templates</p>
-				<div id="price"><p>€{{ premiumMonthlyPrice }}<br><span>MONTH</span></p></div>
+				<h2>${{ premiumMonthlyPrice }}/month</h2>
 				<a class="modalButtons" id="usePremium" ng-click="usePremium()">{{ usePremiumText }}</a>
 			</div>
+
+			<div class="planChoice" id="proPlan">
+				<h1>Professional</h1>
+				<p>Need more than 10 books?</p>
+				<p>&nbsp;</p>
+				<a href="mailto:info@scripler.com" class="modalButtons" id="usePro">Contact us</a>
+			</div>
+
 		</div>
-		<!-- END: Free / Premium Modal. -->
+		<!-- END: Free / Premium / Pro Modal. -->
 
 		<!-- BEGIN: Payment Modal. -->
 		<div ng-switch-when="payment" ng-controller="PaymentModalController" class="modal">
 			<div class="upgradePayment" id="upgradePayment">
 				<form name="upgradePaymentForm" ng-submit="paymentUpgrade()" novalidate>
-					<!-- <form name="upgradePaymentForm" ng-init="setFormScope(this)" ng-submit="paymentUpgrade()" novalidate> -->
 					<h2>Upgrade to Premium</h2>
-					<p class="no-top-margin"><em>Your card will be charged €14.00/month.</em></p>
+					<p class="no-top-margin"><em>Your card will be charged ${{ premiumMonthlyPrice }}/month.</em></p>
 					<hr>
-					<img class="secure-image" src="pages/images/safe_payment.png" height="45" width="45">
-					<span><p class="secure-text">SECURE PAYMENT<br><a href="">LEARN MORE</a></p></span>
+					<a target="_blank" href="https://en.wikipedia.org/wiki/HTTPS">
+						<img class="secure-image" src="pages/images/safe_payment.png" height="45" width="45">
+						<span><p class="secure-text">SECURE PAYMENT<br>LEARN MORE</p></span>
+					</a>
 					<br>
 					<span><p class="top-text-card">Card number</p></span>
 					<p class="card-number">
-						<input class="inputCardNumber" id="paymentCardNumber" ng-model="payment.cardNumber" type="tel" placeholder="•••• •••• •••• ••••" autocompletetype="cc-number" required="required" />
+						<!-- bind="payment.cardNumberValid" -->
+						<input id="paymentCardNumber" ng-model="payment.cardNumber" class="paymentItem" data-ng-class="{ 'paymentCardNumber': !payment.cardNumberValid, 'paymentCardNumber paymentItemValid': payment.cardNumberValid }" type="tel" placeholder="â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢" autocompletetype="cc-number" required="required" payment-input />
 					</p>
 					<span>
 						<div class="paymentAir" id="paymentAir">
 							<p class="top-text-expires-cvc">Expires</p>
-							<input class="inputExpiresCVC" id="paymentExpirationDate" ng-model="payment.expirationDate" type="tel" placeholder="MM / YY" autocompletetype="cc-exp" required="required" />
+							<input id="paymentExpirationDate" ng-model="payment.expirationDate" class="paymentItem" data-ng-class="{ 'paymentExpiresCVC': !payment.expirationDateValid, 'paymentExpiresCVC paymentItemValid': payment.expirationDateValid }" type="tel" placeholder="MM / YY" autocompletetype="cc-exp" required="required" payment-input />
 						</div>
 						<div class="paymentAir" id="paymentAir">
-							<p class="top-text-expires-cvc">CVC/CVV&emsp;<a href=""><img src="pages/images/questionmark_icon.png"></a></p>
-							<input class="inputExpiresCVC" id="paymentCvv" ng-model="payment.cvv" type="tel" placeholder="CVC" autocompletetype="cc-cvc" required="required" />
+							<p class="top-text-expires-cvc">CVC/CVV&emsp;<a target="_blank" href="https://en.wikipedia.org/wiki/Card_security_code"><img src="pages/images/questionmark_icon.png"></a></p>
+							<input id="paymentCvv" ng-model="payment.cvv" class="paymentItem" data-ng-class="{ 'paymentExpiresCVC': !payment.cvvValid, 'paymentExpiresCVC paymentItemValid': payment.cvvValid }" type="tel" placeholder="CVC" autocompletetype="cc-cvc" required="required" payment-input />
 						</div>
 					</span>
 					<p>
-						<a class="paymentButtons" id="paymentUpgrade" ng-click="paymentUpgrade()">Upgrade</a>
+						<!-- TODO: also disable the button visually, e.g. "grey out" the button, change the cursor, etc. -->
+						<a class="paymentButtons" id="paymentUpgrade" ng-click="!(payment.cardNumberValid || payment.expirationDateValid || payment.cvvValid) || paymentUpgrade()">Upgrade</a>
 						<a class="paymentButtons" id="paymentCancel" ng-click="paymentCancel()">Cancel</a>
 					</p>
 				</form>
 			</div>
 		</div>
-		<!-- END: Login / Register Modal. -->
+		<!-- END: Payment Modal. -->
 
-		<!-- BEGIN: Free / Premium Modal. -->
+		<!-- BEGIN: Login / Register Modal. -->
 		<div ng-switch-when="loginregister" ng-controller="LoginRegisterController" class="modal">
 			<div id="registrationModal">
 				<div class="tabs">

@@ -205,18 +205,19 @@
 	}
 
 	// TODO: should this be duplicated in config/<env>.json because we want to be able to change it without making a release?
+	// TODO: how to make this configurable for test?
 	var subscriptions = {
 		"free": {
-			"maxNumberOfProjects": 5,
+			"maxNumberOfProjects": 3,
 			"maxNumberOfDesigns": 3
 		},
 		"premium": {
-			"maxNumberOfProjects": 20,
+			"maxNumberOfProjects": 10,
 			"maxNumberOfDesigns": 17,
-			"monthlyPrice": "14.00"
+			"monthlyPrice": "9.99"
 		},
 		"professional": {
-			"maxNumberOfProjects": 500
+			"maxNumberOfProjects": 100
 		}
 	};
 
@@ -249,15 +250,20 @@
 
 		var maxNumberOfProjects = subscriptions[userLevel].maxNumberOfProjects;
 
-		// The user is allowed to load any of his/her projects, if he/she has fewer than the max
-		if (projectIds && projectIds.length <= maxNumberOfProjects && projectIds.indexOf(projectIdToCheck) > -1) return true;
+		// If we are not exceeding the max number of projects...
+		if (projectIds && projectIds.length <= maxNumberOfProjects) {
+			// The user is allowed to load any of his/her projects, if he/she has fewer than the max
+			if (projectIds.indexOf(projectIdToCheck) > -1) return true;
 
-		// Since the first four bytes of a Mongo id represents a creation timestamp, we can use this to sort by date.
-		var sortedProjectIds = projectIds.sort();
-		var firstXProjectIds = sortedProjectIds.slice(0, maxNumberOfProjects);
+			// Since the first four bytes of a Mongo id represents a creation timestamp, we can use this to sort by date.
+			var sortedProjectIds = projectIds.sort();
+			var firstXProjectIds = sortedProjectIds.slice(0, maxNumberOfProjects);
 
-		// TODO: implement not using indexOf(), since we want to compare values not references? (see http://stackoverflow.com/questions/19737408/mongoose-check-if-objectid-exists-in-an-array)
-		return JSON.stringify(firstXProjectIds).indexOf(projectIdToCheck.toString()) > -1;
+			// TODO: implement not using indexOf(), since we want to compare values not references? (see http://stackoverflow.com/questions/19737408/mongoose-check-if-objectid-exists-in-an-array)
+			return JSON.stringify(firstXProjectIds).indexOf(projectIdToCheck.toString()) > -1;
+		}
+
+		return false;
 	}
 
 	return {
