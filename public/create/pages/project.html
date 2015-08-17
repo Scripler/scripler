@@ -61,7 +61,7 @@
 		<ul>
 			<li data-ng-repeat="styleset in stylesets track by $index" id="{{styleset._id}}" class="typo" data-ng-class="{ 'open' : styleset._id == selectedStyleset }" data-ng-hide="styleset.archived || styleset.hidden">
 
-				<a class="styleset-upgrade no-select" data-ng-show="!isStylesetAccessible(styleset)">Upgrade to premium!</a>
+				<a class="styleset-upgrade no-select" data-ng-click="upgrade()" data-ng-show="!isStylesetAccessible(styleset)">Upgrade to premium!</a>
 
 				<a class="styleset-options-show" data-ng-show="isStylesetAccessible(styleset)" data-ng-click="showStyleset(styleset._id); showStylesetOptions($index);" data-ng-class="{ 'open' : $index == selectedStylesetOptions }">
 					<div class="arrow"></div>

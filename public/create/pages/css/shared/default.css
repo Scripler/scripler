@@ -292,43 +292,56 @@ textarea {
 	display: none;
 }
 
-
-/*registration modal styling*/
-#registrationModalOverlay {
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	position:fixed;
-	opacity: 0.5;
-	background: black;
-	pointer-events: none;
-	z-index: 40;
-}
-#registrationModal  {
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	position:fixed;
-	display: flex;
-	align-items: flex-start;
-	justify-content: center;
-	z-index: 40;
+/* START Modals */
+div.m-modals {
+	background-color: rgba( 0, 0, 0, 0.8 ) ;
+	bottom: 0px ;
+	left: 0px ;
+	position: fixed ;
+	right: 0px ;
+	top: 0px ;
+	z-index:999;
 }
 
-#registrationModal .registration-container {
+div.m-modals.ng-hide {
+	background-color: rgba( 0, 0, 0, 0 );
+}
+
+div.m-modals.ng-hide-add.ng-hide-add-active,
+div.m-modals.ng-hide-remove.ng-hide-remove-active {
+	transition: 250ms ease all ;
+}
+
+div.m-modals > .modal {
+	border-radius: 3px 3px 3px 3px ;
+	box-sizing: border-box ;
+	-moz-box-sizing: border-box ;
+	padding: 20px 20px 20px 20px ;
+	position: fixed ;
+	left: 50% ;
+	margin-left: -400px ;
+	top: 150px ;
+	width: 800px;
+}
+
+div.m-modals.ng-hide > .modal.ng-enter {
+	top: -200px ;
+	transition: 250ms ease top ;
+}
+
+div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
+	top: 200px ;
+}
+/* END Modals */
+
+/* START Login/Register modal styling */
+#registrationModal {
 	width: 340px;
 	position: relative;
-	margin-top: 200px;
 	background-color:#F2F2F2;
 	color: black;
-}
-
-@media all and (max-height: 600px) {
-	#registrationModal .registration-container {
-		margin: auto;
-	}
+	margin-left: auto;
+	margin-right: auto;
 }
 
 #registrationModal .error-box {
@@ -388,6 +401,8 @@ textarea {
 	border-top: 1px solid #CCCCCC;
 	clear: both;
 }
+/* END Login/Register modal styling */
+
 
 .cancel-button {
 	background-color: #CCCCCC;
@@ -534,6 +549,7 @@ textarea {
 	margin: -40px 0 0;
 	padding: 5px 10px;
 	color: #fff;
+	z-index: 99;
 }
 .error-box.error-box-name {
 	margin-left: 30px;

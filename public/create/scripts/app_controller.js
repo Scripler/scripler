@@ -18,27 +18,61 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		// sweetAlert
 		var swal = $window.swal;
 
+		//var upgradePromise = modals.open("loginregister");
+
+		$scope.upgrade = function() {
+			if (!$scope.user || !$scope.user._id || $scope.user.isDemo) {
+				showLoginRegisterModal();
+			} else {
+				showUpgradeModal();
+			}
+		}
+
 		// Opens the Upgrade modal
-	    $scope.upgrade = function() {
+		var showLoginRegisterModal = function() {
+
+			var loginRegisterPromise = modals.open("loginregister");
+			loginRegisterPromise.then(
+				function handleResolve(response) {
+					if ($scope.user && !$scope.user.isDemo && $scope.user.level == 'free') {
+						showUpgradeModal();
+					}
+				},
+				function handleReject(error) {
+					if (error) console.log("An error occurred closing the login register window: " + error);
+				}
+			);
+		}
+		// Opens the Upgrade modal
+		var showUpgradeModal = function() {
 			// the .open() method returns a promise that will be either
-		    // resolved or rejected when the modal window is closed.
-		    var upgradePromise = modals.open("upgrade");
+			// resolved or rejected when the modal window is closed.
 
-		    upgradePromise.then(
-			        function handleResolve(response) {
-						if (response) {
-							var title;
-							var text;
-							var type = "error";
-							var confirmButtonText = "OK";
+			var upgradePromise = modals.open("upgrade");
 
-							if (response == 'premium') {
-								// TODO: should we just create one token when the page loads that can be used for both payment and downgrade?
-								paymentService.setClient($window.braintree, function (err) {
-									title = "Could not cancel subscription";
+			upgradePromise.then(
+				function handleResolve(response) {
+					if (response) {
+						var title;
+						var text;
+						var type = "error";
+						var confirmButtonText = "OK";
 
+						if (response == 'premium') {
+							// TODO: should we just create one token when the page loads that can be used for both payment and downgrade?
+							paymentService.setClient($window.braintree, function (err) {
+								title = "Could not cancel subscription";
+
+								if (err) {
+									text = err.errorMessage;
+									swal({
+										title: title,
+										text: text,
+										type: type,
+										confirmButtonText: confirmButtonText
+									});
+								} else {
 									if (err) {
-										text = err.errorMessage;
 										swal({
 											title: title,
 											text: text,
@@ -46,7 +80,50 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 											confirmButtonText: confirmButtonText
 										});
 									} else {
+										paymentService.cancelSubscription($scope.user, function (err, data) {
+											if (err) {
+												text = err.errorMessage;
+												swal({
+													title: title,
+													text: text,
+													type: type,
+													confirmButtonText: confirmButtonText
+												});
+											} else {
+												if (data && data.user.level != 'free' && data.user.payment.cancelled) {
+													$scope.user.payment.cancelled = data.user.payment.cancelled;
+													swal({
+														title: "Subscription cancelled",
+														// TODO: get the date on which the user's premium subscription expires
+														text: "Your subscription has now been cancelled. You will remain Premium until your subscription expires.",
+														type: "success",
+														confirmButtonText: confirmButtonText
+													});
+												} else {
+													swal({
+														title: title,
+														text: text,
+														type: type,
+														confirmButtonText: confirmButtonText
+													});
+												}
+											}
+										});
+									}
+								}
+							});
+						} else if (response == 'free') {
+							// the .open() method returns a promise that will be either
+							// resolved or rejected when the modal window is closed.
+							var paymentPromise = modals.open("payment");
+
+							paymentPromise.then(
+								function handleResolve(response) {
+									paymentService.setClient($window.braintree, function (err) {
+										title = "Could not create subscription";
+
 										if (err) {
+											text = err.errorMessage;
 											swal({
 												title: title,
 												text: text,
@@ -54,7 +131,10 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 												confirmButtonText: confirmButtonText
 											});
 										} else {
-											paymentService.cancelSubscription($scope.user, function (err, data) {
+											var paymentCardNumber = response.cardNumber;
+											var expirationDate = response.expirationDate;
+											var cvv = response.cvv;
+											paymentService.createSubscription(paymentCardNumber, expirationDate, cvv, function (err, data) {
 												if (err) {
 													text = err.errorMessage;
 													swal({
@@ -64,12 +144,11 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 														confirmButtonText: confirmButtonText
 													});
 												} else {
-													if (data && data.user.level != 'free' && data.user.payment.cancelled) {
-														$scope.user.payment.cancelled = data.user.payment.cancelled;
+													if (data && data.user.level == 'premium' && !data.user.payment.cancelled) {
+														$scope.user.level = data.user.level;
 														swal({
-															title: "Subscription cancelled",
-															// TODO: get the date on which the user's premium subscription expires
-															text: "Your subscription has now been cancelled. You will remain Premium until your subscription expires.",
+															title: "Subscription created",
+															text: "Your payment has been received and your subscription created. You will receive a confirmation email shortly.",
 															type: "success",
 															confirmButtonText: confirmButtonText
 														});
@@ -84,77 +163,24 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 												}
 											});
 										}
-									}
-								});
-							} else if (response == 'free') {
-								// the .open() method returns a promise that will be either
-								// resolved or rejected when the modal window is closed.
-								var paymentPromise = modals.open("payment");
-
-								paymentPromise.then(
-									function handleResolve(response) {
-										paymentService.setClient($window.braintree, function (err) {
-											title = "Could not create subscription";
-
-											if (err) {
-												text = err.errorMessage;
-												swal({
-													title: title,
-													text: text,
-													type: type,
-													confirmButtonText: confirmButtonText
-												});
-											} else {
-												var paymentCardNumber = response.cardNumber;
-												var expirationDate = response.expirationDate;
-												var cvv = response.cvv;
-												paymentService.createSubscription(paymentCardNumber, expirationDate, cvv, function (err, data) {
-													if (err) {
-														text = err.errorMessage;
-														swal({
-															title: title,
-															text: text,
-															type: type,
-															confirmButtonText: confirmButtonText
-														});
-													} else {
-														if (data && data.user.level == 'premium' && !data.user.payment.cancelled) {
-															$scope.user.level = data.user.level;
-															swal({
-																title: "Subscription created",
-																text: "Your payment has been received and your subscription created. You will receive a confirmation email shortly.",
-																type: "success",
-																confirmButtonText: confirmButtonText
-															});
-														} else {
-															swal({
-																title: title,
-																text: text,
-																type: type,
-																confirmButtonText: confirmButtonText
-															});
-														}
-													}
-												});
-											}
-										});
-									},
-									function handleReject(error) {
-										if (error) console.log("An error occurred closing the payment window: " + JSON.stringify(error));
-									}
-								);
-							} else {
-								console.log("Upgrade modal promise did not contain either a 'free' or 'premium' value");
-							}
+									});
+								},
+								function handleReject(error) {
+									if (error) console.log("An error occurred closing the payment window: " + JSON.stringify(error));
+								}
+							);
 						} else {
-							console.log("Unable to get response from upgrade modal promise");
+							console.log("Upgrade modal promise did not contain either a 'free' or 'premium' value");
 						}
-					},
-			        function handleReject(error) {
-						if (error) console.log("An error occurred closing the upgrade window: " + JSON.stringify(error));
-			        }
-		        );
-	    };
+					} else {
+						console.log("Unable to get response from upgrade modal promise");
+					}
+				},
+				function handleReject(error) {
+					if (error) console.log("An error occurred closing the upgrade window: " + JSON.stringify(error));
+				}
+			);
+		};
 
 		$scope.$onRootScope('user:updated', function(event, user) {
 			if (user.isDemo) {
@@ -168,23 +194,23 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		});
 
 		$scope.$onRootScope('login:failed', function(event) {
-				var demoId = Date.now();
-				var password = utilsService.createRandomString(10);
-				$scope.demoUser = {
-					name: "Scripler Demo " + demoId,
-					email: "demo-" + demoId + "@scripler.com",
-					password: password,
-					isDemo: true
-				};
+			var demoId = Date.now();
+			var password = utilsService.createRandomString(10);
+			$scope.demoUser = {
+				name: "Scripler Demo " + demoId,
+				email: "demo-" + demoId + "@scripler.com",
+				password: password,
+				isDemo: true
+			};
 
-				$scope.registerUser($scope.demoUser, function (err, user) {
-					if (err) {
-						alert("ERROR registering demo user: " + JSON.stringify(err));
-					} else {
-						// TODO: emit 'user:registered' event when a demo user registers?
-						$rootScope.$emit('user:registered', user);
-					}
-				});
+			$scope.registerUser($scope.demoUser, function (err, user) {
+				if (err) {
+					alert("ERROR registering demo user: " + JSON.stringify(err));
+				} else {
+					// TODO: emit 'user:registered' event when a demo user registers?
+					$rootScope.$emit('user:registered', user);
+				}
+			});
 		});
 
 		// TODO: this check should include if user.emailVerified and user.isDemo
@@ -193,7 +219,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				$scope.showRegistrationInfoBar = false;
 			}
 			else {
-				$scope.showRegistrationInfoBar = true;	
+				$scope.showRegistrationInfoBar = true;
 			}
 		};
 
@@ -263,79 +289,47 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				});
 		}
 
-		$scope.submitRegistration = function() {
-			$scope.registrationSubmitted = true;
-			$scope.registerForm.$pristine = false;
-			$scope.registerForm.name.$pristine = false;
-			$scope.registerForm.email.$pristine = false;
-			$scope.registerForm.password.$pristine = false;
+		$scope.submitRegistration = function($overrideScope, next) {
+			// $scope - the AppController scope
+			// $localScope - the caller scope (registation form)
+			var $localScope = $scope;
+			if ($overrideScope) {
+				$localScope = $overrideScope;
+			}
+			$localScope.registrationSubmitted = true;
+			$localScope.registerForm.$pristine = false;
+			$localScope.registerForm.name.$pristine = false;
+			$localScope.registerForm.email.$pristine = false;
+			$localScope.registerForm.password.$pristine = false;
 
-			if ($scope.registerForm.$valid) {
-				$scope.user.isDemo = false;
-				userService.updateUser($scope.user, function (err) {
+			if ($localScope.registerForm.$valid) {
+				$localScope.user.isDemo = false;
+				userService.updateUser($localScope.user, function (err) {
 					if (err) {
 						if (err && err.errorDetails && err.errorDetails === 'Email already registered' ) {
-							$scope.errors.email = err.errorDetails;
-							$scope.registerForm.email.$invalid = true;
-							$scope.registerForm.$invalid = true;
+							$localScope.errors.email = err.errorDetails;
+							$localScope.registerForm.email.$invalid = true;
+							$localScope.registerForm.$invalid = true;
+							if (next) {
+								next(err);
+							}
 						}
 					} else {
-						$rootScope.$emit('user:registered', $scope.user);
-						$scope.registrationText = 'Good job! We\'ve emailed you a confirmation link. You can keep writing, though...';
-						$scope.registrationSubmitted = false;
+						$localScope.registrationText = 'Good job! We\'ve emailed you a confirmation link. You can keep writing, though...';
+						$rootScope.$emit('user:registered', $localScope.user);
+						$localScope.registrationSubmitted = false;
+						if (next) {
+							next();
+						}
 					}
 				});
-			}
-		}
-
-		$scope.submitLogin = function() {
-			$scope.registrationSubmitted = true;
-			$scope.loginForm.$pristine = false;
-			$scope.loginForm.email.$pristine = false;
-			$scope.loginForm.password.$pristine = false;
-			$scope.loginForm.email.$invalid = false;
-			$scope.loginForm.$invalid = false;
-
-			if ($scope.forgotPassword) {
-				if ($scope.loginForm.email.$valid) {
-
-					$http.post('/user/password-reset',{
-							"email": $scope.login.email
-						})
-						.success(function(data) {
-							console.log("ALL GOOD!");
-							console.log(data);
-							// TODO: Tell the user to check his email
-							//$scope.loginInfo = 'If you entered your correct email address, an email has been sent to you. By using the link in this email you can change your password.';
-						})
-						.error(function(data) {
-							$scope.errors.email = 'Could not reset password';
-							$scope.loginForm.email.$invalid = true;
-							$scope.loginForm.$invalid = true;
-						});
-				}
 			} else {
-				if ($scope.loginForm.$valid) {
-
-					$http.post('/user/login',{
-							"email": $scope.login.email,
-							"password": $scope.login.password+'lll',
-							"remember": $scope.login.remember
-						})
-						.success(function(data) {
-							console.log("ALL GOOD!");
-							console.log(data);
-						})
-						.error(function(data) {
-							$scope.errors.email = 'Could not login user';
-							$scope.loginForm.email.$invalid = true;
-							$scope.loginForm.$invalid = true;
-						});
-
+				if (next) {
+					next("Invalid");
 				}
 			}
 		}
-}]);
+	}]);
 
 app.config( function($routeProvider, $httpProvider, $provide) {
 
@@ -382,15 +376,15 @@ app.config( function($routeProvider, $httpProvider, $provide) {
 				});
 
 			return deferred.promise;
-	}]
+		}]
 
 	$routeProvider
 		.when('/', { templateUrl:'pages/create.html', controller: createController,
-					resolve: { user: isLoggedIn }
-					})
+			resolve: { user: isLoggedIn }
+		})
 		.when('/project', { templateUrl:'pages/project.html', controller: projectController,
-							resolve: { user: isLoggedIn }
-							})
+			resolve: { user: isLoggedIn }
+		})
 		.when('/error', { templateUrl:'pages/error.html' })
 		.otherwise({ redirectTo:'/' });
 });
@@ -523,24 +517,24 @@ app.service('paymentService', function($http, $q) {
 });
 
 app.filter('filterTruncation', function () {
-    return function (input, chars) {
-        if (isNaN(chars)) {
-            return input;
-        }
-        if (chars <= 0) {
-            return '';
-        }
-        if (input && input.length > chars) {
-            input = input.substring(0, chars);
-            while (input.charAt(input.length - 1) === ' ' || input.charAt(input.length - 1) === '.' || input.charAt(input.length - 1) === ',') {
-                input = input.substr(0, input.length - 1);
-            }
+	return function (input, chars) {
+		if (isNaN(chars)) {
+			return input;
+		}
+		if (chars <= 0) {
+			return '';
+		}
+		if (input && input.length > chars) {
+			input = input.substring(0, chars);
+			while (input.charAt(input.length - 1) === ' ' || input.charAt(input.length - 1) === '.' || input.charAt(input.length - 1) === ',') {
+				input = input.substr(0, input.length - 1);
+			}
 
-            return input + '…';
-        }
+			return input + '…';
+		}
 
-        return input;
-    };
+		return input;
+	};
 })
 
 app.directive('confirmSaveOnExit', function($window, $location, $route) {
@@ -556,20 +550,20 @@ app.directive('confirmSaveOnExit', function($window, $location, $route) {
 				});
 			}
 
-/*			$window.onbeforeunload = function(event){
-				if ($location.path() === "/project" && !scope.lastSaved) {
-					var message = 'If you leave this page you are going to lose all unsaved changes, are you sure you want to leave?';
-					if (typeof event == 'undefined') {
-						event = $window.event;
-					}
-					if (event) {
-						event.returnValue = message;
-				    }
+			/*			$window.onbeforeunload = function(event){
+			 if ($location.path() === "/project" && !scope.lastSaved) {
+			 var message = 'If you leave this page you are going to lose all unsaved changes, are you sure you want to leave?';
+			 if (typeof event == 'undefined') {
+			 event = $window.event;
+			 }
+			 if (event) {
+			 event.returnValue = message;
+			 }
 
-				    confirmSaveChanges(event);
-				    return message;
-				};
-			}; */
+			 confirmSaveChanges(event);
+			 return message;
+			 };
+			 }; */
 
 			scope.$on('$locationChangeStart', function(event, next, current) {
 				if ($location.path() === "/") {
@@ -577,7 +571,7 @@ app.directive('confirmSaveOnExit', function($window, $location, $route) {
 				};
 			});
 
-        }
+		}
 	};
 });
 
@@ -629,12 +623,12 @@ app.directive('blurOnEnter', function() {
 
 app.directive('selectOnClick', function () {
 	return {
-	  restrict: 'AC',
-	  link: function (scope, element, attrs) {
-	    element.bind('click', function () {
-	      this.select();
-	    });
-	  }
+		restrict: 'AC',
+		link: function (scope, element, attrs) {
+			element.bind('click', function () {
+				this.select();
+			});
+		}
 	}
 });
 
@@ -656,7 +650,7 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 					'/',
 					{ name: 'fontstyles', items: [ 'FontSize', 'LineHeight' ] },
 					'/',
-					['Bold'], ['Italic'], ['Underline'], ['TransformTextToUppercase'], ['Subscript'], ['Superscript'], 
+					['Bold'], ['Italic'], ['Underline'], ['TransformTextToUppercase'], ['Subscript'], ['Superscript'],
 					'/',
 					['JustifyLeft'], ['JustifyCenter'], ['JustifyRight'], ['JustifyBlock'], ['NumberedList'], ['BulletedList'],
 					'/',
@@ -754,8 +748,8 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 			ck.on('key', function(event) { timeOutModel(event); });
 			ck.on('dataReady', function(event) { $rootScope.$emit('ckDocument:dataReady'); timeOutModel(event); });
 			/*ck.on('save', function() {
-				ngModel.$setViewValue(ck.getData());
-			});*/
+			 ngModel.$setViewValue(ck.getData());
+			 });*/
 
 			ngModel.$render = function(value) {
 				ck.setData(ngModel.$viewValue);
@@ -787,41 +781,41 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 
 // controls the Upgrade modal window
 app.controller("UpgradeModalController", [ '$scope', 'modals', 'utilsService',
-	function( $scope, modals, utilsService ) {
-        var params = modals.params();
+		function( $scope, modals, utilsService ) {
+			var params = modals.params();
 
-		$scope.freeNumberOfEbooks = utilsService.subscriptions.free.maxNumberOfProjects;
-		$scope.freeNumberOfDesigns = utilsService.subscriptions.free.maxNumberOfDesigns;
+			$scope.freeNumberOfEbooks = utilsService.subscriptions.free.maxNumberOfProjects;
+			$scope.freeNumberOfDesigns = utilsService.subscriptions.free.maxNumberOfDesigns;
 
-		$scope.premiumNumberOfEbooks = utilsService.subscriptions.premium.maxNumberOfProjects;
-		$scope.premiumNumberOfDesigns = utilsService.subscriptions.premium.maxNumberOfDesigns;
-		$scope.premiumMonthlyPrice = utilsService.subscriptions.premium.monthlyPrice;
+			$scope.premiumNumberOfEbooks = utilsService.subscriptions.premium.maxNumberOfProjects;
+			$scope.premiumNumberOfDesigns = utilsService.subscriptions.premium.maxNumberOfDesigns;
+			$scope.premiumMonthlyPrice = utilsService.subscriptions.premium.monthlyPrice;
 
-        // setup defaults using the modal params.
-		// TODO: use isPremium() function from projectController, once "premium-logic" branch has been merged in
-        $scope.useFreeText = ( params.useFree || ($scope.user.level && $scope.user.level == 'free' ? "Continue as Free" : 'Downgrade to Free') );
-        $scope.usePremiumText = ( params.usePremium || ($scope.user.level && $scope.user.level == 'premium' ? "Continue as Premium" : "Upgrade to Premium") );
+			// setup defaults using the modal params.
+			// TODO: use isPremium() function from projectController, once "premium-logic" branch has been merged in
+			$scope.useFreeText = ( params.useFree || ($scope.user.level && $scope.user.level == 'free' ? "Continue as Free" : 'Downgrade to Free') );
+			$scope.usePremiumText = ( params.usePremium || ($scope.user.level && $scope.user.level == 'premium' ? "Continue as Premium" : "Upgrade to Premium") );
 
-		$scope.useFree = function() {
-			if (params.useFree || ($scope.user.level && $scope.user.level == 'premium')) {
-				modals.resolve($scope.user.level);
-			} else {
-				modals.reject();
-			}
-		};
+			$scope.useFree = function() {
+				if (params.useFree || ($scope.user.level && $scope.user.level == 'premium')) {
+					modals.resolve($scope.user.level);
+				} else {
+					modals.reject();
+				}
+			};
 
-		$scope.usePremium = function() {
-			if (params.usePremium || ($scope.user.level && $scope.user.level == 'free')) {
-				modals.resolve($scope.user.level);
-			} else {
-				modals.reject();
-			}
-		};
+			$scope.usePremium = function() {
+				if (params.usePremium || ($scope.user.level && $scope.user.level == 'free')) {
+					modals.resolve($scope.user.level);
+				} else {
+					modals.reject();
+				}
+			};
 
-        // wire the modal buttons into modal resolution actions.
-		//$scope.useFree = ( params.useFree || ($scope.user.level && $scope.user.level == 'premium' ? modals.resolve : modals.reject) );
-        //$scope.usePremium = ( params.usePremium || ($scope.user.level && $scope.user.level == 'free' ? modals.resolve : modals.reject) );
-    }]
+			// wire the modal buttons into modal resolution actions.
+			//$scope.useFree = ( params.useFree || ($scope.user.level && $scope.user.level == 'premium' ? modals.resolve : modals.reject) );
+			//$scope.usePremium = ( params.usePremium || ($scope.user.level && $scope.user.level == 'free' ? modals.resolve : modals.reject) );
+		}]
 );
 
 // controls the Payment modal window
@@ -843,105 +837,211 @@ app.controller("PaymentModalController",
 	}
 );
 
+// controls the Login/Register modal window
+app.controller("LoginRegisterController",
+	function( $scope, modals, $http ) {
+		var params = modals.params();
+
+		// wire the modal buttons into modal resolution actions.
+		$scope.login = function() {
+			swal({
+				title: "Email has been sent",
+				text: 'If you entered your correct email address, an email has been sent to you. By using the link in this email you can change your password.',
+				type: "info",
+				confirmButtonText: "OK"
+			});
+			swal({
+				title: 'Are you sure?',
+				text: 'Your current demo work will be lost if you login.',
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Yes!'
+			}, function () {
+				resetLoginForm();
+				submitLogin(function (err, user) {
+					if (err) {
+						// Fail. Do what?
+					} else {
+						modals.resolve();
+						location.hash = "/";
+					}
+				});
+			});
+
+		};
+		$scope.register = function() {
+			$scope.submitRegistration($scope, function(err){
+				if (err) {
+					// Fail, do nothing
+				} else if ($scope.registerForm.$valid) {
+					modals.resolve();
+				}
+			});
+		};
+		$scope.resetPassword = function() {
+			resetLoginForm();
+			submitResetPassword();
+		};
+
+		$scope.cancel = modals.reject;
+
+		// Helper functions
+		function resetLoginForm() {
+			$scope.registrationSubmitted = true;
+			$scope.loginForm.$pristine = false;
+			$scope.loginForm.email.$pristine = false;
+			$scope.loginForm.password.$pristine = false;
+			$scope.loginForm.email.$invalid = false;
+			$scope.loginForm.$invalid = false;
+		}
+
+		function submitResetPassword() {
+			if ($scope.loginForm.email.$valid) {
+
+				$http.post('/user/password-reset',{
+					"email": $scope.login.email
+					})
+					.success(function(data) {
+						swal({
+							title: "Email has been sent",
+							text: 'If you entered your correct email address, an email has been sent to you. By using the link in this email you can change your password.',
+							type: "info",
+							confirmButtonText: "OK"
+						});
+						$scope.forgotPassword = false;
+					})
+					.error(function(data) {
+						$scope.errors.email = 'Could not reset password';
+						$scope.loginForm.email.$invalid = true;
+						$scope.loginForm.$invalid = true;
+					});
+			}
+		}
+
+		function submitLogin(next) {
+			if ($scope.loginForm.$valid) {
+
+				$http.post('/user/login',{
+					"email": $scope.login.email,
+					"password": $scope.login.password,
+					"remember": $scope.login.remember
+				})
+					.success(function(data) {
+						next(null, data.user);
+					})
+					.error(function(data) {
+						$scope.errors.email = 'Could not login user';
+						$scope.loginForm.email.$invalid = true;
+						$scope.loginForm.$invalid = true;
+						next('Invalid email');
+					});
+
+			} else {
+				next('Invalid email');
+			}
+		}
+	}
+);
+
 // manages the modals within the application
 app.service("modals",
-    function( $rootScope, $q ) {
-        // represents the currently active modal window instance
-        var modal = {
-            deferred: null,
-            params: null
-        };
+	function( $rootScope, $q ) {
+		// represents the currently active modal window instance
+		var modal = {
+			deferred: null,
+			params: null
+		};
 
-        // returns the public API
-        return({
-            open: open,
-            params: params,
-            proceedTo: proceedTo,
-            reject: reject,
-            resolve: resolve
-        });
+		// returns the public API
+		return({
+			open: open,
+			params: params,
+			proceedTo: proceedTo,
+			reject: reject,
+			resolve: resolve
+		});
 
-        // Opens a modal of the given type, with the given params. If a modal
-        // window is already open, you can optionally pipe the response of the
-        // new modal window into the response of the current (cum previous) modal
-        // window. Otherwise, the current modal will be rejected before the new
-        // modal window is opened.
-        function open( type, params, pipeResponse ) {
-            var previousDeferred = modal.deferred;
+		// Opens a modal of the given type, with the given params. If a modal
+		// window is already open, you can optionally pipe the response of the
+		// new modal window into the response of the current (cum previous) modal
+		// window. Otherwise, the current modal will be rejected before the new
+		// modal window is opened.
+		function open( type, params, pipeResponse ) {
+			var previousDeferred = modal.deferred;
 
-            // setup the new modal instance properties
-            modal.deferred = $q.defer();
-            modal.params = params;
+			// setup the new modal instance properties
+			modal.deferred = $q.defer();
+			modal.params = params;
 
-            // We're going to pipe the new window response into the previous
-            // window's deferred value.
-            if ( previousDeferred && pipeResponse ) {
+			// We're going to pipe the new window response into the previous
+			// window's deferred value.
+			if ( previousDeferred && pipeResponse ) {
 
-                modal.deferred.promise
-                    .then( previousDeferred.resolve, previousDeferred.reject );
+				modal.deferred.promise
+					.then( previousDeferred.resolve, previousDeferred.reject );
 
-            // We're not going to pipe, so immediately reject the current window.
-            } else if ( previousDeferred ) {
-                previousDeferred.reject();
-            }
+				// We're not going to pipe, so immediately reject the current window.
+			} else if ( previousDeferred ) {
+				previousDeferred.reject();
+			}
 
-            // Since the service object doesn't (and shouldn't) have any direct
-            // reference to the DOM, we are going to use events to communicate
-            // with a directive that will help manage the DOM elements that
-            // render the modal windows.
+			// Since the service object doesn't (and shouldn't) have any direct
+			// reference to the DOM, we are going to use events to communicate
+			// with a directive that will help manage the DOM elements that
+			// render the modal windows.
 
-            // NOTE: We could have accomplished this with a $watch() binding in
-            // the directive; but, that would have been a poor choice since it
-            // would require a chronic watching of acute application events.
-            $rootScope.$emit( "modals.open", type );
+			// NOTE: We could have accomplished this with a $watch() binding in
+			// the directive; but, that would have been a poor choice since it
+			// would require a chronic watching of acute application events.
+			$rootScope.$emit( "modals.open", type );
 
-            return( modal.deferred.promise );
+			return( modal.deferred.promise );
 
-        }
+		}
 
 
-        // returns the params associated with the current params
-        function params() {
-            return( modal.params || {} );
-        }
+		// returns the params associated with the current params
+		function params() {
+			return( modal.params || {} );
+		}
 
-        // opens a modal window with the given type and pipe the new window's
-        // response into the current window's response without rejecting it
-        // outright
+		// opens a modal window with the given type and pipe the new window's
+		// response into the current window's response without rejecting it
+		// outright
 
-        // This is just a convenience method for .open() that enables the
-        // pipeResponse flag; it helps to make the workflow more intuitive.
-        function proceedTo( type, params ) {
-            return( open( type, params, true ) );
-        }
+		// This is just a convenience method for .open() that enables the
+		// pipeResponse flag; it helps to make the workflow more intuitive.
+		function proceedTo( type, params ) {
+			return( open( type, params, true ) );
+		}
 
-        // rejects the current modal with the given reason
-        function reject( reason ) {
-            if ( ! modal.deferred ) {
-                return;
-            }
+		// rejects the current modal with the given reason
+		function reject( reason ) {
+			if ( ! modal.deferred ) {
+				return;
+			}
 
-            modal.deferred.reject( reason );
-            modal.deferred = modal.params = null;
+			modal.deferred.reject( reason );
+			modal.deferred = modal.params = null;
 
-            // tell the modal directive to close the active modal window
-            $rootScope.$emit( "modals.close" );
-        }
+			// tell the modal directive to close the active modal window
+			$rootScope.$emit( "modals.close" );
+		}
 
-        // resolves the current modal with the given response
-        function resolve( response ) {
-            if ( ! modal.deferred ) {
-                return;
-            }
+		// resolves the current modal with the given response
+		function resolve( response ) {
+			if ( ! modal.deferred ) {
+				return;
+			}
 
-            modal.deferred.resolve( response );
-            modal.deferred = modal.params = null;
+			modal.deferred.resolve( response );
+			modal.deferred = modal.params = null;
 
-            // tell the modal directive to close the active modal window
-            $rootScope.$emit( "modals.close" );
-        }
+			// tell the modal directive to close the active modal window
+			$rootScope.$emit( "modals.close" );
+		}
 
-    }
+	}
 );
 
 
@@ -949,46 +1049,46 @@ app.service("modals",
 // It doesn't actually define the modals in anyway - it simply decides which DOM sub-tree
 // should be linked. The means by which the modal window is defined is entirely up to the developer.
 app.directive("bnModals",
-    function( $rootScope, modals ) {
-        // return the directive configuration
-        return( link );
+	function( $rootScope, modals ) {
+		// return the directive configuration
+		return( link );
 
-        // binds the JavaScript events to the scope
-        function link( scope, element, attributes ) {
-            // Defines which modal window is being rendered. By convention,
-            // the subview will be the same as the type emitted by the modals
-            // service object.
-            scope.subview = null;
-            
-            // If the user clicks directly on the backdrop (ie, the modals
-            // container), consider that an escape out of the modal, and reject
-            // it implicitly.
-            element.on("click",
-                function handleClickEvent( event ) {
-                    if ( element[ 0 ] !== event.target ) {
-                        return;
-                    }
+		// binds the JavaScript events to the scope
+		function link( scope, element, attributes ) {
+			// Defines which modal window is being rendered. By convention,
+			// the subview will be the same as the type emitted by the modals
+			// service object.
+			scope.subview = null;
 
-                    scope.$apply( modals.reject );
+			// If the user clicks directly on the backdrop (ie, the modals
+			// container), consider that an escape out of the modal, and reject
+			// it implicitly.
+			element.on("click",
+				function handleClickEvent( event ) {
+					if ( element[ 0 ] !== event.target ) {
+						return;
+					}
 
-                }
-            );
+					scope.$apply( modals.reject );
 
-            // listen for "open" events emitted by the modals service object
-            $rootScope.$on("modals.open",
-                function handleModalOpenEvent( event, modalType ) {
-                    scope.subview = modalType;
-                }
-            );
+				}
+			);
 
-            // listen for "close" events emitted by the modals service object
-            $rootScope.$on("modals.close",
-                function handleModalCloseEvent( event ) {
-                    scope.subview = null;
-                }
-            );
+			// listen for "open" events emitted by the modals service object
+			$rootScope.$on("modals.open",
+				function handleModalOpenEvent( event, modalType ) {
+					scope.subview = modalType;
+				}
+			);
 
-        }
+			// listen for "close" events emitted by the modals service object
+			$rootScope.$on("modals.close",
+				function handleModalCloseEvent( event ) {
+					scope.subview = null;
+				}
+			);
 
-    }
+		}
+
+	}
 );

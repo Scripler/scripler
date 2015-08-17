@@ -6,6 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:400,700italic,700,500italic,400italic,500" />
 	<link rel="stylesheet" type="text/css" href="pages/css/shared/default.css" />
 	<link rel="stylesheet" type="text/css" href="pages/css/shared/fonts.css" />
+	<link rel="stylesheet" type="text/css" href="pages/css/pages/sweetalert2.css" />
 </head>
 <body data-ng-controller="appController" data-ng-cloak>
 	<!-- Google Tag Manager -->
@@ -52,65 +53,127 @@
 			</div>
 		</div>
 	</div>
-	<div id="registrationModalOverlay"></div>
-	<div id="registrationModal">
-		<div class="registration-container">
-			<div class="tabs">
-				<div data-ng-click="activeModalTab = 'login'" data-ng-class="{ 'active' : activeModalTab != 'register' }">Login</div>
-				<div data-ng-click="activeModalTab = 'register'" data-ng-class="{ 'active' : activeModalTab == 'register' }" >Register</div>
-			</div>
-			<div class="tab-content clearfix">
-				<div class="registration-form" data-ng-show="activeModalTab != 'register'">
-					<form name="loginForm" data-ng-submit="submitLogin()" novalidate>
-						<div class="error-box" data-ng-show="loginForm.email.$invalid && !loginForm.email.$pristine && registrationSubmitted " data-ng-bind="errors.email"></div>
-						<input on-click-change-text type="email" name="email" data-ng-model="login.email" data-ng-class="{ 'has-error' : loginForm.email.$invalid && !loginForm.email.$pristine && registrationSubmitted }" placeholder="Email address" data-ng-pattern="EMAIL_REGEXP" required>
-						<div class="error-box" data-ng-show="loginForm.password.$invalid && !loginForm.password.$pristine && registrationSubmitted && !forgotPassword" data-ng-bind="errors.password"></div>
-						<input data-ng-show="!forgotPassword" on-click-change-text type="password" name="password" data-ng-model="login.password" data-ng-class="{ 'has-error' : loginForm.password.$invalid && !loginForm.password.$pristine && registrationSubmitted }" placeholder="Password" data-ng-minlength="6" required>
-						<div class="extra-bar">
-							<div class="registration-social">
-								<a class="socialicon" href="../auth/facebook"><span class="icon-facebook"></span></a>
-								<a class="socialicon" href="../auth/linkedin"><span class="icon-linkedin"></span></a>
-								<a class="socialicon" href="../auth/google"><span class="icon-google-plus"></span></a>
-							</div>
-							<div class="remember-password">
-								<div><a href="" data-ng-click="forgotPassword = true" data-ng-show="!forgotPassword">Forgot password?</a></div>
-								<div><a href="" data-ng-click="forgotPassword = false" data-ng-show="!!forgotPassword">Cancel</a></div>
-								<div><label><input type="checkbox" name="remember" data-ng-model="login.remember">Keep me logged in</label></div>
-							</div>
-						</div>
-						<hr />
-						<button type="reset" class="button registration-button cancel-button">Cancel</button>
-						<button type="submit" class="button registration-button" data-ng-show="!forgotPassword">Login</button>
-						<button type="submit" class="button registration-button" data-ng-show="!!forgotPassword">Reset password</button>
-					</form>
-				</div>
 
-				<div class="registration-form" data-ng-show="activeModalTab == 'register'">
-					<form name="registerForm" data-ng-submit="submitRegistration()" novalidate>
-						<div class="error-box" data-ng-show="registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted " data-ng-bind="errors.name"></div>
-						<input on-click-change-text type="text" name="name" data-ng-model="user.name" data-ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First and last name" required>
-						<div class="error-box" data-ng-show="registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted " data-ng-bind="errors.email"></div>
-						<input on-click-change-text type="email" name="email" data-ng-model="user.email" data-ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email address" data-ng-pattern="EMAIL_REGEXP" required>
-						<div class="error-box" data-ng-show="registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted " data-ng-bind="errors.password"></div>
-						<input on-click-change-text type="password" name="password" data-ng-model="user.password" data-ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" data-ng-minlength="6" required>
-						<div class="extra-bar">
-							<div class="registration-social">
-								<a class="socialicon" href="../auth/facebook"><span class="icon-facebook"></span></a>
-								<a class="socialicon" href="../auth/linkedin"><span class="icon-linkedin"></span></a>
-								<a class="socialicon" href="../auth/google"><span class="icon-google-plus"></span></a>
-							</div>
-							<div class="remember-password">
-								<div class="remember-me-box"><label><input type="checkbox" name="remember">Keep me logged in</label></div>
-							</div>
+
+	<!-- modal windows -->
+	<div bn-modals ng-show="subview" class="m-modals" ng-switch="subview">
+		<!-- BEGIN: Free / Premium Modal. -->
+		<div ng-switch-when="upgrade" ng-controller="UpgradeModalController" class="modal">
+			<div class="planChoice" id="freePlan">
+				<h1>Free</h1>
+				<p>{{ freeNumberOfEbooks }} ebook projects</p>
+				<p>{{ freeNumberOfDesigns }} ebook design templates</p>
+				<a class="modalButtons" id="useFree" ng-click="useFree()">{{ useFreeText }}</a>
+			</div>
+			<div class="planChoice" id="premiumPlan">
+				<h1>Premium</h1>
+				<p>{{ premiumNumberOfEbooks }} ebook projects</p>
+				<p>{{ premiumNumberOfDesigns }} ebook design templates</p>
+				<div id="price"><p>€{{ premiumMonthlyPrice }}<br><span>MONTH</span></p></div>
+				<a class="modalButtons" id="usePremium" ng-click="usePremium()">{{ usePremiumText }}</a>
+			</div>
+		</div>
+		<!-- END: Free / Premium Modal. -->
+
+		<!-- BEGIN: Payment Modal. -->
+		<div ng-switch-when="payment" ng-controller="PaymentModalController" class="modal">
+			<div class="upgradePayment" id="upgradePayment">
+				<form name="upgradePaymentForm" ng-submit="paymentUpgrade()" novalidate>
+					<!-- <form name="upgradePaymentForm" ng-init="setFormScope(this)" ng-submit="paymentUpgrade()" novalidate> -->
+					<h2>Upgrade to Premium</h2>
+					<p class="no-top-margin"><em>Your card will be charged €14.00/month.</em></p>
+					<hr>
+					<img class="secure-image" src="pages/images/safe_payment.png" height="45" width="45">
+					<span><p class="secure-text">SECURE PAYMENT<br><a href="">LEARN MORE</a></p></span>
+					<br>
+					<span><p class="top-text-card">Card number</p></span>
+					<p class="card-number">
+						<input class="inputCardNumber" id="paymentCardNumber" ng-model="payment.cardNumber" type="tel" placeholder="•••• •••• •••• ••••" autocompletetype="cc-number" required="required" />
+					</p>
+					<span>
+						<div class="paymentAir" id="paymentAir">
+							<p class="top-text-expires-cvc">Expires</p>
+							<input class="inputExpiresCVC" id="paymentExpirationDate" ng-model="payment.expirationDate" type="tel" placeholder="MM / YY" autocompletetype="cc-exp" required="required" />
 						</div>
-						<hr />
-						<button type="reset" class="button registration-button cancel-button">Cancel</button>
-						<button type="submit" class="button registration-button">Register</button>
-					</form>
+						<div class="paymentAir" id="paymentAir">
+							<p class="top-text-expires-cvc">CVC/CVV&emsp;<a href=""><img src="pages/images/questionmark_icon.png"></a></p>
+							<input class="inputExpiresCVC" id="paymentCvv" ng-model="payment.cvv" type="tel" placeholder="CVC" autocompletetype="cc-cvc" required="required" />
+						</div>
+					</span>
+					<p>
+						<a class="paymentButtons" id="paymentUpgrade" ng-click="paymentUpgrade()">Upgrade</a>
+						<a class="paymentButtons" id="paymentCancel" ng-click="paymentCancel()">Cancel</a>
+					</p>
+				</form>
+			</div>
+		</div>
+		<!-- END: Login / Register Modal. -->
+
+		<!-- BEGIN: Free / Premium Modal. -->
+		<div ng-switch-when="loginregister" ng-controller="LoginRegisterController" class="modal">
+			<div id="registrationModal">
+				<div class="tabs">
+					<div data-ng-click="activeModalTab = 'login'" data-ng-class="{ 'active' : activeModalTab != 'register' }">Login</div>
+					<div data-ng-click="activeModalTab = 'register'" data-ng-class="{ 'active' : activeModalTab == 'register' }" >Register</div>
+				</div>
+				<div class="tab-content clearfix">
+					<div class="registration-form" data-ng-show="activeModalTab != 'register'">
+						<form name="loginForm" novalidate>
+							<div class="error-box" data-ng-show="loginForm.email.$invalid && !loginForm.email.$pristine && registrationSubmitted " data-ng-bind="errors.email"></div>
+							<input on-click-change-text type="email" name="email" data-ng-model="login.email" data-ng-class="{ 'has-error' : loginForm.email.$invalid && !loginForm.email.$pristine && registrationSubmitted }" placeholder="Email address" data-ng-pattern="EMAIL_REGEXP" required>
+							<div class="error-box" data-ng-show="loginForm.password.$invalid && !loginForm.password.$pristine && registrationSubmitted && !forgotPassword" data-ng-bind="errors.password"></div>
+							<input data-ng-show="!forgotPassword" on-click-change-text type="password" name="password" data-ng-model="login.password" data-ng-class="{ 'has-error' : loginForm.password.$invalid && !loginForm.password.$pristine && registrationSubmitted }" placeholder="Password" data-ng-minlength="6" required>
+							<div class="extra-bar">
+								<div class="registration-social">
+									<a class="socialicon" href="../auth/facebook"><span class="icon-facebook"></span></a>
+									<a class="socialicon" href="../auth/linkedin"><span class="icon-linkedin"></span></a>
+									<a class="socialicon" href="../auth/google"><span class="icon-google-plus"></span></a>
+								</div>
+								<div class="remember-password">
+									<div><a href="" data-ng-click="forgotPassword = true" data-ng-show="!forgotPassword">Forgot password?</a></div>
+									<div><a href="" data-ng-click="forgotPassword = false" data-ng-show="!!forgotPassword">Cancel</a></div>
+									<div data-ng-show="!forgotPassword">
+										<label><input type="checkbox" name="remember" data-ng-model="login.remember">Keep me logged in</label>
+									</div>
+								</div>
+							</div>
+							<hr />
+							<button type="reset" data-ng-click="cancel()" class="button registration-button cancel-button">Cancel</button>
+							<button type="submit" data-ng-click="login()" class="button registration-button" data-ng-show="!forgotPassword">Login</button>
+							<button type="submit" data-ng-click="resetPassword()" class="button registration-button" data-ng-show="!!forgotPassword">Reset password</button>
+						</form>
+					</div>
+
+					<div class="registration-form" data-ng-show="activeModalTab == 'register'">
+						<form name="registerForm" novalidate>
+							<div class="error-box" data-ng-show="registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted " data-ng-bind="errors.name"></div>
+							<input on-click-change-text type="text" name="name" data-ng-model="user.name" data-ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First and last name" required>
+							<div class="error-box" data-ng-show="registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted " data-ng-bind="errors.email"></div>
+							<input on-click-change-text type="email" name="email" data-ng-model="user.email" data-ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email address" data-ng-pattern="EMAIL_REGEXP" required>
+							<div class="error-box" data-ng-show="registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted " data-ng-bind="errors.password"></div>
+							<input on-click-change-text type="password" name="password" data-ng-model="user.password" data-ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" data-ng-minlength="6" required>
+							<div class="extra-bar">
+								<div class="registration-social">
+									<a class="socialicon" href="../auth/facebook"><span class="icon-facebook"></span></a>
+									<a class="socialicon" href="../auth/linkedin"><span class="icon-linkedin"></span></a>
+									<a class="socialicon" href="../auth/google"><span class="icon-google-plus"></span></a>
+								</div>
+								<div class="remember-password">
+									<div class="remember-me-box"><label><input type="checkbox" name="remember">Keep me logged in</label></div>
+								</div>
+							</div>
+							<hr />
+							<button type="reset" data-ng-click="cancel()" class="button registration-button cancel-button">Cancel</button>
+							<button type="submit" data-ng-click="register()" class="button registration-button">Register</button>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
+		<!-- END: Login / Register Modal. -->
+
 	</div>
+
 	<!-- Braintree must appear before Angular, since we are not importing it as an Angular module (TODO: is there a way to do this?) -->
 	<script type="text/javascript" src="//js.braintreegateway.com/v2/braintree.js"></script>
 	<script type="text/javascript" src="scripts/sweetalert2.min.js"></script>
