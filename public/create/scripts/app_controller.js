@@ -8,6 +8,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		$scope.errors.name = 'Name is empty';
 		$scope.errors.email = 'Email is invalid';
 		$scope.errors.password = 'Six characters minimum';
+		$scope.errors.tos = 'Please accept the terms of service';
 		$scope.registrationText = 'Hey, stranger. Register to save your work!';
 		$scope.verificationEmailSent = false;
 		$scope.socialRegistrationText = 'or use:';

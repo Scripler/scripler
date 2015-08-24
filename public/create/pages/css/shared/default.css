@@ -344,8 +344,6 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 	top: 200px ;
 }
 
-/* END Modals */
-
 /* START Login/Register modal styling */
 #registrationModal {
 	width: 340px;
@@ -413,14 +411,21 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 	border-top: 1px solid #CCCCCC;
 	clear: both;
 }
-/* END Login/Register modal styling */
-
 
 .cancel-button {
 	background-color: #CCCCCC;
 	color: white;
 	border: 1px solid #cccccc;
 }
+
+#registrationModal #tosContainer {
+	padding-top: 10px;
+}
+
+/* END Login/Register modal styling */
+
+/* END Modals */
+
 
 /*registration styling*/
 .registration {
@@ -555,6 +560,12 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 	color: #000;
 }
 
+#registration-tos-container {
+	position: absolute; /* To avoid affecting the size (height) of the registration bar */
+	margin-left: 465px;
+	padding-top: 2px;
+}
+
 .error-box {
 	position: absolute;
 	background: #ff0000;
@@ -572,6 +583,10 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 .error-box.error-box-password {
 	margin-left: 392px;
 }
+.error-box.error-box-tos {
+	margin-left: 595px;
+	width: 267px;
+}
 .error-box:after {
 	top: 100%;
 	left: 50%;
@@ -585,7 +600,6 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 	border-top-color: #ff0000;
 	margin-left: -3px;
 }
-
 
 /* Styling for the ngProgress */
 
