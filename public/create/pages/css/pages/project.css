@@ -200,12 +200,12 @@
 	width: 100% !important;
 	height: 100%;
 }
-/* This should with time be fixed in the menubar plugin or how it works in ckeditor, a lot of styles are set on the elements */
+
 .cke_toolbox {
-	margin: 0 0 0 -5px !important;
-	width: calc(100% - 100px) !important;
-	padding-left: 0 !important;
+	margin: 0 0 0 -5px;
+	width: calc(100% - 100px);
 	float: left;
+	padding: 3px 0 0 0px;
 }
 .cke_toolgroup {
 	margin: 0 2px 4px !important;
@@ -267,7 +267,6 @@
 	background: #fff;
 	border: 1px solid #000;
 	border-bottom: #fff;
-	z-index: 16;
 }
 .style-options-show {
 	z-index: 8;
@@ -771,5 +770,13 @@ li.typo .style-copy-options p {
 	left: 0;
 	overflow: visible;
 	overflow-y:visible;
+}
 
+.urlError{
+	position: relative; 
+}
+
+input[type="submit"]{
+	font-family: 'Roboto', Arial, sans-serif;
+  	font-size: 100%;
 }

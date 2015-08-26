@@ -230,6 +230,14 @@ ul.navList li>a:hover{
     background-color: transparent;
 }
 
+.nav .blog-link:hover, .nav .blog-link:focus{
+	background-color: #000;
+}
+
+.nav .talk-link:hover, .nav .talk-link:focus{
+	background-color: #ccc;
+}
+
 a#signUp{
 	color:#000;
 	text-decoration: underline;
