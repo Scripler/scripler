@@ -8,7 +8,7 @@ var emailer = require('../lib/email/email.js');
 var utils = require('../lib/utils');
 
 var gateway = braintree.connect({
-	environment: (env == 'production' ? braintree.Environment.Production : braintree.Environment.Sandbox),
+	environment: (conf.braintree.env == 'production' ? braintree.Environment.Production : braintree.Environment.Sandbox),
 	merchantId: conf.braintree.merchantId,
 	publicKey: conf.braintree.publicKey,
 	privateKey: conf.braintree.privateKey

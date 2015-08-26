@@ -26,6 +26,7 @@
 		"apiKey": "xxxx"
 	},
 	"braintree":{
+		"env": "sandbox",
 		"merchantId": "xxx",
 		"publicKey": "xxx",
 		"privateKey": "xxx"
