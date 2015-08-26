@@ -21,9 +21,6 @@
 
 	<div class="container" data-ng-class="{'shownotification' : showRegistrationInfoBar && !user.emailVerified, 'activation' : user._id}" data-ng-view confirm-save-on-exit></div>
 
-	<div class="notifications" data-ng-class="{ 'loggedin' : !showRegistrationInfoBar || user.emailVerified, 'activation' : user._id }">
-		We're in alpha. <a class="readmore" target="_blank" href="http://blog.scripler.com/test-scripler-now.html">Read more</a>
-	</div>
 	<div id="registrationWrapper" class="registration" data-ng-hide="user.emailVerified || !showRegistrationInfoBar" data-ng-class="{ 'activation' : user._id }" data-ng-cloak>
 		<div id="registrationContainer" class="registration-container">
 			<div class="registration-form explanation" data-ng-hide="user.isDemo">

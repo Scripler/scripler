@@ -232,7 +232,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 			var bookmarks = selectedRanges.createBookmarks2(false);
 			var startElement = selection.getStartElement();
 			var range = selectedRanges[0];
-			var elName = 'div';
+			var elName = 'p';
 			var isOneLine = false;
 			var boundryNodes = range.getBoundaryNodes();
 
@@ -251,7 +251,8 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				}
 			}
 
-			$scope.copiedElement = el;
+			$rootScope.copiedElement = el;
+			$rootScope.copiedText = selection.getSelectedText();
 
 			$rootScope.ck.focus();
 			selectedRanges.moveToBookmarks(bookmarks);
@@ -664,7 +665,9 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 				skin: 'scripler',
 				bodyId: 'scripler',
 				resize_enabled: false,
+				forcePasteAsPlainText: true,
 				extraPlugins: 'scripler,floating-tools,lineHeight,texttransform,colordialog,colorbutton,indent-right,indentations,scripler_pagebreak,imageScripler,linkScripler',
+				removePlugins: 'pastefromword',
 				floatingtools: 'Basic',
 				floatingtools_Basic: [
 					{ name: 'styles', items: [ 'Font' ] },
@@ -725,12 +728,42 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 				}
 			}
 
+			function htmlUnescape(value){
+				return String(value)
+					.replace(/&quot;/g, '"')
+					.replace(/&#39;/g, "'")
+					.replace(/&lt;/g, '<')
+					.replace(/&gt;/g, '>')
+					.replace(/<br\s*\/?>|<\/?p>|&nbsp;/g, ' ')
+					.replace(/&amp;/g, '&');
+			}
+
+			function cleanWhitespace(string) {
+				return string.replace(/\s+/g, ' ');
+			}
+
+			function copiedTextEquals(text1, text2) {
+				if (!text1 || !text2) {
+					return false;
+				}
+				// cleanWhitespace, since types of whitespace may differ (non-breaking, linebreak, duplicate, etc)
+				// htmlUnescape, since pasted plain text contains encoded html-entites, <p>- and <br>-tags.
+				text1 = cleanWhitespace(text1).trim();
+				text2 = cleanWhitespace(htmlUnescape(text2)).trim();
+
+				// Find a common length to compare - CK's getSelectedText tend to cut off text.
+				var length = Math.min(text1.length, text2.length);
+				text1 = text1.substring(0, length);
+				text2 = text2.substring(0, length);
+				return text1 == text2;
+			}
+
 			ck.on('paste', function(event) {
-				//TODO check for pasted value vs copiedElement
-				if (scope.copiedElement) {
+				// Check if the copied text is the same as the latest internal copy.
+				if (copiedTextEquals($rootScope.copiedText, event.data.dataValue)) {
 					event.stop();
 
-					var el = scope.copiedElement.clone(true);
+					var el = $rootScope.copiedElement.clone(true);
 					var headingsArray = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ];
 
 					if (headingsArray.indexOf(el.getName()) > -1 ) {
@@ -766,6 +799,10 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 					}
 
 					ck.insertElement(el);
+				} else {
+					// Something external was copied since last editor copy - reset internal copy of the copied content
+					$rootScope.copiedElement = null;
+					$rootScope.copiedText = '';
 				}
 			});
 			ck.on('key', function(event) { timeOutModel(event); });
