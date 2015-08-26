@@ -161,7 +161,7 @@ describe('Scripler RESTful API', function () {
 					userStylesetId2 = res.body.user.stylesets[1]; // book-color
 					userStylesetId3 = res.body.user.stylesets[2]; // draft-bw
 					userStylesetId4 = res.body.user.stylesets[3]; // draft-color  
-					defaultUserStyleset = res.body.user.stylesets[15]; // simple-bw
+					defaultUserStyleset = res.body.user.stylesets[0]; // book-bw
                     done();
 				});
 		}),
@@ -1935,6 +1935,10 @@ describe('Scripler RESTful API', function () {
 			imageName = 'Scripler_logo.jpg';
 			var srcImagesDir = path.join('test', 'resources', 'images');
 			var srcImage = path.join(srcImagesDir, imageName);
+
+			// HACK! Use the value from when the test was written to get the "Payment required" error (402) and not "not able to load project" (596)
+			// TODO: this should be fixed/improved, ideally by being able to inject subscription values into "shared_utils" for "dev", "test" and "prod".
+			shared_utils.subscriptions["free"].maxNumberOfProjects = 5;
 
 			request(host)
 				.post('/image/' + projectId + '/upload')

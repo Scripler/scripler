@@ -6,6 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:400,700italic,700,500italic,400italic,500" />
 	<link rel="stylesheet" type="text/css" href="pages/css/shared/default.css" />
 	<link rel="stylesheet" type="text/css" href="pages/css/shared/fonts.css" />
+	<link rel="stylesheet" type="text/css" href="pages/css/pages/sweetalert2.css" />
 </head>
 <body data-ng-controller="appController" data-ng-cloak>
 	<!-- Google Tag Manager -->
@@ -34,11 +35,16 @@
 					<div class="error-box error-box-name" data-ng-show="registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted " data-ng-bind="errors.name"></div>
 					<div class="error-box error-box-email" data-ng-show="registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted " data-ng-bind="errors.email"></div>
 					<div class="error-box error-box-password" data-ng-show="registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted " data-ng-bind="errors.password"></div>
+					<div class="error-box error-box-tos" data-ng-show="!tos && registrationSubmitted " data-ng-bind="errors.tos"></div>
 
 					<input on-click-change-text type="text" id="reg-name" name="name" data-ng-model="user.name" data-ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First and last name" required>
 					<input on-click-change-text type="email" id="reg-email" name="email" data-ng-model="user.email" data-ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email address" data-ng-pattern="EMAIL_REGEXP" required>
 					<input on-click-change-text type="password" id="reg-password" name="password" data-ng-model="user.password" data-ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" data-ng-minlength="6" required>
 					<button type="submit" class="button registration-button">Register</button>
+					<div id="registration-tos-container">
+						<!-- TODO: insert correct link to Terms of Service -->
+						I agree to the <a target="_blank" href="http://talk.scripler.com/t/official-scripler-faq/109">terms of service</a> <input id="tos" type="checkbox" data-ng-model="tos" required>
+					</div>
 				</form>
 			</div>
 			<div class="registration-social clearfix" data-ng-hide="user._id && !user.isDemo">
@@ -49,6 +55,148 @@
 			</div>
 		</div>
 	</div>
+
+
+	<!-- modal windows -->
+	<div bn-modals ng-show="subview" class="m-modals" ng-switch="subview">
+		<!-- BEGIN: Free / Premium / Pro Modal. -->
+		<div ng-switch-when="upgrade" ng-controller="UpgradeModalController" class="modalPlan">
+
+			<div class="planChoice" id="freePlan">
+				<h1>Free</h1>
+				<p>{{ freeNumberOfEbooks }} ebook projects</p>
+				<p>{{ freeNumberOfDesigns }} ebook design templates</p>
+				<a class="modalButtons" id="useFree" ng-click="useFree()">{{ useFreeText }}</a>
+			</div>
+
+			<div class="planChoice" id="premiumPlan">
+				<h1>Premium</h1>
+				<p>{{ premiumNumberOfEbooks }} ebook projects</p>
+				<p>{{ premiumNumberOfDesigns }} ebook design templates</p>
+				<h2>${{ premiumMonthlyPrice }}/month</h2>
+				<a class="modalButtons" id="usePremium" ng-click="usePremium()">{{ usePremiumText }}</a>
+			</div>
+
+			<div class="planChoice" id="proPlan">
+				<h1>Professional</h1>
+				<p>Need more than 10 books?</p>
+				<p>&nbsp;</p>
+				<a href="mailto:info@scripler.com" class="modalButtons" id="usePro">Contact us</a>
+			</div>
+
+		</div>
+		<!-- END: Free / Premium / Pro Modal. -->
+
+		<!-- BEGIN: Payment Modal. -->
+		<div ng-switch-when="payment" ng-controller="PaymentModalController" class="modal">
+			<div class="upgradePayment" id="upgradePayment">
+				<form name="upgradePaymentForm" ng-submit="paymentUpgrade()" novalidate>
+					<h2>Upgrade to Premium</h2>
+					<p class="no-top-margin"><em>Your card will be charged ${{ premiumMonthlyPrice }}/month.</em></p>
+					<hr>
+					<a target="_blank" href="https://en.wikipedia.org/wiki/HTTPS">
+						<img class="secure-image" src="pages/images/safe_payment.png" height="45" width="45">
+						<span><p class="secure-text">SECURE PAYMENT<br>LEARN MORE</p></span>
+					</a>
+					<br>
+					<span><p class="top-text-card">Card number</p></span>
+					<p class="card-number">
+						<!-- bind="payment.cardNumberValid" -->
+						<input id="paymentCardNumber" ng-model="payment.cardNumber" class="paymentItem" data-ng-class="{ 'paymentCardNumber': !payment.cardNumberValid, 'paymentCardNumber paymentItemValid': payment.cardNumberValid }" type="tel" placeholder="•••• •••• •••• ••••" autocompletetype="cc-number" required="required" payment-input />
+					</p>
+					<span>
+						<div class="paymentAir" id="paymentAir">
+							<p class="top-text-expires-cvc">Expires</p>
+							<input id="paymentExpirationDate" ng-model="payment.expirationDate" class="paymentItem" data-ng-class="{ 'paymentExpiresCVC': !payment.expirationDateValid, 'paymentExpiresCVC paymentItemValid': payment.expirationDateValid }" type="tel" placeholder="MM / YY" autocompletetype="cc-exp" required="required" payment-input />
+						</div>
+						<div class="paymentAir" id="paymentAir">
+							<p class="top-text-expires-cvc">CVC/CVV&emsp;<a target="_blank" href="https://en.wikipedia.org/wiki/Card_security_code"><img src="pages/images/questionmark_icon.png"></a></p>
+							<input id="paymentCvv" ng-model="payment.cvv" class="paymentItem" data-ng-class="{ 'paymentExpiresCVC': !payment.cvvValid, 'paymentExpiresCVC paymentItemValid': payment.cvvValid }" type="tel" placeholder="CVC" autocompletetype="cc-cvc" required="required" payment-input />
+						</div>
+					</span>
+					<p>
+						<!-- TODO: also disable the button visually, e.g. "grey out" the button, change the cursor, etc. -->
+						<a class="paymentButtons" id="paymentUpgrade" ng-click="!(payment.cardNumberValid || payment.expirationDateValid || payment.cvvValid) || paymentUpgrade()">Upgrade</a>
+						<a class="paymentButtons" id="paymentCancel" ng-click="paymentCancel()">Cancel</a>
+					</p>
+				</form>
+			</div>
+		</div>
+		<!-- END: Payment Modal. -->
+
+		<!-- BEGIN: Login / Register Modal. -->
+		<div ng-switch-when="loginregister" ng-controller="LoginRegisterController" class="modal">
+			<div id="registrationModal">
+				<div class="tabs">
+					<div data-ng-click="activeModalTab = 'login'" data-ng-class="{ 'active' : activeModalTab != 'register' }">Login</div>
+					<div data-ng-click="activeModalTab = 'register'" data-ng-class="{ 'active' : activeModalTab == 'register' }" >Register</div>
+				</div>
+				<div class="tab-content clearfix">
+					<div class="registration-form" data-ng-show="activeModalTab != 'register'">
+						<form name="loginForm" novalidate>
+							<div class="error-box" data-ng-show="loginForm.email.$invalid && !loginForm.email.$pristine && registrationSubmitted " data-ng-bind="errors.email"></div>
+							<input on-click-change-text type="email" name="email" data-ng-model="login.email" data-ng-class="{ 'has-error' : loginForm.email.$invalid && !loginForm.email.$pristine && registrationSubmitted }" placeholder="Email address" data-ng-pattern="EMAIL_REGEXP" required>
+							<div class="error-box" data-ng-show="loginForm.password.$invalid && !loginForm.password.$pristine && registrationSubmitted && !forgotPassword" data-ng-bind="errors.password"></div>
+							<input data-ng-show="!forgotPassword" on-click-change-text type="password" name="password" data-ng-model="login.password" data-ng-class="{ 'has-error' : loginForm.password.$invalid && !loginForm.password.$pristine && registrationSubmitted }" placeholder="Password" data-ng-minlength="6" required>
+							<div class="extra-bar">
+								<div class="registration-social">
+									<a class="socialicon" href="../auth/facebook"><span class="icon-facebook"></span></a>
+									<a class="socialicon" href="../auth/linkedin"><span class="icon-linkedin"></span></a>
+									<a class="socialicon" href="../auth/google"><span class="icon-google-plus"></span></a>
+								</div>
+								<div class="remember-password">
+									<div><a href="" data-ng-click="forgotPassword = true" data-ng-show="!forgotPassword">Forgot password?</a></div>
+									<div><a href="" data-ng-click="forgotPassword = false" data-ng-show="!!forgotPassword">Cancel</a></div>
+									<div data-ng-show="!forgotPassword">
+										<label><input type="checkbox" name="remember" data-ng-model="login.remember">Keep me logged in</label>
+									</div>
+								</div>
+							</div>
+							<hr />
+							<button type="reset" data-ng-click="cancel()" class="button registration-button cancel-button">Cancel</button>
+							<button type="submit" data-ng-click="login()" class="button registration-button" data-ng-show="!forgotPassword">Login</button>
+							<button type="submit" data-ng-click="resetPassword()" class="button registration-button" data-ng-show="!!forgotPassword">Reset password</button>
+						</form>
+					</div>
+
+					<div class="registration-form" data-ng-show="activeModalTab == 'register'">
+						<form name="registerForm" novalidate>
+							<div class="error-box" data-ng-show="registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted " data-ng-bind="errors.name"></div>
+							<input on-click-change-text type="text" name="name" data-ng-model="user.name" data-ng-class="{ 'has-error' : registerForm.name.$invalid && !registerForm.name.$pristine && registrationSubmitted }" placeholder="First and last name" required>
+							<div class="error-box" data-ng-show="registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted " data-ng-bind="errors.email"></div>
+							<input on-click-change-text type="email" name="email" data-ng-model="user.email" data-ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email address" data-ng-pattern="EMAIL_REGEXP" required>
+							<div class="error-box" data-ng-show="registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted " data-ng-bind="errors.password"></div>
+							<input on-click-change-text type="password" name="password" data-ng-model="user.password" data-ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" data-ng-minlength="6" required>
+							<div class="extra-bar">
+								<div class="registration-social">
+									<a class="socialicon" href="../auth/facebook"><span class="icon-facebook"></span></a>
+									<a class="socialicon" href="../auth/linkedin"><span class="icon-linkedin"></span></a>
+									<a class="socialicon" href="../auth/google"><span class="icon-google-plus"></span></a>
+								</div>
+								<div class="remember-password">
+									<div class="remember-me-box"><label><input type="checkbox" name="remember">Keep me logged in</label></div>
+								</div>
+							</div>
+							<hr />
+							<button type="reset" data-ng-click="cancel()" class="button registration-button cancel-button">Cancel</button>
+							<button type="submit" data-ng-click="register()" class="button registration-button">Register</button>
+							<div id="tosContainer">
+								<div class="error-box error-box-tos" data-ng-show="!tos && registrationSubmitted " data-ng-bind="errors.tos"></div>
+								<!-- TODO: insert correct link to Terms of Service -->
+								I agree to the <a target="_blank" href="http://talk.scripler.com/t/official-scripler-faq/109">terms of service</a> <input id="tos" type="checkbox" data-ng-model="tos" required>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- END: Login / Register Modal. -->
+
+	</div>
+
+	<!-- Braintree must appear before Angular, since we are not importing it as an Angular module (TODO: is there a way to do this?) -->
+	<script type="text/javascript" src="//js.braintreegateway.com/v2/braintree.js"></script>
+	<script type="text/javascript" src="scripts/sweetalert2.min.js"></script>
 	<script type="text/javascript" src="scripts/angular-file-upload-html5-shim.min.js"></script>
 	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/webfont/1.5.3/webfont.js"></script>
 	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>

@@ -9,6 +9,7 @@ var mkdirp = require('mkdirp');
 var fs = require('fs');
 var logger = require('../lib/logger');
 var mongoose = require('mongoose')
+var user_utils = require('../lib/user-utils');
 
 exports.create = function (req, res, next) {
 	var project = req.project;
@@ -31,7 +32,9 @@ exports.create = function (req, res, next) {
 	}
 
 	if (req.user.storageUsed + totalBytes > storageLimitBytes) {
-		return next({message: "User storage quota exceeded (" + (req.user.storageUsed + totalBytes) + " > " + storageLimitBytes + " bytes)", status: 402});
+		logger.error("User " + req.user._id + " tried to exceed storage quota (" + (req.user.storageUsed + totalBytes) + " > " + storageLimitBytes + " bytes)");
+		var errorMessageToUser = user_utils.getStorageLimitErrorMessage(req.user.level, conf.subscriptions[req.user.level].storage);
+		return next({message: errorMessageToUser, status: 402});
 	}
 
 	async.each(files, function (file, callback) {
@@ -88,7 +91,7 @@ exports.create = function (req, res, next) {
 			}
 
 			// Image(s) was correctly uploaded and stored on project.
-			// As a background task update the users stoageUsed value.
+			// As a background task update the user's storageUsed value.
 			// Don't wait for it - customer will just be happy if it fails.
 			User.update({_id: req.user._id}, {$inc: {storageUsed: totalBytes}}, function (err, numAffected) {
 				if (err) {

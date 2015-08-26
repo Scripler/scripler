@@ -55,13 +55,15 @@
 		</div>
 	</div>
 	<div id="menu-left-design" class="menu-item-left" data-ng-show="leftMenuShowItem == 'design'">
-		<div class="typo new" data-ng-click="addNewStyleset()">
+		<div class="typo new" data-ng-show="isPremium()" data-ng-click="addNewStyleset()">
 			<p>+</p>
 		</div>
 		<ul>
 			<li data-ng-repeat="styleset in stylesets track by $index" id="{{styleset._id}}" class="typo" data-ng-class="{ 'open' : styleset._id == selectedStyleset }" data-ng-hide="styleset.archived || styleset.hidden">
 
-				<a class="styleset-options-show" data-ng-click="showStyleset(styleset._id); showStylesetOptions($index);" data-ng-class="{ 'open' : $index == selectedStylesetOptions }">
+				<a class="styleset-upgrade no-select" data-ng-click="upgrade()" data-ng-show="!isStylesetAccessible(styleset)">Upgrade to premium!</a>
+
+				<a class="styleset-options-show" data-ng-show="isStylesetAccessible(styleset)" data-ng-click="showStyleset(styleset._id); showStylesetOptions($index);" data-ng-class="{ 'open' : $index == selectedStylesetOptions }">
 					<div class="arrow"></div>
 				</a>
 
@@ -81,7 +83,7 @@
 
 				<ul data-ng-show="styleset._id == selectedStyleset" class="typo-children">
 					<li data-ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" data-ng-hide="style.archived || style.hidden" data-ng-selected="selectedStyle._id === style._id" class="typo-children-style" data-ng-class="{ selected : selectedStyle._id === style._id }">
-						<a class="style-options-show" data-ng-click="showStylesetChildOptions($parent.$index, $index)" data-ng-class="{ 'open' : $parent.$index == selectedStylesetParentOptions && $index == selectedStylesetChildOptions }">
+						<a class="style-options-show" data-ng-show="isStylesetAccessible(styleset)" data-ng-click="showStylesetChildOptions($parent.$index, $index)" data-ng-class="{ 'open' : $parent.$index == selectedStylesetParentOptions && $index == selectedStylesetChildOptions }">
 							<div class="arrow"></div>
 						</a>
 

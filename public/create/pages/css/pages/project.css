@@ -780,3 +780,19 @@ input[type="submit"]{
 	font-family: 'Roboto', Arial, sans-serif;
   	font-size: 100%;
 }
+
+.styleset-upgrade {
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: #f2d32c;
+	border: 2px solid #fff56c;
+	padding: 0px 5px 0px 5px;
+	font-size: 0.8em;
+	color:  #fff56c;
+}
+
+
+a.styleset-upgrade:hover {
+	color:  #fff56c;
+}

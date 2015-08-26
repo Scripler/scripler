@@ -17,7 +17,8 @@
 	},
 	"subscriptions": {
 		"free": {
-			"storage": 20000//bytes
+			"storage": 20000,//bytes
+		  "stylesets": ["book-bw", "light-color", "book-color", "simple-color"]
 		},
 		"premium": {
 			"storage": 200000//bytes
@@ -54,6 +55,6 @@
 		"uploadLimit": 104857600//100 MB (Nginx will have a lower limit)
 	},
 	"user": {
-		"defaultStylesetName": "simple-bw"
+		"defaultStylesetName": "book-bw"
 	}
 }

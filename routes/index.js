@@ -8,9 +8,7 @@ var frontpage = require('./frontpage')
 	, image = require('./image')
 	, font = require('./font')
 	, payment = require('./payment')
-	, server = require('./server')
-	, utils = require('../lib/utils')
-	, conf = require('config');
+	, utils = require('../lib/utils');
 
 module.exports = function (app, auth) {
 
@@ -39,13 +37,13 @@ module.exports = function (app, auth) {
 	app.post('/project', auth.isLoggedIn(), project.create);
 	app.get('/project/:projectIdPopulated', auth.isLoggedIn(), project.open);
 	app.put('/project/:projectId/rename', auth.isLoggedIn(), project.rename);
-	app.put('/project/:projectId/archive', auth.isLoggedIn(), project.archive);
-	app.put('/project/:projectId/unarchive', auth.isLoggedIn(), project.unarchive);
+	app.put('/project/:projectIdNoPremiumCheck/archive', auth.isLoggedIn(), project.archive);
+	app.put('/project/:projectIdNoPremiumCheck/unarchive', auth.isLoggedIn(), project.unarchive);
 	app.put('/project/:projectId/metadata', auth.isLoggedIn(), project.metadata);
 	app.put('/project/:projectId/metadata/cover', auth.isLoggedIn(), project.metadata_cover); // TODO: Refactor when using PATCH, c.f. #323
 	app.put('/project/:projectId/toc', auth.isLoggedIn(), project.set_toc);
 	app.get('/project/:projectIdPopulatedFull/toc', auth.isLoggedIn(), project.get_toc);
-	app.delete('/project/:projectId', auth.isLoggedIn(), project.delete);
+	app.delete('/project/:projectIdNoPremiumCheck', auth.isLoggedIn(), project.delete);
 	app.post('/project/:projectIdPopulatedFull/copy', auth.isLoggedIn(), project.copy);
 	app.post('/image/:projectId/upload', auth.isLoggedIn(), image.create);
 	app.get('/project/:projectId/images/*', auth.isLoggedIn(), image.get);
@@ -99,18 +97,14 @@ module.exports = function (app, auth) {
 
 	/* API Output */
 	app.get('/project/:projectIdPopulatedFull/compile', auth.isLoggedIn(), project.compile);
-	app.post('/project/:projectIdPopulated/publish', auth.isLoggedIn(), project.publish);
-	app.delete('/project/:projectId/publish', auth.isLoggedIn(), project.unpublish);
 	app.get('/project/:projectId/epub', auth.isLoggedIn(), project.downloadEpub);
-	app.get('/'+conf.publish.route+'/:projectIdNoAccessCheck/*', project.renderEpubReader);
-	app.get('/server/status', server.status);
 
 	// API Parameters
 	app.param('projectId', function (req, res, next, id) {
 		return project.load(id)(req, res, next);
 	});
-	app.param('projectIdNoAccessCheck', function (req, res, next, id) {
-		return project.loadNoAccessCheck(id)(req, res, next);
+	app.param('projectIdNoPremiumCheck', function (req, res, next, id) {
+		return project.loadWithoutPremiumCheck(id)(req, res, next);
 	});
 	app.param('projectIdPopulated', function (req, res, next, id) {
 		return project.loadPopulated(id)(req, res, next);

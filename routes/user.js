@@ -262,6 +262,19 @@ exports.edit = function (req, res, next) {
 		user.isDemo = isDemo;
 	}
 
+	// If upgrading from a demo account to real user with email-address, and user not already got a subscription,
+	// add optional free premium months.
+	if (emailChanged && userWasDemo && !user.payment.subscriptionId && !user.payment.endDate) {
+		var freeMonth = parseInt(conf.user.freePremiumMonths);
+		if (freeMonth > 0) {
+			user.level = "premium";
+			var endDate = new Date();
+			endDate.setMonth(endDate.getMonth() + freeMonth);
+			user.payment.endDate = endDate;
+			logger.info("User '" + user.id + "' got " + freeMonth + " free months. End-date: " + endDate);
+		}
+	}
+
 	var saveUser = function () {
 		user.save(function (err) {
 			if (err) {

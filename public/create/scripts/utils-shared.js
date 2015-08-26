@@ -204,6 +204,68 @@
 		return text;
 	}
 
+	// TODO: should this be duplicated in config/<env>.json because we want to be able to change it without making a release?
+	// TODO: how to make this configurable for test?
+	var subscriptions = {
+		"free": {
+			"maxNumberOfProjects": 3,
+			"maxNumberOfDesigns": 3
+		},
+		"premium": {
+			"maxNumberOfProjects": 10,
+			"maxNumberOfDesigns": 17,
+			"monthlyPrice": "9.99"
+		},
+		"professional": {
+			"maxNumberOfProjects": 100
+		}
+	};
+
+	/**
+	 * Can a user with "userLevel" and "projectIds" create a new project?
+	 *
+	 * @param userLevel
+	 * @param projectIds
+	 * @returns {boolean}
+	 */
+	function canCreateProject(userLevel, projectIds) {
+		if (!userLevel) return false;
+		if (!subscriptions[userLevel]) return false;
+		if (!projectIds) return true;
+		if (projectIds.length < subscriptions[userLevel].maxNumberOfProjects) return true;
+		return false;
+	}
+
+	/**
+	 * Is a user with "userLevel" and "projectIds" allowed to load "projectIdToCheck"?
+	 *
+	 * @param userLevel
+	 * @param projectIds
+	 * @param projectIdToCheck
+	 * @returns {boolean}
+	 */
+	function canLoadProject(userLevel, projectIds, projectIdToCheck) {
+		if (!userLevel) return false;
+		if (!subscriptions[userLevel]) return false;
+
+		var maxNumberOfProjects = subscriptions[userLevel].maxNumberOfProjects;
+
+		// If we are not exceeding the max number of projects...
+		if (projectIds && projectIds.length <= maxNumberOfProjects) {
+			// The user is allowed to load any of his/her projects, if he/she has fewer than the max
+			if (projectIds.indexOf(projectIdToCheck) > -1) return true;
+
+			// Since the first four bytes of a Mongo id represents a creation timestamp, we can use this to sort by date.
+			var sortedProjectIds = projectIds.sort();
+			var firstXProjectIds = sortedProjectIds.slice(0, maxNumberOfProjects);
+
+			// TODO: implement not using indexOf(), since we want to compare values not references? (see http://stackoverflow.com/questions/19737408/mongoose-check-if-objectid-exists-in-an-array)
+			return JSON.stringify(firstXProjectIds).indexOf(projectIdToCheck.toString()) > -1;
+		}
+
+		return false;
+	}
+
 	return {
 		getStylesetContents : getStylesetContents,
 		getCombinedStylesetContents: getCombinedStylesetContents,
@@ -213,7 +275,10 @@
 		containsDocWithFolderId: containsDocWithFolderId,
 		isValidEmail: isValidEmail,
 		getNameParts: getNameParts,
-		createRandomString : createRandomString
+		createRandomString : createRandomString,
+		canCreateProject : canCreateProject,
+		canLoadProject: canLoadProject,
+		subscriptions: subscriptions
 	}
 
 }()))

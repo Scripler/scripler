@@ -6,16 +6,17 @@
 
 .section-unisquare {
 	position: fixed;
-	padding: 16px;
-	width: 327px;
+	padding: 16px 16px 0px 16px;
+	width: 300px;
 /*	height: 300px !important;*/
 	border: 2px solid #fff;
 	background: #c6c6c6;
-	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.5) 100%); /* WebKit */
-	background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.5) 100%); /* Firefox */
-	background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.5) 100%); /* IE10+ */
-	background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.5) 100%); /* Opera */
-	background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.5) 100%);
+	box-shadow: 0px 5px 5px -5px #ccc;
+	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* WebKit */
+	background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* Firefox */
+	background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* IE10+ */
+	background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* Opera */
+	background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%);
 }
 .section-unisquare.white-bg {
 	background-color: #fff;
@@ -27,7 +28,7 @@
 	width: -moz-calc(100% - 360px) !important;
 	width: calc(100% - 360px) !important;
 	height: 100%;
-	margin: 0 0 0 350px !important;
+	margin: 0 0 0 325px !important;
 	overflow: auto;
 }
 
@@ -49,18 +50,29 @@
 	width: 100px;
 	height: 129px;
 	float: left;
+	background-repeat: no-repeat; /* To avoid a black line under the project icon */
 }
 .project:hover, .project:focus {
-	background: url("../../images/ebook_hover.png")
+	background: url("../../images/ebook_hover.png");
+	background-repeat: no-repeat;
 }
 .project.new {
-	background: url("../../images/ebook_new.png")
+	background: url("../../images/ebook_new.png") /* If "no-repeat" is used here, the icon is not shown */
 }
 .project.new:hover, .project.new:focus {
 	background: url("../../images/ebook_new_hover.png")
 }
 .project.archived {
-	background: url("../../images/ebook_archived.png")
+	background: url("../../images/ebook_archived.png");
+	background-repeat: no-repeat;
+}
+.project.upgrade {
+	background: url("../../images/ebook_new_upgrade.svg");
+	background-repeat: no-repeat;
+}
+.project.downgraded {
+	background: url("../../images/ebook_downgraded.svg");
+	background-repeat: no-repeat;
 }
 
 .project p {
@@ -122,7 +134,7 @@
 	top: 20px;
 	left: 6px;
 	overflow: hidden;
-	width: 73px;
+	width: 74px;
 	height: 90px;
 	padding: 5px;
 	text-align: center;
@@ -141,12 +153,20 @@
 }
 .project-link.show-more {
 	top: inherit;
-	bottom: 19px;
+	bottom: 18px;
 	height: 28px;
 	background: #fff;
 }
 .archived .project-link.show-more {
 	background: #ccc;
+}
+.project-link.downgraded {
+	color: #fff;
+}
+.project-link.downgraded-helptext {
+	background: #000;
+	color: #fff;
+	font-size: 12px;
 }
 
 .filter-sort, .filter-search {
@@ -195,6 +215,7 @@ textarea#rename {
 }
 .frontpage-link span {
 	float: left;
+	margin-right: 5px;
 }
 .frontpage-link:hover .arrow-left {
 	border-right: 5px solid #666;
@@ -221,12 +242,19 @@ textarea#rename {
 	color:#999;
 }
 .uni-bottom-box {
-	position: absolute;
-	left: 0;
-	bottom: 0;
+	position: relative;
 	width: 100%;
-	background-color: #fff;
 	padding: 10px;
+	border-top:1px #fff solid;
+}
+.upgrade-bottom-box {
+	position: relative;
+	border-top: 2px solid #fff;
+	padding: 10px 0 10px;
+	margin: 0 -16px;
+}
+.upgrade-bottom-box-premium {
+	background: #F2D32C;
 }
 .user-box {
 	padding: 6px;
@@ -236,7 +264,6 @@ textarea#rename {
 }
 .user-text {
 	float: left;
-	width: 225px;
 	color: #000;
 	padding-top: 5px;
 	padding-left: 10px;
@@ -254,7 +281,8 @@ textarea#rename {
 	text-decoration: underline;
 }
 .user-links a, span {
-	font-size: 100%;
+	font-size: 90%;
+	color: #000;
 }
 .user-links a:hover {
 	color: #000;
@@ -275,7 +303,9 @@ textarea#rename {
 }
 hr {
 	border: 0;
-	border-top: 1px solid #fff265;
+	border-top: 2px solid #fff;
+	margin-bottom: 15px;
+	margin-right: 25px;
 }
 .user-settings-options .user-email input {
 	width: auto;
@@ -381,4 +411,3 @@ hr {
 	overflow: visible;
 	overflow-y:visible;
 }
-
