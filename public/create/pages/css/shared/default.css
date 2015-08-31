@@ -236,15 +236,12 @@ a.link-underline {
 }
 
 input[type="password"], input[type="text"], input[type="email"] {
-	-moz-border-radius: 1px;
-	-webkit-border-radius: 1px;
-	border-radius: 1px;
 	-webkit-appearance: none;
 	border: 0px solid #fff;
-	background: #f6f6f6;
+	background: #fff;
 	font-size: 15px;
 	padding: 6px 8px;
-	margin: 0 5px 0 0;
+	margin: 0 10px 0 0;
 }
 input.has-error {
 	border: 1px solid #ff0000;
@@ -371,6 +368,7 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 	margin-bottom: 5px;
 	border: 1px solid #c6c6c6;
 	width: 100%;
+	font-family: roboto, helvetica, sans-serif;
 }
 
 #registrationModal .tabs {
@@ -381,13 +379,15 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 	background-color:white;
 	width: 50%;
 	float:left;
-	padding: 10px 0 10px 20px;
+	padding: 10px 0 10px 15px;
 	cursor: pointer;
+	color: gray;
 }
 
 #registrationModal .tabs div.active {
 	background-color:#F2F2F2;
 	font-weight: bold;
+	color: #000;
 }
 
 #registrationModal .tab-content {
@@ -396,7 +396,7 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 
 #registrationModal .extra-bar {
 	height: 40px;
-	margin: 5px 0 5px 0;
+	margin: 10px 0 10px 0;
 }
 
 #registrationModal .registration-social {
@@ -405,10 +405,11 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 
 #registrationModal .remember-password {
 	float: right;
+	font-size: 12px;
 }
 
 #registrationModal hr {
-	border-top: 1px solid #CCCCCC;
+	border: 1px solid #CCCCCC;
 	clear: both;
 }
 
@@ -416,6 +417,7 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 	background-color: #CCCCCC;
 	color: white;
 	border: 1px solid #cccccc;
+	margin-right: 10px;
 }
 
 #registrationModal #tosContainer {
@@ -495,18 +497,19 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 */
 .socialicon {
 	background-color: #fff;
-	border-radius: 50%;
 	width: 33px;
 	height: 33px;
-	padding: 5px 0 0 0;
+	padding: 6px 0 0 0;
 	font-size: 20px;
 	text-align:center;
 	display: inline-block;
 	cursor:pointer;
+	margin-right: 5px;
 
 }
 .socialicon:hover {
-	background-color: #f5f5f5;
+	background-color: #F2F2F2;
+	text-decoration: none;
 }
 
 .social-registration-text {
@@ -518,10 +521,10 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 }
 
 .registration-button {
-	width: auto;
-	font-size: 16px;
+	width: 148px;
+	font-size: 18px;
 	font-weight: 700;
-	padding: 4px 10px 5px;
+	padding: 5px 10px 5px;
 	min-width: 100px;
 }
 .registration-missing-email {
