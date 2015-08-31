@@ -15,7 +15,7 @@
 		<div data-ng-hide="showSettings">
 			<div class="clearfix">
 				<a href="http://{{frontpage}}" target="_self" class="frontpage-link">
-					<span class="arrow-left"></span><span>Front page</span>
+					<span>Frontpage</span>
 				</a>
 			</div>
 			<div class="logo-box">
@@ -85,12 +85,14 @@
 		<div class="projects-title">Ebooks</div>
 
 		<div class="section-projects">
-			<!-- TODO: insert real Upgrade link here when the Premium frontend has been implemented -->
+
+
 			<div data-ng-class="getNewProjectClass()" data-ng-click="addProject();"></div>
 			<div class="project clearfix" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived, 'downgraded' : !canLoadProject(project) }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index" data-ng-mouseenter="showProjectTitle($index)" data-ng-mouseleave="hideProjectTitle()">
 				<a data-ng-class="{ 'project-options-show' : canLoadProject(project)}" data-ng-class="{ 'open' : $index == selectedProjectOptions }" data-ng-click="showProjectOptions($index)">
 					<div class="arrow"></div>
 				</a>
+
 
 				<div data-ng-hide="project.editingProjectTitle || (!canLoadProject(project) && $index == selectedProjectHover)" class="project-link" data-ng-class="{ 'show-all' : $index == selectedProjectHover && !project.editingProjectTitle && $index != selectedProjectOptions && !project.archived, 'downgraded' : !canLoadProject(project) }">
 					<a data-ng-if="!project.archived && canLoadProject(project)" data-ng-href="#/project?pid={{project._id}}">
@@ -108,6 +110,7 @@
 					<textarea id="rename" name="projectTitleEdit" data-ng-model="project.name" placeholder="project title" focus-on="!!project.editingProjectTitle" blur-on-enter data-ng-focus="storeTitle(project)" data-ng-blur="project.editingProjectTitle = false; renameProject(project);" required></textarea>
 					<div class="nameError" ng-show="project{{$index}}.projectTitleEdit.$error.required">The title is required!</div> 
 				</form>
+
 
 				<div data-ng-class="{ 'project-options' : canLoadProject(project)}" data-ng-show="$index == selectedProjectOptions">
 					<div class="project-options-menupoint" data-ng-show="project.archived" data-ng-click="unarchiveProject(project); hideProjectOptions();">unarchive</div>

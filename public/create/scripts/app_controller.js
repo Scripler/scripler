@@ -8,6 +8,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		$scope.errors.name = 'Name is empty';
 		$scope.errors.email = 'Email is invalid';
 		$scope.errors.password = 'Six characters minimum';
+		$scope.errors.tos = 'Please accept the terms of service';
 		$scope.registrationText = 'Hey, stranger. Register to save your work!';
 		$scope.verificationEmailSent = false;
 		$scope.socialRegistrationText = 'or use:';
@@ -17,8 +18,12 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 
 		// sweetAlert
 		var swal = $window.swal;
-
-		//var upgradePromise = modals.open("loginregister");
+		swal.setDefaults({
+			confirmButtonText: "OK",
+			allowEscapeKey: true,
+			confirmButtonColor: '#fff56c',
+			cancelButtonColor: "#f3f3f3"
+		});
 
 		$scope.upgrade = function() {
 			if (!$scope.user || !$scope.user._id || $scope.user.isDemo) {
@@ -28,7 +33,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 			}
 		}
 
-		// Opens the Upgrade modal
+		// Opens the login/register modal
 		var showLoginRegisterModal = function() {
 
 			var loginRegisterPromise = modals.open("loginregister");
@@ -39,10 +44,11 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 					}
 				},
 				function handleReject(error) {
-					if (error) console.log("An error occurred closing the login register window: " + error);
+					// If error is defined, an error occurred closing the login register window
 				}
 			);
 		}
+
 		// Opens the Upgrade modal
 		var showUpgradeModal = function() {
 			// the .open() method returns a promise that will be either
@@ -53,26 +59,21 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 			upgradePromise.then(
 				function handleResolve(response) {
 					if (response) {
-							var alertTitle;
-							var alertHtml;
-							var alertType = "error";
-							var alertConfirmButtonText = "OK";
+						var alertTitle;
+						var alertHtml;
+						var alertType = "error";
 
 						if (response == 'premium') {
 							// TODO: should we just create one token when the page loads that can be used for both payment and downgrade?
 							paymentService.setClient($window.braintree, function (err) {
-									alertTitle = "Could not cancel subscription";
+								alertTitle = "Could not cancel subscription";
 
 								if (err) {
-										alertHtml = err.errorMessage;
+									alertHtml = err.errorMessage;
 									swal({
-											title: alertTitle,
-											html: alertHtml,
-											type: alertType,
-											confirmButtonText: alertConfirmButtonText,
-											allowEscapeKey: true,
-											confirmButtonColor: "#fff56c",
-											cancelButtonColor: "#f3f3f3"
+										title: alertTitle,
+										html: alertHtml,
+										type: alertType
 									});
 								} else {
 										paymentService.cancelSubscription($scope.user, function (err, data) {
@@ -81,31 +82,22 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 												swal({
 													title: alertTitle,
 													html: alertHtml,
-													type: alertType,
-													confirmButtonText: alertConfirmButtonText,
-													allowEscapeKey: true,
-													confirmButtonColor: "#fff56c",
-													cancelButtonColor: "#f3f3f3"
+													type: alertType
 												});
 											} else {
 												if (data && data.user.level != 'free' && data.user.payment.cancelled) {
 													$scope.user.payment.cancelled = data.user.payment.cancelled;
 													swal({
 														title: "Subscription cancelled",
-														// TODO: get the date on which the user's premium subscription expires
+														// TODO: show the date on which the user's premium subscription expires. Does Braintree return the value synchronously when cancelling or do we have to wait for the webhook callback?
 														html: "Your subscription has now been cancelled. You will remain Premium until your subscription expires.",
-														type: "success",
-														confirmButtonText: alertConfirmButtonText
+														type: "success"
 													});
 												} else {
 													swal({
 														title: alertTitle,
-														html: alertHtml,
-														type: alertType,
-														confirmButtonText: alertConfirmButtonText,
-														allowEscapeKey: true,
-														confirmButtonColor: "#fff56c",
-														cancelButtonColor: "#f3f3f3"
+														html: "Oops! Something went wrong cancelling your subscription.",
+														type: alertType
 													});
 												}
 											}
@@ -123,56 +115,40 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 							paymentPromise.then(
 								function handleResolve(response) {
 									paymentService.setClient($window.braintree, function (err) {
-											alertTitle = "Could not create subscription";
+										alertTitle = "Could not create subscription";
 
 										if (err) {
-												alertHtml = err.errorMessage;
+											alertHtml = err.errorMessage;
 											swal({
-													title: alertTitle,
-													html: alertHtml,
-													type: alertType,
-													confirmButtonText: alertConfirmButtonText,
-													allowEscapeKey: true,
-													confirmButtonColor: "#fff56c",
-													cancelButtonColor: "#f3f3f3"
+												title: alertTitle,
+												html: alertHtml,
+												type: alertType
 											});
 										} else {
-												var paymentCardNumber = response.cardNumber.replace(/\s/g, '');
-												var expirationDate = response.expirationDate.replace(/\s/g, '');
+											var paymentCardNumber = response.cardNumber.replace(/\s/g, '');
+											var expirationDate = response.expirationDate.replace(/\s/g, '');
 											var cvv = response.cvv;
 											paymentService.createSubscription(paymentCardNumber, expirationDate, cvv, function (err, data) {
 												if (err) {
-														alertHtml = err.errorMessage;
+													alertHtml = err.errorMessage;
 													swal({
-															title: alertTitle,
-															html: alertHtml,
-															type: alertType,
-															confirmButtonText: alertConfirmButtonText,
-															allowEscapeKey: true,
-															confirmButtonColor: "#fff56c",
-															cancelButtonColor: "#f3f3f3"
+														title: alertTitle,
+														html: alertHtml,
+														type: alertType
 													});
 												} else {
 													if (data && data.user.level == 'premium' && !data.user.payment.cancelled) {
 														$scope.user.level = data.user.level;
 														swal({
 															title: "Subscription created",
-																html: "Your payment has been received and your subscription created. You will receive a confirmation email shortly.",
-															type: "success",
-																confirmButtonText: alertConfirmButtonText,
-																allowEscapeKey: true,
-																confirmButtonColor: "#fff56c",
-																cancelButtonColor: "#f3f3f3"
+															html: "Your payment has been received and your subscription created. You will receive a confirmation email shortly.",
+															type: "success"
 														});
 													} else {
 														swal({
-																title: alertTitle,
-																html: alertHtml,
-																type: alertType,
-																confirmButtonText: alertConfirmButtonText,
-																allowEscapeKey: true,
-																confirmButtonColor: "#fff56c",
-																cancelButtonColor: "#f3f3f3"
+															title: alertTitle,
+															html: "Oops! Something went wrong creating your subscription.",
+															type: alertType
 														});
 													}
 												}
@@ -181,18 +157,18 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 									});
 								},
 								function handleReject(error) {
-									if (error) console.log("An error occurred closing the payment window: " + JSON.stringify(error));
+									// If error is defined, an error occurred closing the payment window
 								}
 							);
 						} else {
-							console.log("Upgrade modal promise did not contain either a 'free' or 'premium' value");
+							// Upgrade modal promise did not contain either a 'free' or 'premium' value
 						}
 					} else {
-						console.log("Unable to get response from upgrade modal promise");
+						// Unable to get response from upgrade modal promise
 					}
 				},
 				function handleReject(error) {
-					if (error) console.log("An error occurred closing the upgrade window: " + JSON.stringify(error));
+					// If error is defined, an error occurred closing the upgrade window
 				}
 			);
 		};
@@ -256,7 +232,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 			var bookmarks = selectedRanges.createBookmarks2(false);
 			var startElement = selection.getStartElement();
 			var range = selectedRanges[0];
-			var elName = 'div';
+			var elName = 'p';
 			var isOneLine = false;
 			var boundryNodes = range.getBoundaryNodes();
 
@@ -275,7 +251,8 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				}
 			}
 
-			$scope.copiedElement = el;
+			$rootScope.copiedElement = el;
+			$rootScope.copiedText = selection.getSelectedText();
 
 			$rootScope.ck.focus();
 			selectedRanges.moveToBookmarks(bookmarks);
@@ -513,7 +490,6 @@ app.service('paymentService', function($http, $q) {
 			$http.get('/payment/token')
 				.success( function(data) {
 					if (data && data.token) {
-						//var client = new braintree.api.Client({clientToken: data.token});
 						client = new $braintree.api.Client({
 							clientToken: data.token
 						});
@@ -689,7 +665,9 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 				skin: 'scripler',
 				bodyId: 'scripler',
 				resize_enabled: false,
+				forcePasteAsPlainText: true,
 				extraPlugins: 'scripler,floating-tools,lineHeight,texttransform,colordialog,colorbutton,indent-right,indentations,scripler_pagebreak,imageScripler,linkScripler',
+				removePlugins: 'pastefromword',
 				floatingtools: 'Basic',
 				floatingtools_Basic: [
 					{ name: 'styles', items: [ 'Font' ] },
@@ -750,12 +728,42 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 				}
 			}
 
+			function htmlUnescape(value){
+				return String(value)
+					.replace(/&quot;/g, '"')
+					.replace(/&#39;/g, "'")
+					.replace(/&lt;/g, '<')
+					.replace(/&gt;/g, '>')
+					.replace(/<br\s*\/?>|<\/?p>|&nbsp;/g, ' ')
+					.replace(/&amp;/g, '&');
+			}
+
+			function cleanWhitespace(string) {
+				return string.replace(/\s+/g, ' ');
+			}
+
+			function copiedTextEquals(text1, text2) {
+				if (!text1 || !text2) {
+					return false;
+				}
+				// cleanWhitespace, since types of whitespace may differ (non-breaking, linebreak, duplicate, etc)
+				// htmlUnescape, since pasted plain text contains encoded html-entites, <p>- and <br>-tags.
+				text1 = cleanWhitespace(text1).trim();
+				text2 = cleanWhitespace(htmlUnescape(text2)).trim();
+
+				// Find a common length to compare - CK's getSelectedText tend to cut off text.
+				var length = Math.min(text1.length, text2.length);
+				text1 = text1.substring(0, length);
+				text2 = text2.substring(0, length);
+				return text1 == text2;
+			}
+
 			ck.on('paste', function(event) {
-				//TODO check for pasted value vs copiedElement
-				if (scope.copiedElement) {
+				// Check if the copied text is the same as the latest internal copy.
+				if (copiedTextEquals($rootScope.copiedText, event.data.dataValue)) {
 					event.stop();
 
-					var el = scope.copiedElement.clone(true);
+					var el = $rootScope.copiedElement.clone(true);
 					var headingsArray = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ];
 
 					if (headingsArray.indexOf(el.getName()) > -1 ) {
@@ -791,6 +799,10 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 					}
 
 					ck.insertElement(el);
+				} else {
+					// Something external was copied since last editor copy - reset internal copy of the copied content
+					$rootScope.copiedElement = null;
+					$rootScope.copiedText = '';
 				}
 			});
 			ck.on('key', function(event) { timeOutModel(event); });
@@ -821,7 +833,7 @@ app.directive('ckEditor', function($window, $rootScope, $timeout) {
 
 /***
  *
- * TODO: give props where props are due (where did we get this code from?)
+ * Copied (and slightly adapted) from https://github.com/stripe/jquery.payment (removed jQuery dependencies).
  *
  * TODO: refactor into separate module
  *
@@ -995,8 +1007,7 @@ app.directive('paymentInput', function($timeout, $parse) {
 				return;
 			}
 			groups.shift();
-			// TODO: implement using Array.filter()
-			groups = $.grep(groups, function(n) {
+			groups.filter(function (n) {
 				return n;
 			});
 			return groups.join(' ');
@@ -1463,6 +1474,7 @@ app.controller("UpgradeModalController", [ '$scope', 'modals', 'utilsService',
 		function( $scope, modals, utilsService ) {
 			var params = modals.params();
 
+			// Used in the modal text
 			$scope.freeNumberOfEbooks = utilsService.subscriptions.free.maxNumberOfProjects;
 			$scope.freeNumberOfDesigns = utilsService.subscriptions.free.maxNumberOfDesigns;
 
@@ -1512,14 +1524,8 @@ app.controller("LoginRegisterController",
 		// wire the modal buttons into modal resolution actions.
 		$scope.login = function() {
 			swal({
-				title: "Email has been sent",
-				text: 'If you entered your correct email address, an email has been sent to you. By using the link in this email you can change your password.',
-				type: "info",
-				confirmButtonText: "OK"
-			});
-			swal({
 				title: 'Are you sure?',
-				text: 'Your current demo work will be lost if you login.',
+				text: 'Your current content will be lost if you login.',
 				type: 'warning',
 				showCancelButton: true,
 				confirmButtonText: 'Yes!'

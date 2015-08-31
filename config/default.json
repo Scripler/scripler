@@ -31,7 +31,7 @@
 		"privateKey": "xxx"
 	},
 	"plans": {
-		"premium": {"name": "Premium Subscription", "price": "14.99", "trial": "10"},
+		"premium": {"name": "Premium Subscription", "price": "9.99", "trial": "10"},
 		"free": {"name": "Free Subscription", "price": "0.0", "trial": "0"}
 	},
 	"prices": {
@@ -115,7 +115,7 @@
 		"uploadLimit": 524288000//500 MB (Nginx can have lower limits, and differentiate between routes)
 	},
 	"user": {
-		"defaultStylesetName": "book-bw",
+		"defaultStylesetName": "simple-color",
 		"freePremiumMonths": 3
 	}
 }
