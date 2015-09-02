@@ -52,11 +52,11 @@ describe('Scripler - Payment', function () {
 					assert.equal(res.body.user.firstname, "John");
 					assert.equal(res.body.user.lastname, "The Payer");
 					assert.equal(res.body.user.stylesets.length, 17);
-					userStylesetId1 = res.body.user.stylesets[0]; // book-bw - Free
-					userStylesetId2 = res.body.user.stylesets[1]; // book-color - Free
-					userStylesetId3 = res.body.user.stylesets[2]; // draft-bw - Premium
-					userStylesetId4 = res.body.user.stylesets[3]; // draft-color - Premium
-					defaultUserStyleset = res.body.user.stylesets[0]; // book-bw
+					userStylesetId1 = res.body.user.stylesets[15]; 	// simple-bw	- Free
+					userStylesetId2 = res.body.user.stylesets[9]; 	// light-color	- Free
+					userStylesetId3 = res.body.user.stylesets[1];	// book-color	- Premium
+					userStylesetId4 = res.body.user.stylesets[3]; 	// draft-color	- Premium
+					defaultUserStyleset = userStylesetId1; // simple-bw
 					done();
 				});
 		}),
@@ -114,13 +114,13 @@ describe('Scripler - Payment', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.stylesets.length, 17);
-					assert.notEqual(res.body.stylesets[0]._id, userStylesetId1);//This default styleset, book-bw, has now been applied to document, so it got a new id.
-					assert.equal(res.body.stylesets[1]._id, userStylesetId2);
-					assert.equal(res.body.stylesets[2]._id, userStylesetId3);
+					assert.notEqual(res.body.stylesets[15]._id, userStylesetId1); //This default styleset, simple-bw, has now been applied to document, so it got a new id.
+					assert.equal(res.body.stylesets[9]._id, userStylesetId2);
+					assert.equal(res.body.stylesets[1]._id, userStylesetId3);
 					assert.equal(res.body.stylesets[3]._id, userStylesetId4);
-					assert.equal(res.body.stylesets[0].accessLevels.indexOf("free") >= 0, true);
-					assert.equal(res.body.stylesets[1].accessLevels.indexOf("free") >= 0, true);
-					assert.equal(res.body.stylesets[2].accessLevels.indexOf("free") >= 0, false);
+					assert.equal(res.body.stylesets[15].accessLevels.indexOf("free") >= 0, true);
+					assert.equal(res.body.stylesets[9].accessLevels.indexOf("free") >= 0, true);
+					assert.equal(res.body.stylesets[1].accessLevels.indexOf("free") >= 0, false);
 					assert.equal(res.body.stylesets[3].accessLevels.indexOf("free") >= 0, false);
 					done();
 				});
