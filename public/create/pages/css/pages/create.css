@@ -8,15 +8,14 @@
 	position: fixed;
 	padding: 16px 16px 0px 16px;
 	width: 300px;
-/*	height: 300px !important;*/
+	height: 300px !important;
 	border: 2px solid #fff;
 	background: #c6c6c6;
-	box-shadow: 0px 5px 5px -5px #ccc;
-	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* WebKit */
-	background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* Firefox */
-	background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* IE10+ */
-	background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%); /* Opera */
-	background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.1) 100%);
+	background-image: -webkit-radial-gradient(center center, circle contain, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.4) 100%); /* WebKit */
+	background-image: -moz-radial-gradient(center center, circle contain, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.4) 100%); /* Firefox */
+	background-image: -ms-radial-gradient(center center, circle contain, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.4) 100%); /* IE10+ */
+	background-image: -o-radial-gradient(center center, circle contain, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.4) 100%); /* Opera */
+	background-image: radial-gradient(center center, circle contain, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.4) 100%);
 }
 .section-unisquare.white-bg {
 	background-color: #fff;
@@ -212,10 +211,13 @@ textarea#rename {
 }
 .frontpage-link:hover span {
 	text-decoration: underline;
+	color: #000;
 }
 .frontpage-link span {
 	float: left;
 	margin-right: 5px;
+	text-decoration: underline;
+	color: #fff;
 }
 .frontpage-link:hover .arrow-left {
 	border-right: 5px solid #666;
@@ -231,8 +233,9 @@ textarea#rename {
 }
 .logo-box {
 	text-align: center;
-	padding-top: 60px;
+	padding-top: 50px;
 	height: 276px;
+
 }
 .logo {
 	width: 37%;
@@ -243,24 +246,31 @@ textarea#rename {
 }
 .uni-bottom-box {
 	position: relative;
+	margin-top: -84px;
 	width: 100%;
 	padding: 10px;
-	border-top:1px #fff solid;
+	border-top:1px #ccc solid;
 }
 .upgrade-bottom-box {
 	position: relative;
-	border-top: 2px solid #fff;
-	padding: 10px 0 10px;
-	margin: 0 -16px;
+    border: 2px solid #fff;
+    padding: 10px 0 10px;
+    margin-top: 10px;
+    margin-left: -17px;
+    background-color: #d6d6d6;
+    width: 300px;
 }
 .upgrade-bottom-box-premium {
 	background: #F2D32C;
+	border: 2px solid #fff56c;
 }
 .user-box {
 	padding: 6px;
 }
 .user-image {
 	float: left;
+	width: 50px;
+	height: 50px;
 }
 .user-text {
 	float: left;
@@ -298,7 +308,7 @@ textarea#rename {
 	color: #000;
 	opacity: 0.6;
 	width: 160px;
-	padding-top: 20px;
+	padding-top: 31px;
 	padding-left: 15px;
 }
 hr {
