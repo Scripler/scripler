@@ -124,8 +124,8 @@ a {
 	color: #000;
 	text-decoration: none;
 }
+
 a:hover {
-	color: #000;
 	text-decoration: underline;
 }
 
@@ -361,12 +361,11 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 }
 
 #registrationModal .registration-form > form {
-	padding: 5px;
+	padding-top: 20px;
 }
 
 #registrationModal .registration-form > form > input {
-	margin-bottom: 5px;
-	border: 1px solid #c6c6c6;
+	margin-bottom: 10px;
 	width: 100%;
 	font-family: roboto, helvetica, sans-serif;
 }
@@ -391,7 +390,7 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 }
 
 #registrationModal .tab-content {
-	padding: 10px;
+	padding: 20px;
 }
 
 #registrationModal .extra-bar {
@@ -406,6 +405,7 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 #registrationModal .remember-password {
 	float: right;
 	font-size: 12px;
+	margin-right: 27px;
 }
 
 #registrationModal hr {
@@ -421,7 +421,8 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 }
 
 #registrationModal #tosContainer {
-	padding-top: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
 /* END Login/Register modal styling */
@@ -521,9 +522,9 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 }
 
 .registration-button {
-	width: 148px;
+	width: 143px;
 	font-size: 18px;
-	font-weight: 700;
+	font-weight: 400;
 	padding: 5px 10px 5px;
 	min-width: 100px;
 }

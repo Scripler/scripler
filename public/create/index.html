@@ -166,6 +166,11 @@
 							<input on-click-change-text type="email" name="email" data-ng-model="user.email" data-ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine && registrationSubmitted }" placeholder="Email address" data-ng-pattern="EMAIL_REGEXP" required>
 							<div class="error-box" data-ng-show="registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted " data-ng-bind="errors.password"></div>
 							<input on-click-change-text type="password" name="password" data-ng-model="user.password" data-ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" data-ng-minlength="6" required>
+							<div id="tosContainer">
+								<div class="error-box error-box-tos" data-ng-show="!tos && registrationSubmitted " data-ng-bind="errors.tos"></div>
+								<!-- TODO: insert correct link to Terms of Service -->
+								<input id="tos" type="checkbox" data-ng-model="tos" required> I agree to the <a target="_blank" href="http://talk.scripler.com/t/official-scripler-faq/109">terms of service</a> 
+							</div>
 							<div class="extra-bar">
 								<div class="registration-social">
 									<a class="socialicon" href="../auth/facebook"><span class="icon-facebook"></span></a>
@@ -178,11 +183,6 @@
 							</div>
 							<button type="reset" data-ng-click="cancel()" class="button registration-button cancel-button">Cancel</button>
 							<button type="submit" data-ng-click="register()" class="button registration-button">Register</button>
-							<div id="tosContainer">
-								<div class="error-box error-box-tos" data-ng-show="!tos && registrationSubmitted " data-ng-bind="errors.tos"></div>
-								<!-- TODO: insert correct link to Terms of Service -->
-								I agree to the <a target="_blank" href="http://talk.scripler.com/t/official-scripler-faq/109">terms of service</a> <input id="tos" type="checkbox" data-ng-model="tos" required>
-							</div>
 						</form>
 					</div>
 				</div>
