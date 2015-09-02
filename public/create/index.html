@@ -116,7 +116,7 @@
 					</span>
 					<p>
 						<!-- TODO: also disable the button visually, e.g. "grey out" the button, change the cursor, etc. -->
-						<a class="paymentButtons" id="paymentUpgrade" ng-click="!(payment.cardNumberValid || payment.expirationDateValid || payment.cvvValid) || paymentUpgrade()">Upgrade</a>
+						<a class="paymentButtons" id="paymentUpgrade" ng-click="(!payment.cardNumberValid || !payment.expirationDateValid || !payment.cvvValid) || paymentUpgrade()">Upgrade</a>
 						<a class="paymentButtons" id="paymentCancel" ng-click="paymentCancel()">Cancel</a>
 					</p>
 				</form>
