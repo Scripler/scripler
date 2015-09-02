@@ -125,8 +125,8 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 												type: alertType
 											});
 										} else {
-											var paymentCardNumber = response.cardNumber.replace(/\s/g, '');
-											var expirationDate = response.expirationDate.replace(/\s/g, '');
+											var paymentCardNumber = response.cardNumber ? response.cardNumber.replace(/\s/g, '') : '';
+											var expirationDate = response.expirationDate ? response.expirationDate.replace(/\s/g, '') : '';
 											var cvv = response.cvv;
 											paymentService.createSubscription(paymentCardNumber, expirationDate, cvv, function (err, data) {
 												if (err) {
