@@ -157,11 +157,11 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.user.firstname, "John");
 					assert.equal(res.body.user.lastname, "Doe");
 					assert.equal(res.body.user.stylesets.length, 17);
-					userStylesetId1 = res.body.user.stylesets[0]; // book-bw
-					userStylesetId2 = res.body.user.stylesets[1]; // book-color
-					userStylesetId3 = res.body.user.stylesets[2]; // draft-bw
-					userStylesetId4 = res.body.user.stylesets[3]; // draft-color  
-					defaultUserStyleset = res.body.user.stylesets[0]; // book-bw
+					userStylesetId1 = res.body.user.stylesets[0]; 	// book-bw
+					userStylesetId2 = res.body.user.stylesets[9]; 	// light-color
+					userStylesetId3 = res.body.user.stylesets[15];	// simple-bw
+					userStylesetId4 = res.body.user.stylesets[3]; 	// draft-color
+					defaultUserStyleset = userStylesetId3; // simple-bw
                     done();
 				});
 		}),
@@ -241,14 +241,14 @@ describe('Scripler RESTful API', function () {
 		}),
 		it('Opening a user styleset to verify its contents', function (done) {
 			request(host)
-				.get('/styleset/' + userStylesetId1)
+				.get('/styleset/' + userStylesetId3)
 				.set('cookie', cookie)
 				.send({})
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset._id, userStylesetId1);
-					assert.equal(res.body.styleset.name, "book-bw");
+					assert.equal(res.body.styleset._id, userStylesetId3);
+					assert.equal(res.body.styleset.name, "simple-bw");
 					assert.equal(res.body.styleset.styles.length, numberOfStylesInSystemStyleset);
 					done();
 				});
@@ -1264,7 +1264,7 @@ describe('Scripler RESTful API', function () {
 					done();
 				});
 		}),
-		it('Applying a user styleset to a document should return a document styleset, a document styleset. This styleset will be used below to add a style to because a style must be added to document stylesets.', function (done) {
+		it('Applying a user styleset to a document should return a document styleset. This styleset will be used below to add a style to, because a style must be added to document stylesets.', function (done) {
 			request(host)
 				.put('/styleset/' + userStylesetId3 + "/document/" + copyCrappyDocumentId)
 				.set('cookie', cookie)
@@ -1273,7 +1273,7 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					documentStylesetId3 = res.body.styleset._id;
-					assert.equal(res.body.styleset.styles.length, numberOfStylesInSystemStyleset + 1);
+					assert.equal(res.body.styleset.styles.length, numberOfStylesInSystemStyleset); // Style was added to userStylesetId3 above but since documentStylesetId3 is returned, expect the same number of styles as in the system styleset
 					documentStylesetId3 && done();
 				});
 		}),
@@ -1288,7 +1288,7 @@ describe('Scripler RESTful API', function () {
 					assert.equal(res.body.styleset._id, documentStylesetId3);
 					assert.equal(res.body.styleset.original, userStylesetId3);
 					documentStylesetId3Length = res.body.styleset.styles.length;
-					assert.equal(documentStylesetId3Length, documentStylesetId3OriginalLength + 1);
+					assert.equal(documentStylesetId3Length, documentStylesetId3OriginalLength); // No styles were added to the document styleset (changes are only copied from user to document)
 					done();
 				});
 		}),
@@ -1301,12 +1301,11 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset._id, userStylesetId3);
-					assert.equal(res.body.styleset.name, "draft-bw");
+					assert.equal(res.body.styleset.name, "simple-bw");
 					var userStylesetId3Length = res.body.styleset.styles.length;
-					assert.equal(userStylesetId3Length, userStylesetId3OriginalLength + 1);
-					assert.equal(documentStylesetId3Length, userStylesetId3Length);
+					assert.equal(userStylesetId3Length, userStylesetId3OriginalLength + 1); // Verify that style WAS added to user styleset
+					assert.equal(userStylesetId3Length - 1, documentStylesetId3Length);		// Verify that style was NOT added to the document styleset - TODO: remove since this is the same test as line #1276?
 					userStyleId1 = res.body.styleset.styles[userStylesetId3Length-1]._id;
-					assert.equal(userStylesetId3Length, documentStylesetId3Length);
 					done();
 				});
 		}),
@@ -1435,7 +1434,7 @@ describe('Scripler RESTful API', function () {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.styleset.original, userStylesetId3);
 					documentStylesetId3Length = res.body.styleset.styles.length;
-					assert.equal(documentStylesetId3Length, documentStylesetId3OriginalLength + 1); // Rememeber, a new style was added to userStylesetId3 and thus also to documentStylesetId1
+					assert.equal(documentStylesetId3Length, documentStylesetId3OriginalLength); // No styles have been added to documentStylesetId3 (only to userStylesetId3).
 					done();
 				});
 		}),
@@ -1682,7 +1681,7 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset.name, "book-color");
+					assert.equal(res.body.styleset.name, "light-color");
 					assert.equal(res.body.styleset.archived, true);
 					done();
 				});
@@ -1695,7 +1694,7 @@ describe('Scripler RESTful API', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.stylesets.length, 1);
-					assert.equal(res.body.stylesets[0].name, "book-color");
+					assert.equal(res.body.stylesets[0].name, "light-color");
 					done();
 				});
 		}),
@@ -1707,7 +1706,7 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.styleset.name, "book-color");
+					assert.equal(res.body.styleset.name, "light-color");
 					assert.equal(res.body.styleset.archived, false);
 					done();
 				});
