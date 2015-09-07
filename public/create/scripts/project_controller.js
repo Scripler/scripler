@@ -1076,6 +1076,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return applyToParent;
 	}
 
+	/* Disabled until adding new styles is working properly
 	$scope.addNewStyle = function(styleset, style, index) {
 		var newStyle = {};
 
@@ -1117,6 +1118,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				}
 			});
 	}
+	*/
 
 	$scope.updateStyle = function(style) {
 		$http.put('/style/' + style._id + '/update', angular.toJson(style));
