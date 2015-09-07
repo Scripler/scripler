@@ -566,8 +566,9 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 
 #registration-tos-container {
 	position: absolute; /* To avoid affecting the size (height) of the registration bar */
-	padding-top: 2px;
+	padding-top: 0px;
 	width: 300px;
+	margin-left: 497px;
 }
 
 .error-box {
