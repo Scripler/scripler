@@ -233,7 +233,7 @@ textarea#rename {
 }
 .logo-box {
 	text-align: center;
-	padding-top: 50px;
+	padding-top: 40px;
 	height: 276px;
 
 }
@@ -308,8 +308,8 @@ textarea#rename {
 	color: #000;
 	opacity: 0.6;
 	width: 160px;
-	padding-top: 31px;
-	padding-left: 15px;
+	padding-top: 9px;
+	padding-left: 10px;
 }
 hr {
 	border: 0;
