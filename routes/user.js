@@ -11,6 +11,7 @@ var User = require('../models/user.js').User
 	, user_utils = require('../lib/user-utils')
 	, Styleset = require('../models/styleset.js').Styleset
 	, discourse_sso = require('discourse-sso')
+	, geoip = require('geoip-lite')
 ;
 
 /**
@@ -375,3 +376,21 @@ exports.sso = function (req, res, next) {
 		}
 	}
 }
+
+/**
+ * GET users country based on ip.
+ */
+exports.getCountry = function (req, res) {
+	var ip = req.ip;
+	// For IPv6, req.ip can be '::ffff:127.0.0.1"'.
+	// Geolite needs IPv4, so strip IPv6 in these cases
+	if ( ip.indexOf('::ffff:"') >= 0 ) {
+		ip = ip.split(':').reverse()[0]
+	}
+	var countryCode = 'DK';
+	var lookedUpIP = geoip.lookup(ip)
+	if ( lookedUpIP && lookedUpIP.country ) {
+		countryCode = lookedUpIP.country;
+	}
+	res.send({"country": countryCode});
+};

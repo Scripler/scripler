@@ -898,7 +898,6 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 .paymentAir{
 	float: left;
 	margin-right: 20px;
-	margin-bottom: 30px;
 }
 
 .yellow{
@@ -918,20 +917,28 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 	margin-top: 30px;
 }
 
-.top-text-expires-cvc{
+.input-label{
 	color: #A9A9A9;
 	margin: 0;
-}
-
-.card-number{
-	margin-top: 0;
 }
 
 .paymentCardNumber{
 	width: 342px;
 	padding: 10px;
+	margin: 0;
 	font-size: 1.2em;
 	font-family: 'Roboto', Arial, sans-serif;
+}
+
+.billingCountry{
+	width: 342px;
+	padding: 10px;
+	font-size: 1.2em;
+	font-family: 'Roboto', Arial, sans-serif;
+}
+
+.fadedOption {
+	color: gray;
 }
 
 .paymentExpiresCVC{
@@ -969,7 +976,7 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 
 .upgradePayment{
 	width:400px;
-	height:410px;
+	height:490px;
 	display:inline-block;
 	padding-left:25px;
 	background: #EEEEEE;
@@ -977,6 +984,10 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 	margin-left: 180px;
 	border:4px #fff solid;
 	color: #000;
+}
+
+.upgradePayment input {
+	margin-bottom: 20px;
 }
 
 .paymentButtons{

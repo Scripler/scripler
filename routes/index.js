@@ -30,6 +30,7 @@ module.exports = function (app, auth) {
 	app.post('/user/resend-verify-email', auth.isLoggedIn(), user.resendVerifyEmail);
 	app.post('/user/password-reset', user.passwordReset);
 	app.post('/user/:id/password-change', user.passwordChange);
+	app.get('/user/country', user.getCountry);
 
 	/* API Project Space: Project */
 	app.get('/project/list', auth.isLoggedIn(), project.list);

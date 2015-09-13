@@ -1,0 +1,6 @@
+{
+  "DK": {"name": "Denmark", "rate": 25.00},
+  "NO": {"name": "Germany", "rate": 22.00},
+  "DE": {"name": "Germany", "rate": 19.00},
+  "?": {"name": "Non-EU", "rate": 0.00}
+}

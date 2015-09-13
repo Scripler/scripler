@@ -40,6 +40,7 @@ exports.beforeRoutes = function (app, conf, mongoose) {
 
 	// all environments
 	app.set('port', conf.app.port);
+	app.set('trust proxy', 'loopback');
 	//TODO: Don't allow cross domain in production
 	//if ('development' == app.get('env')) {
 		// development only
