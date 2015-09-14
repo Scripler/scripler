@@ -147,20 +147,12 @@ function createController($scope, $http, projectsService, userService, $q, user,
         $scope.selectedProjectHover = -1;
     };
 
-	// TODO: refactor into common method with "getNewProjectHandler" that BOTH handles the CSS class and click handler parts, i.e. move CSS classes to the HTML and do the "if can create project" check inside controller
-	$scope.getNewProjectClass = function() {
+	$scope.canCreateProject = function() {
+		var result = false;
 		if ($scope.user) {
-			var canCreateProject = utilsService.canCreateProject($scope.user.level, $scope.projects);
-			var newProjectClass = canCreateProject ? 'project new' : 'project upgrade';
-			return newProjectClass;
-		} else {
-			return 'project new';
+			result = utilsService.canCreateProject($scope.user.level, $scope.projects);
 		}
-	};
-
-	$scope.getNewProjectHandler = function() {
-		var canCreateProject = utilsService.canCreateProject($scope.user.level, $scope.projects);
-		return canCreateProject ? $scope.addProject() : $scope.upgrade();
+		return result;
 	};
 
 	$scope.canLoadProject = function(project) {
