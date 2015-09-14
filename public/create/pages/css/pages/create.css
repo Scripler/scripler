@@ -73,6 +73,11 @@
 	background: url("../../images/ebook_downgraded.svg");
 	background-repeat: no-repeat;
 }
+.project.upgrade-pro {
+	background: url("../../images/ebook_new_upgrade_pro.svg");
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
 
 .project p {
 	display: table-cell;

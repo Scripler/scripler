@@ -149,8 +149,11 @@ function createController($scope, $http, projectsService, userService, $q, user,
 
 	$scope.getNewProjectClass = function() {
 		if ($scope.user) {
+			var newProjectClass = 'project new';
 			var canCreateProject = utilsService.canCreateProject($scope.user.level, $scope.projects);
-			var newProjectClass = canCreateProject ? 'project new' : 'project upgrade';
+			if (!canCreateProject) {
+				var newProjectClass = $scope.user.level == 'premium' ? 'project upgrade-pro' : 'project upgrade';
+			}
 			return newProjectClass;
 		} else {
 			return 'project new';
