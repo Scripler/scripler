@@ -75,6 +75,11 @@
 	background-repeat: no-repeat;
 	cursor: pointer;
 }
+.project.upgrade-pro {
+	background: url("../../images/ebook_new_upgrade_pro.svg");
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
 
 .project p {
 	display: table-cell;
