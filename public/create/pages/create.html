@@ -87,7 +87,7 @@
 		<div class="section-projects">
 
 
-			<div data-ng-class="{'project new' : canCreateProject(), 'project upgrade': !canCreateProject() }" data-ng-click="canCreateProject() ? addProject() : upgrade();"></div>
+			<div data-ng-class="canCreateProject() ? 'project new' : (user.level == 'premium' ? 'project upgrade-pro' : 'project upgrade')" data-ng-click="canCreateProject() ? addProject() : upgrade();"></div>
 			<div class="project clearfix" data-ng-animate="'animate'" data-ng-class="{ 'archived' : project.archived, 'downgraded' : !canLoadProject(project) }" data-ng-hide="project.archived && !user.showArchived" data-ng-repeat="project in projects track by $index" data-ng-mouseenter="showProjectTitle($index)" data-ng-mouseleave="hideProjectTitle()">
 				<a data-ng-class="{ 'project-options-show' : canLoadProject(project)}" data-ng-class="{ 'open' : $index == selectedProjectOptions }" data-ng-click="showProjectOptions($index)">
 					<div class="arrow"></div>
