@@ -147,17 +147,12 @@ function createController($scope, $http, projectsService, userService, $q, user,
         $scope.selectedProjectHover = -1;
     };
 
-	$scope.getNewProjectClass = function() {
+	$scope.canCreateProject = function() {
+		var result = false;
 		if ($scope.user) {
-			var newProjectClass = 'project new';
-			var canCreateProject = utilsService.canCreateProject($scope.user.level, $scope.projects);
-			if (!canCreateProject) {
-				var newProjectClass = $scope.user.level == 'premium' ? 'project upgrade-pro' : 'project upgrade';
-			}
-			return newProjectClass;
-		} else {
-			return 'project new';
+			result = utilsService.canCreateProject($scope.user.level, $scope.projects);
 		}
+		return result;
 	};
 
 	$scope.canLoadProject = function(project) {

@@ -250,20 +250,13 @@
 
 		var maxNumberOfProjects = subscriptions[userLevel].maxNumberOfProjects;
 
-		// If we are not exceeding the max number of projects...
-		if (projectIds && projectIds.length <= maxNumberOfProjects) {
-			// The user is allowed to load any of his/her projects, if he/she has fewer than the max
-			if (projectIds.indexOf(projectIdToCheck) > -1) return true;
-
-			// Since the first four bytes of a Mongo id represents a creation timestamp, we can use this to sort by date.
-			var sortedProjectIds = projectIds.sort();
-			var firstXProjectIds = sortedProjectIds.slice(0, maxNumberOfProjects);
-
-			// TODO: implement not using indexOf(), since we want to compare values not references? (see http://stackoverflow.com/questions/19737408/mongoose-check-if-objectid-exists-in-an-array)
-			return JSON.stringify(firstXProjectIds).indexOf(projectIdToCheck.toString()) > -1;
-		}
-
-		return false;
+		// Since the first four bytes of a Mongo id represents a creation timestamp, we can use this to sort by date.
+		// First, make a copy to avoid changing the input parameter
+		var projectIdsCopy = projectIds.slice();
+		var sortedProjectIds = projectIdsCopy.sort();
+		var firstXProjectIds = sortedProjectIds.slice(0, maxNumberOfProjects);
+		// TODO: implement not using indexOf(), since we want to compare values not references? (see http://stackoverflow.com/questions/19737408/mongoose-check-if-objectid-exists-in-an-array)
+		return JSON.stringify(firstXProjectIds).indexOf(projectIdToCheck.toString()) > -1;
 	}
 
 	return {
