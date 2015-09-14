@@ -1950,6 +1950,8 @@ describe('Scripler RESTful API', function () {
 				});
 		}),
 		it('Change user level: premium', function(done) {
+			shared_utils.subscriptions["free"].maxNumberOfProjects = 3; // HACK END: set "maxNumberOfProjects" back to 3
+
 			user_utils.changeLevel(userId, "premium", function (err) {
 				if (err) throw new Error(err);
 				done();

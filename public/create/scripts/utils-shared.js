@@ -255,7 +255,6 @@
 		var projectIdsCopy = projectIds.slice();
 		var sortedProjectIds = projectIdsCopy.sort();
 		var firstXProjectIds = sortedProjectIds.slice(0, maxNumberOfProjects);
-
 		// TODO: implement not using indexOf(), since we want to compare values not references? (see http://stackoverflow.com/questions/19737408/mongoose-check-if-objectid-exists-in-an-array)
 		return JSON.stringify(firstXProjectIds).indexOf(projectIdToCheck.toString()) > -1;
 	}
