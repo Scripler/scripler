@@ -27,19 +27,25 @@ var utils_shared = require('../public/create/scripts/utils-shared');
 
 var premiumMessage = "User not allowed to load project: user is not premium/professional or user is trying to access a 'locked' project.";
 
-// Load project by id
-exports.load = function (id) {
+function genericLoad(id, populateObject, checkAccess, checkPremium) {
 	return function (req, res, next) {
-		// Avoiding global scope!
 		var idCopy = id || req.body.projectId;
-		Project.findOne({"_id": idCopy, "deleted": false}).exec(function (err, project) {
+		var query = Project.findOne({"_id": idCopy, "deleted": false});
+		if (populateObject) {
+			query.populate(populateObject);
+		}
+		query.exec(function (err, project) {
 			if (err) return next(err);
 			if (!project) {
 				return next({message: "Project not found", status: 404});
 			}
-			if (!req.user) return next(); //Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToModel(req.user, project)) return next(403);
-			if (!utils_shared.canLoadProject(req.user.level, req.user.projects, idCopy)) return next(596, premiumMessage);
+			if (checkAccess) {
+				if (!req.user) return next();//Let missing authentication be handled in auth middleware
+				if (!utils.hasAccessToModel(req.user, project)) return next(403);
+				if (checkPremium) {
+					if (!utils_shared.canLoadProject(req.user.level, req.user.projects, idCopy)) return next(596, premiumMessage);
+				}
+			}
 
 			req.project = project;
 			return next();
@@ -47,61 +53,25 @@ exports.load = function (id) {
 	}
 }
 
-// Load project by id without performing premium check: it must e.g. be possible for free users to archive and delete their projects.
-exports.loadWithoutPremiumCheck = function (id) {
-	return function (req, res, next) {
-		// Avoiding global scope!
-		var idCopy = id || req.body.projectId;
-		Project.findOne({"_id": idCopy, "deleted": false})
-			.populate({path: 'images'})
-			.exec(function (err, project) {
-			if (err) return next(err);
-			if (!project) {
-				return next({message: "Project not found", status: 404});
-			}
-			if (!req.user) return next(); //Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToModel(req.user, project)) return next(403);
+//Load project by id
+exports.load = function (id) {
+	return genericLoad(id, null, true, true);
+}
 
-			req.project = project;
-			return next();
-		});
-	}
+exports.loadNoAccessCheck = function (id) {
+	return genericLoad(id, null, false, false);
+}
+
+exports.loadWithoutPremiumCheck  = function (id) {
+	return genericLoad(id, {path: 'images'}, true, false);
 }
 
 exports.loadPopulated = function (id) {
-	return function (req, res, next) {
-		var idCopy = id || req.body.projectId;
-		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', select: 'name folderId modified archived stylesets defaultStyleset members type', match: {"deleted": false}}).exec(function (err, project) {
-			if (err) return next(err);
-			if (!project) {
-				return next({message: "Project not found", status: 404});
-			}
-			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToModel(req.user, project)) return next(403);
-			if (!utils_shared.canLoadProject(req.user.level, req.user.projects, idCopy)) return next(596, premiumMessage);
-
-			req.project = project;
-			return next();
-		});
-	}
+	return genericLoad(id, {path: 'documents', select: 'name folderId modified archived stylesets defaultStyleset members type'}, true, true);
 }
 
 exports.loadPopulatedFull = function (id) {
-	return function (req, res, next) {
-		var idCopy = id || req.body.projectId;
-		Project.findOne({"_id": idCopy, "deleted": false}).populate({path: 'documents', match: {archived: false}, select: 'name folderId modified archived stylesets defaultStyleset members type text'}).exec(function (err, project) {
-			if (err) return next(err);
-			if (!project) {
-				return next({message: "Project not found", status: 404});
-			}
-			if (!req.user) return next();//Let missing authentication be handled in auth middleware
-			if (!utils.hasAccessToModel(req.user, project)) return next(403);
-			if (!utils_shared.canLoadProject(req.user.level, req.user.projects, idCopy)) return next(596, premiumMessage);
-
-			req.project = project;
-			return next();
-		});
-	}
+	return genericLoad(id, {path: 'documents', match: {archived: false}, select: 'name folderId modified archived stylesets defaultStyleset members type text'}, true, true);
 }
 
 var list = exports.list = function (req, res, next) {
@@ -644,6 +614,92 @@ exports.compile = function (req, res, next) {
 		}
 	});
 
+}
+
+exports.publish = function (req, res, next) {
+	var project = req.project;
+	var userEpubPath = path.join(conf.resources.usersDir, conf.epub.userDirPrefix + req.user._id, project._id + '.epub');
+	var publishEpubPath = path.join(conf.resources.publishDir, req.project._id + '.epub');
+
+	utils.copyFile(userEpubPath, publishEpubPath, function(err) {
+		if (err) {
+			return next(err);
+		}
+		// Get title without whitespace
+		var epubName = utils.cleanUrlPart(project.metadata.title || project.name);
+		var epubAuthor = '';
+		if (project.metadata.authors && project.metadata.authors[0]) {
+			epubAuthor = utils.cleanUrlPart(project.metadata.authors[0]) + "-";
+		}
+		project.publish.url = conf.app.url_prefix + conf.publish.route + "/" + project.id + "/" + epubAuthor + epubName;
+
+		// Only set created date initially - if already set, we are updating/republishing
+		if (!project.publish.created) {
+			project.publish.created = Date.now();
+		}
+		project.publish.modified = Date.now();
+		project.publish.title = req.project.metadata.title || req.project.name || '';
+		project.publish.description = project.metadata.description || '';
+
+		// Generate image
+		var imagePath = path.join(conf.resources.publishDir, req.project._id + '.jpg');
+		project.publish.image = conf.resources.publishUrl + "/" + project.id + ".jpg";
+
+		utils.generatePreview(project, imagePath, function (err) {
+			if (err) {
+				return next(err);
+			}
+			project.save(function (err) {
+				if (err) {
+					return next(err);
+				}
+				res.send({
+					publish: project.publish
+				});
+			});
+		});
+	});
+}
+
+exports.unpublish = function (req, res, next) {
+	var project = req.project;
+	var publishEpubPath = path.join(conf.resources.publishDir, req.project._id + '.epub');
+
+	if (project.publish.url) {
+		// Delete the published epub
+		fs.unlink(publishEpubPath, function (err) {
+			if (err) {
+				return next(err);
+			}
+			//Set to unpublished in the database
+			project.publish.url = null;
+			project.save(function (err) {
+				if (err) {
+					return next(err);
+				}
+				res.send({publish: project.publish});
+			});
+		});
+	} else {
+		logger.warn("Unpublish called for already unpublished project.");
+		res.send({publish: project.publish});
+	}
+}
+
+exports.renderEpubReader = function (req, res, next) {
+	var project = req.project;
+	if (project.publish.url) {
+		res.render('ebook', {
+			epub: conf.resources.publishUrl + "/" + project.id + ".epub",
+			title: project.publish.title,
+			description: project.publish.description,
+			image: project.publish.image,
+			url: project.publish.url,
+			env: env
+		});
+	} else {
+		res.redirect(conf.app.url_prefix + '?code=' + "301");//Non-published ebook
+	}
 }
 
 exports.downloadEpub = function (req, res, next) {

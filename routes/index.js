@@ -8,7 +8,9 @@ var frontpage = require('./frontpage')
 	, image = require('./image')
 	, font = require('./font')
 	, payment = require('./payment')
-	, utils = require('../lib/utils');
+	, server = require('./server')
+	, utils = require('../lib/utils')
+	, conf = require('config');
 
 module.exports = function (app, auth) {
 
@@ -98,11 +100,18 @@ module.exports = function (app, auth) {
 
 	/* API Output */
 	app.get('/project/:projectIdPopulatedFull/compile', auth.isLoggedIn(), project.compile);
+	app.post('/project/:projectIdPopulated/publish', auth.isLoggedIn(), project.publish);
+	app.delete('/project/:projectId/publish', auth.isLoggedIn(), project.unpublish);
 	app.get('/project/:projectId/epub', auth.isLoggedIn(), project.downloadEpub);
+	app.get('/'+conf.publish.route+'/:projectIdNoAccessCheck/*', project.renderEpubReader);
+	app.get('/server/status', server.status);
 
 	// API Parameters
 	app.param('projectId', function (req, res, next, id) {
 		return project.load(id)(req, res, next);
+	});
+	app.param('projectIdNoAccessCheck', function (req, res, next, id) {
+		return project.loadNoAccessCheck(id)(req, res, next);
 	});
 	app.param('projectIdNoPremiumCheck', function (req, res, next, id) {
 		return project.loadWithoutPremiumCheck(id)(req, res, next);
