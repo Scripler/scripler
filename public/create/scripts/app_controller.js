@@ -110,7 +110,15 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 							// resolved or rejected when the modal window is closed.
 							var paymentPromise = modals.open("payment");
 
-								$scope.payment = {};
+							$scope.payment = {};
+
+							// Fetch default country from backend
+							$http.get('/user/country')
+								.success(function(data) {
+									if (data.country) {
+										$scope.payment.billingCountryCode = data.country;
+									}
+								});
 
 							paymentPromise.then(
 								function handleResolve(response) {
@@ -128,7 +136,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 											var paymentCardNumber = response.cardNumber ? response.cardNumber.replace(/\s/g, '') : '';
 											var expirationDate = response.expirationDate ? response.expirationDate.replace(/\s/g, '') : '';
 											var cvv = response.cvv;
-											paymentService.createSubscription(paymentCardNumber, expirationDate, cvv, function (err, data) {
+											paymentService.createSubscription(paymentCardNumber, expirationDate, cvv, response.billingCountryCode, function (err, data) {
 												if (err) {
 													alertHtml = err.errorMessage;
 													swal({
@@ -506,12 +514,12 @@ app.service('paymentService', function($http, $q) {
 					}
 				});
 		},
-		createSubscription: function(cardNumber, expirationDate, cvv, next) {
+		createSubscription: function(cardNumber, expirationDate, cvv, billingCountryCode, next) {
 			client.tokenizeCard({number: cardNumber, expirationDate: expirationDate, cvv: cvv}, function (err, nonce) {
 				if (err) return next(err);
 
-				var nonceData = { "payment_method_nonce": nonce	};
-				$http.post('/payment/subscription', nonceData)
+				var data = { "payment_method_nonce": nonce, "billingCountryCode": billingCountryCode };
+				$http.post('/payment/subscription', data)
 					.success( function(data) {
 						if (next) {
 							return next(null, data);

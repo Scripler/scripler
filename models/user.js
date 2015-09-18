@@ -41,6 +41,7 @@ var UserSchema = new Schema({
 	payment: {
 		customerId: { type: String },
 		subscriptionId: { type: String},
+		billingCountryCode: { type: String},
 		endDate: { type: Date },
 		payments: [{
 			id: { type: String },

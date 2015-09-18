@@ -181,6 +181,7 @@ exports.transaction = function (req, res, next) {
 exports.create_subscription = function (req, res, next) {
 	var user = req.user;
 	var nonce = req.body.payment_method_nonce;
+	var billingCountryCode = req.body.billingCountryCode;
 
 	var addSubscription = function (paymentMethodToken) {
 		logger.info("Adding braintree subscription for user " + user.id + ". Token: " +  paymentMethodToken);
@@ -198,6 +199,7 @@ exports.create_subscription = function (req, res, next) {
 				var subscriptionId = result.subscription.id;
 				user.level = 'premium';
 				user.payment.subscriptionId = subscriptionId;
+				user.payment.billingCountryCode = billingCountryCode;
 				logger.info("Added braintree subscription for user " + user.id + ". Subscription id: " +  subscriptionId);
 
 				var plan = conf.plans[user.level];
