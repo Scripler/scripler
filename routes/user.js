@@ -384,7 +384,7 @@ exports.getCountry = function (req, res) {
 	var ip = req.ip;
 	// For IPv6, req.ip can be '::ffff:127.0.0.1"'.
 	// Geolite needs IPv4, so strip IPv6 in these cases
-	if ( ip.indexOf('::ffff:"') >= 0 ) {
+	if ( ip.indexOf('::ffff:') >= 0 ) {
 		ip = ip.split(':').reverse()[0]
 	}
 	var countryCode = 'DK';
