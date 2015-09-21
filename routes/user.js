@@ -12,6 +12,8 @@ var User = require('../models/user.js').User
 	, Styleset = require('../models/styleset.js').Styleset
 	, discourse_sso = require('discourse-sso')
 	, geoip = require('geoip-lite')
+	, path = require('path')
+	, euVatRates = require('../lib/eu-vat-rates.json')
 ;
 
 /**
@@ -390,7 +392,12 @@ exports.getCountry = function (req, res) {
 	var countryCode = 'DK';
 	var lookedUpIP = geoip.lookup(ip)
 	if ( lookedUpIP && lookedUpIP.country ) {
-		countryCode = lookedUpIP.country;
+		// Check if country-code is a known EU country
+		if (euVatRates[lookedUpIP.country]) {
+			countryCode = lookedUpIP.country;
+		} else {
+			countryCode = "?";//Outside EU
+		}
 	}
 	res.send({"country": countryCode});
 };
