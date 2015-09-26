@@ -218,6 +218,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return deferred.promise;
 	}
 
+	$scope.linkAnchorChanged = function () {
+		$scope.linkAddress = '';
+	}
+
+	$scope.linkAddressChanged = function () {
+		$scope.linkAnchor = '';
+	}
+
 
 	$scope.move = function(array, from, to) {
 		if (to === from) return;
@@ -480,8 +488,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			if ( $scope.leftMenuShowItem != 'design' && $scope.styleEditorVisible ) {
 				$scope.hideStyleEditor();
 			}
-
-			$scope.selectedStyle.scroll = true;
+			if ($scope.leftMenuShowItem == 'design') {
+				$scope.selectedStyle.scroll = true;
+			}
 		}
 		else {
 			$scope.hideLeftMenu();
@@ -1416,7 +1425,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.insertNewLink = function() {
 		var type = "link";
-		var link = '<a href="' + $scope.linkAddress + '">link_text</a>';
+		var link;
+		if ($scope.linkAnchor) {
+			link = '<a href="' + $scope.linkAnchor.target + '">link_text</a>';
+		} else {
+			link = '<a href="' + $scope.linkAddress + '">link_text</a>';
+		}
 		editorInsert( link, type);
 		$scope.updateProjectDocument();
 		$scope.linkAddress = '';
@@ -1590,16 +1604,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 			if(!isHyperlink){
 				document.getElementById("anchorInputBox").value = range;
-				document.getElementById("hyperlinkInputBox").value = range;
-				document.getElementById("hyperlinkTarget").value = "";
+				document.getElementById("linkText").value = range;
+				document.getElementById("linkAddress").value = "";
 			}
 		}
 
 		// onselectionchange doesn't work for Firefox, so instead we update with the old selectedContent returned by CKEditor
 		if(navigator.userAgent.search("Firefox")>-1){
 			document.getElementById("anchorInputBox").value = selectedContent;
-			document.getElementById("hyperlinkInputBox").value = selectedContent;
-			document.getElementById("hyperlinkTarget").value = "";
+			document.getElementById("linkText").value = selectedContent;
+			document.getElementById("linkAddress").value = "";
 		}
 
 		return selectedContent;
@@ -1607,10 +1621,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	function editorInsert( insert, type ) {
 		var anchorInputContent = document.getElementById("anchorInputBox").value;
-		var hyperlinkInputContent = document.getElementById("hyperlinkInputBox").value;
+		var hyperlinkInputContent = document.getElementById("linkText").value;
 
 		var editor = getEditor();
-		var selectedContentRequired = (type == "anchor" || type == "link"); 
+		var selectedContentRequired = (type == "anchor" || type == "link");
 		var selectedContent = returnSelectedContent();
 		var validURL = true;
 
@@ -1622,12 +1636,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 			else if(type=="link" && hyperlinkInputContent!=""){
 				selectedContent = hyperlinkInputContent;
-			}		
+			}
 		}
 
 		// if no hyperlink text is provided, take the targetURL as the text
 		if(selectedContent == ""){
-			selectedContent = $scope.linkAddress; 
+			selectedContent = $scope.linkAddress;
 		}
 
 
@@ -1650,20 +1664,22 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				}
 				insert = insert.replace('link_text', title);
 
-				var regExpValidUrl = /^((https?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{1,}\.[a-zA-Z]{1,}(\.[a-zA-Z]{2,})?$/;
+				var regExpValidUrl = /^(https?:\/\/)?[^ "]+$/;
 
 				var isInternal = false;
 				var toc = $scope.toc;
-				toc.forEach(function(entry) {
-					if($scope.linkAddress == entry.target)isInternal = true;
-				});
+				if (toc && $scope.linkAnchor && $scope.linkAnchor.target) {
+					toc.forEach(function (entry) {
+						if ($scope.linkAnchor.target == entry.target)isInternal = true;
+					});
+				}
 
-				if($scope.linkAddress!=undefined && $scope.linkAddress.substring(0,4)!="http" && !isInternal){ 
+				if(!isInternal && $scope.linkAddress!=undefined && $scope.linkAddress.substring(0,4)!="http"){
 					insert = insert.replace($scope.linkAddress, "http://" + $scope.linkAddress);
 				}
 
-				validURL = (regExpValidUrl.test($scope.linkAddress) || isInternal);
-			}	
+				validURL = (isInternal || regExpValidUrl.test($scope.linkAddress));
+			}
 
 			//create and insert anchor/hyperlink element on the caret
 			if(validURL){
@@ -1692,9 +1708,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 	}
 
 
-	$scope.$watch('linkAnchor', function(newValue, oldValue) {
+	/*$scope.$watch('linkAnchor', function(newValue, oldValue) {
 		var hasText = false;
-		if(hyperlinkInputBox.value!=""){
+		if(linkText.value!=""){
 				hasText = true;
 		}
 		if (newValue !== oldValue) {
@@ -1703,10 +1719,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			if(!hasText){
 				$scope.linkText = newValue.text;
 			}
-		} 
+		}
 
 		$scope.focusEditor();
-	});
+	});*/
 
 	$scope.$onRootScope('user:registered', function( event, user ) {
 		if ( user._id ) {
@@ -1796,8 +1812,33 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						// fetching content of anchor
 						content = element.$.innerHTML;
 
-						document.getElementById("hyperlinkInputBox").value = content;
-						document.getElementById("hyperlinkTarget").value = target;
+						var toc = $scope.toc;
+						var tocEntry = -1;
+						if (toc) {
+							for (var i = 0; i < toc.length; i++) {
+								if (toc[i].target == target) {
+									tocEntry = i;
+									break;
+								}
+							}
+						}
+
+						//$scope.$apply(function(){
+							if (tocEntry>=0) {
+								//scope.linkAddress = "";
+								$scope.linkAnchor = target;
+								document.getElementById("linkAnchor").value = tocEntry;
+								document.getElementById("linkAddress").value = "";
+							} else {
+								//scope.linkAddress = target;
+								$scope.linkAnchor = "";
+								document.getElementById("linkAnchor").value = "";
+								document.getElementById("linkAddress").value = target;
+							}
+							//scope.linkText = content;
+							document.getElementById("linkText").value = content;
+
+						//});
 
 						return false;
 					}
