@@ -1707,23 +1707,6 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
-
-	/*$scope.$watch('linkAnchor', function(newValue, oldValue) {
-		var hasText = false;
-		if(linkText.value!=""){
-				hasText = true;
-		}
-		if (newValue !== oldValue) {
-			$scope.linkAddress = newValue.target;
-
-			if(!hasText){
-				$scope.linkText = newValue.text;
-			}
-		}
-
-		$scope.focusEditor();
-	});*/
-
 	$scope.$onRootScope('user:registered', function( event, user ) {
 		if ( user._id ) {
 			$scope.user = user;
@@ -1823,22 +1806,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 							}
 						}
 
-						//$scope.$apply(function(){
-							if (tocEntry>=0) {
-								//scope.linkAddress = "";
-								$scope.linkAnchor = target;
-								document.getElementById("linkAnchor").value = tocEntry;
-								document.getElementById("linkAddress").value = "";
-							} else {
-								//scope.linkAddress = target;
-								$scope.linkAnchor = "";
-								document.getElementById("linkAnchor").value = "";
-								document.getElementById("linkAddress").value = target;
-							}
-							//scope.linkText = content;
-							document.getElementById("linkText").value = content;
-
-						//});
+						if (tocEntry>=0) {
+							$scope.linkAnchor = target;
+							document.getElementById("linkAnchor").value = tocEntry;
+							document.getElementById("linkAddress").value = "";
+						} else {
+							$scope.linkAnchor = "";
+							document.getElementById("linkAnchor").value = "";
+							document.getElementById("linkAddress").value = target;
+						}
+						document.getElementById("linkText").value = content;
 
 						return false;
 					}
