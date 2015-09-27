@@ -651,6 +651,7 @@ li.typo .style-copy-options p {
 .menu-right .insertOption {
 	margin: 0 0 10px 10px;
 }
+
 .insertOption.expanded {
 	height: 128px;
 	margin-bottom: 0;

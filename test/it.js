@@ -126,11 +126,11 @@ describe('Scripler RESTful API', function () {
 				});
 		})
 	}),
-	describe('Add system/Scripler stylesets/styles and fonts', function () {
+	describe('System intialization', function () {
 		it('Create all system stylesets such that they are available when the user registers', function (done) {
 			styleset_utils.import_system_stylesets(true, false, function (err) {
 				if (err) {
-					callback(err);
+					assert.fail(err);
 				}
 
 				done();
@@ -139,9 +139,27 @@ describe('Scripler RESTful API', function () {
 		it('Create all system fonts such that they are available for the EPUB generation (GET /project/compile)', function (done) {
 			font_utils.import_system_fonts(true, false, function (err) {
 				if (err) {
-					callback(err);
+					assert.fail(err);
 				}
 
+				done();
+			});
+		}),
+		it('Get next id should start at 1001', function (done) {
+			utils.getNextId('invoiceNo', function (err, id) {
+				if (err) {
+					assert.fail(err);
+				}
+				assert.equal(id, 1001);
+				done();
+			});
+		}),
+		it('Get next id should now return 1002', function (done) {
+			utils.getNextId('invoiceNo', function (err, id) {
+				if (err) {
+					assert.fail(err);
+				}
+				assert.equal(id, 1002);
 				done();
 			});
 		})
