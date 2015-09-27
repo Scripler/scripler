@@ -31,17 +31,6 @@ describe('utils', function () {
 		string = utils.replaceMap(string, replaceMap);
 		assert.equal('Lots of disco shoes: disco shoes shoes shoes shoes all over!', string);
 	}),
-	it('getNameParts', function () {
-		var name = 'Jytte Andersen-Henriksen';
-		var nameParts = shared_utils.getNameParts(name);
-		assert.equal('Jytte', nameParts.firstname);
-		assert.equal('Andersen-Henriksen', nameParts.lastname);
-
-		name = 'Kenny';
-		nameParts = shared_utils.getNameParts(name);
-		assert.equal('Kenny', nameParts.firstname);
-		assert.equal(undefined, nameParts.lastname);
-	}),
 	it('cleanFilename', function () {
 		assert.equal(utils.cleanFilename("bla bla"), "blabla");
 		assert.equal(utils.cleanFilename("Hello123"), "Hello123");
@@ -82,7 +71,80 @@ describe('shared_utils', function () {
         assert.equal(shared_utils.mongooseEquals(str1, ObjectId(str2)), false);
         assert.equal(shared_utils.mongooseEquals(document1._id, document1), true);
         assert.equal(shared_utils.mongooseEquals(document1._id, document2), false);
-    })
+    }),
+	it('getNameParts', function () {
+		var name = 'Jytte Andersen-Henriksen';
+		var nameParts = shared_utils.getNameParts(name);
+		assert.equal('Jytte', nameParts.firstname);
+		assert.equal('Andersen-Henriksen', nameParts.lastname);
+
+		name = 'Kenny';
+		nameParts = shared_utils.getNameParts(name);
+		assert.equal('Kenny', nameParts.firstname);
+		assert.equal(undefined, nameParts.lastname);
+	}),
+	it('canCreateProject', function () {
+		var result = shared_utils.canCreateProject("premium", ["111", "222", "333", "444"]);
+		assert.equal(true, result);
+
+		result = shared_utils.canCreateProject("premium", ["111", "222", "333", "444", "555"]);
+		assert.equal(true, result);
+
+		result = shared_utils.canCreateProject("premium", ["111", "222", "333", "444", "555", "666", "777"]);
+		assert.equal(true, result);
+
+		result = shared_utils.canCreateProject("premiummy", ["111", "222", "333", "444"]);
+		assert.equal(false, result);
+
+		result = shared_utils.canCreateProject("free", []);
+		assert.equal(true, result);
+
+		result = shared_utils.canCreateProject("free", ["111", "222"]);
+		assert.equal(true, result);
+
+		result = shared_utils.canCreateProject("free", ["111", "222", "333", "444", "555"]);
+		assert.equal(false, result);
+
+		result = shared_utils.canCreateProject("free", ["111", "222", "333", "444", "555", "666"]);
+		assert.equal(false, result);
+	}),
+	it('canLoadProject', function () {
+		var result = shared_utils.canLoadProject("premium", ["111", "222", "333", "444", "555"], "222");
+		assert.equal(true, result);
+
+		result = shared_utils.canLoadProject("premiummy", ["111", "222", "333", "444", "555"], "222");
+		assert.equal(false, result);
+
+		result = shared_utils.canLoadProject("free", ["111", "222", "333"], "222");
+		assert.equal(true, result);
+
+		result = shared_utils.canLoadProject("free", ["111", "222", "333", "444", "555", "666"], "666");
+		assert.equal(false, result);
+
+		result = shared_utils.canLoadProject("free", ["111", "222", "333"], "666");
+		assert.equal(false, result);
+
+		result = shared_utils.canLoadProject("free", [], "666");
+		assert.equal(false, result);
+
+		result = shared_utils.canLoadProject("free", ["5316f7783527c1f021000004", "5336f2756dde8c0804000004"], "5316f7783527c1f021000004");
+		assert.equal(true, result);
+
+		/*
+		 51f782eced72a29c19000004	2013-07-30T09:10:04.000Z
+		 51f78a9d0f9ea7e81c000005	2013-07-30T09:42:53.000Z
+		 5249b768606c41b815000008	2013-09-30T17:39:52.000Z
+		 5316f7783527c1f021000004	2014-03-05T10:07:52.000Z
+		 5336ef0cd075d6c820000005	2014-03-29T16:04:28.000Z
+		 5336f2756dde8c0804000004	2014-03-29T16:19:01.000Z
+		 */
+
+		result = shared_utils.canLoadProject("free", ["51f782eced72a29c19000004", "51f78a9d0f9ea7e81c000005", "5249b768606c41b815000008", "5316f7783527c1f021000004", "5336f2756dde8c0804000004", "5336ef0cd075d6c820000005"], "5336ef0cd075d6c820000005");
+		assert.equal(false, result);
+
+		result = shared_utils.canLoadProject("free", ["51f782eced72a29c19000004", "51f78a9d0f9ea7e81c000005", "5249b768606c41b815000008", "5316f7783527c1f021000004", "5336f2756dde8c0804000004", "5336ef0cd075d6c820000005"], "5336f2756dde8c0804000004");
+		assert.equal(false, result);
+	})
 }),
 describe('project-utils', function () {
 	it('generateToCJSON', function () {

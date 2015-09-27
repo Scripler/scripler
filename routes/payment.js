@@ -6,9 +6,11 @@ var env = process.env.NODE_ENV;
 var Styleset = require('../models/styleset.js').Styleset;
 var emailer = require('../lib/email/email.js');
 var utils = require('../lib/utils');
+var euVatRates = require('../lib/eu-vat-rates.json');
+var moment = require('moment');
 
 var gateway = braintree.connect({
-	environment: (env == 'production' ? braintree.Environment.Production : braintree.Environment.Sandbox),
+	environment: (conf.braintree.env == 'production' ? braintree.Environment.Production : braintree.Environment.Sandbox),
 	merchantId: conf.braintree.merchantId,
 	publicKey: conf.braintree.publicKey,
 	privateKey: conf.braintree.privateKey
@@ -181,6 +183,7 @@ exports.transaction = function (req, res, next) {
 exports.create_subscription = function (req, res, next) {
 	var user = req.user;
 	var nonce = req.body.payment_method_nonce;
+	var billingCountryCode = req.body.billingCountryCode;
 
 	var addSubscription = function (paymentMethodToken) {
 		logger.info("Adding braintree subscription for user " + user.id + ". Token: " +  paymentMethodToken);
@@ -198,6 +201,7 @@ exports.create_subscription = function (req, res, next) {
 				var subscriptionId = result.subscription.id;
 				user.level = 'premium';
 				user.payment.subscriptionId = subscriptionId;
+				user.payment.billingCountryCode = billingCountryCode;
 				logger.info("Added braintree subscription for user " + user.id + ". Subscription id: " +  subscriptionId);
 
 				var plan = conf.plans[user.level];
@@ -221,7 +225,7 @@ exports.create_subscription = function (req, res, next) {
 						logger.error("CRITICAL! Could not update subscription information on user " + user.id + ", for subscription id " + subscriptionId + ". Error: " + JSON.stringify(err));
 						return next(err);
 					};
-					res.send({});
+					res.send({user: utils.cleanUserObject(user)});
 				});
 			} else {
 				return next(result);
@@ -272,7 +276,7 @@ exports.create_subscription = function (req, res, next) {
 		};
 		gateway.customer.create(customerRequest, function (err, result) {
 			if (err) {
-				return next("Could not create Braitree customer: " + err.name);
+				return next("Could not create Braintree customer: " + err.name);
 			}
 			if (result.success) {
 				user.payment.customerId = result.customer.id;
@@ -291,7 +295,14 @@ exports.cancel_subscription = function (req, res, next) {
 		gateway.subscription.cancel(user.payment.subscriptionId, function (err, result) {
 			if (result.success) {
 				// All good. We will notify the customer by email when we get the cancellation confirmation from Braintree through webhook.
-				res.send({});
+				user.payment.cancelled = true;
+				user.save(function (err) {
+					if (err) {
+						return next(err);
+					} else {
+						res.send({user: utils.cleanUserObject(user)});
+					}
+				})
 			} else {
 				return next( {message: result.message, status: 591} );
 			}
@@ -313,16 +324,18 @@ exports.initWebhook = function (req, res, next) {
 exports.webhook = function (req, res, next) {
 
 	var handleWebhook = function (webhookNotification) {
-		logger.info("[Webhook Received " + webhookNotification.timestamp + "] | Kind: " + webhookNotification.kind + " | Subscription: " + webhookNotification.subscription.id + " | Data: " + JSON.stringify(webhookNotification));
-		var subscription = webhookNotification.subject.subscription;
-		var subscriptionId = subscription.id;
+		logger.info("[Webhook Received] | Data: " + JSON.stringify(webhookNotification));
+
+		var subscription = webhookNotification.subscription;
+		var subscriptionId = subscription ? subscription.id : null;
 
 		var kind = webhookNotification.kind;
-		var changedUser = false;
 
 		if (subscription && subscriptionId) {
 			// Load associated customer
 			User.findOne({"payment.subscriptionId": subscriptionId}, function (err, user) {
+				var changedUser = false;
+				var callbackHandlesReturn = false;
 				if (err) {
 					logger.error("Error looking up user associated with subscription: " + subscriptionId);
 					return res.sendStatus(500);
@@ -367,14 +380,68 @@ exports.webhook = function (req, res, next) {
 				} else if (kind == 'subscription_charged_successfully') {
 					logger.info("Sending invoice to user...");
 
-					emailer.sendUserEmail(
-						user,
-						[
-							{name: "PRODUCTNAME", content: planName},
-							{name: "PRODUCTPRICE", content: subscription.price}
-						],
-						'payment-invoice'
-					);
+					// Find credit card used for transaction
+					var transaction = subscription.transactions[0];
+					var creditCardText = transaction.creditCard.cardType + ' ' + transaction.creditCard.maskedNumber;
+
+					// Calculate pricing
+					var countryCode = user.payment.billingCountryCode;
+					var country;
+					var vatRate;
+					if (euVatRates[countryCode]) {
+						vatRate = euVatRates[countryCode].rate;
+						country = euVatRates[countryCode].name;
+					} else {
+						vatRate = euVatRates['?'].rate;
+						country = euVatRates['?'].name;
+					}
+					var priceExVat = Math.round((subscription.price / (1 + vatRate)) * 100) / 100;
+
+					// Format subscription period: 15 January 2015 - 15 February 2015
+					var dateStart = moment(subscription.billingPeriodStartDate).format('MMMM D YYYY');
+					var dateEnd = moment(subscription.billingPeriodEndDate).format('MMMM D YYYY');
+					var subscriptionPeriod = dateStart + ' - ' + dateEnd;
+
+					callbackHandlesReturn = true;
+					utils.getNextId('invoiceNo', function (err, invoiceNo) {
+						if (err) {
+							logger.error("Error getting invoice number: " + err);
+							return res.sendStatus(500);
+						}
+
+						// Send invoice email
+						emailer.sendUserEmail(
+							user,
+							[
+								{name: "INVOICENO", content: invoiceNo },
+								{name: "PRODUCTNAME", content: planName},
+								{name: "SUBSCRIPTIONPERIOD", content: subscriptionPeriod},
+								{name: "PRODUCTPRICE", content: subscription.price},
+								{name: "PRODUCTPRICEEXVAT", content: priceExVat },
+								{name: "VATRATE", content:  vatRate*100 },
+								{name: "CREDITCARD", content: creditCardText },
+								{name: "COUNTRY", content: country}
+							],
+							'payment-invoice'
+						);
+
+						// Store transaction in user
+						user.payment.payments.push({
+							id: 'S'+invoiceNo,
+							amount: subscription.price,
+							type: 'recurring',
+							countryCode: countryCode,
+							vatRate: vatRate,
+							description: 'Payment for Premium subscription: ' + subscription.id
+						});
+						// Don't use changedUser boolean, since we are inside a callback here
+						user.save(function (err, user) {
+							if (err) {
+								logger.error("Could not update subscription information on user " + user.id + ", for subscription id " + subscriptionId);
+							};
+							return res.sendStatus(200);
+						});
+					})
 
 				} else if (kind == 'subscription_charged_unsuccessfully') {
 					logger.info("Sending notification to user...");
@@ -386,6 +453,8 @@ exports.webhook = function (req, res, next) {
 						],
 						'payment-subscription-charge-failed'
 					);
+
+
 				} else if (kind == 'subscription_canceled') {
 					var endDate;
 					if (subscription.trialPeriod) {
@@ -410,14 +479,14 @@ exports.webhook = function (req, res, next) {
 					logger.info("Unhandled " + kind + " webhook. Nothing to do?");
 				}
 
-				if (changedUser) {
-					user.save(function (err) {
+				if (changedUser && !callbackHandlesReturn) {
+					user.save(function (err, user) {
 						if (err) {
 							logger.error("Could not update subscription information on user " + user.id + ", for subscription id " + subscriptionId);
 						};
 						res.sendStatus(200);
 					});
-				} else {
+				} else if (!callbackHandlesReturn) {
 					res.sendStatus(200);
 				}
 			});

@@ -26,12 +26,13 @@
 		"apiKey": "xxxx"
 	},
 	"braintree":{
+		"env": "sandbox",
 		"merchantId": "xxx",
 		"publicKey": "xxx",
 		"privateKey": "xxx"
 	},
 	"plans": {
-		"premium": {"name": "Premium Subscription", "price": "14.99", "trial": "10"},
+		"premium": {"name": "Premium Subscription", "price": "9.99", "trial": "10"},
 		"free": {"name": "Free Subscription", "price": "0.0", "trial": "0"}
 	},
 	"prices": {
@@ -78,7 +79,7 @@
 	"subscriptions": {
 		"free": {
 			"storage": 20000,//bytes
-			"stylesets": ["book-bw", "book-color", "future-bw", "future-color", "light-bw", "light-color", "simple-bw", "simple-color"]
+			"stylesets": ["book-bw", "light-color", "simple-bw"]
 		},
 		"premium": {
 			"storage": 20000000//bytes
@@ -115,6 +116,7 @@
 		"uploadLimit": 524288000//500 MB (Nginx can have lower limits, and differentiate between routes)
 	},
 	"user": {
-		"defaultStylesetName": "simple-bw"
+		"defaultStylesetName": "simple-bw",
+		"freePremiumMonths": 3
 	}
 }

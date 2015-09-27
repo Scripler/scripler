@@ -1,7 +1,7 @@
 {
   "name": "scripler-server",
   "description": "Scripler Server",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "test": "mocha"
@@ -24,6 +24,7 @@
     "express-dot-engine": "^1.0.6",
     "express-session": "^1.11.1",
     "filewalker": "~0.1.2",
+    "geoip-lite": "^1.1.6",
     "lwip": "0.0.6",
     "mailchimp-api": "~2.0.3",
     "mandrill-api": "^1.0.45",

@@ -5,7 +5,6 @@ require('./it'); // Ensure that this is run after it.js
 var assert = require("assert")
 	, conf = require('config')
 	, app = require('../app')
-	, mongoose = require('mongoose')
 	, request = require('supertest')
 	, fs = require('fs')
 	, url = require('url')
@@ -52,11 +51,11 @@ describe('Scripler - Payment', function () {
 					assert.equal(res.body.user.firstname, "John");
 					assert.equal(res.body.user.lastname, "The Payer");
 					assert.equal(res.body.user.stylesets.length, 17);
-					userStylesetId1 = res.body.user.stylesets[0]; // book-bw - Free
-					userStylesetId2 = res.body.user.stylesets[1]; // book-color - Free
-					userStylesetId3 = res.body.user.stylesets[2]; // draft-bw - Premium
-					userStylesetId4 = res.body.user.stylesets[3]; // draft-color - Premium
-					defaultUserStyleset = res.body.user.stylesets[15]; // simple-bw
+					userStylesetId1 = res.body.user.stylesets[15]; 	// simple-bw	- Free
+					userStylesetId2 = res.body.user.stylesets[9]; 	// light-color	- Free
+					userStylesetId3 = res.body.user.stylesets[1];	// book-color	- Premium
+					userStylesetId4 = res.body.user.stylesets[3]; 	// draft-color	- Premium
+					defaultUserStyleset = userStylesetId1; // simple-bw
 					done();
 				});
 		}),
@@ -114,13 +113,13 @@ describe('Scripler - Payment', function () {
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
 					assert.equal(res.body.stylesets.length, 17);
-					assert.equal(res.body.stylesets[0]._id, userStylesetId1);
-					assert.equal(res.body.stylesets[1]._id, userStylesetId2);
-					assert.equal(res.body.stylesets[2]._id, userStylesetId3);
+					assert.notEqual(res.body.stylesets[15]._id, userStylesetId1); //This default styleset, simple-bw, has now been applied to document, so it got a new id.
+					assert.equal(res.body.stylesets[9]._id, userStylesetId2);
+					assert.equal(res.body.stylesets[1]._id, userStylesetId3);
 					assert.equal(res.body.stylesets[3]._id, userStylesetId4);
-					assert.equal(res.body.stylesets[0].accessLevels.indexOf("free") >= 0, true);
-					assert.equal(res.body.stylesets[1].accessLevels.indexOf("free") >= 0, true);
-					assert.equal(res.body.stylesets[2].accessLevels.indexOf("free") >= 0, false);
+					assert.equal(res.body.stylesets[15].accessLevels.indexOf("free") >= 0, true);
+					assert.equal(res.body.stylesets[9].accessLevels.indexOf("free") >= 0, true);
+					assert.equal(res.body.stylesets[1].accessLevels.indexOf("free") >= 0, false);
 					assert.equal(res.body.stylesets[3].accessLevels.indexOf("free") >= 0, false);
 					done();
 				});
@@ -222,45 +221,45 @@ describe('Scripler - Payment', function () {
 				.send({
 					"kind": "subscription_charged_successfully",
 					"timestamp": "2015-03-15T15:33:32Z",
-					"subject": {
-						"subscription": {
-							"addOns": [],
-							"balance": "0.00",
-							"billingDayOfMonth": 15,
-							"billingPeriodEndDate": "2015-04-14",
-							"billingPeriodStartDate": "2015-03-15",
-							"createdAt": "2015-03-14T15:15:34Z",
-							"updatedAt": "2015-03-15T15:33:32Z",
-							"currentBillingCycle": 1,
-							"daysPastDue": null,
-							"discounts": [],
-							"failureCount": 0,
-							"firstBillingDate": "2015-03-15",
-							"id": "58kjjw",
-							"merchantAccountId": "zz7g25spzvnvqgzm",
-							"neverExpires": true,
-							"nextBillAmount": "2000.00",
-							"nextBillingPeriodAmount": "2000.00",
-							"nextBillingDate": "2015-04-15",
-							"numberOfBillingCycles": null,
-							"paidThroughDate": "2015-04-14",
-							"paymentMethodToken": "ktfswb",
-							"planId": "bad-premium",
-							"price": "2000.00",
-							"status": "Active",
-							"trialDuration": 1,
-							"trialDurationUnit": "day",
-							"trialPeriod": true,
-							"descriptor": {
-								"name": null,
-								"phone": null,
-								"url": null
-							},
-							"transactions": [],// Truncated
-							"statusHistory": []//Truncated
-						}
-					},
-					"subscription": {}//Truncated
+					"subscription": {
+						"addOns": [],
+						"balance": "0.00",
+						"billingDayOfMonth": 15,
+						"billingPeriodEndDate": "2015-04-14",
+						"billingPeriodStartDate": "2015-03-15",
+						"createdAt": "2015-03-14T15:15:34Z",
+						"updatedAt": "2015-03-15T15:33:32Z",
+						"currentBillingCycle": 1,
+						"daysPastDue": null,
+						"discounts": [],
+						"failureCount": 0,
+						"firstBillingDate": "2015-03-15",
+						"id": "test-subscription",
+						"merchantAccountId": "zz7g25spzvnvqgzm",
+						"neverExpires": true,
+						"nextBillAmount": "2000.00",
+						"nextBillingPeriodAmount": "2000.00",
+						"nextBillingDate": "2015-04-15",
+						"numberOfBillingCycles": null,
+						"paidThroughDate": "2015-04-14",
+						"paymentMethodToken": "ktfswb",
+						"planId": "bad-premium",
+						"price": "2000.00",
+						"status": "Active",
+						"trialDuration": 1,
+						"trialDurationUnit": "day",
+						"trialPeriod": true,
+						"descriptor": {
+							"name": null,
+							"phone": null,
+							"url": null
+						},
+						"transactions": [{
+							"id": "xxxxx",
+							"creditCard": {"cardType": "Visa", "maskedNumber": "************1234"}
+						}],// Truncated
+						"statusHistory": []//Truncated
+					}
 				})
 				.expect(200)
 				.end(function (err, res) {
@@ -274,45 +273,42 @@ describe('Scripler - Payment', function () {
 				.send({
 					"kind":         "subscription_went_active",
 					"timestamp":    "2015-03-15T15:33:31Z",
-					"subject":      {
-						"subscription": {
-							"addOns":                  [],
-							"balance":                 "200.00",
-							"billingDayOfMonth":       15,
-							"billingPeriodEndDate":    "2015-04-14",
-							"billingPeriodStartDate":  "2015-03-15",
-							"createdAt":               "2015-03-14T15:15:34Z",
-							"updatedAt":               "2015-03-15T13:49:18Z",
-							"currentBillingCycle":     1,
-							"daysPastDue":             null,
-							"discounts":               [],
-							"failureCount":            1,
-							"firstBillingDate":        "2015-03-15",
-							"id":                      "58kjjw",
-							"merchantAccountId":       "zz7g25spzvnvqgzm",
-							"neverExpires":            true,
-							"nextBillAmount":          "2000.00",
-							"nextBillingPeriodAmount": "2000.00",
-							"nextBillingDate":         "2015-03-25",
-							"numberOfBillingCycles":   null,
-							"paidThroughDate":         null,
-							"paymentMethodToken":      "ktfswb",
-							"planId":                  "bad-premium",
-							"price":                   "2000.00",
-							"status":                  "Active",
-							"trialDuration":           1,
-							"trialDurationUnit":       "day",
-							"trialPeriod":             true,
-							"descriptor":              {
-								"name":  null,
-								"phone": null,
-								"url":   null
-							},
-							"transactions":            [],// Truncated
-							"statusHistory":           []// Truncated
-						}
-					},
-					"subscription": {}// Truncated
+					"subscription": {
+						"addOns":                  [],
+						"balance":                 "200.00",
+						"billingDayOfMonth":       15,
+						"billingPeriodEndDate":    "2015-04-14",
+						"billingPeriodStartDate":  "2015-03-15",
+						"createdAt":               "2015-03-14T15:15:34Z",
+						"updatedAt":               "2015-03-15T13:49:18Z",
+						"currentBillingCycle":     1,
+						"daysPastDue":             null,
+						"discounts":               [],
+						"failureCount":            1,
+						"firstBillingDate":        "2015-03-15",
+						"id":                      "58kjjw",
+						"merchantAccountId":       "zz7g25spzvnvqgzm",
+						"neverExpires":            true,
+						"nextBillAmount":          "2000.00",
+						"nextBillingPeriodAmount": "2000.00",
+						"nextBillingDate":         "2015-03-25",
+						"numberOfBillingCycles":   null,
+						"paidThroughDate":         null,
+						"paymentMethodToken":      "ktfswb",
+						"planId":                  "bad-premium",
+						"price":                   "2000.00",
+						"status":                  "Active",
+						"trialDuration":           1,
+						"trialDurationUnit":       "day",
+						"trialPeriod":             true,
+						"descriptor":              {
+							"name":  null,
+							"phone": null,
+							"url":   null
+						},
+						"transactions":            [],// Truncated
+						"statusHistory":           []// Truncated
+					}
 				})
 				.expect(200)
 				.end(function (err, res) {
@@ -326,45 +322,42 @@ describe('Scripler - Payment', function () {
 				.send({
 					"kind": "subscription_canceled",
 					"timestamp": "2015-03-15T15:32:12Z",
-					"subject": {
-						"subscription": {
-							"addOns": [],
-							"balance": "0.00",
-							"billingDayOfMonth": 16,
-							"billingPeriodEndDate": null,
-							"billingPeriodStartDate": null,
-							"createdAt": "2015-03-15T15:31:28Z",
-							"updatedAt": "2015-03-15T15:32:12Z",
-							"currentBillingCycle": 0,
-							"daysPastDue": null,
-							"discounts": [],
-							"failureCount": 0,
-							"firstBillingDate": "2015-03-16",
-							"id": "9bmg22",
-							"merchantAccountId": "zz7g25spzvnvqgzm",
-							"neverExpires": true,
-							"nextBillAmount": "2000.00",
-							"nextBillingPeriodAmount": "2000.00",
-							"nextBillingDate": "2015-03-16",
-							"numberOfBillingCycles": null,
-							"paidThroughDate": null,
-							"paymentMethodToken": "fd2cwb",
-							"planId": "bad-premium",
-							"price": "2000.00",
-							"status": "Canceled",
-							"trialDuration": 1,
-							"trialDurationUnit": "day",
-							"trialPeriod": true,
-							"descriptor": {
-								"name": null,
-								"phone": null,
-								"url": null
-							},
-							"transactions":            [],// Truncated
-							"statusHistory":           []// Truncated
-						}
-					},
-					"subscription": {}// Truncated
+					"subscription": {
+						"addOns": [],
+						"balance": "0.00",
+						"billingDayOfMonth": 16,
+						"billingPeriodEndDate": null,
+						"billingPeriodStartDate": null,
+						"createdAt": "2015-03-15T15:31:28Z",
+						"updatedAt": "2015-03-15T15:32:12Z",
+						"currentBillingCycle": 0,
+						"daysPastDue": null,
+						"discounts": [],
+						"failureCount": 0,
+						"firstBillingDate": "2015-03-16",
+						"id": "9bmg22",
+						"merchantAccountId": "zz7g25spzvnvqgzm",
+						"neverExpires": true,
+						"nextBillAmount": "2000.00",
+						"nextBillingPeriodAmount": "2000.00",
+						"nextBillingDate": "2015-03-16",
+						"numberOfBillingCycles": null,
+						"paidThroughDate": null,
+						"paymentMethodToken": "fd2cwb",
+						"planId": "bad-premium",
+						"price": "2000.00",
+						"status": "Canceled",
+						"trialDuration": 1,
+						"trialDurationUnit": "day",
+						"trialPeriod": true,
+						"descriptor": {
+							"name": null,
+							"phone": null,
+							"url": null
+						},
+						"transactions":            [],// Truncated
+						"statusHistory":           []// Truncated
+					}
 				})
 				.expect(200)
 				.end(function (err, res) {
@@ -378,45 +371,42 @@ describe('Scripler - Payment', function () {
 				.send({
 					"kind": "subscription_canceled",
 					"timestamp": "2015-03-15T15:52:54Z",
-					"subject": {
-						"subscription": {
-							"addOns": [],
-							"balance": "0.00",
-							"billingDayOfMonth": 15,
-							"billingPeriodEndDate": "2015-04-14",
-							"billingPeriodStartDate": "2015-03-15",
-							"createdAt": "2015-03-15T15:52:39Z",
-							"updatedAt": "2015-03-15T15:52:54Z",
-							"currentBillingCycle": 1,
-							"daysPastDue": null,
-							"discounts": [],
-							"failureCount": 0,
-							"firstBillingDate": "2015-03-15",
-							"id": "dr5db2",
-							"merchantAccountId": "zz7g25spzvnvqgzm",
-							"neverExpires": true,
-							"nextBillAmount": "200.00",
-							"nextBillingPeriodAmount": "200.00",
-							"nextBillingDate": "2015-04-15",
-							"numberOfBillingCycles": null,
-							"paidThroughDate": "2015-04-14",
-							"paymentMethodToken": "4266bw",
-							"planId": "bad-premium",
-							"price": "200.00",
-							"status": "Canceled",
-							"trialDuration": 1,
-							"trialDurationUnit": "day",
-							"trialPeriod": false,
-							"descriptor": {
-								"name": null,
-								"phone": null,
-								"url": null
-							},
-							"transactions":            [],// Truncated
-							"statusHistory":           []// Truncated
-						}
-					},
-					"subscription": {}// Truncated
+					"subscription": {
+						"addOns": [],
+						"balance": "0.00",
+						"billingDayOfMonth": 15,
+						"billingPeriodEndDate": "2015-04-14",
+						"billingPeriodStartDate": "2015-03-15",
+						"createdAt": "2015-03-15T15:52:39Z",
+						"updatedAt": "2015-03-15T15:52:54Z",
+						"currentBillingCycle": 1,
+						"daysPastDue": null,
+						"discounts": [],
+						"failureCount": 0,
+						"firstBillingDate": "2015-03-15",
+						"id": "dr5db2",
+						"merchantAccountId": "zz7g25spzvnvqgzm",
+						"neverExpires": true,
+						"nextBillAmount": "200.00",
+						"nextBillingPeriodAmount": "200.00",
+						"nextBillingDate": "2015-04-15",
+						"numberOfBillingCycles": null,
+						"paidThroughDate": "2015-04-14",
+						"paymentMethodToken": "4266bw",
+						"planId": "bad-premium",
+						"price": "200.00",
+						"status": "Canceled",
+						"trialDuration": 1,
+						"trialDurationUnit": "day",
+						"trialPeriod": false,
+						"descriptor": {
+							"name": null,
+							"phone": null,
+							"url": null
+						},
+						"transactions":            [],// Truncated
+						"statusHistory":           []// Truncated
+					}
 				})
 				.expect(200)
 				.end(function (err, res) {
@@ -430,45 +420,42 @@ describe('Scripler - Payment', function () {
 				.send({
 					"kind": "subscription_trial_ended",
 					"timestamp": "2015-03-15T13:49:17Z",
-					"subject": {
-						"subscription": {
-							"addOns": [],
-							"balance": "2000.00",
-							"billingDayOfMonth": 15,
-							"billingPeriodEndDate": "2015-04-14",
-							"billingPeriodStartDate": "2015-03-15",
-							"createdAt": "2015-03-14T15:15:34Z",
-							"updatedAt": "2015-03-14T15:15:34Z",
-							"currentBillingCycle": 1,
-							"daysPastDue": null,
-							"discounts": [],
-							"failureCount": 0,
-							"firstBillingDate": "2015-03-15",
-							"id": "58kjjw",
-							"merchantAccountId": "zz7g25spzvnvqgzm",
-							"neverExpires": true,
-							"nextBillAmount": "2000.00",
-							"nextBillingPeriodAmount": "2000.00",
-							"nextBillingDate": "2015-04-15",
-							"numberOfBillingCycles": null,
-							"paidThroughDate": null,
-							"paymentMethodToken": "ktfswb",
-							"planId": "bad-premium",
-							"price": "2000.00",
-							"status": "Active",
-							"trialDuration": 1,
-							"trialDurationUnit": "day",
-							"trialPeriod": true,
-							"descriptor": {
-								"name": null,
-								"phone": null,
-								"url": null
-							},
-							"transactions":            [],// Truncated
-							"statusHistory":           []// Truncated
-						}
-					},
-					"subscription": {}// Truncated
+					"subscription": {
+						"addOns": [],
+						"balance": "2000.00",
+						"billingDayOfMonth": 15,
+						"billingPeriodEndDate": "2015-04-14",
+						"billingPeriodStartDate": "2015-03-15",
+						"createdAt": "2015-03-14T15:15:34Z",
+						"updatedAt": "2015-03-14T15:15:34Z",
+						"currentBillingCycle": 1,
+						"daysPastDue": null,
+						"discounts": [],
+						"failureCount": 0,
+						"firstBillingDate": "2015-03-15",
+						"id": "58kjjw",
+						"merchantAccountId": "zz7g25spzvnvqgzm",
+						"neverExpires": true,
+						"nextBillAmount": "2000.00",
+						"nextBillingPeriodAmount": "2000.00",
+						"nextBillingDate": "2015-04-15",
+						"numberOfBillingCycles": null,
+						"paidThroughDate": null,
+						"paymentMethodToken": "ktfswb",
+						"planId": "bad-premium",
+						"price": "2000.00",
+						"status": "Active",
+						"trialDuration": 1,
+						"trialDurationUnit": "day",
+						"trialPeriod": true,
+						"descriptor": {
+							"name": null,
+							"phone": null,
+							"url": null
+						},
+						"transactions":            [],// Truncated
+						"statusHistory":           []// Truncated
+					}
 				})
 				.expect(200)
 				.end(function (err, res) {
@@ -482,45 +469,42 @@ describe('Scripler - Payment', function () {
 				.send({
 					"kind": "subscription_charged_unsuccessfully",
 					"timestamp": "2015-03-15T13:49:17Z",
-					"subject": {
-						"subscription": {
-							"addOns": [],
-							"balance": "2000.00",
-							"billingDayOfMonth": 15,
-							"billingPeriodEndDate": "2015-04-14",
-							"billingPeriodStartDate": "2015-03-15",
-							"createdAt": "2015-03-14T15:15:34Z",
-							"updatedAt": "2015-03-14T15:15:34Z",
-							"currentBillingCycle": 1,
-							"daysPastDue": null,
-							"discounts": [],
-							"failureCount": 1,
-							"firstBillingDate": "2015-03-15",
-							"id": "58kjjw",
-							"merchantAccountId": "zz7g25spzvnvqgzm",
-							"neverExpires": true,
-							"nextBillAmount": "2000.00",
-							"nextBillingPeriodAmount": "2000.00",
-							"nextBillingDate": "2015-04-15",
-							"numberOfBillingCycles": null,
-							"paidThroughDate": null,
-							"paymentMethodToken": "ktfswb",
-							"planId": "bad-premium",
-							"price": "2000.00",
-							"status": "Active",
-							"trialDuration": 1,
-							"trialDurationUnit": "day",
-							"trialPeriod": true,
-							"descriptor": {
-								"name": null,
-								"phone": null,
-								"url": null
-							},
-							"transactions":            [],// Truncated
-							"statusHistory":           []// Truncated
-						}
-					},
-					"subscription": {}// Truncated
+					"subscription": {
+						"addOns": [],
+						"balance": "2000.00",
+						"billingDayOfMonth": 15,
+						"billingPeriodEndDate": "2015-04-14",
+						"billingPeriodStartDate": "2015-03-15",
+						"createdAt": "2015-03-14T15:15:34Z",
+						"updatedAt": "2015-03-14T15:15:34Z",
+						"currentBillingCycle": 1,
+						"daysPastDue": null,
+						"discounts": [],
+						"failureCount": 1,
+						"firstBillingDate": "2015-03-15",
+						"id": "58kjjw",
+						"merchantAccountId": "zz7g25spzvnvqgzm",
+						"neverExpires": true,
+						"nextBillAmount": "2000.00",
+						"nextBillingPeriodAmount": "2000.00",
+						"nextBillingDate": "2015-04-15",
+						"numberOfBillingCycles": null,
+						"paidThroughDate": null,
+						"paymentMethodToken": "ktfswb",
+						"planId": "bad-premium",
+						"price": "2000.00",
+						"status": "Active",
+						"trialDuration": 1,
+						"trialDurationUnit": "day",
+						"trialPeriod": true,
+						"descriptor": {
+							"name": null,
+							"phone": null,
+							"url": null
+						},
+						"transactions":            [],// Truncated
+						"statusHistory":           []// Truncated
+					}
 				})
 				.expect(200)
 				.end(function (err, res) {
@@ -534,45 +518,42 @@ describe('Scripler - Payment', function () {
 				.send({
 					"kind": "subscription_went_past_due",
 					"timestamp": "2015-03-15T13:49:18Z",
-					"subject": {
-						"subscription": {
-							"addOns": [],
-							"balance": "2000.00",
-							"billingDayOfMonth": 15,
-							"billingPeriodEndDate": "2015-04-14",
-							"billingPeriodStartDate": "2015-03-15",
-							"createdAt": "2015-03-14T15:15:34Z",
-							"updatedAt": "2015-03-15T13:49:18Z",
-							"currentBillingCycle": 1,
-							"daysPastDue": 0,
-							"discounts": [],
-							"failureCount": 1,
-							"firstBillingDate": "2015-03-15",
-							"id": "58kjjw",
-							"merchantAccountId": "zz7g25spzvnvqgzm",
-							"neverExpires": true,
-							"nextBillAmount": "2000.00",
-							"nextBillingPeriodAmount": "2000.00",
-							"nextBillingDate": "2015-03-25",
-							"numberOfBillingCycles": null,
-							"paidThroughDate": null,
-							"paymentMethodToken": "ktfswb",
-							"planId": "bad-premium",
-							"price": "2000.00",
-							"status": "Past Due",
-							"trialDuration": 1,
-							"trialDurationUnit": "day",
-							"trialPeriod": true,
-							"descriptor": {
-								"name": null,
-								"phone": null,
-								"url": null
-							},
-							"transactions":            [],// Truncated
-							"statusHistory":           []// Truncated
-						}
-					},
-					"subscription": {}// Truncated
+					"subscription": {
+						"addOns": [],
+						"balance": "2000.00",
+						"billingDayOfMonth": 15,
+						"billingPeriodEndDate": "2015-04-14",
+						"billingPeriodStartDate": "2015-03-15",
+						"createdAt": "2015-03-14T15:15:34Z",
+						"updatedAt": "2015-03-15T13:49:18Z",
+						"currentBillingCycle": 1,
+						"daysPastDue": 0,
+						"discounts": [],
+						"failureCount": 1,
+						"firstBillingDate": "2015-03-15",
+						"id": "58kjjw",
+						"merchantAccountId": "zz7g25spzvnvqgzm",
+						"neverExpires": true,
+						"nextBillAmount": "2000.00",
+						"nextBillingPeriodAmount": "2000.00",
+						"nextBillingDate": "2015-03-25",
+						"numberOfBillingCycles": null,
+						"paidThroughDate": null,
+						"paymentMethodToken": "ktfswb",
+						"planId": "bad-premium",
+						"price": "2000.00",
+						"status": "Past Due",
+						"trialDuration": 1,
+						"trialDurationUnit": "day",
+						"trialPeriod": true,
+						"descriptor": {
+							"name": null,
+							"phone": null,
+							"url": null
+						},
+						"transactions":            [],// Truncated
+						"statusHistory":           []// Truncated
+					}
 				})
 				.expect(200)
 				.end(function (err, res) {

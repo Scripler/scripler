@@ -20,10 +20,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		// TODO: how to handle error? (awaiting "Show error messages to the user" task)
 		console.log("ERROR: user is undefined!");
 	} else {
-		var projectPromise = projectsService.getProject( $scope.pid );
+		// If a user attempts to deep link into a project he/she cannot load
+		var canLoadProject = utilsService.canLoadProject(user.level, $scope.user.projects, $scope.pid);
+		if (!canLoadProject) {
+			$location.path('create/#/');
+		}
 
+		var projectPromise = projectsService.getProject( $scope.pid );
 		projectPromise.then( function( project ) {
 			$scope.project = project;
+
 			var metadataChanged = false;
 			if (!$scope.project.metadata.title) {
 				$scope.project.metadata.title = $scope.project.name;
@@ -91,6 +97,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				file: file
 			}).progress(function(evt) {
 				ngProgress.set(parseInt(100.0 * evt.loaded / evt.total) - 25);
+			}).error(function(data, status) {
+				if (status == 402) {
+					window.alert(data.errorMessage);
+				}
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
 				$scope.projectDocuments.push( data.document );
@@ -108,6 +118,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				file: file
 			}).progress(function(evt) {
 				ngProgress.set(parseInt(100.0 * evt.loaded / evt.total) - 25);
+			}).error(function(data, status) {
+				if (status == 402) {
+					window.alert(data.errorMessage);
+				}
 			}).success(function(data, status, headers, config) {
 				ngProgress.complete();
 				if ( typeof type !== 'undefined' ) {
@@ -202,6 +216,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			})
 
 		return deferred.promise;
+	}
+
+	$scope.linkAnchorChanged = function () {
+		$scope.linkAddress = '';
+	}
+
+	$scope.linkAddressChanged = function () {
+		$scope.linkAnchor = '';
 	}
 
 
@@ -466,8 +488,9 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			if ( $scope.leftMenuShowItem != 'design' && $scope.styleEditorVisible ) {
 				$scope.hideStyleEditor();
 			}
-
-			$scope.selectedStyle.scroll = true;
+			if ($scope.leftMenuShowItem == 'design') {
+				$scope.selectedStyle.scroll = true;
+			}
 		}
 		else {
 			$scope.hideLeftMenu();
@@ -855,6 +878,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 			editor = getEditor(),
 			isDefault = styleset._id === $scope.documentSelected.defaultStyleset;
 
+		if (!$scope.isStylesetAccessible(styleset)) {
+			// User has no access to apply styleset
+			return;
+		}
+
 		//when applying styleset to document, the styles get copied to new (document) styleset
 		if (style._id != styleset.styles[styleIndex]._id) {
 			style = styleset.styles[styleIndex];
@@ -1057,6 +1085,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		return applyToParent;
 	}
 
+	/* Disabled until adding new styles is working properly
 	$scope.addNewStyle = function(styleset, style, index) {
 		var newStyle = {};
 
@@ -1098,6 +1127,7 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				}
 			});
 	}
+	*/
 
 	$scope.updateStyle = function(style) {
 		$http.put('/style/' + style._id + '/update', angular.toJson(style));
@@ -1395,7 +1425,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	$scope.insertNewLink = function() {
 		var type = "link";
-		var link = '<a href="' + $scope.linkAddress + '">link_text</a>';
+		var link;
+		if ($scope.linkAnchor) {
+			link = '<a href="' + $scope.linkAnchor.target + '">link_text</a>';
+		} else {
+			link = '<a href="' + $scope.linkAddress + '">link_text</a>';
+		}
 		editorInsert( link, type);
 		$scope.updateProjectDocument();
 		$scope.linkAddress = '';
@@ -1515,6 +1550,14 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
+	$scope.isStylesetAccessible = function(styleset) {
+		return $scope.isPremiumUser() || styleset.accessLevels.indexOf($scope.user.level) > -1 || styleset.accessPayment;
+	}
+
+	$scope.isPremiumUser = function() {
+		return $scope.user.level && $scope.user.level != 'free';
+	}
+
 	function generateColophonHtml() {
 		var title = '<h4 class="right">' + $scope.project.name + '</h4>';
 		var author = '<p class="colophon">' + $scope.user.firstname + ' ' + $scope.user.lastname + '</p>'
@@ -1561,16 +1604,16 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 			if(!isHyperlink){
 				document.getElementById("anchorInputBox").value = range;
-				document.getElementById("hyperlinkInputBox").value = range;
-				document.getElementById("hyperlinkTarget").value = "";
+				document.getElementById("linkText").value = range;
+				document.getElementById("linkAddress").value = "";
 			}
 		}
 
 		// onselectionchange doesn't work for Firefox, so instead we update with the old selectedContent returned by CKEditor
 		if(navigator.userAgent.search("Firefox")>-1){
 			document.getElementById("anchorInputBox").value = selectedContent;
-			document.getElementById("hyperlinkInputBox").value = selectedContent;
-			document.getElementById("hyperlinkTarget").value = "";
+			document.getElementById("linkText").value = selectedContent;
+			document.getElementById("linkAddress").value = "";
 		}
 
 		return selectedContent;
@@ -1578,10 +1621,10 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 	function editorInsert( insert, type ) {
 		var anchorInputContent = document.getElementById("anchorInputBox").value;
-		var hyperlinkInputContent = document.getElementById("hyperlinkInputBox").value;
+		var hyperlinkInputContent = document.getElementById("linkText").value;
 
 		var editor = getEditor();
-		var selectedContentRequired = (type == "anchor" || type == "link"); 
+		var selectedContentRequired = (type == "anchor" || type == "link");
 		var selectedContent = returnSelectedContent();
 		var validURL = true;
 
@@ -1593,12 +1636,12 @@ function projectController( $scope, $location, userService, projectsService, $ht
 
 			else if(type=="link" && hyperlinkInputContent!=""){
 				selectedContent = hyperlinkInputContent;
-			}		
+			}
 		}
 
 		// if no hyperlink text is provided, take the targetURL as the text
 		if(selectedContent == ""){
-			selectedContent = $scope.linkAddress; 
+			selectedContent = $scope.linkAddress;
 		}
 
 
@@ -1621,20 +1664,22 @@ function projectController( $scope, $location, userService, projectsService, $ht
 				}
 				insert = insert.replace('link_text', title);
 
-				var regExpValidUrl = /^((https?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{1,}\.[a-zA-Z]{1,}(\.[a-zA-Z]{2,})?$/;
+				var regExpValidUrl = /^(https?:\/\/)?[^ "]+$/;
 
 				var isInternal = false;
 				var toc = $scope.toc;
-				toc.forEach(function(entry) {
-					if($scope.linkAddress == entry.target)isInternal = true;
-				});
+				if (toc && $scope.linkAnchor && $scope.linkAnchor.target) {
+					toc.forEach(function (entry) {
+						if ($scope.linkAnchor.target == entry.target)isInternal = true;
+					});
+				}
 
-				if($scope.linkAddress!=undefined && $scope.linkAddress.substring(0,4)!="http" && !isInternal){ 
+				if(!isInternal && $scope.linkAddress!=undefined && $scope.linkAddress.substring(0,4)!="http"){
 					insert = insert.replace($scope.linkAddress, "http://" + $scope.linkAddress);
 				}
 
-				validURL = (regExpValidUrl.test($scope.linkAddress) || isInternal);
-			}	
+				validURL = (isInternal || regExpValidUrl.test($scope.linkAddress));
+			}
 
 			//create and insert anchor/hyperlink element on the caret
 			if(validURL){
@@ -1662,21 +1707,11 @@ function projectController( $scope, $location, userService, projectsService, $ht
 		}
 	}
 
-
-	$scope.$watch('linkAnchor', function(newValue, oldValue) {
-		var hasText = false;
-		if(hyperlinkInputBox.value!=""){
-				hasText = true;
+	$scope.$onRootScope('user:registered', function( event, user ) {
+		if ( user._id ) {
+			$scope.user = user;
+			userService.setUser(user);
 		}
-		if (newValue !== oldValue) {
-			$scope.linkAddress = newValue.target;
-
-			if(!hasText){
-				$scope.linkText = newValue.text;
-			}
-		} 
-
-		$scope.focusEditor();
 	});
 
 	function getEditor(scope) {
@@ -1760,8 +1795,27 @@ function projectController( $scope, $location, userService, projectsService, $ht
 						// fetching content of anchor
 						content = element.$.innerHTML;
 
-						document.getElementById("hyperlinkInputBox").value = content;
-						document.getElementById("hyperlinkTarget").value = target;
+						var toc = $scope.toc;
+						var tocEntry = -1;
+						if (toc) {
+							for (var i = 0; i < toc.length; i++) {
+								if (toc[i].target == target) {
+									tocEntry = i;
+									break;
+								}
+							}
+						}
+
+						if (tocEntry>=0) {
+							$scope.linkAnchor = target;
+							document.getElementById("linkAnchor").value = tocEntry;
+							document.getElementById("linkAddress").value = "";
+						} else {
+							$scope.linkAnchor = "";
+							document.getElementById("linkAnchor").value = "";
+							document.getElementById("linkAddress").value = target;
+						}
+						document.getElementById("linkText").value = content;
 
 						return false;
 					}

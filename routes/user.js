@@ -11,6 +11,9 @@ var User = require('../models/user.js').User
 	, user_utils = require('../lib/user-utils')
 	, Styleset = require('../models/styleset.js').Styleset
 	, discourse_sso = require('discourse-sso')
+	, geoip = require('geoip-lite')
+	, path = require('path')
+	, euVatRates = require('../lib/eu-vat-rates.json')
 ;
 
 /**
@@ -262,6 +265,19 @@ exports.edit = function (req, res, next) {
 		user.isDemo = isDemo;
 	}
 
+	// If upgrading from a demo account to real user with email-address, and user not already got a subscription,
+	// add optional free premium months.
+	if (emailChanged && userWasDemo && !user.payment.subscriptionId && !user.payment.endDate) {
+		var freeMonth = parseInt(conf.user.freePremiumMonths);
+		if (freeMonth > 0) {
+			user.level = "premium";
+			var endDate = new Date();
+			endDate.setMonth(endDate.getMonth() + freeMonth);
+			user.payment.endDate = endDate;
+			logger.info("User '" + user.id + "' got " + freeMonth + " free months. End-date: " + endDate);
+		}
+	}
+
 	var saveUser = function () {
 		user.save(function (err) {
 			if (err) {
@@ -362,3 +378,26 @@ exports.sso = function (req, res, next) {
 		}
 	}
 }
+
+/**
+ * GET users country based on ip.
+ */
+exports.getCountry = function (req, res) {
+	var ip = req.ip;
+	// For IPv6, req.ip can be '::ffff:127.0.0.1"'.
+	// Geolite needs IPv4, so strip IPv6 in these cases
+	if ( ip.indexOf('::ffff:') >= 0 ) {
+		ip = ip.split(':').reverse()[0]
+	}
+	var countryCode = 'DK';
+	var lookedUpIP = geoip.lookup(ip)
+	if ( lookedUpIP && lookedUpIP.country ) {
+		// Check if country-code is a known EU country
+		if (euVatRates[lookedUpIP.country]) {
+			countryCode = lookedUpIP.country;
+		} else {
+			countryCode = "?";//Outside EU
+		}
+	}
+	res.send({"country": countryCode});
+};

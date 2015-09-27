@@ -106,9 +106,9 @@ blockquote {
 	color:#ffffff;
 	background-color: #25768F;
 	padding:1em;
-/*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
+	/*Margin-left and right is defined in %, as it then becomes relative to width, which is important for responsive design to e.g. mobile phones.*/
 
-margin:1.5em 30% 1.5em 0%;
+	margin:1.5em 30% 1.5em 0%;
 	page-break-inside:avoid;
 }
 

@@ -41,14 +41,18 @@ var UserSchema = new Schema({
 	payment: {
 		customerId: { type: String },
 		subscriptionId: { type: String},
+		billingCountryCode: { type: String},
 		endDate: { type: Date },
 		payments: [{
 			id: { type: String },
 			amount: { type: String },
 			date: { type: Date, default: Date.now },
 			type: { type: String, enum: ['recurring', 'single'] },
+			countryCode: { type: String},
+			vatRate: { type: Number, default: 0},
 			description: { type: String}
-		}]
+		}],
+		cancelled: { type: Boolean, default: false }
 	}
 });
 

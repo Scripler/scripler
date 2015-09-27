@@ -106,23 +106,45 @@ button:hover label, button:active label, .button:hover label, .button:active lab
 	margin-right: 10px;
 }
 
+.no-top-margin {
+	margin-top: 0;
+}
+
+.no-top-margin-2 {
+	margin-top: 0;
+	color: #9A9A9A;
+    font-size: 14px;
+}
+
+.no-top-margin-2 a{
+	color: #9A9A9A;
+	text-decoration: underline;
+}
+
+.no-top-margin-2 a:hover{
+	color: #000;
+	text-decoration: underline;
+}
+
 /* General Styling */
 h1 {
 	font-size: 2.25em;
 	margin: 0.8em 0 0.4em 0;
 }
 h2 {
-	font-size: 1.25em;
-	margin: 0.8em 0 0.4em 0;
+	font-size: 2em;
+	margin: 0.8em 0 0.2em 0;
 }
 
 a {
 	color: #000;
 	text-decoration: none;
 }
+
 a:hover {
-	color: #666;
+	text-decoration: underline;
 }
+
 a.link-underline {
 	text-decoration: underline;
 }
@@ -230,21 +252,17 @@ a.link-underline {
 }
 
 input[type="password"], input[type="text"], input[type="email"] {
-	-moz-border-radius: 1px;
-	-webkit-border-radius: 1px;
-	border-radius: 1px;
 	-webkit-appearance: none;
 	border: 0px solid #fff;
-	background: #f6f6f6;
+	background: #fff;
 	font-size: 15px;
 	padding: 6px 8px;
-	margin: 0 5px 0 0;
+	margin: 0 10px 0 0;
 }
 input.has-error {
 	border: 1px solid #ff0000;
 }
 input:focus {
-	border-color: #ffff99;
 	outline: none;
 }
 textarea {
@@ -287,6 +305,146 @@ textarea {
 	display: none;
 }
 
+/* START Modals */
+div.m-modals {
+	background-color: rgba( 0, 0, 0, 0.8 ) ;
+	bottom: 0px ;
+	left: 0px ;
+	position: fixed ;
+	right: 0px ;
+	top: 0px ;
+	z-index:999;
+}
+
+div.m-modals.ng-hide {
+	background-color: rgba( 0, 0, 0, 0 );
+}
+
+div.m-modals.ng-hide-add.ng-hide-add-active,
+div.m-modals.ng-hide-remove.ng-hide-remove-active {
+	transition: 250ms ease all ;
+}
+div.m-modals > .modalPlan {
+	border-radius: 3px 3px 3px 3px ;
+	box-sizing: border-box ;
+	-moz-box-sizing: border-box ;
+	padding: 20px 20px 20px 20px ;
+	position: fixed ;
+	left: 50% ;
+	margin-left: -600px ;
+	top: 200px ;
+	width: 1200px;
+}
+
+div.m-modals > .modal {
+	border-radius: 3px 3px 3px 3px ;
+	box-sizing: border-box ;
+	-moz-box-sizing: border-box ;
+	padding: 20px 20px 20px 20px ;
+	position: fixed ;
+	left: 50% ;
+	margin-left: -400px ;
+	top: 100px ;
+	width: 800px;
+}
+
+div.m-modals.ng-hide > .modal.ng-enter {
+	top: -200px ;
+	transition: 250ms ease top ;
+}
+
+div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
+	top: 200px ;
+}
+
+/* START Login/Register modal styling */
+#registrationModal {
+	width: 340px;
+	position: relative;
+	background-color:#F2F2F2;
+	color: black;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#registrationModal .error-box {
+	margin: -35px 0;
+}
+
+#registrationModal .registration-form {
+	width: 100%;
+	margin-top: 5px;
+}
+
+#registrationModal .registration-form > form {
+	padding-top: 20px;
+}
+
+#registrationModal .registration-form > form > input {
+	margin-bottom: 10px;
+	width: 100%;
+	font-family: roboto, helvetica, sans-serif;
+}
+
+#registrationModal .tabs {
+	width: 100%;
+}
+
+#registrationModal .tabs div {
+	background-color:white;
+	width: 50%;
+	float:left;
+	padding: 10px 0 10px 15px;
+	cursor: pointer;
+	color: gray;
+}
+
+#registrationModal .tabs div.active {
+	background-color:#F2F2F2;
+	font-weight: bold;
+	color: #000;
+}
+
+#registrationModal .tab-content {
+	padding: 20px;
+}
+
+#registrationModal .extra-bar {
+	height: 40px;
+	margin: 10px 0 10px 0;
+}
+
+#registrationModal .registration-social {
+	float: left;
+}
+
+#registrationModal .remember-password {
+	float: right;
+	font-size: 12px;
+	margin-right: 27px;
+}
+
+#registrationModal hr {
+	border: 1px solid #CCCCCC;
+	clear: both;
+}
+
+.cancel-button {
+	background-color: #CCCCCC;
+	color: white;
+	border: 1px solid #cccccc;
+	margin-right: 10px;
+}
+
+#registrationModal #tosContainer {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+/* END Login/Register modal styling */
+
+/* END Modals */
+
 
 /*registration styling*/
 .registration {
@@ -294,9 +452,10 @@ textarea {
 	position: absolute;
 	width: 100%;
 	padding: 20px;
-	z-index: 2;
+	z-index: 30;
 	bottom: 0;
 }
+
 .registration.activation {
 	background-color: #5cb85c;
 	color: white;
@@ -308,7 +467,6 @@ textarea {
 .registration-form {
 	position: relative;
 	float: left;
-	min-width: 692px;
 }
 .registration-form.explanation {
 	margin: 0 0 10px;
@@ -320,12 +478,12 @@ textarea {
 }
 .activation .registration-form {
 	float: none;
-	min-width: 0;
 	text-align: center;
 }
 .activation .registration-form.explanation {
 	margin: 0;
 }
+
 @media all and (min-width: 1220px) {
 	.registration-text {
 		float: left;
@@ -335,7 +493,6 @@ textarea {
 	.registration-form {
 		position: relative;
 		float: left;
-		min-width: 0;
 	}
 	.registration-form.explanation {
 		margin: 0;
@@ -357,18 +514,19 @@ textarea {
 */
 .socialicon {
 	background-color: #fff;
-	border-radius: 50%;
 	width: 33px;
 	height: 33px;
-	padding: 5px 0 0 0;
+	padding: 6px 0 0 0;
 	font-size: 20px;
 	text-align:center;
 	display: inline-block;
 	cursor:pointer;
+	margin-right: 5px;
 
 }
 .socialicon:hover {
-	background-color: #f5f5f5;
+	background-color: #F2F2F2;
+	text-decoration: none;
 }
 
 .social-registration-text {
@@ -380,10 +538,10 @@ textarea {
 }
 
 .registration-button {
-	width: auto;
-	font-size: 16px;
-	font-weight: 700;
-	padding: 4px 10px 5px;
+	width: 143px;
+	font-size: 18px;
+	font-weight: 400;
+	padding: 5px 10px 5px;
 	min-width: 100px;
 }
 .registration-missing-email {
@@ -422,12 +580,20 @@ textarea {
 	color: #000;
 }
 
+#registration-tos-container {
+	position: absolute; /* To avoid affecting the size (height) of the registration bar */
+	padding-top: 0px;
+	width: 300px;
+	margin-left: 497px;
+}
+
 .error-box {
 	position: absolute;
 	background: #ff0000;
 	margin: -40px 0 0;
 	padding: 5px 10px;
 	color: #fff;
+	z-index: 99;
 }
 .error-box.error-box-name {
 	margin-left: 30px;
@@ -437,6 +603,10 @@ textarea {
 }
 .error-box.error-box-password {
 	margin-left: 392px;
+}
+.error-box.error-box-tos {
+	margin-left: 595px;
+	width: 267px;
 }
 .error-box:after {
 	top: 100%;
@@ -451,7 +621,6 @@ textarea {
 	border-top-color: #ff0000;
 	margin-left: -3px;
 }
-
 
 /* Styling for the ngProgress */
 
@@ -536,6 +705,7 @@ textarea {
 	margin-left: -125px;
 	z-index: 20;
 }
+
 .notifications.activation {
 	bottom: 110px;
 }
@@ -563,4 +733,293 @@ textarea {
 .readmore{
 	text-decoration: underline;
 	color:#999;
+}
+
+.no-select {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+
+#upgradeButton, #changeButton{
+	cursor: pointer;
+}
+
+.modalButtons{
+	cursor: pointer;
+	margin-right: 10px;
+	padding:10px;
+	text-align: center;
+	font-size: 18px;
+}
+
+#useFree{
+	position: absolute;
+	bottom:20px;
+	left:20px;
+	width:350px;
+	background: #fff;
+}
+.upgrade-text {
+	color: #000;
+	text-align: center;
+}
+.upgrade-text span {
+	font-size: 16px;
+	padding: 0 5px;
+}
+.upgrade-text a {
+	text-decoration: underline;
+	padding: 0 5px;
+	color: #fff;
+}
+.upgrade-text-free {
+	color: #000;
+}
+.upgrade-text-premium {
+	color: #fff56c;
+}
+.upgrade-text .upgrade-text-being-downgraded {
+	text-decoration: none;
+	color: #fff;
+}
+
+
+#useFree:hover{
+	color:#c6c6c6;
+	background: #fff;
+}
+
+#useFree:active{
+	color:#000;
+	background: #fff;
+}
+
+#usePremium{
+	position: absolute;
+	bottom:20px;
+	right:420px;
+	width:350px;
+	background: #fff56c;
+	color: #e98f2c;
+}
+
+#usePremium:hover{
+	color: #f2d32c;
+	background: #fff56c;
+}
+
+#usePremium:active{
+	color: #e98f2c;
+	background: #fff56c;
+}
+
+#usePro{
+	position: absolute;
+	bottom:20px;
+	right:10px;
+	width:350px;
+	background: #9D9DFF;
+	color: #00006B;
+}
+
+#usePro:hover{
+	color: #000;
+	background: #9D9DFF;
+}
+
+#usePro:active{
+	color: #000;
+	background: #9D9DFF;
+}
+
+.planChoice{
+	width:350px;
+	height:240px;
+	display:inline-block;
+	padding-left:25px;
+}
+
+.planChoice p{
+	font-size: 20px;
+	line-height: .5;
+}
+
+#freePlan{
+	background: #d6d6d6;
+	margin-right:50px;
+	border:4px #fff solid;
+	color: #000;
+	float: left;
+}
+
+#freePlan h1{
+	font-weight: 400;
+	margin: 0.6em 0 0.4em 0;
+}
+
+#premiumPlan{
+	background: #f2d32c;
+	border:4px #fff56c solid;
+	color: #e98f2c;
+}
+
+#premiumPlan h1{
+	color: #fff56c;
+	font-weight: 400;
+	margin: 0.6em 0 0.4em 0;
+}
+
+#premiumPlan h2{
+	color: #fff56c;
+	font-weight: 400;
+	text-align: right;
+	margin-right: 25px;
+	font-size: 27px;
+}
+
+#proPlan{
+	background: #00006B;
+	border:4px #9D9DFF solid;
+	color: #C6C6C6;
+	float: right;
+}
+
+#proPlan h1{
+	color: #fff;
+	font-weight: 400;
+	margin: 0.6em 0 0.4em 0;
+}
+
+#price{
+	position: absolute;
+	right: 45px;
+	top: 35px;
+	color: #fff56c;
+	text-align: right;
+}
+
+#price p{
+	font-size:32px;
+	padding-right: 10px;
+}
+
+#price span{
+	font-size:12px;
+	color:#fff56c;
+}
+
+.paymentAir{
+	float: left;
+	margin-right: 20px;
+}
+
+.yellow{
+	color: #fff56c;
+}
+
+.secure-text{
+	text-align: right;
+	float: right;
+	margin-right: 10px;
+	margin-top: -1px;
+}
+
+.top-text-card{
+	color: #A9A9A9;
+	margin-bottom: 0;
+	margin-top: 30px;
+}
+
+.input-label{
+	color: #A9A9A9;
+	margin: 0;
+}
+
+.paymentCardNumber{
+	width: 342px;
+	padding: 10px;
+	margin: 0;
+	font-size: 1.2em;
+	font-family: 'Roboto', Arial, sans-serif;
+}
+
+.billingCountry{
+	width: 342px;
+	padding: 10px;
+	font-size: 1.2em;
+	font-family: 'Roboto', Arial, sans-serif;
+}
+
+.paymentExpiresCVC{
+	width: 161px;
+	padding: 10px;
+	font-size: 1.2em;
+	font-family: 'Roboto', Arial, sans-serif;
+}
+
+.paymentItem:focus{
+	border-color: #85C0FF;
+	border-style: solid;
+	box-shadow: 0 0 .1875em #85C0FF;
+	border-width: 2px;
+}
+
+.paymentItemValid{
+	border-color: #75FFAF;
+	border-style: solid;
+	box-shadow: 0 0 .1875em #75FFAF;
+	border-width: 2px;
+}
+
+.paymentItemValid:focus{
+	border-color: #75FFAF;
+	border-style: solid;
+	box-shadow: 0 0 .1875em #75FFAF;
+	border-width: 2px;
+}
+
+.secure-image{
+	float: right;
+	margin-right: 25px;
+}
+
+.upgradePayment{
+	width:400px;
+	height:515px;
+	display:inline-block;
+	padding-left:25px;
+	background: #EEEEEE;
+	margin-right:50px;
+	margin-left: 180px;
+	border:4px #fff solid;
+	color: #000;
+}
+
+.upgradePayment input {
+	margin-bottom: 20px;
+}
+
+.paymentButtons{
+	cursor: pointer;
+	text-align: center;
+	font-size: 18px;
+	color: #ffffff;
+}
+
+.paymentButtons#paymentCancel{
+	background: #cccccc;
+	color: #fff;
+	float: left;
+	padding:10px 52px;
+}
+
+.paymentButtons#paymentUpgrade{
+	background: #fff56c;
+	color: #e98f2c;
+	float: right;
+	margin-right: 25px;
+	padding:10px 47px;
 }

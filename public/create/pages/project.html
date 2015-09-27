@@ -25,7 +25,7 @@
 <div class="menu-left full-height" data-ng-class="{ 'open' : leftMenuShow, 'bottom-menu-space' : leftMenuShowItem == 'contents' || leftMenuShowItem == 'design', 'open-small' : leftMenuShowItem == 'contents' && (showNewOptions || showBottomOptions), 'open-big' : leftMenuShowItem == 'contents' && showImportOptions }">
 	<div id="menu-left-contents" class="menu-item-left" data-ng-show="leftMenuShowItem == 'contents'">
 		<div class="projectDocument new" data-ng-click="addProjectDocument();">
-			<p>+</p>
+			<h2>+</h2>
 		</div>
 		<div html-sortable="sortable_option" data-ng-model="projectDocuments">
 			<div class="projectDocument" data-ng-repeat="projectDocument in projectDocuments track by projectDocument._id" data-ng-click="showProjectDocument(projectDocument._id)" data-ng-hide="projectDocument.archived && !user.showArchivedDocuments" data-ng-class="{ 'archived' : projectDocument.archived, 'selected' : selectedProjectDocument == projectDocument._id }">
@@ -55,13 +55,15 @@
 		</div>
 	</div>
 	<div id="menu-left-design" class="menu-item-left" data-ng-show="leftMenuShowItem == 'design'">
-		<div class="typo new" data-ng-click="addNewStyleset()">
+		<div class="typo new" data-ng-show="isPremium()" data-ng-click="addNewStyleset()">
 			<p>+</p>
 		</div>
 		<ul>
 			<li data-ng-repeat="styleset in stylesets track by $index" id="{{styleset._id}}" class="typo" data-ng-class="{ 'open' : styleset._id == selectedStyleset }" data-ng-hide="styleset.archived || styleset.hidden">
 
-				<a class="styleset-options-show" data-ng-click="showStyleset(styleset._id); showStylesetOptions($index);" data-ng-class="{ 'open' : $index == selectedStylesetOptions }">
+				<a class="styleset-upgrade no-select" data-ng-click="upgrade()" data-ng-show="!isStylesetAccessible(styleset)">Upgrade to premium</a>
+
+				<a class="styleset-options-show" data-ng-show="isStylesetAccessible(styleset)" data-ng-click="showStyleset(styleset._id); showStylesetOptions($index);" data-ng-class="{ 'open' : $index == selectedStylesetOptions }">
 					<div class="arrow"></div>
 				</a>
 
@@ -81,7 +83,7 @@
 
 				<ul data-ng-show="styleset._id == selectedStyleset" class="typo-children">
 					<li data-ng-repeat="style in styleset.styles track by $index" id="{{style._id}}" data-ng-hide="style.archived || style.hidden" data-ng-selected="selectedStyle._id === style._id" class="typo-children-style" data-ng-class="{ selected : selectedStyle._id === style._id }">
-						<a class="style-options-show" data-ng-click="showStylesetChildOptions($parent.$index, $index)" data-ng-class="{ 'open' : $parent.$index == selectedStylesetParentOptions && $index == selectedStylesetChildOptions }">
+						<a class="style-options-show" data-ng-show="isStylesetAccessible(styleset)" data-ng-click="showStylesetChildOptions($parent.$index, $index)" data-ng-class="{ 'open' : $parent.$index == selectedStylesetParentOptions && $index == selectedStylesetChildOptions }">
 							<div class="arrow"></div>
 						</a>
 
@@ -107,7 +109,7 @@
 							<!--<div class="style-options-menupoint" data-ng-click="archiveStyle(style); hideStylesetOptions();">archive</div>-->
 						</div>
 					</li>
-					<li class="new style" data-ng-click="addNewStyle( styleset )"><p>+</p></li>
+					<!-- <li class="new style" data-ng-click="addNewStyle( styleset )"><p>+</p></li> -->
 				</ul>
 			</li>
 		</ul>
@@ -134,23 +136,15 @@
 				<div class="left-menu-options">
 
 					<form name="insertHyperlinks" class="insertHyperlinks" novalidate>
+						<span class="menu-box inputfield margin-top">
+							<input id="linkText" type="text" data-ng-model="linkText" placeholder="Text" required>
+						</span>
 						<span class="menu-box inputfield">
-							<!-- Morten's comments: Since our experiments and a bit of Googling showed that it is 
-							apparently (https://github.com/angular/angular.js/issues/5226) not possible to store the 
-							regex in the JavaScript code (controller) (this trick: http://stackoverflow.com/questions/17384909/directive-to-dynamically-create-an-ng-pattern 
-							only worked partially: error message was not shown for URLs like "ydyfuyydufdf"), we should at least add a comment 
-							explaining that this regex is the same as the one being used in project_controller.js (https://github.com/Scripler/scripler/blob/beta1/public/create/scripts/project_controller.js#L1610). -->
-							<input id="hyperlinkTarget" name="hyperlinkTarget" type="text" data-ng-model="linkAddress" ng-pattern="/doc_.|^((https?):\/\/)?([w|W]{3}\.)*[a-zA-Z0-9\-\.]{1,}\.[a-zA-Z]{1,}(\.[a-zA-Z]{2,})?$/" placeholder="Target" required>
+							<input id="linkAddress" type="text" data-ng-model="linkAddress" data-ng-change="linkAddressChanged()" placeholder="External link" />
 						</span>
-						<div role="alert">
-							<span class="nameError urlError" ng-show="insertHyperlinks.$submitted && insertHyperlinks.hyperlinkTarget.$error.pattern && !insertHyperlinks.hyperlinkTarget.$untouched">Not a valid URL</span>
-						</div>
-						<span class="menu-box inputfield margin-top">
-							<input id="hyperlinkInputBox" name="hyperlinkInputBox" type="text" data-ng-model="linkText" placeholder="Text" required>
-						</span>
-						<span class="menu-box inputfield margin-top">
-							<select data-ng-model="linkAnchor" data-ng-options="anchor.text for anchor in toc">
-								<option value="">Choose internal target</option>
+						<span class="menu-box inputfield">
+							<select id="linkAnchor" data-ng-model="linkAnchor" data-ng-change="linkAnchorChanged()" data-ng-options="anchor.text for anchor in toc">
+								<option value="">or choose internal target</option>
 							</select>
 						</span>
 						<input type="submit" value="Insert hyperlink" class="button margin-top" data-ng-click="insertNewLink();">
@@ -226,13 +220,15 @@
 	<div id="menu-left-content-options" class="menu-options" data-ng-show="leftMenuShowItem == 'contents' && (showNewOptions || showImportOptions || showBottomOptions)">
 		<div class="options-bottom-box">
 			<div data-ng-show="showNewOptions">
-				<a data-ng-click="addProjectDocument()">New chapter</a><br>
+				<a data-ng-click="addProjectDocument()">Add new chapter</a><br>
 			</div>
 			<div data-ng-show="showImportOptions">
-				<div class="upload-box" data-ng-file-drop="onFileSelect($files)" data-ng-file-drag-over-class="dragover"
-					 data-ng-show="dropSupported" data-ng-file-drop-available="dropSupported=true">Drop files here</div>
-				<p>Scripler imports Word files and other common word processor formats (link).</p>
+				<div class="upload-box" data-ng-file-drop="onFileSelect($files)" data-ng-file-drag-over-class="dragover" data-ng-show="dropSupported" data-ng-file-drop-available="dropSupported=true">Drop files here</div>
+				<br>
+				<p>Scripler imports Word files and other common word processor formats</p>
+				<br>
 				<input type="file" data-ng-file-select="onFileSelect($files)">
+				<br>
 			</div>
 			<div data-ng-show="showBottomOptions">
 				<input type="checkbox" data-ng-model="user.showArchivedDocuments" data-ng-change="updateUser();">Show archived content<br>
