@@ -7,6 +7,7 @@ var Styleset = require('../models/styleset.js').Styleset;
 var emailer = require('../lib/email/email.js');
 var utils = require('../lib/utils');
 var euVatRates = require('../lib/eu-vat-rates.json');
+var moment = require('moment');
 
 var gateway = braintree.connect({
 	environment: (conf.braintree.env == 'production' ? braintree.Environment.Production : braintree.Environment.Sandbox),
@@ -396,6 +397,11 @@ exports.webhook = function (req, res, next) {
 					}
 					var priceExVat = Math.round((subscription.price / (1 + vatRate)) * 100) / 100;
 
+					// Format subscription period: 15 January 2015 - 15 February 2015
+					var dateStart = moment(subscription.billingPeriodStartDate).format('MMMM D YYYY');
+					var dateEnd = moment(subscription.billingPeriodEndDate).format('MMMM D YYYY');
+					var subscriptionPeriod = dateStart + ' - ' + dateEnd;
+
 					callbackHandlesReturn = true;
 					utils.getNextId('invoiceNo', function (err, invoiceNo) {
 						if (err) {
@@ -409,6 +415,7 @@ exports.webhook = function (req, res, next) {
 							[
 								{name: "INVOICENO", content: invoiceNo },
 								{name: "PRODUCTNAME", content: planName},
+								{name: "SUBSCRIPTIONPERIOD", content: subscriptionPeriod},
 								{name: "PRODUCTPRICE", content: subscription.price},
 								{name: "PRODUCTPRICEEXVAT", content: priceExVat },
 								{name: "VATRATE", content:  vatRate*100 },
