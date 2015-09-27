@@ -937,10 +937,6 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 	font-family: 'Roboto', Arial, sans-serif;
 }
 
-.fadedOption {
-	color: gray;
-}
-
 .paymentExpiresCVC{
 	width: 161px;
 	padding: 10px;
