@@ -25,7 +25,7 @@
 <div class="menu-left full-height" data-ng-class="{ 'open' : leftMenuShow, 'bottom-menu-space' : leftMenuShowItem == 'contents' || leftMenuShowItem == 'design', 'open-small' : leftMenuShowItem == 'contents' && (showNewOptions || showBottomOptions), 'open-big' : leftMenuShowItem == 'contents' && showImportOptions }">
 	<div id="menu-left-contents" class="menu-item-left" data-ng-show="leftMenuShowItem == 'contents'">
 		<div class="projectDocument new" data-ng-click="addProjectDocument();">
-			<p>+</p>
+			<h2>+</h2>
 		</div>
 		<div html-sortable="sortable_option" data-ng-model="projectDocuments">
 			<div class="projectDocument" data-ng-repeat="projectDocument in projectDocuments track by projectDocument._id" data-ng-click="showProjectDocument(projectDocument._id)" data-ng-hide="projectDocument.archived && !user.showArchivedDocuments" data-ng-class="{ 'archived' : projectDocument.archived, 'selected' : selectedProjectDocument == projectDocument._id }">
@@ -61,7 +61,7 @@
 		<ul>
 			<li data-ng-repeat="styleset in stylesets track by $index" id="{{styleset._id}}" class="typo" data-ng-class="{ 'open' : styleset._id == selectedStyleset }" data-ng-hide="styleset.archived || styleset.hidden">
 
-				<a class="styleset-upgrade no-select" data-ng-click="upgrade()" data-ng-show="!isStylesetAccessible(styleset)">Upgrade to premium!</a>
+				<a class="styleset-upgrade no-select" data-ng-click="upgrade()" data-ng-show="!isStylesetAccessible(styleset)">Upgrade to premium</a>
 
 				<a class="styleset-options-show" data-ng-show="isStylesetAccessible(styleset)" data-ng-click="showStyleset(styleset._id); showStylesetOptions($index);" data-ng-class="{ 'open' : $index == selectedStylesetOptions }">
 					<div class="arrow"></div>
@@ -220,13 +220,15 @@
 	<div id="menu-left-content-options" class="menu-options" data-ng-show="leftMenuShowItem == 'contents' && (showNewOptions || showImportOptions || showBottomOptions)">
 		<div class="options-bottom-box">
 			<div data-ng-show="showNewOptions">
-				<a data-ng-click="addProjectDocument()">New chapter</a><br>
+				<a data-ng-click="addProjectDocument()">Add new chapter</a><br>
 			</div>
 			<div data-ng-show="showImportOptions">
-				<div class="upload-box" data-ng-file-drop="onFileSelect($files)" data-ng-file-drag-over-class="dragover"
-					 data-ng-show="dropSupported" data-ng-file-drop-available="dropSupported=true">Drop files here</div>
-				<p>Scripler imports Word files and other common word processor formats (link).</p>
+				<div class="upload-box" data-ng-file-drop="onFileSelect($files)" data-ng-file-drag-over-class="dragover" data-ng-show="dropSupported" data-ng-file-drop-available="dropSupported=true">Drop files here</div>
+				<br>
+				<p>Scripler imports Word files and other common word processor formats</p>
+				<br>
 				<input type="file" data-ng-file-select="onFileSelect($files)">
+				<br>
 			</div>
 			<div data-ng-show="showBottomOptions">
 				<input type="checkbox" data-ng-model="user.showArchivedDocuments" data-ng-change="updateUser();">Show archived content<br>
