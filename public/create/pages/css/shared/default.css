@@ -110,6 +110,21 @@ button:hover label, button:active label, .button:hover label, .button:active lab
 	margin-top: 0;
 }
 
+.no-top-margin-2 {
+	margin-top: 0;
+	color: #c6c6c6;
+}
+
+.no-top-margin-2 a{
+	color: #c6c6c6;
+	text-decoration: underline;
+}
+
+.no-top-margin-2 a:hover{
+	color: #000;
+	text-decoration: underline;
+}
+
 /* General Styling */
 h1 {
 	font-size: 2.25em;
@@ -328,7 +343,7 @@ div.m-modals > .modal {
 	position: fixed ;
 	left: 50% ;
 	margin-left: -400px ;
-	top: 150px ;
+	top: 100px ;
 	width: 800px;
 }
 
@@ -972,7 +987,7 @@ div.m-modals.ng-hide > .modal.ng-enter.ng-enter-active {
 
 .upgradePayment{
 	width:400px;
-	height:490px;
+	height:515px;
 	display:inline-block;
 	padding-left:25px;
 	background: #EEEEEE;
