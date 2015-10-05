@@ -176,55 +176,55 @@ describe('project-utils', function () {
 		var document1ToCEntriesJSONExpected = [new TOCEntry({
 			id: "id_1",
 			type: "h1",
-			level: 1,
+			level: 0,
 			target: "Document1.html#" + conf.epub.anchorIdPrefix + "1",
 			text: "Introduction"
 		}), new TOCEntry({
 			"id": "id_2",
 			"type": "h2",
-			"level": 2,
+			"level": 1,
 			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "2",
 			"text": "Hi"
 		}), new TOCEntry({
 			"id": "id_62",
 			"type": "h3",
-			"level": 3,
+			"level": 2,
 			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "62",
 			"text": "A new start"
 		}), new TOCEntry({
 			"id": "id_8",
 			"type": "h2",
-			"level": 2,
+			"level": 1,
 			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "8",
 			"text": "Something else"
 		}), new TOCEntry({
 			"id": "id_15",
 			"type": "a",
-			"level": 3,
+			"level": 2,
 			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "15",
 			"text": "My Anc"
 		}), new TOCEntry({
 			"id": "id_991",
 			"type": "h1",
-			"level": 1,
+			"level": 0,
 			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "991",
 			"text": "Moving on"
 		}), new TOCEntry({
 			"id": "id_3",
 			"type": "h6",
-			"level": 4,
+			"level": 3,
 			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "3",
 			"text": "Cool story, bro"
 		}), new TOCEntry({
 			"id": "id_27",
 			"type": "h6",
-			"level": 4,
+			"level": 3,
 			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "27",
 			"text": "Not too shabby"
 		}), new TOCEntry({
 			"id": "id_88",
 			"type": "a",
-			"level": 5,
+			"level": 4,
 			"target": "Document1.html#" + conf.epub.anchorIdPrefix + "88",
 			"text": "y0"
 		})];
@@ -262,43 +262,43 @@ describe('project-utils', function () {
 		var document2ToCEntriesJSONExpected = [new TOCEntry({
 			id: "id_741",
 			type: "h2",
-			level: 1,
+			level: 0,
 			target: "Document2.html#" + conf.epub.anchorIdPrefix + "741",
 			text: "Introduction"
 		}), new TOCEntry({
 			"id": "id_90",
 			"type": "h4",
-			"level": 3,
+			"level": 2,
 			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "90",
 			"text": "Popeye's Left Eye"
 		}), new TOCEntry({
 			"id": "id_10",
 			"type": "h4",
-			"level": 3,
+			"level": 2,
 			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "10",
 			"text": "Mein Gott!"
 		}), new TOCEntry({
 			"id": "id_666",
 			"type": "h6",
-			"level": 4,
+			"level": 3,
 			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "666",
 			"text": "Hola, Señor Coconut"
 		}), new TOCEntry({
 			"id": "id_32",
 			"type": "h3",
-			"level": 2,
+			"level": 1,
 			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "32",
 			"text": "Gutenberg's Drawer"
 		}), new TOCEntry({
 			"id": "id_101",
 			"type": "a",
-			"level": 3,
+			"level": 2,
 			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "101",
 			"text": "Anchor1"
 		}), new TOCEntry({
 			"id": "id_109",
 			"type": "a",
-			"level": 3,
+			"level": 2,
 			"target": "Document2.html#" + conf.epub.anchorIdPrefix + "109",
 			"text": "Anchor2"
 		})];
