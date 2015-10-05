@@ -1791,22 +1791,17 @@ describe('Scripler RESTful API', function () {
 				.expect(200)
 				.end(function (err, res) {
 					if (err) throw new Error(err + " (" + res.body.errorMessage + ")");
-					assert.equal(res.body.toc.length, 10);
-					assert.equal(res.body.toc[0].id, coverDocumentId);
-					assert.equal(res.body.toc[0].type, 'document');
+					assert.equal(res.body.toc.length, 4);
+					assert.equal(res.body.toc[0].id, "id_1");
+					assert.equal(res.body.toc[0].type, 'h1');
 					assert.equal(res.body.toc[0].level, 0);
-					assert.equal(res.body.toc[0].target, 'Cover.html');
-					assert.equal(res.body.toc[0].text, 'Cover');
-					assert.equal(res.body.toc[4].id, childDocumentId);
-					assert.equal(res.body.toc[4].type, 'document');
-					assert.equal(res.body.toc[4].level, 0);
-					assert.equal(res.body.toc[4].target, conf.epub.documentPrefix + childDocumentId + ".html");
-					assert.equal(res.body.toc[4].text, 'Sikke et dokument');
-					assert.equal(res.body.toc[9].id, "id_25");
-					assert.equal(res.body.toc[9].type, 'a');
-					assert.equal(res.body.toc[9].level, 3);
-					assert.equal(res.body.toc[9].target, conf.epub.documentPrefix + jimboDocumentId + ".html#id_25");
-					assert.equal(res.body.toc[9].text, 'LinkyDinky');
+					assert.equal(res.body.toc[0].target, conf.epub.documentPrefix + childDocumentId + ".html#id_1");
+					assert.equal(res.body.toc[0].text, 'Introduction');
+					assert.equal(res.body.toc[3].id, "id_25");
+					assert.equal(res.body.toc[3].type, 'a');
+					assert.equal(res.body.toc[3].level, 2);
+					assert.equal(res.body.toc[3].target, conf.epub.documentPrefix + jimboDocumentId + ".html#id_25");
+					assert.equal(res.body.toc[3].text, 'LinkyDinky');
 					done();
 				});
 		})
