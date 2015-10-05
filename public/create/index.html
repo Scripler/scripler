@@ -83,7 +83,9 @@
 				<p>&nbsp;</p>
 				<a href="mailto:info@scripler.com" class="modalButtons" id="usePro">Contact us</a>
 			</div>
-
+			<div class="loading-animation" data-ng-show="processingCancellation">
+				<div class="loading-mask"></div>
+			</div>
 		</div>
 		<!-- END: Free / Premium / Pro Modal. -->
 
@@ -156,6 +158,9 @@
 						<a class="paymentButtons" id="paymentCancel" ng-click="paymentCancel()">Cancel</a>
 					</p>
 				</form>
+				<div class="loading-animation" data-ng-show="processingPayment">
+					<div class="loading-mask"></div>
+				</div>
 			</div>
 		</div>
 		<!-- END: Payment Modal. -->

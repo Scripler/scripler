@@ -49,6 +49,55 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 			);
 		}
 
+		$scope.submitUpgrade = function(response, next) {
+			paymentService.setClient($window.braintree, function (err) {
+				var alertHtml;
+				var alertTitle = "Could not create subscription";
+				var alertType = 'error';
+
+				if (err) {
+					alertHtml = err.errorMessage;
+					swal({
+						title: alertTitle,
+						html: alertHtml,
+						type: alertType
+					});
+				} else {
+					var paymentCardNumber = response.cardNumber ? response.cardNumber.replace(/\s/g, '') : '';
+					var expirationDate = response.expirationDate ? response.expirationDate.replace(/\s/g, '') : '';
+					var cvv = response.cvv;
+					paymentService.createSubscription(paymentCardNumber, expirationDate, cvv, response.billingCountryCode, function (err, data) {
+						if (err) {
+							alertHtml = err.errorMessage;
+							swal({
+								title: alertTitle,
+								html: alertHtml,
+								type: alertType
+							});
+							next(err);
+						} else {
+							if (data && data.user.level == 'premium' && !data.user.payment.cancelled) {
+								$scope.user.level = data.user.level;
+								swal({
+									title: "Subscription created",
+									html: "Your payment has been received and your subscription created. You will receive a confirmation email shortly.",
+									type: "success"
+								});
+								next();
+							} else {
+								swal({
+									title: alertTitle,
+									html: "Oops! Something went wrong creating your subscription.",
+									type: alertType
+								});
+								next('Error');
+							}
+						}
+					});
+				}
+			});
+		}
+
 		// Opens the Upgrade modal
 		var showUpgradeModal = function() {
 			// the .open() method returns a promise that will be either
@@ -122,47 +171,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 
 							paymentPromise.then(
 								function handleResolve(response) {
-									paymentService.setClient($window.braintree, function (err) {
-										alertTitle = "Could not create subscription";
-
-										if (err) {
-											alertHtml = err.errorMessage;
-											swal({
-												title: alertTitle,
-												html: alertHtml,
-												type: alertType
-											});
-										} else {
-											var paymentCardNumber = response.cardNumber ? response.cardNumber.replace(/\s/g, '') : '';
-											var expirationDate = response.expirationDate ? response.expirationDate.replace(/\s/g, '') : '';
-											var cvv = response.cvv;
-											paymentService.createSubscription(paymentCardNumber, expirationDate, cvv, response.billingCountryCode, function (err, data) {
-												if (err) {
-													alertHtml = err.errorMessage;
-													swal({
-														title: alertTitle,
-														html: alertHtml,
-														type: alertType
-													});
-												} else {
-													if (data && data.user.level == 'premium' && !data.user.payment.cancelled) {
-														$scope.user.level = data.user.level;
-														swal({
-															title: "Subscription created",
-															html: "Your payment has been received and your subscription created. You will receive a confirmation email shortly.",
-															type: "success"
-														});
-													} else {
-														swal({
-															title: alertTitle,
-															html: "Oops! Something went wrong creating your subscription.",
-															type: alertType
-														});
-													}
-												}
-											});
-										}
-									});
+									// TODO do something?
 								},
 								function handleReject(error) {
 									// If error is defined, an error occurred closing the payment window
@@ -1497,7 +1506,8 @@ app.controller("UpgradeModalController", [ '$scope', 'modals', 'utilsService',
 
 			$scope.useFree = function() {
 				if (params.useFree || ($scope.user.level && $scope.user.level == 'premium')) {
-					modals.resolve($scope.user.level);
+					//modals.resolve($scope.user.level);
+					$scope.processingCancellation = true;
 				} else {
 					modals.reject();
 				}
@@ -1518,7 +1528,14 @@ app.controller("PaymentModalController", [ '$scope', 'modals', 'utilsService',
 	function( $scope, modals, utilsService ) {
 		$scope.premiumMonthlyPrice = utilsService.subscriptions.premium.monthlyPrice;
 		$scope.paymentUpgrade = function() {
-			modals.resolve($scope.payment);
+			$scope.processingPayment = true;
+			$scope.submitUpgrade($scope.payment, function (err) {
+				if (!err) {
+					// TODO what to do with error?
+					modals.resolve();
+				}
+				$scope.processingPayment = false;
+			});
 		};
 		$scope.paymentCancel = modals.reject;
 	}]
