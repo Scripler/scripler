@@ -31,7 +31,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 			} else {
 				showUpgradeModal();
 			}
-		}
+		};
 
 		// Opens the login/register modal
 		var showLoginRegisterModal = function() {
@@ -47,7 +47,11 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 					// If error is defined, an error occurred closing the login register window
 				}
 			);
-		}
+		};
+
+		var alertTitle;
+		var alertHtml;
+		var alertType = "error";
 
 		$scope.submitUpgrade = function(response, next) {
 			paymentService.setClient($window.braintree, function (err) {
@@ -90,13 +94,61 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 									html: "Oops! Something went wrong creating your subscription.",
 									type: alertType
 								});
-								next('Error');
+								next('Error creating subscription: user\'s level was not set to "premium" or the "cancelled" flag was set.');
 							}
 						}
 					});
 				}
 			});
-		}
+		};
+
+		$scope.submitDowngrade = function(next) {
+			// TODO: should we just create one token when the page loads that can be used for both payment and downgrade?
+			paymentService.setClient($window.braintree, function (err) {
+				alertTitle = "Could not cancel subscription";
+
+				if (err) {
+					alertHtml = err.errorMessage;
+					swal({
+						title: alertTitle,
+						html: alertHtml,
+						type: alertType
+					});
+					next(err);
+				} else {
+					paymentService.cancelSubscription($scope.user, function (err, data) {
+						if (err) {
+							alertHtml = err.errorMessage;
+							swal({
+								title: alertTitle,
+								html: alertHtml,
+								type: alertType
+							});
+							next(err);
+						} else {
+							if (data && data.user.level != 'free' && data.user.payment.cancelled) {
+								$scope.user.payment.cancelled = data.user.payment.cancelled;
+								swal({
+									title: "Subscription cancelled",
+									// TODO: show the date on which the user's premium subscription expires. Does Braintree return the value synchronously when cancelling or do we have to wait for the webhook callback?
+									html: "Your subscription has now been cancelled. You will remain Premium until your subscription expires.",
+									type: "success"
+								});
+								next();
+							} else {
+								swal({
+									title: alertTitle,
+									html: "Oops! Something went wrong cancelling your subscription.",
+									type: alertType
+								});
+								next('Error cancelling subscription: user\'s level was not something that could be downgraded or "cancelled" flag was not correctly set.');
+							}
+						}
+					});
+
+				}
+			});
+		};
 
 		// Opens the Upgrade modal
 		var showUpgradeModal = function() {
@@ -108,53 +160,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 			upgradePromise.then(
 				function handleResolve(response) {
 					if (response) {
-						var alertTitle;
-						var alertHtml;
-						var alertType = "error";
-
-						if (response == 'premium') {
-							// TODO: should we just create one token when the page loads that can be used for both payment and downgrade?
-							paymentService.setClient($window.braintree, function (err) {
-								alertTitle = "Could not cancel subscription";
-
-								if (err) {
-									alertHtml = err.errorMessage;
-									swal({
-										title: alertTitle,
-										html: alertHtml,
-										type: alertType
-									});
-								} else {
-										paymentService.cancelSubscription($scope.user, function (err, data) {
-											if (err) {
-												alertHtml = err.errorMessage;
-												swal({
-													title: alertTitle,
-													html: alertHtml,
-													type: alertType
-												});
-											} else {
-												if (data && data.user.level != 'free' && data.user.payment.cancelled) {
-													$scope.user.payment.cancelled = data.user.payment.cancelled;
-													swal({
-														title: "Subscription cancelled",
-														// TODO: show the date on which the user's premium subscription expires. Does Braintree return the value synchronously when cancelling or do we have to wait for the webhook callback?
-														html: "Your subscription has now been cancelled. You will remain Premium until your subscription expires.",
-														type: "success"
-													});
-												} else {
-													swal({
-														title: alertTitle,
-														html: "Oops! Something went wrong cancelling your subscription.",
-														type: alertType
-													});
-												}
-											}
-										});
-
-									}
-							});
-						} else if (response == 'free') {
+						if (response == 'free') {
 							// the .open() method returns a promise that will be either
 							// resolved or rejected when the modal window is closed.
 							var paymentPromise = modals.open("payment");
@@ -178,6 +184,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 								}
 							);
 						} else {
+							//console.log(response);
 							// Upgrade modal promise did not contain either a 'free' or 'premium' value
 						}
 					} else {
@@ -1500,14 +1507,20 @@ app.controller("UpgradeModalController", [ '$scope', 'modals', 'utilsService',
 			$scope.premiumMonthlyPrice = utilsService.subscriptions.premium.monthlyPrice;
 
 			// setup defaults using the modal params.
-			// TODO: use isPremium() function from projectController, once "premium-logic" branch has been merged in
+			// TODO: use isPremium() function from projectController
 			$scope.useFreeText = ( params.useFree || ($scope.user.level && $scope.user.level == 'free' ? "Continue as Free" : 'Downgrade to Free') );
 			$scope.usePremiumText = ( params.usePremium || ($scope.user.level && $scope.user.level == 'premium' ? "Continue as Premium" : "Upgrade to Premium") );
 
 			$scope.useFree = function() {
 				if (params.useFree || ($scope.user.level && $scope.user.level == 'premium')) {
-					//modals.resolve($scope.user.level);
 					$scope.processingCancellation = true;
+					$scope.submitDowngrade(function (err) {
+						$scope.processingCancellation = false;
+						// TODO: currently the error is handled by sweetAlert inside "submitUpgrade" - is it prettier to handle the error on this outer level?
+						if (!err) {
+							modals.resolve($scope.user.level);
+						}
+					});
 				} else {
 					modals.reject();
 				}
@@ -1527,16 +1540,18 @@ app.controller("UpgradeModalController", [ '$scope', 'modals', 'utilsService',
 app.controller("PaymentModalController", [ '$scope', 'modals', 'utilsService',
 	function( $scope, modals, utilsService ) {
 		$scope.premiumMonthlyPrice = utilsService.subscriptions.premium.monthlyPrice;
+
 		$scope.paymentUpgrade = function() {
 			$scope.processingPayment = true;
 			$scope.submitUpgrade($scope.payment, function (err) {
+				$scope.processingPayment = false;
+				// TODO: currently the error is handled by sweetAlert inside "submitUpgrade" - is it prettier to handle the error on this outer level?
 				if (!err) {
-					// TODO what to do with error?
 					modals.resolve();
 				}
-				$scope.processingPayment = false;
 			});
 		};
+
 		$scope.paymentCancel = modals.reject;
 	}]
 );
