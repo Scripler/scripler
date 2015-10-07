@@ -112,11 +112,12 @@ button:hover label, button:active label, .button:hover label, .button:active lab
 
 .no-top-margin-2 {
 	margin-top: 0;
-	color: #c6c6c6;
+	color: #9A9A9A;
+    font-size: 14px;
 }
 
 .no-top-margin-2 a{
-	color: #c6c6c6;
+	color: #9A9A9A;
 	text-decoration: underline;
 }
 
