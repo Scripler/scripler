@@ -94,7 +94,8 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 									html: "Oops! Something went wrong creating your subscription.",
 									type: alertType
 								});
-								next('Error creating subscription: user\'s level was not set to "premium" or the "cancelled" flag was set.');
+								// Error creating subscription: user\'s level was not set to "premium" or the "cancelled" flag was set.
+								next('Error');
 							}
 						}
 					});
@@ -141,7 +142,8 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 									html: "Oops! Something went wrong cancelling your subscription.",
 									type: alertType
 								});
-								next('Error cancelling subscription: user\'s level was not something that could be downgraded or "cancelled" flag was not correctly set.');
+								// Error cancelling subscription: user\'s level was not something that could be downgraded or "cancelled" flag was not correctly set.
+								next('Error');
 							}
 						}
 					});
