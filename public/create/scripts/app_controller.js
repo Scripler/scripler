@@ -15,6 +15,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		$scope.EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		$scope.showRegistrationInfoBar = true;
 		$scope.user = {};
+		$scope.userReady = false;
 
 		// sweetAlert
 		var swal = $window.swal;
@@ -200,6 +201,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 		};
 
 		$scope.$onRootScope('user:updated', function(event, user) {
+			$scope.userReady = true;
 			if (user.isDemo) {
 				$scope.demoUser = user;
 			} else {
