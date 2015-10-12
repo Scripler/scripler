@@ -517,19 +517,8 @@ exports.get_toc = function (req, res, next) {
 			}
 
 			var target = documentFilename;
-
-			var tocEntry = new TOCEntry({
-				id: documentId,
-				type: 'document',
-				level: 0,
-				target: target,
-				text: document.name
-			});
-
-			var documentToCEntries = [tocEntry];
-			var documentChildToCEntries = project_utils.generateToCJSON(target, document.text);
-			Array.prototype.push.apply(documentToCEntries, documentChildToCEntries);
-			documentToCs[documentId] = documentToCEntries;
+			var tocEntries = project_utils.generateToCJSON(target, document.text);
+			documentToCs[documentId] = tocEntries;
 		}
 
 		callback();
