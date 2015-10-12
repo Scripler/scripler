@@ -237,7 +237,7 @@
 .projectDocument.new {
 	padding-top: 15px;
 	background-color: #F3F3F3;
-    border: 2px dashed #fff;
+    border: 2px dashed #000;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
@@ -253,7 +253,7 @@
 }
 
 .projectDocument h2 {
-	color: #fff;
+	color: #000;
     height: 62px;
     margin: 0px 5px 5px;
     text-align: center;
