@@ -42,7 +42,7 @@
 
 	<div class="container" data-ng-class="{'shownotification' : showRegistrationInfoBar && !user.emailVerified, 'activation' : user._id}" data-ng-view confirm-save-on-exit></div>
 
-	<div id="registrationWrapper" class="registration" data-ng-hide="!user.email || user.emailVerified || !showRegistrationInfoBar" data-ng-class="{ 'activation' : user._id }">
+	<div id="registrationWrapper" class="registration" data-ng-hide="!demoUser || user.emailVerified || !showRegistrationInfoBar" data-ng-class="{ 'activation' : user._id }">
 		<div id="registrationContainer" class="registration-container">
 			<div class="registration-form explanation" data-ng-hide="user.isDemo">
 				<div class="registration-close-button" data-ng-click="showRegistrationBar('hide')" data-ng-show="user._id">x</div>
