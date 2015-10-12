@@ -7,6 +7,27 @@
 	<link rel="stylesheet" type="text/css" href="pages/css/shared/default.css" />
 	<link rel="stylesheet" type="text/css" href="pages/css/shared/fonts.css" />
 	<link rel="stylesheet" type="text/css" href="pages/css/pages/sweetalert2.css" />
+
+	<!-- Braintree must appear before Angular, since we are not importing it as an Angular module (TODO: is there a way to do this?) -->
+	<script type="text/javascript" src="//js.braintreegateway.com/v2/braintree.js"></script>
+	<script type="text/javascript" src="scripts/sweetalert2.min.js"></script>
+	<script type="text/javascript" src="scripts/angular-file-upload-html5-shim.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/webfont/1.5.3/webfont.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-route.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-sanitize.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-animate.min.js"></script>
+	<script type="text/javascript" src="scripts/angular-local-storage.min.js"></script>
+	<script type="text/javascript" src="scripts/angular-file-upload.min.js"></script>
+	<script type="text/javascript" src="scripts/angucomplete-alt.js"></script>
+	<script type="text/javascript" src="scripts/html5-sortable.js"></script>
+	<script type="text/javascript" src="scripts/ngProgress.min.js"></script>
+	<script type="text/javascript" src="scripts/utils-shared.js"></script>
+	<script type="text/javascript" src="scripts/app_controller.js"></script>
+	<script type="text/javascript" src="scripts/create_controller.js"></script>
+	<script type="text/javascript" src="scripts/project_controller.js"></script>
+	<script type="text/javascript" src="scripts/smooth-scroll.js"></script>
+	<script type="text/javascript" src="ckeditor/ckeditor.js"></script>
 </head>
 <body data-ng-controller="appController" data-ng-cloak>
 	<!-- Google Tag Manager -->
@@ -21,7 +42,7 @@
 
 	<div class="container" data-ng-class="{'shownotification' : showRegistrationInfoBar && !user.emailVerified, 'activation' : user._id}" data-ng-view confirm-save-on-exit></div>
 
-	<div id="registrationWrapper" class="registration" data-ng-hide="user.emailVerified || !showRegistrationInfoBar" data-ng-class="{ 'activation' : user._id }" data-ng-cloak>
+	<div id="registrationWrapper" class="registration" data-ng-hide="!demoUser || user.emailVerified || !showRegistrationInfoBar" data-ng-class="{ 'activation' : user._id }">
 		<div id="registrationContainer" class="registration-container">
 			<div class="registration-form explanation" data-ng-hide="user.isDemo">
 				<div class="registration-close-button" data-ng-click="showRegistrationBar('hide')" data-ng-show="user._id">x</div>
@@ -42,7 +63,7 @@
 					<input on-click-change-text type="password" id="reg-password" name="password" data-ng-model="user.password" data-ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine && registrationSubmitted }" placeholder="Password" data-ng-minlength="6" required>
 					<button type="submit" class="button registration-button">Register</button>
 					<div id="registration-tos-container">
-						 <input id="tos" type="checkbox" data-ng-model="tos" required> I agree to the <a target="_blank" href="http://talk.scripler.com/t/scripler-terms-of-service/135">terms of service</a>
+						 <input type="checkbox" data-ng-model="tos" required> I agree to the <a target="_blank" href="http://talk.scripler.com/t/scripler-terms-of-service/135">terms of service</a>
 					</div>
 				</form>
 			</div>
@@ -209,7 +230,7 @@
 							<div id="tosContainer">
 								<div class="error-box error-box-tos" data-ng-show="!tos && registrationSubmitted " data-ng-bind="errors.tos"></div>
 								<!-- TODO: insert correct link to Terms of Service -->
-								<input id="tos" type="checkbox" data-ng-model="tos" required> I agree to the <a target="_blank" href="http://talk.scripler.com/t/official-scripler-faq/109">terms of service</a> 
+								<input type="checkbox" data-ng-model="tos" required> I agree to the <a target="_blank" href="http://talk.scripler.com/t/official-scripler-faq/109">terms of service</a>
 							</div>
 							<div class="extra-bar">
 								<div class="registration-social">
@@ -231,27 +252,6 @@
 		<!-- END: Login / Register Modal. -->
 
 	</div>
-
-	<!-- Braintree must appear before Angular, since we are not importing it as an Angular module (TODO: is there a way to do this?) -->
-	<script type="text/javascript" src="//js.braintreegateway.com/v2/braintree.js"></script>
-	<script type="text/javascript" src="scripts/sweetalert2.min.js"></script>
-	<script type="text/javascript" src="scripts/angular-file-upload-html5-shim.min.js"></script>
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/webfont/1.5.3/webfont.js"></script>
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-route.min.js"></script>
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-sanitize.min.js"></script>
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-animate.min.js"></script>
-	<script type="text/javascript" src="scripts/angular-local-storage.min.js"></script>
-	<script type="text/javascript" src="scripts/angular-file-upload.min.js"></script>
-	<script type="text/javascript" src="scripts/angucomplete-alt.js"></script>
-	<script type="text/javascript" src="scripts/html5-sortable.js"></script>
-	<script type="text/javascript" src="scripts/ngProgress.min.js"></script>
-	<script type="text/javascript" src="scripts/utils-shared.js"></script>
-	<script type="text/javascript" src="scripts/app_controller.js"></script>
-	<script type="text/javascript" src="scripts/create_controller.js"></script>
-	<script type="text/javascript" src="scripts/project_controller.js"></script>
-	<script type="text/javascript" src="scripts/smooth-scroll.js"></script>
-	<script type="text/javascript" src="ckeditor/ckeditor.js"></script>
 
 	<script>
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
