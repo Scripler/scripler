@@ -314,6 +314,8 @@ $(document).ready(function() {
     }
 });
 
+$('[data-rel=popup-iframe]').magnificPopup({type:'iframe'});
+
 /* Create HTML5 elements for IE */
 document.createElement("nav");
 document.createElement("article");

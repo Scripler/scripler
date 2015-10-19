@@ -290,7 +290,7 @@ nav {
 }
 
 #contact{ 
-	background-image: url('../images/map.png');
+	background-color: #ececec;
 }
 
 #contact .container{
@@ -320,6 +320,7 @@ nav {
 
 #contact a {
 	color: #000;
+	text-decoration: underline;
 }
 
 #forgot-password{
