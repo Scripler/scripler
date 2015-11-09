@@ -320,3 +320,16 @@ $('[data-rel=popup-iframe]').magnificPopup({type:'iframe'});
 document.createElement("nav");
 document.createElement("article");
 document.createElement("section");
+
+function socialLogin(provider) {
+    window.ga('send', {
+        hitType: 'event',
+        eventCategory: 'Onboarding',
+        eventAction: 'Frontpage social login',
+        eventValue: provider,
+        hitCallback: function() {
+            $window.location = 'auth/'+provider;
+        }
+    });
+    return false;
+}
