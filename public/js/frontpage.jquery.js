@@ -328,7 +328,7 @@ function socialLogin(provider) {
         eventAction: 'Frontpage social login',
         eventValue: provider,
         hitCallback: function() {
-            $window.location = 'auth/'+provider;
+            window.location = 'auth/'+provider;
         }
     });
     return false;
