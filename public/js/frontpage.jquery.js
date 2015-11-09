@@ -325,7 +325,7 @@ function socialLogin(provider) {
     window.ga('send', {
         hitType: 'event',
         eventCategory: 'Onboarding',
-        eventAction: 'Fonrtpage social login',
+        eventAction: 'Frontpage social login',
         eventValue: provider,
         hitCallback: function() {
             $window.location = 'auth/'+provider;
