@@ -326,7 +326,7 @@ function socialLogin(provider) {
         hitType: 'event',
         eventCategory: 'Onboarding',
         eventAction: 'Frontpage social login',
-        eventValue: provider,
+        eventLabel: provider,
         hitCallback: function() {
             window.location = 'auth/'+provider;
         }
