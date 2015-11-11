@@ -31,7 +31,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 				hitType: 'event',
 				eventCategory: 'Onboarding',
 				eventAction: 'Social login',
-				eventValue: provider,
+				eventLabel: provider,
 				hitCallback: function() {
 					$window.location = '../auth/'+provider;
 				}
@@ -107,7 +107,7 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 									hitType: 'event',
 									eventCategory: 'Onboarding',
 									eventAction: 'Buy premium subscription',
-									eventValue: '9.99'
+									eventLabel: '9.99'
 								});
 
 								next();
