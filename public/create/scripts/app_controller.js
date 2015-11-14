@@ -26,6 +26,19 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 			cancelButtonColor: "#f3f3f3"
 		});
 
+		$scope.socialLogin = function (provider) {
+			$window.ga('send', {
+				hitType: 'event',
+				eventCategory: 'Onboarding',
+				eventAction: 'Social login',
+				eventLabel: provider,
+				hitCallback: function() {
+					$window.location = '../auth/'+provider;
+				}
+			});
+			return false;
+		}
+
 		$scope.upgrade = function() {
 			if (!$scope.user || !$scope.user._id || $scope.user.isDemo) {
 				showLoginRegisterModal();
@@ -88,6 +101,15 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 									html: "Your payment has been received and your subscription created. You will receive a confirmation email shortly.",
 									type: "success"
 								});
+
+								// Subscription created, send Analytics event
+								$window.ga('send', {
+									hitType: 'event',
+									eventCategory: 'Onboarding',
+									eventAction: 'Buy premium subscription',
+									eventLabel: '9.99'
+								});
+
 								next();
 							} else {
 								swal({
@@ -341,6 +363,13 @@ app.controller('appController', [ '$http', '$scope', 'userService', '$rootScope'
 						if (next) {
 							next();
 						}
+
+						// User registered, send Analytics event
+						$window.ga('send', {
+							hitType: 'event',
+							eventCategory: 'Onboarding',
+							eventAction: 'Register User'
+						});
 					}
 				});
 			} else {

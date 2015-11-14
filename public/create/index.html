@@ -69,9 +69,9 @@
 			</div>
 			<div class="registration-social clearfix" data-ng-hide="user._id && !user.isDemo">
 				<div class="social-registration-text" data-ng-bind="socialRegistrationText"></div>
-				<a class="socialicon" href="../auth/facebook"><span class="icon-facebook"></span></a>
-				<a class="socialicon" href="../auth/linkedin"><span class="icon-linkedin"></span></a>
-				<a class="socialicon" href="../auth/google"><span class="icon-google-plus"></span></a>
+				<a class="socialicon" data-ng-click="socialLogin('facebook')" href="../auth/facebook"><span class="icon-facebook"></span></a>
+				<a class="socialicon" data-ng-click="socialLogin('linkedin')" href="../auth/linkedin"><span class="icon-linkedin"></span></a>
+				<a class="socialicon" data-ng-click="socialLogin('google')" href="../auth/google"><span class="icon-google-plus"></span></a>
 			</div>
 		</div>
 	</div>
@@ -201,9 +201,9 @@
 							<input data-ng-show="!forgotPassword" on-click-change-text type="password" name="password" data-ng-model="login.password" data-ng-class="{ 'has-error' : loginForm.password.$invalid && !loginForm.password.$pristine && registrationSubmitted }" placeholder="Password" data-ng-minlength="6" required>
 							<div class="extra-bar">
 								<div class="registration-social">
-									<a class="socialicon" href="../auth/facebook"><span class="icon-facebook"></span></a>
-									<a class="socialicon" href="../auth/linkedin"><span class="icon-linkedin"></span></a>
-									<a class="socialicon" href="../auth/google"><span class="icon-google-plus"></span></a>
+									<a class="socialicon" data-ng-click="socialLogin('facebook')" href="../auth/facebook"><span class="icon-facebook"></span></a>
+									<a class="socialicon" data-ng-click="socialLogin('linkedin')" href="../auth/linkedin"><span class="icon-linkedin"></span></a>
+									<a class="socialicon" data-ng-click="socialLogin('google')" href="../auth/google"><span class="icon-google-plus"></span></a>
 								</div>
 								<div class="remember-password">
 									<div><a href="" data-ng-click="forgotPassword = true" data-ng-show="!forgotPassword">Forgot password?</a></div>
@@ -234,9 +234,9 @@
 							</div>
 							<div class="extra-bar">
 								<div class="registration-social">
-									<a class="socialicon" href="../auth/facebook"><span class="icon-facebook"></span></a>
-									<a class="socialicon" href="../auth/linkedin"><span class="icon-linkedin"></span></a>
-									<a class="socialicon" href="../auth/google"><span class="icon-google-plus"></span></a>
+									<a class="socialicon" data-ng-click="socialLogin('facebook')" href="../auth/facebook"><span class="icon-facebook"></span></a>
+									<a class="socialicon" data-ng-click="socialLogin('linkedin')" href="../auth/linkedin"><span class="icon-linkedin"></span></a>
+									<a class="socialicon" data-ng-click="socialLogin('google')" href="../auth/google"><span class="icon-google-plus"></span></a>
 								</div>
 								<div class="remember-password">
 									<div class="remember-me-box"><label><input type="checkbox" name="remember">Keep me logged in</label></div>
