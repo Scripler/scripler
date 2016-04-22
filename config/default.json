@@ -22,9 +22,6 @@
 		"memberGroupIdFree": "Members - Free",
 		"memberGroupIdPaying": "Members - Paying"
 	},
-	"mandrill": {
-		"apiKey": "xxxx"
-	},
 	"sparkpost": {
 		"apiKey": "xxxx"
 	},
