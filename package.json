@@ -43,6 +43,7 @@
     "ps-node": "0.0.4",
     "rimraf": "^2.3.2",
     "sanitize-filename": "^1.3.0",
+    "sparkpost": "^1.3.2",
     "strftime": "^0.9.0",
     "webshot": "^0.15.4",
     "winston": "^1.0.0",

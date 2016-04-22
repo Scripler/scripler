@@ -25,6 +25,9 @@
 	"mandrill": {
 		"apiKey": "xxxx"
 	},
+	"sparkpost": {
+		"apiKey": "xxxx"
+	},
 	"braintree":{
 		"env": "sandbox",
 		"merchantId": "xxx",
