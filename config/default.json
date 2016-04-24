@@ -22,7 +22,7 @@
 		"memberGroupIdFree": "Members - Free",
 		"memberGroupIdPaying": "Members - Paying"
 	},
-	"mandrill": {
+	"sparkpost": {
 		"apiKey": "xxxx"
 	},
 	"braintree":{
