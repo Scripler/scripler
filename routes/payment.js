@@ -420,7 +420,8 @@ exports.webhook = function (req, res, next) {
 								{name: "PRODUCTPRICEEXVAT", content: priceExVat },
 								{name: "VATRATE", content:  vatRate*100 },
 								{name: "CREDITCARD", content: creditCardText },
-								{name: "COUNTRY", content: country}
+								{name: "COUNTRY", content: country},
+								{name: "DATE", content: moment().format('MMMM Do, YYYY')}
 							],
 							'payment-invoice'
 						);
