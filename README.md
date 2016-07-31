@@ -1,3 +1,5 @@
+### THIS REPOSITORY IS NO LONGER MAINTAINED!
+
 Scripler
 =========
 The Scripler web application source code repository.
