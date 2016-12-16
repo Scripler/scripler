@@ -54,4 +54,4 @@ https://github.com/ncb000gt/node.bcrypt.js/#dependencies
 
   [1]: http://www.mongodb.org/
   [2]: http://nodejs.org/
-  [3]: http://visionmedia.github.io/mocha/
+  [3]: http://mochajs.org/
